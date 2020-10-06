@@ -30,30 +30,30 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 
-   public STRenderPanel findRenderer() {
-      return (STRenderPanel) find(component -> component instanceof STRenderPanel)
-            .orElseGet(() -> {
-               final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
-               addPane("Renderer", stRenderPanel);
-               return stRenderPanel;
-            });
-   }
+	public STRenderPanel findRenderer() {
+		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
+				.orElseGet(() -> {
+					final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+					addPane("Renderer", stRenderPanel);
+					return stRenderPanel;
+				});
+	}
 
-   public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
-      for (int i = 0; i < getTabCount(); i++)
-         if (predicate.test(getComponentAt(i)))
-            return Optional.of((T) getComponentAt(i));
-      return Optional.empty();
-   }
+	public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
+		for (int i = 0; i < getTabCount(); i++)
+			if (predicate.test(getComponentAt(i)))
+				return Optional.of((T) getComponentAt(i));
+		return Optional.empty();
+	}
 
-   public STModelCanvas findCanvas() {
-      return (STModelCanvas) find(component -> component instanceof STModelCanvas)
-            .orElseGet(() -> {
-               final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
-               addPane("Canvas", stModelCanvas);
-               return stModelCanvas;
-            });
-   }
+	public STModelCanvas findCanvas() {
+		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
+				.orElseGet(() -> {
+					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+					addPane("Canvas", stModelCanvas);
+					return stModelCanvas;
+				});
+	}
 
 	public STModelGrid getModelGrid(STTemplate stTemplate) {
 		for (int i = 0; i < getTabCount(); i++) {
@@ -177,6 +177,13 @@ public class STWorkspace extends JTabbedPane {
 								}
 							});
 
+							pop.add(new AbstractAction("Close All") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									presentationModel.getWorkspace().closeAll();
+								}
+							});
+
 							pop.show(ButtonTabComponent.this, e.getX(), e.getY());
 						});
 					else {
@@ -192,6 +199,14 @@ public class STWorkspace extends JTabbedPane {
 			for (int i = getTabCount() - 1; i >= 0; i--) {
 				final Component componentAt = getComponentAt(i);
 				if (componentAt.equals(component)) continue;
+				remove(i);
+			}
+		});
+	}
+
+	private void closeAll() {
+		SwingUtilities.invokeLater(() -> {
+			for (int i = getTabCount() - 1; i >= 0; i--) {
 				remove(i);
 			}
 		});

@@ -26,9 +26,10 @@ SequentialFlow(name,execute,then) ::= <<SequentialFlow.Builder.aNewSequentialFlo
 		.then(~it~)}~
 		.build()  >>
 
-Work(packageName,name,inputs,statements) ::= <<package ~packageName~;
+Work(packageName,imports,name,inputs,statements) ::= <<package ~packageName~;
 
 import org.jeasy.flows.work.*;
+~imports:{it|~it~};separator="\n"~
 
 public class ~name~ implements Work {
 
@@ -68,7 +69,10 @@ public class ~name~ extends WorkFlowNeoFactory {
 	}
 	
 	public org.jeasy.flows.work.Work newInstance(Work work) {
-		final nextgen.templates.javaeasyflows.Work javaCode = toCode(work);
+		return newInstance(toCode(work));
+	}
+
+	public org.jeasy.flows.work.Work newInstance(nextgen.templates.javaeasyflows.Work javaCode) {
 		final String className = javaCode.getPackageName() + "." + javaCode.getName().toString();
 		try {
 			final Class<?> workClass = CompilerUtils.CACHED_COMPILER.loadFromJava(className, javaCode.toString());

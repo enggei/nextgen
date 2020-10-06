@@ -1,10 +1,14 @@
 package nextgen.utils;
 
+import nextgen.st.domain.STEnum;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class STModelUtil {
 
@@ -33,5 +37,22 @@ public class STModelUtil {
       return list;
    }
 
+   public static Set<STTemplate> findSTInterfacesByName(String name, STGroupModel stGroupModel) {
+      final Set<STTemplate> set = new LinkedHashSet<>();
+      getAllSTTemplates(stGroupModel)
+            .forEach(stTemplate -> {
+               stTemplate.getImplements()
+                     .filter(name::equals)
+                     .findFirst()
+                     .ifPresent(s -> set.add(stTemplate));
+            });
+      return set;
+   }
 
+   public static STEnum findSTEnumByName(String name, STGroupModel stGroupModel) {
+      return stGroupModel.getEnums()
+            .filter(stEnum -> stEnum.getName().equals(name))
+            .findFirst()
+            .orElseGet(null);
+   }
 }

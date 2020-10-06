@@ -452,7 +452,7 @@
       "uuid" : "b308d46d-0864-4ec4-bb4a-7fef0c0222df",
       "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "4d2a7ca4-a4fc-42e0-9e5e-8a6dbe41e0aa",
       "name" : "templates",
@@ -467,12 +467,12 @@
       "uuid" : "cd28b603-9065-4ea5-905a-aff49137883b",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "7de2093f-bbce-44ed-8aa7-0f67de90aba7",
       "name" : "root",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "41456a3c-230f-42c7-a963-6cd17f3bfab2",
       "name" : "fields",
@@ -513,7 +513,7 @@
       "uuid" : "0d5e30a7-85dc-430b-8012-8d9edf6113f5",
       "name" : "packageDeclarations",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "ProjectPackage"
     }, {
       "uuid" : "c243f9ff-c782-4a6e-a7b7-3bedaa5addd9",
       "name" : "entities",
@@ -553,66 +553,27 @@
     }, {
       "uuid" : "24ffaa86-978d-40f1-a641-cb202f0f51d6",
       "name" : "ProjectPackage",
-      "text" : "protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~~packageName~);\n~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ ",
+      "text" : "protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n~childPackages:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "1f73deb8-42c0-4a84-bde0-84b998662564",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "2fd9d082-3400-425c-bee8-54a54a8ab8f5",
         "name" : "parentPackage",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "ProjectPackage"
       }, {
         "uuid" : "284565c4-32bb-4cb8-9e18-262c5a7a9fc9",
         "name" : "packageName",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
-        "uuid" : "36f64995-d945-456d-83a1-d940bf88b58f",
-        "name" : "types",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "2f71e037-f9d8-49d9-83f1-8bde5e838f7a",
-          "name" : "name",
-          "argumentType" : "Object"
-        } ]
-      } ]
-    }, {
-      "uuid" : "56ca8fd0-4b29-479b-bab3-9513c826fab6",
-      "name" : "TestRunner",
-      "text" : "package ~packageName~;\n\npublic class ~name~ extends ~projectName~ {\n\n~generators:{it|\n\t@Override\n\tpublic void ~it.name~() {\n\t\t~if(it.run)~super.~it.name~();~endif~\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n\tpublic static void main(String[] args) {\n\t\tfinal org.junit.runner.JUnitCore junit = new org.junit.runner.JUnitCore();\n\t\tjunit.addListener(new org.junit.internal.TextListener(System.out));\n\t\tfinal org.junit.runner.Result result = junit.run(~name~.class);\n\t\tfor (org.junit.runner.notification.Failure failure : result.getFailures()) {\n\t\t\tSystem.out.println(failure.toString());\n\t\t}\n\t}\n} ",
-      "parameters" : [ {
-        "uuid" : "f98c2964-990a-4771-b504-2fdb7994d22e",
-        "name" : "packageName",
-        "type" : "SINGLE",
+        "uuid" : "655be9e6-1c58-4fda-aa61-c4068acede3f",
+        "name" : "childPackages",
+        "type" : "LIST",
         "argumentType" : "Object"
-      }, {
-        "uuid" : "bf11c0e0-f5c4-4df7-b03c-a9ff77a73564",
-        "name" : "name",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "31261d17-b354-4f97-901e-411367291a51",
-        "name" : "projectName",
-        "type" : "SINGLE",
-        "argumentType" : "Object"
-      }, {
-        "uuid" : "bd28f69f-46b5-445c-a388-9d517bf2790d",
-        "name" : "generators",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "ab612850-1b6c-45f8-a082-54d88806f12d",
-          "name" : "name",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "278d8075-3fb6-46e4-9eec-bbe873a7286a",
-          "name" : "run",
-          "argumentType" : "Object"
-        } ]
       } ]
     } ]
   } ],

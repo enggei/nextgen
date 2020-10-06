@@ -1,7 +1,6 @@
 package nextgen.st;
 
 import net.openhft.compiler.CompilerUtils;
-import nextgen.domains.meta.*;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
 import nextgen.templates.MavenPatterns;
@@ -15,6 +14,7 @@ import nextgen.templates.maven.neo.ProjectModel;
 import nextgen.templates.stringtemplate.DomainVisitorRunner;
 import nextgen.templates.stringtemplate.ScriptRunner;
 import nextgen.templates.stringtemplate.StringTemplateST;
+import nextgen.utils.DomainUtil;
 import nextgen.utils.NeoChronicle;
 import nextgen.utils.STModelUtil;
 import nextgen.utils.SwingUtil;
@@ -53,7 +53,6 @@ public class STAppPresentationModel {
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
    public final STRenderer stRenderer;
    public final STModelDB db;
-   public final MetaDomainDB metaDb;
 
    final STGroupModel generatorSTGroup;
    final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
@@ -81,7 +80,6 @@ public class STAppPresentationModel {
       this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
       this.workFlowFacade = new WorkFlowFacade(db.getDatabaseService());
       this.chronicle = new NeoChronicle(appModel.getModelDb("./db"), db.getDatabaseService());
-      this.metaDb = new MetaDomainDB(db.getDatabaseService());
 
       final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment()
             .getAvailableFontFamilyNames()));
@@ -142,20 +140,6 @@ public class STAppPresentationModel {
          stgFile.renameTo(new File(stgDirectory.getPath(), name + ".json.deleted"));
    }
 
-   public void addEntityRelation(DomainEntity domainEntity, MetaRelation metaRelation, MetaEntity metaEntity) {
-
-      if (metaRelation.getCardinality().equals(Cardinality.ONE_TO_ONE))
-         domainEntity.getNode()
-               .getRelationships(RelationshipType.withName(metaRelation.getName()))
-               .forEach(Relationship::delete);
-
-      final DomainEntity dst = newDomainEntity(metaEntity);
-      final Relationship relationshipTo = domainEntity.getNode()
-            .createRelationshipTo(dst.getNode(), RelationshipType
-                  .withName(metaRelation
-                        .getName()));
-      relationshipTo.setProperty("_uuid", UUID.randomUUID().toString());
-   }
 
    public void editSTGroupTags(JComponent parent, STGroupModel model) {
       nextgen.utils.SwingUtil.showInputDialog("Tags", parent, model.getTags(""), tags -> {
@@ -218,35 +202,32 @@ public class STAppPresentationModel {
       });
    }
 
-   public void edit(JComponent owner, MetaProperty model, Consumer<MetaProperty> metaPropertyConsumer) {
-      final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
-      fieldMap.put("Name", newTextField(model.getName(""), 15));
-      fieldMap.put("Type", newTextField(model.getType(""), 15));
-      fieldMap.put("Default Value", newTextField(model.getDefaultValue(""), 15));
-      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-         inputPanel.add(new JLabel(fieldEntry.getKey()));
-         inputPanel.add(fieldEntry.getValue());
-      }
-      SwingUtil.showDialog(inputPanel, owner, "Edit Property", new SwingUtil.ConfirmAction() {
-         @Override
-         public void verifyAndCommit() throws Exception {
-            doLaterInTransaction(tx -> {
-               final String name = fieldMap.get("Name").getText().trim();
-               final String type = fieldMap.get("Type").getText().trim();
-               final String defaultValue = fieldMap.get("Default Value").getText().trim();
-               metaPropertyConsumer.accept(model.setName(name)
-                     .setType(type)
-                     .setDefaultValue(defaultValue.length() == 0 ? null : defaultValue));
-            });
-         }
-      });
-   }
+//   public void edit(JComponent owner, MetaProperty model, Consumer<MetaProperty> metaPropertyConsumer) {
+//      final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
+//      fieldMap.put("Name", newTextField(model.getName(""), 15));
+//      fieldMap.put("Type", newTextField(model.getType(""), 15));
+//      fieldMap.put("Default Value", newTextField(model.getDefaultValue(""), 15));
+//      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+//      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+//      for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+//         inputPanel.add(new JLabel(fieldEntry.getKey()));
+//         inputPanel.add(fieldEntry.getValue());
+//      }
+//      SwingUtil.showDialog(inputPanel, owner, "Edit Property", new SwingUtil.ConfirmAction() {
+//         @Override
+//         public void verifyAndCommit() throws Exception {
+//            doLaterInTransaction(tx -> {
+//               final String name = fieldMap.get("Name").getText().trim();
+//               final String type = fieldMap.get("Type").getText().trim();
+//               final String defaultValue = fieldMap.get("Default Value").getText().trim();
+//               metaPropertyConsumer.accept(model.setName(name)
+//                     .setType(type)
+//                     .setDefaultValue(defaultValue.length() == 0 ? null : defaultValue));
+//            });
+//         }
+//      });
+//   }
 
-   public void edit(DomainVisitor model) {
-
-   }
 
    public STTemplate findSTTemplateByUuid(String stTemplate) {
       return db.findSTTemplateByUuid(stTemplate);
@@ -350,73 +331,6 @@ public class STAppPresentationModel {
       }
    }
 
-   public CompilationResult generateVisitorCode(DomainVisitor visitor, DomainEntity domainEntity) {
-
-      final File srcRoot = new File(appModel.getRootDir());
-
-      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
-            .newPackageDeclaration()
-            .setName("tmp");
-
-      final Collection<ImportDeclaration> imports = new ArrayList<>();
-      stgDirectories.forEach(directory -> {
-         final String outputPackage = directory.getOutputPackage();
-         final File templateClassDir = new File(srcRoot, STGenerator.packageToPath(outputPackage));
-
-         directory.getGroups().forEach(stGroupModel -> {
-            final String packageName = outputPackage + "." + stGroupModel.getName().toLowerCase();
-            if (new File(srcRoot, STGenerator.packageToPath(packageName)).exists()) {
-               imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(packageName + "." + capitalize(stGroupModel
-                           .getName() + "ST"))
-                     .setIsAsterisk(true)
-                     .setIsStatic(true));
-               imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(packageName)
-                     .setIsAsterisk(true));
-            }
-         });
-
-         Arrays.stream(Objects.requireNonNull(templateClassDir.listFiles()))
-               .filter(file -> file.isFile() && file.getName().endsWith("Patterns.java"))
-               .forEach(file -> imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(directory
-                           .getOutputPackage() + "." + capitalize(file
-                           .getName()
-                           .substring(0, file.getName()
-                                 .length() - 5)))
-                     .setIsAsterisk(true)
-                     .setIsStatic(true)));
-      });
-
-      final String className = visitor.getName().replaceAll("[ ]", "");
-
-      STGenerator
-            .writeJavaFile(getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, className), packageDeclaration
-                  .getName(), className, srcRoot);
-
-      final java.io.StringWriter sr = new java.io.StringWriter();
-      final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
-      try {
-         final String cacheClassname = className + System.currentTimeMillis();
-         final Class<?> aClass = CompilerUtils.CACHED_COMPILER
-               .loadFromJava(getClass().getClassLoader(), packageDeclaration
-                     .getName() + "." + cacheClassname, getDomainVisitorRunner(visitor, domainEntity, packageDeclaration, imports, cacheClassname)
-                     .toString(), compilerOutput);
-         return new CompilationResult(sr.toString(), aClass);
-      } catch (Throwable t) {
-         return new CompilationResult(sr.toString(), null);
-      }
-   }
-
-   public DomainVisitorRunner getDomainVisitorRunner(DomainVisitor visitor, DomainEntity domainEntity, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
-      return new DomainVisitorGenerator(visitor, domainEntity, packageDeclaration, imports, className, appModel
-            .getDirectories()
-            .findFirst()
-            .get()
-            .getPath(), appModel
-            .getModelDb("./db")).generate();
-   }
 
    public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {
       return db.getInTransaction(action);
@@ -529,96 +443,6 @@ public class STAppPresentationModel {
       return cache.get(iconName);
    }
 
-   public DomainEntity newDomainEntity(MetaEntity metaEntity) {
-      return metaDb.newDomainEntity(metaEntity);
-   }
-
-   public DomainEntity newDomainEntity(Node node) {
-      return metaDb.newDomainEntity(node);
-   }
-
-   public DomainVisitor newDomainVisitor(Node node) {
-      return metaDb.newDomainVisitor(node);
-   }
-
-   public DomainVisitor newDomainVisitor(MetaDomain model, String name) {
-      return metaDb.newDomainVisitor(model, name);
-   }
-
-   public EntityVisitorMethod newEntityVisitorMethod(DomainVisitor model, MetaEntity metaEntity) {
-      return metaDb.newEntityVisitorMethod(model, metaEntity);
-   }
-
-   public MetaDomain newMetaDomain(Node node) {
-      return metaDb.newMetaDomain(node);
-   }
-
-   public MetaEntity newMetaEntity(Node node) {
-      return metaDb.newMetaEntity(node);
-   }
-
-   public void newMetaProperty(Component owner, Consumer<MetaProperty> metaPropertyConsumer) {
-      final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
-      fieldMap.put("Name", newTextField(15));
-      fieldMap.put("Type", newTextField(15));
-      fieldMap.put("Default Value", newTextField(15));
-      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-         inputPanel.add(new JLabel(fieldEntry.getKey()));
-         inputPanel.add(fieldEntry.getValue());
-      }
-      SwingUtil.showDialog(inputPanel, owner, "New Property", new SwingUtil.ConfirmAction() {
-         @Override
-         public void verifyAndCommit() throws Exception {
-            doLaterInTransaction(tx -> {
-               final String name = fieldMap.get("Name").getText().trim();
-               final String type = fieldMap.get("Type").getText().trim();
-               final String defaultValue = fieldMap.get("Default Value").getText().trim();
-               metaPropertyConsumer.accept(metaDb.newMetaProperty()
-                     .setName(name)
-                     .setUuid(UUID.randomUUID().toString())
-                     .setType(type)
-                     .setDefaultValue(defaultValue.length() == 0 ? null : defaultValue));
-            });
-         }
-      });
-   }
-
-   public MetaProperty newMetaProperty(Node node) {
-      return metaDb.newMetaProperty(node);
-   }
-
-   public void newMetaRelation(Component owner, MetaEntity src) {
-      final Map<String, JComponent> fieldMap = new LinkedHashMap<>();
-      fieldMap.put("Name", newTextField(15));
-      fieldMap.put("Type", newComboBox(Cardinality.values(), Cardinality.ONE_TO_MANY));
-      fieldMap.put("Dst", newTextField(15));
-      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (Map.Entry<String, JComponent> fieldEntry : fieldMap.entrySet()) {
-         inputPanel.add(new JLabel(fieldEntry.getKey()));
-         inputPanel.add(fieldEntry.getValue());
-      }
-      SwingUtil.showDialog(inputPanel, owner, "New Property", new SwingUtil.ConfirmAction() {
-         @Override
-         public void verifyAndCommit() throws Exception {
-            doLaterInTransaction(tx -> {
-               final String name = ((JTextField) fieldMap.get("Name")).getText().trim();
-               final Cardinality type = (Cardinality) ((JComboBox<Cardinality>) fieldMap.get("Type")).getSelectedItem();
-               final String dst = ((JTextField) fieldMap.get("Dst")).getText().trim();
-
-               final MetaRelation metaRelation = metaDb.newMetaRelation(src, name, type);
-               if (dst.length() != 0) metaDb.newMetaEntity(metaRelation, dst);
-            });
-         }
-      });
-   }
-
-   public MetaRelation newMetaRelation(Node node) {
-      return metaDb.newMetaRelation(node);
-   }
-
    public Project newProject(Node node) {
       return db.newProject(node);
    }
@@ -627,9 +451,6 @@ public class STAppPresentationModel {
       return db.newProject(name);
    }
 
-   public RelationVisitorMethod newRelationVisitorMethod(DomainVisitor model, MetaRelation metaRelation) {
-      return metaDb.newRelationVisitorMethod(model, metaRelation);
-   }
 
    public Pair<STArgument, STValue> newSTArgument(STParameter stParameter, String value) {
       final STValue stValue = newSTValue(value);
@@ -690,6 +511,10 @@ public class STAppPresentationModel {
 
    public STValue newSTValue(STModel stModel) {
       return db.newSTValue(stModel);
+   }
+
+   public STValue newSTValue(STEnumValue stEnum) {
+      return db.newSTValue(stEnum);
    }
 
    public STValue newSTValue(Node node) {
@@ -782,45 +607,6 @@ public class STAppPresentationModel {
       return render(stArgument.getValue());
    }
 
-   public String render(DomainEntity domainEntity) {
-      final StringBuilder out = new StringBuilder("[" + domainEntity.get_meta().getName() + "]");
-      domainEntity.get_meta()
-            .getProperties()
-            .forEach(metaProperty -> out.append("\n")
-                  .append(metaProperty.getName())
-                  .append(":")
-                  .append(domainEntity.getNode()
-                        .hasProperty(metaProperty.getName()) ? domainEntity
-                        .getNode()
-                        .getProperty(metaProperty
-                              .getName()) : ""));
-      return out.toString();
-   }
-
-   public String render(DomainVisitor model) {
-      final StringBuilder out = new StringBuilder(model.getName());
-      out.append("\n\n// init").append("\n").append(model.getInitStatements(""));
-
-      out.append("\n\nEntities:");
-      model.getEntityVisitors()
-            .sorted((o1, o2) -> o1.get_meta().getName().compareToIgnoreCase(o2.get_meta().getName()))
-            .forEach(entityVisitorMethod -> out.append("\n// ")
-                  .append(entityVisitorMethod.get_meta().getName())
-                  .append("\n")
-                  .append(entityVisitorMethod.getStatements()));
-
-      out.append("\n\nRelations:");
-      model.getRelationVisitors()
-            .sorted((o1, o2) -> o1.get_meta().getName().compareToIgnoreCase(o2.get_meta().getName()))
-            .forEach(relationVisitorMethod -> out.append("\n\n//")
-                  .append(relationVisitorMethod.get_meta().getName())
-                  .append("\n")
-                  .append(relationVisitorMethod.getStatements()));
-
-      out.append("\n\n// end").append("\n").append(model.getEndStatements(""));
-      return out.toString();
-   }
-
    public String render(STArgument kvArgument, STParameter stParameter) {
       final StringBuilder out = new StringBuilder();
 
@@ -833,14 +619,6 @@ public class STAppPresentationModel {
       });
 
       return out.toString();
-   }
-
-   public String render(EntityVisitorMethod model) {
-      return model.getStatements();
-   }
-
-   public String render(RelationVisitorMethod model) {
-      return model.getStatements();
    }
 
    public void runScript(JComponent canvas, Script script) {
@@ -864,30 +642,6 @@ public class STAppPresentationModel {
             nextgen.utils.SwingUtil.showException(canvas, ex);
          }
       });
-   }
-
-   public void runVisitor(JComponent canvas, DomainEntity domainEntity, DomainVisitor visitor) {
-      doLaterInTransaction(tx -> {
-         try {
-
-            final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateVisitorCode(visitor, domainEntity);
-
-            if (compilationResult.aClass == null) {
-               JOptionPane
-                     .showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
-               return;
-            }
-
-            ((Runnable) compilationResult.aClass
-                  .getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class, nextgen.domains.meta.DomainEntity.class)
-                  .newInstance(db, stRenderer, domainEntity))
-                  .run();
-
-         } catch (Throwable ex) {
-            nextgen.utils.SwingUtil.showException(canvas, ex);
-         }
-      });
-
    }
 
    public boolean sameArgumentValue(STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue model) {
@@ -925,26 +679,6 @@ public class STAppPresentationModel {
                      .error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
                            .getLine()));
       }
-   }
-
-   public void setEntityProperty(Component owner, DomainEntity domainEntity, MetaProperty metaProperty, Consumer<Object> valueConsumer) {
-
-      final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
-      fieldMap.put("Value", newTextField(15));
-      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-         inputPanel.add(new JLabel(fieldEntry.getKey()));
-         inputPanel.add(fieldEntry.getValue());
-         if (domainEntity.getNode().hasProperty(metaProperty.getName()))
-            fieldEntry.getValue().setText(domainEntity.getNode().getProperty(metaProperty.getName()).toString());
-      }
-      SwingUtil.showDialog(inputPanel, owner, metaProperty.getName(), new SwingUtil.ConfirmAction() {
-         @Override
-         public void verifyAndCommit() throws Exception {
-            doLaterInTransaction(tx -> valueConsumer.accept(fieldMap.get("Value").getText().trim()));
-         }
-      });
    }
 
    public void setLastDir(File dir) {
@@ -1206,6 +940,11 @@ public class STAppPresentationModel {
       return workFlowFacade;
    }
 
+   public void importDomain(String s) {
+      DomainUtil.importDomain(s, workFlowFacade);
+   }
+
+
    public static final class CompilationResult {
 
       public final String compilerOutput;
@@ -1378,7 +1117,15 @@ public class STAppPresentationModel {
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()));
    }
 
+   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer) {
+      setParameter(stParameter, stModel, parent, consumer, true);
+   }
+
    public void addList(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer) {
+      setParameter(stParameter, stModel, parent, consumer, false);
+   }
+
+   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer, boolean singleValue) {
 
       doInTransaction(transaction -> {
 
@@ -1392,40 +1139,85 @@ public class STAppPresentationModel {
                   .collect(Collectors.toSet());
 
             if (!stTemplateSet.isEmpty()) {
-
+               if (singleValue) removeArgument(stModel, stParameter);
                final STTemplate stTemplate = stTemplateSet.iterator().next();
                final STGroupModel stGroupModel = stRenderer.findSTGroupModel(stTemplate);
                final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
-               final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
-               stModel.addArguments(newArgument.getValue0());
-               consumer.accept(newArgument);
+               addParameter(stParameter, stModel, consumer, stValue);
 
             } else {
                SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
                      doLaterInTransaction(transaction2 -> {
-                        final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
-                        stModel.addArguments(newArgument.getValue0());
-                        consumer.accept(newArgument);
+                        if (singleValue) removeArgument(stModel, stParameter);
+                        addParameter(stParameter, stModel, consumer, inputValue);
                      }));
             }
          } else {
             final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
             final STTemplate stTemplate = STModelUtil.findSTemplateByName(argumentType, stGroupModel);
             if (stTemplate != null) {
+               if (singleValue) removeArgument(stModel, stParameter);
                final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
-               final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
-               stModel.addArguments(newArgument.getValue0());
-               consumer.accept(newArgument);
+               addParameter(stParameter, stModel, consumer, stValue);
             } else {
-               SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
-                     doLaterInTransaction(transaction2 -> {
-                        final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
-                        stModel.addArguments(newArgument.getValue0());
-                        consumer.accept(newArgument);
-                     }));
-            }
 
+               final Set<STTemplate> interfaces = STModelUtil.findSTInterfacesByName(argumentType, stGroupModel);
+               if (!interfaces.isEmpty()) {
+
+                  if (interfaces.size() == 1) {
+                     doLaterInTransaction(transaction2 -> {
+                        if (singleValue) removeArgument(stModel, stParameter);
+                        final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), interfaces.iterator()
+                              .next()));
+                        addParameter(stParameter, stModel, consumer, stValue);
+                     });
+                     return;
+                  }
+
+                  SwingUtil.showSelectDialog("Select", parent, interfaces, stTemplate1 -> {
+                     doLaterInTransaction(transaction2 -> {
+                        if (singleValue) removeArgument(stModel, stParameter);
+                        final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
+                        addParameter(stParameter, stModel, consumer, stValue);
+                     });
+                  });
+
+               } else {
+
+                  final STEnum stEnum = STModelUtil.findSTEnumByName(argumentType, stGroupModel);
+                  if (stEnum != null) {
+
+                     SwingUtil.showSelectDialog("Select", parent, stEnum.getValues()
+                           .collect(Collectors.toSet()), stEnumValue -> {
+                        doLaterInTransaction(transaction2 -> {
+                           if (singleValue) removeArgument(stModel, stParameter);
+                           final STValue stValue = newSTValue(stEnumValue);
+                           addParameter(stParameter, stModel, consumer, stValue);
+                        });
+                     });
+
+                  } else {
+                     SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
+                           doLaterInTransaction(transaction2 -> {
+                              if (singleValue) removeArgument(stModel, stParameter);
+                              addParameter(stParameter, stModel, consumer, inputValue);
+                           }));
+                  }
+               }
+            }
          }
       });
+   }
+
+   public void addParameter(STParameter stParameter, STModel stModel, Consumer<Pair<STArgument, STValue>> consumer, String inputValue) {
+      final Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
+      stModel.addArguments(newArgument.getValue0());
+      consumer.accept(newArgument);
+   }
+
+   public void addParameter(STParameter stParameter, STModel stModel, Consumer<Pair<STArgument, STValue>> consumer, STValue stValue) {
+      final Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
+      stModel.addArguments(newArgument.getValue0());
+      consumer.accept(newArgument);
    }
 }

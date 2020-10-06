@@ -104,7 +104,10 @@ public class WorkFlowFacade {
 				"	}\n" + 
 				"	\n" + 
 				"	public org.jeasy.flows.work.Work newInstance(Work work) {\n" + 
-				"		final nextgen.templates.javaeasyflows.Work javaCode = toCode(work);\n" + 
+				"		return newInstance(toCode(work));\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public org.jeasy.flows.work.Work newInstance(nextgen.templates.javaeasyflows.Work javaCode) {\n" + 
 				"		final String className = javaCode.getPackageName() + \".\" + javaCode.getName().toString();\n" + 
 				"		try {\n" + 
 				"			final Class<?> workClass = CompilerUtils.CACHED_COMPILER.loadFromJava(className, javaCode.toString());\n" + 

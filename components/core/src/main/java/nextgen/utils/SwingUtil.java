@@ -3,6 +3,7 @@ package nextgen.utils;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
+import nextgen.st.domain.STTemplate;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.jetbrains.annotations.NotNull;
@@ -241,6 +242,44 @@ public class SwingUtil {
 
    public static void showInputDialog(String message, Component owner, Dimension dimension, Consumer<String> onConfirm) {
       showInputDialog(message, owner, dimension, null, onConfirm);
+   }
+
+   public static <T>void showSelectDialog(String message, Component owner, Set<T> set, Consumer<T> onConfirm) {
+      final JComboBox<T> content = newComboBox(set, set.iterator().next());
+      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
+      dialog.add(content, BorderLayout.CENTER);
+      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+      final ConfirmAction onSave = new ConfirmAction() {
+         @Override
+         public void verifyAndCommit() throws Exception {
+            onConfirm.accept((T) content.getSelectedItem());
+         }
+      };
+
+      JButton btnSave;
+      commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            try {
+               onSave.verifyAndCommit();
+               dialog.dispose();
+            } catch (Exception e1) {
+               SwingUtil.showExceptionNoStack(content, e1);
+            }
+         }
+      }));
+      dialog.getRootPane().setDefaultButton(btnSave);
+
+      commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            SwingUtilities.invokeLater(dialog::dispose);
+         }
+      }));
+      dialog.add(commandPanel, BorderLayout.SOUTH);
+
+      showDialog(dialog, owner);
    }
 
    public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {

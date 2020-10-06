@@ -362,10 +362,8 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			presentationModel.db.doInTransaction(transaction -> {
-				add(new DomainsTreeNode("Domains"));
 				add(new ProjectsRootNode("Projects"));
 				presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
-				add(new ScriptsRootNode("Scripts"));
 				add(new STValuesRootNode("Values"));
 			});
 		}
@@ -386,83 +384,6 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Undo", actionEvent -> {
 				presentationModel.undoLast();
-			}));
-			return actions;
-		}
-
-	}
-
-	// ScriptsRootNode
-	public class ScriptsRootNode extends BaseTreeNode<String> {
-
-		ScriptsRootNode(String model) {
-			super(model, null);
-
-			this.label = getModel();
-			this.tooltip = "";
-
-			presentationModel.db.findAllScript().forEach(script -> add(new ScriptTreeNode(script)));
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		ScriptsRootNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewScript(nextgen.st.STAppEvents.NewScript event) {
-			presentationModel.doLaterInTransaction(transaction -> 
-				addAndSelectChild(new ScriptTreeNode(event.script))
-			);
-		}
-	}
-
-	// ScriptTreeNode
-	public class ScriptTreeNode extends BaseTreeNode<nextgen.st.model.Script> {
-
-		private String uuid;
-
-		ScriptTreeNode(nextgen.st.model.Script model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-		}
-
-		ScriptTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			actions.add(newAction("Open", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenScript(getModel()));
-			}));
-			actions.add(newAction("Run Script", actionEvent -> {
-				presentationModel.runScript(tree, getModel());
 			}));
 			return actions;
 		}
@@ -604,9 +525,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("New instance", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
-					presentationModel.db.newSTModel(getModel().getUuid(), getModel());
-				});
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.newSTModel(getModel().getUuid(), getModel()));
 			}));
 			actions.add(newAction("Edit Models", actionEvent -> {
 				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
@@ -657,13 +576,13 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Open", actionEvent -> {
-				getParentNode(STTemplateTreeNode.class)
-					.ifPresent(stTemplateTreeNode -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel())));
+				getParentNode(STTemplateTreeNode.class).ifPresent(stTemplateTreeNode -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel())));
 			}));
 			actions.add(newAction("Edit", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
 					.ifPresent(stTemplateTreeNode -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
 						final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
+						//modelEditor.setModelNavigator(STModelNavigator.this);
 						workspace.setSelectedComponent(modelEditor);
 					})));
 			}));
@@ -688,198 +607,6 @@ public class STModelNavigator extends JPanel {
 				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 			});
 		}
-	}
-
-	// DomainsTreeNode
-	public class DomainsTreeNode extends BaseTreeNode<String> {
-
-		DomainsTreeNode(String model) {
-			super(model, null);
-
-			this.label = model.toString();
-			this.tooltip = "";
-
-			presentationModel.metaDb.findAllMetaDomain().forEach(metaDomain -> add(new MetaDomainTreeNode(metaDomain)));
-		}
-
-		DomainsTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().toString();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-	}
-
-	// MetaDomainTreeNode
-	public class MetaDomainTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaDomain> {
-
-		MetaDomainTreeNode(nextgen.domains.meta.MetaDomain model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-
-			getModel().getRoots().forEach(metaEntity -> add(new MetaEntityTreeNode(metaEntity)));
-		}
-
-		MetaDomainTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			actions.add(newAction("Open", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenMetaDomain(getModel()));
-			}));
-			return actions;
-		}
-
-	}
-
-	// MetaEntityTreeNode
-	public class MetaEntityTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaEntity> {
-
-		MetaEntityTreeNode(nextgen.domains.meta.MetaEntity model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-
-			getModel().getProperties().forEach(metaProperty -> add(new MetaPropertyTreeNode(metaProperty)));
-			getModel().getRelations().forEach(metaRelation -> add(new MetaRelationTreeNode(metaRelation)));
-
-			getModel().getNode().getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("_meta")).forEach(relationship -> {
-				add(new DomainEntityTreeNode(new nextgen.domains.meta.DomainEntity(relationship.getStartNode())));
-			});
-		}
-
-		MetaEntityTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-	}
-
-	// MetaRelationTreeNode
-	public class MetaRelationTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaRelation> {
-
-		MetaRelationTreeNode(nextgen.domains.meta.MetaRelation model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-
-			getModel().getProperties().forEach(metaProperty -> add(new MetaPropertyTreeNode(metaProperty)));
-		}
-
-		MetaRelationTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-	}
-
-	// DomainEntityTreeNode
-	public class DomainEntityTreeNode extends BaseTreeNode<nextgen.domains.meta.DomainEntity> {
-
-		DomainEntityTreeNode(nextgen.domains.meta.DomainEntity model) {
-			super(model, null);
-
-			this.label = model.toString();
-			this.tooltip = "";
-
-		}
-
-		DomainEntityTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().toString();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-	}
-
-	// MetaPropertyTreeNode
-	public class MetaPropertyTreeNode extends BaseTreeNode<nextgen.domains.meta.MetaProperty> {
-
-		MetaPropertyTreeNode(nextgen.domains.meta.MetaProperty model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-
-		}
-
-		MetaPropertyTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {

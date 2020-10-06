@@ -281,19 +281,21 @@ public class STModelEditorNavigator extends JPanel {
 				presentationModel.writeToFile(getModel());
 			}));
 			actions.add(newAction("Remove", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
-					if (stArgument instanceof STArgument) {
-						STArgument argument = (STArgument) stArgument;
-						argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
-						treeModel.removeNodeFromParent(this);
-						editor.setText("", null);
-					} else if (stArgument instanceof STArgumentKV) {
-						STArgumentKV argumentKV = (STArgumentKV) stArgument;
-						argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
-						treeModel.removeNodeFromParent(this);
-						editor.setText("", null);
-					}
-				});
+				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> 
+					presentationModel.doLaterInTransaction(transaction -> {
+						if (stArgument instanceof STArgument) {
+							STArgument argument = (STArgument) stArgument;
+							argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
+							treeModel.removeNodeFromParent(this);
+							editor.setText("", null);
+						} else if (stArgument instanceof STArgumentKV) {
+							STArgumentKV argumentKV = (STArgumentKV) stArgument;
+							argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
+							treeModel.removeNodeFromParent(this);
+							editor.setText("", null);
+						}
+					})
+				);
 			}));
 			actions.add(newAction("Edit", actionEvent -> {
 				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> presentationModel.getWorkspace().setSelectedComponent(presentationModel.getModelEditor(getModel()))));
@@ -333,20 +335,27 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("Remove", actionEvent -> {
+			actions.add(newAction("To Clipboard", actionEvent -> {
 				presentationModel.doLaterInTransaction(transaction -> {
-					if (stArgument instanceof STArgument) {
-						STArgument argument = (STArgument) stArgument;
-						argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
-						treeModel.removeNodeFromParent(this);
-						editor.setText("", null);
-					} else if (stArgument instanceof STArgumentKV) {
-						STArgumentKV argumentKV = (STArgumentKV) stArgument;
-						argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
-						treeModel.removeNodeFromParent(this);
-						editor.setText("", null);
-					}
+					SwingUtil.toClipboard(presentationModel.render(getModel()));
 				});
+			}));
+			actions.add(newAction("Remove", actionEvent -> {
+				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> 
+					presentationModel.doLaterInTransaction(transaction -> {
+						if (stArgument instanceof STArgument) {
+							STArgument argument = (STArgument) stArgument;
+							argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
+							treeModel.removeNodeFromParent(this);
+							editor.setText("", null);
+						} else if (stArgument instanceof STArgumentKV) {
+							STArgumentKV argumentKV = (STArgumentKV) stArgument;
+							argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(argumentKV));
+							treeModel.removeNodeFromParent(this);
+							editor.setText("", null);
+						}
+					})
+				);
 			}));
 			return actions;
 		}
@@ -635,7 +644,7 @@ public class STModelEditorNavigator extends JPanel {
 						}
 						break;
 					case LIST:
-						actions.add(newAction("Add from Input", actionEvent -> {
+						actions.add(newAction("Add", actionEvent -> {
 							presentationModel.addList(getModel(), stModel, tree, newArgument -> {
 
 								STValue argumentValue = newArgument.getValue1();

@@ -7,6 +7,7 @@ public class Work {
 
 	private Object _packageName;
 	private Object _name;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _inputs = new java.util.ArrayList<>();
 
@@ -23,6 +24,7 @@ public class Work {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Work");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _inputs) st.addAggr("inputs.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
@@ -70,6 +72,35 @@ public class Work {
 	public Work removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public Work addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public Work setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Work setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public Work removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public Work removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
 	} 
 
 	public Work addStatements(Object value) {
@@ -169,9 +200,10 @@ public class Work {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Work(packageName,name,inputs,statements) ::= <<package ~packageName~;\n" + 
+	static final String st = "Work(packageName,imports,name,inputs,statements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.jeasy.flows.work.*;\n" + 
+				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name~ implements Work {\n" + 
 				"\n" + 

@@ -1,0 +1,458 @@
+{
+  "uuid" : "2db2d0ea-f927-4a55-bc1d-bf842e17019c",
+  "name" : "JavaSwing",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "3ee07ae4-4eaf-4ed3-8b72-6a441389c654",
+    "name" : "JTree",
+    "text" : "package ~packageName~;\n\nimport javax.swing.*;\nimport javax.swing.tree.DefaultTreeCellRenderer;\nimport javax.swing.tree.TreePath;\nimport java.awt.*;\nimport java.awt.event.MouseAdapter;\nimport java.awt.event.MouseEvent;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends JTree {\n\n\tpublic ~name~(~treeModel~ model) {\n\t\tsetModel(model);\n\t\tsetCellRenderer(new ~name~CellRenderer());\n\t\taddMouseListener(new ~name~MouseListener());\n\t}\n\n\tprivate final class ~name~CellRenderer extends DefaultTreeCellRenderer {\n\t\t@Override\n\t\tpublic Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n\t\t\tfinal ~nodeType~ node = (~nodeType~) value;\n\t\t\tfinal ImageIcon icon = node.getIcon();\n\t\t\tsetIcon(icon);\n\t\t\tsetOpenIcon(icon);\n\t\t\tsetClosedIcon(icon);\n\t\t\tsetLeafIcon(icon);\n\t\t\tsetToolTipText(node.getTooltip());\n\t\t\treturn super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);\n\t\t}\n\t}\n\n\tprivate final class ~name~MouseListener extends MouseAdapter {\n\n\t\t@Override\n\t\tpublic void mouseClicked(MouseEvent e) {\n\n\t\t\tfinal TreePath selectionPath = getPathForLocation(e.getX(), e.getY());\n\t\t\tif (selectionPath == null) return;\n\t\t\tfinal ~nodeType~<?> node = (~nodeType~<?>) selectionPath.getLastPathComponent();\n\n\t\t\tif (SwingUtilities.isRightMouseButton(e)) {\n\n\t\t\t\tfinal JPopupMenu pop = new JPopupMenu();\n\t\t\t\tfor (Action action : node.getActions())\n\t\t\t\t\tpop.add(action);\n\n\t\t\t\tSwingUtilities.invokeLater(() -> pop.show(~name~.this, e.getX(), e.getY()));\n\n\t\t\t} else {\n\n\t\t\t\tnode.setSelected();\n\t\t\t}\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "4a4f398f-efed-4a3a-9786-723071e2f557",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "76727694-b200-423e-9ece-2f645ce3d777",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "678dba9e-5d76-47d3-817e-e245117e7430",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "cc5ade2e-0065-45fa-b57f-35a5e9c3e8a8",
+      "name" : "treeModel",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "dcb6cf25-489d-4b05-bdfb-0cf64b0b7c00",
+      "name" : "nodeType",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "d7bb40e9-7828-4e34-b3b5-847508b65924",
+      "name" : "BaseTreeNode",
+      "text" : "package ~packageName~;\n\nimport javax.swing.*;\nimport javax.swing.tree.*;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class ~name~<T> extends DefaultMutableTreeNode {\n\n\tprivate String label;\n\tprivate ImageIcon icon;\n\tprivate String tooltip;\n\tprivate String uuid;\n\n\tpublic ~name~(T model) {\n\t\tsetUserObject(model);\n\t\tthis.label = \"\";\n\t\tthis.icon = null;\n\t\tthis.tooltip = \"\";\n\t\tthis.uuid = java.util.UUID.randomUUID().toString();\n\t}\n\n\tpublic ~name~(T model, String uuid) {\n\t\tsetUserObject(model);\n\t\tthis.label = \"NO_NAME\";\n\t\tthis.icon = null;\n\t\tthis.tooltip = \"\";\n\t\tthis.uuid = uuid;\n\t}\n\t\n\tpublic ~name~(T model, String uuid, String label, ImageIcon icon, String tooltip) {\n\t\tsetUserObject(model);\n\t\tthis.label = label;\n\t\tthis.icon = icon;\n\t\tthis.tooltip = tooltip;\n\t\tthis.uuid = uuid;\n\t}\n\n\t@SuppressWarnings(\"unchecked\")\n\tT getModel() { return (T) this.getUserObject(); }\n\n\tString getLabel() { return label; }\n\n\tvoid setLabel(String value) { this.label = value == null || value.trim().length() == 0 ? \"NO_NAME\" : value; }\n\n\tImageIcon getIcon() { return icon; }\n\n\tvoid setIcon(ImageIcon value) { this.icon = value; }\n\n\tString getTooltip() { return tooltip; }\n\n\tvoid setTooltip(String value) { this.tooltip = tooltip; }\n\n\tString getUuid() {\n\t\treturn uuid;\n\t}\n\t\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tList<Action> getActions() {\n\t\treturn new ArrayList<>();\n\t}\n\n\tpublic void setSelected() {\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "1d73aa95-6967-4324-83e3-c2a9b9341c02",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e685e34e-e7d8-4f6b-b26c-50bf3b119f20",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "760df98d-36fe-4d68-bc8e-7426353777b4",
+        "name" : "methods",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "73d72aec-7f1a-4e48-a409-28a879156708",
+      "name" : "TreeModel",
+      "text" : "package ~packageName~;\n\nimport javax.swing.tree.*;\nimport java.util.Optional;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends DefaultTreeModel {\n\n\tpublic ~name~(~nodeType~ root) {\n\t\tsuper(root);\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tprotected Optional<NavigatorTreeNode<?>~gt()~ find(java.util.function.Predicate<NavigatorTreeNode<?>~gt()~ predicate) {\n\t\treturn find((NavigatorTreeNode<?>) getRoot(), predicate);\n\t}\n\n\tprotected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {\n\t\treturn find((NavigatorTreeNode<?>) getRoot(), navigatorTreeNode ->\n\t\t\t\tnavigatorTreeNode.getClass().isAssignableFrom(nodeType));\n\t}\n\n\tprotected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n\t\treturn find((NavigatorTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()\n\t\t\t\t.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n\t}\n\n\tprotected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(NavigatorTreeNode<?> parent, java.util.function.Predicate<NavigatorTreeNode<?>~gt()~ predicate) {\n\t\tfinal int childCount = parent.getChildCount();\n\t\tfor (int i = 0; i < childCount; i++) {\n\t\t\tfinal NavigatorTreeNode<?> childAt = (NavigatorTreeNode<?>) parent.getChildAt(i);\n\t\t\tif (predicate.test(childAt))\n\t\t\t\treturn Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());\n\t\t\telse {\n\t\t\t\tfinal Optional<T> node = find(childAt, predicate);\n\t\t\t\tif (node.isPresent()) return node;\n\t\t\t}\n\t\t}\n\t\treturn Optional.empty();\n\t}\n\n\tprivate void addNodeInSortedOrder(NavigatorTreeNode<?> parent, NavigatorTreeNode<?> child) {\n\n\t\tint n = parent.getChildCount();\n\t\tif (n == 0) {\n\t\t\tparent.add(child);\n\t\t\tnodesWereInserted(parent, new int[]{n});\n\t\t\treturn;\n\t\t}\n\n\t\tfor (int i = 0; i < n; i++) {\n\t\t\tfinal NavigatorTreeNode<?> node = (NavigatorTreeNode<?>) parent.getChildAt(i);\n\t\t\tif (node.getLabel().compareTo(child.getLabel()) > 0) {\n\t\t\t\tparent.insert(child, i);\n\t\t\t\tnodesWereInserted(parent, new int[]{i});\n\t\t\t\treturn;\n\t\t\t}\n\t\t}\n\n\t\tparent.add(child);\n\t\tnodesWereInserted(parent, new int[]{n});\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "4abf50be-ce8e-49e2-9e3e-86d88703b144",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1fb9e3b5-8e46-4733-a840-8d48e95d9be2",
+        "name" : "imports",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c7da1190-c764-4fa5-83e8-e54aece9f1bc",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bb2caf57-7bd6-44d2-a09e-8b3ba072523a",
+        "name" : "nodeType",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "337f1532-2280-4797-8be9-72cd12eaaf2c",
+        "name" : "constructorStatements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c8d66d1d-161c-4393-9537-e9b0d92f18e1",
+        "name" : "methods",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "30c38635-5fb5-47b8-97a3-43ee2764d1e0",
+      "name" : "TreeNode",
+      "text" : "package ~packageName~;\n\nimport javax.swing.*;\nimport javax.swing.tree.*;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends ~baseTreeNode~<~type~> {\n\n\tpublic ~name~(~type~ model) {\n\t\tsuper(model~if(uuidExpression)~, ~uuidExpression~~endif~);\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tjava.util.List<Action> getActions() {\n\t\tfinal java.util.List<Action> actions = super.getActions();\n\t\t~actions:{it|~it~};separator=\"\\n\"~\n\t\treturn actions;\n\t}\n\n\t@Override\n\tpublic void setSelected() {\n\t\t~selectedStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "d76b948d-b1e2-43f2-bef4-fbb4e98a0104",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "80c0aca7-f2c8-4f39-8251-b2f9bb3c9b6e",
+        "name" : "imports",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f0156fcd-b68e-43cb-a918-fa42307d5835",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7ae616fb-1031-4428-b02e-f3ca41d03ea2",
+        "name" : "baseTreeNode",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "0a63d35c-4a8b-4292-ab40-bda942020a08",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "0c001ad7-682b-4075-bbdb-f38806bb5494",
+        "name" : "uuidExpression",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c59e3079-5704-4140-a3ac-cfa01b214cab",
+        "name" : "constructorStatements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "90a881e0-9e07-4e90-8f49-216993ad9fa9",
+        "name" : "actions",
+        "type" : "LIST",
+        "argumentType" : "GetTreeNodeAction"
+      }, {
+        "uuid" : "440860cc-38b6-4621-bbbc-bab96c57d3c9",
+        "name" : "selectedStatements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1bdd2a64-be40-4a7f-ab4f-592015cb12df",
+        "name" : "methods",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "4128528e-8f26-4728-9d98-10aeea2de50d",
+        "name" : "GetTreeNodeAction",
+        "text" : "actions.add(new ~name~(~arguments:{it|~it.name~};separator=\", \"~)); ",
+        "parameters" : [ {
+          "uuid" : "9075f947-22c6-4b3a-bf21-700fa9fdd105",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "8bac1996-8dd3-4369-85a0-8aa23cb2f5cf",
+          "name" : "arguments",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "eacaed18-b559-44b7-837b-d3ad84d3b593",
+            "name" : "name",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "e294d5a1-744c-4658-8c7f-bcfde0c74585",
+    "name" : "JPanel",
+    "text" : "~if(innerClass)~~else~package ~packageName~;\n\nimport javax.swing.*;\nimport java.awt.*;\n\n~imports:{it|~it~};separator=\"\\n\"~\n~endif~\npublic class ~name~ extends javax.swing.JPanel {\n\n\t~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\t\n\tpublic ~name~(~constructorParameters:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(new java.awt.BorderLayout());\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "d3697a86-3e35-49ff-adfd-4ebd4d1f3e34",
+      "name" : "innerClass",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "09f23d03-781b-432d-8456-6413c54d4b89",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "d93370ce-13cb-4879-aa14-9c570cd43e20",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "d3d5b3a3-567b-4d96-bf6d-a0b13c9c52be",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "597e65b4-1ec4-42e5-b16a-a33f2e4bc05a",
+      "name" : "fields",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "86b555ba-26ba-42b0-8306-b03dc246e7d1",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b1399efb-e200-49a0-95d7-69b5c4621d0b",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "7b2829ad-a2c1-4df5-9dff-4633fcaa2cf9",
+        "name" : "init",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "90565ad0-772b-4e6a-84b3-b0790a0a21e4",
+      "name" : "constructorParameters",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "91b24ed5-35d2-4757-8cbe-2d9601c8d876",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d4c0b705-79ea-4edb-997a-3f0806f060c9",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "f299bbaf-774f-44c9-a01b-b2606aef0d52",
+      "name" : "constructorStatements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1260dc5c-ab37-46f8-9f48-727233f1ec5c",
+      "name" : "methods",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "0021fa69-5cde-4f9f-9f20-9bb813df1f64",
+      "name" : "Editor",
+      "text" : "package ~packageName~;\n\nimport nextgen.DomainFacade;\nimport nextgen.swing.AppModel;\n\nimport javax.swing.*;\nimport java.awt.*;\n\npublic class ~name~<T> extends JPanel {\n\n\tprotected final T model;\n\tprivate String title;\n\n\tpublic ~name~(T model, String title) {\n\t\tsuper(new BorderLayout());\n\t\tthis.model = model;\n\t\tthis.title = title;\n\t\tsetBackground(java.awt.Color.BLACK);\n\t}\n\n\tpublic T getModel() {\n\t\treturn model;\n\t}\n\n\tpublic String getTitle() {\n\t\treturn title;\n\t}\n\n\tpublic void setTitle(String title) {\n\t\tthis.title = title;\n\t}\n\n\tprotected DomainFacade getDomain() {\n\t\treturn AppModel.getInstance().getDomain();\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "f11e4939-3802-424d-97f6-80ebde2b7ab7",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "6bb433e2-0c13-4e21-8a8c-c69dab84ea94",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "bd4e0afa-92ee-445a-ac16-ad2b4470133a",
+        "name" : "ModelEditor",
+        "text" : "package ~packageName~;\n\nimport nextgen.swing.SwingUtil;\nimport org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.KeyAdapter;\nimport java.awt.event.KeyEvent;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends Editor<~modelType~> {\n\n   public ~name~(~modelType~ model) {\n      super(model, model.getName());\n      setBackground(java.awt.Color.~background~);\n      ~statements:{it|~it~};separator=\"\\n\"~\n   }\n\n   ~methods:{it|~it~};separator=\"\\n\\n\"~\n\n   ~innerClasses:{it|~it~};separator=\"\\n\\n\"~\n} ",
+        "parameters" : [ {
+          "uuid" : "690b0417-dc1b-4d9f-9202-ac7fbf37c99f",
+          "name" : "packageName",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "3a65700e-8ed9-46df-a7a7-4830eb3f42e3",
+          "name" : "imports",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "ba51e4d0-07a6-490a-8adf-8fb615786a14",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "3f9aa721-f719-480d-b697-0ae4172f950a",
+          "name" : "modelType",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "bd143dee-1957-41c2-99fd-3e16fa0f528f",
+          "name" : "background",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "3611ea49-74a0-48be-8920-001028b3dc8d",
+          "name" : "statements",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "532f53f7-2cc5-4ef7-9fc1-76a7f69551dd",
+          "name" : "methods",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c1955061-5db1-414e-b4b4-4b2512b29618",
+          "name" : "innerClasses",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "8c0fcf2b-7871-42d2-a5e0-ded7736b8dee",
+    "name" : "JTabbedPane",
+    "text" : "package ~packageName~;\n\nimport javax.swing.*;\nimport java.awt.Component;\nimport java.util.Optional;\nimport java.util.function.Predicate;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends JTabbedPane {\n\n\tpublic ~name~() {\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\tpublic <T extends Component> Optional<T> find(Predicate<Component> predicate) {\n\t\tfor (int i = 0; i < getTabCount(); i++) \n\t\t\tif (predicate.test(getComponentAt(i)))\n\t\t\t\treturn Optional.of((T) getComponentAt(i));\n\t\treturn Optional.empty();\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "0e6fc807-b252-4bbf-a1b2-994431fd6a59",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "4be11d11-930a-43a9-ab4b-7abfe502c912",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "42f82a63-9042-4e9f-9405-a7f1eece6096",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "570134f4-3c01-49cf-ba0a-06ec19a85ee8",
+      "name" : "constructorStatements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "653bcb1c-3b9f-4237-8696-5e407c80f185",
+      "name" : "methods",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "0b1804fe-903f-437a-b56f-b79b7f126a11",
+      "name" : "ButtonTab",
+      "text" : "package ~packageName~;\n\nimport javax.swing.*;\nimport java.awt.*;\n\nclass ~name~ extends JPanel {\n\n\t~name~(final JTabbedPane pane, String title, JComponent component) {\n\t\tsuper(new FlowLayout(FlowLayout.LEFT, 0, 0));\n\t\tsetOpaque(false);\n\n\t\tfinal JLabel label = new JLabel(title);\n\t\tlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n\t\tadd(label);\n\n\t\tfinal java.net.URL resource = getClass().getClassLoader().getResource(\"icons/close12x12.png\");\n\t\tfinal JButton btnClose = new JButton(new ImageIcon(resource));\n\t\tfinal Dimension dimension = new Dimension(12, 16);\n\t\tbtnClose.setMaximumSize(dimension);\n\t\tbtnClose.setPreferredSize(dimension);\n\t\tbtnClose.setMinimumSize(dimension);\n\t\tbtnClose.setOpaque(false);\n\t\tbtnClose.setContentAreaFilled(false);\n\t\tbtnClose.setBorderPainted(false);\n\t\tbtnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));\n\t\tadd(btnClose);\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "f2a0ed7b-4f77-4343-bdf7-45d4619d6d9e",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b1969fb7-b90b-457f-b1e6-e01ffba5b13a",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "ccf7f714-5b83-4b48-8194-d56acbbfb773",
+    "name" : "SwingUtil",
+    "text" : "package ~packageName~;\n\nimport com.jgoodies.forms.builder.FormBuilder;\nimport com.jgoodies.forms.debug.FormDebugPanel;\nimport com.jgoodies.forms.layout.CellConstraints;\nimport org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;\nimport org.fife.ui.rtextarea.RTextScrollPane;\nimport org.jetbrains.annotations.NotNull;\n\nimport javax.swing.*;\nimport javax.swing.text.BadLocationException;\nimport javax.swing.text.DefaultHighlighter;\nimport javax.swing.text.Highlighter;\nimport javax.swing.text.JTextComponent;\nimport java.awt.*;\nimport java.awt.datatransfer.Clipboard;\nimport java.awt.datatransfer.DataFlavor;\nimport java.awt.datatransfer.StringSelection;\nimport java.awt.datatransfer.Transferable;\nimport java.awt.event.*;\nimport java.io.File;\nimport java.io.PrintStream;\nimport java.io.PrintWriter;\nimport java.io.StringWriter;\nimport java.util.List;\nimport java.util.*;\nimport java.util.function.Consumer;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\nimport static javax.swing.JOptionPane.*;\n\npublic class ~name~ {\n\n\tpublic static Font getDefaultFont() {\n\t\treturn new Font(\"Hack\", Font.PLAIN, 20);\n\t}\n\n\tpublic static JTextField newTextField() {\n\t\treturn new JTextField();\n\t}\n\n\tpublic static String fromClipboard() {\n\t\tfinal Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();\n\t\tfinal Transferable contents = clipboard.getContents(null);\n\t\tif ((contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {\n\t\t\ttry {\n\t\t\t\treturn (String) contents.getTransferData(DataFlavor.stringFlavor);\n\t\t\t} catch (Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t\treturn e.getMessage();\n\t\t\t}\n\t\t}\n\t\treturn \"\";\n\t}\n\n\tpublic static void toClipboard(String content) {\n\t\tStringSelection stringSelection = new StringSelection(content);\n\t\tClipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();\n\t\tclipboard.setContents(stringSelection, (clipboard1, contents) -> {\n\t\t\t// don't care ?\n\t\t});\n\t}\n\n\tpublic static void showPanel(final JComponent component) {\n\t\tSwingUtil.setLookAndFeel_Nimbus();\n\n\t\tfinal JFrame frame = new JFrame();\n\t\tframe.getContentPane().add(component, BorderLayout.CENTER);\n\t\tframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);\n\t\tshow(frame);\n\t}\n\n\tpublic static File showOpenDir(Component parent, String dir) {\n\t\tfinal JFileChooser fc = dir == null || (!new File(dir).isDirectory()) ? new JFileChooser() : new JFileChooser(dir);\n\t\tfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);\n\t\tfinal int result = fc.showOpenDialog(parent);\n\t\treturn JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null;\n\t}\n\n\tpublic static Optional<File> showOpenFile(Component parent, String dir) {\n\t\tfinal JFileChooser fc = dir == null ? new JFileChooser() : new JFileChooser(new File(dir).isDirectory() ? new File(dir) : new File(dir)\n\t\t\t\t.getParentFile());\n\t\tfinal int result = fc.showOpenDialog(parent);\n\t\treturn Optional.ofNullable(JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null);\n\t}\n\n\tpublic static void showTextResult(String title, String text, Component parentComponent) {\n\t\tshowTextResult(title, text, parentComponent, true);\n\t}\n\n\tpublic static void showTextResult(String title, String text, Component parentComponent, boolean modal) {\n\t\tshowTextResult(title, text, parentComponent, new Dimension(800, 600), modal);\n\t}\n\n\tpublic static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize, boolean modal) {\n\t\tfinal JPanel panel = new JPanel(new BorderLayout());\n\t\tpanel.add(new JLabel(title + \" : \"), BorderLayout.NORTH);\n\n\t\tfinal JTextArea txtEditor = new JTextArea(text);\n\t\ttxtEditor.setBackground(UIManager.getColor(\"Panel.background\"));\n\t\ttxtEditor.setTabSize(3);\n\t\ttxtEditor.setCaretPosition(0);\n\n\t\tfinal JScrollPane content = new JScrollPane(txtEditor);\n\t\tcontent.setBackground(Color.getColor(\"Panel.background\"));\n\t\tif (defaultSize != null) {\n\t\t\tcontent.setMaximumSize(defaultSize);\n\t\t\tcontent.setPreferredSize(defaultSize);\n\t\t\tcontent.setMinimumSize(defaultSize);\n\t\t\tcontent.setSize(defaultSize);\n\t\t}\n\t\tpanel.add(content, BorderLayout.CENTER);\n\n\t\tif (modal)\n\t\t\tshowDialog(content, parentComponent, \"Text\", null, true);\n\t\telse\n\t\t\tJOptionPane.showMessageDialog(parentComponent, panel, \"Text\", INFORMATION_MESSAGE);\n\t}\n\n\tpublic static void showTextInput(String title, JTextArea textArea, Component component, ConfirmAction onSave) {\n\t\tfinal JPanel panel = new JPanel(new BorderLayout(5, 5));\n\t\tpanel.add(new JLabel(title + \" : \"), BorderLayout.NORTH);\n\t\tfinal JScrollPane content = new JScrollPane(textArea);\n\t\tcontent.setMaximumSize(new Dimension(800, 600));\n\t\tcontent.setPreferredSize(new Dimension(800, 600));\n\t\tcontent.setMinimumSize(new Dimension(800, 600));\n\t\tcontent.setSize(new Dimension(800, 600));\n\t\tpanel.add(content, BorderLayout.CENTER);\n\n\t\tshowDialog(panel, component, title, onSave);\n\t}\n\n\tpublic static void showException(String message, Throwable throwable, Component component) {\n\n\t\tfinal String stacktrace = printStackTrace(throwable);\n\n\t\tif (component != null) {\n\t\t\tfinal JPanel panel = new JPanel(new BorderLayout());\n\t\t\tpanel.add(new JLabel(message + \" : \"), BorderLayout.NORTH);\n\t\t\tfinal JScrollPane content = new JScrollPane(new JTextArea(stacktrace));\n\t\t\tcontent.setMaximumSize(new Dimension(800, 600));\n\t\t\tcontent.setPreferredSize(new Dimension(800, 600));\n\t\t\tcontent.setMinimumSize(new Dimension(800, 600));\n\t\t\tcontent.setSize(new Dimension(800, 600));\n\t\t\tpanel.add(content, BorderLayout.CENTER);\n\t\t\tJOptionPane.showMessageDialog(component, panel, \"Exception\", JOptionPane.ERROR_MESSAGE);\n\t\t} \n\t}\n\n\t@NotNull\n\tpublic static String printStackTrace(Throwable throwable) {\n\t\tfinal StringWriter stacktrace = new StringWriter();\n\t\tthrowable.printStackTrace(new PrintWriter(stacktrace));\n\t\treturn stacktrace.toString();\n\t}\n\n\tpublic static void showException(Throwable throwable, Component component) {\n\t\tshowException(\"\", throwable, component);\n\t}\n\n\tpublic static void showMessage(String message, Component component) {\n\t\tJOptionPane.showMessageDialog(component, message);\n\t}\n\n\tprivate static JFrame getFrame(Component child) {\n\t\treturn (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, child);\n\t}\n\n\tpublic static void showDialog(final Component content, final Component owner, String title) {\n\t\tshowDialog(content, owner, title, null);\n\t}\n\n\t// todo: combine showDialog and showDialogNoDefaultButton\n\n\tpublic static void showDialog(final Component content, final Component owner, String title, final ConfirmAction onSave) {\n\t\tshowDialog(content, owner, title, onSave, true);\n\t}\n\n\tpublic static void showDialog(final Component content, final Component owner, String title, final ConfirmAction onSave, boolean modal) {\n\t\tfinal JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, modal);\n\t\tfinal Component component = content instanceof FormPanel ? ((FormPanel) content).build() : (content instanceof DebugFormPanel ? ((DebugFormPanel) content)\n\t\t\t\t.build() : content);\n\t\tdialog.add(component, BorderLayout.CENTER);\n\t\tfinal JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));\n\n\t\tif (onSave != null) {\n\t\t\tJButton btnSave;\n\t\t\tcommandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {\n\t\t\t\t@Override\n\t\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tonSave.verifyAndCommit();\n\t\t\t\t\t\tdialog.dispose();\n\t\t\t\t\t} catch (Exception e1) {\n\t\t\t\t\t\tSwingUtil.showExceptionNoStack(content, e1);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}));\n\t\t\tdialog.getRootPane().setDefaultButton(btnSave);\n\t\t}\n\n\t\tcommandPanel.add(new JButton(new AbstractAction(onSave == null ? \"Close\" : onSave.getCancelTitle()) {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tSwingUtilities.invokeLater(dialog::dispose);\n\t\t\t}\n\t\t}));\n\t\tdialog.add(commandPanel, BorderLayout.SOUTH);\n\n\t\tshowDialog(dialog, owner);\n\t}\n\n\tpublic static void showDialog(final JDialog dialog, final Component owner) {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tdialog.pack();\n\t\t\tdialog.setLocationRelativeTo(owner);\n\t\t\tdialog.setVisible(true);\n\t\t});\n\t}\n\n\tpublic static String showInputDialog(String message, Component owner) {\n\t\tfinal String s = JOptionPane.showInputDialog(owner, message);\n\t\treturn s == null ? null : s.trim();\n\t}\n\n\tpublic static void showNameDialog(String message, Component owner, Consumer<String> onConfirm) {\n\t\tshowInputDialog(message, owner, new Dimension(800, 600), onConfirm);\n\t}\n\n\tpublic static void showInputDialog(String message, Component owner, Consumer<String> onConfirm) {\n\t\tshowInputDialog(message, owner, new Dimension(800, 600), onConfirm);\n\t}\n\n\tpublic static void showInputDialog(String message, Component owner, String startValue, Consumer<String> onConfirm) {\n\t\tshowInputDialog(message, owner, new Dimension(800, 600), startValue, onConfirm);\n\t}\n\n\tpublic static void showInputDialog(String message, Component owner, Dimension dimension, Consumer<String> onConfirm) {\n\t\tshowInputDialog(message, owner, dimension, null, onConfirm);\n\t}\n\n\tpublic static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {\n\n\t\tfinal RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();\n\t\trSyntaxTextArea.setText(startValue == null ? \"\" : startValue);\n\n\t\tfinal JPanel content = new JPanel(new BorderLayout());\n\t\tcontent.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);\n\t\tcontent.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));\n\t\tcontent.setPreferredSize(dimension);\n\n\t\tfinal JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);\n\t\tdialog.add(content, BorderLayout.CENTER);\n\t\tfinal JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));\n\n\t\tfinal ConfirmAction onSave = new ConfirmAction() {\n\t\t\t@Override\n\t\t\tpublic void verifyAndCommit() throws Exception {\n\t\t\t\tfinal String s = rSyntaxTextArea.getText().trim();\n\t\t\t\tif (s.trim().length() == 0) {\n\t\t\t\t\tdialog.dispose();\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tonConfirm.accept(s.trim());\n\t\t\t}\n\t\t};\n\n\t\trSyntaxTextArea.addKeyListener(new KeyAdapter() {\n\t\t\t@Override\n\t\t\tpublic void keyPressed(KeyEvent e) {\n\t\t\t\tif (e.isControlDown() && KeyEvent.VK_S == e.getKeyCode()) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tonSave.verifyAndCommit();\n\t\t\t\t\t\tdialog.dispose();\n\t\t\t\t\t} catch (Exception ex) {\n\t\t\t\t\t\tex.printStackTrace();\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\t\tJButton btnSave;\n\t\tcommandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\ttry {\n\t\t\t\t\tonSave.verifyAndCommit();\n\t\t\t\t\tdialog.dispose();\n\t\t\t\t} catch (Exception e1) {\n\t\t\t\t\tSwingUtil.showExceptionNoStack(content, e1);\n\t\t\t\t}\n\t\t\t}\n\t\t}));\n\t\tdialog.getRootPane().setDefaultButton(btnSave);\n\n\t\tcommandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tSwingUtilities.invokeLater(dialog::dispose);\n\t\t\t}\n\t\t}));\n\t\tdialog.add(commandPanel, BorderLayout.SOUTH);\n\n\t\tshowDialog(dialog, owner);\n\n\n\t}\n\n\tpublic static void showException(Component parent, Throwable t) {\n\t\tt.printStackTrace();\n\t\tfinal StringWriter stackTrace = new StringWriter();\n\t\tt.printStackTrace(new PrintWriter(stackTrace));\n\t\tJOptionPane.showMessageDialog(parent, t.getMessage() + \"\\n\" + stackTrace, \"Exception\", JOptionPane.ERROR_MESSAGE);\n\t}\n\n\tpublic static void showExceptionNoStack(Component parent, Throwable t) {\n\t\tJOptionPane.showMessageDialog(parent, t.getMessage(), \"Exception\", JOptionPane.ERROR_MESSAGE);\n\t}\n\n\tpublic static void setLookAndFeel_Nimbus() {\n\t\tsetLookAndFeel();\n\t}\n\n\tprivate static void setLookAndFeel() {\n\t\tfor (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {\n\t\t\tif (\"Nimbus\".equals(laf.getName())) {\n\t\t\t\ttry {\n\t\t\t\t\tUIManager.setLookAndFeel(laf.getClassName());\n\t\t\t\t} catch (Exception e) {\n\t\t\t\t\tSystem.err.println(\"Could not set look and feel '\" + \"Nimbus\" + \"': \" + e.getMessage());\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\tpublic static void printSwingDefaults(PrintStream out) {\n\n\t\tfinal UIDefaults uid = UIManager.getDefaults();\n\t\tfinal Enumeration<Object> uidKeys = uid.keys();\n\t\tfinal String cr = System.getProperty(\"line.separator\");\n\t\tfinal TreeMap<Object, Object> sortedMap = new TreeMap<>();\n\n\t\tObject uidKey;\n\t\twhile (uidKeys.hasMoreElements()) {\n\t\t\tuidKey = uidKeys.nextElement();\n\t\t\tsortedMap.put(uidKey.toString(), uid.get(uidKey));\n\t\t}\n\n\t\tfor (Object key : sortedMap.keySet()) out.print(key + \"=\" + sortedMap.get(key) + cr);\n\n//\t\tUIManager.put(\"OptionPane.cancelButtonText\", \"Cancel\");\n//\t\tUIManager.put(\"OptionPane.noButtonText\", \"No\");\n//\t\tUIManager.put(\"OptionPane.okButtonText\", \"Confirm\");\n//\t\tUIManager.put(\"OptionPane.yesButtonText\", \"Yes\");\n\t}\n\n\tpublic static void showDialog(final JDialog dialog, final Component relativeTo, final Component contentPane, final JButton confirmAction, final JButton cancelAction, final JButton defaultAction) {\n\t\tdialog.add(contentPane, BorderLayout.CENTER);\n\t\tfinal JPanel commandPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));\n\t\tcommandPane.add(confirmAction);\n\t\tcommandPane.add(cancelAction);\n\t\tdialog.add(commandPane, BorderLayout.SOUTH);\n\t\tdialog.getRootPane().setDefaultButton(defaultAction);\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tdialog.pack();\n\t\t\tif (relativeTo != null) dialog.setLocationRelativeTo(relativeTo);\n\t\t\tdialog.setVisible(true);\n\t\t});\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tprintSwingDefaults(System.out);\n\t}\n\n\tpublic static void show(final JFrame frame) {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tframe.pack();\n\t\t\tframe.setLocationByPlatform(true);\n\t\t\tframe.setVisible(true);\n\t\t});\n\t}\n\n\tpublic static void showPopup(final JPopupMenu pop, final Component invoker, final MouseEvent e) {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tpop.setInvoker(invoker);\n\t\t\tpop.show(invoker, e.getX(), e.getY());\n\t\t});\n\t}\n\n\tpublic static boolean showConfirmDialog(Component parent, String message) {\n\t\treturn JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(parent, message + \" ?\");\n\t}\n\n\tpublic static void showDialog(final JDialog dialog, final Dimension size, final Component owner) {\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\ttry {\n\t\t\t\tif (size == null) dialog.pack();\n\t\t\t\telse dialog.setSize(size);\n\t\t\t\tdialog.setLocationRelativeTo(owner);\n\t\t\t\tdialog.setVisible(true);\n\t\t\t} catch (Exception e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t});\n\t}\n\n\tpublic static <T> JComboBox<T> newComboBox(T[] enumValues, T selected) {\n\t\treturn newComboBox(new LinkedHashSet<>(Arrays.asList(enumValues)), selected);\n\t}\n\n\t@SuppressWarnings(\"unchecked\")\n\tpublic static <T> JComboBox<T> newComboBox(Set<T> enumValues, T selected) {\n\t\tfinal T[] values = (T[]) new Object[enumValues.size()];\n\t\tint index = 0;\n\t\tfor (T enumValue : enumValues)\n\t\t\tvalues[index++] = enumValue;\n\t\tfinal JComboBox<T> comboBox = new JComboBox<>(values);\n\t\tif (selected != null) comboBox.setSelectedItem(selected);\n\t\treturn comboBox;\n\t}\n\n\tpublic static abstract class ConfirmAction {\n\n\t\tprivate final String confirmTitle;\n\t\tprivate final String cancelTitle;\n\n\t\tpublic ConfirmAction() {\n\t\t\tthis(\"Save\", \"Cancel\");\n\t\t}\n\n\t\tpublic ConfirmAction(String confirmTitle, String cancelTitle) {\n\t\t\tthis.confirmTitle = confirmTitle;\n\t\t\tthis.cancelTitle = cancelTitle;\n\t\t}\n\n\t\tpublic abstract void verifyAndCommit() throws Exception;\n\n\t\tString getConfirmTitle() {\n\t\t\treturn confirmTitle;\n\t\t}\n\n\t\tString getCancelTitle() {\n\t\t\treturn cancelTitle;\n\t\t}\n\t}\n\n\tpublic static class DebugFormPanel extends FormDebugPanel {\n\n\t\tprivate final FormBuilder builder;\n\t\tprivate final CellConstraints cc;\n\t\tprivate final CellConstraints.Alignment colAlign;\n\t\tprivate final CellConstraints.Alignment rowAlign;\n\n\t\tDebugFormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.cc = new CellConstraints();\n\t\t\tthis.builder = FormBuilder.create().debug(true).columns(columns).rows(rows);\n\t\t\tthis.colAlign = colAlign;\n\t\t\tthis.rowAlign = rowAlign;\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row) {\n\t\t\tthis.add(component, column, row, 1, 1);\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.add(component, column, row, 1, 1, colAlign, rowAlign);\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, int colSpan, int rowSpan) {\n\t\t\tthis.add(component, column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);\n\t\t}\n\n\t\tpublic void addLabel(String text, int column, int row) {\n\t\t\tthis.addLabel(text, column, row, this.colAlign, this.rowAlign);\n\t\t}\n\n\t\tpublic void addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.addLabel(text, column, row, 1, 1, colAlign, rowAlign);\n\t\t}\n\n\t\tpublic void addLabel(String text, int column, int row, int colSpan, int rowSpan) {\n\t\t\tthis.add(new JLabel(text), column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);\n\t\t}\n\n\t\tpublic void addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tfinal JLabel label = new JLabel(text);\n\t\t\tlabel.setFont(label.getFont().deriveFont(Font.BOLD));\n\t\t\tthis.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);\n\t\t}\n\n\t\tpublic void addSeparator(String text, int column, int row, int colSpan, int rowSpan) {\n\t\t\tthis.builder.addSeparator(text, this.cc.xywh(column, row, colSpan, rowSpan));\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.builder.add(component).at(this.cc.xywh(column, row, colSpan, rowSpan, colAlign, rowAlign));\n\t\t}\n\n\t\tprotected void setTitledBorder(String title) {\n\t\t\tthis.setBorder(BorderFactory.createTitledBorder(\" \" + title + \" \"));\n\t\t}\n\n\t\tpublic JPanel build() {\n\t\t\treturn builder.build();\n\t\t}\n\t}\n\n\tpublic static class FormPanel extends JPanel {\n\t\tprivate final FormBuilder builder;\n\t\tprivate final CellConstraints cc;\n\t\tprivate final CellConstraints.Alignment colAlign;\n\t\tprivate final CellConstraints.Alignment rowAlign;\n\n\t\tpublic FormPanel() {\n\t\t\tthis(\"\", \"\");\n\t\t}\n\n\t\tpublic FormPanel(String columns, String rows) {\n\t\t\tthis(columns, rows, CellConstraints.FILL, CellConstraints.FILL);\n\t\t}\n\n\t\tpublic FormPanel(String columns, String rows, Component... components) {\n\t\t\tthis(columns, rows, CellConstraints.FILL, CellConstraints.FILL);\n\n\t\t\tfinal int columnCount = rows.split(\",\").length;\n\t\t\tint column = 1;\n\t\t\tint row = 1;\n\t\t\tfor (Component component : components) {\n\t\t\t\tadd(component, column, row);\n\t\t\t\tcolumn += 2;\n\t\t\t\tif (column > columnCount) {\n\t\t\t\t\tcolumn = 1;\n\t\t\t\t\trow += 2;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tsetBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));\n\t\t}\n\n\t\tpublic JPanel build() {\n\t\t\treturn builder.getPanel();\n\t\t}\n\n\t\tpublic FormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.cc = new CellConstraints();\n\t\t\tthis.builder = FormBuilder.create().columns(columns).rows(rows);\n\t\t\tthis.colAlign = colAlign;\n\t\t\tthis.rowAlign = rowAlign;\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row) {\n\t\t\tthis.add(component, column, row, 1, 1);\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.add(component, column, row, 1, 1, colAlign, rowAlign);\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, int colSpan, int rowSpan) {\n\t\t\tthis.add(component, column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);\n\t\t}\n\n\t\tpublic JLabel addLabel(String text, int column, int row) {\n\t\t\treturn this.addLabel(text, column, row, this.colAlign, this.rowAlign);\n\t\t}\n\n\t\tpublic JLabel addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\treturn this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);\n\t\t}\n\n\t\tpublic JLabel addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tfinal JLabel label = new JLabel(text);\n\t\t\tthis.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);\n\t\t\treturn label;\n\t\t}\n\n\t\tpublic void addSeparator(String text, int column, int row, int colSpan, int rowSpan) {\n\t\t\tthis.builder.addSeparator(text, this.cc.xywh(column, row, colSpan, rowSpan));\n\t\t}\n\n\t\tpublic void add(Component component, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {\n\t\t\tthis.builder.add(component).at(this.cc.xywh(column, row, colSpan, rowSpan, colAlign, rowAlign));\n\t\t}\n\n\t\tprotected void setTitledBorder(String title) {\n\t\t\tthis.setBorder(BorderFactory.createTitledBorder(\" \" + title + \" \"));\n\t\t}\n\t}\n\n\tpublic static void tryToHighlight(JTextComponent txtEditor, final List<String> selectedText, final Highlighter.HighlightPainter highlightPainter) {\n\t\tSwingUtilities.invokeLater(() -> highLight(txtEditor, selectedText, highlightPainter));\n\t}\n\n\tprivate static void highLight(JTextComponent textComp, Iterable<String> pattern, Highlighter.HighlightPainter highlightPainter) {\n\n\t\tremoveHighlights(textComp);\n\n\t\ttry {\n\n\t\t\t// escape '$' if its used in patterns:\n\t\t\tfinal StringBuilder out = new StringBuilder();\n\t\t\tboolean first = true;\n\t\t\tfor (String item : pattern) {\n\t\t\t\tif (!first) out.append(\"|\");\n\t\t\t\tfirst = false;\n\t\t\t\tout.append(item.replaceAll(\"\\\\\\$\", \"\\\\\\\\\\\\\\\\\\\\\\\\$\").replaceAll(\"\\\\\\(\", \"\\\\\\\\\\\\\\\\\\\\\\\\(\").replaceAll(\"\\\\\\)\", \"\\\\\\\\\\\\\\\\\\\\\\\\)\"));\n\t\t\t}\n\n\t\t\tfinal Pattern r = Pattern.compile(out.toString());\n\t\t\tfinal Matcher matcher = r.matcher(textComp.getText());\n\t\t\tfinal Highlighter highlighter = textComp.getHighlighter();\n\t\t\twhile (matcher.find()) {\n\t\t\t\thighlighter.addHighlight(matcher.start(), matcher.end(), highlightPainter);\n\t\t\t}\n\n\t\t} catch (BadLocationException ble) {\n\t\t\tble.printStackTrace();\n\t\t}\n\t}\n\n\tprivate static void removeHighlights(JTextComponent textComp) {\n\t\tfinal Highlighter highlighter = textComp.getHighlighter();\n\t\tfinal Highlighter.Highlight[] highlights = highlighter.getHighlights();\n\t\tfor (Highlighter.Highlight highlight : highlights) {\n\t\t\tif (highlight.getPainter() instanceof DefaultHighlighter.DefaultHighlightPainter) {\n\t\t\t\thighlighter.removeHighlight(highlight);\n\t\t\t}\n\t\t}\n\t}\n\n\tpublic static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea() {\n\t\treturn newRSyntaxTextArea(10, 80);\n\t}\n\n\tpublic static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {\n\t\treturn decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));\n\t}\n\n\tpublic static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {\n\n\t\trSyntaxTextArea.setTabSize(3);\n\t\trSyntaxTextArea.setHighlightCurrentLine(false);\n\t\trSyntaxTextArea.setSelectionColor(Color.decode(\"#2b8cbe\"));\n\t\trSyntaxTextArea.setBackground(UIManager.getColor(\"Panel.background\"));\n\t\trSyntaxTextArea.setForeground(UIManager.getColor(\"Tree.foreground\"));\n\t\trSyntaxTextArea.setFont(UIManager.getFont(\"TextField.font\"));\n\t\trSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {\n\n\t\t\t@Override\n\t\t\tpublic void keyPressed(java.awt.event.KeyEvent keyEvent) {\n\t\t\t\tif (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {\n\t\t\t\t\tformat(rSyntaxTextArea);\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\treturn rSyntaxTextArea;\n\t}\n\n\tpublic static RTextScrollPane newRTextScrollPane(RSyntaxTextArea rSyntaxTextArea) {\n\t\tfinal RTextScrollPane scrollPane = new RTextScrollPane(rSyntaxTextArea);\n\t\tscrollPane.setBackground(UIManager.getColor(\"Panel.background\"));\n\t\tscrollPane.getGutter().setBackground(scrollPane.getBackground());\n\t\tscrollPane.getGutter().setForeground(UIManager.getColor(\"TextField.foreground\"));\n\t\tscrollPane.getGutter().setFont(UIManager.getFont(\"TextField.font\").deriveFont(29f));\n\t\treturn scrollPane;\n\t}\n\n\tpublic static void format(JTextArea txtEditor) {\n\t\tfinal int caretPosition = txtEditor.getCaretPosition();\n\t\tfinal StringBuilder spaces = new StringBuilder();\n\t\tfor (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(\" \");\n\n\t\tString[] split = txtEditor.getText().split(\"\\n\");\n\t\tfinal StringBuilder formatted = new StringBuilder();\n\t\tfor (String s : split) formatted.append(s.replace(spaces, \"\\t\")).append(\"\\n\");\n\t\tsplit = formatted.toString().split(\"\\n\");\n\n\t\tfinal StringBuilder formatted2 = new StringBuilder();\n\t\tfor (String s : split) {\n\t\t\tif (s.trim().length() == 0) {\n\t\t\t\tformatted2.append(\"\\n\");\n\t\t\t\tcontinue;\n\t\t\t}\n\n\t\t\tfinal char[] c = s.toCharArray();\n\t\t\tfor (int i = 0; i < c.length; i++) {\n\t\t\t\tif (c[i] == '\\t') {\n\t\t\t\t\tformatted2.append(c[i]);\n\t\t\t\t\tcontinue;\n\t\t\t\t}\n\t\t\t\tif (c[i] == ' ') continue;\n\t\t\t\tformatted2.append(s.substring(i));\n\t\t\t\tbreak;\n\t\t\t}\n\n\t\t\tformatted2.append(\"\\n\");\n\t\t}\n\t\ttxtEditor.setText(formatted2.toString().trim());\n\t\ttxtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));\n\t}\n\n\tpublic static javax.swing.JTextField newTextField(int columns) {\n\t\treturn newTextField(\"\", columns);\n\t}\n\n\tpublic static javax.swing.JTextField newTextField(String content, int columns) {\n\t\tjavax.swing.JTextField textField = new javax.swing.JTextField(content, columns);\n\t\ttextField.addMouseListener(new java.awt.event.MouseAdapter() {\n\t\t\t@Override\n\t\t\tpublic void mouseClicked(java.awt.event.MouseEvent e) {\n\t\t\t\tif (javax.swing.SwingUtilities.isRightMouseButton(e))\n\t\t\t\t\tjavax.swing.SwingUtilities.invokeLater(() -> {\n\t\t\t\t\t\tfinal javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();\n\t\t\t\t\t\tpop.add(new AbstractAction(\"Set from clipboard\") {\n\t\t\t\t\t\t\t@Override\n\t\t\t\t\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\t\t\t\t\ttextField.setText(fromClipboard());\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tpop.show(textField, e.getX(), e.getY());\n\t\t\t\t\t});\n\t\t\t}\n\t\t});\n\t\ttextField.addFocusListener(new java.awt.event.FocusAdapter() {\n\t\t\t@Override\n\t\t\tpublic void focusGained(java.awt.event.FocusEvent evt) {\n\t\t\t\tjavax.swing.SwingUtilities.invokeLater(() -> ((javax.swing.JTextField) evt.getSource()).selectAll());\n\t\t\t}\n\n\t\t\t@Override\n\t\t\tpublic void focusLost(java.awt.event.FocusEvent evt) {\n\t\t\t\tjavax.swing.SwingUtilities.invokeLater(() -> {\n\t\t\t\t\t((javax.swing.JTextField) evt.getSource()).setSelectionStart(0);\n\t\t\t\t\t((javax.swing.JTextField) evt.getSource()).setSelectionEnd(0);\n\t\t\t\t});\n\t\t\t}\n\t\t});\n\t\treturn textField;\n\t}\n\n\tpublic static void showDialog(JComponent parent, JDialog dialog, JButton btnSave) {\n\n\t\tdialog.getRootPane().setDefaultButton(btnSave);\n\n\t\tfinal JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));\n\t\tcommandPanel.add(btnSave);\n\t\tcommandPanel.add(new JButton(new AbstractAction(\"Cancel\") {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tSwingUtilities.invokeLater(dialog::dispose);\n\t\t\t}\n\t\t}));\n\t\tdialog.add(commandPanel, BorderLayout.SOUTH);\n\n\t\tSwingUtilities.invokeLater(() -> {\n\t\t\tdialog.pack();\n\t\t\tdialog.setLocationRelativeTo(parent);\n\t\t\tdialog.setVisible(true);\n\t\t});\n\t}\n\n\tpublic static Optional<String> getInputFromUser(JComponent parent, String message) {\n\t\tfinal String s = SwingUtil.showInputDialog(message, parent);\n\t\treturn Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);\n\t}\n\n\tpublic static Optional<Boolean> confirm(JComponent parent, String description) {\n\t\tfinal boolean b = SwingUtil.showConfirmDialog(parent, description);\n\t\treturn Optional.ofNullable(b ? Boolean.TRUE : null);\n\t}\n\n\tprivate static class SelectFocusAdapter extends FocusAdapter {\n\n\t\t@Override\n\t\tpublic void focusGained(java.awt.event.FocusEvent evt) {\n\t\t\tSwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());\n\t\t}\n\n\t\t@Override\n\t\tpublic void focusLost(FocusEvent evt) {\n\t\t\tSwingUtilities.invokeLater(() -> {\n\t\t\t\t((JTextField) evt.getSource()).setSelectionStart(0);\n\t\t\t\t((JTextField) evt.getSource()).setSelectionEnd(0);\n\t\t\t});\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "4a2f2390-79a6-40e2-89d8-ca0b734ab4ed",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "75511520-477a-4c2b-9c14-cae15e0c5d10",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "be11b19c-b405-47c5-ad75-9cb9eee489dc",
+    "name" : "Actions",
+    "text" : "~packageName~; ",
+    "parameters" : [ {
+      "uuid" : "886b75e3-3ace-46f7-a236-fe859b5b59af",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "07f07639-dede-422d-bc01-e6ff3ea69aab",
+      "name" : "TransactionAction",
+      "text" : "package ~packageName~;\n\nimport org.neo4j.graphdb.Transaction;\n\nimport javax.swing.*;\nimport java.awt.event.ActionEvent;\n\npublic abstract class ~name~ extends AbstractAction {\n\n\t~name~(String name) {\n\t\tsuper(name);\n\t}\n\n\t@Override\n\tpublic void actionPerformed(ActionEvent actionEvent) {\n\t\t~appModelType~.getInstance()\n\t\t\t\t.getDomain()\n\t\t\t\t.doInTransaction(transaction -> actionPerformed(actionEvent, transaction, ~appModelType~.getInstance()));\n\t}\n\n\tprotected abstract void actionPerformed(ActionEvent actionEvent, Transaction transaction, ~appModelType~ appModel);\n} ",
+      "parameters" : [ {
+        "uuid" : "1103caa2-9f51-4b26-855b-67b36945abf6",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "691eaddc-e6f8-4d68-8f3c-e80a1da2bae1",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "4c65e2b5-1124-411d-ac67-0a23a6d714d0",
+        "name" : "appModelType",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "de7b7da7-eb36-4c3f-80c1-c1a84f590c73",
+      "name" : "EntityAction",
+      "text" : "package ~packageName~;\n\nimport nextgen.swing.SwingUtil;\nimport org.neo4j.graphdb.Transaction;\n\nimport java.awt.event.ActionEvent;\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ extends TransactionAction {\n\n\t~fields:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(\"~title~\");\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n\t@Override\n\tprotected void actionPerformed(ActionEvent actionEvent, Transaction transaction, ~appModelType~ appModel) {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~members:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "3bea1f04-1914-4322-8f1c-354005147d8a",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b461ae37-bb8d-4c48-ae6e-44b8c7960cfb",
+        "name" : "imports",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "22eae4a6-b034-45af-b409-aa935a3e56a4",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "08a1e087-798c-406a-bb6c-f3622b159df8",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "03a34229-c60d-45d4-b82d-632eedbeb6b6",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "1d25430f-4a7e-45bb-8d56-8b60edc77bd5",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "474b93b2-d3e9-4dad-829f-5c2671465ed3",
+        "name" : "title",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b5276402-2284-412c-ac5c-5d758a2be47d",
+        "name" : "appModelType",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e26a23ec-43fa-408d-99a4-0b6d85b0293d",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ff0acb6c-3efa-4938-8087-13a05550ea3c",
+        "name" : "members",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "3cc462df-14f5-42ef-a314-afa972e34dd8",
+    "name" : "App",
+    "text" : "package ~packageName~;\n\nimport nextgen.DomainFacade;\nimport nextgen.swing.components.navigation.Navigator;\nimport nextgen.swing.components.workspace.Workspace;\nimport nextgen.swing.config.AppConfig;\nimport nextgen.swing.config.AppConfigJsonFactory;\n\nimport javax.swing.*;\nimport java.awt.*;\nimport java.io.File;\nimport java.io.IOException;\n\npublic class ~name~ extends JFrame {\n\n   public ~name~(AppModel appModel) {\n      super(appModel.getTitle());\n\n      appModel.setFrame(this);\n\n      appModel.getDomain().doInTransaction(transaction -> {\n         final Navigator navigator = new Navigator();\n         final Workspace workspace = new Workspace();\n\n         final JPanel contentPanel = new JPanel(new BorderLayout());\n         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));\n         contentPanel.add(navigator, BorderLayout.WEST);\n         contentPanel.add(workspace, BorderLayout.CENTER);\n         contentPanel.setPreferredSize(appModel.getAppSize());\n         add(contentPanel, BorderLayout.CENTER);\n      });\n\n      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n   }\n\n   public static void main(String[] args) throws IOException {\n      SwingUtil.show(new ~name~(loadConfig(args)));\n   }\n\n   private static AppModel loadConfig(String[] args) throws IOException {\n\n      com.formdev.flatlaf.FlatDarculaLaf.install();\n\n      if (args.length == 0) {\n         final DomainFacade domainFacade = new DomainFacade(\"./db\");\n         return AppModel.getInstance()\n               .setEditorFontSize(12)\n               .setAppSize(new Dimension(1600, 1200))\n               .setNavigatorSize(new Dimension(400, 1200))\n               .setWorkspaceSize(new Dimension(1200, 1200))\n               .setOutputPackage(\"nextgen.templates\")\n               .setOutputPath(\"./src/main/java\")\n               .setRootDir(\".\")\n               .setTitle(\"~name~\")\n               .setDomain(domainFacade);\n      }\n\n      final AppConfig appConfig = AppConfigJsonFactory.newAppConfig(new File(args[0]));\n      final DomainFacade domainFacade = new DomainFacade(appConfig.getDbDir());\n      return AppModel.getInstance()\n            .setEditorFontSize(appConfig.getEditorFontSize())\n            .setAppSize(new Dimension(appConfig.getAppWidth(), appConfig.getAppHeight()))\n            .setNavigatorSize(new Dimension(appConfig.getNavigatorWidth(), appConfig.getNavigatorHeight()))\n            .setWorkspaceSize(new Dimension(appConfig.getWorkspaceWidth(), appConfig.getWorkspaceHeight()))\n            .setOutputPackage(appConfig.getOutputPackage())\n            .setOutputPath(appConfig.getOutputPath())\n            .setRootDir(appConfig.getRootDir())\n            .setTitle(appConfig.getTitle())\n            .setDomain(domainFacade);\n   }\n} ",
+    "parameters" : [ {
+      "uuid" : "ef7865fa-118a-4c28-a630-884ff5ac3e4f",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "53bd5215-661c-47a5-8f38-a20edb51f1ec",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

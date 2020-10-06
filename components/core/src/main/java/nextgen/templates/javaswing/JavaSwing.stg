@@ -1,0 +1,1274 @@
+delimiters "~","~"
+
+Actions(packageName) ::= <<~packageName~;  >>
+
+TransactionAction(packageName,name,appModelType) ::= <<package ~packageName~;
+
+import org.neo4j.graphdb.Transaction;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+public abstract class ~name~ extends AbstractAction {
+
+	~name~(String name) {
+		super(name);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		~appModelType~.getInstance()
+				.getDomain()
+				.doInTransaction(transaction -> actionPerformed(actionEvent, transaction, ~appModelType~.getInstance()));
+	}
+
+	protected abstract void actionPerformed(ActionEvent actionEvent, Transaction transaction, ~appModelType~ appModel);
+}  >>
+
+EntityAction(packageName,imports,name,fields,title,appModelType,statements,members) ::= <<package ~packageName~;
+
+import nextgen.swing.SwingUtil;
+import org.neo4j.graphdb.Transaction;
+
+import java.awt.event.ActionEvent;
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends TransactionAction {
+
+	~fields:{it|~it.type~ ~it.name~;};separator="\n"~
+	
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super("~title~");
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	protected void actionPerformed(ActionEvent actionEvent, Transaction transaction, ~appModelType~ appModel) {
+		~statements:{it|~it~};separator="\n"~
+	}
+
+	~members:{it|~it~};separator="\n\n"~
+}  >>
+
+App(packageName,name) ::= <<package ~packageName~;
+
+import nextgen.DomainFacade;
+import nextgen.swing.components.navigation.Navigator;
+import nextgen.swing.components.workspace.Workspace;
+import nextgen.swing.config.AppConfig;
+import nextgen.swing.config.AppConfigJsonFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
+public class ~name~ extends JFrame {
+
+   public ~name~(AppModel appModel) {
+      super(appModel.getTitle());
+
+      appModel.setFrame(this);
+
+      appModel.getDomain().doInTransaction(transaction -> {
+         final Navigator navigator = new Navigator();
+         final Workspace workspace = new Workspace();
+
+         final JPanel contentPanel = new JPanel(new BorderLayout());
+         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+         contentPanel.add(navigator, BorderLayout.WEST);
+         contentPanel.add(workspace, BorderLayout.CENTER);
+         contentPanel.setPreferredSize(appModel.getAppSize());
+         add(contentPanel, BorderLayout.CENTER);
+      });
+
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   }
+
+   public static void main(String[] args) throws IOException {
+      SwingUtil.show(new ~name~(loadConfig(args)));
+   }
+
+   private static AppModel loadConfig(String[] args) throws IOException {
+
+      com.formdev.flatlaf.FlatDarculaLaf.install();
+
+      if (args.length == 0) {
+         final DomainFacade domainFacade = new DomainFacade("./db");
+         return AppModel.getInstance()
+               .setEditorFontSize(12)
+               .setAppSize(new Dimension(1600, 1200))
+               .setNavigatorSize(new Dimension(400, 1200))
+               .setWorkspaceSize(new Dimension(1200, 1200))
+               .setOutputPackage("nextgen.templates")
+               .setOutputPath("./src/main/java")
+               .setRootDir(".")
+               .setTitle("~name~")
+               .setDomain(domainFacade);
+      }
+
+      final AppConfig appConfig = AppConfigJsonFactory.newAppConfig(new File(args[0]));
+      final DomainFacade domainFacade = new DomainFacade(appConfig.getDbDir());
+      return AppModel.getInstance()
+            .setEditorFontSize(appConfig.getEditorFontSize())
+            .setAppSize(new Dimension(appConfig.getAppWidth(), appConfig.getAppHeight()))
+            .setNavigatorSize(new Dimension(appConfig.getNavigatorWidth(), appConfig.getNavigatorHeight()))
+            .setWorkspaceSize(new Dimension(appConfig.getWorkspaceWidth(), appConfig.getWorkspaceHeight()))
+            .setOutputPackage(appConfig.getOutputPackage())
+            .setOutputPath(appConfig.getOutputPath())
+            .setRootDir(appConfig.getRootDir())
+            .setTitle(appConfig.getTitle())
+            .setDomain(domainFacade);
+   }
+}  >>
+
+JPanel(innerClass,packageName,imports,name,fields,constructorParameters,constructorStatements,methods) ::= <<~if(innerClass)~~else~package ~packageName~;
+
+import javax.swing.*;
+import java.awt.*;
+
+~imports:{it|~it~};separator="\n"~
+~endif~
+public class ~name~ extends javax.swing.JPanel {
+
+	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	
+	public ~name~(~constructorParameters:{it|~it.type~ ~it.name~};separator=", "~) {
+		super(new java.awt.BorderLayout());
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+Editor(packageName,name) ::= <<package ~packageName~;
+
+import nextgen.DomainFacade;
+import nextgen.swing.AppModel;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class ~name~<T> extends JPanel {
+
+	protected final T model;
+	private String title;
+
+	public ~name~(T model, String title) {
+		super(new BorderLayout());
+		this.model = model;
+		this.title = title;
+		setBackground(java.awt.Color.BLACK);
+	}
+
+	public T getModel() {
+		return model;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	protected DomainFacade getDomain() {
+		return AppModel.getInstance().getDomain();
+	}
+}  >>
+
+ModelEditor(packageName,imports,name,modelType,background,statements,methods,innerClasses) ::= <<package ~packageName~;
+
+import nextgen.swing.SwingUtil;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends Editor<~modelType~> {
+
+   public ~name~(~modelType~ model) {
+      super(model, model.getName());
+      setBackground(java.awt.Color.~background~);
+      ~statements:{it|~it~};separator="\n"~
+   }
+
+   ~methods:{it|~it~};separator="\n\n"~
+
+   ~innerClasses:{it|~it~};separator="\n\n"~
+}  >>
+
+JTabbedPane(packageName,imports,name,constructorStatements,methods) ::= <<package ~packageName~;
+
+import javax.swing.*;
+import java.awt.Component;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends JTabbedPane {
+
+	public ~name~() {
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
+		for (int i = 0; i < getTabCount(); i++) 
+			if (predicate.test(getComponentAt(i)))
+				return Optional.of((T) getComponentAt(i));
+		return Optional.empty();
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+ButtonTab(packageName,name) ::= <<package ~packageName~;
+
+import javax.swing.*;
+import java.awt.*;
+
+class ~name~ extends JPanel {
+
+	~name~(final JTabbedPane pane, String title, JComponent component) {
+		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		setOpaque(false);
+
+		final JLabel label = new JLabel(title);
+		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		add(label);
+
+		final java.net.URL resource = getClass().getClassLoader().getResource("icons/close12x12.png");
+		final JButton btnClose = new JButton(new ImageIcon(resource));
+		final Dimension dimension = new Dimension(12, 16);
+		btnClose.setMaximumSize(dimension);
+		btnClose.setPreferredSize(dimension);
+		btnClose.setMinimumSize(dimension);
+		btnClose.setOpaque(false);
+		btnClose.setContentAreaFilled(false);
+		btnClose.setBorderPainted(false);
+		btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
+		add(btnClose);
+	}
+}  >>
+
+JTree(packageName,imports,name,treeModel,nodeType) ::= <<package ~packageName~;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends JTree {
+
+	public ~name~(~treeModel~ model) {
+		setModel(model);
+		setCellRenderer(new ~name~CellRenderer());
+		addMouseListener(new ~name~MouseListener());
+	}
+
+	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {
+		@Override
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+			final ~nodeType~ node = (~nodeType~) value;
+			final ImageIcon icon = node.getIcon();
+			setIcon(icon);
+			setOpenIcon(icon);
+			setClosedIcon(icon);
+			setLeafIcon(icon);
+			setToolTipText(node.getTooltip());
+			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);
+		}
+	}
+
+	private final class ~name~MouseListener extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+
+			final TreePath selectionPath = getPathForLocation(e.getX(), e.getY());
+			if (selectionPath == null) return;
+			final ~nodeType~<?> node = (~nodeType~<?>) selectionPath.getLastPathComponent();
+
+			if (SwingUtilities.isRightMouseButton(e)) {
+
+				final JPopupMenu pop = new JPopupMenu();
+				for (Action action : node.getActions())
+					pop.add(action);
+
+				SwingUtilities.invokeLater(() -> pop.show(~name~.this, e.getX(), e.getY()));
+
+			} else {
+
+				node.setSelected();
+			}
+		}
+	}
+}  >>
+
+BaseTreeNode(packageName,name,methods) ::= <<package ~packageName~;
+
+import javax.swing.*;
+import javax.swing.tree.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ~name~<T> extends DefaultMutableTreeNode {
+
+	private String label;
+	private ImageIcon icon;
+	private String tooltip;
+	private String uuid;
+
+	public ~name~(T model) {
+		setUserObject(model);
+		this.label = "";
+		this.icon = null;
+		this.tooltip = "";
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
+
+	public ~name~(T model, String uuid) {
+		setUserObject(model);
+		this.label = "NO_NAME";
+		this.icon = null;
+		this.tooltip = "";
+		this.uuid = uuid;
+	}
+	
+	public ~name~(T model, String uuid, String label, ImageIcon icon, String tooltip) {
+		setUserObject(model);
+		this.label = label;
+		this.icon = icon;
+		this.tooltip = tooltip;
+		this.uuid = uuid;
+	}
+
+	@SuppressWarnings("unchecked")
+	T getModel() { return (T) this.getUserObject(); }
+
+	String getLabel() { return label; }
+
+	void setLabel(String value) { this.label = value == null || value.trim().length() == 0 ? "NO_NAME" : value; }
+
+	ImageIcon getIcon() { return icon; }
+
+	void setIcon(ImageIcon value) { this.icon = value; }
+
+	String getTooltip() { return tooltip; }
+
+	void setTooltip(String value) { this.tooltip = tooltip; }
+
+	String getUuid() {
+		return uuid;
+	}
+	
+	~methods:{it|~it~};separator="\n\n"~
+
+	List<Action> getActions() {
+		return new ArrayList<>();
+	}
+
+	public void setSelected() {
+	}
+}  >>
+
+TreeModel(packageName,imports,name,nodeType,constructorStatements,methods) ::= <<package ~packageName~;
+
+import javax.swing.tree.*;
+import java.util.Optional;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends DefaultTreeModel {
+
+	public ~name~(~nodeType~ root) {
+		super(root);
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+
+	protected Optional<NavigatorTreeNode<?>~gt()~ find(java.util.function.Predicate<NavigatorTreeNode<?>~gt()~ predicate) {
+		return find((NavigatorTreeNode<?>) getRoot(), predicate);
+	}
+
+	protected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {
+		return find((NavigatorTreeNode<?>) getRoot(), navigatorTreeNode ->
+				navigatorTreeNode.getClass().isAssignableFrom(nodeType));
+	}
+
+	protected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+		return find((NavigatorTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+				.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+	}
+
+	protected <T extends NavigatorTreeNode<?>~gt()~ Optional<T> find(NavigatorTreeNode<?> parent, java.util.function.Predicate<NavigatorTreeNode<?>~gt()~ predicate) {
+		final int childCount = parent.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			final NavigatorTreeNode<?> childAt = (NavigatorTreeNode<?>) parent.getChildAt(i);
+			if (predicate.test(childAt))
+				return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
+			else {
+				final Optional<T> node = find(childAt, predicate);
+				if (node.isPresent()) return node;
+			}
+		}
+		return Optional.empty();
+	}
+
+	private void addNodeInSortedOrder(NavigatorTreeNode<?> parent, NavigatorTreeNode<?> child) {
+
+		int n = parent.getChildCount();
+		if (n == 0) {
+			parent.add(child);
+			nodesWereInserted(parent, new int[]{n});
+			return;
+		}
+
+		for (int i = 0; i < n; i++) {
+			final NavigatorTreeNode<?> node = (NavigatorTreeNode<?>) parent.getChildAt(i);
+			if (node.getLabel().compareTo(child.getLabel()) > 0) {
+				parent.insert(child, i);
+				nodesWereInserted(parent, new int[]{i});
+				return;
+			}
+		}
+
+		parent.add(child);
+		nodesWereInserted(parent, new int[]{n});
+	}
+}  >>
+
+TreeNode(packageName,imports,name,baseTreeNode,type,uuidExpression,constructorStatements,actions,selectedStatements,methods) ::= <<package ~packageName~;
+
+import javax.swing.*;
+import javax.swing.tree.*;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ extends ~baseTreeNode~<~type~> {
+
+	public ~name~(~type~ model) {
+		super(model~if(uuidExpression)~, ~uuidExpression~~endif~);
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	java.util.List<Action> getActions() {
+		final java.util.List<Action> actions = super.getActions();
+		~actions:{it|~it~};separator="\n"~
+		return actions;
+	}
+
+	@Override
+	public void setSelected() {
+		~selectedStatements:{it|~it~};separator="\n"~
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+GetTreeNodeAction(name,arguments) ::= <<actions.add(new ~name~(~arguments:{it|~it.name~};separator=", "~));  >>
+
+SwingUtil(packageName,name) ::= <<package ~packageName~;
+
+import com.jgoodies.forms.builder.FormBuilder;
+import com.jgoodies.forms.debug.FormDebugPanel;
+import com.jgoodies.forms.layout.CellConstraints;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static javax.swing.JOptionPane.*;
+
+public class ~name~ {
+
+	public static Font getDefaultFont() {
+		return new Font("Hack", Font.PLAIN, 20);
+	}
+
+	public static JTextField newTextField() {
+		return new JTextField();
+	}
+
+	public static String fromClipboard() {
+		final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		final Transferable contents = clipboard.getContents(null);
+		if ((contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+			try {
+				return (String) contents.getTransferData(DataFlavor.stringFlavor);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		}
+		return "";
+	}
+
+	public static void toClipboard(String content) {
+		StringSelection stringSelection = new StringSelection(content);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(stringSelection, (clipboard1, contents) -> {
+			// don't care ?
+		});
+	}
+
+	public static void showPanel(final JComponent component) {
+		SwingUtil.setLookAndFeel_Nimbus();
+
+		final JFrame frame = new JFrame();
+		frame.getContentPane().add(component, BorderLayout.CENTER);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		show(frame);
+	}
+
+	public static File showOpenDir(Component parent, String dir) {
+		final JFileChooser fc = dir == null || (!new File(dir).isDirectory()) ? new JFileChooser() : new JFileChooser(dir);
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		final int result = fc.showOpenDialog(parent);
+		return JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null;
+	}
+
+	public static Optional<File> showOpenFile(Component parent, String dir) {
+		final JFileChooser fc = dir == null ? new JFileChooser() : new JFileChooser(new File(dir).isDirectory() ? new File(dir) : new File(dir)
+				.getParentFile());
+		final int result = fc.showOpenDialog(parent);
+		return Optional.ofNullable(JFileChooser.APPROVE_OPTION == result ? fc.getSelectedFile() : null);
+	}
+
+	public static void showTextResult(String title, String text, Component parentComponent) {
+		showTextResult(title, text, parentComponent, true);
+	}
+
+	public static void showTextResult(String title, String text, Component parentComponent, boolean modal) {
+		showTextResult(title, text, parentComponent, new Dimension(800, 600), modal);
+	}
+
+	public static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize, boolean modal) {
+		final JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
+
+		final JTextArea txtEditor = new JTextArea(text);
+		txtEditor.setBackground(UIManager.getColor("Panel.background"));
+		txtEditor.setTabSize(3);
+		txtEditor.setCaretPosition(0);
+
+		final JScrollPane content = new JScrollPane(txtEditor);
+		content.setBackground(Color.getColor("Panel.background"));
+		if (defaultSize != null) {
+			content.setMaximumSize(defaultSize);
+			content.setPreferredSize(defaultSize);
+			content.setMinimumSize(defaultSize);
+			content.setSize(defaultSize);
+		}
+		panel.add(content, BorderLayout.CENTER);
+
+		if (modal)
+			showDialog(content, parentComponent, "Text", null, true);
+		else
+			JOptionPane.showMessageDialog(parentComponent, panel, "Text", INFORMATION_MESSAGE);
+	}
+
+	public static void showTextInput(String title, JTextArea textArea, Component component, ConfirmAction onSave) {
+		final JPanel panel = new JPanel(new BorderLayout(5, 5));
+		panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
+		final JScrollPane content = new JScrollPane(textArea);
+		content.setMaximumSize(new Dimension(800, 600));
+		content.setPreferredSize(new Dimension(800, 600));
+		content.setMinimumSize(new Dimension(800, 600));
+		content.setSize(new Dimension(800, 600));
+		panel.add(content, BorderLayout.CENTER);
+
+		showDialog(panel, component, title, onSave);
+	}
+
+	public static void showException(String message, Throwable throwable, Component component) {
+
+		final String stacktrace = printStackTrace(throwable);
+
+		if (component != null) {
+			final JPanel panel = new JPanel(new BorderLayout());
+			panel.add(new JLabel(message + " : "), BorderLayout.NORTH);
+			final JScrollPane content = new JScrollPane(new JTextArea(stacktrace));
+			content.setMaximumSize(new Dimension(800, 600));
+			content.setPreferredSize(new Dimension(800, 600));
+			content.setMinimumSize(new Dimension(800, 600));
+			content.setSize(new Dimension(800, 600));
+			panel.add(content, BorderLayout.CENTER);
+			JOptionPane.showMessageDialog(component, panel, "Exception", JOptionPane.ERROR_MESSAGE);
+		} 
+	}
+
+	@NotNull
+	public static String printStackTrace(Throwable throwable) {
+		final StringWriter stacktrace = new StringWriter();
+		throwable.printStackTrace(new PrintWriter(stacktrace));
+		return stacktrace.toString();
+	}
+
+	public static void showException(Throwable throwable, Component component) {
+		showException("", throwable, component);
+	}
+
+	public static void showMessage(String message, Component component) {
+		JOptionPane.showMessageDialog(component, message);
+	}
+
+	private static JFrame getFrame(Component child) {
+		return (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, child);
+	}
+
+	public static void showDialog(final Component content, final Component owner, String title) {
+		showDialog(content, owner, title, null);
+	}
+
+	// todo: combine showDialog and showDialogNoDefaultButton
+
+	public static void showDialog(final Component content, final Component owner, String title, final ConfirmAction onSave) {
+		showDialog(content, owner, title, onSave, true);
+	}
+
+	public static void showDialog(final Component content, final Component owner, String title, final ConfirmAction onSave, boolean modal) {
+		final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, modal);
+		final Component component = content instanceof FormPanel ? ((FormPanel) content).build() : (content instanceof DebugFormPanel ? ((DebugFormPanel) content)
+				.build() : content);
+		dialog.add(component, BorderLayout.CENTER);
+		final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+		if (onSave != null) {
+			JButton btnSave;
+			commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						onSave.verifyAndCommit();
+						dialog.dispose();
+					} catch (Exception e1) {
+						SwingUtil.showExceptionNoStack(content, e1);
+					}
+				}
+			}));
+			dialog.getRootPane().setDefaultButton(btnSave);
+		}
+
+		commandPanel.add(new JButton(new AbstractAction(onSave == null ? "Close" : onSave.getCancelTitle()) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(dialog::dispose);
+			}
+		}));
+		dialog.add(commandPanel, BorderLayout.SOUTH);
+
+		showDialog(dialog, owner);
+	}
+
+	public static void showDialog(final JDialog dialog, final Component owner) {
+		SwingUtilities.invokeLater(() -> {
+			dialog.pack();
+			dialog.setLocationRelativeTo(owner);
+			dialog.setVisible(true);
+		});
+	}
+
+	public static String showInputDialog(String message, Component owner) {
+		final String s = JOptionPane.showInputDialog(owner, message);
+		return s == null ? null : s.trim();
+	}
+
+	public static void showNameDialog(String message, Component owner, Consumer<String> onConfirm) {
+		showInputDialog(message, owner, new Dimension(800, 600), onConfirm);
+	}
+
+	public static void showInputDialog(String message, Component owner, Consumer<String> onConfirm) {
+		showInputDialog(message, owner, new Dimension(800, 600), onConfirm);
+	}
+
+	public static void showInputDialog(String message, Component owner, String startValue, Consumer<String> onConfirm) {
+		showInputDialog(message, owner, new Dimension(800, 600), startValue, onConfirm);
+	}
+
+	public static void showInputDialog(String message, Component owner, Dimension dimension, Consumer<String> onConfirm) {
+		showInputDialog(message, owner, dimension, null, onConfirm);
+	}
+
+	public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {
+
+		final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();
+		rSyntaxTextArea.setText(startValue == null ? "" : startValue);
+
+		final JPanel content = new JPanel(new BorderLayout());
+		content.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
+		content.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		content.setPreferredSize(dimension);
+
+		final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
+		dialog.add(content, BorderLayout.CENTER);
+		final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+		final ConfirmAction onSave = new ConfirmAction() {
+			@Override
+			public void verifyAndCommit() throws Exception {
+				final String s = rSyntaxTextArea.getText().trim();
+				if (s.trim().length() == 0) {
+					dialog.dispose();
+					return;
+				}
+				onConfirm.accept(s.trim());
+			}
+		};
+
+		rSyntaxTextArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.isControlDown() && KeyEvent.VK_S == e.getKeyCode()) {
+					try {
+						onSave.verifyAndCommit();
+						dialog.dispose();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+		JButton btnSave;
+		commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					onSave.verifyAndCommit();
+					dialog.dispose();
+				} catch (Exception e1) {
+					SwingUtil.showExceptionNoStack(content, e1);
+				}
+			}
+		}));
+		dialog.getRootPane().setDefaultButton(btnSave);
+
+		commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(dialog::dispose);
+			}
+		}));
+		dialog.add(commandPanel, BorderLayout.SOUTH);
+
+		showDialog(dialog, owner);
+
+
+	}
+
+	public static void showException(Component parent, Throwable t) {
+		t.printStackTrace();
+		final StringWriter stackTrace = new StringWriter();
+		t.printStackTrace(new PrintWriter(stackTrace));
+		JOptionPane.showMessageDialog(parent, t.getMessage() + "\n" + stackTrace, "Exception", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public static void showExceptionNoStack(Component parent, Throwable t) {
+		JOptionPane.showMessageDialog(parent, t.getMessage(), "Exception", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public static void setLookAndFeel_Nimbus() {
+		setLookAndFeel();
+	}
+
+	private static void setLookAndFeel() {
+		for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
+			if ("Nimbus".equals(laf.getName())) {
+				try {
+					UIManager.setLookAndFeel(laf.getClassName());
+				} catch (Exception e) {
+					System.err.println("Could not set look and feel '" + "Nimbus" + "': " + e.getMessage());
+				}
+			}
+		}
+	}
+
+	public static void printSwingDefaults(PrintStream out) {
+
+		final UIDefaults uid = UIManager.getDefaults();
+		final Enumeration<Object> uidKeys = uid.keys();
+		final String cr = System.getProperty("line.separator");
+		final TreeMap<Object, Object> sortedMap = new TreeMap<>();
+
+		Object uidKey;
+		while (uidKeys.hasMoreElements()) {
+			uidKey = uidKeys.nextElement();
+			sortedMap.put(uidKey.toString(), uid.get(uidKey));
+		}
+
+		for (Object key : sortedMap.keySet()) out.print(key + "=" + sortedMap.get(key) + cr);
+
+//		UIManager.put("OptionPane.cancelButtonText", "Cancel");
+//		UIManager.put("OptionPane.noButtonText", "No");
+//		UIManager.put("OptionPane.okButtonText", "Confirm");
+//		UIManager.put("OptionPane.yesButtonText", "Yes");
+	}
+
+	public static void showDialog(final JDialog dialog, final Component relativeTo, final Component contentPane, final JButton confirmAction, final JButton cancelAction, final JButton defaultAction) {
+		dialog.add(contentPane, BorderLayout.CENTER);
+		final JPanel commandPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		commandPane.add(confirmAction);
+		commandPane.add(cancelAction);
+		dialog.add(commandPane, BorderLayout.SOUTH);
+		dialog.getRootPane().setDefaultButton(defaultAction);
+		SwingUtilities.invokeLater(() -> {
+			dialog.pack();
+			if (relativeTo != null) dialog.setLocationRelativeTo(relativeTo);
+			dialog.setVisible(true);
+		});
+	}
+
+	public static void main(String[] args) {
+		printSwingDefaults(System.out);
+	}
+
+	public static void show(final JFrame frame) {
+		SwingUtilities.invokeLater(() -> {
+			frame.pack();
+			frame.setLocationByPlatform(true);
+			frame.setVisible(true);
+		});
+	}
+
+	public static void showPopup(final JPopupMenu pop, final Component invoker, final MouseEvent e) {
+		SwingUtilities.invokeLater(() -> {
+			pop.setInvoker(invoker);
+			pop.show(invoker, e.getX(), e.getY());
+		});
+	}
+
+	public static boolean showConfirmDialog(Component parent, String message) {
+		return JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(parent, message + " ?");
+	}
+
+	public static void showDialog(final JDialog dialog, final Dimension size, final Component owner) {
+		SwingUtilities.invokeLater(() -> {
+			try {
+				if (size == null) dialog.pack();
+				else dialog.setSize(size);
+				dialog.setLocationRelativeTo(owner);
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	public static <T> JComboBox<T> newComboBox(T[] enumValues, T selected) {
+		return newComboBox(new LinkedHashSet<>(Arrays.asList(enumValues)), selected);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> JComboBox<T> newComboBox(Set<T> enumValues, T selected) {
+		final T[] values = (T[]) new Object[enumValues.size()];
+		int index = 0;
+		for (T enumValue : enumValues)
+			values[index++] = enumValue;
+		final JComboBox<T> comboBox = new JComboBox<>(values);
+		if (selected != null) comboBox.setSelectedItem(selected);
+		return comboBox;
+	}
+
+	public static abstract class ConfirmAction {
+
+		private final String confirmTitle;
+		private final String cancelTitle;
+
+		public ConfirmAction() {
+			this("Save", "Cancel");
+		}
+
+		public ConfirmAction(String confirmTitle, String cancelTitle) {
+			this.confirmTitle = confirmTitle;
+			this.cancelTitle = cancelTitle;
+		}
+
+		public abstract void verifyAndCommit() throws Exception;
+
+		String getConfirmTitle() {
+			return confirmTitle;
+		}
+
+		String getCancelTitle() {
+			return cancelTitle;
+		}
+	}
+
+	public static class DebugFormPanel extends FormDebugPanel {
+
+		private final FormBuilder builder;
+		private final CellConstraints cc;
+		private final CellConstraints.Alignment colAlign;
+		private final CellConstraints.Alignment rowAlign;
+
+		DebugFormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.cc = new CellConstraints();
+			this.builder = FormBuilder.create().debug(true).columns(columns).rows(rows);
+			this.colAlign = colAlign;
+			this.rowAlign = rowAlign;
+		}
+
+		public void add(Component component, int column, int row) {
+			this.add(component, column, row, 1, 1);
+		}
+
+		public void add(Component component, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.add(component, column, row, 1, 1, colAlign, rowAlign);
+		}
+
+		public void add(Component component, int column, int row, int colSpan, int rowSpan) {
+			this.add(component, column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
+		}
+
+		public void addLabel(String text, int column, int row) {
+			this.addLabel(text, column, row, this.colAlign, this.rowAlign);
+		}
+
+		public void addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);
+		}
+
+		public void addLabel(String text, int column, int row, int colSpan, int rowSpan) {
+			this.add(new JLabel(text), column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
+		}
+
+		public void addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			final JLabel label = new JLabel(text);
+			label.setFont(label.getFont().deriveFont(Font.BOLD));
+			this.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);
+		}
+
+		public void addSeparator(String text, int column, int row, int colSpan, int rowSpan) {
+			this.builder.addSeparator(text, this.cc.xywh(column, row, colSpan, rowSpan));
+		}
+
+		public void add(Component component, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.builder.add(component).at(this.cc.xywh(column, row, colSpan, rowSpan, colAlign, rowAlign));
+		}
+
+		protected void setTitledBorder(String title) {
+			this.setBorder(BorderFactory.createTitledBorder(" " + title + " "));
+		}
+
+		public JPanel build() {
+			return builder.build();
+		}
+	}
+
+	public static class FormPanel extends JPanel {
+		private final FormBuilder builder;
+		private final CellConstraints cc;
+		private final CellConstraints.Alignment colAlign;
+		private final CellConstraints.Alignment rowAlign;
+
+		public FormPanel() {
+			this("", "");
+		}
+
+		public FormPanel(String columns, String rows) {
+			this(columns, rows, CellConstraints.FILL, CellConstraints.FILL);
+		}
+
+		public FormPanel(String columns, String rows, Component... components) {
+			this(columns, rows, CellConstraints.FILL, CellConstraints.FILL);
+
+			final int columnCount = rows.split(",").length;
+			int column = 1;
+			int row = 1;
+			for (Component component : components) {
+				add(component, column, row);
+				column += 2;
+				if (column > columnCount) {
+					column = 1;
+					row += 2;
+				}
+			}
+
+			setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		}
+
+		public JPanel build() {
+			return builder.getPanel();
+		}
+
+		public FormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.cc = new CellConstraints();
+			this.builder = FormBuilder.create().columns(columns).rows(rows);
+			this.colAlign = colAlign;
+			this.rowAlign = rowAlign;
+		}
+
+		public void add(Component component, int column, int row) {
+			this.add(component, column, row, 1, 1);
+		}
+
+		public void add(Component component, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.add(component, column, row, 1, 1, colAlign, rowAlign);
+		}
+
+		public void add(Component component, int column, int row, int colSpan, int rowSpan) {
+			this.add(component, column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
+		}
+
+		public JLabel addLabel(String text, int column, int row) {
+			return this.addLabel(text, column, row, this.colAlign, this.rowAlign);
+		}
+
+		public JLabel addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			return this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);
+		}
+
+		public JLabel addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			final JLabel label = new JLabel(text);
+			this.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);
+			return label;
+		}
+
+		public void addSeparator(String text, int column, int row, int colSpan, int rowSpan) {
+			this.builder.addSeparator(text, this.cc.xywh(column, row, colSpan, rowSpan));
+		}
+
+		public void add(Component component, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			this.builder.add(component).at(this.cc.xywh(column, row, colSpan, rowSpan, colAlign, rowAlign));
+		}
+
+		protected void setTitledBorder(String title) {
+			this.setBorder(BorderFactory.createTitledBorder(" " + title + " "));
+		}
+	}
+
+	public static void tryToHighlight(JTextComponent txtEditor, final List<String> selectedText, final Highlighter.HighlightPainter highlightPainter) {
+		SwingUtilities.invokeLater(() -> highLight(txtEditor, selectedText, highlightPainter));
+	}
+
+	private static void highLight(JTextComponent textComp, Iterable<String> pattern, Highlighter.HighlightPainter highlightPainter) {
+
+		removeHighlights(textComp);
+
+		try {
+
+			// escape '$' if its used in patterns:
+			final StringBuilder out = new StringBuilder();
+			boolean first = true;
+			for (String item : pattern) {
+				if (!first) out.append("|");
+				first = false;
+				out.append(item.replaceAll("\\\$", "\\\\\\\\\\\\$").replaceAll("\\\(", "\\\\\\\\\\\\(").replaceAll("\\\)", "\\\\\\\\\\\\)"));
+			}
+
+			final Pattern r = Pattern.compile(out.toString());
+			final Matcher matcher = r.matcher(textComp.getText());
+			final Highlighter highlighter = textComp.getHighlighter();
+			while (matcher.find()) {
+				highlighter.addHighlight(matcher.start(), matcher.end(), highlightPainter);
+			}
+
+		} catch (BadLocationException ble) {
+			ble.printStackTrace();
+		}
+	}
+
+	private static void removeHighlights(JTextComponent textComp) {
+		final Highlighter highlighter = textComp.getHighlighter();
+		final Highlighter.Highlight[] highlights = highlighter.getHighlights();
+		for (Highlighter.Highlight highlight : highlights) {
+			if (highlight.getPainter() instanceof DefaultHighlighter.DefaultHighlightPainter) {
+				highlighter.removeHighlight(highlight);
+			}
+		}
+	}
+
+	public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea() {
+		return newRSyntaxTextArea(10, 80);
+	}
+
+	public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
+		return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+	}
+
+	public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {
+
+		rSyntaxTextArea.setTabSize(3);
+		rSyntaxTextArea.setHighlightCurrentLine(false);
+		rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
+		rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
+		rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
+		rSyntaxTextArea.setFont(UIManager.getFont("TextField.font"));
+		rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+				if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {
+					format(rSyntaxTextArea);
+				}
+			}
+		});
+
+		return rSyntaxTextArea;
+	}
+
+	public static RTextScrollPane newRTextScrollPane(RSyntaxTextArea rSyntaxTextArea) {
+		final RTextScrollPane scrollPane = new RTextScrollPane(rSyntaxTextArea);
+		scrollPane.setBackground(UIManager.getColor("Panel.background"));
+		scrollPane.getGutter().setBackground(scrollPane.getBackground());
+		scrollPane.getGutter().setForeground(UIManager.getColor("TextField.foreground"));
+		scrollPane.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
+		return scrollPane;
+	}
+
+	public static void format(JTextArea txtEditor) {
+		final int caretPosition = txtEditor.getCaretPosition();
+		final StringBuilder spaces = new StringBuilder();
+		for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+
+		String[] split = txtEditor.getText().split("\n");
+		final StringBuilder formatted = new StringBuilder();
+		for (String s : split) formatted.append(s.replace(spaces, "\t")).append("\n");
+		split = formatted.toString().split("\n");
+
+		final StringBuilder formatted2 = new StringBuilder();
+		for (String s : split) {
+			if (s.trim().length() == 0) {
+				formatted2.append("\n");
+				continue;
+			}
+
+			final char[] c = s.toCharArray();
+			for (int i = 0; i < c.length; i++) {
+				if (c[i] == '\t') {
+					formatted2.append(c[i]);
+					continue;
+				}
+				if (c[i] == ' ') continue;
+				formatted2.append(s.substring(i));
+				break;
+			}
+
+			formatted2.append("\n");
+		}
+		txtEditor.setText(formatted2.toString().trim());
+		txtEditor.setCaretPosition(Math.min(formatted2.toString().trim().length(), caretPosition));
+	}
+
+	public static javax.swing.JTextField newTextField(int columns) {
+		return newTextField("", columns);
+	}
+
+	public static javax.swing.JTextField newTextField(String content, int columns) {
+		javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);
+		textField.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (javax.swing.SwingUtilities.isRightMouseButton(e))
+					javax.swing.SwingUtilities.invokeLater(() -> {
+						final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
+						pop.add(new AbstractAction("Set from clipboard") {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								textField.setText(fromClipboard());
+							}
+						});
+						pop.show(textField, e.getX(), e.getY());
+					});
+			}
+		});
+		textField.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override
+			public void focusGained(java.awt.event.FocusEvent evt) {
+				javax.swing.SwingUtilities.invokeLater(() -> ((javax.swing.JTextField) evt.getSource()).selectAll());
+			}
+
+			@Override
+			public void focusLost(java.awt.event.FocusEvent evt) {
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					((javax.swing.JTextField) evt.getSource()).setSelectionStart(0);
+					((javax.swing.JTextField) evt.getSource()).setSelectionEnd(0);
+				});
+			}
+		});
+		return textField;
+	}
+
+	public static void showDialog(JComponent parent, JDialog dialog, JButton btnSave) {
+
+		dialog.getRootPane().setDefaultButton(btnSave);
+
+		final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		commandPanel.add(btnSave);
+		commandPanel.add(new JButton(new AbstractAction("Cancel") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(dialog::dispose);
+			}
+		}));
+		dialog.add(commandPanel, BorderLayout.SOUTH);
+
+		SwingUtilities.invokeLater(() -> {
+			dialog.pack();
+			dialog.setLocationRelativeTo(parent);
+			dialog.setVisible(true);
+		});
+	}
+
+	public static Optional<String> getInputFromUser(JComponent parent, String message) {
+		final String s = SwingUtil.showInputDialog(message, parent);
+		return Optional.ofNullable(s == null || s.trim().length() == 0 ? null : s);
+	}
+
+	public static Optional<Boolean> confirm(JComponent parent, String description) {
+		final boolean b = SwingUtil.showConfirmDialog(parent, description);
+		return Optional.ofNullable(b ? Boolean.TRUE : null);
+	}
+
+	private static class SelectFocusAdapter extends FocusAdapter {
+
+		@Override
+		public void focusGained(java.awt.event.FocusEvent evt) {
+			SwingUtilities.invokeLater(() -> ((JTextField) evt.getSource()).selectAll());
+		}
+
+		@Override
+		public void focusLost(FocusEvent evt) {
+			SwingUtilities.invokeLater(() -> {
+				((JTextField) evt.getSource()).setSelectionStart(0);
+				((JTextField) evt.getSource()).setSelectionEnd(0);
+			});
+		}
+	}
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

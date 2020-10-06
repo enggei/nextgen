@@ -1,0 +1,7 @@
+delimiters "~","~"
+
+CreateNode(labels,properties) ::= <<CREATE (~if(labels)~n:~endif~~labels:{it|~it~};separator=":"~ ~if(properties)~{ ~properties:{it|~it.name~: ~it.value~};separator=", "~ }~endif~)  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

@@ -1,0 +1,745 @@
+delimiters "~","~"
+
+components() ::= << >>
+
+NavigationBar(header) ::= <<import React from 'react';
+import { Link } from 'react-router-dom';
+import { inject, observer } from 'mobx-react';
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+
+import UserMenu from './UserMenu.js';
+
+const useStyles = theme => ({
+	news: {
+		flex: 1
+	}
+});
+
+const LoginLink = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref } to="/login" { ...props } />
+));
+
+const LogoutLink = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref } to="/logout" { ...props } />
+));
+
+const LoggedOutView = props => {
+	if (!props.currentUser)  {
+		return (<Button color="inherit" component={ LoginLink }>
+			Login
+		</Button>);
+	}
+	return null;
+}
+
+const LoggedInView = props => {
+	if (props.currentUser)  {
+		return (<Button color="inherit" component={ LogoutLink }>
+			Logout
+		</Button>);
+	}
+	return null;
+}
+
+@inject('userStore', 'appStore')
+@observer
+@withStyles(useStyles)
+class NavigationBar extends React.Component {
+
+	constructor(){
+		super();
+	}
+
+	render() {
+		return ( 
+			<div>
+				<AppBar color='primary' position='static'>
+					<Toolbar>
+						<UserMenu currentUser={ this.props.userStore.currentUser } />
+						<Typography variant="h6" className={ this.props.classes.news }>~header~</Typography>
+						<LoggedOutView currentUser={ this.props.userStore.currentUser } />
+						<LoggedInView currentUser={ this.props.userStore.currentUser } />
+					</Toolbar>
+				</AppBar>
+			</div>
+		)
+	}
+}
+
+export default (NavigationBar);  >>
+
+UserMenu() ::= <<import React from 'react';
+import { Link } from 'react-router-dom';
+
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
+const LoginLink = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref } to="/login" { ...props } />
+));
+
+const LogoutLink = React.forwardRef( (props, ref) => (
+	<Link innerRef={ ref } to="/logout" { ...props } />
+));
+
+export default function UserMenu(props) {
+
+	const [anchorEl, setAnchorEl] = React.useState(null);
+
+	function handleClick(event) {
+		setAnchorEl(event.currentTarget);
+	}
+
+	function handleClose() {
+		setAnchorEl(null);
+	}
+
+	if (!props.currentUser)  {
+		return (
+			<div>
+				<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
+					<MenuIcon />
+				</IconButton>
+				<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+					<MenuItem component={ LoginLink } onClick={handleClose}>Login</MenuItem>
+				</Menu>
+			</div>);
+	} else {
+		return (
+			<div>
+				<IconButton edge="start" color="inherit" aria-label="Menu" onClick={handleClick}>
+						<MenuIcon />
+				</IconButton>
+				<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+					{props.currentUser.menus.map((e, i) => (<MenuItem key={e.key} component={ React.forwardRef( (props, ref) => (<Link innerRef={ ref } to={e.url} { ...props } />)) } onClick={handleClose}> {e.label} </MenuItem>))}
+					<MenuItem component={ LogoutLink } onClick={handleClose}> Logout </MenuItem> 
+				</Menu>
+			</div>);
+	}
+}  >>
+
+LoginForm() ::= <<import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+
+import ListErrors from './ListErrors.js';
+import Copyright from './Copyright.js';
+
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+		avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+}));
+
+export default function LoginForm(props) {
+
+	const classes = useStyles();
+	const { values, errors, inProgress } = props.authStore;
+	const { onSubmit } = props;
+
+	return (
+
+		<Container component="main" maxWidth="xs">
+			<ListErrors errors={errors} />
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<LockOutlinedIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Log in
+				</Typography>
+				<form className={ classes.form } onSubmit={ onSubmit } noValidate>
+					<TextField
+						value={ values.username }
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Email Address"
+						name="email"
+						autoComplete="email"
+						autoFocus />
+					<TextField
+						value={ values.password }
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						id="password"
+						autoComplete="current-password" />
+					<Button
+						className={classes.submit}
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary">
+						Log in
+					</Button>
+				</form>
+			</div>
+			<Box mt={8}>
+				<Copyright />
+			</Box>
+		</Container>
+	);
+}  >>
+
+ListErrors() ::= <<import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = theme => ({
+	errors: {
+		color: 'red'
+	}
+});
+
+@withStyles(useStyles)
+class ListErrors extends React.Component {
+
+	render() {
+
+		const errors = this.props.errors;
+
+		if (errors) 
+			return (
+				<ul className={ this.props.classes.errors }> { Object.keys(errors).map(key => { return (<li key={key}><Typography>{errors[key]}</Typography></li>);}) }
+				</ul>
+			);
+
+		return null;
+	}
+}
+
+export default ListErrors;  >>
+
+Copyright(companyName) ::= <<import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+
+export default function Copyright() {
+
+	return (
+		<Typography variant="body2" color="textSecondary" align="center">
+			{'Copyright © ~companyName~ '}
+			{new Date().getFullYear()}
+		</Typography>
+	);
+}  >>
+
+LogoutForm() ::= <<import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+}));
+
+export default function SignOut(props) {
+
+	const classes = useStyles();
+	const { onSubmit } = props;
+
+	return (
+		<Container component="main" maxWidth="xs">
+			<div className={classes.paper}>
+				<form className={classes.form} noValidate onSubmit={ onSubmit }>					
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit} >
+						Logout
+					</Button>
+				</form>
+			</div>
+		</Container>
+	);
+}  >>
+
+Page(components,stores,name,constructorStatements,componentDidMountStatements,renderConst,renderCondition,renderTrue,renderFalse,renderElement) ::= <<import React from 'react';
+import { inject, observer } from 'mobx-react';
+~components:{it|import ~it.name~ from '../components/~it.name~';};separator="\n"~
+
+~if(stores)~@inject(~stores:{it|'~it~'};separator=","~)~endif~
+@observer
+class ~name~ extends React.Component {
+
+	constructor(props) {
+		super(props);
+		~constructorStatements:{it|~it~};separator="\n"~
+	}
+
+	componentDidMount() {
+		~componentDidMountStatements:{it|~it~};separator="\n"~
+		// this.props.siteStore.load~name~(this.props.match.params.id);
+	}
+
+	render() {
+
+		~renderConst:{it|~it~};separator="\n"~
+
+~if(renderCondition)~
+	if(~renderCondition~)
+		return ( 
+			~renderTrue~
+		);
+	else
+		return (
+			~renderFalse~
+		);
+~else~
+	return (
+		~renderElement~
+	);
+~endif~
+	}
+}
+
+export default (~name~);  >>
+
+RenderConst(elements,source) ::= <<const { ~elements:{it|~it~};separator=","~ } = this.props.~source~;  >>
+
+Pages() ::= << >>
+
+LoginPage() ::= <<import { withRouter } from 'react-router-dom';
+import React from 'react';
+
+import { inject, observer } from 'mobx-react';
+
+import LoginForm from '../components/LoginForm.js';
+
+@withRouter
+@inject('authStore')
+@observer
+class LoginPage extends React.Component {
+
+	constructor(){
+		super();
+		this.handleSubmitForm = this.handleSubmitForm.bind(this);
+		this.handleUsernameChange = this.handleUsernameChange.bind(this);
+		this.handlePasswordChange = this.handlePasswordChange.bind(this);
+	}
+
+	handleSubmitForm = (e) => {
+		e.preventDefault();
+		this.props.authStore.login().then(() => this.props.history.replace('/')).catch(e => {});
+	}
+
+	handleUsernameChange = (e) => {
+		this.props.authStore.setUsername(e.target.value);
+	}
+
+	handlePasswordChange = (e) => {
+		this.props.authStore.setPassword(e.target.value);
+	}
+
+	render() {
+		return (<LoginForm authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);
+	}
+}
+
+export default (LoginPage);  >>
+
+LogoutPage() ::= <<import { withRouter } from 'react-router-dom';
+import React from 'react';
+
+import { inject, observer } from 'mobx-react';
+
+import LogoutForm from '../components/LogoutForm';
+
+@withRouter
+@inject('authStore')
+@observer
+class LogoutPage extends React.Component {
+
+	constructor(){
+		super();
+		this.handleSubmitForm = this.handleSubmitForm.bind(this);
+	}
+
+	handleSubmitForm = (e) => {
+		e.preventDefault();
+		this.props.authStore.logout().then(() => this.props.history.replace('/')).catch(e => {});
+	}
+
+	render() {
+		return (<LogoutForm authStore={ this.props.authStore } onSubmit={ this.handleSubmitForm } />);
+	}
+}
+
+export default (LogoutPage);  >>
+
+stores() ::= << >>
+
+AppStore(appName) ::= <<import { observable, action,  reaction } from 'mobx';
+import agent from '../Agent.js';
+
+class AppStore {
+
+	@observable loading;
+	@observable errors = undefined;
+	@observable appName = '~appName~';
+	@observable token = window.localStorage.getItem('jwt');
+	@observable appLoaded = false;
+
+	constructor() {
+		reaction(() => this.token, (token) => { if (token) window.localStorage.setItem('jwt',token); else window.localStorage.removeItem('jwt'); });
+	}
+
+	@action setToken(token) {
+		this.token = token;
+	}
+
+	@action setAppLoaded() {
+		this.appLoaded = true;
+	}
+}
+
+export default new AppStore();  >>
+
+AuthStore() ::= <<import { observable, action,  reaction } from 'mobx';
+import agent from '../Agent';
+import userStore from './UserStore';
+import appStore from './AppStore';
+
+class AuthStore {
+
+	@observable inProgress = false;
+	@observable errors = undefined;
+	@observable values = { username: 'geirove', password: 'geirove' };
+
+	constructor() {
+	}
+
+	@action setUsername(username) {
+		this.values.username = username;
+	}
+
+	@action setPassword(password) {
+		this.values.password = password;
+	}
+
+	@action reset() {
+		this.values.username = '';
+		this.values.password = '';
+		this.errors = undefined;
+	}
+
+	@action login() {
+		this.inProgress = true;;
+		this.errors = undefined;
+		return agent.Auth.login(this.values.username, this.values.password)
+				.then(({ user }) => appStore.setToken(user.token))
+				.then(() => userStore.pullUser())
+				.catch(action((err) => {
+					this.errors = err.response && err.response.body && err.response.body.errors;
+					throw err;
+				}))
+				.finally(action(() => this.inProgress = false));
+	}
+
+	@action logout() {
+		appStore.setToken(undefined)
+		userStore.forgetUser();
+		return Promise.resolve();
+	}
+}
+
+export default new AuthStore();  >>
+
+UserStore() ::= <<import { observable, action,  reaction } from 'mobx';
+import agent from '../Agent';
+
+class UserStore {
+
+	@observable loading;
+	@observable errors = undefined;
+	@observable currentUser;
+	@observable updatingUser;
+	@observable updatingUserErrors;
+
+	constructor() {
+	}
+
+	@action pullUser() {
+		this.loading = true;
+		this.errors = undefined;
+		return agent.Auth.current().then(action(({ user }) => this.currentUser = user)).finally(action(() => this.loadingUser = false));
+	}
+
+	@action updateUser(newUser) {
+		this.updatingUser = true;
+		return agent.Auth.save(newUser).then(action(({ user }) => this.currentUser = user)).finally(action(() => this.updatingUser = false));
+	}
+
+	@action forgetUser() {
+		this.currentUser = undefined;
+	}
+}
+
+export default new UserStore();  >>
+
+SystemDescription(appName,appTitle,pages) ::= <<~appName~
+~appTitle~
+
+Routes:
+
+
+Pages:
+~pages:{it|~it~};separator="\n\n"~  >>
+
+SystemPage(name) ::= <<Page:
+
+~name~  >>
+
+WebVerticle(packageName,name,endpoints) ::= <<package ~packageName~;
+
+import ~packageName~.api.LoginRequest;
+import ~packageName~.api.UserSession;
+import ~packageName~.domain.SSLDeploymentSettings;
+import ~packageName~.domain.ServerDeploymentOptions;
+import ~packageName~.domain.UserDeploymentSettings;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.PemKeyCertOptions;
+import io.vertx.ext.auth.KeyStoreOptions;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTAuthOptions;
+import io.vertx.ext.jwt.JWTOptions;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.JWTAuthHandler;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
+
+import java.io.File;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static ~packageName~.PasswordUtils.verifyUserPassword;
+import static ~packageName~.WebUtils.*;
+import static ~packageName~.api.WebApiJsonFactory.*;
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
+
+public class ~name~ extends AbstractVerticle {
+
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	@Override
+	public void start(Future<Void> startFuture) throws Exception {
+		log.info("starting ~name~");
+
+		final ServerDeploymentOptions deploymentOptions = new ServerDeploymentOptions(config());
+		final Optional<SSLDeploymentSettings> ssl = Optional.ofNullable(deploymentOptions.getSsl());
+
+		final KeyStoreOptions keyStoreOptions = new KeyStoreOptions().
+					setPath(deploymentOptions.getJwt().getPath()).
+					setPassword(deploymentOptions.getJwt().getPassword()).
+					setType(deploymentOptions.getJwt().getType());
+
+		final JWTAuthOptions jwtAuthOptions = new JWTAuthOptions().setKeyStore(keyStoreOptions);
+		final JWTAuth auth = JWTAuth.create(vertx, jwtAuthOptions);
+
+		final Router router = Router.router(vertx);
+		router.route().handler(BodyHandler.create());
+		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+		router.post("/login").handler(routingContext -> login(routingContext, auth));
+		router.route("/api/*").handler(JWTAuthHandler.create(auth, "/login"));
+		router.get("/user").handler(this::getUser);
+		router.get("/images/:name").handler(this::getImage);
+		~endpoints:{it|router.~it.action~("~it.route~").handler(this::~it.handler~);};separator="\n"~
+		router.get("/api/current").handler(this::getCurrent);
+		router.get("/report/current").handler(this::getReport);
+
+		final HttpServerOptions serverOptions = new HttpServerOptions();
+
+		ssl.ifPresent(sslDeploymentSettings ->
+					serverOptions
+								.setSsl(true)
+								.setPemKeyCertOptions(
+										new PemKeyCertOptions().
+													setKeyPath(sslDeploymentSettings.getKey()).
+													setCertPath(sslDeploymentSettings.getCert())));
+
+		final StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setWebRoot(deploymentOptions.getWebRoot());
+		staticHandler.setCachingEnabled(false);
+		router.route("/*").handler(staticHandler);
+
+		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());
+
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpHost() + ":" + deploymentOptions.getPort());
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpName("pettyresidential.info") + ":" + deploymentOptions.getPort());
+
+		startFuture.succeeded();
+	}
+
+	private void login(RoutingContext routingContext, JWTAuth auth) {
+		WebUtils.debug("login", routingContext);
+
+		final LoginRequest loginRequest = newLoginRequest(routingContext.getBodyAsJson());
+		final ServerDeploymentOptions deploymentOptions = new ServerDeploymentOptions(config());
+
+		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()
+					.filter(userDeploymentSettings -> userDeploymentSettings.getUsername().equals(loginRequest.getUsername()))
+					.findFirst();
+
+		if (!userFound.isPresent()) {
+				sendErrors(routingContext, UNAUTHORIZED, "User credentials not found");
+				return;
+		}
+
+		final boolean passwordMatch = verifyUserPassword(loginRequest.getPassword(), userFound.get().getPassword(), userFound.get().getSalt());
+
+		if (!passwordMatch) {
+				sendFailResponse(routingContext, BAD_REQUEST, "User credentials not found");
+				return;
+		}
+
+		userFound.get()
+					.setToken(auth.generateToken(
+								newJWTPayload()
+										.setSub(userFound.get().getUsername())
+										.getJsonObject(),
+								new JWTOptions()
+										.setExpiresInMinutes(deploymentOptions.getJwt().getExpiresInMinutes())
+										.setSubject(userFound.get().getUsername())));
+
+		final UserSession userSession = newUserSession()
+					.setToken(userFound.get().getToken())
+					.setUsername(userFound.get().getUsername());
+
+		setUserMenus(userFound.get(), userSession);
+
+		sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
+	}
+
+	private void getUser(RoutingContext routingContext) {
+
+		final String authorization = routingContext.request().getHeader("Authorization");
+		final String token = authorization == null ? null : authorization.substring(7).trim();
+
+		final ServerDeploymentOptions deploymentOptions = new ServerDeploymentOptions(config());
+		final Optional<UserDeploymentSettings> userFound = deploymentOptions.getJwt().getUsers()
+					.filter(userDeploymentSettings -> userDeploymentSettings.getToken()!=null)
+					.filter(userDeploymentSettings -> userDeploymentSettings.getToken().equals(token))
+					.findFirst();
+
+		if (!userFound.isPresent()) {
+				sendFailResponse(routingContext, BAD_REQUEST, "User session not found");
+				return;
+		}
+
+		final UserSession userSession = newUserSession()
+					.setToken(userFound.get().getToken())
+					.setUsername(userFound.get().getUsername())
+					.addMenus(newUserMenu()
+					.setLabel("Trends")
+					.setUrl("/trends")
+					.setKey(1));
+
+		setUserMenus(userFound.get(), userSession);
+
+		sendResponse(routingContext, OK, new JsonObject().put("user", userSession.getJsonObject()));
+	}
+
+	private void getImage(RoutingContext routingContext) {
+		routingContext.response()
+					.putHeader("Content-Type", "image/jpg")
+					.sendFile(new File(".", routingContext.pathParam("name")).getAbsolutePath());
+	}
+
+	private void getCurrent(RoutingContext routingContext) {
+
+	}
+
+	~endpoints:{it|~it.handlerImpl~};separator="\n\n"~
+
+	private void getReport(RoutingContext routingContext) {
+		routingContext.response()
+					.putHeader("Content-Type", "application/pdf")
+					.setStatusCode(HttpResponseStatus.OK.code())
+					.sendFile("./report.pdf");
+	}
+
+	private void setUserMenus(UserDeploymentSettings settings, UserSession session) {
+
+		final AtomicInteger key = new AtomicInteger(0);
+		settings.getAccess().forEach(userAccess -> session.addMenus(newUserMenu().setKey(key.incrementAndGet()).setUrl(userAccess.getUrl()).setLabel(userAccess.getLabel())));
+	}
+}  >>
+
+EndpointHandler(name,statements) ::= <<private void ~name~(RoutingContext routingContext) {
+	log.info("handle ~name~");
+	~statements:{it|~it~};separator="\n\n"~
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"
