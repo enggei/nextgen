@@ -304,6 +304,11 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			actions.add(newAction("Edit", actionEvent -> {
+				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+					workspace.setSelectedComponent(workspace.getProjectEditor(getModel()));
+				}));
+			}));
 			return actions;
 		}
 
@@ -660,7 +665,6 @@ public class STModelNavigator extends JPanel {
 				getParentNode(STTemplateTreeNode.class)
 					.ifPresent(stTemplateTreeNode -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
 						final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
-						//modelEditor.setModelNavigator(STModelNavigator.this);
 						workspace.setSelectedComponent(modelEditor);
 					})));
 			}));
@@ -671,7 +675,7 @@ public class STModelNavigator extends JPanel {
 				presentationModel.writeToFile(getModel());
 			}));
 			actions.add(newAction("Delete", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel()));
+				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel())));
 			}));
 			actions.add(newAction("As NeoModel", actionEvent -> {
 				presentationModel.generateNeoSource(getModel());

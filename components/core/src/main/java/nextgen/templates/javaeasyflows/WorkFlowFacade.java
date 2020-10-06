@@ -99,6 +99,10 @@ public class WorkFlowFacade {
 				"		super(dir);\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public WorkFlowFacade(GraphDatabaseService db) {\n" + 
+				"		super(db);\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public org.jeasy.flows.work.Work newInstance(Work work) {\n" + 
 				"		final nextgen.templates.javaeasyflows.Work javaCode = toCode(work);\n" + 
 				"		final String className = javaCode.getPackageName() + \".\" + javaCode.getName().toString();\n" + 

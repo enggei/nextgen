@@ -4,7 +4,7 @@ public class WorkFlowNeoFactory {
 
 	private final org.neo4j.graphdb.GraphDatabaseService db;
 
-	public WorkFlowNeoFactory(java.lang.String dir) {
+	public WorkFlowNeoFactory(java.lang.String dir) { 
 		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory()
 				.newEmbeddedDatabaseBuilder(new java.io.File(dir))
 				.setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true")
@@ -12,7 +12,7 @@ public class WorkFlowNeoFactory {
 		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));
 	}
 
-	public WorkFlowNeoFactory(org.neo4j.graphdb.GraphDatabaseService db) {
+	public WorkFlowNeoFactory(org.neo4j.graphdb.GraphDatabaseService db) { 
 		this.db = db;
 	}
 

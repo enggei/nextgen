@@ -3,10 +3,15 @@ package nextgen.st;
 import nextgen.domains.meta.DomainVisitor;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
+import nextgen.st.model.Project;
 import nextgen.st.model.STModel;
+import nextgen.utils.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -154,6 +159,24 @@ public class STWorkspace extends JTabbedPane {
       findCanvas().ifPresent(stModelCanvas -> SwingUtilities.invokeLater(() -> setSelectedComponent(stModelCanvas)));
    }
 
+   public ProjectEditor getProjectEditor(Project model) {
+      for (int i = 0; i < getTabCount(); i++) {
+         final Component tabComponentAt = getComponentAt(i);
+         if (tabComponentAt instanceof ProjectEditor) {
+            if (((ProjectEditor) tabComponentAt).getModel().equals(model)) {
+               final ProjectEditor stEditor = (ProjectEditor) tabComponentAt;
+               setSelectedComponent(stEditor);
+               return stEditor;
+            }
+         }
+      }
+
+      final ProjectEditor component = new ProjectEditor(model, presentationModel);
+      addPane(model.getName(), component);
+      setSelectedComponent(component);
+      return component;
+   }
+
    class ButtonTabComponent extends JPanel {
 
       ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
@@ -174,6 +197,45 @@ public class STWorkspace extends JTabbedPane {
          btnClose.setBorderPainted(false);
          btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
          add(btnClose);
+
+         addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               if (SwingUtilities.isRightMouseButton(e))
+                  SwingUtilities.invokeLater(() -> {
+                     final JPopupMenu pop = new JPopupMenu();
+
+                     pop.add(new AbstractAction("Close") {
+                        @Override
+                        public void actionPerformed(ActionEvent actionEvent) {
+                           pane.remove(component);
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Close Others") {
+                        @Override
+                        public void actionPerformed(ActionEvent actionEvent) {
+                           presentationModel.getWorkspace().closeAllExcept(component);
+                        }
+                     });
+
+                     pop.show(ButtonTabComponent.this, e.getX(), e.getY());
+                  });
+               else {
+                  SwingUtilities.invokeLater(() -> pane.setSelectedComponent(component));
+               }
+            }
+         });
       }
+   }
+
+   private void closeAllExcept(JComponent component) {
+      SwingUtilities.invokeLater(() -> {
+         for (int i = getTabCount() - 1; i >= 0; i--) {
+            final Component componentAt = getComponentAt(i);
+            if (componentAt.equals(component)) continue;
+            remove(i);
+         }
+      });
    }
 }

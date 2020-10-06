@@ -3,24 +3,20 @@ package nextgen.st;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STParameterKey;
 import nextgen.st.domain.STTemplate;
-import nextgen.st.model.*;
-import nextgen.templates.java.BlockStmt;
+import nextgen.st.model.STArgument;
+import nextgen.st.model.STArgumentKV;
+import nextgen.st.model.STModel;
+import nextgen.st.model.STValue;
 import nextgen.templates.java.MethodCallExpression;
-import nextgen.templates.java.PackageDeclaration;
 import nextgen.utils.StringUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
-import static nextgen.templates.JavaPatterns.*;
+import static nextgen.templates.JavaPatterns.newMethodCallExpression;
 
 public class STRenderer {
 
@@ -235,8 +231,7 @@ public class STRenderer {
    }
 
    public STGroupModel findSTGroupModel(STTemplate stTemplate) {
-      STMapper stMapper = findSTMapper(stTemplate.getUuid());
-      return stMapper.groupModel;
+      return Objects.requireNonNull(findSTMapper(stTemplate.getUuid())).groupModel;
    }
 
    private static final class STMapper {

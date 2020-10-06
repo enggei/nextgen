@@ -4,9 +4,6 @@ import net.openhft.compiler.CompilerUtils;
 import nextgen.domains.meta.*;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
-import nextgen.templates.stringtemplate.DomainVisitorRunner;
-import nextgen.templates.stringtemplate.ScriptRunner;
-import nextgen.templates.stringtemplate.StringTemplateST;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.java.BlockStmt;
 import nextgen.templates.java.ImportDeclaration;
@@ -15,8 +12,13 @@ import nextgen.templates.maven.TestRunner;
 import nextgen.templates.maven.neo.MavenNeo;
 import nextgen.templates.maven.neo.ProjectGeneratorModel;
 import nextgen.templates.maven.neo.ProjectModel;
+import nextgen.templates.stringtemplate.DomainVisitorRunner;
+import nextgen.templates.stringtemplate.ScriptRunner;
+import nextgen.templates.stringtemplate.StringTemplateST;
 import nextgen.utils.NeoChronicle;
+import nextgen.utils.STModelUtil;
 import nextgen.utils.SwingUtil;
+import nextgen.workflow.WorkFlowFacade;
 import org.javatuples.Pair;
 import org.neo4j.graphdb.*;
 
@@ -31,6 +33,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -41,9 +44,9 @@ import static nextgen.st.STGenerator.toSTGroup;
 import static nextgen.st.model.STValueType.PRIMITIVE;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.java.JavaST.*;
-import static nextgen.templates.java.JavaST.newClassOrInterfaceType;
 import static nextgen.utils.StringUtil.capitalize;
-import static nextgen.utils.SwingUtil.*;
+import static nextgen.utils.SwingUtil.newComboBox;
+import static nextgen.utils.SwingUtil.newTextField;
 
 public class STAppPresentationModel {
 
@@ -61,6 +64,7 @@ public class STAppPresentationModel {
    private Font preferredFont;
    private STWorkspace stWorkspace;
    private String lastDir;
+   private final WorkFlowFacade workFlowFacade;
 
    STAppPresentationModel(STAppModel appModel) throws IOException {
 
@@ -76,6 +80,7 @@ public class STAppPresentationModel {
 
       this.stRenderer = new STRenderer(stGroups);
       this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
+      this.workFlowFacade = new WorkFlowFacade(db.getDatabaseService());
       this.chronicle = new NeoChronicle(appModel.getModelDb("./db"), db.getDatabaseService());
       this.metaDb = new MetaDomainDB(db.getDatabaseService());
 
@@ -1193,6 +1198,14 @@ public class STAppPresentationModel {
             .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 
+   public STModelEditor getModelEditor(STModel model) {
+      return getWorkspace().getModelEditor(db.getSTTemplate(model), model);
+   }
+
+   public WorkFlowFacade getWorkspaceFacade() {
+      return workFlowFacade;
+   }
+
    public static final class CompilationResult {
 
       public final String compilerOutput;
@@ -1388,12 +1401,33 @@ public class STAppPresentationModel {
 
          } else {
 
-            SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
-                  doLaterInTransaction(transaction2 -> {
-                     final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
-                     stModel.addArguments(newArgument.getValue0());
-                     consumer.accept(newArgument);
-                  }));
+            final String argumentType = stParameter.getArgumentType();
+            if (argumentType.equals("Object") || argumentType.equals("String")) {
+               SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
+                     doLaterInTransaction(transaction2 -> {
+                        final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
+                        stModel.addArguments(newArgument.getValue0());
+                        consumer.accept(newArgument);
+                     }));
+            } else {
+
+               final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
+               final STTemplate stTemplate = STModelUtil.findSTemplateByName(argumentType, stGroupModel);
+               if (stTemplate != null) {
+                  final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
+                  final org.javatuples.Pair<STArgument, STValue> newArgument = new Pair<>(newSTArgument(stParameter, stValue), stValue);
+                  stModel.addArguments(newArgument.getValue0());
+                  consumer.accept(newArgument);
+               } else {
+                  SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
+                        doLaterInTransaction(transaction2 -> {
+                           final org.javatuples.Pair<STArgument, STValue> newArgument = newSTArgument(stParameter, inputValue);
+                           stModel.addArguments(newArgument.getValue0());
+                           consumer.accept(newArgument);
+                        }));
+               }
+
+            }
          }
       });
    }

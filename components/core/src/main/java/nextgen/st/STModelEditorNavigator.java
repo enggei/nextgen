@@ -295,6 +295,9 @@ public class STModelEditorNavigator extends JPanel {
 					}
 				});
 			}));
+			actions.add(newAction("Edit", actionEvent -> {
+				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> presentationModel.getWorkspace().setSelectedComponent(presentationModel.getModelEditor(getModel()))));
+			}));
 			return actions;
 		}
 
@@ -657,19 +660,7 @@ public class STModelEditorNavigator extends JPanel {
 								presentationModel.doLaterInTransaction(transaction -> {
 									final STArgument stArgument = presentationModel.newSTArgument(getModel(), selectedValue);
 									stModel.addArguments(stArgument);
-                           switch (selectedValue.getType()) {
-
-                              case STMODEL:
-                                 final STModel stModel = selectedValue.getStModel();
-                                 addAndSelectChild(new STModelTreeNode(stModel, presentationModel.findSTTemplateByUuid(stModel
-                                       .getStTemplate()), stArgument));
-                                 break;
-                              case PRIMITIVE:
-                                 addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
-                                 break;
-                              case ENUM:
-                                 break;
-                           }
+									addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
 								});
 							}));
 						});
@@ -680,8 +671,7 @@ public class STModelEditorNavigator extends JPanel {
 									final STValue stValue = presentationModel.newSTValue(selectedModel);
 									final STArgument newArgument = presentationModel.newSTArgument(getModel(), stValue);
 									stModel.addArguments(newArgument);
-                           addAndSelectChild(new STModelTreeNode(selectedModel, presentationModel.findSTTemplateByUuid(stModel
-                                 .getStTemplate()), newArgument));
+									addAndSelectChild(new STValueTreeNode(stValue, newArgument));
 								});
 							}));
 						});

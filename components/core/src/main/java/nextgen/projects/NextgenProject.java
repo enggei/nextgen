@@ -360,7 +360,7 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newEnumField("until", "UntilPredicate", "ALWAYS_TRUE,ALWAYS_FALSE,COMPLETED,FAILED"));
       workInstance.addRelations(DomainPatterns.newOneToOne("repeat", repeatFlow));
 
-      final Domain domain = DomainPatterns.newDomain("Workflows")
+      final Domain domain = DomainPatterns.newDomain("WorkFlow")
             .addEntities(work)
             .addEntities(workInstance);
 
@@ -369,6 +369,8 @@ public class NextgenProject {
             .setName("WorkFlowFacade")
             .setPackageName(workflowPackage.getName());
       STGenerator.writeJavaFile(workFlowFacade, workflowPackage, workFlowFacade.getName(), mainJava);
+
+      DomainPatterns.writeGreenrobotEvents(mainJava, workflowPackage, workflowPackage, domain);
    }
 
    /**

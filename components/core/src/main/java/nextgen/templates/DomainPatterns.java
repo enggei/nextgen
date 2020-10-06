@@ -1,18 +1,24 @@
 package nextgen.templates;
 
+import nextgen.projects.Nextgen2Project;
 import nextgen.st.STGenerator;
 import nextgen.templates.domain.*;
+import nextgen.templates.greenrobot.Event;
+import nextgen.templates.greenrobot.EventManager;
 import nextgen.templates.java.Enum;
 import nextgen.templates.java.*;
 import nextgen.templates.javaneo4jembedded.*;
 import nextgen.templates.vertx.JsonFactory;
 import nextgen.templates.vertx.JsonWrapper;
 import nextgen.templates.vertx.VertxST;
+import nextgen.utils.StringUtil;
 
 import java.io.File;
 import java.util.*;
 
+import static nextgen.templates.GreenRobotPatterns.newPostEventMethod;
 import static nextgen.templates.JavaPatterns.newClassOrInterfaceType;
+import static nextgen.templates.JavaPatterns.newImportDeclaration;
 import static nextgen.templates.domain.RelationType.*;
 import static nextgen.templates.java.JavaST.*;
 
@@ -585,6 +591,45 @@ public class DomainPatterns extends DomainST {
    private static String getSimpleName(Object dst) {
       return dst instanceof Class ? ((Class) dst).getSimpleName() : dst.toString();
    }
+
+   // DOMAIN TO Greenrobot event wrappers:
+   public static void writeGreenrobotEvents(File root, PackageDeclaration packageDeclaration, PackageDeclaration domainPackage, Domain domain) {
+
+      final EventManager eventManager = GreenRobotPatterns.newEventManager()
+            .setPackage(packageDeclaration.getName())
+            .setName(domain.getName() + "Events")
+            .addImports(newImportDeclaration(domainPackage.getName()).setIsAsterisk(true));
+
+      final DomainVisitor domainVisitor = new DomainVisitor() {
+         @Override
+         protected void startEntity(Entity entity) {
+
+            final Map<String, Event> eventMap = new LinkedHashMap<>();
+            eventMap.put("NEW", newEntityEvent(entity, "New"));
+            eventMap.put("UPDATE", newEntityEvent(entity, "Updated"));
+            eventMap.put("DELETE", GreenRobotPatterns
+                  .newStaticEvent("Deleted" + StringUtil.capitalize(entity.getName()))
+                  .addFields("String", "model"));
+            eventMap.put("SELECT", newEntityEvent(entity, "Selected"));
+
+            eventManager.addEvents(eventMap.get("NEW"), newPostEventMethod(eventMap.get("NEW")));
+            eventManager.addEvents(eventMap.get("UPDATE"), newPostEventMethod(eventMap.get("UPDATE")));
+            eventManager.addEvents(eventMap.get("DELETE"), newPostEventMethod(eventMap.get("DELETE")));
+            eventManager.addEvents(eventMap.get("SELECT"), newPostEventMethod(eventMap.get("SELECT")));
+         }
+
+         private Event newEntityEvent(Entity entity, String eventType) {
+            return GreenRobotPatterns
+                  .newStaticEvent(eventType + StringUtil.capitalize(entity.getName()))
+                  .addFields(newClassOrInterfaceType(domainPackage, entity.getName()), "model");
+         }
+      };
+
+      domainVisitor.visit(domain);
+
+      STGenerator.writeJavaFile(eventManager, packageDeclaration, eventManager.getName(), root);
+   }
+
 
    // DOMAIN TO NEO4J wrappers:
 

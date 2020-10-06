@@ -275,6 +275,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		pop.add(new Debug(event));
 		pop.add(new NewDomainAction(event));
 		pop.add(new MakeNeoModelScript(event));
+		pop.add(new NewProject(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
@@ -1364,6 +1365,28 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	final class AddSequentialFlow extends CanvasAction {
+
+		AddSequentialFlow(PInputEvent event) {
+			super("Add Sequential Flow", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+		}
+	}
+
+	final class AddWork extends CanvasAction {
+
+		AddWork(PInputEvent event) {
+			super("Add Work", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+		}
+	}
+
 	final class MakeNeoModelScript extends CanvasAction {
 
 		MakeNeoModelScript(PInputEvent event) {
@@ -1377,6 +1400,21 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
 							.map(stModelNode -> stModelNode.getModel())
 							.collect(java.util.stream.Collectors.toSet()), "NeoTest");
+		}
+	}
+
+	final class NewProject extends CanvasAction {
+
+		NewProject(PInputEvent event) {
+			super("New Project", event);
+		}
+
+		@Override
+		void actionPerformed(PInputEvent event, ActionEvent e) {
+			nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+				final nextgen.st.model.Project project = presentationModel.newProject(s);
+				addProjectNode(project);
+			}));
 		}
 	}
 
@@ -2189,6 +2227,251 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return Optional.ofNullable((canvasNode instanceof MetaDomainNode) ? (MetaDomainNode) canvasNode : null);
 	}
 
+	final class SequentialFlowNode extends BaseCanvasNode<nextgen.workflow.SequentialFlow> {
+
+
+		public SequentialFlowNode(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addSequentialFlowNode(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+		addNode(uuid, newSequentialFlowNode(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<SequentialFlowNode> newSequentialFlowNode(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+		return () -> new SequentialFlowNode(model, uuid, label);
+	}
+
+	public Stream<SequentialFlowNode> getAllSequentialFlowNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof SequentialFlowNode)
+					.map(baseCanvasNode -> (SequentialFlowNode) baseCanvasNode);
+	}
+
+	public void forEachSequentialFlowNode(java.util.function.Consumer<SequentialFlowNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof SequentialFlowNode)
+				.map(baseCanvasNode -> (SequentialFlowNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<SequentialFlowNode> isInstanceOfSequentialFlowNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof SequentialFlowNode) ? (SequentialFlowNode) canvasNode : null);
+	}
+
+	final class WorkNode extends BaseCanvasNode<nextgen.workflow.Work> {
+
+
+		public WorkNode(nextgen.workflow.Work model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+		final class RunWork extends NodeAction {
+
+
+			RunWork(PInputEvent event) {
+				super("Run", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+			}
+		}
+
+	}
+
+	private void addWorkNode(nextgen.workflow.Work model, String uuid, String label) {
+		addNode(uuid, newWorkNode(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<WorkNode> newWorkNode(nextgen.workflow.Work model, String uuid, String label) {
+		return () -> new WorkNode(model, uuid, label);
+	}
+
+	public Stream<WorkNode> getAllWorkNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof WorkNode)
+					.map(baseCanvasNode -> (WorkNode) baseCanvasNode);
+	}
+
+	public void forEachWorkNode(java.util.function.Consumer<WorkNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof WorkNode)
+				.map(baseCanvasNode -> (WorkNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<WorkNode> isInstanceOfWorkNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof WorkNode) ? (WorkNode) canvasNode : null);
+	}
+
+	final class SequentialFlow extends BaseCanvasNode<nextgen.workflow.SequentialFlow> {
+
+
+		public SequentialFlow(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addSequentialFlow(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+		addNode(uuid, newSequentialFlow(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<SequentialFlow> newSequentialFlow(nextgen.workflow.SequentialFlow model, String uuid, String label) {
+		return () -> new SequentialFlow(model, uuid, label);
+	}
+
+	public Stream<SequentialFlow> getAllSequentialFlow() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof SequentialFlow)
+					.map(baseCanvasNode -> (SequentialFlow) baseCanvasNode);
+	}
+
+	public void forEachSequentialFlow(java.util.function.Consumer<SequentialFlow> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof SequentialFlow)
+				.map(baseCanvasNode -> (SequentialFlow) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<SequentialFlow> isInstanceOfSequentialFlow(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof SequentialFlow) ? (SequentialFlow) canvasNode : null);
+	}
+
+	final class ParallelFlowNode extends BaseCanvasNode<nextgen.workflow.ParallelFlow> {
+
+
+		public ParallelFlowNode(nextgen.workflow.ParallelFlow model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addParallelFlowNode(nextgen.workflow.ParallelFlow model, String uuid, String label) {
+		addNode(uuid, newParallelFlowNode(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<ParallelFlowNode> newParallelFlowNode(nextgen.workflow.ParallelFlow model, String uuid, String label) {
+		return () -> new ParallelFlowNode(model, uuid, label);
+	}
+
+	public Stream<ParallelFlowNode> getAllParallelFlowNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof ParallelFlowNode)
+					.map(baseCanvasNode -> (ParallelFlowNode) baseCanvasNode);
+	}
+
+	public void forEachParallelFlowNode(java.util.function.Consumer<ParallelFlowNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof ParallelFlowNode)
+				.map(baseCanvasNode -> (ParallelFlowNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<ParallelFlowNode> isInstanceOfParallelFlowNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof ParallelFlowNode) ? (ParallelFlowNode) canvasNode : null);
+	}
+
+	final class ConditionalFlowNode extends BaseCanvasNode<nextgen.workflow.ConditionalFlow> {
+
+
+		public ConditionalFlowNode(nextgen.workflow.ConditionalFlow model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addConditionalFlowNode(nextgen.workflow.ConditionalFlow model, String uuid, String label) {
+		addNode(uuid, newConditionalFlowNode(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<ConditionalFlowNode> newConditionalFlowNode(nextgen.workflow.ConditionalFlow model, String uuid, String label) {
+		return () -> new ConditionalFlowNode(model, uuid, label);
+	}
+
+	public Stream<ConditionalFlowNode> getAllConditionalFlowNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof ConditionalFlowNode)
+					.map(baseCanvasNode -> (ConditionalFlowNode) baseCanvasNode);
+	}
+
+	public void forEachConditionalFlowNode(java.util.function.Consumer<ConditionalFlowNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof ConditionalFlowNode)
+				.map(baseCanvasNode -> (ConditionalFlowNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<ConditionalFlowNode> isInstanceOfConditionalFlowNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof ConditionalFlowNode) ? (ConditionalFlowNode) canvasNode : null);
+	}
+
+	final class RepeatFlowNode extends BaseCanvasNode<nextgen.workflow.RepeatFlow> {
+
+
+		public RepeatFlowNode(nextgen.workflow.RepeatFlow model, String uuid, String label) {
+			super(model, uuid, label);
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addRepeatFlowNode(nextgen.workflow.RepeatFlow model, String uuid, String label) {
+		addNode(uuid, newRepeatFlowNode(model, uuid, label));
+	}
+
+	public java.util.function.Supplier<RepeatFlowNode> newRepeatFlowNode(nextgen.workflow.RepeatFlow model, String uuid, String label) {
+		return () -> new RepeatFlowNode(model, uuid, label);
+	}
+
+	public Stream<RepeatFlowNode> getAllRepeatFlowNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof RepeatFlowNode)
+					.map(baseCanvasNode -> (RepeatFlowNode) baseCanvasNode);
+	}
+
+	public void forEachRepeatFlowNode(java.util.function.Consumer<RepeatFlowNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof RepeatFlowNode)
+				.map(baseCanvasNode -> (RepeatFlowNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<RepeatFlowNode> isInstanceOfRepeatFlowNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof RepeatFlowNode) ? (RepeatFlowNode) canvasNode : null);
+	}
+
 	final class DomainEntityNode extends BaseCanvasNode<nextgen.domains.meta.DomainEntity> {
 
 
@@ -2416,9 +2699,29 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new AddWork(event));
 			super.onNodeRightClick(event, pop);
 		}
 
+		final class AddWork extends NodeAction {
+
+
+			AddWork(PInputEvent event) {
+				super("Add Work", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+				presentationModel.doLaterInTransaction(transaction -> {
+					final nextgen.workflow.Work work = presentationModel.getWorkspaceFacade()
+							.newWork()
+							.setName("[Work]")
+							.setPackage(getModel().getName());
+							
+					addWorkNode(work, work.getUuid(), work.getName());
+				});
+			}
+		}
 
 	}
 

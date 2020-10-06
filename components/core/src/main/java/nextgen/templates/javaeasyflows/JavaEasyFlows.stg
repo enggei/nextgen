@@ -63,6 +63,10 @@ public class ~name~ extends WorkFlowNeoFactory {
 		super(dir);
 	}
 
+	public WorkFlowFacade(GraphDatabaseService db) {
+		super(db);
+	}
+	
 	public org.jeasy.flows.work.Work newInstance(Work work) {
 		final nextgen.templates.javaeasyflows.Work javaCode = toCode(work);
 		final String className = javaCode.getPackageName() + "." + javaCode.getName().toString();

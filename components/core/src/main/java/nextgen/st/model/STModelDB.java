@@ -154,6 +154,10 @@ public class STModelDB extends STModelNeoFactory {
       return null;
    }
 
+   public STTemplate getSTTemplate(STModel stmodel) {
+      return findSTTemplateByUuid(stmodel.getStTemplate());
+   }
+
    public STTemplate findSTTemplateByUuid(String uuid) {
 
       if (templateMap.containsKey(uuid)) return templateMap.get(uuid);
