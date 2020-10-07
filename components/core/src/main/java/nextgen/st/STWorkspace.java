@@ -2,7 +2,6 @@ package nextgen.st;
 
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
-import nextgen.st.model.Project;
 import nextgen.st.model.STModel;
 
 import javax.swing.*;
@@ -210,23 +209,5 @@ public class STWorkspace extends JTabbedPane {
 				remove(i);
 			}
 		});
-	}
-
-	public ProjectEditor getProjectEditor(Project model) {
-		for (int i = 0; i < getTabCount(); i++) {
-			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof ProjectEditor) {
-				if (((ProjectEditor) tabComponentAt).getModel().equals(model)) {
-					final ProjectEditor stEditor = (ProjectEditor) tabComponentAt;
-					setSelectedComponent(stEditor);
-					return stEditor;
-				}
-			}
-		}
-
-		final ProjectEditor component = new ProjectEditor(model, presentationModel);
-		addPane(model.getName(), component);
-		setSelectedComponent(component);
-		return component;
 	}
 }

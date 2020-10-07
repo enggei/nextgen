@@ -5,7 +5,10 @@ public class STModelNeoFactory {
 	private final org.neo4j.graphdb.GraphDatabaseService db;
 
 	public STModelNeoFactory(java.lang.String dir) { 
-		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true").newGraphDatabase());
+		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory()
+				.newEmbeddedDatabaseBuilder(new java.io.File(dir))
+				.setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true")
+				.newGraphDatabase());
 		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));
 	}
 
@@ -91,20 +94,6 @@ public class STModelNeoFactory {
 		return db.findNodes(STModelLabel, "uuid", value).stream().map(this::newSTModel);
 	}
 
-	public STModel findSTModelByStGroup(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "stGroup", value);
-		return node == null ? null : newSTModel(node);
-	}
-
-	public STModel findOrCreateSTModelByStGroup(String value) {
-		final STModel existing = findSTModelByStGroup(value);
-		return existing == null ? newSTModel().setStGroup(value) : existing;
-	}
-
-	public java.util.stream.Stream<STModel> findAllSTModelByStGroup(String value) {
-		return db.findNodes(STModelLabel, "stGroup", value).stream().map(this::newSTModel);
-	}
-
 	public STModel findSTModelByStTemplate(String value) {
 		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "stTemplate", value);
 		return node == null ? null : newSTModel(node);
@@ -117,6 +106,20 @@ public class STModelNeoFactory {
 
 	public java.util.stream.Stream<STModel> findAllSTModelByStTemplate(String value) {
 		return db.findNodes(STModelLabel, "stTemplate", value).stream().map(this::newSTModel);
+	}
+
+	public STModel findSTModelByStGroup(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "stGroup", value);
+		return node == null ? null : newSTModel(node);
+	}
+
+	public STModel findOrCreateSTModelByStGroup(String value) {
+		final STModel existing = findSTModelByStGroup(value);
+		return existing == null ? newSTModel().setStGroup(value) : existing;
+	}
+
+	public java.util.stream.Stream<STModel> findAllSTModelByStGroup(String value) {
+		return db.findNodes(STModelLabel, "stGroup", value).stream().map(this::newSTModel);
 	}
 
 	private static final org.neo4j.graphdb.Label STFileLabel = org.neo4j.graphdb.Label.label("STFile");
@@ -301,98 +304,6 @@ public class STModelNeoFactory {
 
 	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKVByStParameterKey(String value) {
 		return db.findNodes(STArgumentKVLabel, "stParameterKey", value).stream().map(this::newSTArgumentKV);
-	}
-
-	private static final org.neo4j.graphdb.Label ScriptLabel = org.neo4j.graphdb.Label.label("Script");
-
-	public static boolean isScript(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(ScriptLabel);
-	}
-
-	public Script newScript() { 
-		return newScript(db.createNode(ScriptLabel));
-	}
-
-	public Script newScript(org.neo4j.graphdb.Node node) { 
-		return new Script(node);
-	}
-
-	public java.util.stream.Stream<Script> findAllScript() { 
-		return db.findNodes(ScriptLabel).stream().map(this::newScript);
-	}
-
-	public Script findScriptByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(ScriptLabel, "uuid", value);
-		return node == null ? null : newScript(node);
-	}
-
-	public Script findOrCreateScriptByUuid(String value) {
-		final Script existing = findScriptByUuid(value);
-		return existing == null ? newScript().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<Script> findAllScriptByUuid(String value) {
-		return db.findNodes(ScriptLabel, "uuid", value).stream().map(this::newScript);
-	}
-
-	public Script findScriptByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(ScriptLabel, "name", value);
-		return node == null ? null : newScript(node);
-	}
-
-	public Script findOrCreateScriptByName(String value) {
-		final Script existing = findScriptByName(value);
-		return existing == null ? newScript().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<Script> findAllScriptByName(String value) {
-		return db.findNodes(ScriptLabel, "name", value).stream().map(this::newScript);
-	}
-
-	private static final org.neo4j.graphdb.Label ProjectLabel = org.neo4j.graphdb.Label.label("Project");
-
-	public static boolean isProject(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(ProjectLabel);
-	}
-
-	public Project newProject() { 
-		return newProject(db.createNode(ProjectLabel));
-	}
-
-	public Project newProject(org.neo4j.graphdb.Node node) { 
-		return new Project(node);
-	}
-
-	public java.util.stream.Stream<Project> findAllProject() { 
-		return db.findNodes(ProjectLabel).stream().map(this::newProject);
-	}
-
-	public Project findProjectByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(ProjectLabel, "uuid", value);
-		return node == null ? null : newProject(node);
-	}
-
-	public Project findOrCreateProjectByUuid(String value) {
-		final Project existing = findProjectByUuid(value);
-		return existing == null ? newProject().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<Project> findAllProjectByUuid(String value) {
-		return db.findNodes(ProjectLabel, "uuid", value).stream().map(this::newProject);
-	}
-
-	public Project findProjectByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(ProjectLabel, "name", value);
-		return node == null ? null : newProject(node);
-	}
-
-	public Project findOrCreateProjectByName(String value) {
-		final Project existing = findProjectByName(value);
-		return existing == null ? newProject().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<Project> findAllProjectByName(String value) {
-		return db.findNodes(ProjectLabel, "name", value).stream().map(this::newProject);
 	}
 
 	// ONLY delete this node and its relations

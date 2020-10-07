@@ -52,33 +52,6 @@ public class STModel {
 		return this;
 	}
 
-	private static final String _stGroup = "stGroup";
-
-	public STModel setStGroup(String value) { 
-		if (value == null) node.removeProperty(_stGroup); 
-		else node.setProperty(_stGroup, value);
-		return this;
-	}
-
-	public String getStGroup() { 
-		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
-		return null;
-	}
-
-	public String getStGroup(String defaultValue) { 
-		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
-		return defaultValue;
-	}
-
-	public boolean hasStGroup() { 
-		return node.hasProperty(_stGroup);
-	}
-
-	public STModel removeStGroup() { 
-		node.removeProperty(_stGroup);
-		return this;
-	}
-
 	private static final String _stTemplate = "stTemplate";
 
 	public STModel setStTemplate(String value) { 
@@ -103,6 +76,33 @@ public class STModel {
 
 	public STModel removeStTemplate() { 
 		node.removeProperty(_stTemplate);
+		return this;
+	}
+
+	private static final String _stGroup = "stGroup";
+
+	public STModel setStGroup(String value) { 
+		if (value == null) node.removeProperty(_stGroup); 
+		else node.setProperty(_stGroup, value);
+		return this;
+	}
+
+	public String getStGroup() { 
+		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
+		return null;
+	}
+
+	public String getStGroup(String defaultValue) { 
+		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
+		return defaultValue;
+	}
+
+	public boolean hasStGroup() { 
+		return node.hasProperty(_stGroup);
+	}
+
+	public STModel removeStGroup() { 
+		node.removeProperty(_stGroup);
 		return this;
 	}
 
@@ -135,8 +135,8 @@ public class STModel {
 		return this;
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingFilesSTFile() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STValue> getIncomingStModelSTValue() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
 	}
 
 	private static final org.neo4j.graphdb.RelationshipType _arguments = org.neo4j.graphdb.RelationshipType.withName("arguments");
@@ -168,10 +168,6 @@ public class STModel {
 		return this;
 	}
 
-	public java.util.stream.Stream<STArgument> getIncomingArgumentsSTArgument() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();
@@ -196,8 +192,8 @@ public class STModel {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("stGroup")) jsonObject.put("stGroup", node.getProperty("stGroup"));
 		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
+		if (node.hasProperty("stGroup")) jsonObject.put("stGroup", node.getProperty("stGroup"));
 		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
 		getFiles().forEach(element -> _files.add(element.toJsonObject()));
 		if (!_files.isEmpty()) jsonObject.put("files", _files);

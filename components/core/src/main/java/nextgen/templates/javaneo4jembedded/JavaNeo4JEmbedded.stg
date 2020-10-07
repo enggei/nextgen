@@ -100,7 +100,7 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~() {
 }
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() { 
-	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
+	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new ~type~(relationship.getOtherNode(node)));
 }
 
 public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ dst) { 
@@ -131,7 +131,7 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~() {
 }
 
 public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() { 
-	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty("value"));
+	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty("value"));
 }
 
 public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() { 

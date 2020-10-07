@@ -146,6 +146,14 @@ public class STValue {
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
+	public java.util.stream.Stream<STArgument> getIncomingValueSTArgument() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STArgumentKV> getIncomingValueSTArgumentKV() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();

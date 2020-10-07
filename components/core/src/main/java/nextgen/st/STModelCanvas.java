@@ -64,8 +64,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		removeInputEventListener(getZoomEventHandler());
 		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
-		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(null).actionPerformed(null));
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		//test
+		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(null).actionPerformed(null));
 	}
 
 	public STModelCanvas thisCanvas() {
@@ -210,10 +211,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 
 
-		pop.add(new MakeGeneratorScript(event));
 		pop.add(new Debug(event));
 		pop.add(new MakeNeoModelScript(event));
-		pop.add(new NewProject(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
@@ -1327,21 +1326,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	final class NewProject extends CanvasAction {
-
-		NewProject(PInputEvent event) {
-			super("New Project", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-				final nextgen.st.model.Project project = presentationModel.newProject(s);
-				addProjectNode(project);
-			}));
-		}
-	}
-
 	final class SaveLastLayoutAction extends CanvasAction {
 
 		SaveLastLayoutAction(PInputEvent event) {
@@ -1368,9 +1352,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 						} else if (stNode instanceof STValueNode) {
 							final org.neo4j.graphdb.Node node = ((STValueNode) stNode).getModel().getNode();
-							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
-						} else if (stNode instanceof ScriptNode) {
-							final org.neo4j.graphdb.Node node = ((ScriptNode) stNode).getModel().getNode();
 							layoutNode.getNode().createRelationshipTo(node, org.neo4j.graphdb.RelationshipType.withName("ref"));
 						} else if (stNode instanceof STFileNode) {
 							final org.neo4j.graphdb.Node node = ((STFileNode) stNode).getModel().getNode();
@@ -1411,16 +1392,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 								addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 								getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stValue.getUuid()));
-							} else if (nextgen.st.model.STModelNeoFactory.isScript(stNode)) {
-								final nextgen.st.model.Script script = presentationModel.newScript(stNode);
-								addNode(script.getUuid(), () -> new ScriptNode(script));
-								getNode(script.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(script.getUuid()));
-							} else if (nextgen.st.model.STModelNeoFactory.isProject(stNode)) {
-								final nextgen.st.model.Project project = presentationModel.newProject(stNode);
-								addNode(project.getUuid(), () -> new ProjectNode(project));
-								getNode(project.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
-								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(project.getUuid()));
 							} else if (nextgen.st.model.STModelNeoFactory.isSTFile(stNode)) {
 								final nextgen.st.model.STFile stFile = presentationModel.newSTFile(stNode);
 								stFile.getIncomingFilesSTModel().findFirst().ifPresent(stModel -> {
@@ -1797,277 +1768,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	public Optional<RepeatFlowNode> isInstanceOfRepeatFlowNode(BaseCanvasNode<?> canvasNode) {
 		return Optional.ofNullable((canvasNode instanceof RepeatFlowNode) ? (RepeatFlowNode) canvasNode : null);
-	}
-
-	final class ProjectNode extends BaseCanvasNode<nextgen.st.model.Project> {
-
-
-		public ProjectNode(nextgen.st.model.Project model) {
-			super(model, model.getUuid(), model.getName());
-		}
-		@Override
-		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-			pop.add(new AddWork(event));
-			super.onNodeRightClick(event, pop);
-		}
-
-		final class AddWork extends NodeAction {
-
-
-			AddWork(PInputEvent event) {
-				super("Add Work", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
-					final nextgen.workflow.Work work = presentationModel.getWorkspaceFacade()
-							.newWork()
-							.setName("[Work]")
-							.setPackage(getModel().getName());
-							
-					addWorkNode(work, work.getUuid(), work.getName());
-				});
-			}
-		}
-
-	}
-
-	private void addProjectNode(nextgen.st.model.Project model) {
-		addNode(model.getUuid(), newProjectNode(model));
-	}
-
-	public java.util.function.Supplier<ProjectNode> newProjectNode(nextgen.st.model.Project model) {
-		return () -> new ProjectNode(model);
-	}
-
-	public Stream<ProjectNode> getAllProjectNode() {
-		return getAllNodes()
-					.filter(baseCanvasNode -> baseCanvasNode instanceof ProjectNode)
-					.map(baseCanvasNode -> (ProjectNode) baseCanvasNode);
-	}
-
-	public void forEachProjectNode(java.util.function.Consumer<ProjectNode> consumer) {
-		getAllNodes()
-				.filter(baseCanvasNode -> baseCanvasNode instanceof ProjectNode)
-				.map(baseCanvasNode -> (ProjectNode) baseCanvasNode)
-				.forEach(consumer);
-	}
-
-	public Optional<ProjectNode> isInstanceOfProjectNode(BaseCanvasNode<?> canvasNode) {
-		return Optional.ofNullable((canvasNode instanceof ProjectNode) ? (ProjectNode) canvasNode : null);
-	}
-
-	final class ScriptNode extends BaseCanvasNode<nextgen.st.model.Script> {
-
-
-		public ScriptNode(nextgen.st.model.Script model) {
-			super(model, model.getUuid(), model.getName());
-		}
-
-		@Override
-		public void addedToCanvas() {
-			if (getModel().getScript() == null) return;
-			thisCanvas().getAllNodes().filter(stNode -> stNode instanceof STValueNode)
-					.map(stNode -> (STValueNode) stNode)
-					.filter(stValueNode -> stValueNode.getUuid().toString().equals(getModel().getScript().getUuid()))
-					.findFirst()
-					.ifPresent(stValueNode -> {
-							thisCanvas().addRelation(getModel().getUuid(), () -> new ScriptRelation(ScriptNode.this, stValueNode));
-					});
-		}
-
-
-		@Override
-		public void newNodeAdded(BaseCanvasNode<?> node) {
-			if (getModel().getScript() == null || !getUuid().toString().equals(getModel().getScript().getUuid()))
-				return;
-			thisCanvas().addRelation(getModel().getUuid(), () -> new ScriptRelation(ScriptNode.this, node));
-		}
-
-		@Override
-		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
-			final java.util.List<STValueNode> stValueNodes = thisCanvas().getSelectedNodes()
-							.filter(stNode -> stNode instanceof STValueNode)
-							.filter(stNode -> !stNode.getUuid().equals(getUuid()))
-							.map(stNode -> (STValueNode) stNode)
-							.collect(java.util.stream.Collectors.toList());
-					final java.util.List<STModelNode> stModelNodes = thisCanvas().getSelectedNodes()
-							.filter(stNode -> stNode instanceof STModelNode)
-							.filter(stNode -> !stNode.getUuid().equals(getUuid()))
-							.map(stNode -> (STModelNode) stNode)
-							.collect(java.util.stream.Collectors.toList());
-			presentationModel.doInTransaction(tx -> {
-					stModelNodes.forEach(stNode -> pop.add(new SetScriptModelAction(event, stNode)));
-					stValueNodes.forEach(stNode -> pop.add(new SetScriptValueAction(event, stNode)));
-				});
-			pop.add(new OpenScript(event));
-			pop.add(new Run(event));
-			pop.add(new SetName(event));
-			pop.add(new Delete(event));
-			super.onNodeRightClick(event, pop);
-		}
-
-		@Override
-		protected void onNodeKeyPressed(PInputEvent event) {
-			switch (event.getKeyCode()) {
-				case VK_E:
-					new OpenScript(event).actionPerformed(null);
-					break;
-
-			}
-			super.onNodeKeyPressed(event);
-		}
-
-
-		final class OpenScript extends NodeAction {
-
-
-			OpenScript(PInputEvent event) {
-				super("Open Script", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doInTransaction(transaction -> {
-						final nextgen.st.model.STValue stValue = getModel().getScript();
-						if (stValue == null) return;
-						thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
-					});
-			}
-		}
-
-		final class Run extends NodeAction {
-
-
-			Run(PInputEvent event) {
-				super("Run", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						try {
-
-								final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = thisCanvas().presentationModel.generateScriptCode(getModel());
-
-								if (compilationResult.aClass == null) {
-									JOptionPane.showMessageDialog(thisCanvas(), compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
-									return;
-								}
-
-								((Runnable) compilationResult.aClass
-										.getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
-										.newInstance(thisCanvas().presentationModel.db, thisCanvas().presentationModel.stRenderer))
-										.run();
-
-							} catch (Throwable ex) {
-									nextgen.utils.SwingUtil.showException(thisCanvas(), ex);
-							}
-						});
-			}
-		}
-
-		final class SetName extends NodeAction {
-
-
-			SetName(PInputEvent event) {
-				super("Set Name", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doInTransaction(transaction -> {
-					nextgen.utils.SwingUtil.showInputDialog("Name", thisCanvas(), getModel().getName(), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-							getModel().setName(s);
-							setText(getModel().getName());
-						}));
-					});
-			}
-		}
-
-		final class Delete extends NodeAction {
-
-
-			Delete(PInputEvent event) {
-				super("Delete", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				if (!nextgen.utils.SwingUtil.showConfirmDialog(thisCanvas(), "Delete script ?")) return;
-						thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-							close();
-							thisCanvas().presentationModel.db.remove(getModel());
-						});
-			}
-		}
-
-		final class SetScriptValueAction extends NodeAction {
-
-			private STValueNode model;
-
-			SetScriptValueAction(PInputEvent event, STValueNode model) {
-				super("Set Script to " + presentationModel.cut(model.getText()), event);
-				this.model = model;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
-						getModel().setScript(model.getModel());
-						thisCanvas().removeRelation(getUuid());
-						thisCanvas().addRelation(getUuid(), () -> new ScriptRelation(thisNode(), model));
-					});
-			}
-		}
-
-		final class SetScriptModelAction extends NodeAction {
-
-			private STModelNode stModelNode;
-
-			SetScriptModelAction(PInputEvent event, STModelNode stModelNode) {
-				super("Set Script to " + presentationModel.cut(stModelNode.getText()), event);
-				this.stModelNode = stModelNode;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
-						final nextgen.st.model.STValue dst = thisCanvas().presentationModel.newSTValue(stModelNode.getModel());
-						getModel().setScript(dst);
-						thisCanvas().removeRelation(getUuid());
-						final STValueNode stValueNode = thisCanvas().addNode(dst.getUuid(), () -> new STValueNode(dst));
-						thisCanvas().addRelation(getUuid(), () -> new ScriptRelation(thisNode(), stValueNode));
-					});
-			}
-		}
-
-	}
-
-	private void addScriptNode(nextgen.st.model.Script model) {
-		addNode(model.getUuid(), newScriptNode(model));
-	}
-
-	public java.util.function.Supplier<ScriptNode> newScriptNode(nextgen.st.model.Script model) {
-		return () -> new ScriptNode(model);
-	}
-
-	public Stream<ScriptNode> getAllScriptNode() {
-		return getAllNodes()
-					.filter(baseCanvasNode -> baseCanvasNode instanceof ScriptNode)
-					.map(baseCanvasNode -> (ScriptNode) baseCanvasNode);
-	}
-
-	public void forEachScriptNode(java.util.function.Consumer<ScriptNode> consumer) {
-		getAllNodes()
-				.filter(baseCanvasNode -> baseCanvasNode instanceof ScriptNode)
-				.map(baseCanvasNode -> (ScriptNode) baseCanvasNode)
-				.forEach(consumer);
-	}
-
-	public Optional<ScriptNode> isInstanceOfScriptNode(BaseCanvasNode<?> canvasNode) {
-		return Optional.ofNullable((canvasNode instanceof ScriptNode) ? (ScriptNode) canvasNode : null);
 	}
 
 	final class STFileNode extends BaseCanvasNode<nextgen.st.model.STFile> {
@@ -3402,9 +3102,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(thisCanvas(), getModel(), stTemplate, stModel -> {
-					setText(presentationModel.render(getModel()));
-				}));
+				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(thisCanvas(), getModel(), stTemplate));
 			}
 		}
 

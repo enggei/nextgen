@@ -187,9 +187,7 @@ public class STModelEditor extends JPanel {
 
       pop.add(newAction("Set Multiple", actionEvent -> {
          presentationModel.doLaterInTransaction(transaction -> presentationModel
-               .setMultiple(txtEditor, getModel(), stTemplate, stModel -> {
-                  setText(presentationModel.render(stModel), null);
-               }));
+               .setMultiple(txtEditor, getModel(), stTemplate));
       }));
 
       pop.addSeparator();

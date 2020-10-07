@@ -276,82 +276,6 @@ public class STModelNavigator extends JPanel {
 		}
 	}
 
-	// ProjectTreeNode
-	public class ProjectTreeNode extends BaseTreeNode<nextgen.st.model.Project> {
-
-		private String uuid;
-
-		ProjectTreeNode(nextgen.st.model.Project model) {
-			super(model, null);
-
-			this.label = getModel().getName();
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-		}
-
-		ProjectTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getName();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			actions.add(newAction("Edit", actionEvent -> {
-				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					workspace.setSelectedComponent(workspace.getProjectEditor(getModel()));
-				}));
-			}));
-			return actions;
-		}
-
-	}
-
-	// ProjectsRootNode
-	public class ProjectsRootNode extends BaseTreeNode<String> {
-
-		ProjectsRootNode(String model) {
-			super(model, null);
-
-			this.label = getModel();
-			this.tooltip = "";
-
-			presentationModel.db.findAllProject().forEach(project -> add(new ProjectTreeNode(project)));
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		}
-
-		ProjectsRootNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewProject(nextgen.st.STAppEvents.NewProject event) {
-			presentationModel.doLaterInTransaction(transaction -> 
-				addAndSelectChild(new ProjectTreeNode(event.project))
-			);
-		}
-	}
-
 	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
@@ -362,7 +286,6 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			presentationModel.db.doInTransaction(transaction -> {
-				add(new ProjectsRootNode("Projects"));
 				presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
 				add(new STValuesRootNode("Values"));
 			});

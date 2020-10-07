@@ -124,7 +124,7 @@ public class ListPrimitiveAccessors {
 				"}\n" + 
 				"\n" + 
 				"public java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~Sorted() { \n" + 
-				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty(\"_t\", o.getId()))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty(\"value\"));\n" + 
+				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty(\"_t\"))).map((relationship) -> (~type~) relationship.getOtherNode(node).getProperty(\"value\"));\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 

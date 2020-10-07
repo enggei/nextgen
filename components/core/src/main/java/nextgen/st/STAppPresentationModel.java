@@ -11,10 +11,8 @@ import nextgen.templates.maven.TestRunner;
 import nextgen.templates.maven.neo.MavenNeo;
 import nextgen.templates.maven.neo.ProjectGeneratorModel;
 import nextgen.templates.maven.neo.ProjectModel;
-import nextgen.templates.stringtemplate.DomainVisitorRunner;
 import nextgen.templates.stringtemplate.ScriptRunner;
 import nextgen.templates.stringtemplate.StringTemplateST;
-import nextgen.utils.DomainUtil;
 import nextgen.utils.NeoChronicle;
 import nextgen.utils.STModelUtil;
 import nextgen.utils.SwingUtil;
@@ -43,8 +41,6 @@ import static nextgen.st.STGenerator.toSTGroup;
 import static nextgen.st.model.STValueType.PRIMITIVE;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.java.JavaST.*;
-import static nextgen.utils.StringUtil.capitalize;
-import static nextgen.utils.SwingUtil.newComboBox;
 import static nextgen.utils.SwingUtil.newTextField;
 
 public class STAppPresentationModel {
@@ -59,7 +55,7 @@ public class STAppPresentationModel {
 
    private final NeoChronicle chronicle;
    private final STAppModel appModel;
-   private Font preferredFont;
+   private final Font preferredFont;
    private STWorkspace stWorkspace;
    private String lastDir;
    private final WorkFlowFacade workFlowFacade;
@@ -197,7 +193,7 @@ public class STAppPresentationModel {
 
    public void doLaterInTransaction(PropertyChangeEvent evt, String type, java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       SwingUtilities.invokeLater(() -> {
-         if (type.equals(evt.getPropertyName().split(".")[0]))
+         if (type.equals(evt.getPropertyName().split("\\.")[0]))
             doInTransaction(consumer);
       });
    }
@@ -273,65 +269,6 @@ public class STAppPresentationModel {
       }
    }
 
-   public CompilationResult generateScriptCode(Script script) {
-
-      final File srcRoot = new File(appModel.getRootDir());
-
-      final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
-            .newPackageDeclaration()
-            .setName("tmp");
-
-      final Collection<ImportDeclaration> imports = new ArrayList<>();
-      stgDirectories.forEach(directory -> {
-         final String outputPackage = directory.getOutputPackage();
-         final File templateClassDir = new File(srcRoot, STGenerator.packageToPath(outputPackage));
-
-         directory.getGroups().forEach(stGroupModel -> {
-            final String packageName = outputPackage + "." + stGroupModel.getName().toLowerCase();
-            if (new File(srcRoot, STGenerator.packageToPath(packageName)).exists()) {
-               imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(packageName + "." + capitalize(stGroupModel
-                           .getName() + "ST"))
-                     .setIsAsterisk(true)
-                     .setIsStatic(true));
-               imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(packageName)
-                     .setIsAsterisk(true));
-            }
-         });
-
-         Arrays.stream(Objects.requireNonNull(templateClassDir.listFiles()))
-               .filter(file -> file.isFile() && file.getName().endsWith("Patterns.java"))
-               .forEach(file -> imports.add(nextgen.templates.java.JavaST.newImportDeclaration()
-                     .setName(directory
-                           .getOutputPackage() + "." + capitalize(file
-                           .getName()
-                           .substring(0, file.getName()
-                                 .length() - 5)))
-                     .setIsAsterisk(true)
-                     .setIsStatic(true)));
-      });
-
-      final String className = script.getName().replaceAll("[ ]", "");
-
-      STGenerator.writeJavaFile(getScriptRunner(script.getScript(), packageDeclaration, imports, className), packageDeclaration
-            .getName(), className, srcRoot);
-
-      final java.io.StringWriter sr = new java.io.StringWriter();
-      final java.io.PrintWriter compilerOutput = new java.io.PrintWriter(sr);
-      try {
-         final String cacheClassname = className + System.currentTimeMillis();
-         final Object compilationUnit = getScriptRunner(script.getScript(), packageDeclaration, imports, cacheClassname);
-         final Class<?> aClass = CompilerUtils.CACHED_COMPILER
-               .loadFromJava(getClass().getClassLoader(), packageDeclaration
-                     .getName() + "." + cacheClassname, compilationUnit.toString(), compilerOutput);
-         return new CompilationResult(sr.toString(), aClass);
-      } catch (Throwable t) {
-         return new CompilationResult(sr.toString(), null);
-      }
-   }
-
-
    public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {
       return db.getInTransaction(action);
    }
@@ -376,10 +313,6 @@ public class STAppPresentationModel {
       return lastDir == null ? System.getProperty("user.home") : lastDir;
    }
 
-   Font getPreferredFont() {
-      return preferredFont;
-   }
-
    public Optional<STModel> getSTModel(STValue stValue) {
       return stValue.getType()
             .equals(nextgen.st.model.STValueType.STMODEL) ? Optional.of(stValue.getStModel()) : Optional
@@ -422,10 +355,6 @@ public class STAppPresentationModel {
       return stWorkspace;
    }
 
-   public <T> Optional<T> isInstanceOf(Object object, Class<T> type) {
-      return Optional.ofNullable(object.getClass().isAssignableFrom(type) ? (T) object : null);
-   }
-
    public ImageIcon loadIcon(String iconName) {
       return loadIcon(iconName, "16x16");
    }
@@ -442,15 +371,6 @@ public class STAppPresentationModel {
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);
    }
-
-   public Project newProject(Node node) {
-      return db.newProject(node);
-   }
-
-   public Project newProject(String name) {
-      return db.newProject(name);
-   }
-
 
    public Pair<STArgument, STValue> newSTArgument(STParameter stParameter, String value) {
       final STValue stValue = newSTValue(value);
@@ -499,10 +419,9 @@ public class STAppPresentationModel {
    }
 
    public STTemplate newSTTemplate(String name) {
-      final STTemplate stTemplate = STJsonFactory.newSTTemplate()
+      return STJsonFactory.newSTTemplate()
             .setName(name)
             .setText("");
-      return stTemplate;
    }
 
    public STValue newSTValue(String s) {
@@ -519,14 +438,6 @@ public class STAppPresentationModel {
 
    public STValue newSTValue(Node node) {
       return db.newSTValue(node);
-   }
-
-   public Script newScript(String name) {
-      return db.newScript(name);
-   }
-
-   public Script newScript(Node node) {
-      return db.newScript(node);
    }
 
    public void reconcileValues() {
@@ -621,33 +532,10 @@ public class STAppPresentationModel {
       return out.toString();
    }
 
-   public void runScript(JComponent canvas, Script script) {
-      doLaterInTransaction(tx -> {
-         try {
-
-            final nextgen.st.STAppPresentationModel.CompilationResult compilationResult = generateScriptCode(script);
-
-            if (compilationResult.aClass == null) {
-               JOptionPane
-                     .showMessageDialog(canvas, compilationResult.compilerOutput, "Compilation Exception", JOptionPane.ERROR_MESSAGE);
-               return;
-            }
-
-            ((Runnable) compilationResult.aClass
-                  .getConstructor(nextgen.st.model.STModelDB.class, nextgen.st.STRenderer.class)
-                  .newInstance(db, stRenderer))
-                  .run();
-
-         } catch (Throwable ex) {
-            nextgen.utils.SwingUtil.showException(canvas, ex);
-         }
-      });
-   }
-
    public boolean sameArgumentValue(STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue model) {
       final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
       stModel.getArguments()
-            .filter(existing -> existing.getStParameter().equals(stParameter.uuid()))
+            .filter(existing -> existing.getStParameter().equals(stParameter.getUuid()))
             .forEach(existing -> {
                if (existing.getValue() != null && existing.getValue().getUuid().equals(model.getUuid()))
                   exists.set(true);
@@ -682,7 +570,7 @@ public class STAppPresentationModel {
    }
 
    public void setLastDir(File dir) {
-      this.lastDir = lastDir;
+      this.lastDir = dir.getAbsolutePath();
    }
 
    public STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
@@ -735,7 +623,7 @@ public class STAppPresentationModel {
       }));
    }
 
-   public void setMultiple(JComponent owner, STModel model, STTemplate stTemplate, Consumer<STModel> onSuccess) {
+   public void setMultiple(JComponent owner, STModel model, STTemplate stTemplate) {
       final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
       final Map<String, STParameter> parameterMap = new LinkedHashMap<>();
       final Map<String, STArgument> argumentMap = new LinkedHashMap<>();
@@ -751,8 +639,7 @@ public class STAppPresentationModel {
                final String content = argument.isPresent() ? render(argument.get().getValue().getStModel()) : "";
                fieldMap.put(stParameter.getName(), newTextField(content, 15));
                parameterMap.put(stParameter.getName(), stParameter);
-               if (argument.isPresent())
-                  argumentMap.put(stParameter.getName(), argument.get());
+               argument.ifPresent(stArgument -> argumentMap.put(stParameter.getName(), stArgument));
             });
 
       final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
@@ -911,7 +798,6 @@ public class STAppPresentationModel {
 
    public void undoLast() {
       chronicle.rollbackLast();
-      ;
    }
 
    public Stream<STValue> getSelectedSTValues() {
@@ -939,11 +825,6 @@ public class STAppPresentationModel {
    public WorkFlowFacade getWorkspaceFacade() {
       return workFlowFacade;
    }
-
-   public void importDomain(String s) {
-      DomainUtil.importDomain(s, workFlowFacade);
-   }
-
 
    public static final class CompilationResult {
 
@@ -1174,13 +1055,11 @@ public class STAppPresentationModel {
                      return;
                   }
 
-                  SwingUtil.showSelectDialog("Select", parent, interfaces, stTemplate1 -> {
-                     doLaterInTransaction(transaction2 -> {
-                        if (singleValue) removeArgument(stModel, stParameter);
-                        final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
-                        addParameter(stParameter, stModel, consumer, stValue);
-                     });
-                  });
+                  SwingUtil.showSelectDialog("Select", parent, interfaces, stTemplate1 -> doLaterInTransaction(transaction2 -> {
+                     if (singleValue) removeArgument(stModel, stParameter);
+                     final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
+                     addParameter(stParameter, stModel, consumer, stValue);
+                  }));
 
                } else {
 
@@ -1188,13 +1067,11 @@ public class STAppPresentationModel {
                   if (stEnum != null) {
 
                      SwingUtil.showSelectDialog("Select", parent, stEnum.getValues()
-                           .collect(Collectors.toSet()), stEnumValue -> {
-                        doLaterInTransaction(transaction2 -> {
-                           if (singleValue) removeArgument(stModel, stParameter);
-                           final STValue stValue = newSTValue(stEnumValue);
-                           addParameter(stParameter, stModel, consumer, stValue);
-                        });
-                     });
+                           .collect(Collectors.toSet()), stEnumValue -> doLaterInTransaction(transaction2 -> {
+                              if (singleValue) removeArgument(stModel, stParameter);
+                              final STValue stValue = newSTValue(stEnumValue);
+                              addParameter(stParameter, stModel, consumer, stValue);
+                           }));
 
                   } else {
                      SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->

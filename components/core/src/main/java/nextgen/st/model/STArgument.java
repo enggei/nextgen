@@ -134,10 +134,6 @@ public class STArgument {
 		return this;
 	}
 
-	public java.util.stream.Stream<STArgumentKV> getIncomingKeyValuesSTArgumentKV() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("keyValues")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
-	}
-
 	public java.util.stream.Stream<STModel> getIncomingArgumentsSTModel() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
 	}
