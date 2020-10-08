@@ -5,9 +5,10 @@ public class AppEvents {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
-	private java.util.List<Object> _events = new java.util.ArrayList<>();
+	private String _packageName;
+	private String _name;
+	private java.util.List<AppEvent> _events = new java.util.ArrayList<>();
+	private java.util.List<NewOpenRemovedEvents> _newOpenRemovedEvents = new java.util.ArrayList<>();
 
 	AppEvents(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,19 +24,20 @@ public class AppEvents {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		for (Object o : _events) st.add("events", o);
+		for (Object o : _newOpenRemovedEvents) st.add("newOpenRemovedEvents", o);
 		return st.render().trim();
 	}
 
-	public AppEvents setPackageName(Object value) {
+	public AppEvents setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -48,16 +50,16 @@ public class AppEvents {
 		return this;
 	} 
 
-	public AppEvents setName(Object value) {
+	public AppEvents setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -70,22 +72,22 @@ public class AppEvents {
 		return this;
 	} 
 
-	public AppEvents addEvents(Object value) {
+	public AppEvents addEvents(AppEvent value) {
 		this._events.add(value);
 		return this;
 	}
 
-	public AppEvents setEvents(Object[] value) {
+	public AppEvents setEvents(AppEvent[] value) {
 		this._events.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public AppEvents setEvents(java.util.Collection<Object> values) {
+	public AppEvents setEvents(java.util.Collection<AppEvent> values) {
 		this._events.addAll(values);
 		return this;
 	}
 
-	public AppEvents removeEvents(Object value) {
+	public AppEvents removeEvents(AppEvent value) {
 		this._events.remove(value);
 		return this;
 	}
@@ -95,8 +97,37 @@ public class AppEvents {
 		return this;
 	}
 
-	public java.util.List<Object> getEvents() {
+	public java.util.List<AppEvent> getEvents() {
 		return this._events;
+	} 
+
+	public AppEvents addNewOpenRemovedEvents(NewOpenRemovedEvents value) {
+		this._newOpenRemovedEvents.add(value);
+		return this;
+	}
+
+	public AppEvents setNewOpenRemovedEvents(NewOpenRemovedEvents[] value) {
+		this._newOpenRemovedEvents.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public AppEvents setNewOpenRemovedEvents(java.util.Collection<NewOpenRemovedEvents> values) {
+		this._newOpenRemovedEvents.addAll(values);
+		return this;
+	}
+
+	public AppEvents removeNewOpenRemovedEvents(NewOpenRemovedEvents value) {
+		this._newOpenRemovedEvents.remove(value);
+		return this;
+	}
+
+	public AppEvents removeNewOpenRemovedEvents(int index) {
+		this._newOpenRemovedEvents.remove(index);
+		return this;
+	}
+
+	public java.util.List<NewOpenRemovedEvents> getNewOpenRemovedEvents() {
+		return this._newOpenRemovedEvents;
 	} 
 
 
@@ -113,12 +144,14 @@ public class AppEvents {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AppEvents(packageName,name,events) ::= <<package ~packageName~;\n" + 
+	static final String st = "AppEvents(packageName,name,events,newOpenRemovedEvents) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 
 				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 				"\n" + 
 				"	~events:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~newOpenRemovedEvents:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

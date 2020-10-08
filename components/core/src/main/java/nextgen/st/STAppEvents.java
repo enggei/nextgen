@@ -4,6 +4,36 @@ public class STAppEvents {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
 
+	public static void postSTModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
+		log.info("post STModelEditorTreeNodeClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelEditorTreeNodeClicked(stModel));
+	}
+
+	public static class STModelEditorTreeNodeClicked {
+
+		public final nextgen.st.model.STModel stModel;
+
+		public STModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
+
+	public static void postSTArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+		log.info("post STArgumentAdded");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentAdded(stModel, stArgument));
+	}
+
+	public static class STArgumentAdded {
+
+		public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.model.STArgument stArgument;
+
+		public STArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+			this.stModel = stModel;
+			this.stArgument = stArgument;
+		}
+	}
+
 	public static void postCanvasSTModelClicked(nextgen.st.model.STModel stModel) {
 		log.info("post CanvasSTModelClicked");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(stModel));
@@ -116,7 +146,6 @@ public class STAppEvents {
 		}
 	}
 
-
 	public static void postNewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
 		log.info("post NewSTTemplate");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTTemplate(sTTemplate));
@@ -172,4 +201,5 @@ public class STAppEvents {
 			this.stModel = stModel;
 		}
 	}
+
 }

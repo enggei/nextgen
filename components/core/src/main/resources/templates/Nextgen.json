@@ -5,12 +5,12 @@
   "templates" : [ {
     "uuid" : "76d29786-6c58-46af-b1bd-9d49ed4bb8a9",
     "name" : "TreeNavigator",
-    "text" : "package ~packageName~;\n\nimport nextgen.utils.SwingUtil;\n~imports:{it|import ~it~;};separator=\"\\n\"~\n\nimport javax.swing.*;\nimport javax.swing.tree.*;\nimport java.awt.*;\nimport java.awt.event.*;\nimport java.util.List;\nimport java.util.*;\nimport java.util.function.Consumer;\n\npublic class ~name~ extends JPanel {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\tprivate final JTree tree = new JTree();\n\tprivate final STAppPresentationModel presentationModel;\n\tprivate final DefaultTreeModel treeModel;\n\n\t~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(STAppPresentationModel presentationModel~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(new BorderLayout());\n\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t\n\n\t\tthis.presentationModel = presentationModel;\n\n\t\ttreeModel = new DefaultTreeModel(~rootNodeExpression~);\n\t\ttree.setModel(treeModel);\n\t\tToolTipManager.sharedInstance().registerComponent(tree);\n\n\t\ttree.setCellRenderer(new DefaultTreeCellRenderer() {\n\n\t\t\t@Override\n\t\t\tpublic Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n\t\t\t\tfinal boolean isBaseTreeNode = value instanceof BaseTreeNode;\n\t\t\t\tif (isBaseTreeNode) {\n\t\t\t\t\tfinal BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;\n\t\t\t\t\tfinal ImageIcon icon = baseTreeNode.getIcon();\n\t\t\t\t\tsetIcon(icon);\n\t\t\t\t\tsetOpenIcon(icon);\n\t\t\t\t\tsetClosedIcon(icon);\n\t\t\t\t\tsetLeafIcon(icon);\n\t\t\t\t\tsetToolTipText(baseTreeNode.getTooltip());\n\t\t\t\t\treturn super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);\n\t\t\t\t}\n\t\t\t\treturn super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);\n\t\t\t}\n\t\t});\n\n\t\ttree.addMouseListener(new MouseAdapter() {\n\t\t\t@Override\n\t\t\tpublic void mouseClicked(MouseEvent e) {\n\t\t\t\tif (SwingUtilities.isRightMouseButton(e)) {\n\n\t\t\t\t\tfinal TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\tshowPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n\t\t\t\t\n\t\t\t\t} else {\n\n\t\t\t\t\tfinal TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\t~onSelectionStatements:{it|~it~};separator=\"\\n\"~\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\ttree.addKeyListener(new KeyAdapter() {\n\t\t\t@Override\n\t\t\tpublic void keyPressed(KeyEvent e) {\n\n\t\t\t\tif (e.getKeyCode() == KeyEvent.VK_SPACE) {\n\t\t\t\t\tfinal TreePath selectionPath = tree.getSelectionPath();\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\tfinal Rectangle bounds = tree.getPathBounds(selectionPath);\n\t\t\t\t\tif (bounds == null) return;\n\n\t\t\t\t\tshowPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\tsetPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));\n\t\tadd(new JScrollPane(tree), BorderLayout.CENTER);\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~baseTreeNode~\n\n\t~treeNodes:{it|~it~};separator=\"\\n\\n\"~\t\n\n\tprivate Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {\n\t\treturn new AbstractAction(name) {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tactionEventConsumer.accept(e);\n\t\t\t}\n\t\t};\n\t}\n\n\tprivate void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {\n\t\tfinal List<Action> actions = lastPathComponent.getActions();\n\t\tif (actions.isEmpty()) return;\n\n\t\tfinal JPopupMenu pop = new JPopupMenu();\n\t\tpop.add(\"With \" + presentationModel.cut(lastPathComponent.getLabel()) + \" :\");\n\t\tfor (Action action : actions)\n\t\t\tpop.add(action);\n\n\t\tSwingUtilities.invokeLater(() -> pop.show(tree, x, y));\n\t}\n\n\tpublic <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {\n\t\tfinal TreePath[] selectionPaths = tree.getSelectionPaths();\n\t\tif (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();\n\t\treturn Arrays.stream(selectionPaths)\n\t\t\t\t.filter(treePath -> treePath.getLastPathComponent() != null)\n\t\t\t\t.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))\n\t\t\t\t.map(treePath -> (T) treePath.getLastPathComponent());\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "text" : "package ~packageName~;\n\nimport nextgen.utils.SwingUtil;\n~imports:{it|import ~it~;};separator=\"\\n\"~\n\nimport javax.swing.*;\nimport javax.swing.tree.*;\nimport java.awt.*;\nimport java.awt.event.*;\nimport java.util.List;\nimport java.util.*;\nimport java.util.function.Consumer;\n\npublic class ~name~ extends JPanel {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\tprivate final JTree tree = new JTree();\n\tprivate final STAppPresentationModel presentationModel;\n\tprivate final ~name~TreeModel treeModel;\n\n\t~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(STAppPresentationModel presentationModel~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(new BorderLayout());\n\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\tthis.presentationModel = presentationModel;\n\n\t\ttreeModel = new ~name~TreeModel(~rootNodeExpression~);\n\t\ttree.setModel(treeModel);\n\t\tToolTipManager.sharedInstance().registerComponent(tree);\n\n\t\ttree.setCellRenderer(new DefaultTreeCellRenderer() {\n\n\t\t\t@Override\n\t\t\tpublic Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n\t\t\t\tfinal boolean isBaseTreeNode = value instanceof BaseTreeNode;\n\t\t\t\tif (isBaseTreeNode) {\n\t\t\t\t\tfinal BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;\n\t\t\t\t\tfinal ImageIcon icon = baseTreeNode.getIcon();\n\t\t\t\t\tsetIcon(icon);\n\t\t\t\t\tsetOpenIcon(icon);\n\t\t\t\t\tsetClosedIcon(icon);\n\t\t\t\t\tsetLeafIcon(icon);\n\t\t\t\t\tsetToolTipText(baseTreeNode.getTooltip());\n\t\t\t\t\treturn super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);\n\t\t\t\t}\n\t\t\t\treturn super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);\n\t\t\t}\n\t\t});\n\n\t\ttree.addMouseListener(new MouseAdapter() {\n\t\t\t@Override\n\t\t\tpublic void mouseClicked(MouseEvent e) {\n\t\t\t\tif (SwingUtilities.isRightMouseButton(e)) {\n\n\t\t\t\t\tfinal TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\tshowPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n\n\t\t\t\t} else {\n\n\t\t\t\t\tfinal TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\t~onSelectionStatements:{it|~it~};separator=\"\\n\"~\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\ttree.addKeyListener(new KeyAdapter() {\n\t\t\t@Override\n\t\t\tpublic void keyPressed(KeyEvent e) {\n\n\t\t\t\tif (e.getKeyCode() == KeyEvent.VK_SPACE) {\n\t\t\t\t\tfinal TreePath selectionPath = tree.getSelectionPath();\n\t\t\t\t\tif (selectionPath == null) return;\n\t\t\t\t\tfinal Object lastPathComponent = selectionPath.getLastPathComponent();\n\t\t\t\t\tif (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n\n\t\t\t\t\tfinal Rectangle bounds = tree.getPathBounds(selectionPath);\n\t\t\t\t\tif (bounds == null) return;\n\n\t\t\t\t\tshowPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\tsetPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));\n\t\tadd(new JScrollPane(tree), BorderLayout.CENTER);\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~baseTreeNode~\n\n\t~treeNodes:{it|~it~};separator=\"\\n\\n\"~\t\n\n\tprivate Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {\n\t\treturn new AbstractAction(name) {\n\t\t\t@Override\n\t\t\tpublic void actionPerformed(ActionEvent e) {\n\t\t\t\tactionEventConsumer.accept(e);\n\t\t\t}\n\t\t};\n\t}\n\n\tprivate void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {\n\t\tfinal List<Action> actions = lastPathComponent.getActions();\n\t\tif (actions.isEmpty()) return;\n\n\t\tfinal JPopupMenu pop = new JPopupMenu();\n\t\tpop.add(\"With \" + presentationModel.cut(lastPathComponent.getLabel()) + \" :\");\n\t\tfor (Action action : actions)\n\t\t\tpop.add(action);\n\n\t\tSwingUtilities.invokeLater(() -> pop.show(tree, x, y));\n\t}\n\n\tpublic <T> java.util.stream.Stream<T> getSelectedNodes(Class<T> type) {\n\t\tfinal TreePath[] selectionPaths = tree.getSelectionPaths();\n\t\tif (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();\n\t\treturn Arrays.stream(selectionPaths)\n\t\t\t\t.filter(treePath -> treePath.getLastPathComponent() != null)\n\t\t\t\t.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))\n\t\t\t\t.map(treePath -> (T) treePath.getLastPathComponent());\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tclass ~name~TreeModel extends DefaultTreeModel {\n\n\t\tpublic ~name~TreeModel(BaseTreeNode root) {\n\t\t\tsuper(root);\n\t\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t}\n\n\t\tprotected Optional<BaseTreeNode<?>~gt()~ find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n\t\t\treturn find((BaseTreeNode<?>) getRoot(), predicate);\n\t\t}\n\n\t\tprotected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {\n\t\t\treturn find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->\n\t\t\t\t\tnavigatorTreeNode.getClass().isAssignableFrom(nodeType));\n\t\t}\n\n\t\tprotected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n\t\t\treturn find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()\n\t\t\t\t\t.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n\t\t}\n\n\t\tprotected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n\t\t\tfinal int childCount = parent.getChildCount();\n\t\t\tfor (int i = 0; i < childCount; i++) {\n\t\t\t\tfinal BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);\n\t\t\t\tif (predicate.test(childAt))\n\t\t\t\t\treturn Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());\n\t\t\t\telse {\n\t\t\t\t\tfinal Optional<T> node = find(childAt, predicate);\n\t\t\t\t\tif (node.isPresent()) return node;\n\t\t\t\t}\n\t\t\t}\n\t\t\treturn Optional.empty();\n\t\t}\n\n\t\tprotected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n\t\t\treturn find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()\n\t\t\t\t\t.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n\t\t}\n\n\t\tprivate void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n\n\t\t\tint n = parent.getChildCount();\n\t\t\tif (n == 0) {\n\t\t\t\tparent.add(child);\n\t\t\t\tnodesWereInserted(parent, new int[]{n});\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tfor (int i = 0; i < n; i++) {\n\t\t\t\tfinal BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);\n\t\t\t\tif (node.getLabel().compareTo(child.getLabel()) > 0) {\n\t\t\t\t\tparent.insert(child, i);\n\t\t\t\t\tnodesWereInserted(parent, new int[]{i});\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tparent.add(child);\n\t\t\tnodesWereInserted(parent, new int[]{n});\n\t\t}\n\t}\n} ",
     "parameters" : [ {
       "uuid" : "348d9666-cd87-4081-a94c-a6d719325794",
       "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "832a02d9-62c7-442f-947a-41e92eebe0e3",
       "name" : "imports",
@@ -20,7 +20,7 @@
       "uuid" : "33901a65-a65f-4e83-940a-305e388da778",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "f54c61c0-e129-4103-b552-ac6f243c6bcf",
       "name" : "fields",
@@ -33,7 +33,7 @@
       }, {
         "uuid" : "f82cde2d-7e8f-46f6-b7ba-45bfef6d2995",
         "name" : "name",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       } ]
     }, {
       "uuid" : "f524310c-a048-4e3b-af82-f8fc1371d6a6",
@@ -49,12 +49,12 @@
       "uuid" : "ae08d437-3fb5-4d23-8740-96ce1bc07507",
       "name" : "preferredWidth",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "df3d94f5-b725-4a14-99f3-254396a28456",
       "name" : "preferredHeight",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "07397052-9797-4e19-84a2-43175cbbb861",
       "name" : "constructorStatements",
@@ -64,7 +64,7 @@
       "uuid" : "f7711464-23c4-4958-a1ed-7391fa047792",
       "name" : "baseTreeNode",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "BaseTreeNode"
     }, {
       "uuid" : "04fa15a8-33d0-4360-b026-a168d75bcd18",
       "name" : "treeNodes",
@@ -560,22 +560,27 @@
   }, {
     "uuid" : "94abec9f-6ef2-4d9b-995f-44a09d457c18",
     "name" : "AppEvents",
-    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it~};separator=\"\\n\\n\"~\n} ",
+    "text" : "package ~packageName~;\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it~};separator=\"\\n\\n\"~\n\n\t~newOpenRemovedEvents:{it|~it~};separator=\"\\n\\n\"~\n} ",
     "parameters" : [ {
       "uuid" : "c482571a-a9d7-4450-a318-92ce1fb1c4c9",
       "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "9fe9b57c-1123-4d43-95bb-d5eaf42dc080",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "7b064051-876f-45f7-b424-b99b9b776e2d",
       "name" : "events",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "AppEvent"
+    }, {
+      "uuid" : "797efef5-1789-484c-aa3c-e932b39011c9",
+      "name" : "newOpenRemovedEvents",
+      "type" : "LIST",
+      "argumentType" : "NewOpenRemovedEvents"
     } ],
     "children" : [ {
       "uuid" : "c7a14ffb-fcfe-49af-9577-46af7f94671a",

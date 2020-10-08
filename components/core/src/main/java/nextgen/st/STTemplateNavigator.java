@@ -942,6 +942,19 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelEditorTreeNodeClicked(nextgen.st.STAppEvents.STModelEditorTreeNodeClicked event) {
+		presentationModel.doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+			final RootNode rootNode = (RootNode) treeModel.getRoot();
+			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
+			if (path != null) {
+				tree.scrollPathToVisible(path);
+				tree.setSelectionPath(path);
+			}
+		});
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onOpenTemplate(nextgen.st.STAppEvents.OpenSTTemplate event) {
 		SwingUtilities.invokeLater(() -> {
 			final RootNode rootNode = (RootNode) treeModel.getRoot();

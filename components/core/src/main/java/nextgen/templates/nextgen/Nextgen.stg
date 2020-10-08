@@ -1,12 +1,14 @@
 delimiters "~","~"
 
-AppEvents(packageName,name,events) ::= <<package ~packageName~;
+AppEvents(packageName,name,events,newOpenRemovedEvents) ::= <<package ~packageName~;
 
 public class ~name~ {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	~events:{it|~it~};separator="\n\n"~
+
+	~newOpenRemovedEvents:{it|~it~};separator="\n\n"~
 }  >>
 
 AppEvent(name,fields) ::= <<public static void post~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
@@ -2230,7 +2232,6 @@ STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packa
 
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
-import nextgen.st.model.Project;
 import nextgen.st.model.STModel;
 
 import javax.swing.*;
@@ -2247,37 +2248,37 @@ public class ~name~ extends JTabbedPane {
 
 	public ~name~(STAppPresentationModel presentationModel) {
 		this.presentationModel = presentationModel;
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(1200, 1024));
 		~constructorParameters:{it|~it~};separator="\n"~
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
 
 
-   public STRenderPanel findRenderer() {
-      return (STRenderPanel) find(component -> component instanceof STRenderPanel)
-            .orElseGet(() -> {
-               final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
-               addPane("Renderer", stRenderPanel);
-               return stRenderPanel;
-            });
-   }
+	public STRenderPanel findRenderer() {
+		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
+				.orElseGet(() -> {
+					final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+					addPane("Renderer", stRenderPanel);
+					return stRenderPanel;
+				});
+	}
 
-   public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
-      for (int i = 0; i < getTabCount(); i++)
-         if (predicate.test(getComponentAt(i)))
-            return Optional.of((T) getComponentAt(i));
-      return Optional.empty();
-   }
+	public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
+		for (int i = 0; i < getTabCount(); i++)
+			if (predicate.test(getComponentAt(i)))
+				return Optional.of((T) getComponentAt(i));
+		return Optional.empty();
+	}
 
-   public STModelCanvas findCanvas() {
-      return (STModelCanvas) find(component -> component instanceof STModelCanvas)
-            .orElseGet(() -> {
-               final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
-               addPane("Canvas", stModelCanvas);
-               return stModelCanvas;
-            });
-   }
+	public STModelCanvas findCanvas() {
+		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
+				.orElseGet(() -> {
+					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+					addPane("Canvas", stModelCanvas);
+					return stModelCanvas;
+				});
+	}
 
 	public STModelGrid getModelGrid(STTemplate stTemplate) {
 		for (int i = 0; i < getTabCount(); i++) {
@@ -2401,6 +2402,13 @@ public class ~name~ extends JTabbedPane {
 								}
 							});
 
+							pop.add(new AbstractAction("Close All") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									presentationModel.getWorkspace().closeAll();
+								}
+							});
+
 							pop.show(ButtonTabComponent.this, e.getX(), e.getY());
 						});
 					else {
@@ -2421,22 +2429,12 @@ public class ~name~ extends JTabbedPane {
 		});
 	}
 
-	public ProjectEditor getProjectEditor(Project model) {
-		for (int i = 0; i < getTabCount(); i++) {
-			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof ProjectEditor) {
-				if (((ProjectEditor) tabComponentAt).getModel().equals(model)) {
-					final ProjectEditor stEditor = (ProjectEditor) tabComponentAt;
-					setSelectedComponent(stEditor);
-					return stEditor;
-				}
+	private void closeAll() {
+		SwingUtilities.invokeLater(() -> {
+			for (int i = getTabCount() - 1; i >= 0; i--) {
+				remove(i);
 			}
-		}
-
-		final ProjectEditor component = new ProjectEditor(model, presentationModel);
-		addPane(model.getName(), component);
-		setSelectedComponent(component);
-		return component;
+		});
 	}
 }  >>
 
@@ -2459,7 +2457,7 @@ public class ~name~ extends JPanel {
 
 	private final JTree tree = new JTree();
 	private final STAppPresentationModel presentationModel;
-	private final DefaultTreeModel treeModel;
+	private final ~name~TreeModel treeModel;
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
@@ -2467,11 +2465,9 @@ public class ~name~ extends JPanel {
 		super(new BorderLayout());
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-		
-
 		this.presentationModel = presentationModel;
 
-		treeModel = new DefaultTreeModel(~rootNodeExpression~);
+		treeModel = new ~name~TreeModel(~rootNodeExpression~);
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -2505,7 +2501,7 @@ public class ~name~ extends JPanel {
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
-				
+
 				} else {
 
 					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
@@ -2577,6 +2573,69 @@ public class ~name~ extends JPanel {
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
+
+	class ~name~TreeModel extends DefaultTreeModel {
+
+		public ~name~TreeModel(BaseTreeNode root) {
+			super(root);
+			~constructorStatements:{it|~it~};separator="\n"~
+		}
+
+		protected Optional<BaseTreeNode<?>~gt()~ find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+			return find((BaseTreeNode<?>) getRoot(), predicate);
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
+					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					final Optional<T> node = find(childAt, predicate);
+					if (node.isPresent()) return node;
+				}
+			}
+			return Optional.empty();
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+
+			int n = parent.getChildCount();
+			if (n == 0) {
+				parent.add(child);
+				nodesWereInserted(parent, new int[]{n});
+				return;
+			}
+
+			for (int i = 0; i < n; i++) {
+				final BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (node.getLabel().compareTo(child.getLabel()) > 0) {
+					parent.insert(child, i);
+					nodesWereInserted(parent, new int[]{i});
+					return;
+				}
+			}
+
+			parent.add(child);
+			nodesWereInserted(parent, new int[]{n});
+		}
+	}
 }  >>
 
 BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode {

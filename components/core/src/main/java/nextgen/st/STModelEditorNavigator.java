@@ -18,7 +18,7 @@ public class STModelEditorNavigator extends JPanel {
 
 	private final JTree tree = new JTree();
 	private final STAppPresentationModel presentationModel;
-	private final DefaultTreeModel treeModel;
+	private final STModelEditorNavigatorTreeModel treeModel;
 
 	private STModel model;
 	private STModelEditor editor;
@@ -28,10 +28,9 @@ public class STModelEditorNavigator extends JPanel {
 
 		this.model = model;
 		this.editor = editor;
-
 		this.presentationModel = presentationModel;
 
-		treeModel = new DefaultTreeModel(new STModelTreeNode(model, presentationModel.findSTTemplateByUuid(model.getStTemplate()), null));
+		treeModel = new STModelEditorNavigatorTreeModel(new STModelTreeNode(model, presentationModel.findSTTemplateByUuid(model.getStTemplate()), null));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -77,6 +76,9 @@ public class STModelEditorNavigator extends JPanel {
 						if (lastPathComponent instanceof STModelTreeNode) {
 							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
 							editor.setText(presentationModel.render(selectedNode.getModel()), null);
+
+							STAppEvents.postSTModelEditorTreeNodeClicked(selectedNode.getModel());
+							
 						} else if (lastPathComponent instanceof STValueTreeNode) {
 							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
 							editor.setText(presentationModel.render(selectedNode.getModel()), selectedNode);
@@ -272,11 +274,6 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("Run", actionEvent -> {
-				final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
-				if(root instanceof STModelTreeNode) 
-					presentationModel.runJUnit(getModel(), stTemplate, ((STModelTreeNode)root).getModel());
-			}));
 			actions.add(newAction("Write to File", actionEvent -> {
 				presentationModel.writeToFile(getModel());
 			}));
@@ -741,6 +738,92 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTArgumentAdded(STAppEvents.STArgumentAdded event) {
+		treeModel
+				.find(STModelTreeNode.class, treeNode -> treeNode.getModel().equals(event.stModel))
+				.flatMap(stModelTreeNode -> treeModel.find(stModelTreeNode, STParameterTreeNode.class, baseTreeNode -> ((STParameterTreeNode) baseTreeNode)
+						.getModel()
+						.getUuid()
+						.equals(event.stArgument.getStParameter())))
+				.ifPresent(stParameterTreeNode -> {
+					final STValue stValue = event.stArgument.getValue();
+					switch (stValue.getType()) {
+						case STMODEL:
+							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), presentationModel
+									.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument));
+							break;
+						case PRIMITIVE:
+							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STValueTreeNode(stValue, event.stArgument));
+							break;
+						case ENUM:
+							break;
+					}
+				});
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelUpdated(STAppEvents.STModelUpdated event) {
+	}
+
+	class STModelEditorNavigatorTreeModel extends DefaultTreeModel {
+
+		public STModelEditorNavigatorTreeModel(BaseTreeNode root) {
+			super(root);
+		}
+
+		protected Optional<BaseTreeNode<?>> find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), predicate);
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
+					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					final Optional<T> node = find(childAt, predicate);
+					if (node.isPresent()) return node;
+				}
+			}
+			return Optional.empty();
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+
+			int n = parent.getChildCount();
+			if (n == 0) {
+				parent.add(child);
+				nodesWereInserted(parent, new int[]{n});
+				return;
+			}
+
+			for (int i = 0; i < n; i++) {
+				final BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (node.getLabel().compareTo(child.getLabel()) > 0) {
+					parent.insert(child, i);
+					nodesWereInserted(parent, new int[]{i});
+					return;
+				}
+			}
+
+			parent.add(child);
+			nodesWereInserted(parent, new int[]{n});
+		}
 	}
 }

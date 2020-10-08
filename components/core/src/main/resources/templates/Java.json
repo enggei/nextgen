@@ -384,7 +384,7 @@
       } ]
     }, {
       "uuid" : "cce99ce1-81ea-4b41-a407-5f273c03b8dc",
-      "name" : "Script",
+      "name" : "Runnable",
       "text" : "package ~if(packageName)~~packageName~~else~tmp~endif~;\n\npublic class ~name~ implements Runnable {\n\n\t~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\t\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\t\n\t@Override\n\tpublic void run() {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
       "parameters" : [ {
         "uuid" : "4f5743a6-1ab7-4f4d-b670-1dbf70034495",

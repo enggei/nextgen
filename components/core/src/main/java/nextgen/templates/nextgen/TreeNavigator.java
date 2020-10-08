@@ -5,12 +5,12 @@ public class TreeNavigator {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
+	private String _packageName;
+	private String _name;
 	private Object _rootNodeExpression;
-	private Object _preferredWidth;
-	private Object _preferredHeight;
-	private Object _baseTreeNode;
+	private String _preferredWidth;
+	private String _preferredHeight;
+	private BaseTreeNode _baseTreeNode;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _onSelectionStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
@@ -44,16 +44,16 @@ public class TreeNavigator {
 		return st.render().trim();
 	}
 
-	public TreeNavigator setPackageName(Object value) {
+	public TreeNavigator setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -66,16 +66,16 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setName(Object value) {
+	public TreeNavigator setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -110,16 +110,16 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setPreferredWidth(Object value) {
+	public TreeNavigator setPreferredWidth(String value) {
 		this._preferredWidth = value;
 		return this;
 	}
 
-	public Object getPreferredWidth() {
+	public String getPreferredWidth() {
 		return this._preferredWidth;
 	}
 
-	public Object getPreferredWidth(Object defaultValue) {
+	public String getPreferredWidth(String defaultValue) {
 		return this._preferredWidth == null ? defaultValue : this._preferredWidth;
 	}
 
@@ -132,16 +132,16 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setPreferredHeight(Object value) {
+	public TreeNavigator setPreferredHeight(String value) {
 		this._preferredHeight = value;
 		return this;
 	}
 
-	public Object getPreferredHeight() {
+	public String getPreferredHeight() {
 		return this._preferredHeight;
 	}
 
-	public Object getPreferredHeight(Object defaultValue) {
+	public String getPreferredHeight(String defaultValue) {
 		return this._preferredHeight == null ? defaultValue : this._preferredHeight;
 	}
 
@@ -154,16 +154,16 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setBaseTreeNode(Object value) {
+	public TreeNavigator setBaseTreeNode(BaseTreeNode value) {
 		this._baseTreeNode = value;
 		return this;
 	}
 
-	public Object getBaseTreeNode() {
+	public BaseTreeNode getBaseTreeNode() {
 		return this._baseTreeNode;
 	}
 
-	public Object getBaseTreeNode(Object defaultValue) {
+	public BaseTreeNode getBaseTreeNode(BaseTreeNode defaultValue) {
 		return this._baseTreeNode == null ? defaultValue : this._baseTreeNode;
 	}
 
@@ -321,7 +321,7 @@ public class TreeNavigator {
 		return this._methods;
 	} 
 
-	public TreeNavigator addFields(Object _type, Object _name) {
+	public TreeNavigator addFields(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -346,7 +346,7 @@ public class TreeNavigator {
 	}
 
 
-	public java.util.List<Object> getFields_Name() {
+	public java.util.List<String> getFields_Name() {
 		return streamFields().map(TreeNavigator_Fields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
@@ -354,23 +354,23 @@ public class TreeNavigator {
 	public static final class TreeNavigator_Fields {
 
 		Object _type;
-		Object _name;
+		String _name;
 
-		public TreeNavigator_Fields(Object _type, Object _name) {
+		public TreeNavigator_Fields(Object _type, String _name) {
 			this._type = _type;
 			this._name = _name;
 		}
 
 		private TreeNavigator_Fields(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
@@ -408,7 +408,7 @@ public class TreeNavigator {
 				"\n" + 
 				"	private final JTree tree = new JTree();\n" + 
 				"	private final STAppPresentationModel presentationModel;\n" + 
-				"	private final DefaultTreeModel treeModel;\n" + 
+				"	private final ~name~TreeModel treeModel;\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -416,11 +416,9 @@ public class TreeNavigator {
 				"		super(new BorderLayout());\n" + 
 				"\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-				"		\n" + 
-				"\n" + 
 				"		this.presentationModel = presentationModel;\n" + 
 				"\n" + 
-				"		treeModel = new DefaultTreeModel(~rootNodeExpression~);\n" + 
+				"		treeModel = new ~name~TreeModel(~rootNodeExpression~);\n" + 
 				"		tree.setModel(treeModel);\n" + 
 				"		ToolTipManager.sharedInstance().registerComponent(tree);\n" + 
 				"\n" + 
@@ -454,7 +452,7 @@ public class TreeNavigator {
 				"					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
 				"\n" + 
 				"					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n" + 
-				"				\n" + 
+				"\n" + 
 				"				} else {\n" + 
 				"\n" + 
 				"					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
@@ -526,5 +524,68 @@ public class TreeNavigator {
 				"	}\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	class ~name~TreeModel extends DefaultTreeModel {\n" + 
+				"\n" + 
+				"		public ~name~TreeModel(BaseTreeNode root) {\n" + 
+				"			super(root);\n" + 
+				"			~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected Optional<BaseTreeNode<?>~gt()~ find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"			return find((BaseTreeNode<?>) getRoot(), predicate);\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {\n" + 
+				"			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->\n" + 
+				"					navigatorTreeNode.getClass().isAssignableFrom(nodeType));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
+				"			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
+				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"			final int childCount = parent.getChildCount();\n" + 
+				"			for (int i = 0; i < childCount; i++) {\n" + 
+				"				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);\n" + 
+				"				if (predicate.test(childAt))\n" + 
+				"					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());\n" + 
+				"				else {\n" + 
+				"					final Optional<T> node = find(childAt, predicate);\n" + 
+				"					if (node.isPresent()) return node;\n" + 
+				"				}\n" + 
+				"			}\n" + 
+				"			return Optional.empty();\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
+				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 
+				"\n" + 
+				"			int n = parent.getChildCount();\n" + 
+				"			if (n == 0) {\n" + 
+				"				parent.add(child);\n" + 
+				"				nodesWereInserted(parent, new int[]{n});\n" + 
+				"				return;\n" + 
+				"			}\n" + 
+				"\n" + 
+				"			for (int i = 0; i < n; i++) {\n" + 
+				"				final BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);\n" + 
+				"				if (node.getLabel().compareTo(child.getLabel()) > 0) {\n" + 
+				"					parent.insert(child, i);\n" + 
+				"					nodesWereInserted(parent, new int[]{i});\n" + 
+				"					return;\n" + 
+				"				}\n" + 
+				"			}\n" + 
+				"\n" + 
+				"			parent.add(child);\n" + 
+				"			nodesWereInserted(parent, new int[]{n});\n" + 
+				"		}\n" + 
+				"	}\n" + 
 				"} >>";
 }  

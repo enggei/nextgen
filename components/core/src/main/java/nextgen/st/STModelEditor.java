@@ -39,7 +39,11 @@ public class STModelEditor extends JPanel {
 
       final STModelEditorNavigator stModelNavigator = new STModelEditorNavigator(presentationModel, stModel, this);
 
-      add(new RTextScrollPane(txtEditor), BorderLayout.CENTER);
+      final JTabbedPane editors = new JTabbedPane();
+      editors.add("Editor", new RTextScrollPane(txtEditor));
+      editors.add("Form", new STModelEditorForm(stModel, presentationModel));
+
+      add(editors, BorderLayout.CENTER);
       add(stModelNavigator, BorderLayout.EAST);
 
       setText(presentationModel.render(stModel), null);
@@ -54,136 +58,138 @@ public class STModelEditor extends JPanel {
       final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
 
       stTemplate.getParameters()
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-                .forEach(stParameter -> {
+            .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+            .forEach(stParameter -> {
 
-                   final JMenu stParameterMenu = new JMenu(stParameter.getName());
-                   parametersMenu.add(stParameterMenu);
+               final JMenu stParameterMenu = new JMenu(stParameter.getName());
+               parametersMenu.add(stParameterMenu);
 
-                   switch (stParameter.getType()) {
-                      case SINGLE: {
-                         final JMenu setParameterMenu = new JMenu("Set");
-                         stParameterMenu.add(setParameterMenu);
-                         setParameterMenu.add(newAction("From Input", actionEvent -> SwingUtil
-                               .showInputDialog(stParameter.getName(), txtEditor, s -> {
-                                  presentationModel.doLaterInTransaction(tx -> {
-                                     presentationModel.removeArgument(getModel(), stParameter);
-                                     getModel().addArguments(presentationModel
-                                           .newSTArgument(stParameter, presentationModel.newSTValue(s)));
-                                     setText(presentationModel.render(stModel), null);
-                                  });
-                               })));
-                         setParameterMenu
-                               .add(newAction("Set TRUE", actionEvent -> presentationModel.doLaterInTransaction(tx -> {
-                                  presentationModel.removeArgument(getModel(), stParameter);
-                                  getModel().addArguments(presentationModel.db
-                                        .newSTArgument(stParameter, presentationModel.db.newSTValue("true")));
-                               })));
-                         setParameterMenu.add(newAction("From Clipboard", actionEvent -> {
-                            final String s = SwingUtil.fromClipboard();
-                            if (s == null || s.trim().length() == 0) return;
-                            presentationModel.doLaterInTransaction(tx -> {
-                               presentationModel.removeArgument(getModel(), stParameter);
-                               getModel().addArguments(presentationModel
-                                     .newSTArgument(stParameter, presentationModel.newSTValue(s.trim())));
-                               setText(presentationModel.render(stModel), null);
-                            });
-                         }));
+               switch (stParameter.getType()) {
+                  case SINGLE: {
+                     final JMenu setParameterMenu = new JMenu("Set");
+                     stParameterMenu.add(setParameterMenu);
+                     setParameterMenu.add(newAction("From Input", actionEvent -> SwingUtil
+                           .showInputDialog(stParameter.getName(), txtEditor, s -> {
+                              presentationModel.doLaterInTransaction(tx -> {
+                                 presentationModel.removeArgument(getModel(), stParameter);
+                                 getModel().addArguments(presentationModel
+                                       .newSTArgument(stParameter, presentationModel.newSTValue(s)));
+                                 setText(presentationModel.render(stModel), null);
+                              });
+                           })));
+                     setParameterMenu
+                           .add(newAction("Set TRUE", actionEvent -> presentationModel.doLaterInTransaction(tx -> {
+                              presentationModel.removeArgument(getModel(), stParameter);
+                              getModel().addArguments(presentationModel.db
+                                    .newSTArgument(stParameter, presentationModel.db.newSTValue("true")));
+                           })));
+                     setParameterMenu.add(newAction("From Clipboard", actionEvent -> {
+                        final String s = SwingUtil.fromClipboard();
+                        if (s == null || s.trim().length() == 0) return;
+                        presentationModel.doLaterInTransaction(tx -> {
+                           presentationModel.removeArgument(getModel(), stParameter);
+                           getModel().addArguments(presentationModel
+                                 .newSTArgument(stParameter, presentationModel.newSTValue(s.trim())));
+                           setText(presentationModel.render(stModel), null);
+                        });
+                     }));
 
-                         final JMenu removestParameterMenu = new JMenu("Remove");
-                         stParameterMenu.add(removestParameterMenu);
+                     final JMenu removestParameterMenu = new JMenu("Remove");
+                     stParameterMenu.add(removestParameterMenu);
 
-                         getModel().getArguments()
-                                   .filter(stArgument -> stArgument.getStParameter()
-                                                                   .equals(stParameter.getUuid()))
-                                   .forEach(stArgument -> {
-                                      removestParameterMenu.add(newAction(presentationModel.cut(presentationModel.render(stArgument), 30), actionEvent -> SwingUtil.confirm(txtEditor, "Remove argument ?")
-                                                                                .ifPresent(confirm -> presentationModel
-                                                                                      .doLaterInTransaction(tx -> getModel()
-                                                                                            .removeArguments(stArgument)))));
-                                      setText(presentationModel.render(stModel), null);
-                                   });
-                         break;
-                      }
-                      case LIST: {
-                         final JMenu addParameterMenu = new JMenu("Add");
-                         stParameterMenu.add(addParameterMenu);
-                         addParameterMenu.add(newAction("From Input", new Consumer<ActionEvent>() {
-                            @Override
-                            public void accept(ActionEvent actionEvent) {
-                               nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), txtEditor, s -> {
-                                  presentationModel.doLaterInTransaction(tx -> {
-                                     getModel().addArguments(presentationModel
-                                           .newSTArgument(stParameter, presentationModel.newSTValue(s)));
-                                     setText(presentationModel.render(stModel), null);
-                                  });
-                               });
-                            }
-                         }));
-                         addParameterMenu
-                               .add(newAction("Set TRUE", actionEvent -> presentationModel.doLaterInTransaction(tx -> {
-                                  getModel().addArguments(presentationModel.db
-                                        .newSTArgument(stParameter, presentationModel.db.newSTValue("true")));
-                               })));
-                         addParameterMenu.add(newAction("From Clipboard", actionEvent -> {
-                            final String s = SwingUtil.fromClipboard();
-                            if (s == null || s.trim().length() == 0) return;
-                            presentationModel.doLaterInTransaction(tx -> {
-                               getModel().addArguments(presentationModel
-                                     .newSTArgument(stParameter, presentationModel.newSTValue(s.trim())));
-                               setText(presentationModel.render(stModel), null);
-                            });
-                         }));
+                     getModel().getArguments()
+                           .filter(stArgument -> stArgument.getStParameter()
+                                 .equals(stParameter.getUuid()))
+                           .forEach(stArgument -> {
+                              removestParameterMenu.add(newAction(presentationModel.cut(presentationModel.render(stArgument), 30), actionEvent -> SwingUtil
+                                    .confirm(txtEditor, "Remove argument ?")
+                                    .ifPresent(confirm -> presentationModel
+                                          .doLaterInTransaction(tx -> getModel()
+                                                .removeArguments(stArgument)))));
+                              setText(presentationModel.render(stModel), null);
+                           });
+                     break;
+                  }
+                  case LIST: {
+                     final JMenu addParameterMenu = new JMenu("Add");
+                     stParameterMenu.add(addParameterMenu);
+                     addParameterMenu.add(newAction("From Input", new Consumer<ActionEvent>() {
+                        @Override
+                        public void accept(ActionEvent actionEvent) {
+                           nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), txtEditor, s -> {
+                              presentationModel.doLaterInTransaction(tx -> {
+                                 getModel().addArguments(presentationModel
+                                       .newSTArgument(stParameter, presentationModel.newSTValue(s)));
+                                 setText(presentationModel.render(stModel), null);
+                              });
+                           });
+                        }
+                     }));
+                     addParameterMenu
+                           .add(newAction("Set TRUE", actionEvent -> presentationModel.doLaterInTransaction(tx -> {
+                              getModel().addArguments(presentationModel.db
+                                    .newSTArgument(stParameter, presentationModel.db.newSTValue("true")));
+                           })));
+                     addParameterMenu.add(newAction("From Clipboard", actionEvent -> {
+                        final String s = SwingUtil.fromClipboard();
+                        if (s == null || s.trim().length() == 0) return;
+                        presentationModel.doLaterInTransaction(tx -> {
+                           getModel().addArguments(presentationModel
+                                 .newSTArgument(stParameter, presentationModel.newSTValue(s.trim())));
+                           setText(presentationModel.render(stModel), null);
+                        });
+                     }));
 
-                         final JMenu removestParameterMenu = new JMenu("Remove");
-                         stParameterMenu.add(removestParameterMenu);
+                     final JMenu removestParameterMenu = new JMenu("Remove");
+                     stParameterMenu.add(removestParameterMenu);
 
-                         getModel().getArguments()
-                                   .filter(stArgument -> stArgument.getStParameter()
-                                                                   .equals(stParameter.getUuid()))
-                                   .forEach(stArgument -> {
-                                      removestParameterMenu.add(newAction(presentationModel.cut(presentationModel.render(stArgument), 30), actionEvent -> SwingUtil.confirm(txtEditor, "Remove argument ?")
-                                                                                .ifPresent(confirm -> {
-                                                                                   presentationModel
-                                                                                         .doLaterInTransaction(tx -> getModel()
-                                                                                               .removeArguments(stArgument));
-                                                                                   setText(presentationModel
-                                                                                         .render(stModel), null);
-                                                                                })));
-                                   });
-                         break;
-                      }
-                      case KVLIST: {
-                         final JMenu addKVParameterMenu = new JMenu("Add");
-                         stParameterMenu.add(addKVParameterMenu);
-                         addKVParameterMenu.add(newAction("From input", actionEvent -> presentationModel
-                               .doLaterInTransaction(tx -> presentationModel
-                                     .addKVArgument(getModel(), stParameter, txtEditor, stArgument -> {
-                                        setText(presentationModel.render(stModel), null);
-                                     }))));
+                     getModel().getArguments()
+                           .filter(stArgument -> stArgument.getStParameter()
+                                 .equals(stParameter.getUuid()))
+                           .forEach(stArgument -> {
+                              removestParameterMenu.add(newAction(presentationModel.cut(presentationModel.render(stArgument), 30), actionEvent -> SwingUtil
+                                    .confirm(txtEditor, "Remove argument ?")
+                                    .ifPresent(confirm -> {
+                                       presentationModel
+                                             .doLaterInTransaction(tx -> getModel()
+                                                   .removeArguments(stArgument));
+                                       setText(presentationModel
+                                             .render(stModel), null);
+                                    })));
+                           });
+                     break;
+                  }
+                  case KVLIST: {
+                     final JMenu addKVParameterMenu = new JMenu("Add");
+                     stParameterMenu.add(addKVParameterMenu);
+                     addKVParameterMenu.add(newAction("From input", actionEvent -> presentationModel
+                           .doLaterInTransaction(tx -> presentationModel
+                                 .addKVArgument(getModel(), stParameter, txtEditor, stArgument -> {
+                                    setText(presentationModel.render(stModel), null);
+                                 }))));
 
-                         final JMenu removestParameterMenu = new JMenu("Remove");
-                         stParameterMenu.add(removestParameterMenu);
+                     final JMenu removestParameterMenu = new JMenu("Remove");
+                     stParameterMenu.add(removestParameterMenu);
 
-                         getModel().getArguments()
-                                   .filter(stArgument -> stArgument.getStParameter()
-                                                                   .equals(stParameter.getUuid()))
-                                   .forEach(stArgument -> {
-                                      removestParameterMenu.add(newAction(presentationModel
-                                            .cut(presentationModel.render(stArgument), 30), actionEvent -> {
-                                         nextgen.utils.SwingUtil.confirm(txtEditor, "Remove argument ?")
-                                                                .ifPresent(confirm -> presentationModel
-                                                                      .doLaterInTransaction(tx -> {
-                                                                         getModel().removeArguments(stArgument);
-                                                                         setText(presentationModel
-                                                                               .render(stModel), null);
-                                                                      }));
-                                      }));
-                                   });
-                         break;
-                      }
-                   }
-                });
+                     getModel().getArguments()
+                           .filter(stArgument -> stArgument.getStParameter()
+                                 .equals(stParameter.getUuid()))
+                           .forEach(stArgument -> {
+                              removestParameterMenu.add(newAction(presentationModel
+                                    .cut(presentationModel.render(stArgument), 30), actionEvent -> {
+                                 nextgen.utils.SwingUtil.confirm(txtEditor, "Remove argument ?")
+                                       .ifPresent(confirm -> presentationModel
+                                             .doLaterInTransaction(tx -> {
+                                                getModel().removeArguments(stArgument);
+                                                setText(presentationModel
+                                                      .render(stModel), null);
+                                             }));
+                              }));
+                           });
+                     break;
+                  }
+               }
+            });
 
       pop.add(newAction("Set Multiple", actionEvent -> {
          presentationModel.doLaterInTransaction(transaction -> presentationModel
@@ -232,13 +238,6 @@ public class STModelEditor extends JPanel {
       txtEditor.setCaretPosition(0);
       txtEditor.setEditable(selectedTreeNode != null);
       this.currentTreeNode = selectedTreeNode;
-   }
-
-   void setText(String text) {
-      txtEditor.setText(text);
-      txtEditor.setCaretPosition(0);
-      txtEditor.setEditable(false);
-      this.currentTreeNode = null;
    }
 
    public STModel getModel() {

@@ -59,15 +59,7 @@ public class NextgenProject {
       DomainPatterns.writeNeo(mainJava, snippetsPackage, DomainPatterns.newDomain("JShell")
             .addEntities(script));
 
-      appEvents.addEvents(NextgenST.newNewOpenRemovedEvents()
-            .setName(script.getName())
-            .setType(snippetsPackage.getName() + "." + script.getName()));
-
-      appEvents.addEvents(NextgenST.newNewOpenRemovedEvents()
-            .setName(snippet.getName())
-            .setType(snippetsPackage.getName() + "." + snippet.getName()));
-
-      generateAppEvents();
+     generateAppEvents();
    }
 
    /**
@@ -138,51 +130,81 @@ public class NextgenProject {
     */
    @org.junit.Test
    public void generateSTTemplateDomain() {
+
+      final Entity stParameterType = DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST");
+
+      final Entity stParameterKey = DomainPatterns.newEntity("STParameterKey")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
+      final Entity stParameter = DomainPatterns.newEntity("STParameter")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newEnumField("type", stParameterType))
+            .addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
+      final Entity stInterface = DomainPatterns.newEntity("STInterface")
+            .addRelations(DomainPatterns.newStringField("name"));
+
+      final Entity stEnumValue = DomainPatterns.newEntity("STEnumValue")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("lexical"));
+
+      final Entity stEnum = DomainPatterns.newEntity("STEnum")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
+
+//      final Entity stTemplateAction = DomainPatterns.newEntity("STTemplateAction")
+//            .addRelations(DomainPatterns.newStringField("name", true))
+//            .addRelations(DomainPatterns.newOneToManyString("statements"));
+
+      final Entity stTemplate = DomainPatterns.newEntity("STTemplate")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("text"))
+            .addRelations(DomainPatterns.newOneToManyString("implements"))
+            .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
+            .addRelations(DomainPatterns.newOneToManySelf("children"))
+//            .addRelations(DomainPatterns.newOneToMany("actions", stTemplateAction))
+            ;
+
       final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("delimiter"))
             .addRelations(DomainPatterns.newStringField("icon"))
             .addRelations(DomainPatterns.newStringField("tags"))
-            .addRelations(DomainPatterns.newOneToMany("templates", DomainPatterns.newEntity("STTemplate")
-                  .addRelations(DomainPatterns.newStringField("name", true))
-                  .addRelations(DomainPatterns.newStringField("text"))
-                  .addRelations(DomainPatterns.newOneToManyString("implements"))
-                  .addRelations(DomainPatterns.newOneToMany("parameters", DomainPatterns.newEntity("STParameter")
-                        .addRelations(DomainPatterns.newStringField("name", true))
-                        .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST")))
-                        .addRelations(DomainPatterns.newOneToMany("keys", DomainPatterns.newEntity("STParameterKey")
-                              .addRelations(DomainPatterns.newStringField("name"))
-                              .addRelations(DomainPatterns.newStringField("argumentType"))))
-                        .addRelations(DomainPatterns.newStringField("argumentType"))))
-                  .addRelations(DomainPatterns.newOneToManySelf("children"))))
-            .addRelations(DomainPatterns.newOneToMany("interfaces", DomainPatterns.newEntity("STInterface")
-                  .addRelations(DomainPatterns.newStringField("name"))))
-            .addRelations(DomainPatterns.newOneToMany("enums", DomainPatterns.newEntity("STEnum")
-                  .addRelations(DomainPatterns.newStringField("name", true))
-                  .addRelations(DomainPatterns.newOneToMany("values", DomainPatterns.newEntity("STEnumValue")
-                        .addRelations(DomainPatterns.newStringField("name", true))
-                        .addRelations(DomainPatterns.newStringField("lexical"))))));
+            .addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
+            .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
+            .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
+
+      final Entity stgErrorType = DomainPatterns.newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
+
+      final Entity stgError = DomainPatterns.newEntity("STGError")
+            .addRelations(DomainPatterns.newEnumField("type", stgErrorType))
+            .addRelations(DomainPatterns.newStringField("message"))
+            .addRelations(DomainPatterns.newIntegerField("line"))
+            .addRelations(DomainPatterns.newIntegerField("charPosition"));
+
+      final Entity stgDirectory = DomainPatterns.newEntity("STGDirectory")
+            .addRelations(DomainPatterns.newStringField("path"))
+            .addRelations(DomainPatterns.newStringField("outputPackage"))
+            .addRelations(DomainPatterns.newStringField("outputPath"))
+            .addRelations(DomainPatterns.newOneToMany("groups", stGroupModel));
+
+      final Entity stAppModel = DomainPatterns.newEntity("STAppModel")
+            .addRelations(DomainPatterns.newStringField("modelDb"))
+            .addRelations(DomainPatterns.newStringField("rootDir"))
+            .addRelations(DomainPatterns.newIntegerField("editorFontSize"))
+            .addRelations(DomainPatterns.newOneToMany("directories", stgDirectory));
+
+      final Entity stgParseResult = DomainPatterns.newEntity("STGParseResult")
+            .addRelations(DomainPatterns.newOneToOne("parsed", stGroupModel))
+            .addRelations(DomainPatterns.newOneToMany("errors", stgError));
 
       final Domain domain = DomainPatterns.newDomain("ST")
-            .addEntities(DomainPatterns.newEntity("STAppModel")
-                  .addRelations(DomainPatterns.newStringField("modelDb"))
-                  .addRelations(DomainPatterns.newStringField("rootDir"))
-                  .addRelations(DomainPatterns.newIntegerField("editorFontSize"))
-                  .addRelations(DomainPatterns.newOneToMany("directories", DomainPatterns.newEntity("STGDirectory")
-                        .addRelations(DomainPatterns.newStringField("path"))
-                        .addRelations(DomainPatterns.newStringField("outputPackage"))
-                        .addRelations(DomainPatterns.newStringField("outputPath"))
-                        .addRelations(DomainPatterns.newOneToMany("groups", stGroupModel)))))
-            .addEntities(DomainPatterns.newEntity("STGParseResult")
-                  .addRelations(DomainPatterns.newOneToOne("parsed", stGroupModel))
-                  .addRelations(DomainPatterns.newOneToMany("errors", DomainPatterns.newEntity("STGError")
-                        .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL")))
-                        .addRelations(DomainPatterns.newStringField("message"))
-                        .addRelations(DomainPatterns.newIntegerField("line"))
-                        .addRelations(DomainPatterns.newIntegerField("charPosition")))));
+            .addEntities(stAppModel)
+            .addEntities(stgParseResult);
 
       DomainPatterns.writeJsonWrapper(mainJava, stDomainPackage, domain);
-
    }
 
    /**
@@ -214,17 +236,17 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToOne("value", stValue))
             .addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
 
-      final Entity stModelNeo = DomainPatterns.newEntityWithUuid("STModel")
+      final Entity stModel = DomainPatterns.newEntityWithUuid("STModel")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("stTemplate"))
             .addRelations(DomainPatterns.newStringField("stGroup"))
             .addRelations(DomainPatterns.newOneToMany("files", stFile))
             .addRelations(DomainPatterns.newOneToMany("arguments", stArgument));
 
-      stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModelNeo));
+      stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModel));
 
       final Domain domain = DomainPatterns.newDomain("STModel")
-            .addEntities(stModelNeo);
+            .addEntities(stModel);
 
       DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
    }
@@ -346,17 +368,7 @@ public class NextgenProject {
             .addEvents(NextgenST.newAppEvent()
                   .setName("OpenMetaRelation")
                   .addFields("nextgen.domains.meta.MetaRelation", "metaRelation"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents()
-                  .setName("DomainVisitor")
-                  .setType("nextgen.domains.meta.DomainVisitor"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents().setName("Project").setType("nextgen.st.model.Project"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents().setName("STModel").setType("nextgen.st.model.STModel"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents().setName("STValue").setType("nextgen.st.model.STValue"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents().setName("Script").setType("nextgen.st.model.Script"))
-            .addEvents(NextgenST.newNewOpenRemovedEvents()
-                  .setName("STTemplate")
-                  .setType("nextgen.st.domain.STTemplate"))
-            .addEvents(NextgenST.newAppEvent()
+             .addEvents(NextgenST.newAppEvent()
                   .setName("STModelTreeNodeClicked")
                   .addFields("nextgen.st.model.STModel", "stModel"));
 
