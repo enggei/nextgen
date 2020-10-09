@@ -1958,17 +1958,38 @@
     "children" : [ {
       "uuid" : "6c2bbf37-2208-4993-bbc6-a27a2fabf40d",
       "name" : "JavaPackage",
-      "text" : "~name~\n~types:{it|~it~};separator=\"\\n\"~ ",
+      "text" : "~name~\n~types:{it|~JavaType(packageName=name, name=it.name)~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "ab87578e-09ce-4932-9bb7-ffc8a8969bd7",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "ef84a69d-64d0-4efc-a022-5c84198e0c73",
+        "uuid" : "c1cf885c-2bba-46f3-93e1-dacee406cdaa",
         "name" : "types",
-        "type" : "LIST",
-        "argumentType" : "ClassOrInterfaceType"
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "8ecdaf57-81fc-413f-80b2-8b851843a99a",
+          "name" : "name",
+          "argumentType" : "String"
+        } ]
+      } ],
+      "children" : [ {
+        "uuid" : "fe17e06e-067c-4b32-9fb8-06cbe277c5a9",
+        "name" : "JavaType",
+        "text" : "~packageName~.~name~ ",
+        "parameters" : [ {
+          "uuid" : "5d63812b-3e50-4050-a13c-1008355309b4",
+          "name" : "packageName",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "690d69ba-e944-49c9-a006-41ceeb529852",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
       } ]
     } ]
   }, {

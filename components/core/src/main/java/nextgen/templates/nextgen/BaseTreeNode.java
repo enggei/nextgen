@@ -42,10 +42,10 @@ public class BaseTreeNode {
 				"	protected ImageIcon icon;\n" + 
 				"	protected String tooltip;\n" + 
 				"\n" + 
-				"	public BaseTreeNode(T model, String icon) {\n" + 
+				"	public BaseTreeNode(T model, ImageIcon icon) {\n" + 
 				"		setUserObject(model);\n" + 
 				"		this.label = model.toString();\n" + 
-				"		this.icon = presentationModel.loadIcon(icon);\n" + 
+				"		this.icon = icon;\n" + 
 				"		this.tooltip = \"\";\n" + 
 				"	}\n" + 
 				"\n" + 

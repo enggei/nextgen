@@ -1,6 +1,7 @@
 package nextgen.st;
 
 import nextgen.utils.SwingUtil;
+import nextgen.swing.AppModel;
 import nextgen.st.domain.*;
 
 import javax.swing.*;
@@ -16,19 +17,16 @@ public class STTemplateNavigator extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
 
 	private final JTree tree = new JTree();
-	private final STAppPresentationModel presentationModel;
-	private final DefaultTreeModel treeModel;
+	private final STTemplateNavigatorTreeModel treeModel;
 
 	private STWorkspace workspace;
 
-	public STTemplateNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
+	public STTemplateNavigator(STWorkspace workspace) {
 		super(new BorderLayout());
 
 		this.workspace = workspace;
 
-		this.presentationModel = presentationModel;
-
-		treeModel = new DefaultTreeModel(new RootNode("Templates"));
+		treeModel = new STTemplateNavigatorTreeModel(new RootNode("Templates"));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -117,10 +115,10 @@ public class STTemplateNavigator extends JPanel {
 		protected ImageIcon icon;
 		protected String tooltip;
 
-		public BaseTreeNode(T model, String icon) {
+		public BaseTreeNode(T model, ImageIcon icon) {
 			setUserObject(model);
 			this.label = model.toString();
-			this.icon = presentationModel.loadIcon(icon);
+			this.icon = icon;
 			this.tooltip = "";
 		}
 
@@ -235,15 +233,25 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// RootNode
+
+	private boolean isRootNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof RootNode;
+	}
+
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
-			super(model, "RootNode");
+			super(model, appModel().loadIcon("RootNode"));
 
 			this.label = getModel();
 			this.tooltip = "";
 
-			presentationModel.stgDirectories.forEach(stgDirectory -> add(new STGDirectoryTreeNode(stgDirectory)));
+			final STGDirectory stgDirectory = new STGDirectory()
+					.setOutputPath(AppModel.getInstance().getOutputPath())
+					.setOutputPackage(AppModel.getInstance().getOutputPackage())
+					.setPath(AppModel.getInstance().getTemplateDir());
+			appModel().stGroups.forEach(stgDirectory::addGroups);
+			add(new STGDirectoryTreeNode(stgDirectory));
 		}
 
 		RootNode thisNode() {
@@ -266,12 +274,17 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// STGDirectoryTreeNode
+
+	private boolean isSTGDirectoryTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STGDirectoryTreeNode;
+	}
+
 	public class STGDirectoryTreeNode extends BaseTreeNode<nextgen.st.domain.STGDirectory> {
 
 		private String uuid;
 
 		STGDirectoryTreeNode(nextgen.st.domain.STGDirectory model) {
-			super(model, "STGDirectory");
+			super(model, appModel().loadIcon("STGDirectory"));
 
 			this.label = getModel().getPath();
 			this.tooltip = "";
@@ -310,7 +323,7 @@ public class STTemplateNavigator extends JPanel {
 						return;
 					}
 
-					final nextgen.st.domain.STGroupModel stGroupModel = presentationModel.newSTGroupModel(name);
+					final nextgen.st.domain.STGroupModel stGroupModel = appModel().newSTGroupModel(name);
 					getModel().addGroups(stGroupModel);
 
 					SwingUtilities.invokeLater(() -> {
@@ -322,10 +335,10 @@ public class STTemplateNavigator extends JPanel {
 				});
 			}));
 			actions.add(newAction("Generate All", actionEvent -> {
-				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel(), false)));
+				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> appModel().generateSTGroup(stGroupTreeNode.getModel(), false)));
 			}));
 			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
-				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> presentationModel.generateSTGroup(stGroupTreeNode.getModel(), true)));
+				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> appModel().generateSTGroup(stGroupTreeNode.getModel(), true)));
 			}));
 			actions.add(newAction("Expand", actionEvent -> {
 				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
@@ -343,12 +356,17 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// STGroupTreeNode
+
+	private boolean isSTGroupTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STGroupTreeNode;
+	}
+
 	public class STGroupTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
 
 		private String uuid;
 
 		STGroupTreeNode(nextgen.st.domain.STGroupModel model) {
-			super(model, model.getIcon());
+			super(model, appModel().loadIcon(model.getIcon()));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -374,16 +392,16 @@ public class STTemplateNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Set Tags", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.editSTGroupTags(tree, getModel()));
+				appModel().doLaterInTransaction(transaction -> appModel().editSTGroupTags(tree, getModel()));
 			}));
 			actions.add(newAction("Import From File", actionEvent -> {
-				SwingUtil.showOpenFile(tree, presentationModel.getLastDir())
+				SwingUtil.showOpenFile(tree, appModel().getLastDir())
 					.ifPresent(file -> {
-						presentationModel.setLastDir(file.getParentFile());
-						presentationModel.doLaterInTransaction(transaction -> {
+						appModel().setLastDir(file.getParentFile());
+						appModel().doLaterInTransaction(transaction -> {
 							final String fileName = file.getName();
 							final String name = fileName.substring(0, fileName.indexOf("."));
-							final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+							final STTemplate stTemplate = appModel().newSTTemplate(name);
 							stTemplate.setText(nextgen.utils.FileUtil.readIntact(file));
 							getModel().addTemplates(stTemplate);
 							save();
@@ -396,13 +414,13 @@ public class STTemplateNavigator extends JPanel {
 					});
 			}));
 			actions.add(newAction("Generate Group", actionEvent -> {
-				presentationModel.generateSTGroup(getModel(), false);
+				appModel().generateSTGroup(getModel(), false);
 			}));
 			actions.add(newAction("New template", actionEvent -> {
 				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
 						STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
-							final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+							final STTemplate stTemplate = appModel().newSTTemplate(name);
 							getModel().addTemplates(stTemplate);
 							save();
 
@@ -416,7 +434,7 @@ public class STTemplateNavigator extends JPanel {
 				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
 					STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
-						final STEnum stEnum = presentationModel.newSTEnum(name);
+						final STEnum stEnum = appModel().newSTEnum(name);
 						getModel().addEnums(stEnum);
 						save();
 
@@ -427,7 +445,7 @@ public class STTemplateNavigator extends JPanel {
 				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
 					STAppPresentationModel.isValidTemplateName(tree, getModel(), name).ifPresent(s -> {
 
-						final STInterface stInterface = presentationModel.newSTInterface(name);
+						final STInterface stInterface = appModel().newSTInterface(name);
 						getModel().addInterfaces(stInterface);
 						save();
 
@@ -478,13 +496,13 @@ public class STTemplateNavigator extends JPanel {
 					save();
 
 					SwingUtilities.invokeLater(() -> {
-							this.icon = presentationModel.loadIcon(iconName);
+							this.icon = appModel().loadIcon(iconName);
 							treeModel.nodeChanged(STGroupTreeNode.this);
 					});
 				});
 			}));
 			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
-				presentationModel.generateSTGroup(getModel(), true);
+				appModel().generateSTGroup(getModel(), true);
 			}));
 			actions.add(newAction("Collapse", actionEvent -> {
 				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
@@ -498,12 +516,17 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// STEnumTreeNode
+
+	private boolean isSTEnumTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STEnumTreeNode;
+	}
+
 	public class STEnumTreeNode extends BaseTreeNode<nextgen.st.domain.STEnum> {
 
 		private String uuid;
 
 		STEnumTreeNode(nextgen.st.domain.STEnum model) {
-			super(model, "STEnum");
+			super(model, appModel().loadIcon("STEnum"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -527,8 +550,8 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			getModel().getValues().forEach(stEnumValue -> {
 				actions.add(newAction("New " + stEnumValue.getName() + " instance", actionEvent -> {
-					presentationModel.doLaterInTransaction(transaction -> {
-						presentationModel.db.newSTValue(stEnumValue);
+					appModel().doLaterInTransaction(transaction -> {
+						appModel().db.newSTValue(stEnumValue);
 						workspace.setSelectedComponent(workspace.findCanvas());
 					});
 				}));
@@ -619,12 +642,17 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// STTemplateTreeNode
+
+	private boolean isSTTemplateTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STTemplateTreeNode;
+	}
+
 	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
 
 		private String uuid;
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
-			super(model, "STTemplate");
+			super(model, appModel().loadIcon("STTemplate"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -708,8 +736,8 @@ public class STTemplateNavigator extends JPanel {
 			})));
 			actions.add(newAction("New Instance", actionEvent -> {
 				getParentNode(STGroupTreeNode.class)
-					.ifPresent(stGroupTreeNode -> presentationModel.doLaterInTransaction(transaction -> {
-						presentationModel.db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel());
+					.ifPresent(stGroupTreeNode -> appModel().doLaterInTransaction(transaction -> {
+						appModel().db.newSTModel(stGroupTreeNode.getModel().getUuid(), getModel());
 						workspace.setSelectedComponent(workspace.findCanvas());
 					}));
 			}));
@@ -718,7 +746,7 @@ public class STTemplateNavigator extends JPanel {
 					.ifPresent(candidateName -> getParentNode(STGroupTreeNode.class)
 							.ifPresent(stGroupTreeNode -> STAppPresentationModel.isValidTemplateName(tree, stGroupTreeNode.getModel(), candidateName)
 									.ifPresent(name -> {
-										final STTemplate stTemplate = presentationModel.newSTTemplate(name);
+										final STTemplate stTemplate = appModel().newSTTemplate(name);
 					
 										getModel().addChildren(stTemplate);
 										stGroupTreeNode.save();
@@ -858,12 +886,17 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// STInterfaceTreeNode
+
+	private boolean isSTInterfaceTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STInterfaceTreeNode;
+	}
+
 	public class STInterfaceTreeNode extends BaseTreeNode<nextgen.st.domain.STInterface> {
 
 		private String uuid;
 
 		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
-			super(model, "STInterface");
+			super(model, appModel().loadIcon("STInterface"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -920,12 +953,20 @@ public class STTemplateNavigator extends JPanel {
 		};
 	}
 
+	private Action newTransactionAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionEventConsumer.accept(e)));
+			}
+		};
+	}
+
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
@@ -941,10 +982,14 @@ public class STTemplateNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelEditorTreeNodeClicked(nextgen.st.STAppEvents.STModelEditorTreeNodeClicked event) {
-		presentationModel.doLaterInTransaction(transaction -> {
-			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+		appModel().doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
 			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
 			if (path != null) {
@@ -968,8 +1013,8 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onCanvasSTModelClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
-		presentationModel.doLaterInTransaction(transaction -> {
-			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+		appModel().doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
 			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
 			if (path != null) {
@@ -981,8 +1026,8 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelTreeNodeClicked(nextgen.st.STAppEvents.STModelTreeNodeClicked event) {
-		presentationModel.doLaterInTransaction(transaction -> {
-			final STTemplate stTemplate = presentationModel.findSTTemplateByUuid(event.stModel.getStTemplate());
+		appModel().doLaterInTransaction(transaction -> {
+			final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
 			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
 			if (path != null) {
@@ -990,5 +1035,67 @@ public class STTemplateNavigator extends JPanel {
 				tree.setSelectionPath(path);
 			}
 		});
+	}
+
+	class STTemplateNavigatorTreeModel extends DefaultTreeModel {
+
+		public STTemplateNavigatorTreeModel(BaseTreeNode root) {
+			super(root);
+		}
+
+		protected Optional<BaseTreeNode<?>> find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), predicate);
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
+					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					final Optional<T> node = find(childAt, predicate);
+					if (node.isPresent()) return node;
+				}
+			}
+			return Optional.empty();
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+
+			int n = parent.getChildCount();
+			if (n == 0) {
+				parent.add(child);
+				nodesWereInserted(parent, new int[]{n});
+				return;
+			}
+
+			for (int i = 0; i < n; i++) {
+				final BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (node.getLabel().compareTo(child.getLabel()) > 0) {
+					parent.insert(child, i);
+					nodesWereInserted(parent, new int[]{i});
+					return;
+				}
+			}
+
+			parent.add(child);
+			nodesWereInserted(parent, new int[]{n});
+		}
 	}
 }

@@ -45,16 +45,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
 
-	private nextgen.st.STAppPresentationModel presentationModel;
 
-	public STModelCanvas(nextgen.st.STAppPresentationModel presentationModel) {
-		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024), presentationModel);
+	public STModelCanvas() {
+		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024));
 	}
 
-	public STModelCanvas(Color background, Dimension preferredSize, nextgen.st.STAppPresentationModel presentationModel) {
+	public STModelCanvas(Color background, Dimension preferredSize) {
 		super();
 
-		this.presentationModel = presentationModel;
 
 		setBackground(background);
 		setPreferredSize(preferredSize);
@@ -65,7 +63,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		//test
 		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(null).actionPerformed(null));
 	}
 
@@ -73,15 +70,19 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		return this;
 	}
 
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
-		presentationModel.doLaterInTransaction(transaction -> addSTModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
+		addSTModelNode(event.sTModel, appModel().findSTTemplateByUuid(event.sTModel.getStTemplate()));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onOpenSTModel(nextgen.st.STAppEvents.OpenSTModel event) {
-		presentationModel.doLaterInTransaction(transaction -> addSTModelNode(event.sTModel, presentationModel.findSTTemplateByUuid(event.sTModel.getStTemplate())));
-		presentationModel.getWorkspace().showCanvas();
+		addSTModelNode(event.sTModel, appModel().findSTTemplateByUuid(event.sTModel.getStTemplate()));
+		appModel().getWorkspace().showCanvas();
 	}
 
 	@Override
@@ -212,7 +213,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 
 		pop.add(new Debug(event));
-		pop.add(new MakeNeoModelScript(event));
 		pop.add(new SaveLastLayoutAction(event));
 		pop.add(new LoadLastLayoutAction(event));
 		pop.addSeparator();
@@ -1237,22 +1237,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}  
 
-	final class MakeGeneratorScript extends CanvasAction {
-
-		MakeGeneratorScript(PInputEvent event) {
-			super("Make Script", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			presentationModel.generateSources(getSelectedNodes()
-					.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
-					.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
-					.map(stModelNode -> stModelNode.getModel())
-					.collect(java.util.stream.Collectors.toSet()), "Test");
-		}
-	}
-
 	final class Debug extends CanvasAction {
 
 		Debug(PInputEvent event) {
@@ -1261,7 +1245,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
-			presentationModel.doLaterInTransaction(transaction -> {
+			appModel().doLaterInTransaction(transaction -> {
 				System.out.println("Node layer");
 				nodeLayer.getAllNodes().stream().forEach(o -> System.out.println(o));
 
@@ -1310,22 +1294,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	final class MakeNeoModelScript extends CanvasAction {
-
-		MakeNeoModelScript(PInputEvent event) {
-			super("Generate Neo Model script", event);
-		}
-
-		@Override
-		void actionPerformed(PInputEvent event, ActionEvent e) {
-			presentationModel.generateNeoSources(getSelectedNodes()
-							.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
-							.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
-							.map(stModelNode -> stModelNode.getModel())
-							.collect(java.util.stream.Collectors.toSet()), "NeoTest");
-		}
-	}
-
 	final class SaveLastLayoutAction extends CanvasAction {
 
 		SaveLastLayoutAction(PInputEvent event) {
@@ -1334,8 +1302,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
-			presentationModel.doLaterInTransaction(tx -> {
-					final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(presentationModel.db.getDatabaseService());
+			appModel().doLaterInTransaction(tx -> {
+					final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(appModel().db.getDatabaseService());
 					final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findOrCreateLayoutByName("last");
 
 					last.getNodes().forEach(layoutNode -> {
@@ -1371,9 +1339,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		void actionPerformed(PInputEvent event, ActionEvent e) {
-			presentationModel.doLaterInTransaction(tx -> {
+			appModel().doLaterInTransaction(tx -> {
 
-				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(presentationModel.db.getDatabaseService());
+				final nextgen.st.canvas.layout.LayoutNeoFactory layoutNeoFactory = new nextgen.st.canvas.layout.LayoutNeoFactory(appModel().db.getDatabaseService());
 				final nextgen.st.canvas.layout.Layout last = layoutNeoFactory.findLayoutByName("last");
 				if (last == null) return;
 
@@ -1383,17 +1351,17 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName("ref")).forEach(relationship -> {
 							final org.neo4j.graphdb.Node stNode = relationship.getOtherNode(node);
 							if (nextgen.st.model.STModelNeoFactory.isSTModel(stNode)) {
-								final nextgen.st.model.STModel stModel = presentationModel.newSTModel(stNode);
-								addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+								final nextgen.st.model.STModel stModel = appModel().newSTModel(stNode);
+								addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
 								getNode(stModel.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stModel.getUuid()));
 							} else if (nextgen.st.model.STModelNeoFactory.isSTValue(stNode)) {
-								final nextgen.st.model.STValue stValue = presentationModel.newSTValue(stNode);
+								final nextgen.st.model.STValue stValue = appModel().newSTValue(stNode);
 								addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 								getNode(stValue.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
 								if (centerNodeRef.get() == null) centerNodeRef.set(getNode(stValue.getUuid()));
 							} else if (nextgen.st.model.STModelNeoFactory.isSTFile(stNode)) {
-								final nextgen.st.model.STFile stFile = presentationModel.newSTFile(stNode);
+								final nextgen.st.model.STFile stFile = appModel().newSTFile(stNode);
 								stFile.getIncomingFilesSTModel().findFirst().ifPresent(stModel -> {
 									addNode(stFile.getUuid(), () -> new STFileNode(stFile, stModel));
 									getNode(stFile.getUuid()).setOffset(layoutNode.getX(), layoutNode.getY());
@@ -1801,7 +1769,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 							.map(stNode -> (STValueNode) stNode)
 							.collect(java.util.stream.Collectors.toList());
-			presentationModel.doInTransaction(tx -> {
+			appModel().doInTransaction(tx -> {
 					final JMenu sourceMenu = new JMenu("STModels");
 					stModelNodes.forEach(stModelNode -> {
 						final int end = Math.min(stModelNode.getText().length(), 50);
@@ -1835,9 +1803,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onNodeLeftClick(PInputEvent event) {
 			super.onNodeLeftClick(event);
-			thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+			thisCanvas().appModel().doLaterInTransaction(tx -> {
 					if (getModel() == null || getModel().getPath() == null) return;
-					nextgen.st.STGenerator.writeToFile(thisCanvas().presentationModel.render(stModel), getModel().getPackageName().getValue(), getModel().getName().getValue(), getModel().getType().getValue(), new java.io.File(getModel().getPath().getValue()));
+					nextgen.st.STGenerator.writeToFile(thisCanvas().appModel().render(stModel), getModel().getPackageName().getValue(), getModel().getName().getValue(), getModel().getType().getValue(), new java.io.File(getModel().getPath().getValue()));
 				});
 		}
 
@@ -1851,7 +1819,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doInTransaction(tx -> {
+				appModel().doInTransaction(tx -> {
 						final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 						fieldMap.put("name", SwingUtil.newTextField(getModel().getName() == null ? "" : getModel().getName().getValue(), 15));
 						fieldMap.put("type", SwingUtil.newTextField(getModel().getType() == null ? "" : getModel().getType().getValue(), 15));
@@ -1870,19 +1838,19 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 									final String type = fieldMap.get("type").getText().trim();
 									final String path = fieldMap.get("path").getText().trim();
 									final String packageName = fieldMap.get("package").getText().trim();
-									thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+									thisCanvas().appModel().doLaterInTransaction(tx -> {
 
 										if (getModel().getName() == null || (getModel().getName().getValue() == null || !getModel().getName().getValue().equals(name)))
-											getModel().setName(thisCanvas().presentationModel.newSTValue(name));
+											getModel().setName(thisCanvas().appModel().newSTValue(name));
 
 										if (getModel().getType() == null || (getModel().getType().getValue() == null || !getModel().getType().getValue().equals(type)))
-											getModel().setType(thisCanvas().presentationModel.newSTValue(type));
+											getModel().setType(thisCanvas().appModel().newSTValue(type));
 
 										if (getModel().getPath() == null || (getModel().getPath().getValue() == null || !getModel().getPath().getValue().equals(path)))
-											getModel().setPath(thisCanvas().presentationModel.newSTValue(path));
+											getModel().setPath(thisCanvas().appModel().newSTValue(path));
 
 										if (getModel().getPackageName() == null || (getModel().getPackageName().getValue() == null || !getModel().getPackageName().getValue().equals(packageName)))
-											getModel().setPackageName(thisCanvas().presentationModel.newSTValue(packageName));
+											getModel().setPackageName(thisCanvas().appModel().newSTValue(packageName));
 
 										setText(nextgen.st.STGenerator.asFile(getModel()).getAbsolutePath());
 									});
@@ -1901,7 +1869,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 						try {
 							java.awt.Desktop.getDesktop().open(nextgen.st.STGenerator.asFile(getModel()));
 						} catch (Exception ex) {
@@ -1922,7 +1890,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 						if (stModel != null) thisCanvas().removeRelation(getUuid());
 						stModel = stModelNode.getModel();
 						stModel.addFiles(getModel());
@@ -1943,7 +1911,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 						getModel().setPath(model);
 						setText(nextgen.st.STGenerator.asFile(getModel()).getAbsolutePath());
 					});
@@ -1961,7 +1929,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 						getModel().setName(model);
 						setText(nextgen.st.STGenerator.asFile(getModel()).getAbsolutePath());
 					});
@@ -1979,7 +1947,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 						getModel().setType(model);
 						setText(nextgen.st.STGenerator.asFile(getModel()).getAbsolutePath());
 					});
@@ -1997,7 +1965,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 						getModel().setPackageName(model);
 						setText(nextgen.st.STGenerator.asFile(getModel()).getAbsolutePath());
 					});
@@ -2082,7 +2050,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							.filter(stNode -> !stNode.getUuid().equals(getUuid()))
 							.map(stNode -> (STModelNode) stNode)
 							.collect(java.util.stream.Collectors.toList());
-			presentationModel.doInTransaction(tx -> {
+			appModel().doInTransaction(tx -> {
 					stParameter.getKeys().forEach(stParameterKey -> {
 						final JMenu stParameterMenu = new JMenu(stParameterKey.getName());
 						stValueNodes.forEach(stNode -> stParameterMenu.add(new SetSTValueArgumentAction(event, stParameterKey, getModel(), stNode)));
@@ -2122,7 +2090,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 						stParameter.getKeys()
 								.forEach(stParameterKey -> getModel().getKeyValues()
 										.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
@@ -2148,10 +2116,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.showInputDialog(stParameterKey.getName(), thisCanvas(), s -> {
-							thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-								final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.db.newSTValue(s);
-								presentationModel.removeArgument(getModel(), stParameterKey);
-								final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
+							thisCanvas().appModel().doLaterInTransaction(tx -> {
+								final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(s);
+								appModel().removeArgument(getModel(), stParameterKey);
+								final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValue);
 								stArgument.addKeyValues(stArgumentKV);
 								thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameterKey, stArgumentKV));
 							});
@@ -2166,7 +2134,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STValueNode stValueNode;
 
 			SetSTValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgument stArgument, STValueNode stValueNode) {
-				super(presentationModel.cut(stValueNode.getText(), 30), event);
+				super(appModel().cut(stValueNode.getText(), 30), event);
 				this.stParameterKey = stParameterKey;
 				this.stArgument = stArgument;
 				this.stValueNode = stValueNode;
@@ -2174,9 +2142,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-							presentationModel.removeArgument(getModel(), stParameterKey);
-							final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().presentationModel.db.newSTArgumentKV(stParameterKey, stValueNode.getModel());
+				thisCanvas().appModel().doLaterInTransaction(tx -> {
+							appModel().removeArgument(getModel(), stParameterKey);
+							final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValueNode.getModel());
 							stArgument.addKeyValues(stArgumentKV);
 							thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), stValueNode, stArgument, stParameterKey, stArgumentKV));
 						});
@@ -2190,7 +2158,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STModelNode stModelNode;
 
 			SetSTModelArgumentAction(PInputEvent event, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgument stArgument, STModelNode stModelNode) {
-				super(presentationModel.cut(stModelNode.getText(), 30), event);
+				super(appModel().cut(stModelNode.getText(), 30), event);
 				this.stParameterKey = stParameterKey;
 				this.stArgument = stArgument;
 				this.stModelNode = stModelNode;
@@ -2198,10 +2166,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-							presentationModel.removeArgument(getModel(), stParameterKey);
-							final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.db.newSTValue(stModelNode.getModel());
-							final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
+				appModel().doLaterInTransaction(tx -> {
+							appModel().removeArgument(getModel(), stParameterKey);
+							final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(stModelNode.getModel());
+							final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValue);
 							stArgument.addKeyValues(stArgumentKV);
 							thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), stModelNode, stArgument, stParameterKey, stArgumentKV));
 						});
@@ -2215,7 +2183,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgumentKV stArgumentKV;
 
 			OpenArgument(PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
-				super(presentationModel.cut(thisCanvas().presentationModel.render(stArgument.getValue())), event);
+				super(appModel().cut(thisCanvas().appModel().render(stArgument.getValue())), event);
 				this.stArgument = stArgument;
 				this.stParameterKey = stParameterKey;
 				this.stArgumentKV = stArgumentKV;
@@ -2223,11 +2191,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 							final nextgen.st.model.STValue stValue = stArgumentKV.getValue();
 							switch (stValue.getType()) {
 								case STMODEL:
-									thisCanvas().addNode(stValue.getStModel().getUuid(), () -> new STModelNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate())));
+									thisCanvas().addNode(stValue.getStModel().getUuid(), () -> new STModelNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate())));
 									thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getStModel().getUuid()), stArgument, stParameterKey, stArgumentKV));
 									break;
 								case PRIMITIVE:
@@ -2250,14 +2218,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgumentKV stArgumentKV;
 
 			RemoveArgument(PInputEvent event, nextgen.st.model.STArgument stArgument, nextgen.st.model.STArgumentKV stArgumentKV) {
-				super(presentationModel.cut(thisCanvas().presentationModel.render(stArgument.getValue())), event);
+				super(appModel().cut(thisCanvas().appModel().render(stArgument.getValue())), event);
 				this.stArgument = stArgument;
 				this.stArgumentKV = stArgumentKV;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 						stArgument.removeKeyValues(stArgumentKV);
 						thisCanvas().removeRelation(stArgumentKV.getUuid());
 					});
@@ -2277,10 +2245,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-						presentationModel.removeArgument(getModel(), stParameterKey);
-						final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().presentationModel.db.newSTArgumentKV(stParameterKey, stValue);
+				appModel().doLaterInTransaction(tx -> {
+						final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
+						appModel().removeArgument(getModel(), stParameterKey);
+						final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValue);
 						stArgument.addKeyValues(stArgumentKV);
 						thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameterKey, stArgumentKV));
 					});
@@ -2319,7 +2287,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		private nextgen.st.domain.STTemplate stTemplate;
 
 		public STModelNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
-			super(model, model.getUuid(), stTemplate.getName() + " :\n" + presentationModel.render(model, 1500));
+			super(model, model.getUuid(), stTemplate.getName() + " :\n" + appModel().render(model, 1500));
 			this.stTemplate = stTemplate;
 		}
 
@@ -2331,7 +2299,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
-			presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
+			appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
 				if (refersTo(stArgument, stParameter, node))
 					addRelation(stArgument.getUuid(), () -> new STArgumentRelation(STModelNode.this, node, stArgument, stParameter));
 			});
@@ -2355,9 +2323,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					.map(stNode -> (STModelNode) stNode)
 					.filter(stModelNode -> stModelNode.stTemplate.equals(STModelNode.this.stTemplate))
 					.collect(java.util.stream.Collectors.toList());
-			thisCanvas().presentationModel.doInTransaction(tx -> {
+			thisCanvas().appModel().doInTransaction(tx -> {
 
-				final String clipboardValue = presentationModel.cut(nextgen.utils.SwingUtil.fromClipboard());
+				final String clipboardValue = appModel().cut(nextgen.utils.SwingUtil.fromClipboard());
 				
 				final JMenu parametersMenu = new JMenu("Parameters");
 				pop.add(parametersMenu);
@@ -2456,7 +2424,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onNodeLeftClick(PInputEvent event) {
 			super.onNodeLeftClick(event);
-			presentationModel.doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + presentationModel.render(getModel())));
+			appModel().doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + appModel().render(getModel())));
 			nextgen.st.STAppEvents.postCanvasSTModelClicked(getModel());
 		}
 
@@ -2500,8 +2468,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.addList(stParameter, getModel(), thisCanvas(), objects -> {
-						setText(thisCanvas().presentationModel.render(getModel()));						
+				appModel().addList(stParameter, getModel(), thisCanvas(), objects -> {
+						setText(thisCanvas().appModel().render(getModel()));						
 					});
 			}
 		}
@@ -2517,8 +2485,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.setParameter(stParameter, getModel(), thisCanvas(), objects -> {
-						setText(thisCanvas().presentationModel.render(getModel()));						
+				appModel().setParameter(stParameter, getModel(), thisCanvas(), objects -> {
+						setText(thisCanvas().appModel().render(getModel()));						
 					});
 			}
 		}
@@ -2548,7 +2516,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.writeToFile(getModel());
+				appModel().writeToFile(getModel());
 			}
 		}
 
@@ -2561,27 +2529,27 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 
-					presentationModel.getIncomingSTArguments(getModel())
+					appModel().getIncomingSTArguments(getModel())
 							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
 									.forEach(stModel -> {
-										final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+										final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
 										if (stTemplateByUuid == null) return;
 										stTemplateByUuid.getParameters()
 												.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
 												.findFirst()
 												.ifPresent(stParameter -> {
-													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
 													thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));
 												});
 									}));
 
-					presentationModel.getIncomingSTArgumentKVs(getModel())
+					appModel().getIncomingSTArgumentKVs(getModel())
 							.forEach(stArgumentKV -> {
 								stArgumentKV.getIncomingKeyValuesSTArgument()
 										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-											final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+											final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
 													.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
@@ -2590,7 +2558,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 															.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
 															.findFirst()
 															.ifPresent(stParameterKey -> {
-																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
 																final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
 																thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));
 																thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));
@@ -2610,8 +2578,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-					presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null));
+				appModel().doLaterInTransaction(tx -> {
+					appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null));
 					new LayoutTreeAction(thisNode(), event).actionPerformed(null);
 				});
 			}
@@ -2626,7 +2594,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(thisCanvas().presentationModel.render(getModel())));
+				appModel().doLaterInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(thisCanvas().appModel().render(getModel())));
 			}
 		}
 
@@ -2640,9 +2608,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete model ?")
-						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {
 							close();
-							thisCanvas().presentationModel.db.remove(getModel());
+							thisCanvas().appModel().db.remove(getModel());
 						}));
 			}
 		}
@@ -2656,7 +2624,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> thisCanvas().addNode(new STModelNode(thisCanvas().presentationModel.db.clone(getModel()), stTemplate)));
+				appModel().doLaterInTransaction(tx -> thisCanvas().addNode(new STModelNode(thisCanvas().appModel().db.clone(getModel()), stTemplate)));
 			}
 		}
 
@@ -2669,13 +2637,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+				thisCanvas().appModel().doLaterInTransaction(tx -> {
 
 					final java.util.concurrent.atomic.AtomicInteger typeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 					final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
 
 					final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
-					final String[] pathTypes = thisCanvas().presentationModel.db.findAllSTFile()
+					final String[] pathTypes = thisCanvas().appModel().db.findAllSTFile()
 								.filter(stFile -> stFile.getPath() != null)
 								.filter(stFile -> stFile.getPath().getValue() != null)
 								.map(stFile -> stFile.getPath().getValue())
@@ -2683,10 +2651,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 								.toArray(String[]::new);
 
 					final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-					fieldMap.put("name", SwingUtil.newTextField(thisCanvas().presentationModel.getSTModelName(getModel(), ""), 15));
+					fieldMap.put("name", SwingUtil.newTextField(thisCanvas().appModel().getSTModelName(getModel(), ""), 15));
 					fieldMap.put("type", SwingUtil.newTextField(15));
 					fieldMap.put("path", SwingUtil.newTextField(15));
-					fieldMap.put("package", SwingUtil.newTextField(thisCanvas().presentationModel.getSTModelPackage(getModel(), ""), 15));
+					fieldMap.put("package", SwingUtil.newTextField(thisCanvas().appModel().getSTModelPackage(getModel(), ""), 15));
 					final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
 					inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 					for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
@@ -2717,8 +2685,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 								final String type = fieldMap.get("type").getText().trim();
 								final String path = fieldMap.get("path").getText().trim();
 								final String packageName = fieldMap.get("package").getText().trim();
-								thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-									final nextgen.st.model.STFile stFile = thisCanvas().presentationModel.newSTFile(name, type, path, packageName);
+								thisCanvas().appModel().doLaterInTransaction(tx -> {
+									final nextgen.st.model.STFile stFile = thisCanvas().appModel().newSTFile(name, type, path, packageName);
 									getModel().addFiles(stFile);
 									final STFileNode dstNode = thisCanvas().addNode(new STFileNode(stFile, getModel()));
 									thisCanvas().addRelation(dstNode.getUuid(), () -> new STSinkRelation(thisNode(), dstNode));
@@ -2738,7 +2706,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx ->
+				thisCanvas().appModel().doLaterInTransaction(tx ->
 							getModel().getFiles().forEach(stFile -> {
 								final STFileNode dstNode = thisCanvas().addNode(stFile.getUuid(), () -> new STFileNode(stFile, getModel()));
 								thisCanvas().addRelation(dstNode.getUuid(), () -> new STSinkRelation(thisNode(), dstNode));
@@ -2754,20 +2722,20 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STValueNode stValueNode;
 
 			SetSTValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STValueNode stValueNode) {
-				super(presentationModel.cut(stValueNode.getText(), 30), event);
+				super(appModel().cut(stValueNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stValueNode = stValueNode;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-					if (presentationModel.sameArgumentValue(getModel(), stParameter, stValueNode.getModel())) return;
-					presentationModel.removeArgument(getModel(), stParameter);
-					final nextgen.st.model.STArgument stArgument = presentationModel.newSTArgument(stParameter, stValueNode.getModel());
+				appModel().doLaterInTransaction(tx -> {
+					if (appModel().sameArgumentValue(getModel(), stParameter, stValueNode.getModel())) return;
+					appModel().removeArgument(getModel(), stParameter);
+					final nextgen.st.model.STArgument stArgument = appModel().newSTArgument(stParameter, stValueNode.getModel());
 					getModel().addArguments(stArgument);
 					thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-					setText(presentationModel.render(getModel()));
+					setText(appModel().render(getModel()));
 				});
 			}
 		}
@@ -2778,20 +2746,20 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STModelNode stModelNode;
 
 			SetSTModelArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STModelNode stModelNode) {
-				super(presentationModel.cut(stModelNode.getText(), 30), event);
+				super(appModel().cut(stModelNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stModelNode = stModelNode;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-					presentationModel.removeArgument(getModel(), stParameter);
-					final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.newSTValue(stModelNode.getModel());
-					final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+				thisCanvas().appModel().doLaterInTransaction(tx -> {
+					appModel().removeArgument(getModel(), stParameter);
+					final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(stModelNode.getModel());
+					final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 					getModel().addArguments(stArgument);
 					thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stModelNode, stArgument, stParameter));
-					setText(thisCanvas().presentationModel.render(getModel()));
+					setText(thisCanvas().appModel().render(getModel()));
 				});
 			}
 		}
@@ -2802,24 +2770,24 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STModelNode stModelNode;
 
 			SetToSameAsArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STModelNode stModelNode) {
-				super("Same as " + presentationModel.cut(stModelNode.getText(), 30), event);
+				super("Same as " + appModel().cut(stModelNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stModelNode = stModelNode;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doInTransaction(transaction -> stModelNode.getModel().getArguments()
+				thisCanvas().appModel().doInTransaction(transaction -> stModelNode.getModel().getArguments()
 						.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
 						.filter(stArgument -> stArgument.getValue() != null)
 						.findFirst()
 						.ifPresent(sourceArgument -> {
-								presentationModel.removeArgument(getModel(), stParameter);
-								final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, sourceArgument.getValue());
+								appModel().removeArgument(getModel(), stParameter);
+								final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, sourceArgument.getValue());
 								getModel().addArguments(stArgument);
 								final STValueNode stValueNode = thisCanvas().addNode(sourceArgument.getValue().getUuid(), () -> new STValueNode(sourceArgument.getValue()));
 								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-								setText(thisCanvas().presentationModel.render(getModel()));
+								setText(thisCanvas().appModel().render(getModel()));
 						}));
 			}
 		}
@@ -2836,14 +2804,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), thisCanvas(), s -> {
-					thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-							final nextgen.st.model.STValue stValue = presentationModel.newSTValue(s);
-							presentationModel.removeArgument(getModel(), stParameter);
-							final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+					thisCanvas().appModel().doLaterInTransaction(tx -> {
+							final nextgen.st.model.STValue stValue = appModel().newSTValue(s);
+							appModel().removeArgument(getModel(), stParameter);
+							final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 							getModel().addArguments(stArgument);
 							final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 							thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-							setText(thisCanvas().presentationModel.render(getModel()));
+							setText(thisCanvas().appModel().render(getModel()));
 					});
 				});
 			}
@@ -2860,12 +2828,12 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-					presentationModel.removeArgument(getModel(), stParameter);
-					final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.db.newSTValue("true");
-					final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.db.newSTArgument(stParameter, stValue);
+				thisCanvas().appModel().doLaterInTransaction(tx -> {
+					appModel().removeArgument(getModel(), stParameter);
+					final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue("true");
+					final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().db.newSTArgument(stParameter, stValue);
 					getModel().addArguments(stArgument);
-					setText(thisCanvas().presentationModel.render(getModel()));
+					setText(thisCanvas().appModel().render(getModel()));
 				});
 			}
 		}
@@ -2883,14 +2851,14 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				final String s = nextgen.utils.SwingUtil.fromClipboard();
 				if (s == null || s.trim().length() == 0) return;
-				thisCanvas().presentationModel.doLaterInTransaction(tx -> {
-					presentationModel.removeArgument(getModel(), stParameter);
-					final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.newSTValue(s.trim());
-					final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+				thisCanvas().appModel().doLaterInTransaction(tx -> {
+					appModel().removeArgument(getModel(), stParameter);
+					final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());
+					final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 					getModel().addArguments(stArgument);
 					thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 					thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getUuid()), stArgument, stParameter));
-					setText(thisCanvas().presentationModel.render(getModel()));
+					setText(thisCanvas().appModel().render(getModel()));
 				});
 			}
 		}
@@ -2902,7 +2870,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgument stArgument;
 
 			OpenArgument(PInputEvent event, boolean layoutAfter, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
-				super(presentationModel.cut(presentationModel.render(stArgument), 30), event);
+				super(appModel().cut(appModel().render(stArgument), 30), event);
 				this.layoutAfter = layoutAfter;
 				this.stParameter = stParameter;
 				this.stArgument = stArgument;
@@ -2910,7 +2878,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
+				appModel().doLaterInTransaction(tx -> {
 					if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {
 						addSTKVNode(stArgument, stParameter);
 					} else {
@@ -2918,7 +2886,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						switch (stValue.getType()) {
 							case STMODEL: {
 								final nextgen.st.model.STModel stModel = stValue.getStModel();
-								addSTModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate()));
+								addSTModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate()));
 								break;
 							}
 							case PRIMITIVE: {
@@ -2943,17 +2911,17 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private nextgen.st.model.STArgument stArgument;
 
 			RemoveArgument(PInputEvent event, nextgen.st.model.STArgument stArgument) {
-				super(presentationModel.cut(presentationModel.render(stArgument), 30), event);
+				super(appModel().cut(appModel().render(stArgument), 30), event);
 				this.stArgument = stArgument;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Remove argument ?")
-						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {
 							thisCanvas().removeRelation(stArgument.getUuid());
 							getModel().removeArguments(stArgument);
-							setText(thisCanvas().presentationModel.render(getModel()));
+							setText(thisCanvas().appModel().render(getModel()));
 						}));
 			}
 		}
@@ -2969,8 +2937,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						presentationModel.forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
+				appModel().doLaterInTransaction(tx -> {
+						appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
 								if (this.stParameter.equals(stParameter))
 									new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null);
 						});
@@ -2985,18 +2953,18 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STValueNode stValueNode;
 
 			AddSTValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STValueNode stValueNode) {
-				super(presentationModel.cut(stValueNode.getText(), 30), event);
+				super(appModel().cut(stValueNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stValueNode = stValueNode;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValueNode.getModel());
+				appModel().doLaterInTransaction(tx -> {
+						final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValueNode.getModel());
 						getModel().addArguments(stArgument);
 						thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-						setText(thisCanvas().presentationModel.render(getModel()));
+						setText(thisCanvas().appModel().render(getModel()));
 					});
 			}
 		}
@@ -3007,19 +2975,19 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			private STModelNode stModelNode;
 
 			AddSTModelArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter, STModelNode stModelNode) {
-				super(presentationModel.cut(stModelNode.getText(), 30), event);
+				super(appModel().cut(stModelNode.getText(), 30), event);
 				this.stParameter = stParameter;
 				this.stModelNode = stModelNode;
 			}
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.newSTValue(stModelNode.getModel());
-						final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+				appModel().doLaterInTransaction(tx -> {
+						final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(stModelNode.getModel());
+						final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 						getModel().addArguments(stArgument);
 						thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stModelNode, stArgument, stParameter));
-						setText(thisCanvas().presentationModel.render(getModel()));
+						setText(thisCanvas().appModel().render(getModel()));
 					});
 			}
 		}
@@ -3036,13 +3004,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), thisCanvas(), s -> {
-						presentationModel.doLaterInTransaction(tx -> {
-								final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.newSTValue(s.trim());
-								final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+						appModel().doLaterInTransaction(tx -> {
+								final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());
+								final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 								getModel().addArguments(stArgument);
 								final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-								setText(thisCanvas().presentationModel.render(getModel()));
+								setText(thisCanvas().appModel().render(getModel()));
 						});
 					});
 			}
@@ -3061,13 +3029,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				final String s = nextgen.utils.SwingUtil.fromClipboard();
 				if (s == null || s.trim().length() == 0) return;
-				presentationModel.doLaterInTransaction(tx -> {
-					final nextgen.st.model.STValue stValue = thisCanvas().presentationModel.newSTValue(s.trim());
-					final nextgen.st.model.STArgument stArgument = thisCanvas().presentationModel.newSTArgument(stParameter, stValue);
+				appModel().doLaterInTransaction(tx -> {
+					final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());
+					final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);
 					getModel().addArguments(stArgument);
 					final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));
 					thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));
-					setText(thisCanvas().presentationModel.render(getModel()));
+					setText(thisCanvas().appModel().render(getModel()));
 				});
 			}
 		}
@@ -3083,11 +3051,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(tx -> {
-						presentationModel.addKVArgument(getModel(), stParameter, thisCanvas(), stArgument -> {
+				appModel().doLaterInTransaction(tx -> {
+						appModel().addKVArgument(getModel(), stParameter, thisCanvas(), stArgument -> {
 								final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
 								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stkvNode, stArgument, stParameter));
-								setText(thisCanvas().presentationModel.render(getModel()));
+								setText(thisCanvas().appModel().render(getModel()));
 						});
 					});
 			}
@@ -3102,7 +3070,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.setMultiple(thisCanvas(), getModel(), stTemplate));
+				appModel().doLaterInTransaction(transaction -> appModel().setMultiple(thisCanvas(), getModel(), stTemplate));
 			}
 		}
 
@@ -3115,7 +3083,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTTemplate(stTemplate));
+				appModel().doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTTemplate(stTemplate));
 			}
 		}
 
@@ -3177,12 +3145,12 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 
 		public STValueNode(nextgen.st.model.STValue model) {
-			super(model, model.getUuid(), presentationModel.render(model));
+			super(model, model.getUuid(), appModel().render(model));
 		}
 
 		@Override
 		public void addedToCanvas() {
-			presentationModel.getSTModel(getModel())
+			appModel().getSTModel(getModel())
 					.filter(stModel -> thisCanvas().getNode(stModel.getUuid()) != null)
 					.map(stModel -> (STModelNode) thisCanvas().getNode(stModel.getUuid()))
 					.ifPresent(stModelNode -> thisCanvas().addRelation(stModelNode.getUuid(), () -> new STValueModelRelation(STValueNode.this, stModelNode)));
@@ -3191,7 +3159,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		public void newNodeAdded(BaseCanvasNode<?> node) {
-			presentationModel.getSTModel(getModel())
+			appModel().getSTModel(getModel())
 					.map(stModel -> stModel.getUuid())
 					.filter(uuid -> uuid.equals(node.getUuid()))
 					.ifPresent(uuid -> thisCanvas().addRelation(node.getUuid(), () -> new STValueModelRelation(STValueNode.this, node)));
@@ -3215,7 +3183,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				nextgen.utils.SwingUtil.showInputDialog("Edit", thisCanvas(), thisCanvas().presentationModel.db.get(() -> getModel().getValue()), s -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+				nextgen.utils.SwingUtil.showInputDialog("Edit", thisCanvas(), thisCanvas().appModel().db.get(() -> getModel().getValue()), s -> thisCanvas().appModel().doLaterInTransaction(tx -> {
 						getModel().setValue(s);
 						setText(getModel().getValue());
 					}));
@@ -3231,7 +3199,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(presentationModel.render(getModel())));
+				appModel().doInTransaction(tx -> nextgen.utils.SwingUtil.toClipboard(appModel().render(getModel())));
 			}
 		}
 
@@ -3245,9 +3213,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete value ?")
-						.ifPresent(confirm -> thisCanvas().presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {
 							close();
-							presentationModel.db.remove(getModel());
+							appModel().db.remove(getModel());
 						}));
 			}
 		}
@@ -3261,27 +3229,27 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 
-					presentationModel.getIncomingSTArguments(getModel())
+					appModel().getIncomingSTArguments(getModel())
 							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
 									.forEach(stModel -> {
-										final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+										final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
 										if (stTemplateByUuid == null) return;
 										stTemplateByUuid.getParameters()
 												.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
 												.findFirst()
 												.ifPresent(stParameter -> {
-													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
 													thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));
 												});
 									}));
 
-					presentationModel.getIncomingSTArgumentKVs(getModel())
+					appModel().getIncomingSTArgumentKVs(getModel())
 							.forEach(stArgumentKV -> {
 								stArgumentKV.getIncomingKeyValuesSTArgument()
 										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-											final nextgen.st.domain.STTemplate stTemplateByUuid = presentationModel.findSTTemplateByUuid(stModel.getStTemplate());
+											final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
 											if (stTemplateByUuid == null) return;
 											stTemplateByUuid.getParameters()
 													.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
@@ -3290,7 +3258,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 															.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
 															.findFirst()
 															.ifPresent(stParameterKey -> {
-																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, presentationModel.findSTTemplateByUuid(stModel.getStTemplate())));
+																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
 																final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
 																thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));
 																thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));
@@ -3395,7 +3363,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Delete " + stParameter.getName() + " ?")
-						.ifPresent(confirm -> presentationModel.doLaterInTransaction(tx -> {
+						.ifPresent(confirm -> appModel().doLaterInTransaction(tx -> {
 							final STModelNode src = (STModelNode) getSrc();
 							src.getModel().removeArguments(stArgument);
 							removeRelation(getUuid());

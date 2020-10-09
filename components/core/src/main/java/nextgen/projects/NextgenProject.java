@@ -3,16 +3,27 @@ package nextgen.projects;
 import nextgen.st.STGenerator;
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.JavaEasyFlowsPatterns;
+import nextgen.templates.JavaPatterns;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
+import nextgen.templates.java.ClassOrInterfaceType;
+import nextgen.templates.java.PackageDeclaration;
+import nextgen.templates.java.Singleton;
 import nextgen.templates.javaeasyflows.WorkFlowFacade;
 import nextgen.templates.maven.MavenST;
 import nextgen.templates.maven.Pom;
 import nextgen.templates.nextgen.AppEvents;
 import nextgen.templates.nextgen.NextgenST;
+import nextgen.utils.StringUtil;
+import org.junit.Before;
 
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.JavaPatterns.newClassOrInterfaceType;
 
 public class NextgenProject {
 
@@ -23,106 +34,93 @@ public class NextgenProject {
    final File testJava = new File(root, "src/test/java");
    final File testResources = new File(root, "src/test/resources");
 
+   final Map<Object, ClassOrInterfaceType> typesMap = new LinkedHashMap<>();
 
-   private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.JavaPatterns.newPackageDeclaration("nextgen");
-   private final nextgen.templates.java.PackageDeclaration stPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st");
-   private final nextgen.templates.java.PackageDeclaration metaDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "domains.meta");
-   private final nextgen.templates.java.PackageDeclaration stDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.domain");
-   private final nextgen.templates.java.PackageDeclaration stModelPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.model");
-   private final nextgen.templates.java.PackageDeclaration canvasLayoutPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.canvas.layout");
-   private final nextgen.templates.java.PackageDeclaration beansPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "st.beans");
-   private final nextgen.templates.java.PackageDeclaration snippetsPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "snippets");
-   private final nextgen.templates.java.PackageDeclaration workflowPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "workflow");
+   final String swingPackageName = "swing";
+   final String swingConfigPackageName = "config";
+
+   final String presentationModelName = "STAppPresentationModel";
+   final String appModelName = "AppModel";
+   final String stringType = "String";
+   final String awtDimensionType = "java.awt.Dimension";
+   final String integerType = "Integer";
+   final String jFrameType = "javax.swing.JFrame";
+
+   final PackageDeclaration corePackage = JavaPatterns.newPackageDeclaration("nextgen");
+   final PackageDeclaration stPackage = JavaPatterns.newPackageDeclaration(corePackage, "st");
+   final PackageDeclaration metaDomainPackage = JavaPatterns.newPackageDeclaration(corePackage, "domains.meta");
+   final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.domain");
+   final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.model");
+   final PackageDeclaration canvasLayoutPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.canvas.layout");
+   final PackageDeclaration beansPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.beans");
+   final PackageDeclaration snippetsPackage = JavaPatterns.newPackageDeclaration(corePackage, "snippets");
+   final PackageDeclaration workflowPackage = JavaPatterns.newPackageDeclaration(corePackage, "workflow");
+   final PackageDeclaration swingPackage = JavaPatterns.newPackageDeclaration(corePackage, swingPackageName);
+   final PackageDeclaration swingConfigPackage = JavaPatterns.newPackageDeclaration(swingPackage, swingConfigPackageName);
 
    final AppEvents appEvents = NextgenST.newAppEvents()
          .setPackageName(stPackage.getName())
          .setName("STAppEvents");
 
-
-   @org.junit.Test
-   public void generateSnippetsDomain() {
-
-      final Entity snippet = DomainPatterns.newEntity("ShellSnippet")
-            .addRelations(DomainPatterns.newStringField("id"))
-            .addRelations(DomainPatterns.newStringField("source"));
-//                  .addRelations(DomainPatterns.newEnumField("kind", DomainPatterns.newEnum("SnippetKind", "ERRONEOUS", "EXPRESSION", "IMPORT", "METHOD", "STATEMENT", "TYPE_DECL", "VAR")))
-//                  .addRelations(DomainPatterns.newEnumField("subKind", DomainPatterns.newEnum("SnippetSubKind", "ANNOTATION", "ASSIGNMENT", "CLASS", "ENUM", "INTERFACE", "METHOD", "OTHER_EXPRESSION", "SINGLE_STATIC_IMPORT", "SINGLE_TYPE_IMPORT", "STATEMENT", "STATIC_IMPORT_ON_DEMAND", "TEMP_VAR", "TYPE_IMPORT_ON_DEMAND", "UNKNOWN", "VAR_DECLARATION", "VAR_VALUE")))
-//                  .addRelations(DomainPatterns.newStringField("expressionName"))
-//                  .addRelations(DomainPatterns.newStringField("expressionTypeName"))
-//                  .addRelations(DomainPatterns.newStringField("persistentName"))
-
-      final Entity script = DomainPatterns.newEntity("ShellScript")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("snippets", snippet));
-
-      DomainPatterns.writeNeo(mainJava, snippetsPackage, DomainPatterns.newDomain("JShell")
-            .addEntities(script));
-
-     generateAppEvents();
+   @Before
+   public void init() {
+      typesMap.put(presentationModelName, JavaPatterns.newClassOrInterfaceType(stPackage, presentationModelName));
    }
 
-   /**
-    * generateMetaDomain
-    */
    @org.junit.Test
-   public void generateMetaDomain() {
-      // meta
-      final Entity metaProperty = DomainPatterns.newEntity("MetaProperty")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newStringField("type"))
-            .addRelations(DomainPatterns.newStringField("defaultValue"));
+   public void generateSwing() {
 
-      final Entity metaEntity = DomainPatterns.newEntity("MetaEntity")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("properties", metaProperty));
+      final Singleton appModel = JavaPatterns.newSingleton(appModelName, swingPackage)
+            .addFields(stringType, "title", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "title", appModelName))
+            .addFields(awtDimensionType, "appSize", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "appSize", appModelName))
+            .addFields(awtDimensionType, "navigatorSize", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "navigatorSize", appModelName))
+            .addFields(awtDimensionType, "workspaceSize", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "workspaceSize", appModelName))
+            .addFields(stringType, "rootDir", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "rootDir", appModelName))
+            .addFields(stringType, "dbDir", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "dbDir", appModelName))
+            .addFields(stringType, "outputPackage", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "outputPackage", appModelName))
+            .addFields(stringType, "outputPath", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "outputPath", appModelName))
+            .addFields(stringType, "templateDir", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "templateDir", appModelName))
+            .addFields(stringType, "stDelimiter", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "stDelimiter", appModelName))
+            .addFields(integerType, "fontSize", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(integerType, "fontSize", appModelName))
+            .addFields(stringType, "fontName", null)
+            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "fontName", appModelName))
+            .addFields(jFrameType, "frame", null)
+            .addAccessors(JavaPatterns.newReferenceAccessors(jFrameType, "frame", appModelName))
+            .addFields(typesMap.get(presentationModelName), StringUtil.lowFirst(presentationModelName), null)
+            .addAccessors(JavaPatterns.newReferenceAccessors(typesMap.get(presentationModelName), StringUtil.lowFirst(presentationModelName), appModelName));
 
-      final Entity metaRelation = DomainPatterns.newEntity("MetaRelation")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newEnumField("cardinality", "Cardinality", "ONE_TO_ONE,ONE_TO_MANY"))
-            .addRelations(DomainPatterns.newOneToMany("dst", metaEntity))
-            .addRelations(DomainPatterns.newOneToMany("properties", metaProperty));
+      final Entity config = newEntity("AppConfig")
+            .addRelations(newStringField("title"))
+            .addRelations(newIntegerField("appWidth"))
+            .addRelations(newIntegerField("appHeight"))
+            .addRelations(newIntegerField("navigatorWidth"))
+            .addRelations(newIntegerField("navigatorHeight"))
+            .addRelations(newIntegerField("workspaceWidth"))
+            .addRelations(newIntegerField("workspaceHeight"))
+            .addRelations(newIntegerField("editorWidth"))
+            .addRelations(newIntegerField("editorHeight"))
+            .addRelations(newStringField("rootDir"))
+            .addRelations(newStringField("dbDir"))
+            .addRelations(newStringField("outputPackage"))
+            .addRelations(newStringField("outputPath"))
+            .addRelations(newStringField("templateDir"))
+            .addRelations(newIntegerField("fontSize"))
+            .addRelations(newStringField("fontName"));
+      typesMap.put(config, newClassOrInterfaceType(swingConfigPackage, config.getName()));
 
-      metaEntity.addRelations(DomainPatterns.newOneToMany("relations", metaRelation));
-
-      final Entity domainVisitor = DomainPatterns.newEntity("DomainVisitor")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newStringField("initStatements"))
-            .addRelations(DomainPatterns.newStringField("endStatements"))
-            .addRelations(DomainPatterns.newOneToMany("fields", DomainPatterns.newEntity("VisitorField")
-                  .addRelations(DomainPatterns.newStringField("uuid"))
-                  .addRelations(DomainPatterns.newStringField("name"))
-                  .addRelations(DomainPatterns.newStringField("type"))))
-            .addRelations(DomainPatterns.newOneToMany("entityVisitors", DomainPatterns.newEntity("EntityVisitorMethod")
-                  .addRelations(DomainPatterns.newStringField("uuid"))
-                  .addRelations(DomainPatterns.newRef("_meta", metaEntity))
-                  .addRelations(DomainPatterns.newStringField("statements"))))
-            .addRelations(DomainPatterns.newOneToMany("relationVisitors", DomainPatterns.newEntity("RelationVisitorMethod")
-                  .addRelations(DomainPatterns.newStringField("uuid"))
-                  .addRelations(DomainPatterns.newRef("_meta", metaRelation))
-                  .addRelations(DomainPatterns.newStringField("statements"))));
-
-      final Entity metaDomain = DomainPatterns.newEntity("MetaDomain")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("roots", metaEntity))
-            .addRelations(DomainPatterns.newOneToMany("properties", metaProperty))
-            .addRelations(DomainPatterns.newOneToMany("visitors", domainVisitor));
-
-      // models
-      final Entity domainEntity = DomainPatterns.newEntity("DomainEntity")
-            .addRelations(DomainPatterns.newStringField("uuid"))
-            .addRelations(DomainPatterns.newRef("_meta", metaEntity));
-
-      final Domain domain = DomainPatterns.newDomain("MetaDomain")
-            .addEntities(metaDomain)
-            .addEntities(domainEntity)
-            .addEntities(domainVisitor);
-      DomainPatterns.writeNeo(mainJava, metaDomainPackage, domain);
+      STGenerator.writeJavaFile(appModel, appModel.getPackageName(), appModel.getName(), mainJava);
+      writeJsonWrapper(mainJava, swingConfigPackage, newDomain(config.getName()).addEntities(config));
    }
 
    /**
@@ -329,52 +327,7 @@ public class NextgenProject {
       DomainPatterns.writeGreenrobotEvents(mainJava, workflowPackage, workflowPackage, domain);
    }
 
-   /**
-    * generateAppEvents
-    */
-   @org.junit.Test
-   public void generateAppEvents() {
-      appEvents
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("NewMetaDomain")
-                  .addFields("nextgen.domains.meta.MetaDomain", "metaDomain"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("NewMetaEntity")
-                  .addFields("nextgen.domains.meta.MetaEntity", "metaEntity"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("NewMetaProperty")
-                  .addFields("nextgen.domains.meta.MetaProperty", "metaProperty"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("NewMetaRelation")
-                  .addFields("nextgen.domains.meta.MetaRelation", "metaRelation"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("CanvasSTModelClicked")
-                  .addFields("nextgen.st.model.STModel", "stModel"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("STModelUpdated")
-                  .addFields("nextgen.st.model.STModel", "stModel"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("NewDomainEntity")
-                  .addFields("nextgen.domains.meta.DomainEntity", "domainEntity"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("OpenMetaDomain")
-                  .addFields("nextgen.domains.meta.MetaDomain", "metaDomain"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("OpenMetaEntity")
-                  .addFields("nextgen.domains.meta.MetaEntity", "metaEntity"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("OpenMetaProperty")
-                  .addFields("nextgen.domains.meta.MetaProperty", "metaProperty"))
-            .addEvents(NextgenST.newAppEvent()
-                  .setName("OpenMetaRelation")
-                  .addFields("nextgen.domains.meta.MetaRelation", "metaRelation"))
-             .addEvents(NextgenST.newAppEvent()
-                  .setName("STModelTreeNodeClicked")
-                  .addFields("nextgen.st.model.STModel", "stModel"));
 
-      STGenerator.writeJavaFile(appEvents, appEvents.getPackageName().toString(), appEvents.getName()
-            .toString(), mainJava);
-   }
 
    /**
     * generateProjectFiles
@@ -459,32 +412,5 @@ public class NextgenProject {
       MavenPatterns.generate(MavenPatterns.newProject()
             .setName("Nextgen")
             .setRoot(root.getAbsolutePath()), projectPom);
-   }
-
-   /**
-    * test2
-    */
-   @org.junit.Test
-   public void test2() {
-   }
-
-
-   protected static void log(Object log) {
-      System.out.println(log);
-   }
-
-   class JavaType {
-
-      final nextgen.templates.java.ClassOrInterfaceType type;
-
-      JavaType(String packageDeclaration, String name) {
-         this.type = nextgen.templates.java.JavaST.newClassOrInterfaceType()
-               .setScope(packageDeclaration)
-               .addNames(name);
-      }
-
-      JavaType(nextgen.templates.java.PackageDeclaration packageDeclaration, String name) {
-         this(packageDeclaration.getName(), name);
-      }
    }
 }

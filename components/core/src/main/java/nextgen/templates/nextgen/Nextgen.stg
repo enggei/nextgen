@@ -2456,17 +2456,15 @@ public class ~name~ extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	private final JTree tree = new JTree();
-	private final STAppPresentationModel presentationModel;
 	private final ~name~TreeModel treeModel;
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
-	public ~name~(STAppPresentationModel presentationModel~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super(new BorderLayout());
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-		this.presentationModel = presentationModel;
-
+		
 		treeModel = new ~name~TreeModel(~rootNodeExpression~);
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
@@ -2551,12 +2549,21 @@ public class ~name~ extends JPanel {
 		};
 	}
 
+	private Action newTransactionAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AppModel.getInstance().getSTAppPresentationModel().doInTransaction(transaction -> actionEventConsumer.accept(e));
+			}
+		};
+	}
+	
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
+		pop.add("With " + AppModel.getInstance().getSTAppPresentationModel().cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
@@ -2644,10 +2651,10 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	protected ImageIcon icon;
 	protected String tooltip;
 
-	public BaseTreeNode(T model, String icon) {
+	public BaseTreeNode(T model, ImageIcon icon) {
 		setUserObject(model);
 		this.label = model.toString();
-		this.icon = presentationModel.loadIcon(icon);
+		this.icon = icon;
 		this.tooltip = "";
 	}
 
@@ -2802,7 +2809,7 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-TreeNodeAction(title,statements) ::= <<newAction("~title~", actionEvent -> {
+TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action("~title~", actionEvent -> {
 	~statements:{it|~it~};separator="\n"~
 })  >>
 

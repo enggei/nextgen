@@ -20,13 +20,11 @@ import static nextgen.st.STAppPresentationModel.newAction;
 
 public class STValueGrid extends JPanel {
 
-    private final STAppPresentationModel presentationModel;
     private final ResultsTableModel resultsModel;
 
-    public STValueGrid(STAppPresentationModel presentationModel) {
+    public STValueGrid() {
         super(new BorderLayout());
 
-        this.presentationModel = presentationModel;
         this.resultsModel = new ResultsTableModel();
 
         setBackground(UIManager.getColor("Panel.background"));
@@ -68,6 +66,10 @@ public class STValueGrid extends JPanel {
         add(jScrollPane, BorderLayout.CENTER);
     }
 
+    private STAppPresentationModel appModel() {
+        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+    }
+    
     private MouseListener getSearchFieldMouseListener(JTextField txtSearch) {
         return new MouseAdapter() {
             @Override
@@ -92,8 +94,8 @@ public class STValueGrid extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> {
                     resultsModel.clear();
-                    presentationModel.db.doInTransaction(transaction ->
-                            resultsModel.setResult(presentationModel.db.findAllSTValue()
+                    appModel().doInTransaction(transaction ->
+                            resultsModel.setResult(appModel().findAllSTValue()
                                     .filter(stValue -> stValue.getType() != null)
                                     .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
                                     .filter(STValue::hasValue)
@@ -109,11 +111,11 @@ public class STValueGrid extends JPanel {
         return new AbstractAction("Replace") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
+                SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> {
                     resultsModel.content.forEach(stValueElement -> {
                         final String replaceAll = stValueElement.text.replace(txtSearch.getText(), txtReplace.getText());
                         stValueElement.stValue.setValue(replaceAll);
-                        stValueElement.text = presentationModel.render(stValueElement.stValue);
+                        stValueElement.text = appModel().render(stValueElement.stValue);
                     });
                     resultsModel.fireTableDataChanged();
                 }));
@@ -128,7 +130,7 @@ public class STValueGrid extends JPanel {
 
         private STValueElement(STValue stValue) {
             this.stValue = stValue;
-            this.text = presentationModel.render(stValue);
+            this.text = appModel().render(stValue);
         }
 
         @Override
@@ -178,7 +180,7 @@ public class STValueGrid extends JPanel {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            presentationModel.db.doInTransaction(transaction -> {
+            appModel().doInTransaction(transaction -> {
                 final STValueElement stValueElement = content.get(rowIndex);
                 stValueElement.text = aValue.toString().trim();
                 stValueElement.stValue.setValue(stValueElement.text);
@@ -243,7 +245,7 @@ public class STValueGrid extends JPanel {
         private void tryToSave() {
             if (element != null) {
                 System.out.println("tryToSave : ");
-                presentationModel.doInTransaction(transaction -> element.stValue.setValue(component.getText()));
+                appModel().doInTransaction(transaction -> element.stValue.setValue(component.getText()));
             }
         }
 

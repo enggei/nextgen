@@ -36,16 +36,14 @@ public class STEditor extends JPanel {
     private final Color errorColor = Color.decode("#e66101");
     private final Border defaultBorder = txtEditor.getBorder();
 
-    private final STAppPresentationModel presentationModel;
     STGroupModel stGroupModel;
     private STTemplate stTemplate;
 
     private String startText;
 
-    public STEditor(STGroupModel stGroupModel, STAppPresentationModel presentationModel) {
+    public STEditor(STGroupModel stGroupModel) {
         super(new BorderLayout());
 
-        this.presentationModel = presentationModel;
         this.stGroupModel = stGroupModel;
         this.infoPanel = new STEditorInfoPanel();
         final JPopupMenu pop = this.txtEditor.getPopupMenu();
@@ -80,6 +78,10 @@ public class STEditor extends JPanel {
         add(commandPanel, BorderLayout.NORTH);
         add(infoPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(800, 600));
+    }
+
+    private STAppPresentationModel appModel() {
+        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
     }
 
     public STGroupModel getModel() {
@@ -125,7 +127,7 @@ public class STEditor extends JPanel {
 
     private void generate() {
         commit();
-        presentationModel.generateSTGroup(stGroupModel,true);
+        appModel().generateSTGroup(stGroupModel,true);
     }
 
     private Action newAction(String name, Consumer<ActionEvent> consumer) {
@@ -205,7 +207,7 @@ public class STEditor extends JPanel {
             if (parseResult.getErrors().count() == 0) {
                 STParser.mergeTemplate(parseResult.getParsed().getTemplates().findFirst().get(), stTemplate);
                 startText = text.trim();
-                presentationModel.save(stGroupModel);
+                appModel().save(stGroupModel);
                 txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
                 infoPanel.clear();
 
@@ -319,7 +321,7 @@ public class STEditor extends JPanel {
             context.setReplaceWith(replaceWith);
             context.setMatchCase(true);
             context.setSearchForward(true);
-            context.setWholeWord(false);
+            context.setWholeWord(true);
             SearchEngine.replaceAll(txtEditor, context);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
         });

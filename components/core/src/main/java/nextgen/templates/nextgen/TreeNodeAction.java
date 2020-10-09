@@ -5,6 +5,7 @@ public class TreeNodeAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Boolean _isTransactional;
 	private Object _title;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
@@ -19,10 +20,33 @@ public class TreeNodeAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TreeNodeAction");
+		st.add("isTransactional", _isTransactional);
 		st.add("title", _title);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
+
+	public TreeNodeAction setIsTransactional(Boolean value) {
+		this._isTransactional = value;
+		return this;
+	}
+
+	public Boolean getIsTransactional() {
+		return this._isTransactional;
+	}
+
+	public Boolean getIsTransactional(Boolean defaultValue) {
+		return this._isTransactional == null ? defaultValue : this._isTransactional;
+	}
+
+	public boolean hasIsTransactional() {
+		return this._isTransactional != null;
+	}
+
+	public TreeNodeAction removeIsTransactional() {
+		this._isTransactional = null;
+		return this;
+	} 
 
 	public TreeNodeAction setTitle(Object value) {
 		this._title = value;
@@ -89,7 +113,7 @@ public class TreeNodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNodeAction(title,statements) ::= <<newAction(\"~title~\", actionEvent -> {\n" + 
+	static final String st = "TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action(\"~title~\", actionEvent -> {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"}) >>";
 }  

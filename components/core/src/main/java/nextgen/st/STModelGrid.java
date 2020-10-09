@@ -29,7 +29,7 @@ public class STModelGrid extends JPanel {
 
     private final STTemplate model;
 
-    public STModelGrid(STAppPresentationModel presentationModel, STTemplate stTemplate) {
+    public STModelGrid(STTemplate stTemplate) {
         super(new BorderLayout());
 
         this.model = stTemplate;
@@ -47,12 +47,12 @@ public class STModelGrid extends JPanel {
         final Map<String, JPanel> columns = new TreeMap<>();
         final Map<String, STParameter> stParameterMap = new TreeMap<>();
         stParameters.forEach(stParameter -> {
-            columns.put(stParameter.uuid(), getColumnPanel(stParameter.getName()));
-            stParameterMap.put(stParameter.uuid(), stParameter);
+            columns.put(stParameter.getUuid(), getColumnPanel(stParameter.getName()));
+            stParameterMap.put(stParameter.getUuid(), stParameter);
         });
 
         // rows
-        presentationModel.db.findAllSTModelByStTemplate(stTemplate.uuid()).forEach(stModel -> {
+        appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> {
             final Map<String, RSyntaxTextArea> txtMap = new LinkedHashMap<>();
             final Map<String, SingleHandler> singleHandlerMap = new LinkedHashMap<>();
             for (Map.Entry<String, JPanel> columnEntry : columns.entrySet()) {
@@ -67,7 +67,7 @@ public class STModelGrid extends JPanel {
                 txtMap.put(columnEntry.getKey(), txtValue);
 
                 final STParameter stParameter = stParameterMap.get(columnEntry.getKey());
-                singleHandlerMap.put(stParameter.uuid(), new SingleHandler(stTemplate, stModel, txtValue, stParameter, presentationModel));
+                singleHandlerMap.put(stParameter.getUuid(), new SingleHandler(stTemplate, stModel, txtValue, stParameter));
             }
 
             stModel.getArguments()
@@ -76,13 +76,13 @@ public class STModelGrid extends JPanel {
                     .forEach(stArgument -> {
                         final RSyntaxTextArea txtValue = txtMap.get(stArgument.getStParameter());
                         final STParameter stParameter = stParameterMap.get(stArgument.getStParameter());
-                        txtValue.setText(presentationModel.render(stArgument.getValue()));
-                        singleHandlerMap.get(stParameter.uuid()).stArgument = stArgument;
+                        txtValue.setText(appModel().render(stArgument.getValue()));
+                        singleHandlerMap.get(stParameter.getUuid()).stArgument = stArgument;
                     });
         });
 
         stParameters.forEach(stParameter -> {
-            final JPanel value = columns.get(stParameter.uuid());
+            final JPanel value = columns.get(stParameter.getUuid());
             value.add(Box.createVerticalGlue());
             grid.add(value);
         });
@@ -90,6 +90,10 @@ public class STModelGrid extends JPanel {
         final JScrollPane jScrollPane = new JScrollPane(grid);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         add(jScrollPane, BorderLayout.CENTER);
+    }
+
+    private STAppPresentationModel appModel() {
+        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
     }
 
     public RTextScrollPane decorate(RSyntaxTextArea txtValue) {
@@ -119,59 +123,59 @@ public class STModelGrid extends JPanel {
 
         STArgument stArgument;
 
-        public SingleHandler(STTemplate stTemplate, STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter, STAppPresentationModel presentationModel) {
+        public SingleHandler(STTemplate stTemplate, STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter) {
             final JPopupMenu pop = txtValue.getPopupMenu();
             pop.addSeparator();
-            pop.add(newAction("Save", actionEvent -> save(stModel, presentationModel, txtValue, stParameter)));
+            pop.add(newAction("Save", actionEvent -> save(stModel, txtValue, stParameter)));
             pop.addSeparator();
-            pop.add(newAction("Open", actionEvent -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(stModel))));
+            pop.add(newAction("Open", actionEvent -> appModel().doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(stModel))));
             pop.add(newAction("Set From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim());
-                save(stModel, presentationModel, txtValue, stParameter);
+                save(stModel, txtValue, stParameter);
             }));
             pop.add(newAction("Append From Clipboard", actionEvent -> {
                 txtValue.append(SwingUtil.fromClipboard().trim());
-                save(stModel, presentationModel, txtValue, stParameter);
+                save(stModel, txtValue, stParameter);
             }));
             pop.add(newAction("Prepend From Clipboard", actionEvent -> {
                 txtValue.setText(SwingUtil.fromClipboard().trim() + txtValue.getText());
-                save(stModel, presentationModel, txtValue, stParameter);
+                save(stModel, txtValue, stParameter);
             }));
             pop.add(newAction("Set TRUE", actionEvent -> {
                 txtValue.setText("TRUE");
-                save(stModel, presentationModel, txtValue, stParameter);
+                save(stModel, txtValue, stParameter);
             }));
             pop.addSeparator();
             pop.add(newAction("To Clipboard", actionEvent -> SwingUtil.toClipboard(txtValue.getText().trim())));
             pop.addSeparator();
-            pop.add(newAction("Remove", actionEvent -> remove(stModel, presentationModel, txtValue)));
+            pop.add(newAction("Remove", actionEvent -> remove(stModel, txtValue)));
 
             txtValue.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent keyEvent) {
                     if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_S)
-                        save(stModel, presentationModel, txtValue, stParameter);
+                        save(stModel, txtValue, stParameter);
                 }
             });
         }
 
-        private void save(STModel stModel, STAppPresentationModel presentationModel, RSyntaxTextArea txtValue, STParameter stParameter) {
-            presentationModel.db.doInTransaction(transaction -> {
+        private void save(STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter) {
+            appModel().doInTransaction(transaction -> {
                 final String s = txtValue.getText().trim();
-                final STValue stValue = presentationModel.newSTValue(s);
+                final STValue stValue = appModel().newSTValue(s);
                 if (stArgument == null) {
-                    stArgument = presentationModel.newSTArgument(stParameter, stValue);
+                    stArgument = appModel().newSTArgument(stParameter, stValue);
                     stModel.addArguments(stArgument);
                 } else
                     stArgument.setValue(stValue);
-                log.info("saving " + presentationModel.render(stValue));
+                log.info("saving " + appModel().render(stValue));
                 txtValue.setBackground(UIManager.getColor("Panel.background"));
             });
         }
 
-        private void remove(STModel stModel, STAppPresentationModel presentationModel, RSyntaxTextArea txtValue) {
+        private void remove(STModel stModel, RSyntaxTextArea txtValue) {
             if (stArgument == null) return;
-            presentationModel.db.doInTransaction(transaction -> {
+            appModel().doInTransaction(transaction -> {
                 stModel.removeArguments(stArgument);
                 txtValue.setText("");
                 txtValue.setBackground(UIManager.getColor("Panel.background"));

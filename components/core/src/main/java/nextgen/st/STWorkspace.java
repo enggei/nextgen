@@ -14,10 +14,7 @@ import java.util.function.Predicate;
 
 public class STWorkspace extends JTabbedPane {
 
-	private final STAppPresentationModel presentationModel;
-
-	public STWorkspace(STAppPresentationModel presentationModel) {
-		this.presentationModel = presentationModel;
+	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
 		findCanvas();
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -25,14 +22,17 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelTreeNodeClicked(STAppEvents.STModelTreeNodeClicked event) {
-		presentationModel.doLaterInTransaction(transaction -> setSelectedComponent(findRenderer().setText(event.stModel)));
+		setSelectedComponent(findRenderer().setText(event.stModel));
 	}
 
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
 
 	public STRenderPanel findRenderer() {
 		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
 				.orElseGet(() -> {
-					final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+					final STRenderPanel stRenderPanel = new STRenderPanel();
 					addPane("Renderer", stRenderPanel);
 					return stRenderPanel;
 				});
@@ -48,7 +48,7 @@ public class STWorkspace extends JTabbedPane {
 	public STModelCanvas findCanvas() {
 		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
 				.orElseGet(() -> {
-					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600));
 					addPane("Canvas", stModelCanvas);
 					return stModelCanvas;
 				});
@@ -63,7 +63,7 @@ public class STWorkspace extends JTabbedPane {
 				}
 		}
 
-		final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);
+		final STModelGrid stModelGrid = new STModelGrid(stTemplate);
 		addPane(stTemplate.getName() + "-Models", stModelGrid);
 		return stModelGrid;
 	}
@@ -77,7 +77,7 @@ public class STWorkspace extends JTabbedPane {
 				}
 		}
 
-		final STModelEditor component = new STModelEditor(presentationModel, stModel);
+		final STModelEditor component = new STModelEditor(stModel);
 		addPane(stTemplate.getName() + "Model", component);
 		return component;
 	}
@@ -106,7 +106,7 @@ public class STWorkspace extends JTabbedPane {
 				}
 		}
 
-		final STEditor component = new STEditor(stGroup, presentationModel);
+		final STEditor component = new STEditor(stGroup);
 		component.setSTTemplate(null);
 		addPane(stGroup.getName(), component);
 		setSelectedComponent(component);
@@ -120,7 +120,7 @@ public class STWorkspace extends JTabbedPane {
 					return (STValueGrid) tabComponentAt;
 		}
 
-		final STValueGrid component = new STValueGrid(presentationModel);
+		final STValueGrid component = new STValueGrid();
 		addPane("Values", component);
 		return component;
 	}
@@ -144,7 +144,7 @@ public class STWorkspace extends JTabbedPane {
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 
-			final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
+			final JButton btnClose = new JButton(appModel().loadIcon("close", "12x12"));
 			final Dimension dimension = new Dimension(12, 16);
 			btnClose.setMaximumSize(dimension);
 			btnClose.setPreferredSize(dimension);
@@ -172,14 +172,14 @@ public class STWorkspace extends JTabbedPane {
 							pop.add(new AbstractAction("Close Others") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									presentationModel.getWorkspace().closeAllExcept(component);
+									appModel().getWorkspace().closeAllExcept(component);
 								}
 							});
 
 							pop.add(new AbstractAction("Close All") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									presentationModel.getWorkspace().closeAll();
+									appModel().getWorkspace().closeAll();
 								}
 							});
 

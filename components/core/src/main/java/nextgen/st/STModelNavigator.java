@@ -15,19 +15,16 @@ public class STModelNavigator extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelNavigator.class);
 
 	private final JTree tree = new JTree();
-	private final STAppPresentationModel presentationModel;
-	private final DefaultTreeModel treeModel;
+	private final STModelNavigatorTreeModel treeModel;
 
 	private STWorkspace workspace;
 
-	public STModelNavigator(STAppPresentationModel presentationModel, STWorkspace workspace) {
+	public STModelNavigator(STWorkspace workspace) {
 		super(new BorderLayout());
 
 		this.workspace = workspace;
 
-		this.presentationModel = presentationModel;
-
-		treeModel = new DefaultTreeModel(new RootNode("Models"));
+		treeModel = new STModelNavigatorTreeModel(new RootNode("Models"));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -95,7 +92,7 @@ public class STModelNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(400, 600));
+		setPreferredSize(new Dimension(400, 1200));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -107,10 +104,10 @@ public class STModelNavigator extends JPanel {
 		protected ImageIcon icon;
 		protected String tooltip;
 
-		public BaseTreeNode(T model, String icon) {
+		public BaseTreeNode(T model, ImageIcon icon) {
 			setUserObject(model);
 			this.label = model.toString();
-			this.icon = presentationModel.loadIcon(icon);
+			this.icon = icon;
 			this.tooltip = "";
 		}
 
@@ -225,6 +222,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STValueTreeNode
+
+	private boolean isSTValueTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STValueTreeNode;
+	}
+
 	public class STValueTreeNode extends BaseTreeNode<nextgen.st.model.STValue> {
 
 		private String uuid;
@@ -233,10 +235,9 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
-			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 300);
+			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
 
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		}
 
 		STValueTreeNode thisNode() {
@@ -246,37 +247,40 @@ public class STModelNavigator extends JPanel {
 		@Override
 		public void nodeChanged() {
 			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
-			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 300);
+			this.tooltip = appModel().tooltip(getModel());
 			super.nodeChanged();
 		}
 
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("To Clipboard", actionEvent -> {
-				presentationModel.db.doInTransaction(transaction -> SwingUtil.toClipboard(presentationModel.render(getModel()).trim()));
+			actions.add(newTransactionAction("To Clipboard", actionEvent -> {
+				appModel().renderToClipboard(getModel());
 			}));
-			actions.add(newAction("Set from Clipboard", actionEvent -> {
-				presentationModel.db.doInTransaction(transaction -> getModel().setValue(SwingUtil.fromClipboard().trim()));
+			actions.add(newTransactionAction("Set from Clipboard", actionEvent -> {
+				getModel().setValue(SwingUtil.fromClipboard().trim());
 			}));
-			actions.add(newAction("Open", actionEvent -> {
-				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> STAppEvents.postOpenSTValue(getModel())));
+			actions.add(newTransactionAction("Open", actionEvent -> {
+				STAppEvents.postOpenSTValue(getModel());
 			}));
-			actions.add(newAction("Delete", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel()));
+			actions.add(newTransactionAction("Delete", actionEvent -> {
+				appModel().remove(getModel());
 			}));
 			return actions;
 		}
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onRemovedSTValue(nextgen.st.STAppEvents.RemovedSTValue event) {
-			presentationModel.doLaterInTransaction(transaction -> {
-				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
-			});
+			if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 		}
 	}
 
 	// RootNode
+
+	private boolean isRootNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof RootNode;
+	}
+
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
@@ -285,8 +289,8 @@ public class STModelNavigator extends JPanel {
 			this.label = getModel();
 			this.tooltip = "";
 
-			presentationModel.db.doInTransaction(transaction -> {
-				presentationModel.db.getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
+			appModel().doInTransaction(transaction -> {
+				appModel().getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
 				add(new STValuesRootNode("Values"));
 			});
 		}
@@ -306,7 +310,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Undo", actionEvent -> {
-				presentationModel.undoLast();
+				appModel().undoLast();
 			}));
 			return actions;
 		}
@@ -314,6 +318,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STValuesRootNode
+
+	private boolean isSTValuesRootNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STValuesRootNode;
+	}
+
 	public class STValuesRootNode extends BaseTreeNode<String> {
 
 		STValuesRootNode(String model) {
@@ -322,12 +331,11 @@ public class STModelNavigator extends JPanel {
 			this.label = getModel();
 			this.tooltip = "";
 
-			presentationModel.db.findAllSTValue()
+			appModel().findAllSTValue()
 				.filter(stValue -> stValue.getType() != null)
 				.filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
 				.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
 				.forEach(stValue -> add(new STValueTreeNode(stValue)));
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		}
 
 		STValuesRootNode thisNode() {
@@ -344,37 +352,36 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("Edit Values", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
-					final STValueGrid valueGrid = workspace.getValueGrid();
-					workspace.setSelectedComponent(valueGrid);
-					valueGrid.requestFocusInWindow();
-				});
+			actions.add(newTransactionAction("Edit Values", actionEvent -> {
+				final STValueGrid valueGrid = workspace.getValueGrid();
+				workspace.setSelectedComponent(valueGrid);
+				valueGrid.requestFocusInWindow();
 			}));
-			actions.add(newAction("Reconcile", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
-					presentationModel.reconcileValues();
-					nodeChanged();
-				});
+			actions.add(newTransactionAction("Reconcile", actionEvent -> {
+				appModel().reconcileValues();
+				nodeChanged();
 			}));
 			return actions;
 		}
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTValue(nextgen.st.STAppEvents.NewSTValue event) {
-			presentationModel.doLaterInTransaction(transaction -> 
-				addChild(new STValueTreeNode(event.sTValue))
-			);
+			addChild(new STValueTreeNode(event.sTValue));
 		}
 	}
 
 	// STGroupModelTreeNode
+
+	private boolean isSTGroupModelTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STGroupModelTreeNode;
+	}
+
 	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
 
 		private String uuid;
 
 		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
-			super(model, model.getIcon());
+			super(model, appModel().loadIcon(model.getIcon()));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -405,10 +412,8 @@ public class STModelNavigator extends JPanel {
 		}
 
 		private boolean countChildren(nextgen.st.domain.STTemplate stTemplate) {
-
-			long count = presentationModel.db.findAllSTModelByStTemplate(stTemplate.getUuid()).count();
+			long count = appModel().findAllSTModelByStTemplate(stTemplate.getUuid()).count();
 			if (count != 0L) return true;
-
 			Iterator<nextgen.st.domain.STTemplate> iterator = stTemplate.getChildren().iterator();
 			while (iterator.hasNext())
 				if (countChildren(iterator.next())) return true;
@@ -417,6 +422,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STTemplateTreeNode
+
+	private boolean isSTTemplateTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STTemplateTreeNode;
+	}
+
 	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
 
 		private String uuid;
@@ -428,9 +438,8 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			presentationModel.db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
+			appModel().db.findAllSTModelByStTemplate(model.getUuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		}
 
 		STTemplateTreeNode thisNode() {
@@ -447,41 +456,41 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("New instance", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> presentationModel.db.newSTModel(getModel().getUuid(), getModel()));
+			actions.add(newTransactionAction("New instance", actionEvent -> {
+				appModel().newSTModel(getModel().getUuid(), getModel());
 			}));
-			actions.add(newAction("Edit Models", actionEvent -> {
-				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-					final STModelGrid stModelGrid = workspace.getModelGrid(getModel());
-					workspace.setSelectedComponent(stModelGrid);
-					stModelGrid.requestFocusInWindow();
-				}));
+			actions.add(newTransactionAction("Edit Models", actionEvent -> {
+				final STModelGrid stModelGrid = workspace.getModelGrid(getModel());
+				workspace.setSelectedComponent(stModelGrid);
+				stModelGrid.requestFocusInWindow();
 			}));
 			return actions;
 		}
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
-			presentationModel.doLaterInTransaction(transaction -> {
-				if (getModel().getUuid().equals(event.sTModel.getStTemplate())) 
-					addAndSelectChild(new STModelTreeNode(event.sTModel));
-			});
+			if (getModel().getUuid().equals(event.sTModel.getStTemplate())) 
+				addAndSelectChild(new STModelTreeNode(event.sTModel));
 		}
 	}
 
 	// STModelTreeNode
+
+	private boolean isSTModelTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STModelTreeNode;
+	}
+
 	public class STModelTreeNode extends BaseTreeNode<nextgen.st.model.STModel> {
 
 		private String uuid;
 
 		STModelTreeNode(nextgen.st.model.STModel model) {
-			super(model, "STGDirectory");
+			super(model, appModel().loadIcon("STGDirectory"));
 
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> presentationModel.render(getModel(), 10));
-			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
+			this.label = appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10));
+			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
 
-			org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		}
 
 		STModelTreeNode thisNode() {
@@ -490,45 +499,39 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> presentationModel.render(getModel(), 10));
-			this.tooltip = presentationModel.cut(presentationModel.render(getModel()), 100);
+			this.label = appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10));
+			this.tooltip = appModel().tooltip(getModel());
 			super.nodeChanged();
 		}
 
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(newAction("Open", actionEvent -> {
-				getParentNode(STTemplateTreeNode.class).ifPresent(stTemplateTreeNode -> presentationModel.doLaterInTransaction(transaction -> STAppEvents.postOpenSTModel(getModel())));
+			actions.add(newTransactionAction("Open", actionEvent -> {
+				STAppEvents.postOpenSTModel(getModel());
 			}));
-			actions.add(newAction("Edit", actionEvent -> {
+			actions.add(newTransactionAction("Edit", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
-					.ifPresent(stTemplateTreeNode -> SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> {
-						final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
-						//modelEditor.setModelNavigator(STModelNavigator.this);
-						workspace.setSelectedComponent(modelEditor);
-					})));
+						.ifPresent(stTemplateTreeNode -> {
+							final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
+							workspace.setSelectedComponent(modelEditor);
+						});
 			}));
 			actions.add(newAction("As STRenderer", actionEvent -> {
-				presentationModel.generateSource(getModel());
+				appModel().generateSource(getModel());
 			}));
 			actions.add(newAction("Write To File", actionEvent -> {
-				presentationModel.writeToFile(getModel());
+				appModel().writeToFile(getModel());
 			}));
 			actions.add(newAction("Delete", actionEvent -> {
-				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> presentationModel.doLaterInTransaction(transaction -> presentationModel.db.remove(getModel())));
-			}));
-			actions.add(newAction("As NeoModel", actionEvent -> {
-				presentationModel.generateNeoSource(getModel());
+				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> appModel().doLaterInTransaction(transaction -> appModel().db.remove(getModel())));
 			}));
 			return actions;
 		}
 
 		@org.greenrobot.eventbus.Subscribe()
 		public void onRemovedSTModel(nextgen.st.STAppEvents.RemovedSTModel event) {
-			presentationModel.doLaterInTransaction(transaction -> {
-				if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
-			});
+			if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
 		}
 	}	
 
@@ -541,12 +544,20 @@ public class STModelNavigator extends JPanel {
 		};
 	}
 
+	private Action newTransactionAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionEventConsumer.accept(e)));
+			}
+		};
+	}
+
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
@@ -560,6 +571,10 @@ public class STModelNavigator extends JPanel {
 				.filter(treePath -> treePath.getLastPathComponent() != null)
 				.filter(treePath -> treePath.getLastPathComponent().getClass().isAssignableFrom(type))
 				.map(treePath -> (T) treePath.getLastPathComponent());
+	}
+
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
 	public Set<nextgen.st.model.STValue> getSelectedValues() {
@@ -586,5 +601,67 @@ public class STModelNavigator extends JPanel {
 				tree.setSelectionPath(path);
 			}
 		});
+	}
+
+	class STModelNavigatorTreeModel extends DefaultTreeModel {
+
+		public STModelNavigatorTreeModel(BaseTreeNode root) {
+			super(root);
+		}
+
+		protected Optional<BaseTreeNode<?>> find(java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), predicate);
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
+					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					final Optional<T> node = find(childAt, predicate);
+					if (node.isPresent()) return node;
+				}
+			}
+			return Optional.empty();
+		}
+
+		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+
+			int n = parent.getChildCount();
+			if (n == 0) {
+				parent.add(child);
+				nodesWereInserted(parent, new int[]{n});
+				return;
+			}
+
+			for (int i = 0; i < n; i++) {
+				final BaseTreeNode<?> node = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (node.getLabel().compareTo(child.getLabel()) > 0) {
+					parent.insert(child, i);
+					nodesWereInserted(parent, new int[]{i});
+					return;
+				}
+			}
+
+			parent.add(child);
+			nodesWereInserted(parent, new int[]{n});
+		}
 	}
 }

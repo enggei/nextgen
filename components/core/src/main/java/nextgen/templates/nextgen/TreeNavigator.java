@@ -407,17 +407,15 @@ public class TreeNavigator {
 				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 				"\n" + 
 				"	private final JTree tree = new JTree();\n" + 
-				"	private final STAppPresentationModel presentationModel;\n" + 
 				"	private final ~name~TreeModel treeModel;\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"	public ~name~(STAppPresentationModel presentationModel~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(new BorderLayout());\n" + 
 				"\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-				"		this.presentationModel = presentationModel;\n" + 
-				"\n" + 
+				"		\n" + 
 				"		treeModel = new ~name~TreeModel(~rootNodeExpression~);\n" + 
 				"		tree.setModel(treeModel);\n" + 
 				"		ToolTipManager.sharedInstance().registerComponent(tree);\n" + 
@@ -502,12 +500,21 @@ public class TreeNavigator {
 				"		};\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	private Action newTransactionAction(String name, Consumer<ActionEvent> actionEventConsumer) {\n" + 
+				"		return new AbstractAction(name) {\n" + 
+				"			@Override\n" + 
+				"			public void actionPerformed(ActionEvent e) {\n" + 
+				"				AppModel.getInstance().getSTAppPresentationModel().doInTransaction(transaction -> actionEventConsumer.accept(e));\n" + 
+				"			}\n" + 
+				"		};\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {\n" + 
 				"		final List<Action> actions = lastPathComponent.getActions();\n" + 
 				"		if (actions.isEmpty()) return;\n" + 
 				"\n" + 
 				"		final JPopupMenu pop = new JPopupMenu();\n" + 
-				"		pop.add(\"With \" + presentationModel.cut(lastPathComponent.getLabel()) + \" :\");\n" + 
+				"		pop.add(\"With \" + AppModel.getInstance().getSTAppPresentationModel().cut(lastPathComponent.getLabel()) + \" :\");\n" + 
 				"		for (Action action : actions)\n" + 
 				"			pop.add(action);\n" + 
 				"\n" + 

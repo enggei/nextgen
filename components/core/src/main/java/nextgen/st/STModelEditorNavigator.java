@@ -17,20 +17,18 @@ public class STModelEditorNavigator extends JPanel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelEditorNavigator.class);
 
 	private final JTree tree = new JTree();
-	private final STAppPresentationModel presentationModel;
 	private final STModelEditorNavigatorTreeModel treeModel;
 
 	private STModel model;
 	private STModelEditor editor;
 
-	public STModelEditorNavigator(STAppPresentationModel presentationModel, STModel model, STModelEditor editor) {
+	public STModelEditorNavigator(STModel model, STModelEditor editor) {
 		super(new BorderLayout());
 
 		this.model = model;
 		this.editor = editor;
-		this.presentationModel = presentationModel;
 
-		treeModel = new STModelEditorNavigatorTreeModel(new STModelTreeNode(model, presentationModel.findSTTemplateByUuid(model.getStTemplate()), null));
+		treeModel = new STModelEditorNavigatorTreeModel(new STModelTreeNode(model, appModel().findSTTemplateByUuid(model.getStTemplate()), null));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -72,19 +70,19 @@ public class STModelEditorNavigator extends JPanel {
 					final Object lastPathComponent = selectionPath.getLastPathComponent();
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-					presentationModel.doInTransaction(transaction -> {
+					appModel().doInTransaction(transaction -> {
 						if (lastPathComponent instanceof STModelTreeNode) {
 							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel()), null);
+							editor.setText(appModel().render(selectedNode.getModel()), null);
 
 							STAppEvents.postSTModelEditorTreeNodeClicked(selectedNode.getModel());
 							
 						} else if (lastPathComponent instanceof STValueTreeNode) {
 							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel()), selectedNode);
+							editor.setText(appModel().render(selectedNode.getModel()), selectedNode);
 						} else if (lastPathComponent instanceof STKVArgumentTreeNode) {
 							final STKVArgumentTreeNode selectedNode = (STKVArgumentTreeNode) lastPathComponent;
-							editor.setText(presentationModel.render(selectedNode.getModel(), selectedNode.stParameter), null);
+							editor.setText(appModel().render(selectedNode.getModel(), selectedNode.stParameter), null);
 						} else {
 							editor.setText("", null);
 						}
@@ -122,10 +120,10 @@ public class STModelEditorNavigator extends JPanel {
 		protected ImageIcon icon;
 		protected String tooltip;
 
-		public BaseTreeNode(T model, String icon) {
+		public BaseTreeNode(T model, ImageIcon icon) {
 			setUserObject(model);
 			this.label = model.toString();
-			this.icon = presentationModel.loadIcon(icon);
+			this.icon = icon;
 			this.tooltip = "";
 		}
 
@@ -240,6 +238,11 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STModelTreeNode
+
+	private boolean isSTModelTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STModelTreeNode;
+	}
+
 	public class STModelTreeNode extends BaseTreeNode<STModel> {
 
 		private String uuid;
@@ -251,7 +254,7 @@ public class STModelEditorNavigator extends JPanel {
 
 			this.stTemplate = stTemplate;
 			this.stArgument = stArgument;
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
+			this.label = appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -266,7 +269,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = presentationModel.tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
+			this.label = appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -275,11 +278,11 @@ public class STModelEditorNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("Write to File", actionEvent -> {
-				presentationModel.writeToFile(getModel());
+				appModel().writeToFile(getModel());
 			}));
 			actions.add(newAction("Remove", actionEvent -> {
 				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> 
-					presentationModel.doLaterInTransaction(transaction -> {
+					appModel().doLaterInTransaction(transaction -> {
 						if (stArgument instanceof STArgument) {
 							STArgument argument = (STArgument) stArgument;
 							argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
@@ -295,7 +298,7 @@ public class STModelEditorNavigator extends JPanel {
 				);
 			}));
 			actions.add(newAction("Edit", actionEvent -> {
-				SwingUtilities.invokeLater(() -> presentationModel.db.doInTransaction(transaction -> presentationModel.getWorkspace().setSelectedComponent(presentationModel.getModelEditor(getModel()))));
+				SwingUtilities.invokeLater(() -> appModel().db.doInTransaction(transaction -> appModel().getWorkspace().setSelectedComponent(appModel().getModelEditor(getModel()))));
 			}));
 			return actions;
 		}
@@ -303,6 +306,11 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STValueTreeNode
+
+	private boolean isSTValueTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STValueTreeNode;
+	}
+
 	public class STValueTreeNode extends BaseTreeNode<nextgen.st.model.STValue> {
 
 		private String uuid;
@@ -333,13 +341,13 @@ public class STModelEditorNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newAction("To Clipboard", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
-					SwingUtil.toClipboard(presentationModel.render(getModel()));
+				appModel().doLaterInTransaction(transaction -> {
+					SwingUtil.toClipboard(appModel().render(getModel()));
 				});
 			}));
 			actions.add(newAction("Remove", actionEvent -> {
 				SwingUtil.confirm(tree, "Delete ?").ifPresent(aBoolean -> 
-					presentationModel.doLaterInTransaction(transaction -> {
+					appModel().doLaterInTransaction(transaction -> {
 						if (stArgument instanceof STArgument) {
 							STArgument argument = (STArgument) stArgument;
 							argument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(argument));
@@ -360,6 +368,11 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STKVArgumentTreeNode
+
+	private boolean isSTKVArgumentTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STKVArgumentTreeNode;
+	}
+
 	public class STKVArgumentTreeNode extends BaseTreeNode<STArgument> {
 		private STParameter stParameter;
 
@@ -367,7 +380,7 @@ public class STModelEditorNavigator extends JPanel {
 			super(model, null);
 
 			this.stParameter = stParameter;
-			this.label = presentationModel.tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
+			this.label = appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
 			this.tooltip = "";
 
 			stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()
@@ -382,7 +395,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = presentationModel.tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
+			this.label = appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -390,13 +403,13 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			presentationModel.doInTransaction(transaction -> {
+			appModel().doInTransaction(transaction -> {
 				stParameter.getKeys().forEach(stParameterKey -> {
 					actions.add(newAction(stParameterKey.getName() + " from input", actionEvent -> {
 							SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
-									presentationModel.doLaterInTransaction(transaction1 -> {
+									appModel().doLaterInTransaction(transaction1 -> {
 											int childCount = getChildCount();
-											final STValue stValue = presentationModel.newSTValue(inputValue);
+											final STValue stValue = appModel().newSTValue(inputValue);
 											for (int i = 0; i < childCount; i++) {
 												final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
 												final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
@@ -409,15 +422,15 @@ public class STModelEditorNavigator extends JPanel {
 												}
 											}
 
-											final STArgumentKV stArgumentKV = presentationModel.newSTArgumentKV(stParameterKey, stValue);
+											final STArgumentKV stArgumentKV = appModel().newSTArgumentKV(stParameterKey, stValue);
 											getModel().addKeyValues(stArgumentKV);
 											addAndSelectChild(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey));
 									}));
 					}));
-					actions.add(newAction(stParameterKey.getName() + " from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-							presentationModel.doLaterInTransaction(transaction1 -> {
+					actions.add(newAction(stParameterKey.getName() + " from Clipboard " + appModel().cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+							appModel().doLaterInTransaction(transaction1 -> {
 								int childCount = getChildCount();
-								final STValue stValue = presentationModel.newSTValue(SwingUtil.fromClipboard());
+								final STValue stValue = appModel().newSTValue(SwingUtil.fromClipboard());
 								for (int i = 0; i < childCount; i++) {
 									final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
 									final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
@@ -430,7 +443,7 @@ public class STModelEditorNavigator extends JPanel {
 									}
 								}
 
-								final STArgumentKV stArgumentKV = presentationModel.newSTArgumentKV(stParameterKey, stValue);
+								final STArgumentKV stArgumentKV = appModel().newSTArgumentKV(stParameterKey, stValue);
 								getModel().addKeyValues(stArgumentKV);
 								addAndSelectChild(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey));
 							});
@@ -438,7 +451,7 @@ public class STModelEditorNavigator extends JPanel {
 				});
 			});
 			actions.add(newAction("Remove", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 					getModel().getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(getModel()));
 					treeModel.removeNodeFromParent(this);
 					editor.setText("", null);
@@ -450,6 +463,11 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STKVTreeNode
+
+	private boolean isSTKVTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STKVTreeNode;
+	}
+
 	public class STKVTreeNode extends BaseTreeNode<STArgumentKV> {
 
 		private String uuid;
@@ -469,7 +487,7 @@ public class STModelEditorNavigator extends JPanel {
 			if (stValue != null)
 				switch (stValue.getType()) {
 					case STMODEL:
-						add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), model));
+						add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), model));
 						break;
 					case PRIMITIVE:
 						add(new STValueTreeNode(stValue, model));
@@ -493,12 +511,12 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			presentationModel.doInTransaction(transaction -> {
+			appModel().doInTransaction(transaction -> {
 
 				actions.add(newAction("Set from input", actionEvent -> {
 					SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
-								presentationModel.doLaterInTransaction(transaction1 -> {
-									final STValue stValue = presentationModel.newSTValue(inputValue);
+								appModel().doLaterInTransaction(transaction1 -> {
+									final STValue stValue = appModel().newSTValue(inputValue);
 									getModel().setValue(stValue);
 									while (getChildCount() != 0)
 											treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
@@ -507,9 +525,9 @@ public class STModelEditorNavigator extends JPanel {
 								}));
 				}));
 
-				actions.add(newAction("Set from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-					presentationModel.doLaterInTransaction(transaction1 -> {
-							final STValue stValue = presentationModel.newSTValue(SwingUtil.fromClipboard());
+				actions.add(newAction("Set from Clipboard " + appModel().cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+					appModel().doLaterInTransaction(transaction1 -> {
+							final STValue stValue = appModel().newSTValue(SwingUtil.fromClipboard());
 							getModel().setValue(stValue);
 							while (getChildCount() != 0)
 								treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
@@ -519,7 +537,7 @@ public class STModelEditorNavigator extends JPanel {
 				}));
 			});
 			actions.add(newAction("Remove", actionEvent -> {
-				presentationModel.doLaterInTransaction(transaction1 -> {
+				appModel().doLaterInTransaction(transaction1 -> {
 					stArgument.removeKeyValues(getModel());
 					treeModel.removeNodeFromParent(this);
 					editor.setText("", null);
@@ -531,6 +549,11 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	// STParameterTreeNode
+
+	private boolean isSTParameterTreeNode(BaseTreeNode<?> treeNode) {
+		return treeNode instanceof STParameterTreeNode;
+	}
+
 	public class STParameterTreeNode extends BaseTreeNode<STParameter> {
 
 		private String uuid;
@@ -545,12 +568,12 @@ public class STModelEditorNavigator extends JPanel {
 			this.uuid = model.getUuid();
 
 			stModel.getArgumentsSorted()
-				.filter(stArgument -> stArgument.getStParameter().equals(model.uuid()))
-				.forEach(presentationModel.stArgumentConsumer(model)
+				.filter(stArgument -> stArgument.getStParameter().equals(model.getUuid()))
+				.forEach(appModel().stArgumentConsumer(model)
 						.onSingleSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
-						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
+						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
 						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
-						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), presentationModel.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
+						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
 						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stArgument, model))));
 		}
 
@@ -568,59 +591,59 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			presentationModel.doInTransaction(tx -> {
+			appModel().doInTransaction(tx -> {
 
 				switch (getModel().getType()) {
 					case SINGLE:
 						actions.add(newAction("Set from Input", actionEvent -> {
 							SwingUtil.showInputDialog(getModel().getName(), tree, inputValue ->
-									presentationModel.doLaterInTransaction(transaction -> {
-										presentationModel.removeArgument(stModel, getModel());
+									appModel().doLaterInTransaction(transaction -> {
+										appModel().removeArgument(stModel, getModel());
 										while (getChildCount() != 0)
 											treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-										final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), inputValue);
+										final org.javatuples.Pair<STArgument, STValue> newArgument = appModel().newSTArgument(getModel(), inputValue);
 										stModel.addArguments(newArgument.getValue0());
 										addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
 									}));
 						}));
 
-						presentationModel.getSelectedSTValues().forEach(selectedValue -> {
-							actions.add(newAction("Set '" + presentationModel.render(selectedValue, 30) + "'", actionEvent -> {
-								presentationModel.doLaterInTransaction(transaction -> {
-									presentationModel.removeArgument(stModel, getModel());
+						appModel().getSelectedSTValues().forEach(selectedValue -> {
+							actions.add(newAction("Set '" + appModel().render(selectedValue, 30) + "'", actionEvent -> {
+								appModel().doLaterInTransaction(transaction -> {
+									appModel().removeArgument(stModel, getModel());
 									while (getChildCount() != 0)
 										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-									final STArgument stArgument = presentationModel.newSTArgument(getModel(), selectedValue);
+									final STArgument stArgument = appModel().newSTArgument(getModel(), selectedValue);
 									stModel.addArguments(stArgument);
 									addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
 								});
 							}));
 						});
 
-						presentationModel.getSelectedSTModels().forEach(selectedModel -> {
-							actions.add(newAction("Set '" + presentationModel.render(selectedModel, 30) + "'", actionEvent -> {
-								presentationModel.doLaterInTransaction(transaction -> {
-									presentationModel.removeArgument(stModel, getModel());
+						appModel().getSelectedSTModels().forEach(selectedModel -> {
+							actions.add(newAction("Set '" + appModel().render(selectedModel, 30) + "'", actionEvent -> {
+								appModel().doLaterInTransaction(transaction -> {
+									appModel().removeArgument(stModel, getModel());
 									while (getChildCount() != 0)
 										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-									final STValue stValue = presentationModel.newSTValue(selectedModel);
-									final STArgument newArgument = presentationModel.newSTArgument(getModel(), stValue);
+									final STValue stValue = appModel().newSTValue(selectedModel);
+									final STArgument newArgument = appModel().newSTArgument(getModel(), stValue);
 									stModel.addArguments(newArgument);
 									addAndSelectChild(new STValueTreeNode(stValue, newArgument));
 								});
 							}));
 						});
 
-						actions.add(newAction("Set from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-							presentationModel.doLaterInTransaction(transaction -> {
-								presentationModel.removeArgument(stModel, getModel());
+						actions.add(newAction("Set from Clipboard " + appModel().cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+							appModel().doLaterInTransaction(transaction -> {
+								appModel().removeArgument(stModel, getModel());
 								while (getChildCount() != 0)
 									treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-								final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil
+								final org.javatuples.Pair<STArgument, STValue> newArgument = appModel().newSTArgument(getModel(), SwingUtil
 										.fromClipboard());
 								stModel.addArguments(newArgument.getValue0());
 								addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
@@ -628,12 +651,12 @@ public class STModelEditorNavigator extends JPanel {
 						}));
 						if (getModel().getName().startsWith("is") || getModel().getName().startsWith("has")) {
 							actions.add(newAction("Set to TRUE", actionEvent -> {
-								presentationModel.doLaterInTransaction(transaction -> {
-									presentationModel.removeArgument(stModel, getModel());
+								appModel().doLaterInTransaction(transaction -> {
+									appModel().removeArgument(stModel, getModel());
 									while (getChildCount() != 0)
 										treeModel.removeNodeFromParent((BaseTreeNode<?>) getChildAt(0));
 
-									final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), "TRUE");
+									final org.javatuples.Pair<STArgument, STValue> newArgument = appModel().newSTArgument(getModel(), "TRUE");
 									stModel.addArguments(newArgument.getValue0());
 									addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
 								});
@@ -642,14 +665,14 @@ public class STModelEditorNavigator extends JPanel {
 						break;
 					case LIST:
 						actions.add(newAction("Add", actionEvent -> {
-							presentationModel.addList(getModel(), stModel, tree, newArgument -> {
+							appModel().addList(getModel(), stModel, tree, newArgument -> {
 
 								STValue argumentValue = newArgument.getValue1();
 								switch (argumentValue.getType()) {
 
 									case STMODEL:
 										final STModel stModel = argumentValue.getStModel();
-										addAndSelectChild(new STModelTreeNode(stModel, presentationModel.findSTTemplateByUuid(stModel
+										addAndSelectChild(new STModelTreeNode(stModel, appModel().findSTTemplateByUuid(stModel
 												.getStTemplate()), newArgument.getValue0()));
 										break;
 									case PRIMITIVE:
@@ -661,30 +684,30 @@ public class STModelEditorNavigator extends JPanel {
 							});
 						}));
 
-						presentationModel.getSelectedSTValues().forEach(selectedValue -> {
-							actions.add(newAction("Add '" + presentationModel.render(selectedValue, 30) + "'", actionEvent -> {
-								presentationModel.doLaterInTransaction(transaction -> {
-									final STArgument stArgument = presentationModel.newSTArgument(getModel(), selectedValue);
+						appModel().getSelectedSTValues().forEach(selectedValue -> {
+							actions.add(newAction("Add '" + appModel().render(selectedValue, 30) + "'", actionEvent -> {
+								appModel().doLaterInTransaction(transaction -> {
+									final STArgument stArgument = appModel().newSTArgument(getModel(), selectedValue);
 									stModel.addArguments(stArgument);
 									addAndSelectChild(new STValueTreeNode(selectedValue, stArgument));
 								});
 							}));
 						});
 
-						presentationModel.getSelectedSTModels().forEach(selectedModel -> {
-							actions.add(newAction("Add '" + presentationModel.render(selectedModel, 30) + "'", actionEvent -> {
-								presentationModel.doLaterInTransaction(transaction -> {
-									final STValue stValue = presentationModel.newSTValue(selectedModel);
-									final STArgument newArgument = presentationModel.newSTArgument(getModel(), stValue);
+						appModel().getSelectedSTModels().forEach(selectedModel -> {
+							actions.add(newAction("Add '" + appModel().render(selectedModel, 30) + "'", actionEvent -> {
+								appModel().doLaterInTransaction(transaction -> {
+									final STValue stValue = appModel().newSTValue(selectedModel);
+									final STArgument newArgument = appModel().newSTArgument(getModel(), stValue);
 									stModel.addArguments(newArgument);
 									addAndSelectChild(new STValueTreeNode(stValue, newArgument));
 								});
 							}));
 						});
 
-						actions.add(newAction("Add from Clipboard " + presentationModel.cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
-							presentationModel.doLaterInTransaction(transaction -> {
-								final org.javatuples.Pair<STArgument, STValue> newArgument = presentationModel.newSTArgument(getModel(), SwingUtil
+						actions.add(newAction("Add from Clipboard " + appModel().cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
+							appModel().doLaterInTransaction(transaction -> {
+								final org.javatuples.Pair<STArgument, STValue> newArgument = appModel().newSTArgument(getModel(), SwingUtil
 										.fromClipboard());
 								stModel.addArguments(newArgument.getValue0());
 								addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
@@ -693,8 +716,8 @@ public class STModelEditorNavigator extends JPanel {
 						break;
 					case KVLIST:
 						actions.add(newAction("Add " + getModel().getName(), actionEvent -> {
-							presentationModel.doLaterInTransaction(transaction -> {
-								presentationModel.addKVArgument(stModel, getModel(), tree, stArgument ->
+							appModel().doLaterInTransaction(transaction -> {
+								appModel().addKVArgument(stModel, getModel(), tree, stArgument ->
 										addAndSelectChild(new STKVArgumentTreeNode(stArgument, getModel()))
 								);
 							});
@@ -716,12 +739,20 @@ public class STModelEditorNavigator extends JPanel {
 		};
 	}
 
+	private Action newTransactionAction(String name, Consumer<ActionEvent> actionEventConsumer) {
+		return new AbstractAction(name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionEventConsumer.accept(e)));
+			}
+		};
+	}
+
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + presentationModel.cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
@@ -737,6 +768,10 @@ public class STModelEditorNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTArgumentAdded(STAppEvents.STArgumentAdded event) {
 		treeModel
@@ -749,7 +784,7 @@ public class STModelEditorNavigator extends JPanel {
 					final STValue stValue = event.stArgument.getValue();
 					switch (stValue.getType()) {
 						case STMODEL:
-							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), presentationModel
+							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), appModel()
 									.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument));
 							break;
 						case PRIMITIVE:

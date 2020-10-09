@@ -3,20 +3,19 @@ package nextgen.st;
 import net.openhft.compiler.CompilerUtils;
 import nextgen.st.domain.*;
 import nextgen.st.model.*;
+import nextgen.swing.AppModel;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.java.BlockStmt;
-import nextgen.templates.java.ImportDeclaration;
-import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.maven.TestRunner;
 import nextgen.templates.maven.neo.MavenNeo;
 import nextgen.templates.maven.neo.ProjectGeneratorModel;
 import nextgen.templates.maven.neo.ProjectModel;
-import nextgen.templates.stringtemplate.ScriptRunner;
-import nextgen.templates.stringtemplate.StringTemplateST;
 import nextgen.utils.NeoChronicle;
 import nextgen.utils.STModelUtil;
 import nextgen.utils.SwingUtil;
 import nextgen.workflow.WorkFlowFacade;
+import org.antlr.v4.misc.FrequencySet;
+import org.glassfish.grizzly.http.server.Response;
 import org.javatuples.Pair;
 import org.neo4j.graphdb.*;
 
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.st.model.STValueType.PRIMITIVE;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.java.JavaST.*;
 import static nextgen.utils.SwingUtil.newTextField;
@@ -50,40 +48,30 @@ public class STAppPresentationModel {
    public final STRenderer stRenderer;
    public final STModelDB db;
 
+   final Set<STGroupModel> stGroups = new LinkedHashSet<>();
    final STGroupModel generatorSTGroup;
-   final Set<STGDirectory> stgDirectories = new LinkedHashSet<>();
 
    private final NeoChronicle chronicle;
-   private final STAppModel appModel;
-   private final Font preferredFont;
    private STWorkspace stWorkspace;
    private String lastDir;
    private final WorkFlowFacade workFlowFacade;
 
-   STAppPresentationModel(STAppModel appModel) throws IOException {
-
-      this.appModel = appModel;
-
-      final Set<STGroupModel> stGroups = new LinkedHashSet<>();
-      appModel.getDirectories().forEach(stgDirectory -> {
-         stgDirectories.add(stgDirectory);
-         stGroups.addAll(stgDirectory.getGroups().collect(Collectors.toSet()));
-      });
-
-      this.generatorSTGroup = new STGroupModel(new File("/home/goe/projects/nextgen/components/core/src/main/resources/templates/StringTemplate.json"));
+   public STAppPresentationModel() throws IOException {
+      Arrays.stream(Objects.requireNonNull(new File(AppModel.getInstance().getTemplateDir())
+            .listFiles(file -> file.getName().endsWith(".json"))))
+            .forEach(file -> {
+               try {
+                  stGroups.add(new STGroupModel(file));
+               } catch (IOException e) {
+                  System.out.println("Could not read stgroup file " + file.getAbsolutePath());
+               }
+            });
+      this.generatorSTGroup = new STGroupModel(new File(AppModel.getInstance().getTemplateDir(), "StringTemplate.json"));
 
       this.stRenderer = new STRenderer(stGroups);
-      this.db = new STModelDB(appModel.getModelDb("./db"), stGroups);
+      this.db = new STModelDB(AppModel.getInstance().getDbDir(), stGroups);
       this.workFlowFacade = new WorkFlowFacade(db.getDatabaseService());
-      this.chronicle = new NeoChronicle(appModel.getModelDb("./db"), db.getDatabaseService());
-
-      final Set<String> fonts = new HashSet<>(Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getAvailableFontFamilyNames()));
-      this.preferredFont = Stream
-            .of("Hack", "Fira Code", "Source Code Pro", "Monospaced")
-            .filter(fonts::contains)
-            .findFirst().map(s -> new Font(s, Font.PLAIN, appModel.getEditorFontSize(12)))
-            .orElse(null);
+      this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
    }
 
    public static Action newAction(String name, Consumer<ActionEvent> consumer) {
@@ -198,33 +186,6 @@ public class STAppPresentationModel {
       });
    }
 
-//   public void edit(JComponent owner, MetaProperty model, Consumer<MetaProperty> metaPropertyConsumer) {
-//      final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
-//      fieldMap.put("Name", newTextField(model.getName(""), 15));
-//      fieldMap.put("Type", newTextField(model.getType(""), 15));
-//      fieldMap.put("Default Value", newTextField(model.getDefaultValue(""), 15));
-//      final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-//      inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-//      for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-//         inputPanel.add(new JLabel(fieldEntry.getKey()));
-//         inputPanel.add(fieldEntry.getValue());
-//      }
-//      SwingUtil.showDialog(inputPanel, owner, "Edit Property", new SwingUtil.ConfirmAction() {
-//         @Override
-//         public void verifyAndCommit() throws Exception {
-//            doLaterInTransaction(tx -> {
-//               final String name = fieldMap.get("Name").getText().trim();
-//               final String type = fieldMap.get("Type").getText().trim();
-//               final String defaultValue = fieldMap.get("Default Value").getText().trim();
-//               metaPropertyConsumer.accept(model.setName(name)
-//                     .setType(type)
-//                     .setDefaultValue(defaultValue.length() == 0 ? null : defaultValue));
-//            });
-//         }
-//      });
-//   }
-
-
    public STTemplate findSTTemplateByUuid(String stTemplate) {
       return db.findSTTemplateByUuid(stTemplate);
    }
@@ -243,21 +204,17 @@ public class STAppPresentationModel {
 
       if (parseResult.getErrors().count() == 0) {
          final STGenerator stGenerator = new STGenerator(generatorSTGroup);
-         stgDirectories
-               .stream()
-               .filter(directory -> directory.getGroups()
-                     .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                           .equals(stGroupModel
-                                 .getUuid())))
+         stGroups.stream().filter(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid()))
                .findFirst()
                .ifPresent(directory -> {
-                  log.info("generating stGroup " + stGroupModel.getName() + " to " + directory
-                        .getOutputPath() + " " + directory
-                        .getOutputPackage());
+                  log.info("generating stGroup " + stGroupModel.getName() + " to " +
+                        AppModel.getInstance().getOutputPath() + " " +
+                        AppModel.getInstance().getOutputPackage());
                   stGenerator
-                        .generateSTGroup(stGroupModel, directory.getOutputPackage(), directory
+                        .generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance()
                               .getOutputPath());
-                  if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, directory.getOutputPackage(), directory
+                  if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, AppModel.getInstance()
+                        .getOutputPackage(), AppModel.getInstance()
                         .getOutputPath());
                });
       } else {
@@ -327,18 +284,6 @@ public class STAppPresentationModel {
       return db.getSTModelPackage(stModel, defaultName);
    }
 
-   public Object getScriptRunner(STValue statements, PackageDeclaration packageDeclaration, Collection<ImportDeclaration> imports, String className) {
-      final ScriptRunner scriptRunner = StringTemplateST.newScriptRunner();
-      scriptRunner.setPackageName(packageDeclaration.getName());
-      scriptRunner.setName(className);
-      scriptRunner.setTemplatesDir(appModel.getDirectories().findFirst().get().getPath());
-      scriptRunner.setDbDir(appModel.getModelDb("./db"));
-      scriptRunner.setScript(render(statements));
-      for (Object anImport : imports)
-         scriptRunner.addImports(anImport);
-      return scriptRunner;
-   }
-
    public Collection<STArgumentKV> getStArgumentKVS(STParameter stParameter, STArgument stArgument) {
       final Collection<STArgumentKV> kvSet = new LinkedHashSet<>();
       stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues()
@@ -350,8 +295,7 @@ public class STAppPresentationModel {
    }
 
    public STWorkspace getWorkspace() {
-      if (stWorkspace == null)
-         stWorkspace = new STWorkspace(this);
+      if (stWorkspace == null) stWorkspace = new STWorkspace();
       return stWorkspace;
    }
 
@@ -366,7 +310,7 @@ public class STAppPresentationModel {
       if (cache.containsKey(iconName)) return cache.get(iconName);
 
       URL resource = getClass().getClassLoader().getResource("icons/" + iconName + dimension + ".png");
-      if (resource == null) resource = getClass().getClassLoader().getResource("icons/STGroup16x16.png");
+      if (resource == null) return null;
 
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);
@@ -548,18 +492,9 @@ public class STAppPresentationModel {
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
       if (parseResult.getErrors().count() == 0) {
-         stgDirectories
-               .stream()
-               .filter(directory -> directory.getGroups()
-                     .anyMatch(stGroupModel1 -> stGroupModel1.getUuid()
-                           .equals(stGroupModel
-                                 .getUuid())))
-               .findFirst()
-               .ifPresent(directory -> {
-                  final File file = new File(new File(directory.getPath()), stGroupModel.getName() + ".json");
-                  log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-                  STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
-               });
+         final File file = new File(new File(AppModel.getInstance().getTemplateDir()), stGroupModel.getName() + ".json");
+         log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
+         STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors()
@@ -675,47 +610,6 @@ public class STAppPresentationModel {
       });
    }
 
-   public void generateNeoSource(STModel model) {
-      generateNeoSources(Collections.singleton(model), "TestNeo");
-   }
-
-
-   public void generateNeoSources(Set<STModel> stModels, String className) {
-      doLaterInTransaction(transaction -> {
-
-         final nextgen.templates.java.PackageDeclaration packageDeclaration = nextgen.templates.java.JavaST
-               .newPackageDeclaration()
-               .setName("tmp");
-
-         final Collection<String> neoFacades = new LinkedHashSet<>();
-         final Collection<String> modelStatements = new LinkedHashSet<>();
-
-         stModels.forEach(stModel -> stRenderer.renderNeoCode(stModel, neoFacades, modelStatements));
-
-         final StringBuilder statements = new StringBuilder();
-         for (String neoFacade : neoFacades) {
-            statements.append("\n").append(neoFacade);
-         }
-
-         statements.append("\n");
-
-         for (String modelStatement : modelStatements) {
-            statements.append("\n").append(modelStatement);
-         }
-
-         final STValue stValue = db.newSTValue()
-               .setUuid(UUID.randomUUID().toString())
-               .setType(PRIMITIVE)
-               .setValue(statements.toString());
-
-         STGenerator.writeJavaFile(getScriptRunner(stValue, packageDeclaration, Collections.emptyList(), className), packageDeclaration
-               .getName(), className, new File(appModel.getRootDir()));
-
-         db.remove(stValue);
-      });
-   }
-
-
    public void generateSource(STModel model) {
       generateSources(Collections.singleton(model), "Test");
    }
@@ -824,6 +718,38 @@ public class STAppPresentationModel {
 
    public WorkFlowFacade getWorkspaceFacade() {
       return workFlowFacade;
+   }
+
+   public String tooltip(STValue model) {
+      return cut(render(model), 300);
+   }
+
+   public String tooltip(STModel model) {
+      return cut(render(model), 300);
+   }
+
+   public void renderToClipboard(STValue model) {
+      SwingUtil.toClipboard(render(model).trim());
+   }
+
+   public void remove(STValue model) {
+      db.remove(model);
+   }
+
+   public Collection<STGroupModel> getGroupModels() {
+      return db.getGroupModels();
+   }
+
+   public Stream<STValue> findAllSTValue() {
+      return db.findAllSTValue();
+   }
+
+   public Stream<STModel> findAllSTModelByStTemplate(String stTemplateUuid) {
+      return db.findAllSTModelByStTemplate(stTemplateUuid);
+   }
+
+   public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
+      return db.newSTModel(stGroupModel, stTemplate);
    }
 
    public static final class CompilationResult {
@@ -1068,10 +994,10 @@ public class STAppPresentationModel {
 
                      SwingUtil.showSelectDialog("Select", parent, stEnum.getValues()
                            .collect(Collectors.toSet()), stEnumValue -> doLaterInTransaction(transaction2 -> {
-                              if (singleValue) removeArgument(stModel, stParameter);
-                              final STValue stValue = newSTValue(stEnumValue);
-                              addParameter(stParameter, stModel, consumer, stValue);
-                           }));
+                        if (singleValue) removeArgument(stModel, stParameter);
+                        final STValue stValue = newSTValue(stEnumValue);
+                        addParameter(stParameter, stModel, consumer, stValue);
+                     }));
 
                   } else {
                      SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
