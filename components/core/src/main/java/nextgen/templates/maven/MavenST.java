@@ -29,7 +29,6 @@ public class MavenST {
 	.append(Project.st + "\n")
 	.append(ProjectGenerator.st + "\n")
 	.append(ProjectPackage.st + "\n")
-	.append(TestRunner.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -160,10 +159,6 @@ public class MavenST {
 
 	public static ProjectPackage newProjectPackage() {
 		return new ProjectPackage(stGroup);
-	}  
-
-	public static TestRunner newTestRunner() {
-		return new TestRunner(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

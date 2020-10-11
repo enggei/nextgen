@@ -22,7 +22,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelTreeNodeClicked(STAppEvents.STModelTreeNodeClicked event) {
-		setSelectedComponent(findRenderer().setText(event.stModel));
+		setSelectedComponent(findModelEditor(event.stModel, () -> appModel().findSTTemplateByUuid(event.stModel.getStTemplate())));
 	}
 
 	private STAppPresentationModel appModel() {
@@ -66,6 +66,20 @@ public class STWorkspace extends JTabbedPane {
 		final STModelGrid stModelGrid = new STModelGrid(stTemplate);
 		addPane(stTemplate.getName() + "-Models", stModelGrid);
 		return stModelGrid;
+	}
+
+	public STModelEditor findModelEditor(STModel stModel, java.util.function.Supplier<STTemplate> stTemplateSupplier) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelEditor) {
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
+						return (STModelEditor) tabComponentAt;
+				}
+		}
+
+		final STModelEditor component = new STModelEditor(stModel);
+		addPane(stTemplateSupplier.get().getName() + "Model", component);
+		return component;
 	}
 
 	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
@@ -143,17 +157,6 @@ public class STWorkspace extends JTabbedPane {
 			final JLabel label = new JLabel(title);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
-
-			final JButton btnClose = new JButton(appModel().loadIcon("close", "12x12"));
-			final Dimension dimension = new Dimension(12, 16);
-			btnClose.setMaximumSize(dimension);
-			btnClose.setPreferredSize(dimension);
-			btnClose.setMinimumSize(dimension);
-			btnClose.setOpaque(false);
-			btnClose.setContentAreaFilled(false);
-			btnClose.setBorderPainted(false);
-			btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
-			add(btnClose);
 
 			addMouseListener(new MouseAdapter() {
 				@Override

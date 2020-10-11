@@ -308,7 +308,9 @@ public class STModelDB extends STModelNeoFactory {
       });
    }
 
-
+   public STModel cloneSTModel(String stModelUuid) {
+      return clone(findSTModelByUuid(stModelUuid));
+   }
 
    public STModel clone(STModel stModel) {
 
@@ -324,6 +326,7 @@ public class STModelDB extends STModelNeoFactory {
                   .ifPresent(stParameter -> {
                      switch (stParameter.getType()) {
                         case SINGLE:
+                        case LIST:
                            clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
                            break;
                         case KVLIST:

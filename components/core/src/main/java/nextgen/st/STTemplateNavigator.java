@@ -234,24 +234,19 @@ public class STTemplateNavigator extends JPanel {
 
 	// RootNode
 
-	private boolean isRootNode(BaseTreeNode<?> treeNode) {
+	private boolean isRootNode(Object treeNode) {
 		return treeNode instanceof RootNode;
 	}
 
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
-			super(model, appModel().loadIcon("RootNode"));
+			super(model, null);
 
 			this.label = getModel();
 			this.tooltip = "";
 
-			final STGDirectory stgDirectory = new STGDirectory()
-					.setOutputPath(AppModel.getInstance().getOutputPath())
-					.setOutputPackage(AppModel.getInstance().getOutputPackage())
-					.setPath(AppModel.getInstance().getTemplateDir());
-			appModel().stGroups.forEach(stgDirectory::addGroups);
-			add(new STGDirectoryTreeNode(stgDirectory));
+			appModel().stGroups.forEach(stGroup -> add(new STGroupTreeNode(stGroup)));
 		}
 
 		RootNode thisNode() {
@@ -268,51 +263,10 @@ public class STTemplateNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			return actions;
-		}
-
-	}
-
-	// STGDirectoryTreeNode
-
-	private boolean isSTGDirectoryTreeNode(BaseTreeNode<?> treeNode) {
-		return treeNode instanceof STGDirectoryTreeNode;
-	}
-
-	public class STGDirectoryTreeNode extends BaseTreeNode<nextgen.st.domain.STGDirectory> {
-
-		private String uuid;
-
-		STGDirectoryTreeNode(nextgen.st.domain.STGDirectory model) {
-			super(model, appModel().loadIcon("STGDirectory"));
-
-			this.label = getModel().getPath();
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-			model.getGroups()
-				.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-				.forEach(stGroupModel -> add(new STGroupTreeNode(stGroupModel)));
-		}
-
-		STGDirectoryTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			this.label = getModel().getPath();
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
 			actions.add(newAction("New STGroup", actionEvent -> {
 				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> {
 
-					final Optional<nextgen.st.domain.STGroupModel> existing = getModel().getGroups().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
+					final Optional<nextgen.st.domain.STGroupModel> existing = appModel().stGroups.stream().filter(groupModel -> groupModel.getName().toLowerCase().equals(name)).findAny();
 					if (existing.isPresent()) {
 						SwingUtil.showMessage(name + " group already exists in this directory", tree);
 						return;
@@ -324,7 +278,7 @@ public class STTemplateNavigator extends JPanel {
 					}
 
 					final nextgen.st.domain.STGroupModel stGroupModel = appModel().newSTGroupModel(name);
-					getModel().addGroups(stGroupModel);
+					appModel().stGroups.add(stGroupModel);
 
 					SwingUtilities.invokeLater(() -> {
 						final STGroupTreeNode stGroupTreeNode = new STGroupTreeNode(stGroupModel);
@@ -337,27 +291,14 @@ public class STTemplateNavigator extends JPanel {
 			actions.add(newAction("Generate All", actionEvent -> {
 				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> appModel().generateSTGroup(stGroupTreeNode.getModel(), false)));
 			}));
-			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
-				SwingUtilities.invokeLater(() -> getChildren(STGroupTreeNode.class).forEach(stGroupTreeNode -> appModel().generateSTGroup(stGroupTreeNode.getModel(), true)));
-			}));
-			actions.add(newAction("Expand", actionEvent -> {
-				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), true));
-			}));
-			actions.add(newAction("Collapse", actionEvent -> {
-				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
-			}));
 			return actions;
 		}
 
-		public void save(nextgen.st.domain.STGroupModel model) {
-			final java.io.File dir = new java.io.File(getModel().getPath());
-			STGenerator.write(new java.io.File(dir, model.getName() + ".json"), model.getJsonObject().encodePrettily());
-		}
 	}
 
 	// STGroupTreeNode
 
-	private boolean isSTGroupTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTGroupTreeNode(Object treeNode) {
 		return treeNode instanceof STGroupTreeNode;
 	}
 
@@ -453,40 +394,37 @@ public class STTemplateNavigator extends JPanel {
 					}));
 			}));
 			actions.add(newAction("Rename", actionEvent -> {
-				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name ->
-					getParentNode(STGDirectoryTreeNode.class)
-						.ifPresent(parent -> {
-					
-								final Optional<STGroupModel> existing = parent.getModel()
-									.getGroups()
-									.filter(groupModel -> !groupModel.equals(getModel()))
-									.filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
-									.findAny();
-					
-								if (existing.isPresent()) {
-									SwingUtil.showMessage(name + " group already exists", tree);
-									return;
-								}
-					
-								final String oldName = getModel().getName();
-								getModel().setName(name);
-								save();
-					
-								SwingUtilities.invokeLater(() -> {
-									this.label = getModel().getName();
-									treeModel.nodeChanged(STGroupTreeNode.this);
-									STAppPresentationModel.deleteSTGFile(parent.getModel(), oldName);
-								});
-					}));
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> {
+						final Optional<STGroupModel> existing = appModel().stGroups
+								.stream()
+								.filter(groupModel -> !groupModel.equals(getModel()))
+								.filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
+								.findAny();
+
+						if (existing.isPresent()) {
+							SwingUtil.showMessage(name + " group already exists", tree);
+							return;
+						}
+
+						final String oldName = getModel().getName();
+						getModel().setName(name);
+						save();
+
+						SwingUtilities.invokeLater(() -> {
+							this.label = getModel().getName();
+							treeModel.nodeChanged(STGroupTreeNode.this);
+							STAppPresentationModel.deleteSTGFile(oldName);
+						});
+					});
 			}));
 			actions.add(newAction("Delete", actionEvent -> {
 				SwingUtil.confirm(tree,"Delete " + getModel().getName())
-					.flatMap(aBoolean -> getParentNode(STGDirectoryTreeNode.class))
+					.flatMap(aBoolean -> getParentNode(RootNode.class))
 					.ifPresent(parent -> SwingUtilities.invokeLater(() -> {
+						appModel().stGroups.remove(getModel());
 						treeModel.removeNodeFromParent(STGroupTreeNode.this);
 						workspace.removeSTEditor(getModel());
-						parent.getModel().removeGroups(getModel());
-						STAppPresentationModel.deleteSTGFile(parent.getModel(), getModel().getName());
+						STAppPresentationModel.deleteSTGFile(getModel().getName());
 					}));
 			}));
 			actions.add(newAction("Set Icon name", actionEvent -> {
@@ -504,20 +442,17 @@ public class STTemplateNavigator extends JPanel {
 			actions.add(newAction("Generate Group and Neo models", actionEvent -> {
 				appModel().generateSTGroup(getModel(), true);
 			}));
-			actions.add(newAction("Collapse", actionEvent -> {
-				SwingUtilities.invokeLater(() -> expandTreeNodesRecursive(getThisPath(), false));
-			}));
 			return actions;
 		}
 
 		public void save() {
-			getParentNode(STGDirectoryTreeNode.class).ifPresent(stGroupTreeNode -> stGroupTreeNode.save(getModel()));
+			appModel().save(getModel());
 		}
 	}
 
 	// STEnumTreeNode
 
-	private boolean isSTEnumTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTEnumTreeNode(Object treeNode) {
 		return treeNode instanceof STEnumTreeNode;
 	}
 
@@ -526,7 +461,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STEnumTreeNode(nextgen.st.domain.STEnum model) {
-			super(model, appModel().loadIcon("STEnum"));
+			super(model, appModel().loadIcon("sq-green"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -643,7 +578,7 @@ public class STTemplateNavigator extends JPanel {
 
 	// STTemplateTreeNode
 
-	private boolean isSTTemplateTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTTemplateTreeNode(Object treeNode) {
 		return treeNode instanceof STTemplateTreeNode;
 	}
 
@@ -652,7 +587,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
-			super(model, appModel().loadIcon("STTemplate"));
+			super(model, appModel().loadIcon("sq-teal"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -887,7 +822,7 @@ public class STTemplateNavigator extends JPanel {
 
 	// STInterfaceTreeNode
 
-	private boolean isSTInterfaceTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTInterfaceTreeNode(Object treeNode) {
 		return treeNode instanceof STInterfaceTreeNode;
 	}
 
@@ -896,7 +831,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
-			super(model, appModel().loadIcon("STInterface"));
+			super(model, appModel().loadIcon("sq-red"));
 
 			this.label = getModel().getName();
 			this.tooltip = "";
@@ -988,15 +923,13 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelEditorTreeNodeClicked(nextgen.st.STAppEvents.STModelEditorTreeNodeClicked event) {
-		appModel().doLaterInTransaction(transaction -> {
-			final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());
-			final RootNode rootNode = (RootNode) treeModel.getRoot();
-			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
-			if (path != null) {
-				tree.scrollPathToVisible(path);
-				tree.setSelectionPath(path);
-			}
-		});
+		final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());
+		final RootNode rootNode = (RootNode) treeModel.getRoot();
+		final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STTemplateTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(stTemplate));
+		if (path != null) {
+			tree.scrollPathToVisible(path);
+			tree.setSelectionPath(path);
+		}
 	}
 
 	@org.greenrobot.eventbus.Subscribe()

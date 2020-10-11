@@ -5,12 +5,12 @@ public class Project {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
-	private Object _root;
+	private String _packageName;
+	private String _name;
+	private String _root;
 	private java.util.List<Object> _templates = new java.util.ArrayList<>();
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<Object> _packageDeclarations = new java.util.ArrayList<>();
+	private java.util.List<ProjectPackage> _packageDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
 	private java.util.List<Object> _generators = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
@@ -42,16 +42,16 @@ public class Project {
 		return st.render().trim();
 	}
 
-	public Project setPackageName(Object value) {
+	public Project setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -64,16 +64,16 @@ public class Project {
 		return this;
 	} 
 
-	public Project setName(Object value) {
+	public Project setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -86,16 +86,16 @@ public class Project {
 		return this;
 	} 
 
-	public Project setRoot(Object value) {
+	public Project setRoot(String value) {
 		this._root = value;
 		return this;
 	}
 
-	public Object getRoot() {
+	public String getRoot() {
 		return this._root;
 	}
 
-	public Object getRoot(Object defaultValue) {
+	public String getRoot(String defaultValue) {
 		return this._root == null ? defaultValue : this._root;
 	}
 
@@ -166,22 +166,22 @@ public class Project {
 		return this._imports;
 	} 
 
-	public Project addPackageDeclarations(Object value) {
+	public Project addPackageDeclarations(ProjectPackage value) {
 		this._packageDeclarations.add(value);
 		return this;
 	}
 
-	public Project setPackageDeclarations(Object[] value) {
+	public Project setPackageDeclarations(ProjectPackage[] value) {
 		this._packageDeclarations.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public Project setPackageDeclarations(java.util.Collection<Object> values) {
+	public Project setPackageDeclarations(java.util.Collection<ProjectPackage> values) {
 		this._packageDeclarations.addAll(values);
 		return this;
 	}
 
-	public Project removePackageDeclarations(Object value) {
+	public Project removePackageDeclarations(ProjectPackage value) {
 		this._packageDeclarations.remove(value);
 		return this;
 	}
@@ -191,7 +191,7 @@ public class Project {
 		return this;
 	}
 
-	public java.util.List<Object> getPackageDeclarations() {
+	public java.util.List<ProjectPackage> getPackageDeclarations() {
 		return this._packageDeclarations;
 	} 
 

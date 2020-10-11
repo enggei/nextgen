@@ -227,6 +227,6 @@ public class MavenPatterns extends MavenST {
       return newProjectPackage()
             .setName(name)
             .setPackageName(packageName)
-            .setParentPackage(parentPackage.getName());
+            .setParentPackage(parentPackage);
    }
 }

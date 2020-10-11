@@ -66,9 +66,9 @@ public class STModelNavigator extends JPanel {
 					final Object lastPathComponent = selectionPath.getLastPathComponent();
 					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-					if (lastPathComponent instanceof STModelTreeNode) {
+					if (isSTModelTreeNode(lastPathComponent)) {
 						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-						STAppEvents.postSTModelTreeNodeClicked(selectedNode.getModel());
+						appModel().doLaterInTransaction(transaction -> STAppEvents.postSTModelTreeNodeClicked(selectedNode.getModel()));
 					}
 				}
 			}
@@ -223,7 +223,7 @@ public class STModelNavigator extends JPanel {
 
 	// STValueTreeNode
 
-	private boolean isSTValueTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTValueTreeNode(Object treeNode) {
 		return treeNode instanceof STValueTreeNode;
 	}
 
@@ -277,7 +277,7 @@ public class STModelNavigator extends JPanel {
 
 	// RootNode
 
-	private boolean isRootNode(BaseTreeNode<?> treeNode) {
+	private boolean isRootNode(Object treeNode) {
 		return treeNode instanceof RootNode;
 	}
 
@@ -319,14 +319,14 @@ public class STModelNavigator extends JPanel {
 
 	// STValuesRootNode
 
-	private boolean isSTValuesRootNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTValuesRootNode(Object treeNode) {
 		return treeNode instanceof STValuesRootNode;
 	}
 
 	public class STValuesRootNode extends BaseTreeNode<String> {
 
 		STValuesRootNode(String model) {
-			super(model, null);
+			super(model, appModel().loadIcon("sq-orange"));
 
 			this.label = getModel();
 			this.tooltip = "";
@@ -372,7 +372,7 @@ public class STModelNavigator extends JPanel {
 
 	// STGroupModelTreeNode
 
-	private boolean isSTGroupModelTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTGroupModelTreeNode(Object treeNode) {
 		return treeNode instanceof STGroupModelTreeNode;
 	}
 
@@ -423,7 +423,7 @@ public class STModelNavigator extends JPanel {
 
 	// STTemplateTreeNode
 
-	private boolean isSTTemplateTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTTemplateTreeNode(Object treeNode) {
 		return treeNode instanceof STTemplateTreeNode;
 	}
 
@@ -438,7 +438,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			appModel().db.findAllSTModelByStTemplate(model.getUuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
+			appModel().db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 		}
 
@@ -476,7 +476,7 @@ public class STModelNavigator extends JPanel {
 
 	// STModelTreeNode
 
-	private boolean isSTModelTreeNode(BaseTreeNode<?> treeNode) {
+	private boolean isSTModelTreeNode(Object treeNode) {
 		return treeNode instanceof STModelTreeNode;
 	}
 
@@ -485,7 +485,7 @@ public class STModelNavigator extends JPanel {
 		private String uuid;
 
 		STModelTreeNode(nextgen.st.model.STModel model) {
-			super(model, appModel().loadIcon("STGDirectory"));
+			super(model, appModel().loadIcon("sq-teal"));
 
 			this.label = appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10));
 			this.tooltip = appModel().tooltip(getModel());

@@ -12,23 +12,6 @@ import java.util.stream.Collectors;
 
 public class STVisitor {
 
-    public static void main(String[] args) {
-        final STModelDB db = new STModelDB("./db", "/home/goe/projects/nextgen/components/core/src/main/resources/templates");
-
-        final STVisitor stVisitor = new STVisitor(db) {
-            @Override
-            protected void visitSinglePrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
-                System.out.println(stModel.getUuid() + " " + stParameter.getName() + " " + value);
-            }
-        };
-
-
-        db.doInTransaction(transaction -> {
-            db.findAllSTModel().forEach(stVisitor::visit);
-        });
-
-    }
-
     protected final STModelDB db;
 
     public STVisitor(STModelDB db) {

@@ -20,6 +20,9 @@ import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 public class STModelEditor extends JPanel {
 
    private final RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
+   private final org.fife.ui.rtextarea.RTextScrollPane editorComponent = new RTextScrollPane(txtEditor);
+   private final STModelEditorForm formComponent = new STModelEditorForm();
+   private final JTabbedPane editors = new JTabbedPane();
    private final STModel stModel;
 
    private STModelEditorNavigator.STValueTreeNode currentTreeNode;
@@ -34,23 +37,30 @@ public class STModelEditor extends JPanel {
       txtEditor.addKeyListener(getEditorKeyListener());
       addActionsToPopup();
 
+      final STModelEditorGrid editorGrid = new STModelEditorGrid(stModel);
       final STModelEditorNavigator stModelNavigator = new STModelEditorNavigator(stModel, this);
 
-      final JTabbedPane editors = new JTabbedPane();
-      editors.add("Editor", new RTextScrollPane(txtEditor));
-      editors.add("Form", new STModelEditorForm(stModel));
-      editors.add("Values", new STModelEditorGrid(stModel));
-
+      editors.add("Editor", editorComponent);
+      editors.add("Values", editorGrid);
+      editors.add("Form", formComponent);
       add(editors, BorderLayout.CENTER);
       add(stModelNavigator, BorderLayout.EAST);
 
       setText(appModel().render(stModel), null);
+      formComponent.setModel(stModel);
+      org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
    private STAppPresentationModel appModel() {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
-   
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTModelEditorTreeNodeClicked(nextgen.st.STAppEvents.STModelEditorTreeNodeClicked event) {
+      editors.setSelectedComponent(editorComponent);
+      formComponent.setModel(event.stModel);
+   }
+
    public void addActionsToPopup() {
       final JPopupMenu pop = txtEditor.getPopupMenu();
 

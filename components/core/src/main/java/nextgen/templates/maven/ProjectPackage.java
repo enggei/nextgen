@@ -5,10 +5,10 @@ public class ProjectPackage {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private Object _parentPackage;
-	private Object _packageName;
-	private java.util.List<java.util.Map<String, Object>> _types = new java.util.ArrayList<>();
+	private String _name;
+	private ProjectPackage _parentPackage;
+	private String _packageName;
+	private java.util.List<Object> _childPackages = new java.util.ArrayList<>();
 
 	ProjectPackage(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -24,20 +24,20 @@ public class ProjectPackage {
 		st.add("name", _name);
 		st.add("parentPackage", _parentPackage);
 		st.add("packageName", _packageName);
-		for (java.util.Map<String, Object> map : _types) st.addAggr("types.{name}", map.get("name"));
+		for (Object o : _childPackages) st.add("childPackages", o);
 		return st.render().trim();
 	}
 
-	public ProjectPackage setName(Object value) {
+	public ProjectPackage setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -50,16 +50,16 @@ public class ProjectPackage {
 		return this;
 	} 
 
-	public ProjectPackage setParentPackage(Object value) {
+	public ProjectPackage setParentPackage(ProjectPackage value) {
 		this._parentPackage = value;
 		return this;
 	}
 
-	public Object getParentPackage() {
+	public ProjectPackage getParentPackage() {
 		return this._parentPackage;
 	}
 
-	public Object getParentPackage(Object defaultValue) {
+	public ProjectPackage getParentPackage(ProjectPackage defaultValue) {
 		return this._parentPackage == null ? defaultValue : this._parentPackage;
 	}
 
@@ -72,16 +72,16 @@ public class ProjectPackage {
 		return this;
 	} 
 
-	public ProjectPackage setPackageName(Object value) {
+	public ProjectPackage setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -94,48 +94,35 @@ public class ProjectPackage {
 		return this;
 	} 
 
-
-	public ProjectPackage addTypes(Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		this._types.add(map);
+	public ProjectPackage addChildPackages(Object value) {
+		this._childPackages.add(value);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getTypes() {
-		return this._types;
+	public ProjectPackage setChildPackages(Object[] value) {
+		this._childPackages.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
-	public ProjectPackage addTypes(ProjectPackage_Types value) {
-		return addTypes(value._name);
+	public ProjectPackage setChildPackages(java.util.Collection<Object> values) {
+		this._childPackages.addAll(values);
+		return this;
 	}
 
-	public java.util.stream.Stream<ProjectPackage_Types> streamTypes() {
-		return this._types.stream().map(ProjectPackage_Types::new);
+	public ProjectPackage removeChildPackages(Object value) {
+		this._childPackages.remove(value);
+		return this;
 	}
 
-	public java.util.List<Object> getTypes_Name() {
-		return streamTypes().map(ProjectPackage_Types::getName).collect(java.util.stream.Collectors.toList());
+	public ProjectPackage removeChildPackages(int index) {
+		this._childPackages.remove(index);
+		return this;
 	}
 
+	public java.util.List<Object> getChildPackages() {
+		return this._childPackages;
+	} 
 
-	public static final class ProjectPackage_Types {
-
-		Object _name;
-
-		public ProjectPackage_Types(Object _name) {
-			this._name = _name;
-		}
-
-		private ProjectPackage_Types(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -150,6 +137,6 @@ public class ProjectPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectPackage(name,parentPackage,packageName,types) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~~packageName~);\n" + 
-				"~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, \"~it.name~\");};separator=\"\\n\\n\"~ >>";
+	static final String st = "ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" + 
+				"~childPackages:{it|~it~};separator=\"\\n\"~ >>";
 }  

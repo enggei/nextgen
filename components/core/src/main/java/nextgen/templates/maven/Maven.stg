@@ -324,29 +324,8 @@ public void ~name~() {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,parentPackage,packageName,types) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~~packageName~);
-~types:{it|private final JavaType ~it.name~Type = new JavaType(~name~, "~it.name~");};separator="\n\n"~  >>
-
-TestRunner(packageName,name,projectName,generators) ::= <<package ~packageName~;
-
-public class ~name~ extends ~projectName~ {
-
-~generators:{it|
-	@Override
-	public void ~it.name~() {
-		~if(it.run)~super.~it.name~();~endif~
-	~eom()~
-};separator="\n\n"~
-
-	public static void main(String[] args) {
-		final org.junit.runner.JUnitCore junit = new org.junit.runner.JUnitCore();
-		junit.addListener(new org.junit.internal.TextListener(System.out));
-		final org.junit.runner.Result result = junit.run(~name~.class);
-		for (org.junit.runner.notification.Failure failure : result.getFailures()) {
-			System.out.println(failure.toString());
-		}
-	}
-}  >>
+ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
+~childPackages:{it|~it~};separator="\n"~  >>
 
 eom() ::= "}"
 

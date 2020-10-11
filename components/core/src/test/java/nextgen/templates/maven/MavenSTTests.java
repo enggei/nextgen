@@ -33,7 +33,6 @@ public class MavenSTTests {
 		testProject();
 		testProjectGenerator();
 		testProjectPackage();
-		testTestRunner();
 	}
 
 	@org.junit.Test
@@ -154,10 +153,5 @@ public class MavenSTTests {
 	@org.junit.Test
 	public void testProjectPackage() {
 		System.out.println("ProjectPackage:\n" + newProjectPackage());
-	}  
-
-	@org.junit.Test
-	public void testTestRunner() {
-		System.out.println("TestRunner:\n" + newTestRunner());
 	}  
 } 

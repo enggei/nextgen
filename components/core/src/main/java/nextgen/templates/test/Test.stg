@@ -1,0 +1,61 @@
+delimiters "~","~"
+
+basics() ::= << >>
+
+kv(value) ::= <<~value:{it|~it.key~ : ~it.value~};separator="\n"~  >>
+
+list(value) ::= <<~value:{it|~it~};separator="\n"~  >>
+
+single(value) ::= <<~value~  >>
+
+ParameterTests() ::= <<Test the 3 types of parameters:
+
+* Single value 
+* List values
+* Key-Value list values
+
+Test conditional parsing
+
+Test complex combination of all types >>
+
+allTypes(single,list,kvList,cond1,cond2) ::= <<A single value, ~single~, 
+then a list ~list:{it|~it~};separator=","~, 
+and a kv-list : ~kvList:{it|~it.name~:~it.value~};separator=","~
+
+If expression ~conditional(cond1,cond2)~ >>
+
+conditional(condition1,condition2) ::= <<~if(condition1)~condition1: ~condition1~~elseif(condition2)~isCondition2~else~~endif~ >>
+
+complex(list,condition1,condition2) ::= <<test ~if(list)~~list:{it|~it.name~ ~it.value~(~if(condition1)~1~elseif(condition2)~2~else~NULL~endif~)};separator="\n"~~endif~  >>
+
+embeddedKVConditional(fields,PROP) ::= <<~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~ >>
+
+Patterns(isPublic,isPrivate,scope) ::= <<Patterns for templates:
+
+Avoid to many if-elseifs:
+
+~if(isPublic)~public ~elseif(isPrivate)~private ~endif~ class {}
+
+cleaner solution:
+
+~scope~ class {}
+
+and set scope = "public"|"private" in generator (Use of STEnums is perfect for this:)
+
+STEnumExample:
+
+classDeclaration.addModifiers(Modifiers.PUBLIC).addModifiers(Modifiers.PRIVATE)
+
+With static imports:
+
+classDeclaration.addModifiers(PUBLIC).addModifiers(PRIVATE)  >>
+
+Temp(yolo,yys) ::= <<lol ~yolo~
+
+class test
+
+xxxxx ~yys:{it|~it~};separator=","~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

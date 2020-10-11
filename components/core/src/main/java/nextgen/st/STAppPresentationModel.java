@@ -118,10 +118,10 @@ public class STAppPresentationModel {
       return Optional.of(name);
    }
 
-   public static void deleteSTGFile(STGDirectory stgDirectory, String name) {
-      final File stgFile = new File(stgDirectory.getPath(), name + ".json");
+   public static void deleteSTGFile(String name) {
+      final File stgFile = new File(AppModel.getInstance().getTemplateDir(), name + ".json");
       if (stgFile.exists())
-         stgFile.renameTo(new File(stgDirectory.getPath(), name + ".json.deleted"));
+         stgFile.renameTo(new File(AppModel.getInstance().getTemplateDir(), name + ".json.deleted"));
    }
 
 
@@ -301,6 +301,7 @@ public class STAppPresentationModel {
 
    public ImageIcon loadIcon(String iconName) {
       return loadIcon(iconName, "16x16");
+//      return loadIcon(iconName, "");
    }
 
    public ImageIcon loadIcon(String iconName, String dimension) {
@@ -318,6 +319,12 @@ public class STAppPresentationModel {
 
    public Pair<STArgument, STValue> newSTArgument(STParameter stParameter, String value) {
       final STValue stValue = newSTValue(value);
+      final STArgument stArgument = db.newSTArgument(stParameter, stValue);
+      return new Pair<>(stArgument, stValue);
+   }
+
+   public Pair<STArgument, STValue> newSTArgument(STParameter stParameter, STModel stModel) {
+      final STValue stValue = newSTValue(stModel);
       final STArgument stArgument = db.newSTArgument(stParameter, stValue);
       return new Pair<>(stArgument, stValue);
    }
@@ -488,7 +495,6 @@ public class STAppPresentationModel {
    }
 
    public void save(STGroupModel stGroupModel) {
-
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
       if (parseResult.getErrors().count() == 0) {
@@ -649,45 +655,6 @@ public class STAppPresentationModel {
                                  .setBlockStmt(blockStmt)))
                , "tmp", className, new File("./components/core/src/main/java"));
       });
-   }
-
-   public void runJUnit(STModel model, STTemplate stTemplate, STModel project) {
-      if (stTemplate.getName().equals("ProjectGenerator") || stTemplate.getName().equals("Project")) {
-         doInTransaction(transaction -> {
-
-            final MavenNeo mavenDB = new MavenNeo(db);
-            final ProjectModel projectModel = mavenDB.newProjectModel(project);
-            final ProjectGeneratorModel generatorModel = mavenDB.newProjectGeneratorModel(model);
-
-            final String className = render(projectModel.getName());
-            final String packageName = render(projectModel.getPackageName());
-
-            final TestRunner testRunner = MavenPatterns.newTestRunner()
-                  .setName(className + System.currentTimeMillis())
-                  .setProjectName(className)
-                  .setPackageName(packageName);
-
-            projectModel.getGenerators()
-                  .map(stValue -> mavenDB.newProjectGeneratorModel(stValue.getStModel()))
-                  .forEach(projectGeneratorModel -> testRunner.addGenerators(render(projectGeneratorModel.getName()),
-                        !stTemplate.getName().equals("ProjectGenerator") || projectGeneratorModel.getUuid()
-                              .equals(generatorModel.getUuid())
-                  ));
-            try {
-
-               final Class<?> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(testRunner.getPackageName() + "." + testRunner
-                     .getName(), testRunner.toString());
-
-               final Method main = aClass.getDeclaredMethod("main", String[].class);
-               String[] params = null;
-               main.invoke(null, (Object) params);
-
-            } catch (Throwable t) {
-               t.printStackTrace();
-            }
-         });
-
-      }
    }
 
    public void undoLast() {
