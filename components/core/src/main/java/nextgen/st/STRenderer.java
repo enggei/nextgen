@@ -23,12 +23,12 @@ public class STRenderer {
    private final Set<STMapper> mappers = new LinkedHashSet<>();
 
    public STRenderer(Collection<STGroupModel> groupModels) {
-      setGroupModels(groupModels);
-   }
-
-   public void setGroupModels(Collection<STGroupModel> groupModels) {
       for (STGroupModel stGroupModel : groupModels)
          mappers.add(new STMapper(stGroupModel));
+   }
+
+   public void addGroupModel(nextgen.st.domain.STGroupModel stGroupModel) {
+      mappers.add(new nextgen.st.STRenderer.STMapper(stGroupModel));
    }
 
    public String render(STModel stModel) {

@@ -539,7 +539,7 @@ public class STModelNavigator extends JPanel {
 		return new AbstractAction(name) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionEventConsumer.accept(e);
+				SwingUtilities.invokeLater(() -> actionEventConsumer.accept(e));
 			}
 		};
 	}
@@ -575,6 +575,25 @@ public class STModelNavigator extends JPanel {
 
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTModel(nextgen.events.NewSTModel event) {
+		final nextgen.st.domain.STTemplate stTemplate = appModel().db.getSTTemplate(event.model);
+		treeModel
+				.find(STTemplateTreeNode.class, stTemplateTreeNode -> stTemplateTreeNode
+						.getModel()
+						.equals(stTemplate))
+				.ifPresent(stTemplateTreeNode -> {
+					treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model));
+				});
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTValue(nextgen.events.NewSTValue event) {
+		treeModel
+				.find(STValuesRootNode.class)
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.st.STModelNavigator.STValueTreeNode(event.model)));
 	}
 
 	public Set<nextgen.st.model.STValue> getSelectedValues() {
@@ -640,6 +659,12 @@ public class STModelNavigator extends JPanel {
 		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
 			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+			addNodeInSortedOrder(parent, child);
+			tree.scrollPathToVisible(child.getThisPath());
+			tree.setSelectionPath(child.getThisPath());
 		}
 
 		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {

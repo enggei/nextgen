@@ -93,6 +93,87 @@
         "argumentType" : "Object"
       } ]
     } ]
+  }, {
+    "uuid" : "57f00696-63ff-490f-a373-a5d758728253",
+    "name" : "MetaDomain",
+    "text" : "~name~\n\n~entities:{it|~it~};separator=\"\\n\"~\n\n~relations:{it|~it~};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "c88ef9a0-4edc-4989-b78f-21514eec85f6",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "1d3b5d47-2e7c-486f-8cab-392a9c642a41",
+      "name" : "entities",
+      "type" : "LIST",
+      "argumentType" : "MetaEntity"
+    }, {
+      "uuid" : "4c1da5f7-d4cf-4e6a-9dd7-3befda2d74c1",
+      "name" : "relations",
+      "type" : "LIST",
+      "argumentType" : "MetaRelation"
+    } ],
+    "children" : [ {
+      "uuid" : "b7b0daa3-a069-4ccf-a7b1-b07226a3b4c9",
+      "name" : "MetaEntity",
+      "text" : "~name~\n\t~properties:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "ba083dca-26c8-408d-a6a7-fd86b32750b5",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "40ea8d2a-cef5-4496-abc1-ee3cd0749e86",
+        "name" : "properties",
+        "type" : "LIST",
+        "argumentType" : "MetaProperty"
+      } ]
+    }, {
+      "uuid" : "64955d8a-138e-4bf9-8dc8-4f1b85ff6063",
+      "name" : "MetaRelation",
+      "text" : "~name~\n\t(~src:{it|~it~};separator=\", \"~) -> ~type~ -> (~dst:{it|~it~};separator=\", \"~)\n\t~properties:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "8a56436d-6e89-44ce-be7f-9d7d93ea5142",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "e3b595fe-477c-4409-8681-71877631152d",
+        "name" : "src",
+        "type" : "LIST",
+        "argumentType" : "MetaEntity"
+      }, {
+        "uuid" : "e6799361-9a0f-486f-8b76-1736cb7cb359",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "RelationType"
+      }, {
+        "uuid" : "9a8c241e-76d2-451e-ac13-68797f399139",
+        "name" : "dst",
+        "type" : "LIST",
+        "argumentType" : "MetaEntity"
+      }, {
+        "uuid" : "5433c27c-42ec-4380-abb2-2d630539ab99",
+        "name" : "properties",
+        "type" : "LIST",
+        "argumentType" : "MetaProperty"
+      } ]
+    }, {
+      "uuid" : "f7a8bc60-5ac1-43d7-8234-9071185481db",
+      "name" : "MetaProperty",
+      "text" : "~name~ ~type~ ",
+      "parameters" : [ {
+        "uuid" : "023a2627-1396-4f0d-8bdf-487863036b42",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "36c801f0-f033-46c5-af03-afdae2cd9f75",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
   } ],
   "enums" : [ {
     "uuid" : "85f93ad0-6b67-41ac-9211-4f5c88ea666c",

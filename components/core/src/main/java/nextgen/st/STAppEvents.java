@@ -2,204 +2,230 @@ package nextgen.st;
 
 public class STAppEvents {
 
-   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppEvents.class);
 
-   public static void postSTModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
-      log.info("post STModelEditorTreeNodeClicked");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new STModelEditorTreeNodeClicked(stModel));
-   }
+	public static void postSTModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
+		log.info("post STModelEditorTreeNodeClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelEditorTreeNodeClicked(stModel));
+	}
 
-   public static class STModelEditorTreeNodeClicked {
+	public static class STModelEditorTreeNodeClicked {
 
-      public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.model.STModel stModel;
 
-      public STModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
-         this.stModel = stModel;
-      }
-   }
+		public STModelEditorTreeNodeClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 
-   public static void postSTArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
-      log.info("post STArgumentAdded");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentAdded(stModel, stArgument));
-   }
+	public static void postSTModelEditorSTParameterTreeNodeClicked() {
+		log.info("post STModelEditorSTParameterTreeNodeClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelEditorSTParameterTreeNodeClicked());
+	}
 
-   public static class STArgumentAdded {
+	public static class STModelEditorSTParameterTreeNodeClicked {
 
-      public final nextgen.st.model.STModel stModel;
-      public final nextgen.st.model.STArgument stArgument;
 
-      public STArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
-         this.stModel = stModel;
-         this.stArgument = stArgument;
-      }
-   }
+		public STModelEditorSTParameterTreeNodeClicked() {
+		}
+	}
 
-   public static void postCanvasSTModelClicked(nextgen.st.model.STModel stModel) {
-      log.info("post CanvasSTModelClicked");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(stModel));
-   }
+	public static void postNewSTGroupModel(nextgen.st.domain.STGroupModel model) {
+		log.info("post NewSTGroupModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTGroupModel(model));
+	}
 
-   public static class CanvasSTModelClicked {
+	public static class NewSTGroupModel {
 
-      public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.domain.STGroupModel model;
 
-      public CanvasSTModelClicked(nextgen.st.model.STModel stModel) {
-         this.stModel = stModel;
-      }
-   }
+		public NewSTGroupModel(nextgen.st.domain.STGroupModel model) {
+			this.model = model;
+		}
+	}
 
-   public static void postSTModelUpdated(nextgen.st.model.STModel stModel) {
-      log.info("post STModelUpdated");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new STModelUpdated(stModel));
-   }
+	public static void postSTArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+		log.info("post STArgumentAdded");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentAdded(stModel, stArgument));
+	}
 
-   public static class STModelUpdated {
+	public static class STArgumentAdded {
 
-      public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.model.STModel stModel;
+		public final nextgen.st.model.STArgument stArgument;
 
-      public STModelUpdated(nextgen.st.model.STModel stModel) {
-         this.stModel = stModel;
-      }
-   }
+		public STArgumentAdded(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument) {
+			this.stModel = stModel;
+			this.stArgument = stArgument;
+		}
+	}
 
-   public static void postNewSTModel(nextgen.st.model.STModel sTModel) {
-      log.info("post NewSTModel");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTModel(sTModel));
-   }
+	public static void postCanvasSTModelClicked(nextgen.st.model.STModel stModel) {
+		log.info("post CanvasSTModelClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(stModel));
+	}
 
-   public static void postRemovedSTModel(java.lang.String uuid) {
-      log.info("post RemovedSTModel");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTModel(uuid));
-   }
+	public static class CanvasSTModelClicked {
 
-   public static void postOpenSTModel(nextgen.st.model.STModel sTModel) {
-      log.info("post OpenSTModel");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(sTModel));
-   }
+		public final nextgen.st.model.STModel stModel;
 
-   public static class NewSTModel {
+		public CanvasSTModelClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 
-      public final nextgen.st.model.STModel sTModel;
+	public static void postSTModelUpdated(nextgen.st.model.STModel stModel) {
+		log.info("post STModelUpdated");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelUpdated(stModel));
+	}
 
-      public NewSTModel(nextgen.st.model.STModel sTModel) {
-         this.sTModel = sTModel;
-      }
-   }
+	public static class STModelUpdated {
 
-   public static class RemovedSTModel {
+		public final nextgen.st.model.STModel stModel;
 
-      public final java.lang.String uuid;
+		public STModelUpdated(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 
-      public RemovedSTModel(java.lang.String uuid) {
-         this.uuid = uuid;
-      }
-   }
+	public static void postNewSTModel(nextgen.st.model.STModel sTModel) {
+		log.info("post NewSTModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTModel(sTModel));
+	}
 
-   public static class OpenSTModel {
+	public static void postRemovedSTModel(java.lang.String uuid) {
+		log.info("post RemovedSTModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTModel(uuid));
+	}
 
-      public final nextgen.st.model.STModel sTModel;
+	public static void postOpenSTModel(nextgen.st.model.STModel sTModel) {
+		log.info("post OpenSTModel");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(sTModel));
+	}
 
-      public OpenSTModel(nextgen.st.model.STModel sTModel) {
-         this.sTModel = sTModel;
-      }
-   }
+	public static class NewSTModel {
 
-   public static void postNewSTValue(nextgen.st.model.STValue sTValue) {
-      log.info("post NewSTValue");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTValue(sTValue));
-   }
+		public final nextgen.st.model.STModel sTModel;
 
-   public static void postRemovedSTValue(java.lang.String uuid) {
-      log.info("post RemovedSTValue");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTValue(uuid));
-   }
+		public NewSTModel(nextgen.st.model.STModel sTModel) {
+			this.sTModel = sTModel;
+		}
+	}
 
-   public static void postOpenSTValue(nextgen.st.model.STValue sTValue) {
-      log.info("post OpenSTValue");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTValue(sTValue));
-   }
+	public static class RemovedSTModel {
 
-   public static class NewSTValue {
+		public final java.lang.String uuid;
 
-      public final nextgen.st.model.STValue sTValue;
+		public RemovedSTModel(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
 
-      public NewSTValue(nextgen.st.model.STValue sTValue) {
-         this.sTValue = sTValue;
-      }
-   }
+	public static class OpenSTModel {
 
-   public static class RemovedSTValue {
+		public final nextgen.st.model.STModel sTModel;
 
-      public final java.lang.String uuid;
+		public OpenSTModel(nextgen.st.model.STModel sTModel) {
+			this.sTModel = sTModel;
+		}
+	}
 
-      public RemovedSTValue(java.lang.String uuid) {
-         this.uuid = uuid;
-      }
-   }
+	public static void postNewSTValue(nextgen.st.model.STValue sTValue) {
+		log.info("post NewSTValue");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTValue(sTValue));
+	}
 
-   public static class OpenSTValue {
+	public static void postRemovedSTValue(java.lang.String uuid) {
+		log.info("post RemovedSTValue");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTValue(uuid));
+	}
 
-      public final nextgen.st.model.STValue sTValue;
+	public static void postOpenSTValue(nextgen.st.model.STValue sTValue) {
+		log.info("post OpenSTValue");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTValue(sTValue));
+	}
 
-      public OpenSTValue(nextgen.st.model.STValue sTValue) {
-         this.sTValue = sTValue;
-      }
-   }
+	public static class NewSTValue {
 
-   public static void postNewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
-      log.info("post NewSTTemplate");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTTemplate(sTTemplate));
-   }
+		public final nextgen.st.model.STValue sTValue;
 
-   public static void postRemovedSTTemplate(java.lang.String uuid) {
-      log.info("post RemovedSTTemplate");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTTemplate(uuid));
-   }
+		public NewSTValue(nextgen.st.model.STValue sTValue) {
+			this.sTValue = sTValue;
+		}
+	}
 
-   public static void postOpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
-      log.info("post OpenSTTemplate");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTTemplate(sTTemplate));
-   }
+	public static class RemovedSTValue {
 
-   public static class NewSTTemplate {
+		public final java.lang.String uuid;
 
-      public final nextgen.st.domain.STTemplate sTTemplate;
+		public RemovedSTValue(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
 
-      public NewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
-         this.sTTemplate = sTTemplate;
-      }
-   }
+	public static class OpenSTValue {
 
-   public static class RemovedSTTemplate {
+		public final nextgen.st.model.STValue sTValue;
 
-      public final java.lang.String uuid;
+		public OpenSTValue(nextgen.st.model.STValue sTValue) {
+			this.sTValue = sTValue;
+		}
+	}
 
-      public RemovedSTTemplate(java.lang.String uuid) {
-         this.uuid = uuid;
-      }
-   }
+	public static void postNewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+		log.info("post NewSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTTemplate(sTTemplate));
+	}
 
-   public static class OpenSTTemplate {
+	public static void postRemovedSTTemplate(java.lang.String uuid) {
+		log.info("post RemovedSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new RemovedSTTemplate(uuid));
+	}
 
-      public final nextgen.st.domain.STTemplate sTTemplate;
+	public static void postOpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+		log.info("post OpenSTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTTemplate(sTTemplate));
+	}
 
-      public OpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
-         this.sTTemplate = sTTemplate;
-      }
-   }
+	public static class NewSTTemplate {
 
-   public static void postSTModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
-      log.info("post STModelTreeNodeClicked");
-      org.greenrobot.eventbus.EventBus.getDefault().post(new STModelTreeNodeClicked(stModel));
-   }
+		public final nextgen.st.domain.STTemplate sTTemplate;
 
-   public static class STModelTreeNodeClicked {
+		public NewSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+			this.sTTemplate = sTTemplate;
+		}
+	}
 
-      public final nextgen.st.model.STModel stModel;
+	public static class RemovedSTTemplate {
 
-      public STModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
-         this.stModel = stModel;
-      }
-   }
+		public final java.lang.String uuid;
+
+		public RemovedSTTemplate(java.lang.String uuid) {
+			this.uuid = uuid;
+		}
+	}
+
+	public static class OpenSTTemplate {
+
+		public final nextgen.st.domain.STTemplate sTTemplate;
+
+		public OpenSTTemplate(nextgen.st.domain.STTemplate sTTemplate) {
+			this.sTTemplate = sTTemplate;
+		}
+	}
+
+	public static void postSTModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
+		log.info("post STModelTreeNodeClicked");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STModelTreeNodeClicked(stModel));
+	}
+
+	public static class STModelTreeNodeClicked {
+
+		public final nextgen.st.model.STModel stModel;
+
+		public STModelTreeNodeClicked(nextgen.st.model.STModel stModel) {
+			this.stModel = stModel;
+		}
+	}
 
 }

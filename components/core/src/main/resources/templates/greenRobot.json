@@ -5,12 +5,12 @@
   "templates" : [ {
     "uuid" : "56afaa61-e68a-4ded-9563-4e9c38e6320d",
     "name" : "event",
-    "text" : "public ~if(isStatic)~static ~endif~class ~name~ {\n\n\t~fields:{it|public final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n} ",
+    "text" : "package ~packageName~;\n\npublic final class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\tpublic static void post(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tlog.info(\"post ~name~\");\n\t\torg.greenrobot.eventbus.EventBus.getDefault().post(new ~name~(~fields:{it|~it.name~};separator=\", \"~));\n\t}\n\n\t~fields:{it|public final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n} ",
     "parameters" : [ {
-      "uuid" : "b362d005-d62f-4743-8b03-92648a7d26a3",
-      "name" : "isStatic",
+      "uuid" : "29d943da-0fde-404a-a0fa-26ccf96f2ab2",
+      "name" : "packageName",
       "type" : "SINGLE",
-      "argumentType" : "Boolean"
+      "argumentType" : "Object"
     }, {
       "uuid" : "b8517fb6-3686-419f-82fc-8018b50ebe82",
       "name" : "name",
@@ -76,84 +76,5 @@
     "name" : "maven",
     "text" : "<dependency>\n\t<groupId>org.greenrobot</groupId>\n\t<artifactId>eventbus</artifactId>\n\t<version>3.2.0</version>\n</dependency> ",
     "parameters" : [ ]
-  }, {
-    "uuid" : "1342b32f-faf1-4ae7-8163-93e52f758c16",
-    "name" : "EventManager",
-    "text" : "package ~package~;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~events:{it|~it.postMethod~};separator=\"\\n\\n\"~\n\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n} ",
-    "parameters" : [ {
-      "uuid" : "2f81fb0d-aeb9-4709-9871-6a3133f24d9f",
-      "name" : "package",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "34c47341-ed46-4275-b01c-f638bb21fa50",
-      "name" : "imports",
-      "type" : "LIST",
-      "argumentType" : "Object"
-    }, {
-      "uuid" : "d936f2cb-68cd-4754-abe6-b0ebd80f3651",
-      "name" : "name",
-      "type" : "SINGLE",
-      "argumentType" : "String"
-    }, {
-      "uuid" : "6c261827-353d-4113-8df7-f5c21d09f29e",
-      "name" : "events",
-      "type" : "KVLIST",
-      "argumentType" : "Object",
-      "keys" : [ {
-        "uuid" : "56f29d46-aa82-4a14-9238-34868421325a",
-        "name" : "declaration",
-        "argumentType" : "Event"
-      }, {
-        "uuid" : "c135cf5f-86be-4716-9d63-73b567738a07",
-        "name" : "postMethod",
-        "argumentType" : "PostEventMethod"
-      } ]
-    } ],
-    "children" : [ {
-      "uuid" : "88b5e3c2-9692-453a-a35e-c630a41c10f7",
-      "name" : "PostEventMethod",
-      "text" : "public static void post~eventName~(~parameters:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\tlog.info(\"post ~eventName~\");\n\torg.greenrobot.eventbus.EventBus.getDefault().post(new ~eventName~(~parameters:{it|~it.name~};separator=\", \"~));\n} ",
-      "parameters" : [ {
-        "uuid" : "440c8335-a7f1-496f-9d97-0bc9af62d240",
-        "name" : "eventName",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "c70b9c11-f5bc-443e-ac8e-ab3cd3d9eb57",
-        "name" : "parameters",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "5e8547e3-9fdc-497d-b0ca-0c945bb29ba3",
-          "name" : "type",
-          "argumentType" : "Object"
-        }, {
-          "uuid" : "4b71de14-ca98-4353-b181-f2c131252935",
-          "name" : "name",
-          "argumentType" : "String"
-        } ]
-      } ]
-    }, {
-      "uuid" : "a263c15f-fb87-46f8-9426-6c914e4b23d0",
-      "name" : "CallPostEventMethod",
-      "text" : "~eventManager~.post~event~(~arguments:{it|~it~};separator=\", \"~); ",
-      "parameters" : [ {
-        "uuid" : "51b0010a-599a-454b-95ca-5bbe14876fc7",
-        "name" : "eventManager",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "b172b4e1-5eda-43cb-9b48-3a84268512cc",
-        "name" : "event",
-        "type" : "SINGLE",
-        "argumentType" : "String"
-      }, {
-        "uuid" : "8970d2e4-1d0b-4532-8f7a-1d15756bf6d5",
-        "name" : "arguments",
-        "type" : "LIST",
-        "argumentType" : "Object"
-      } ]
-    } ]
   } ]
 }
