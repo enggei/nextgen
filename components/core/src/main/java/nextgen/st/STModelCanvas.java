@@ -45,6 +45,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	private final CanvasInputEventsHandler canvasInputEventsHandler = new CanvasInputEventsHandler();
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
 
+	private final java.util.concurrent.atomic.AtomicInteger fileTypeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
+	private final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 
 	public STModelCanvas() {
 		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024));
@@ -75,13 +77,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
-		addSTModelNode(event.sTModel, appModel().findSTTemplateByUuid(event.sTModel.getStTemplate()));
+	public void onNewSTModel(nextgen.events.NewSTModel event) {
+		addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onOpenSTModel(nextgen.st.STAppEvents.OpenSTModel event) {
-		addSTModelNode(event.sTModel, appModel().findSTTemplateByUuid(event.sTModel.getStTemplate()));
+	public void onOpenSTModel(nextgen.events.OpenSTModel event) {
+		addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));
 		appModel().getWorkspace().showCanvas();
 	}
 
@@ -1820,6 +1822,16 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				appModel().doInTransaction(tx -> {
+
+						final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
+
+						final String[] pathTypes = thisCanvas().appModel().db.findAllSTFile()
+																						.filter(stFile -> stFile.getPath() != null)
+																						.filter(stFile -> stFile.getPath().getValue() != null)
+																						.map(stFile -> stFile.getPath().getValue())
+																						.distinct()
+																						.toArray(String[]::new);
+
 						final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
 						fieldMap.put("name", SwingUtil.newTextField(getModel().getName() == null ? "" : getModel().getName().getValue(), 15));
 						fieldMap.put("type", SwingUtil.newTextField(getModel().getType() == null ? "" : getModel().getType().getValue(), 15));
@@ -1830,6 +1842,22 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
 								inputPanel.add(new JLabel(fieldEntry.getKey()));
 								inputPanel.add(fieldEntry.getValue());
+
+							if (fieldEntry.getKey().equals("type")) {
+								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+									@Override
+									public void mouseClicked(java.awt.event.MouseEvent e) {
+										fieldEntry.getValue().setText(fileTypes[fileTypeIndex.incrementAndGet() % fileTypes.length]);
+									}
+								});
+							} else if (fieldEntry.getKey().equals("path")) {
+								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+									@Override
+									public void mouseClicked(java.awt.event.MouseEvent e) {
+										fieldEntry.getValue().setText(pathTypes[pathIndex.incrementAndGet() % pathTypes.length]);
+									}
+								});
+							}
 						}
 						nextgen.utils.SwingUtil.showDialog(inputPanel, thisCanvas(), "Edit", new nextgen.utils.SwingUtil.ConfirmAction() {
 								@Override
@@ -2425,7 +2453,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		protected void onNodeLeftClick(PInputEvent event) {
 			super.onNodeLeftClick(event);
 			appModel().doLaterInTransaction(tx -> setText(stTemplate.getName() + " : \n" + appModel().render(getModel())));
-			nextgen.st.STAppEvents.postCanvasSTModelClicked(getModel());
+			nextgen.events.CanvasSTModelClicked.post(getModel());
 		}
 
 
@@ -2639,10 +2667,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				thisCanvas().appModel().doLaterInTransaction(tx -> {
 
-					final java.util.concurrent.atomic.AtomicInteger typeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 					final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
 
-					final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 					final String[] pathTypes = thisCanvas().appModel().db.findAllSTFile()
 								.filter(stFile -> stFile.getPath() != null)
 								.filter(stFile -> stFile.getPath().getValue() != null)
@@ -2662,13 +2688,15 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							inputPanel.add(fieldEntry.getValue());
 
 							if (fieldEntry.getKey().equals("type")) {
+								fieldEntry.getValue().setText(fileTypes[fileTypeIndex.get() % fileTypes.length]);
 								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
 									@Override
 									public void mouseClicked(java.awt.event.MouseEvent e) {
-											fieldEntry.getValue().setText(fileTypes[typeIndex.incrementAndGet() % fileTypes.length]);
+											fieldEntry.getValue().setText(fileTypes[fileTypeIndex.incrementAndGet() % fileTypes.length]);
 									}
 								});
 							} else if (fieldEntry.getKey().equals("path")) {
+								fieldEntry.getValue().setText(pathTypes[pathIndex.get() % pathTypes.length]);
 								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
 									@Override
 									public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -3083,7 +3111,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(transaction -> nextgen.st.STAppEvents.postOpenSTTemplate(stTemplate));
+				appModel().doLaterInTransaction(transaction -> nextgen.events.OpenSTTemplate.post(stTemplate));
 			}
 		}
 

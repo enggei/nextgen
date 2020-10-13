@@ -1,8 +1,6 @@
 package nextgen.swing;
 
 import nextgen.st.STAppPresentationModel;
-import nextgen.st.STModelNavigator;
-import nextgen.st.STTemplateNavigator;
 import nextgen.st.STWorkspace;
 import nextgen.swing.config.AppConfig;
 import nextgen.swing.config.AppConfigJsonFactory;
@@ -16,8 +14,6 @@ import java.io.IOException;
 public class STApp extends JFrame {
 
    final STAppPresentationModel presentationModel;
-   final STTemplateNavigator navigator;
-   final STModelNavigator stModelNavigator;
    final STWorkspace workspace;
 
    public STApp(AppModel appModel) throws HeadlessException {
@@ -26,14 +22,12 @@ public class STApp extends JFrame {
       presentationModel = appModel.getSTAppPresentationModel();
 
       workspace = presentationModel.getWorkspace();
-      navigator = new STTemplateNavigator(workspace);
-      stModelNavigator = new STModelNavigator(workspace);
 
       final JPanel contentPanel = new JPanel(new BorderLayout());
       contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-      contentPanel.add(navigator, BorderLayout.WEST);
+      contentPanel.add(workspace.getTemplateNavigator(), BorderLayout.WEST);
       contentPanel.add(workspace, BorderLayout.CENTER);
-      contentPanel.add(stModelNavigator, BorderLayout.EAST);
+      contentPanel.add(workspace.getModelNavigator(), BorderLayout.EAST);
       contentPanel.setSize(new Dimension(1600, 1200));
       add(contentPanel, BorderLayout.CENTER);
 
@@ -59,7 +53,8 @@ public class STApp extends JFrame {
       final AppConfig appConfig = args.length == 0 ? AppConfigJsonFactory.newAppConfig() : AppConfigJsonFactory.newAppConfig(new File(args[0]));
       final String root = "/home/goe/projects/nextgen/components/core";
 
-      AppModel.getInstance()
+      AppModel
+            .getInstance()
             .setFontSize(appConfig.getFontSize(24))
             .setFontName(appConfig.getFontName("InputMono"))
             .setAppSize(new Dimension(appConfig.getAppWidth(1600), appConfig.getAppHeight(1200)))
@@ -72,6 +67,8 @@ public class STApp extends JFrame {
             .setRootDir(appConfig.getRootDir("."))
             .setTitle(appConfig.getTitle("STApp"));
 
-      return AppModel.getInstance().setSTAppPresentationModel(new STAppPresentationModel());
+      return AppModel
+            .getInstance()
+            .setSTAppPresentationModel(new STAppPresentationModel());
    }
 }

@@ -56,9 +56,9 @@ public class STModelEditor extends JPanel {
    }
 
    @org.greenrobot.eventbus.Subscribe()
-   public void onSTModelEditorTreeNodeClicked(nextgen.st.STAppEvents.STModelEditorTreeNodeClicked event) {
+   public void onSTModelEditorTreeNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
       editors.setSelectedComponent(editorComponent);
-      formComponent.setModel(event.stModel);
+      formComponent.setModel(event.model);
    }
 
    public void addActionsToPopup() {

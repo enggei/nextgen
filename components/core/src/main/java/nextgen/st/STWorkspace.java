@@ -14,15 +14,29 @@ import java.util.function.Predicate;
 
 public class STWorkspace extends JTabbedPane {
 
+	private STTemplateNavigator templateNavigator;
+	private STModelNavigator modelNavigator;
+
 	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
-		findCanvas();
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
+		templateNavigator = new STTemplateNavigator(this);
+		modelNavigator = new STModelNavigator(this);
 	}
 
+	public STTemplateNavigator getTemplateNavigator() {
+			return templateNavigator;
+		}
+
+
+	public STModelNavigator getModelNavigator() {
+			return modelNavigator;
+		}
+
+
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTModelTreeNodeClicked(STAppEvents.STModelTreeNodeClicked event) {
-		setSelectedComponent(findModelEditor(event.stModel, () -> appModel().findSTTemplateByUuid(event.stModel.getStTemplate())));
+	public void onSTModelCanvasNodeClicked(nextgen.events.STModelTreeNodeClicked event) {
+		setSelectedComponent(findModelEditor(event.model, () -> appModel().findSTTemplateByUuid(event.model.getStTemplate())));
 	}
 
 	private STAppPresentationModel appModel() {

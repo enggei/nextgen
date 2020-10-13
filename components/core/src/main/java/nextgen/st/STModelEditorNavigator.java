@@ -74,7 +74,7 @@ public class STModelEditorNavigator extends JPanel {
 						if (lastPathComponent instanceof STModelTreeNode) {
 							final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
 							editor.setText(appModel().render(selectedNode.getModel()), null);
-							STAppEvents.postSTModelEditorTreeNodeClicked(selectedNode.getModel());
+							nextgen.events.STModelEditorTreeNodeClicked.post(selectedNode.getModel());
 						} else if (lastPathComponent instanceof STValueTreeNode) {
 							final STValueTreeNode selectedNode = (STValueTreeNode) lastPathComponent;
 							editor.setText(appModel().render(selectedNode.getModel()), selectedNode);
@@ -124,7 +124,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		public BaseTreeNode(T model, ImageIcon icon) {
 			setUserObject(model);
-			this.label = model.toString();
+			setLabel(model.toString());
 			this.icon = icon;
 			this.tooltip = "";
 		}
@@ -132,6 +132,11 @@ public class STModelEditorNavigator extends JPanel {
 		@SuppressWarnings("unchecked")
 		public T getModel() {
 			return (T) getUserObject();
+		}
+
+		protected void setLabel(String label) {
+			this.label = label;
+			if (this.label.length() == 0) this.label = "[EMPTY]";
 		}
 
 		public String getLabel() {
@@ -256,7 +261,7 @@ public class STModelEditorNavigator extends JPanel {
 
 			this.stTemplate = stTemplate;
 			this.stArgument = stArgument;
-			this.label = appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
+			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -271,7 +276,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]");
+			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -325,7 +330,7 @@ public class STModelEditorNavigator extends JPanel {
 			super(model, appModel().loadIcon("sq-orange"));
 
 			this.stArgument = stArgument;
-			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -337,7 +342,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -385,7 +390,7 @@ public class STModelEditorNavigator extends JPanel {
 			super(model, null);
 
 			this.stParameter = stParameter;
-			this.label = appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
+			setLabel(appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
 
 			stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()
@@ -400,7 +405,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName);
+			setLabel(appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -484,7 +489,7 @@ public class STModelEditorNavigator extends JPanel {
 
 			this.stArgument = stArgument;
 			this.stParameterKey = stParameterKey;
-			this.label = stParameterKey.getName();
+			setLabel(stParameterKey.getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -508,7 +513,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = stParameterKey.getName();
+			setLabel(stParameterKey.getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -568,7 +573,7 @@ public class STModelEditorNavigator extends JPanel {
 			super(model, null);
 
 			this.stModel = stModel;
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -588,7 +593,7 @@ public class STModelEditorNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -721,17 +726,28 @@ public class STModelEditorNavigator extends JPanel {
 									final STValue stValue = appModel().newSTValue(selectedModel);
 									final STArgument newArgument = appModel().newSTArgument(getModel(), stValue);
 									stModel.addArguments(newArgument);
-									addAndSelectChild(new STValueTreeNode(stValue, newArgument));
+									addAndSelectChild(new STModelTreeNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate()), newArgument));
 								});
 							}));
 						});
 
+						appModel().getSelectedSTTemplates().forEach(selectedValue -> {
+							actions.add(newAction("Add new " + selectedValue.getName(), actionEvent -> {
+								appModel().doLaterInTransaction(transaction -> {
+									final nextgen.st.model.STModel stModel = appModel().newSTModel(selectedValue);
+									final org.javatuples.Pair<nextgen.st.model.STArgument, nextgen.st.model.STValue> newArgument =  appModel().newSTArgument(getModel(), stModel);
+									stModel.addArguments(newArgument.getValue0());
+									addAndSelectChild(new STModelTreeNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate()), newArgument.getValue0()));
+								});
+							}));
+						});
+									
 						if (fromClipboard != null && fromClipboard.startsWith("stmodel-")) {
 							actions.add(newAction("Add stModel " + fromClipboard.substring(8), actionEvent -> {
 								appModel().doLaterInTransaction(transaction -> {
 									final org.javatuples.Pair<nextgen.st.model.STArgument, nextgen.st.model.STValue> newArgument = appModel().newSTArgument(getModel(), appModel().db.cloneSTModel(fromClipboard.substring(8)));
 									stModel.addArguments(newArgument.getValue0());
-									addAndSelectChild(new STValueTreeNode(newArgument.getValue1(), newArgument.getValue0()));
+									addAndSelectChild(new STModelTreeNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate()), newArgument.getValue0()));
 								});
 							}));
 						} else {
@@ -764,7 +780,7 @@ public class STModelEditorNavigator extends JPanel {
 		return new AbstractAction(name) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionEventConsumer.accept(e);
+				SwingUtilities.invokeLater(() -> actionEventConsumer.accept(e));
 			}
 		};
 	}
@@ -798,12 +814,20 @@ public class STModelEditorNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	public <T> java.util.stream.Stream<T> getSelectedNodes() {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.map(treePath -> (T) treePath.getLastPathComponent());
+	}
+
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTArgumentAdded(STAppEvents.STArgumentAdded event) {
+	public void onSTArgumentAdded(nextgen.events.NewSTArgument event) {
 		treeModel
 				.find(STModelTreeNode.class, treeNode -> treeNode.getModel().equals(event.stModel))
 				.flatMap(stModelTreeNode -> treeModel.find(stModelTreeNode, STParameterTreeNode.class, baseTreeNode -> ((STParameterTreeNode) baseTreeNode)
@@ -863,6 +887,12 @@ public class STModelEditorNavigator extends JPanel {
 		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
 			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+			addNodeInSortedOrder(parent, child);
+			tree.scrollPathToVisible(child.getThisPath());
+			tree.setSelectionPath(child.getThisPath());
 		}
 
 		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {

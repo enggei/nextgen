@@ -441,6 +441,18 @@ public class STAppPresentationModel {
       return db.newSTModel(node);
    }
 
+   public STModel newSTModel(STTemplate stTemplate) {
+      final nextgen.st.model.STModel stModel = db.newSTModel(findSTGroup(stTemplate).getUuid(), stTemplate);
+      nextgen.events.NewSTModel.post(stModel);
+      return stModel;
+   }
+
+   public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
+      final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
+      nextgen.events.NewSTModel.post(stModel);
+      return stModel;
+   }
+
    public nextgen.st.domain.STTemplate newSTTemplate(String name, String text, nextgen.st.domain.STGroupModel parent) {
       final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory
             .newSTTemplate()
@@ -720,9 +732,17 @@ public class STAppPresentationModel {
    }
 
    public void setMultiple(JComponent owner, STModel model, STTemplate stTemplate) {
+
+      final java.util.concurrent.atomic.AtomicInteger modelIndex = new java.util.concurrent.atomic.AtomicInteger(0);
+      final STModel[] existingSTModels = db
+            .findAllSTModelByStTemplate(stTemplate.getUuid())
+            .distinct()
+            .toArray(STModel[]::new);
+
       final Map<String, JTextField> fieldMap = new LinkedHashMap<>();
       final Map<String, STParameter> parameterMap = new LinkedHashMap<>();
       final Map<String, STArgument> argumentMap = new LinkedHashMap<>();
+      final Map<String, List<String>> valuesMap = new LinkedHashMap<>();
 
       stTemplate
             .getParameters()
@@ -737,13 +757,28 @@ public class STAppPresentationModel {
                            .equals(stParameter
                                  .getUuid()))
                      .findFirst();
-               final String content = argument.isPresent() ? render(argument
-                     .get()
-                     .getValue()
-                     .getStModel()) : "";
+               final String content = argument.isPresent() ? render(argument.get()) : "";
                fieldMap.put(stParameter.getName(), newTextField(content, 15));
                parameterMap.put(stParameter.getName(), stParameter);
                argument.ifPresent(stArgument -> argumentMap.put(stParameter.getName(), stArgument));
+
+
+               for (nextgen.st.model.STModel existingSTModel : existingSTModels) {
+                  existingSTModel
+                        .getArguments()
+                        .filter(stArgument -> stArgument
+                              .getStParameter()
+                              .equals(stParameter.getUuid()))
+                        .filter(stArgument -> stArgument.getValue() != null)
+                        .findFirst()
+                        .ifPresent(stArgument -> {
+                           valuesMap.putIfAbsent(stParameter.getName(), new java.util.ArrayList<>());
+                           valuesMap
+                                 .get(stParameter.getName())
+                                 .add(render(stArgument));
+                        });
+               }
+
             });
 
       final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
@@ -751,6 +786,13 @@ public class STAppPresentationModel {
       for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
          inputPanel.add(new JLabel(fieldEntry.getKey()));
          inputPanel.add(fieldEntry.getValue());
+
+         fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+               fieldEntry.getValue().setText(valuesMap.get(fieldEntry.getKey()).get(modelIndex.incrementAndGet() % valuesMap.get(fieldEntry.getKey()).size()));
+            }
+         });
       }
       SwingUtil.showDialog(inputPanel, owner, "Set Multiple", new SwingUtil.ConfirmAction() {
          @Override
@@ -836,6 +878,13 @@ public class STAppPresentationModel {
             .map(STModelCanvas.BaseCanvasNode::getModel);
    }
 
+   public Stream<STTemplate> getSelectedSTTemplates() {
+      return getWorkspace()
+            .getTemplateNavigator()
+            .getSelectedNodes(STTemplateNavigator.STTemplateTreeNode.class)
+            .map(STTemplateNavigator.STTemplateTreeNode::getModel);
+   }
+
    public Stream<STModel> getSelectedSTModels() {
       return getWorkspace()
             .findCanvas()
@@ -879,13 +928,6 @@ public class STAppPresentationModel {
 
    public Stream<STModel> findAllSTModelByStTemplate(String stTemplateUuid) {
       return db.findAllSTModelByStTemplate(stTemplateUuid);
-   }
-
-   public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
-      final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
-      nextgen.events.NewSTModel.post(stModel);
-      STAppEvents.postNewSTModel(stModel);
-      return stModel;
    }
 
    public nextgen.st.domain.STGroupModel findSTGroup(nextgen.st.domain.STTemplate model) {

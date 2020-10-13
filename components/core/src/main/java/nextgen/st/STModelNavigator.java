@@ -68,7 +68,7 @@ public class STModelNavigator extends JPanel {
 
 					if (isSTModelTreeNode(lastPathComponent)) {
 						final STModelTreeNode selectedNode = (STModelTreeNode) lastPathComponent;
-						appModel().doLaterInTransaction(transaction -> STAppEvents.postSTModelTreeNodeClicked(selectedNode.getModel()));
+						appModel().doLaterInTransaction(transaction -> nextgen.events.STModelTreeNodeClicked.post(selectedNode.getModel()));
 					}
 				}
 			}
@@ -106,7 +106,7 @@ public class STModelNavigator extends JPanel {
 
 		public BaseTreeNode(T model, ImageIcon icon) {
 			setUserObject(model);
-			this.label = model.toString();
+			setLabel(model.toString());
 			this.icon = icon;
 			this.tooltip = "";
 		}
@@ -114,6 +114,11 @@ public class STModelNavigator extends JPanel {
 		@SuppressWarnings("unchecked")
 		public T getModel() {
 			return (T) getUserObject();
+		}
+
+		protected void setLabel(String label) {
+			this.label = label;
+			if (this.label == null || this.label.trim().length() == 0) this.label = "[EMPTY]";
 		}
 
 		public String getLabel() {
@@ -234,7 +239,7 @@ public class STModelNavigator extends JPanel {
 		STValueTreeNode(nextgen.st.model.STValue model) {
 			super(model, null);
 
-			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
 
@@ -246,7 +251,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue();
+			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = appModel().tooltip(getModel());
 			super.nodeChanged();
 		}
@@ -261,7 +266,7 @@ public class STModelNavigator extends JPanel {
 				getModel().setValue(SwingUtil.fromClipboard().trim());
 			}));
 			actions.add(newTransactionAction("Open", actionEvent -> {
-				STAppEvents.postOpenSTValue(getModel());
+				nextgen.events.OpenSTValue.post(getModel());
 			}));
 			actions.add(newTransactionAction("Delete", actionEvent -> {
 				appModel().remove(getModel());
@@ -269,10 +274,6 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
-		@org.greenrobot.eventbus.Subscribe()
-		public void onRemovedSTValue(nextgen.st.STAppEvents.RemovedSTValue event) {
-			if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
-		}
 	}
 
 	// RootNode
@@ -286,7 +287,7 @@ public class STModelNavigator extends JPanel {
 		RootNode(String model) {
 			super(model, null);
 
-			this.label = getModel();
+			setLabel(getModel());
 			this.tooltip = "";
 
 			appModel().doInTransaction(transaction -> {
@@ -301,7 +302,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel();
+			setLabel(getModel());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -328,7 +329,7 @@ public class STModelNavigator extends JPanel {
 		STValuesRootNode(String model) {
 			super(model, appModel().loadIcon("sq-orange"));
 
-			this.label = getModel();
+			setLabel(getModel());
 			this.tooltip = "";
 
 			appModel().findAllSTValue()
@@ -344,7 +345,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel();
+			setLabel(getModel());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -365,8 +366,8 @@ public class STModelNavigator extends JPanel {
 		}
 
 		@org.greenrobot.eventbus.Subscribe()
-		public void onNewSTValue(nextgen.st.STAppEvents.NewSTValue event) {
-			addChild(new STValueTreeNode(event.sTValue));
+		public void onNewSTValue(nextgen.events.NewSTValue event) {
+			addChild(new STValueTreeNode(event.model));
 		}
 	}
 
@@ -383,7 +384,7 @@ public class STModelNavigator extends JPanel {
 		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
 			super(model, appModel().loadIcon(model.getIcon()));
 
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -400,7 +401,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -434,11 +435,11 @@ public class STModelNavigator extends JPanel {
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
 			super(model, null);
 
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			appModel().db.findAllSTModelByStTemplate(model.uuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
+			appModel().db.findAllSTModelByStTemplate(model.getUuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
 			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 		}
 
@@ -448,7 +449,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = getModel().getName();
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -467,11 +468,6 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewSTModel(nextgen.st.STAppEvents.NewSTModel event) {
-			if (getModel().getUuid().equals(event.sTModel.getStTemplate())) 
-				addAndSelectChild(new STModelTreeNode(event.sTModel));
-		}
 	}
 
 	// STModelTreeNode
@@ -487,7 +483,7 @@ public class STModelNavigator extends JPanel {
 		STModelTreeNode(nextgen.st.model.STModel model) {
 			super(model, appModel().loadIcon("sq-teal"));
 
-			this.label = appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10));
+			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10)));
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
 
@@ -499,7 +495,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			this.label = appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10));
+			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10)));
 			this.tooltip = appModel().tooltip(getModel());
 			super.nodeChanged();
 		}
@@ -508,7 +504,7 @@ public class STModelNavigator extends JPanel {
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
 			actions.add(newTransactionAction("Open", actionEvent -> {
-				STAppEvents.postOpenSTModel(getModel());
+				nextgen.events.OpenSTModel.post(getModel());
 			}));
 			actions.add(newTransactionAction("Edit", actionEvent -> {
 				getParentNode(STTemplateTreeNode.class)
@@ -529,10 +525,6 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
-		@org.greenrobot.eventbus.Subscribe()
-		public void onRemovedSTModel(nextgen.st.STAppEvents.RemovedSTModel event) {
-			if (event.uuid.equals(uuid)) treeModel.removeNodeFromParent(this);
-		}
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
@@ -573,6 +565,14 @@ public class STModelNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	public <T> java.util.stream.Stream<T> getSelectedNodes() {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.map(treePath -> (T) treePath.getLastPathComponent());
+	}
+
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
@@ -593,7 +593,7 @@ public class STModelNavigator extends JPanel {
 	public void onNewSTValue(nextgen.events.NewSTValue event) {
 		treeModel
 				.find(STValuesRootNode.class)
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.st.STModelNavigator.STValueTreeNode(event.model)));
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.st.STModelNavigator.STValueTreeNode(event.model)));
 	}
 
 	public Set<nextgen.st.model.STValue> getSelectedValues() {
@@ -611,10 +611,10 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTModelTreeNodeClicked(nextgen.st.STAppEvents.CanvasSTModelClicked event) {
+	public void onSTModelCanvasNodeClicked(nextgen.events.CanvasSTModelClicked event) {
 		SwingUtilities.invokeLater(() -> {
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
-			final TreePath path = rootNode.find(baseTreeNode -> (baseTreeNode instanceof STModelTreeNode) && ((STModelTreeNode) baseTreeNode).getModel().equals(event.stModel));
+			final TreePath path = rootNode.find(baseTreeNode -> isSTModelTreeNode(baseTreeNode) && ((STModelTreeNode) baseTreeNode).getModel().equals(event.model));
 			if (path != null) {
 				tree.scrollPathToVisible(path);
 				tree.setSelectionPath(path);

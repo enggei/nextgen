@@ -1,6 +1,5 @@
 package nextgen.st.model;
 
-import nextgen.st.STAppEvents;
 import nextgen.st.domain.*;
 import nextgen.utils.Neo4JUtil;
 import org.neo4j.graphdb.Relationship;
@@ -80,7 +79,7 @@ public class STModelDB extends STModelNeoFactory {
       final STValue found = findSTValueByUuid(uuid);
       if (found == null) return this;
       delete(found.getNode());
-      STAppEvents.postRemovedSTValue(uuid);
+      nextgen.events.STValueDeleted.post(uuid);
       return this;
    }
 
@@ -98,7 +97,7 @@ public class STModelDB extends STModelNeoFactory {
       if (found == null) return this;
       stModel.getArguments().forEach(this::remove);
       delete(found.getNode());
-      STAppEvents.postRemovedSTModel(uuid);
+      nextgen.events.STModelDeleted.post(uuid);
       return this;
    }
 
@@ -243,7 +242,7 @@ public class STModelDB extends STModelNeoFactory {
             .setUuid(UUID.randomUUID().toString())
             .setType(STMODEL)
             .setStModel(stModel);
-      STAppEvents.postNewSTValue(stValue);
+      nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
@@ -252,7 +251,7 @@ public class STModelDB extends STModelNeoFactory {
             .setUuid(UUID.randomUUID().toString())
             .setType(PRIMITIVE)
             .setValue(value);
-      STAppEvents.postNewSTValue(stValue);
+      nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
@@ -263,7 +262,7 @@ public class STModelDB extends STModelNeoFactory {
             .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical()
                   .trim()
                   .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
-      STAppEvents.postNewSTValue(stValue);
+      nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
