@@ -164,8 +164,7 @@ public class STModelGrid extends JPanel {
                 final String s = txtValue.getText().trim();
                 final STValue stValue = appModel().newSTValue(s);
                 if (stArgument == null) {
-                    stArgument = appModel().newSTArgument(stParameter, stValue);
-                    stModel.addArguments(stArgument);
+                    stArgument = appModel().newSTArgument(stModel, stParameter, stValue);
                 } else
                     stArgument.setValue(stValue);
                 log.info("saving " + appModel().render(stValue));

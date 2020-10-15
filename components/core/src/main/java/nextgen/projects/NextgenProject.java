@@ -58,7 +58,8 @@ public class NextgenProject {
    final PackageDeclaration swingPackage = JavaPatterns.newPackageDeclaration(corePackage, swingPackageName);
    final PackageDeclaration swingConfigPackage = JavaPatterns.newPackageDeclaration(swingPackage, swingConfigPackageName);
 
-   final AppEvents appEvents = NextgenST.newAppEvents()
+   final AppEvents appEvents = NextgenST
+         .newAppEvents()
          .setPackageName(stPackage.getName())
          .setName("STAppEvents");
 
@@ -70,7 +71,8 @@ public class NextgenProject {
    @org.junit.Test
    public void generateSwing() {
 
-      final Singleton appModel = JavaPatterns.newSingleton(appModelName, swingPackage)
+      final Singleton appModel = JavaPatterns
+            .newSingleton(appModelName, swingPackage)
             .addFields(stringType, "title", null)
             .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "title", appModelName))
             .addFields(awtDimensionType, "appSize", null)
@@ -131,24 +133,29 @@ public class NextgenProject {
 
       final Entity stParameterType = DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST");
 
-      final Entity stParameterKey = DomainPatterns.newEntity("STParameterKey")
+      final Entity stParameterKey = DomainPatterns
+            .newEntity("STParameterKey")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
-      final Entity stParameter = DomainPatterns.newEntity("STParameter")
+      final Entity stParameter = DomainPatterns
+            .newEntity("STParameter")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newEnumField("type", stParameterType))
             .addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
-      final Entity stInterface = DomainPatterns.newEntity("STInterface")
+      final Entity stInterface = DomainPatterns
+            .newEntity("STInterface")
             .addRelations(DomainPatterns.newStringField("name"));
 
-      final Entity stEnumValue = DomainPatterns.newEntity("STEnumValue")
+      final Entity stEnumValue = DomainPatterns
+            .newEntity("STEnumValue")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("lexical"));
 
-      final Entity stEnum = DomainPatterns.newEntity("STEnum")
+      final Entity stEnum = DomainPatterns
+            .newEntity("STEnum")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
 
@@ -156,7 +163,8 @@ public class NextgenProject {
 //            .addRelations(DomainPatterns.newStringField("name", true))
 //            .addRelations(DomainPatterns.newOneToManyString("statements"));
 
-      final Entity stTemplate = DomainPatterns.newEntity("STTemplate")
+      final Entity stTemplate = DomainPatterns
+            .newEntity("STTemplate")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("text"))
             .addRelations(DomainPatterns.newOneToManyString("implements"))
@@ -165,7 +173,8 @@ public class NextgenProject {
 //            .addRelations(DomainPatterns.newOneToMany("actions", stTemplateAction))
             ;
 
-      final Entity stGroupModel = DomainPatterns.newEntity("STGroupModel")
+      final Entity stGroupModel = DomainPatterns
+            .newEntity("STGroupModel")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("delimiter"))
             .addRelations(DomainPatterns.newStringField("icon"))
@@ -176,29 +185,34 @@ public class NextgenProject {
 
       final Entity stgErrorType = DomainPatterns.newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
 
-      final Entity stgError = DomainPatterns.newEntity("STGError")
+      final Entity stgError = DomainPatterns
+            .newEntity("STGError")
             .addRelations(DomainPatterns.newEnumField("type", stgErrorType))
             .addRelations(DomainPatterns.newStringField("message"))
             .addRelations(DomainPatterns.newIntegerField("line"))
             .addRelations(DomainPatterns.newIntegerField("charPosition"));
 
-      final Entity stgDirectory = DomainPatterns.newEntity("STGDirectory")
+      final Entity stgDirectory = DomainPatterns
+            .newEntity("STGDirectory")
             .addRelations(DomainPatterns.newStringField("path"))
             .addRelations(DomainPatterns.newStringField("outputPackage"))
             .addRelations(DomainPatterns.newStringField("outputPath"))
             .addRelations(DomainPatterns.newOneToMany("groups", stGroupModel));
 
-      final Entity stAppModel = DomainPatterns.newEntity("STAppModel")
+      final Entity stAppModel = DomainPatterns
+            .newEntity("STAppModel")
             .addRelations(DomainPatterns.newStringField("modelDb"))
             .addRelations(DomainPatterns.newStringField("rootDir"))
             .addRelations(DomainPatterns.newIntegerField("editorFontSize"))
             .addRelations(DomainPatterns.newOneToMany("directories", stgDirectory));
 
-      final Entity stgParseResult = DomainPatterns.newEntity("STGParseResult")
+      final Entity stgParseResult = DomainPatterns
+            .newEntity("STGParseResult")
             .addRelations(DomainPatterns.newOneToOne("parsed", stGroupModel))
             .addRelations(DomainPatterns.newOneToMany("errors", stgError));
 
-      final Domain domain = DomainPatterns.newDomain("ST")
+      final Domain domain = DomainPatterns
+            .newDomain("ST")
             .addEntities(stAppModel)
             .addEntities(stgParseResult);
 
@@ -211,30 +225,35 @@ public class NextgenProject {
    @org.junit.Test
    public void generateSTModelDomain() {
 
-      final Entity stValue = DomainPatterns.newEntityWithUuid("STValue")
+      final Entity stValue = DomainPatterns
+            .newEntityWithUuid("STValue")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("value"))
             .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STValueType", "STMODEL,PRIMITIVE,ENUM")));
 
-      final Entity stFile = DomainPatterns.newEntityWithUuid("STFile")
+      final Entity stFile = DomainPatterns
+            .newEntityWithUuid("STFile")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newOneToOne("name", stValue, true))
             .addRelations(DomainPatterns.newOneToOne("type", stValue))
             .addRelations(DomainPatterns.newOneToOne("packageName", stValue))
             .addRelations(DomainPatterns.newOneToOne("path", stValue));
 
-      final Entity stArgumentKV = DomainPatterns.newEntityWithUuid("STArgumentKV")
+      final Entity stArgumentKV = DomainPatterns
+            .newEntityWithUuid("STArgumentKV")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("stParameterKey"))
             .addRelations(DomainPatterns.newOneToOne("value", stValue));
 
-      final Entity stArgument = DomainPatterns.newEntityWithUuid("STArgument")
+      final Entity stArgument = DomainPatterns
+            .newEntityWithUuid("STArgument")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("stParameter"))
             .addRelations(DomainPatterns.newOneToOne("value", stValue))
             .addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
 
-      final Entity stModel = DomainPatterns.newEntityWithUuid("STModel")
+      final Entity stModel = DomainPatterns
+            .newEntityWithUuid("STModel")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("stTemplate"))
             .addRelations(DomainPatterns.newStringField("stGroup"))
@@ -243,8 +262,17 @@ public class NextgenProject {
 
       stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModel));
 
-      final Domain domain = DomainPatterns.newDomain("STModel")
-            .addEntities(stModel);
+      final Entity stProject = DomainPatterns
+            .newEntityWithUuid("STProject")
+            .setEqha("uuid")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToMany("models", stModel))
+            .addRelations(DomainPatterns.newOneToMany("values", stValue));
+
+      final Domain domain = DomainPatterns
+            .newDomain("STModel")
+            .addEntities(stModel)
+            .addEntities(stProject);
 
       DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
    }
@@ -254,13 +282,16 @@ public class NextgenProject {
     */
    @org.junit.Test
    public void generateCanvasLayoutDomain() {
-      final Entity layoutDomain = DomainPatterns.newEntityWithUuid("Layout")
+      final Entity layoutDomain = DomainPatterns
+            .newEntityWithUuid("Layout")
             .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("nodes", DomainPatterns.newEntityWithUuid("LayoutNode")
+            .addRelations(DomainPatterns.newOneToMany("nodes", DomainPatterns
+                  .newEntityWithUuid("LayoutNode")
                   .addRelations(DomainPatterns.newDoubleField("x"))
                   .addRelations(DomainPatterns.newDoubleField("y"))));
 
-      final Domain domain = DomainPatterns.newDomain("Layout")
+      final Domain domain = DomainPatterns
+            .newDomain("Layout")
             .addEntities(layoutDomain);
       DomainPatterns.writeNeo(mainJava, canvasLayoutPackage, domain);
    }
@@ -272,54 +303,64 @@ public class NextgenProject {
    public void generateWorkflowsDomain() {
 
       // Workflows
-      final Entity workInput = DomainPatterns.newEntityWithUuid("WorkInput")
+      final Entity workInput = DomainPatterns
+            .newEntityWithUuid("WorkInput")
             .addRelations(DomainPatterns.newStringField("type"))
             .addRelations(DomainPatterns.newStringField("name"));
 
-      final Entity workStatement = DomainPatterns.newEntityWithUuid("WorkStatement")
+      final Entity workStatement = DomainPatterns
+            .newEntityWithUuid("WorkStatement")
             .addRelations(DomainPatterns.newStringField("statement"));
 
-      final Entity workInstance = DomainPatterns.newEntityWithUuid("WorkInstance")
+      final Entity workInstance = DomainPatterns
+            .newEntityWithUuid("WorkInstance")
             .addRelations(DomainPatterns.newEnumField("type", "WorkType", "WORK,CONDITIONAL,SEQUENTIAL,PARALLEL,REPEAT"));
 
-      final Entity work = DomainPatterns.newEntityWithUuid("Work")
+      final Entity work = DomainPatterns
+            .newEntityWithUuid("Work")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newStringField("package"))
             .addRelations(DomainPatterns.newOneToMany("inputs", workInput))
             .addRelations(DomainPatterns.newOneToMany("statements", workStatement));
       workInstance.addRelations(DomainPatterns.newOneToOne("work", work));
 
-      final Entity conditionalFlow = DomainPatterns.newEntityWithUuid("ConditionalFlow")
+      final Entity conditionalFlow = DomainPatterns
+            .newEntityWithUuid("ConditionalFlow")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newOneToOne("execute", workInstance))
             .addRelations(DomainPatterns.newOneToOne("then", workInstance))
             .addRelations(DomainPatterns.newOneToOne("otherwise", workInstance));
       workInstance.addRelations(DomainPatterns.newOneToOne("conditional", conditionalFlow));
 
-      final Entity sequentialFlow = DomainPatterns.newEntityWithUuid("SequentialFlow")
+      final Entity sequentialFlow = DomainPatterns
+            .newEntityWithUuid("SequentialFlow")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newOneToOne("execute", workInstance))
             .addRelations(DomainPatterns.newOneToMany("then", workInstance));
       workInstance.addRelations(DomainPatterns.newOneToOne("sequential", sequentialFlow));
 
-      final Entity parallelFlow = DomainPatterns.newEntityWithUuid("ParallelFlow")
+      final Entity parallelFlow = DomainPatterns
+            .newEntityWithUuid("ParallelFlow")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newOneToMany("execute", workInstance));
       workInstance.addRelations(DomainPatterns.newOneToOne("parallel", parallelFlow));
 
-      final Entity repeatFlow = DomainPatterns.newEntityWithUuid("RepeatFlow")
+      final Entity repeatFlow = DomainPatterns
+            .newEntityWithUuid("RepeatFlow")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newOneToOne("repeat", workInstance))
             .addRelations(DomainPatterns.newIntegerField("times"))
             .addRelations(DomainPatterns.newEnumField("until", "UntilPredicate", "ALWAYS_TRUE,ALWAYS_FALSE,COMPLETED,FAILED"));
       workInstance.addRelations(DomainPatterns.newOneToOne("repeat", repeatFlow));
 
-      final Domain domain = DomainPatterns.newDomain("WorkFlow")
+      final Domain domain = DomainPatterns
+            .newDomain("WorkFlow")
             .addEntities(work)
             .addEntities(workInstance);
 
       DomainPatterns.writeNeo(mainJava, workflowPackage, domain);
-      final WorkFlowFacade workFlowFacade = JavaEasyFlowsPatterns.newWorkFlowFacade()
+      final WorkFlowFacade workFlowFacade = JavaEasyFlowsPatterns
+            .newWorkFlowFacade()
             .setName("WorkFlowFacade")
             .setPackageName(workflowPackage.getName());
       STGenerator.writeJavaFile(workFlowFacade, workflowPackage, workFlowFacade.getName(), mainJava);
@@ -328,13 +369,13 @@ public class NextgenProject {
    }
 
 
-
    /**
     * generateProjectFiles
     */
    @org.junit.Test
    public void generateProjectFiles() {
-      Pom projectPom = MavenST.newPom()
+      Pom projectPom = MavenST
+            .newPom()
             .setParent("<parent>\n" +
                   "	<artifactId>components</artifactId>\n" +
                   "	<groupId>com.nextgen</groupId>\n" +
@@ -342,74 +383,95 @@ public class NextgenProject {
                   "</parent>")
             .setName("Core")
             .setArtifactId("core")
-            .addProperties(MavenPatterns.newMavenCompilerSource().setValue("9"))
-            .addProperties(MavenPatterns.newMavenCompilerTarget().setValue("9"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addProperties(MavenPatterns
+                  .newMavenCompilerSource()
+                  .setValue("9"))
+            .addProperties(MavenPatterns
+                  .newMavenCompilerTarget()
+                  .setValue("9"))
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("com.fifesoft")
                   .setArtifactId("rsyntaxtextarea")
                   .setVersion("3.0.3"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("com.formdev")
                   .setArtifactId("flatlaf")
                   .setVersion("0.40"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.neo4j")
                   .setArtifactId("neo4j")
                   .setVersion("${neo4j.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.antlr")
                   .setArtifactId("antlr4")
                   .setVersion("${antlr.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("com.jgoodies")
                   .setArtifactId("jgoodies-forms")
                   .setVersion("${jgoodies.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.jeasy")
                   .setArtifactId("easy-flows")
                   .setVersion("0.2"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.piccolo2d")
                   .setArtifactId("piccolo2d-core")
                   .setVersion("${piccolo2d.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.piccolo2d")
                   .setArtifactId("piccolo2d-extras")
                   .setVersion("${piccolo2d.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.abego.treelayout")
                   .setArtifactId("org.abego.treelayout.core")
                   .setVersion("1.0.3"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("io.vertx")
                   .setArtifactId("vertx-core")
                   .setVersion("${vertx.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.jsoup")
                   .setArtifactId("jsoup")
                   .setVersion("1.12.1"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("com.github.kklisura.cdt")
                   .setArtifactId("cdt-java-client")
                   .setVersion("2.1.0"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("net.openhft")
                   .setArtifactId("compiler")
                   .setVersion("2.3.1"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("junit")
                   .setArtifactId("junit")
                   .setVersion("${junit.version}"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("org.javatuples")
                   .setArtifactId("javatuples")
                   .setVersion("1.2"))
-            .addDependencies(nextgen.templates.MavenPatterns.newDependency()
+            .addDependencies(nextgen.templates.MavenPatterns
+                  .newDependency()
                   .setGroupId("com.github.javaparser")
                   .setArtifactId("javaparser-symbol-solver-core")
                   .setVersion("3.16.1"));
 
-      MavenPatterns.generate(MavenPatterns.newProject()
+      MavenPatterns.generate(MavenPatterns
+            .newProject()
             .setName("Nextgen")
             .setRoot(root.getAbsolutePath()), projectPom);
    }

@@ -120,7 +120,7 @@ public class STArgument {
 	}
 
 	public java.util.stream.Stream<STArgumentKV> getKeyValuesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
 	}
 
 	public STArgument removeKeyValues(STArgumentKV dst) { 

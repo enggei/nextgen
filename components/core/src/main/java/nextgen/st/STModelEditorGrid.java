@@ -23,12 +23,11 @@ import static nextgen.st.STAppPresentationModel.newAction;
 public class STModelEditorGrid extends JPanel {
 
    private final ResultsTableModel resultsModel;
-   private final STModel stModel;
+   private  STModel stModel;
 
-   public STModelEditorGrid(STModel stModel) {
+   public STModelEditorGrid() {
       super(new BorderLayout());
 
-      this.stModel = stModel;
       this.resultsModel = new ResultsTableModel();
 
       setBackground(UIManager.getColor("Panel.background"));
@@ -68,6 +67,11 @@ public class STModelEditorGrid extends JPanel {
       jScrollPane.setBackground(UIManager.getColor("Panel.background"));
       jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
       add(jScrollPane, BorderLayout.CENTER);
+   }
+
+   public void setModel(nextgen.st.model.STModel model) {
+      this.stModel = model;
+      SwingUtilities.invokeLater(resultsModel::clear);
    }
 
    private STAppPresentationModel appModel() {

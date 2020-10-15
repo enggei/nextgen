@@ -121,7 +121,7 @@ public class STModel {
 	}
 
 	public java.util.stream.Stream<STFile> getFilesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
 
 	public STModel removeFiles(STFile dst) { 
@@ -154,7 +154,7 @@ public class STModel {
 	}
 
 	public java.util.stream.Stream<STArgument> getArgumentsSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
 	}
 
 	public STModel removeArguments(STArgument dst) { 
@@ -166,6 +166,10 @@ public class STModel {
 	public STModel removeAllArguments() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
+	}
+
+	public java.util.stream.Stream<STProject> getIncomingModelsSTProject() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("models")).spliterator(), false).map((relationship) -> new STProject(relationship.getOtherNode(node)));
 	}
 
 	@Override

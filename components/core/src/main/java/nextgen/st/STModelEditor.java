@@ -21,6 +21,7 @@ public class STModelEditor extends JPanel {
 
    private final RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
    private final org.fife.ui.rtextarea.RTextScrollPane editorComponent = new RTextScrollPane(txtEditor);
+   private final STModelEditorGrid editorGrid = new STModelEditorGrid();
    private final STModelEditorForm formComponent = new STModelEditorForm();
    private final JTabbedPane editors = new JTabbedPane();
    private final STModel stModel;
@@ -37,9 +38,7 @@ public class STModelEditor extends JPanel {
       txtEditor.addKeyListener(getEditorKeyListener());
       addActionsToPopup();
 
-      final STModelEditorGrid editorGrid = new STModelEditorGrid(stModel);
       final STModelEditorNavigator stModelNavigator = new STModelEditorNavigator(stModel, this);
-
       editors.add("Editor", editorComponent);
       editors.add("Values", editorGrid);
       editors.add("Form", formComponent);
@@ -48,6 +47,7 @@ public class STModelEditor extends JPanel {
 
       setText(appModel().render(stModel), null);
       formComponent.setModel(stModel);
+      editorGrid.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
@@ -57,8 +57,14 @@ public class STModelEditor extends JPanel {
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTModelEditorTreeNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
-      editors.setSelectedComponent(editorComponent);
       formComponent.setModel(event.model);
+      editorGrid.setModel(event.model);
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTParameterEditorTreeNodeClicked(nextgen.events.STParameterEditorTreeNodeClicked event) {
+      formComponent.setModel(event.stModel);
+      editorGrid.setModel(event.stModel);
    }
 
    public void addActionsToPopup() {
@@ -84,8 +90,7 @@ public class STModelEditor extends JPanel {
                            .showInputDialog(stParameter.getName(), txtEditor, s -> {
                               appModel().doLaterInTransaction(tx -> {
                                  appModel().removeArgument(getModel(), stParameter);
-                                 getModel().addArguments(appModel()
-                                       .newSTArgument(stParameter, appModel().newSTValue(s)));
+                                 appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s));
                                  setText(appModel().render(stModel), null);
                               });
                            })));
@@ -100,8 +105,7 @@ public class STModelEditor extends JPanel {
                         if (s == null || s.trim().length() == 0) return;
                         appModel().doLaterInTransaction(tx -> {
                            appModel().removeArgument(getModel(), stParameter);
-                           getModel().addArguments(appModel()
-                                 .newSTArgument(stParameter, appModel().newSTValue(s.trim())));
+                           final nextgen.st.model.STArgument stArgument = appModel().newSTArgument(getModel(),stParameter, appModel().newSTValue(s.trim()));
                            setText(appModel().render(stModel), null);
                         });
                      }));
@@ -110,8 +114,7 @@ public class STModelEditor extends JPanel {
                      stParameterMenu.add(removestParameterMenu);
 
                      getModel().getArguments()
-                           .filter(stArgument -> stArgument.getStParameter()
-                                 .equals(stParameter.getUuid()))
+                           .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                            .forEach(stArgument -> {
                               removestParameterMenu.add(newAction(appModel().cut(appModel().render(stArgument), 30), actionEvent -> SwingUtil
                                     .confirm(txtEditor, "Remove argument ?")
@@ -130,8 +133,7 @@ public class STModelEditor extends JPanel {
                         public void accept(ActionEvent actionEvent) {
                            nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), txtEditor, s -> {
                               appModel().doLaterInTransaction(tx -> {
-                                 getModel().addArguments(appModel()
-                                       .newSTArgument(stParameter, appModel().newSTValue(s)));
+                                 appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s));
                                  setText(appModel().render(stModel), null);
                               });
                            });
@@ -146,8 +148,7 @@ public class STModelEditor extends JPanel {
                         final String s = SwingUtil.fromClipboard();
                         if (s == null || s.trim().length() == 0) return;
                         appModel().doLaterInTransaction(tx -> {
-                           getModel().addArguments(appModel()
-                                 .newSTArgument(stParameter, appModel().newSTValue(s.trim())));
+                           appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s.trim()));
                            setText(appModel().render(stModel), null);
                         });
                      }));

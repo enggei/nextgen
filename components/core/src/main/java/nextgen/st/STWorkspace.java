@@ -20,8 +20,11 @@ public class STWorkspace extends JTabbedPane {
 	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
-		templateNavigator = new STTemplateNavigator(this);
-		modelNavigator = new STModelNavigator(this);
+		findCanvas();
+		appModel().doInTransaction(transaction -> {
+			templateNavigator = new STTemplateNavigator(this);
+			modelNavigator = new STModelNavigator(this);
+		});
 	}
 
 	public STTemplateNavigator getTemplateNavigator() {
@@ -92,7 +95,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 
 		final STModelEditor component = new STModelEditor(stModel);
-		addPane(stTemplateSupplier.get().getName() + "Model", component);
+		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
 		return component;
 	}
 
@@ -106,7 +109,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 
 		final STModelEditor component = new STModelEditor(stModel);
-		addPane(stTemplate.getName() + "Model", component);
+		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplate.getName() + "Model"), component);
 		return component;
 	}
 

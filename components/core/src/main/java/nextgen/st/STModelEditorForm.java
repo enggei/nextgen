@@ -22,9 +22,9 @@ public class STModelEditorForm extends JPanel {
 
       final JTable results = new JTable(resultsModel);
       results.setIntercellSpacing(new Dimension(0, 5));
+      results.setAutoCreateRowSorter(true);
       results.setShowGrid(false);
       results.setRowMargin(0);
-      results.setRowHeight(150);
       results.getColumnModel().getColumn(0).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer());
       results.getColumnModel().getColumn(1).setCellRenderer(new STValueElementRenderer());
       results.getColumnModel().getColumn(1).setCellEditor(new STValueElementEditor());
@@ -52,24 +52,25 @@ public class STModelEditorForm extends JPanel {
       final STTemplate stTemplate = appModel().db.getSTTemplate(model);
 
       stTemplate.getParameters()
-            .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
-            .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
-            .forEach(stParameter -> {
+                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
+                .filter(stParameter -> stParameter.getArgumentType() != null)
+                .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
+                .forEach(stParameter -> {
 
-               final Optional<STArgument> argument = model.getArguments()
-                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
-                     .findFirst();
+                   final Optional<STArgument> argument = model.getArguments()
+                                                              .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                                                              .findFirst();
 
-               stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
-            });
+                   stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
+                });
 
       model.getArguments()
-            .filter(stArgument -> stArgument.getValue() != null)
-            .map(STArgument::getValue)
-            .filter(stValue -> stValue.getType() != null)
-            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
-            .filter(stValue -> stValue.getStModel() != null)
-            .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
+           .filter(stArgument -> stArgument.getValue() != null)
+           .map(STArgument::getValue)
+           .filter(stValue -> stValue.getType() != null)
+           .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+           .filter(stValue -> stValue.getStModel() != null)
+           .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
 
    private STAppPresentationModel appModel() {
@@ -96,7 +97,7 @@ public class STModelEditorForm extends JPanel {
 
       public void setValue(String s) {
          if (argument == null) {
-            model.addArguments(argument = appModel().newSTArgument(stParameter, appModel().newSTValue(s)));
+            argument = appModel().newSTArgument(model, stParameter, appModel().newSTValue(s));
          } else {
             final nextgen.st.model.STValue value = argument.getValue();
             if (value == null) argument.setValue(appModel().newSTValue(s));
@@ -178,7 +179,7 @@ public class STModelEditorForm extends JPanel {
       private STValueElement element;
 
       STValueElementEditor() {
-         this.component = nextgen.utils.SwingUtil.newRSyntaxTextArea(2, 40);
+         this.component = nextgen.utils.SwingUtil.newRSyntaxTextArea(1, 40);
          this.component.addKeyListener(getEditorKeyListener());
          this.scrollPane = new org.fife.ui.rtextarea.RTextScrollPane(component);
          for (java.awt.event.MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
@@ -237,14 +238,14 @@ public class STModelEditorForm extends JPanel {
          this.element = (STValueElement) value;
          this.component.setText(element.text);
          this.component.setCaretPosition(0);
-         return scrollPane;
+         return component;
       }
    }
 
    private final class STValueElementRenderer extends org.fife.ui.rsyntaxtextarea.RSyntaxTextArea implements javax.swing.table.TableCellRenderer {
 
       STValueElementRenderer() {
-         super(2, 40);
+         super(1, 40);
          nextgen.utils.SwingUtil.decorate(this);
          setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
       }

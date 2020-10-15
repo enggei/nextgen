@@ -1953,27 +1953,22 @@
       "uuid" : "aadecc17-0e20-487e-949d-c198e962b62b",
       "name" : "packages",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "JavaPackage"
     } ],
     "children" : [ {
       "uuid" : "6c2bbf37-2208-4993-bbc6-a27a2fabf40d",
       "name" : "JavaPackage",
-      "text" : "~name~\n~types:{it|~JavaType(packageName=name, name=it.name)~};separator=\"\\n\"~ ",
+      "text" : "~name~\n~types:{it|~it~};separator=\"\\n\"~ ",
       "parameters" : [ {
         "uuid" : "ab87578e-09ce-4932-9bb7-ffc8a8969bd7",
         "name" : "name",
         "type" : "SINGLE",
         "argumentType" : "String"
       }, {
-        "uuid" : "c1cf885c-2bba-46f3-93e1-dacee406cdaa",
+        "uuid" : "67a88a07-4aa9-43fd-b95c-05d73df15596",
         "name" : "types",
-        "type" : "KVLIST",
-        "argumentType" : "Object",
-        "keys" : [ {
-          "uuid" : "8ecdaf57-81fc-413f-80b2-8b851843a99a",
-          "name" : "name",
-          "argumentType" : "String"
-        } ]
+        "type" : "LIST",
+        "argumentType" : "JavaType"
       } ],
       "children" : [ {
         "uuid" : "fe17e06e-067c-4b32-9fb8-06cbe277c5a9",

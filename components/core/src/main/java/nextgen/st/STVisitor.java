@@ -113,7 +113,7 @@ public class STVisitor {
 
     }
 
-    protected void visitKVArgumentMap(STModel stModel, STParameter stParameter, STArgument stArgument, Map<STParameterKey, STArgumentKV> stArgumentKVMap) {
+    private void visitKVArgumentMap(STModel stModel, STParameter stParameter, STArgument stArgument, Map<STParameterKey, STArgumentKV> stArgumentKVMap) {
 
         stArgumentKVMap.forEach((stParameterKey, stArgumentKV) -> {
 
@@ -149,7 +149,7 @@ public class STVisitor {
 
     }
 
-    protected Map<STParameterKey, STArgumentKV> getStParameterKeySTArgumentKVMap(STParameter stParameter, STArgument stArgument) {
+    private Map<STParameterKey, STArgumentKV> getStParameterKeySTArgumentKVMap(STParameter stParameter, STArgument stArgument) {
         final Set<STParameterKey> stParameterKeys = stParameter.getKeys().collect(Collectors.toSet());
         final Map<STParameterKey, STArgumentKV> stArgumentKVMap = new LinkedHashMap<>();
         stParameterKeys.forEach(stParameterKey -> stArgument.getKeyValues()

@@ -48,7 +48,7 @@ public class STApp extends JFrame {
       SwingUtil.show(new STApp(config));
    }
 
-   private static AppModel loadConfig(String[] args) throws IOException {
+   public static AppModel loadConfig(String[] args) throws IOException {
 
       final AppConfig appConfig = args.length == 0 ? AppConfigJsonFactory.newAppConfig() : AppConfigJsonFactory.newAppConfig(new File(args[0]));
       final String root = "/home/goe/projects/nextgen/components/core";

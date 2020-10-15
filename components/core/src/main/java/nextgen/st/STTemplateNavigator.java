@@ -129,7 +129,7 @@ public class STTemplateNavigator extends JPanel {
 
 		protected void setLabel(String label) {
 			this.label = label;
-			if (this.label.length() == 0) this.label = "[EMPTY]";
+			if (this.label == null || this.label.trim().length() == 0) this.label = "[EMPTY]";
 		}
 
 		public String getLabel() {
@@ -238,11 +238,6 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	// RootNode
-
-	private boolean isRootNode(Object treeNode) {
-		return treeNode instanceof RootNode;
-	}
-
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
@@ -300,12 +295,11 @@ public class STTemplateNavigator extends JPanel {
 
 	}
 
-	// STGroupTreeNode
-
-	private boolean isSTGroupTreeNode(Object treeNode) {
-		return treeNode instanceof STGroupTreeNode;
+	private boolean isRootNode(Object treeNode) {
+		return treeNode instanceof RootNode;
 	}
 
+	// STGroupTreeNode
 	public class STGroupTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
 
 		private String uuid;
@@ -440,12 +434,11 @@ public class STTemplateNavigator extends JPanel {
 		}
 	}
 
-	// STEnumTreeNode
-
-	private boolean isSTEnumTreeNode(Object treeNode) {
-		return treeNode instanceof STEnumTreeNode;
+	private boolean isSTGroupTreeNode(Object treeNode) {
+		return treeNode instanceof STGroupTreeNode;
 	}
 
+	// STEnumTreeNode
 	public class STEnumTreeNode extends BaseTreeNode<nextgen.st.domain.STEnum> {
 
 		private String uuid;
@@ -566,12 +559,11 @@ public class STTemplateNavigator extends JPanel {
 
 	}
 
-	// STTemplateTreeNode
-
-	private boolean isSTTemplateTreeNode(Object treeNode) {
-		return treeNode instanceof STTemplateTreeNode;
+	private boolean isSTEnumTreeNode(Object treeNode) {
+		return treeNode instanceof STEnumTreeNode;
 	}
 
+	// STTemplateTreeNode
 	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
 
 		private String uuid;
@@ -662,8 +654,9 @@ public class STTemplateNavigator extends JPanel {
 			actions.add(newAction("New Instance", actionEvent -> {
 				getParentNode(STGroupTreeNode.class)
 					.ifPresent(stGroupTreeNode -> appModel().doLaterInTransaction(transaction -> {
-						appModel().newSTModel(stGroupTreeNode.getModel().getUuid(), getModel());
-						workspace.setSelectedComponent(workspace.findCanvas());
+							final nextgen.st.STModelCanvas canvas = workspace.findCanvas();
+							appModel().newSTModel(stGroupTreeNode.getModel().getUuid(), getModel());
+							workspace.setSelectedComponent(canvas);
 					}));
 			}));
 			actions.add(newAction("New Child-template", actionEvent -> {
@@ -803,12 +796,11 @@ public class STTemplateNavigator extends JPanel {
 
 	}
 
-	// STInterfaceTreeNode
-
-	private boolean isSTInterfaceTreeNode(Object treeNode) {
-		return treeNode instanceof STInterfaceTreeNode;
+	private boolean isSTTemplateTreeNode(Object treeNode) {
+		return treeNode instanceof STTemplateTreeNode;
 	}
 
+	// STInterfaceTreeNode
 	public class STInterfaceTreeNode extends BaseTreeNode<nextgen.st.domain.STInterface> {
 
 		private String uuid;
@@ -860,6 +852,10 @@ public class STTemplateNavigator extends JPanel {
 			return actions;
 		}
 
+	}
+
+	private boolean isSTInterfaceTreeNode(Object treeNode) {
+		return treeNode instanceof STInterfaceTreeNode;
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
@@ -976,11 +972,15 @@ public class STTemplateNavigator extends JPanel {
 		}
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
 					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
 		}
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
 		}

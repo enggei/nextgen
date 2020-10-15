@@ -306,6 +306,52 @@ public class STModelNeoFactory {
 		return db.findNodes(STArgumentKVLabel, "stParameterKey", value).stream().map(this::newSTArgumentKV);
 	}
 
+	private static final org.neo4j.graphdb.Label STProjectLabel = org.neo4j.graphdb.Label.label("STProject");
+
+	public static boolean isSTProject(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STProjectLabel);
+	}
+
+	public STProject newSTProject() { 
+		return newSTProject(db.createNode(STProjectLabel));
+	}
+
+	public STProject newSTProject(org.neo4j.graphdb.Node node) { 
+		return new STProject(node);
+	}
+
+	public java.util.stream.Stream<STProject> findAllSTProject() { 
+		return db.findNodes(STProjectLabel).stream().map(this::newSTProject);
+	}
+
+	public STProject findSTProjectByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(STProjectLabel, "uuid", value);
+		return node == null ? null : newSTProject(node);
+	}
+
+	public STProject findOrCreateSTProjectByUuid(String value) {
+		final STProject existing = findSTProjectByUuid(value);
+		return existing == null ? newSTProject().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STProject> findAllSTProjectByUuid(String value) {
+		return db.findNodes(STProjectLabel, "uuid", value).stream().map(this::newSTProject);
+	}
+
+	public STProject findSTProjectByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNode(STProjectLabel, "name", value);
+		return node == null ? null : newSTProject(node);
+	}
+
+	public STProject findOrCreateSTProjectByName(String value) {
+		final STProject existing = findSTProjectByName(value);
+		return existing == null ? newSTProject().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STProject> findAllSTProjectByName(String value) {
+		return db.findNodes(STProjectLabel, "name", value).stream().map(this::newSTProject);
+	}
+
 	// ONLY delete this node and its relations
 	public void delete(org.neo4j.graphdb.Node node) {
 

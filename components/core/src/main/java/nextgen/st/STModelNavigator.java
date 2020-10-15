@@ -24,7 +24,7 @@ public class STModelNavigator extends JPanel {
 
 		this.workspace = workspace;
 
-		treeModel = new STModelNavigatorTreeModel(new RootNode("Models"));
+		treeModel = new STModelNavigatorTreeModel(new RootNode("Projects"));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -92,7 +92,7 @@ public class STModelNavigator extends JPanel {
 			}
 		});
 
-		setPreferredSize(new Dimension(400, 1200));
+		setPreferredSize(new Dimension(600, 1200));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -226,19 +226,129 @@ public class STModelNavigator extends JPanel {
 		}
 	}
 
-	// STValueTreeNode
+	// STProjectTreeNode
+	public class STProjectTreeNode extends BaseTreeNode<nextgen.st.model.STProject> {
 
-	private boolean isSTValueTreeNode(Object treeNode) {
-		return treeNode instanceof STValueTreeNode;
+		STProjectTreeNode(nextgen.st.model.STProject model) {
+			super(model, appModel().loadIcon("sq-white"));
+
+			setLabel(getModel().getName());
+			this.tooltip = getModel().getName();
+
+			final Map<nextgen.st.domain.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
+			final Map<nextgen.st.domain.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
+			model.getModelsSorted().forEach(stModel -> {
+
+				final nextgen.st.domain.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());
+				final nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
+
+				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
+					final nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroup);
+					add(stGroupModelTreeNode);
+					stGroupTreeNodeMap.put(stGroup, stGroupModelTreeNode);
+				}
+
+				if (!stTemplateTreeNodeMap.containsKey(stTemplate)) {
+					final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);
+					stGroupTreeNodeMap.get(stGroup).add(stTemplateTreeNode);
+					stTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);
+				}
+
+				stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate, null));
+			});
+		}
+
+		STProjectTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = getModel().getName();
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			getSelectedNodes()
+					.filter(STModelNavigator.this::isSTModelTreeNode)
+					.map(treeNode -> (STModelTreeNode) treeNode)
+					.forEach(stModelTreeNode -> actions.add(newTransactionAction("Add " + stModelTreeNode.getLabel(), actionEvent -> {
+						getModel().addModels(stModelTreeNode.getModel());
+						treeModel.addNodeInSortedOrder(thisNode(), new nextgen.st.STModelNavigator.STModelTreeNode(stModelTreeNode.getModel(), appModel().findSTTemplateByUuid(stModelTreeNode.getModel().getStTemplate()), null));
+					})));
+			actions.add(newTransactionAction("Generate All", actionEvent -> {
+				getChildren(STModelTreeNode.class).forEach(stModelTreeNode -> appModel().writeToFile(stModelTreeNode.getModel()));
+			}));
+			return actions;
+		}
+
 	}
 
+	private boolean isSTProjectTreeNode(Object treeNode) {
+		return treeNode instanceof STProjectTreeNode;
+	}
+
+	// ModelsTreeNode
+	public class ModelsTreeNode extends BaseTreeNode<String> {
+
+		ModelsTreeNode(String model) {
+			super(model, appModel().loadIcon("sq-teal"));
+
+			setLabel(model.toString());
+			this.tooltip = "";
+
+			appModel().doInTransaction(transaction -> {
+				appModel().getGroupModels().forEach(stGroupModel -> {
+					final nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroupModel);
+					add(stGroupModelTreeNode);
+					stGroupModel.getTemplates().forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
+				});
+			});
+		}
+
+		ModelsTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().toString());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+		private void addSTTemplateChild(nextgen.st.domain.STTemplate stTemplate, BaseTreeNode<?> parent) {
+			final nextgen.st.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);
+			parent.add(stTemplateTreeNode);
+
+			appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate, null)));
+			stTemplate.getChildren().forEach(stTemplateChild -> addSTTemplateChild(stTemplateChild, stTemplateTreeNode));
+		}
+	}
+
+	private boolean isModelsTreeNode(Object treeNode) {
+		return treeNode instanceof ModelsTreeNode;
+	}
+
+	// STValueTreeNode
 	public class STValueTreeNode extends BaseTreeNode<nextgen.st.model.STValue> {
 
 		private String uuid;
+		private nextgen.st.model.STArgument stArgument;
 
-		STValueTreeNode(nextgen.st.model.STValue model) {
-			super(model, null);
+		STValueTreeNode(nextgen.st.model.STValue model, nextgen.st.model.STArgument stArgument) {
+			super(model, appModel().loadIcon("sq-orange"));
 
+			this.stArgument = stArgument;
 			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
@@ -276,12 +386,11 @@ public class STModelNavigator extends JPanel {
 
 	}
 
-	// RootNode
-
-	private boolean isRootNode(Object treeNode) {
-		return treeNode instanceof RootNode;
+	private boolean isSTValueTreeNode(Object treeNode) {
+		return treeNode instanceof STValueTreeNode;
 	}
 
+	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
@@ -291,8 +400,8 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			appModel().doInTransaction(transaction -> {
-				appModel().getGroupModels().forEach(stGroupModel -> add(new STGroupModelTreeNode(stGroupModel)));
-				add(new STValuesRootNode("Values"));
+				appModel().getProjects().forEach(stProject -> add(new STProjectTreeNode(stProject)));
+				add(new nextgen.st.STModelNavigator.ModelsTreeNode("Models"));
 			});
 		}
 
@@ -310,6 +419,9 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+			actions.add(newAction("New Project", actionEvent -> {
+				SwingUtil.getInputFromUser(tree, "Name").ifPresent(name -> appModel().doLaterInTransaction(t -> appModel().newSTProject(name)));
+			}));
 			actions.add(newAction("Undo", actionEvent -> {
 				appModel().undoLast();
 			}));
@@ -318,65 +430,11 @@ public class STModelNavigator extends JPanel {
 
 	}
 
-	// STValuesRootNode
-
-	private boolean isSTValuesRootNode(Object treeNode) {
-		return treeNode instanceof STValuesRootNode;
-	}
-
-	public class STValuesRootNode extends BaseTreeNode<String> {
-
-		STValuesRootNode(String model) {
-			super(model, appModel().loadIcon("sq-orange"));
-
-			setLabel(getModel());
-			this.tooltip = "";
-
-			appModel().findAllSTValue()
-				.filter(stValue -> stValue.getType() != null)
-				.filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-				.sorted((o1, o2) -> o1.getValue().compareToIgnoreCase(o2.getValue()))
-				.forEach(stValue -> add(new STValueTreeNode(stValue)));
-		}
-
-		STValuesRootNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-			actions.add(newTransactionAction("Edit Values", actionEvent -> {
-				final STValueGrid valueGrid = workspace.getValueGrid();
-				workspace.setSelectedComponent(valueGrid);
-				valueGrid.requestFocusInWindow();
-			}));
-			actions.add(newTransactionAction("Reconcile", actionEvent -> {
-				appModel().reconcileValues();
-				nodeChanged();
-			}));
-			return actions;
-		}
-
-		@org.greenrobot.eventbus.Subscribe()
-		public void onNewSTValue(nextgen.events.NewSTValue event) {
-			addChild(new STValueTreeNode(event.model));
-		}
+	private boolean isRootNode(Object treeNode) {
+		return treeNode instanceof RootNode;
 	}
 
 	// STGroupModelTreeNode
-
-	private boolean isSTGroupModelTreeNode(Object treeNode) {
-		return treeNode instanceof STGroupModelTreeNode;
-	}
-
 	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
 
 		private String uuid;
@@ -388,11 +446,6 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			model.getTemplates().forEach(stTemplate -> {
-				final boolean hasChildren = countChildren(stTemplate);
-				if (!hasChildren) return;
-				add(new STTemplateTreeNode(stTemplate));
-			});
 		}
 
 		STGroupModelTreeNode thisNode() {
@@ -422,12 +475,11 @@ public class STModelNavigator extends JPanel {
 		}
 	}
 
-	// STTemplateTreeNode
-
-	private boolean isSTTemplateTreeNode(Object treeNode) {
-		return treeNode instanceof STTemplateTreeNode;
+	private boolean isSTGroupModelTreeNode(Object treeNode) {
+		return treeNode instanceof STGroupModelTreeNode;
 	}
 
+	// STTemplateTreeNode
 	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
 
 		private String uuid;
@@ -439,8 +491,6 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			appModel().db.findAllSTModelByStTemplate(model.getUuid()).forEach(stModel -> add(new STModelTreeNode(stModel)));
-			model.getChildren().forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 		}
 
 		STTemplateTreeNode thisNode() {
@@ -470,23 +520,29 @@ public class STModelNavigator extends JPanel {
 
 	}
 
-	// STModelTreeNode
-
-	private boolean isSTModelTreeNode(Object treeNode) {
-		return treeNode instanceof STModelTreeNode;
+	private boolean isSTTemplateTreeNode(Object treeNode) {
+		return treeNode instanceof STTemplateTreeNode;
 	}
 
+	// STModelTreeNode
 	public class STModelTreeNode extends BaseTreeNode<nextgen.st.model.STModel> {
 
 		private String uuid;
+		private nextgen.st.domain.STTemplate stTemplate;
+		private nextgen.st.model.STArgument stArgument;
 
-		STModelTreeNode(nextgen.st.model.STModel model) {
+		STModelTreeNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STArgument stArgument) {
 			super(model, appModel().loadIcon("sq-teal"));
 
+			this.stTemplate = stTemplate;
+			this.stArgument = stArgument;
 			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10)));
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
 
+			stTemplate.getParameters()
+					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
 
 		STModelTreeNode thisNode() {
@@ -506,13 +562,6 @@ public class STModelNavigator extends JPanel {
 			actions.add(newTransactionAction("Open", actionEvent -> {
 				nextgen.events.OpenSTModel.post(getModel());
 			}));
-			actions.add(newTransactionAction("Edit", actionEvent -> {
-				getParentNode(STTemplateTreeNode.class)
-						.ifPresent(stTemplateTreeNode -> {
-							final STModelEditor modelEditor = workspace.getModelEditor(stTemplateTreeNode.getModel(), getModel());
-							workspace.setSelectedComponent(modelEditor);
-						});
-			}));
 			actions.add(newAction("As STRenderer", actionEvent -> {
 				appModel().generateSource(getModel());
 			}));
@@ -525,6 +574,90 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
+	}
+
+	private boolean isSTModelTreeNode(Object treeNode) {
+		return treeNode instanceof STModelTreeNode;
+	}
+
+	// STParameterTreeNode
+	public class STParameterTreeNode extends BaseTreeNode<nextgen.st.domain.STParameter> {
+		private nextgen.st.model.STModel stModel;
+
+		STParameterTreeNode(nextgen.st.domain.STParameter model, nextgen.st.model.STModel stModel) {
+			super(model, null);
+
+			this.stModel = stModel;
+			setLabel(getModel().getName());
+			this.tooltip = "";
+
+			stModel.getArgumentsSorted()
+				.filter(stArgument -> stArgument.getStParameter().equals(model.getUuid()))
+				.forEach(appModel().stArgumentConsumer(model)
+						.onSingleSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
+						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
+						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
+						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
+						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stArgument, model))));
+		}
+
+		STParameterTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	private boolean isSTParameterTreeNode(Object treeNode) {
+		return treeNode instanceof STParameterTreeNode;
+	}
+
+	// STKVArgumentTreeNode
+	public class STKVArgumentTreeNode extends BaseTreeNode<nextgen.st.model.STArgument> {
+		private nextgen.st.domain.STParameter stParameter;
+
+		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
+			super(model, null);
+
+			this.stParameter = stParameter;
+			setLabel(model.toString());
+			this.tooltip = "";
+
+		}
+
+		STKVArgumentTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().toString());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+			return actions;
+		}
+
+	}
+
+	private boolean isSTKVArgumentTreeNode(Object treeNode) {
+		return treeNode instanceof STKVArgumentTreeNode;
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
@@ -578,22 +711,34 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTModel(nextgen.events.NewSTModel event) {
-		final nextgen.st.domain.STTemplate stTemplate = appModel().db.getSTTemplate(event.model);
+	public void onNewSTProject(nextgen.events.NewSTProject event) {
 		treeModel
-				.find(STTemplateTreeNode.class, stTemplateTreeNode -> stTemplateTreeNode
-						.getModel()
-						.equals(stTemplate))
-				.ifPresent(stTemplateTreeNode -> {
-					treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model));
-				});
+				.find(RootNode.class)
+				.ifPresent(rootNode -> treeModel.addNodeInSortedOrder(rootNode, new nextgen.st.STModelNavigator.STProjectTreeNode(event.model)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTValue(nextgen.events.NewSTValue event) {
+	public void onSTArgumentAdded(nextgen.events.NewSTArgument event) {
 		treeModel
-				.find(STValuesRootNode.class)
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.st.STModelNavigator.STValueTreeNode(event.model)));
+				.find(STModelTreeNode.class, treeNode -> treeNode.getModel().equals(event.stModel))
+				.flatMap(stModelTreeNode -> treeModel.find(stModelTreeNode, STParameterTreeNode.class, baseTreeNode -> ((STParameterTreeNode) baseTreeNode)
+						.getModel()
+						.getUuid()
+						.equals(event.stArgument.getStParameter())))
+				.ifPresent(stParameterTreeNode -> {
+					final nextgen.st.model.STValue stValue = event.stArgument.getValue();
+					switch (stValue.getType()) {
+						case STMODEL:
+							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), appModel()
+									.findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument));
+							break;
+						case PRIMITIVE:
+							treeModel.addNodeInSortedOrder(stParameterTreeNode, new STValueTreeNode(stValue, event.stArgument));
+							break;
+						case ENUM:
+							break;
+					}
+				});
 	}
 
 	public Set<nextgen.st.model.STValue> getSelectedValues() {
@@ -633,11 +778,15 @@ public class STModelNavigator extends JPanel {
 		}
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
 					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
 		}
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
 		}
