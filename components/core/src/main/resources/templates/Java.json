@@ -457,7 +457,7 @@
     }, {
       "uuid" : "2109f5b2-21e6-410b-b6df-a7c6948d73b2",
       "name" : "Singleton",
-      "text" : "package ~packageName~;\n\npublic final class ~name~ {\n \n    private static ~name~ INSTANCE;\n    ~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n    \n    private ~name~() {        \n    }\n    \n    public static synchronized ~name~ getInstance() {\n        if(INSTANCE == null) INSTANCE = new ~name~();\n        return INSTANCE;\n    }\n \n    ~accessors:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "text" : "package ~packageName~;\n\npublic final class ~name~ {\n\n\tprivate static ~name~ INSTANCE;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tprivate ~name~() {\t\t  \n\t}\n\n\tpublic static synchronized ~name~ getInstance() {\n\t\tif(INSTANCE == null) INSTANCE = new ~name~();\n\t\treturn INSTANCE;\n\t}\n\n~fields:{it|\n\tpublic ~it.type~ get~it.name;format=\"capitalize\"~() {\n\t\treturn _~it.name~;\n\t~eom()~\n\n\tpublic ~name~ set~it.name;format=\"capitalize\"~(~it.type~ value) {\n\t\tthis._~it.name~ = value;\n\t\treturn this;\n\t~eom()~\n};separator=\"\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "28d512cf-3a7e-4e7b-99f5-f1604e6b7c42",
         "name" : "packageName",
@@ -487,8 +487,8 @@
           "argumentType" : "Object"
         } ]
       }, {
-        "uuid" : "02fdfdd3-ba5c-4db5-bab3-f95f427eac2e",
-        "name" : "accessors",
+        "uuid" : "efe1e787-0f67-457e-92f4-b89e71b1bece",
+        "name" : "methods",
         "type" : "LIST",
         "argumentType" : "Object"
       } ]

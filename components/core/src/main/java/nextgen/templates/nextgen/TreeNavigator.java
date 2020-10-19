@@ -12,10 +12,12 @@ public class TreeNavigator {
 	private String _preferredHeight;
 	private BaseTreeNode _baseTreeNode;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<Object> _onSelectionStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
+	private java.util.List<Object> _unhandledNodeSelectedStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeNodes = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	TreeNavigator(org.stringtemplate.v4.STGroup stGroup) {
@@ -36,10 +38,12 @@ public class TreeNavigator {
 		st.add("preferredHeight", _preferredHeight);
 		st.add("baseTreeNode", _baseTreeNode);
 		for (Object o : _imports) st.add("imports", o);
-		for (Object o : _onSelectionStatements) st.add("onSelectionStatements", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		for (Object o : _treeNodesSelected) st.add("treeNodesSelected", o);
+		for (Object o : _unhandledNodeSelectedStatements) st.add("unhandledNodeSelectedStatements", o);
 		for (Object o : _treeNodes) st.add("treeNodes", o);
 		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
@@ -205,35 +209,6 @@ public class TreeNavigator {
 		return this._imports;
 	} 
 
-	public TreeNavigator addOnSelectionStatements(Object value) {
-		this._onSelectionStatements.add(value);
-		return this;
-	}
-
-	public TreeNavigator setOnSelectionStatements(Object[] value) {
-		this._onSelectionStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setOnSelectionStatements(java.util.Collection<Object> values) {
-		this._onSelectionStatements.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeOnSelectionStatements(Object value) {
-		this._onSelectionStatements.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeOnSelectionStatements(int index) {
-		this._onSelectionStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getOnSelectionStatements() {
-		return this._onSelectionStatements;
-	} 
-
 	public TreeNavigator addConstructorStatements(Object value) {
 		this._constructorStatements.add(value);
 		return this;
@@ -261,6 +236,64 @@ public class TreeNavigator {
 
 	public java.util.List<Object> getConstructorStatements() {
 		return this._constructorStatements;
+	} 
+
+	public TreeNavigator addTreeNodesSelected(Object value) {
+		this._treeNodesSelected.add(value);
+		return this;
+	}
+
+	public TreeNavigator setTreeNodesSelected(Object[] value) {
+		this._treeNodesSelected.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setTreeNodesSelected(java.util.Collection<Object> values) {
+		this._treeNodesSelected.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodesSelected(Object value) {
+		this._treeNodesSelected.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodesSelected(int index) {
+		this._treeNodesSelected.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getTreeNodesSelected() {
+		return this._treeNodesSelected;
+	} 
+
+	public TreeNavigator addUnhandledNodeSelectedStatements(Object value) {
+		this._unhandledNodeSelectedStatements.add(value);
+		return this;
+	}
+
+	public TreeNavigator setUnhandledNodeSelectedStatements(Object[] value) {
+		this._unhandledNodeSelectedStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setUnhandledNodeSelectedStatements(java.util.Collection<Object> values) {
+		this._unhandledNodeSelectedStatements.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeUnhandledNodeSelectedStatements(Object value) {
+		this._unhandledNodeSelectedStatements.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeUnhandledNodeSelectedStatements(int index) {
+		this._unhandledNodeSelectedStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getUnhandledNodeSelectedStatements() {
+		return this._unhandledNodeSelectedStatements;
 	} 
 
 	public TreeNavigator addTreeNodes(Object value) {
@@ -319,6 +352,35 @@ public class TreeNavigator {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
+	} 
+
+	public TreeNavigator addTreeModelConstructorStatements(Object value) {
+		this._treeModelConstructorStatements.add(value);
+		return this;
+	}
+
+	public TreeNavigator setTreeModelConstructorStatements(Object[] value) {
+		this._treeModelConstructorStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setTreeModelConstructorStatements(java.util.Collection<Object> values) {
+		this._treeModelConstructorStatements.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeTreeModelConstructorStatements(Object value) {
+		this._treeModelConstructorStatements.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeTreeModelConstructorStatements(int index) {
+		this._treeModelConstructorStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getTreeModelConstructorStatements() {
+		return this._treeModelConstructorStatements;
 	} 
 
 	public TreeNavigator addFields(Object _type, String _name) {
@@ -389,7 +451,7 @@ public class TreeNavigator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,onSelectionStatements,preferredWidth,preferredHeight,constructorStatements,baseTreeNode,treeNodes,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.utils.SwingUtil;\n" + 
 				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
@@ -415,71 +477,14 @@ public class TreeNavigator {
 				"		super(new BorderLayout());\n" + 
 				"\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-				"		\n" + 
+				"\n" + 
 				"		treeModel = new ~name~TreeModel(~rootNodeExpression~);\n" + 
 				"		tree.setModel(treeModel);\n" + 
 				"		ToolTipManager.sharedInstance().registerComponent(tree);\n" + 
 				"\n" + 
-				"		tree.setCellRenderer(new DefaultTreeCellRenderer() {\n" + 
-				"\n" + 
-				"			@Override\n" + 
-				"			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n" + 
-				"				final boolean isBaseTreeNode = value instanceof BaseTreeNode;\n" + 
-				"				if (isBaseTreeNode) {\n" + 
-				"					final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;\n" + 
-				"					final ImageIcon icon = baseTreeNode.getIcon();\n" + 
-				"					setIcon(icon);\n" + 
-				"					setOpenIcon(icon);\n" + 
-				"					setClosedIcon(icon);\n" + 
-				"					setLeafIcon(icon);\n" + 
-				"					setToolTipText(baseTreeNode.getTooltip());\n" + 
-				"					return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);\n" + 
-				"				}\n" + 
-				"				return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);\n" + 
-				"			}\n" + 
-				"		});\n" + 
-				"\n" + 
-				"		tree.addMouseListener(new MouseAdapter() {\n" + 
-				"			@Override\n" + 
-				"			public void mouseClicked(MouseEvent e) {\n" + 
-				"				if (SwingUtilities.isRightMouseButton(e)) {\n" + 
-				"\n" + 
-				"					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
-				"					if (selectionPath == null) return;\n" + 
-				"					final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
-				"					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
-				"\n" + 
-				"					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n" + 
-				"\n" + 
-				"				} else {\n" + 
-				"\n" + 
-				"					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
-				"					if (selectionPath == null) return;\n" + 
-				"					final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
-				"					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
-				"\n" + 
-				"					~onSelectionStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"				}\n" + 
-				"			}\n" + 
-				"		});\n" + 
-				"\n" + 
-				"		tree.addKeyListener(new KeyAdapter() {\n" + 
-				"			@Override\n" + 
-				"			public void keyPressed(KeyEvent e) {\n" + 
-				"\n" + 
-				"				if (e.getKeyCode() == KeyEvent.VK_SPACE) {\n" + 
-				"					final TreePath selectionPath = tree.getSelectionPath();\n" + 
-				"					if (selectionPath == null) return;\n" + 
-				"					final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
-				"					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
-				"\n" + 
-				"					final Rectangle bounds = tree.getPathBounds(selectionPath);\n" + 
-				"					if (bounds == null) return;\n" + 
-				"\n" + 
-				"					showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());\n" + 
-				"				}\n" + 
-				"			}\n" + 
-				"		});\n" + 
+				"		tree.setCellRenderer(new ~name~.~name~CellRenderer());\n" + 
+				"		tree.addKeyListener(new ~name~.~name~KeyListener());\n" + 
+				"		tree.addMouseListener(new ~name~.~name~MouseListener());\n" + 
 				"\n" + 
 				"		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));\n" + 
 				"		add(new JScrollPane(tree), BorderLayout.CENTER);\n" + 
@@ -487,6 +492,69 @@ public class TreeNavigator {
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {\n" + 
+				"		@Override\n" + 
+				"		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n" + 
+				"			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;\n" + 
+				"			final ImageIcon icon = node.getIcon();\n" + 
+				"			setIcon(icon);\n" + 
+				"			setOpenIcon(icon);\n" + 
+				"			setClosedIcon(icon);\n" + 
+				"			setLeafIcon(icon);\n" + 
+				"			setToolTipText(node.getTooltip());\n" + 
+				"			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private final class ~name~KeyListener extends KeyAdapter {\n" + 
+				"		@Override\n" + 
+				"		public void keyPressed(KeyEvent e) {\n" + 
+				"			if (e.getKeyCode() == KeyEvent.VK_SPACE) {\n" + 
+				"				final TreePath selectionPath = tree.getSelectionPath();\n" + 
+				"				if (selectionPath == null) return;\n" + 
+				"				final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
+				"				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
+				"				final Rectangle bounds = tree.getPathBounds(selectionPath);\n" + 
+				"				if (bounds == null) return;\n" + 
+				"\n" + 
+				"				showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private final class ~name~MouseListener extends MouseAdapter {\n" + 
+				"      @Override\n" + 
+				"      public void mouseClicked(MouseEvent e) {\n" + 
+				"         if (SwingUtilities.isRightMouseButton(e)) {\n" + 
+				"\n" + 
+				"            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
+				"            if (selectionPath == null) return;\n" + 
+				"            final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
+				"            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
+				"\n" + 
+				"            showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n" + 
+				"\n" + 
+				"         } else {\n" + 
+				"\n" + 
+				"            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
+				"            if (selectionPath == null) return;\n" + 
+				"            final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
+				"            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
+				"\n" + 
+				"            appModel().doLaterInTransaction(transaction -> {\n" + 
+				"					~treeNodesSelected:{it|if (is~it~(lastPathComponent)) \n" + 
+				"	on~it~Selected((~it~) lastPathComponent);\n" + 
+				"};separator=\"else \"~~if(treeNodesSelected)~					else \n" + 
+				"		~endif~						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);\n" + 
+				"            });\n" + 
+				"         }\n" + 
+				"      }\n" + 
+				"   }\n" + 
+				"\n" + 
+				"   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {\n" + 
+				"   	~unhandledNodeSelectedStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"   }\n" + 
+				"   \n" + 
 				"	~baseTreeNode~\n" + 
 				"\n" + 
 				"	~treeNodes:{it|~it~};separator=\"\\n\\n\"~	\n" + 
@@ -495,7 +563,7 @@ public class TreeNavigator {
 				"		return new AbstractAction(name) {\n" + 
 				"			@Override\n" + 
 				"			public void actionPerformed(ActionEvent e) {\n" + 
-				"				actionEventConsumer.accept(e);\n" + 
+				"				SwingUtilities.invokeLater(() -> actionEventConsumer.accept(e));\n" + 
 				"			}\n" + 
 				"		};\n" + 
 				"	}\n" + 
@@ -504,17 +572,16 @@ public class TreeNavigator {
 				"		return new AbstractAction(name) {\n" + 
 				"			@Override\n" + 
 				"			public void actionPerformed(ActionEvent e) {\n" + 
-				"				AppModel.getInstance().getSTAppPresentationModel().doInTransaction(transaction -> actionEventConsumer.accept(e));\n" + 
+				"				SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionEventConsumer.accept(e)));\n" + 
 				"			}\n" + 
 				"		};\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {\n" + 
 				"		final List<Action> actions = lastPathComponent.getActions();\n" + 
 				"		if (actions.isEmpty()) return;\n" + 
 				"\n" + 
 				"		final JPopupMenu pop = new JPopupMenu();\n" + 
-				"		pop.add(\"With \" + AppModel.getInstance().getSTAppPresentationModel().cut(lastPathComponent.getLabel()) + \" :\");\n" + 
 				"		for (Action action : actions)\n" + 
 				"			pop.add(action);\n" + 
 				"\n" + 
@@ -530,13 +597,25 @@ public class TreeNavigator {
 				"				.map(treePath -> (T) treePath.getLastPathComponent());\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public <T> java.util.stream.Stream<T> getSelectedNodes() {\n" + 
+				"		final TreePath[] selectionPaths = tree.getSelectionPaths();\n" + 
+				"		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();\n" + 
+				"		return Arrays.stream(selectionPaths)\n" + 
+				"				.filter(treePath -> treePath.getLastPathComponent() != null)\n" + 
+				"				.map(treePath -> (T) treePath.getLastPathComponent());\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private STAppPresentationModel appModel() {\n" + 
+				"		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	class ~name~TreeModel extends DefaultTreeModel {\n" + 
 				"\n" + 
 				"		public ~name~TreeModel(BaseTreeNode root) {\n" + 
 				"			super(root);\n" + 
-				"			~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"			~treeModelConstructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		protected Optional<BaseTreeNode<?>~gt()~ find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
@@ -544,11 +623,15 @@ public class TreeNavigator {
 				"		}\n" + 
 				"\n" + 
 				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {\n" + 
+				"			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();\n" + 
+				"			if (root.getClass().isAssignableFrom(nodeType)) return Optional.of((T) root);\n" + 
 				"			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->\n" + 
 				"					navigatorTreeNode.getClass().isAssignableFrom(nodeType));\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
+				"			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();\n" + 
+				"			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) return Optional.of((T) root);\n" + 
 				"			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
 				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
 				"		}\n" + 
@@ -567,9 +650,15 @@ public class TreeNavigator {
 				"			return Optional.empty();\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
 				"			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
 				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 
+				"			addNodeInSortedOrder(parent, child);\n" + 
+				"			tree.scrollPathToVisible(child.getThisPath());\n" + 
+				"			tree.setSelectionPath(child.getThisPath());\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 

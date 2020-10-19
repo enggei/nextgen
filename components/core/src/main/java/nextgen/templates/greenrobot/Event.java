@@ -5,7 +5,7 @@ public class Event {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Boolean _isStatic;
+	private Object _packageName;
 	private String _name;
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -20,31 +20,31 @@ public class Event {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("event");
-		st.add("isStatic", _isStatic);
+		st.add("packageName", _packageName);
 		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
 
-	public Event setIsStatic(Boolean value) {
-		this._isStatic = value;
+	public Event setPackageName(Object value) {
+		this._packageName = value;
 		return this;
 	}
 
-	public Boolean getIsStatic() {
-		return this._isStatic;
+	public Object getPackageName() {
+		return this._packageName;
 	}
 
-	public Boolean getIsStatic(Boolean defaultValue) {
-		return this._isStatic == null ? defaultValue : this._isStatic;
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
-	public boolean hasIsStatic() {
-		return this._isStatic != null;
+	public boolean hasPackageName() {
+		return this._packageName != null;
 	}
 
-	public Event removeIsStatic() {
-		this._isStatic = null;
+	public Event removePackageName() {
+		this._packageName = null;
 		return this;
 	} 
 
@@ -139,7 +139,16 @@ public class Event {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "event(isStatic,name,fields) ::= <<public ~if(isStatic)~static ~endif~class ~name~ {\n" + 
+	static final String st = "event(packageName,name,fields) ::= <<package ~packageName~;\n" + 
+				"\n" + 
+				"public final class ~name~ {\n" + 
+				"\n" + 
+				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
+				"\n" + 
+				"	public static void post(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		log.info(\"post ~name~\");\n" + 
+				"		org.greenrobot.eventbus.EventBus.getDefault().post(new ~name~(~fields:{it|~it.name~};separator=\", \"~));\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	~fields:{it|public final ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 

@@ -78,7 +78,7 @@ public class STModelEditorForm extends JPanel {
    }
 
 
-   private final class STValueElement {
+   final class STValueElement {
 
       private final String name;
       private final nextgen.st.model.STModel model;

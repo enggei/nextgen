@@ -42,6 +42,11 @@ public class STWorkspace extends JTabbedPane {
 		setSelectedComponent(findModelEditor(event.model, () -> appModel().findSTTemplateByUuid(event.model.getStTemplate())));
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
+		SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
+	}
+
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
@@ -97,6 +102,17 @@ public class STWorkspace extends JTabbedPane {
 		final STModelEditor component = new STModelEditor(stModel);
 		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
 		return component;
+	}
+
+	public void removeModelEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STModelEditor) {
+				if (((STModelEditor) tabComponentAt).getUuid().equals(uuid)) {
+					remove(i);
+				}
+			}
+		}
 	}
 
 	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {

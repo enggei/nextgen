@@ -6,7 +6,6 @@ import nextgen.templates.domain.Entity;
 import nextgen.templates.domain.Relation;
 import nextgen.templates.domain.RelationType;
 import nextgen.templates.greenrobot.Event;
-import nextgen.templates.greenrobot.EventManager;
 import nextgen.templates.greenrobot.Subscribe;
 import nextgen.templates.java.ClassOrInterfaceType;
 import nextgen.templates.java.PackageDeclaration;
@@ -27,7 +26,6 @@ import static nextgen.projects.Nextgen2Project.EntityEventTypes.*;
 import static nextgen.st.STGenerator.*;
 import static nextgen.templates.DomainPatterns.newEnum;
 import static nextgen.templates.DomainPatterns.*;
-import static nextgen.templates.GreenRobotPatterns.newPostEventMethod;
 import static nextgen.templates.JavaPatterns.*;
 import static nextgen.templates.javaswing.JavaSwingST.newGetTreeNodeAction;
 import static nextgen.templates.maven.MavenST.newDependency;
@@ -99,10 +97,10 @@ public class Nextgen2Project {
          .setPackageName(editorsPackage.getName())
          .setName(baseEditorName);
 
-   final EventManager eventManager = GreenRobotPatterns.newEventManager()
-         .setPackage(eventsPackage.getName())
-         .setName(eventManagerName)
-         .addImports(newImportDeclaration(domainPackage.getName()).setIsAsterisk(true));
+//   final EventManager eventManager = GreenRobotPatterns.newEventManager()
+//         .setPackage(eventsPackage.getName())
+//         .setName(eventManagerName)
+//         .addImports(newImportDeclaration(domainPackage.getName()).setIsAsterisk(true));
 
    final JPanel workspace = JavaSwingPatterns.newJPanel()
          .setPackageName(workspacePackage.getName())
@@ -136,7 +134,7 @@ public class Nextgen2Project {
    public void generateDomain() {
 
       typesMap.put(baseEditorName, newClassOrInterfaceType(editor.getPackageName(), editor.getName()));
-      typesMap.put(eventManagerName, newClassOrInterfaceType(eventManager.getPackage(), eventManager.getName()));
+//      typesMap.put(eventManagerName, newClassOrInterfaceType(eventManager.getPackage(), eventManager.getName()));
       typesMap.put(workspaceName, newClassOrInterfaceType(workspace.getPackageName(), workspace.getName()));
       typesMap.put(tabPanelName, newClassOrInterfaceType(tabbedPane.getPackageName(), tabbedPane.getName()));
       typesMap.put(navigatorTreeNodeName, newClassOrInterfaceType(baseTreeNode.getPackageName(), baseTreeNode.getName()));
@@ -330,10 +328,10 @@ public class Nextgen2Project {
                   .addFields(stringType, "model"));
             eventMap.put(SELECT, newEntityEvent(entity, "Selected"));
 
-            eventManager.addEvents(eventMap.get(NEW), newPostEventMethod(eventMap.get(NEW)));
-            eventManager.addEvents(eventMap.get(UPDATE), newPostEventMethod(eventMap.get(UPDATE)));
-            eventManager.addEvents(eventMap.get(DELETE), newPostEventMethod(eventMap.get(DELETE)));
-            eventManager.addEvents(eventMap.get(SELECT), newPostEventMethod(eventMap.get(SELECT)));
+//            eventManager.addEvents(eventMap.get(NEW), newPostEventMethod(eventMap.get(NEW)));
+//            eventManager.addEvents(eventMap.get(UPDATE), newPostEventMethod(eventMap.get(UPDATE)));
+//            eventManager.addEvents(eventMap.get(DELETE), newPostEventMethod(eventMap.get(DELETE)));
+//            eventManager.addEvents(eventMap.get(SELECT), newPostEventMethod(eventMap.get(SELECT)));
 
             if (!entity.getIsEnum(false)) {
                findNameProperty(entity)
@@ -344,9 +342,10 @@ public class Nextgen2Project {
                               .setType(typesMap.get(entity))
                               .setUuidExpression("model.getUuid()")
                               .addConstructorStatements("setLabel(model.getName());")
-                              .addSelectedStatements(GreenRobotPatterns
-                                    .newCallPostEventMethod(eventMap.get(SELECT), typesMap.get(eventManagerName))
-                                    .addArguments("getModel()")));
+//                              .addSelectedStatements(GreenRobotPatterns
+//                                    .newCallPostEventMethod(eventMap.get(SELECT), typesMap.get(eventManagerName))
+//                                    .addArguments("getModel()"))
+                                    );
 
                         // entity editor
                         entityEditorMap.put(entity, newModelEditor(editorsPackage, entity)
@@ -505,7 +504,7 @@ public class Nextgen2Project {
       final Event newSTChildTemplateEvent = GreenRobotPatterns
             .newStaticEvent("NewChildTemplate")
             .addFields(typesMap.get(stTemplate), "model");
-      eventManager.addEvents(newSTChildTemplateEvent, newPostEventMethod(newSTChildTemplateEvent));
+//      eventManager.addEvents(newSTChildTemplateEvent, newPostEventMethod(newSTChildTemplateEvent));
 
       // Config
       final Entity config = newEntity("AppConfig")
@@ -927,7 +926,7 @@ public class Nextgen2Project {
       writeJavaFile(appModel, swingPackage, appModelName, mainJava);
       writeJavaFile(swingUtil, swingPackage, swingUtil.getName(), mainJava);
       writeJavaFile(app, swingPackage, app.getName(), mainJava);
-      writeJavaFile(eventManager, eventsPackage, eventManager.getName(), mainJava);
+//      writeJavaFile(eventManager, eventsPackage, eventManager.getName(), mainJava);
       writeJavaFile(projectCanvas, canvasPackage, projectCanvas.getName(), mainJava);
       writeJavaFile(navigator, navigationPackage, navigator.getName().toString(), mainJava);
       writeJavaFile(treeModel, navigationPackage, treeModel.getName().toString(), mainJava);

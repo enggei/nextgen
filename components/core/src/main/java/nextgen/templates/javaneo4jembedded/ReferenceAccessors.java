@@ -8,6 +8,8 @@ public class ReferenceAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _removeStatements = new java.util.ArrayList<>();
 
 	ReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +25,8 @@ public class ReferenceAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		for (Object o : _setStatements) st.add("setStatements", o);
+		for (Object o : _removeStatements) st.add("removeStatements", o);
 		return st.render().trim();
 	}
 
@@ -92,6 +96,63 @@ public class ReferenceAccessors {
 		return this;
 	} 
 
+	public ReferenceAccessors addSetStatements(Object value) {
+		this._setStatements.add(value);
+		return this;
+	}
+
+	public ReferenceAccessors setSetStatements(Object[] value) {
+		this._setStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ReferenceAccessors setSetStatements(java.util.Collection<Object> values) {
+		this._setStatements.addAll(values);
+		return this;
+	}
+
+	public ReferenceAccessors removeSetStatements(Object value) {
+		this._setStatements.remove(value);
+		return this;
+	}
+
+	public ReferenceAccessors removeSetStatements(int index) {
+		this._setStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getSetStatements() {
+		return this._setStatements;
+	} 
+
+	public ReferenceAccessors addRemoveStatements(Object value) {
+		this._removeStatements.add(value);
+		return this;
+	}
+
+	public ReferenceAccessors setRemoveStatements(Object[] value) {
+		this._removeStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ReferenceAccessors setRemoveStatements(java.util.Collection<Object> values) {
+		this._removeStatements.addAll(values);
+		return this;
+	}
+
+	public ReferenceAccessors removeRemoveStatements(Object value) {
+		this._removeStatements.remove(value);
+		return this;
+	}
+
+	public ReferenceAccessors removeRemoveStatements(int index) {
+		this._removeStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRemoveStatements() {
+		return this._removeStatements;
+	} 
 
 
 	@Override
@@ -107,7 +168,7 @@ public class ReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
+	static final String st = "referenceAccessors(className,name,type,setStatements,removeStatements) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final org.neo4j.graphdb.Relationship relationship = get~name;format=\"capitalize\"~Relation();\n" + 
 				"	if (relationship != null)  { \n" + 
 				"		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;\n" + 
@@ -115,6 +176,7 @@ public class ReferenceAccessors {
 				"	}\n" + 
 				"	if (dst == null) return this;\n" + 
 				"	node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
+				"	~setStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -125,7 +187,10 @@ public class ReferenceAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(get~name;format=\"capitalize\"~Relation());\n" + 
-				"	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	existing.ifPresent(relationship -> {\n" + 
+				"		relationship.delete();\n" + 
+				"		~removeStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	});\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 

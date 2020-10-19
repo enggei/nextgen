@@ -1,6 +1,15 @@
 delimiters "~","~"
 
-event(isStatic,name,fields) ::= <<public ~if(isStatic)~static ~endif~class ~name~ {
+event(packageName,name,fields) ::= <<package ~packageName~;
+
+public final class ~name~ {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	public static void post(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		log.info("post ~name~");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new ~name~(~fields:{it|~it.name~};separator=", "~));
+	}
 
 	~fields:{it|public final ~it.type~ ~it.name~;};separator="\n"~
 
@@ -8,26 +17,6 @@ event(isStatic,name,fields) ::= <<public ~if(isStatic)~static ~endif~class ~name
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 }  >>
-
-EventManager(package,imports,name,events) ::= <<package ~package~;
-
-~imports:{it|~it~};separator="\n"~
-
-public class ~name~ {
-
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
-
-	~events:{it|~it.postMethod~};separator="\n\n"~
-
-	~events:{it|~it.declaration~};separator="\n\n"~
-}  >>
-
-PostEventMethod(eventName,parameters) ::= <<public static void post~eventName~(~parameters:{it|~it.type~ ~it.name~};separator=", "~) {
-	log.info("post ~eventName~");
-	org.greenrobot.eventbus.EventBus.getDefault().post(new ~eventName~(~parameters:{it|~it.name~};separator=", "~));
-}  >>
-
-CallPostEventMethod(eventManager,event,arguments) ::= <<~eventManager~.post~event~(~arguments:{it|~it~};separator=", "~);  >>
 
 maven() ::= <<<dependency>
 	<groupId>org.greenrobot</groupId>

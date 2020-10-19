@@ -48,6 +48,7 @@ public class NextgenProject {
 
    final PackageDeclaration corePackage = JavaPatterns.newPackageDeclaration("nextgen");
    final PackageDeclaration stPackage = JavaPatterns.newPackageDeclaration(corePackage, "st");
+   final PackageDeclaration eventsPackage = JavaPatterns.newPackageDeclaration(corePackage, "events");
    final PackageDeclaration metaDomainPackage = JavaPatterns.newPackageDeclaration(corePackage, "domains.meta");
    final PackageDeclaration stDomainPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.domain");
    final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration(corePackage, "st.model");
@@ -58,10 +59,6 @@ public class NextgenProject {
    final PackageDeclaration swingPackage = JavaPatterns.newPackageDeclaration(corePackage, swingPackageName);
    final PackageDeclaration swingConfigPackage = JavaPatterns.newPackageDeclaration(swingPackage, swingConfigPackageName);
 
-   final AppEvents appEvents = NextgenST
-         .newAppEvents()
-         .setPackageName(stPackage.getName())
-         .setName("STAppEvents");
 
    @Before
    public void init() {
@@ -275,6 +272,81 @@ public class NextgenProject {
             .addEntities(stProject);
 
       DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
+
+      final org.javatuples.Pair<nextgen.templates.javaneo4jembedded.NeoFactory, java.util.Map<nextgen.templates.domain.Entity, nextgen.templates.javaneo4jembedded.NodeWrapper>> neo = transform(stModelPackage, domain);
+
+      final nextgen.templates.javaneo4jembedded.NeoFactory neoFactory = neo.getValue0();
+      final java.util.Map<nextgen.templates.domain.Entity, nextgen.templates.javaneo4jembedded.NodeWrapper> nodeWrapperMap = neo.getValue1();
+
+      for (nextgen.templates.javaneo4jembedded.NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
+
+         final Object className = nodeWrapper.getName();
+         final String updateStatement = eventsPackage.getName() + "." + className + "Updated.post(this);";
+
+         nodeWrapper.getMethods().stream()
+                    .filter(o -> o instanceof nextgen.templates.javaneo4jembedded.DeleteNode)
+                    .map(o -> (nextgen.templates.javaneo4jembedded.DeleteNode) o)
+                    .findFirst()
+                    .ifPresent(deleteNode -> deleteNode.addDeleteStatements(eventsPackage.getName() + "." + className + "Deleted.post(uuid);"));
+
+         nodeWrapper.getAccessors().forEach(o -> {
+
+            if (o instanceof nextgen.templates.javaneo4jembedded.PrimitiveAccessors) {
+               nextgen.templates.javaneo4jembedded.PrimitiveAccessors accessors = (nextgen.templates.javaneo4jembedded.PrimitiveAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.ReferenceAccessors) {
+               nextgen.templates.javaneo4jembedded.ReferenceAccessors accessors = (nextgen.templates.javaneo4jembedded.ReferenceAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.ListReferenceAccessors) {
+               nextgen.templates.javaneo4jembedded.ListReferenceAccessors accessors = (nextgen.templates.javaneo4jembedded.ListReferenceAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors) {
+               nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors accessors = (nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.ExternalAccessors) {
+               nextgen.templates.javaneo4jembedded.ExternalAccessors accessors = (nextgen.templates.javaneo4jembedded.ExternalAccessors) o;
+               accessors.addSetStatements(updateStatement);
+//               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.EnumListAccessors) {
+               nextgen.templates.javaneo4jembedded.EnumListAccessors accessors = (nextgen.templates.javaneo4jembedded.EnumListAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            } else if (o instanceof nextgen.templates.javaneo4jembedded.EnumAccessors) {
+               nextgen.templates.javaneo4jembedded.EnumAccessors accessors = (nextgen.templates.javaneo4jembedded.EnumAccessors) o;
+               accessors.addSetStatements(updateStatement);
+               accessors.addRemoveStatements(updateStatement);
+            }
+         });
+
+         final nextgen.templates.greenrobot.Event updatedEvent = nextgen.templates.GreenRobotPatterns.newEvent()
+                                                                                                     .setName(className + "Updated")
+                                                                                                     .setPackageName(eventsPackage.getName())
+                                                                                                     .addFields(newClassOrInterfaceType(stModelPackage, className
+                                                                                                           .toString()), "model");
+         STGenerator.writeJavaFile(updatedEvent, eventsPackage, updatedEvent.getName(), mainJava);
+
+         final nextgen.templates.greenrobot.Event deletedEvent = nextgen.templates.GreenRobotPatterns.newEvent()
+                                                                                                     .setName(className + "Deleted")
+                                                                                                     .setPackageName(eventsPackage.getName())
+                                                                                                     .addFields("String", "uuid");
+         STGenerator.writeJavaFile(deletedEvent, eventsPackage, deletedEvent.getName(), mainJava);
+      }
+
+      for (nextgen.templates.javaneo4jembedded.NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
+         STGenerator.writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
+      }
+
+      neoFactory.getAccessors().stream()
+                .filter(o -> o instanceof nextgen.templates.javaneo4jembedded.NeoFactoryAccessors)
+                .map(o -> (nextgen.templates.javaneo4jembedded.NeoFactoryAccessors) o)
+                .forEach(neoFactoryAccessors -> neoFactoryAccessors
+                      .addNewInstanceStatements(eventsPackage.getName() + ".New" + neoFactoryAccessors.getName() + ".post(newInstance);"));
+
+      STGenerator.writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
    }
 
    /**

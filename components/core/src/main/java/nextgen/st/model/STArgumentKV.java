@@ -28,8 +28,12 @@ public class STArgumentKV {
 	private static final String _uuid = "uuid";
 
 	public STArgumentKV setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		 	nextgen.events.STArgumentKVUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -49,14 +53,19 @@ public class STArgumentKV {
 
 	public STArgumentKV removeUuid() { 
 		node.removeProperty(_uuid);
+		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
 	private static final String _stParameterKey = "stParameterKey";
 
 	public STArgumentKV setStParameterKey(String value) { 
-		if (value == null) node.removeProperty(_stParameterKey); 
-		else node.setProperty(_stParameterKey, value);
+		if (value == null) 
+			removeStParameterKey(); 
+		else {
+		 	node.setProperty(_stParameterKey, value);
+		 	nextgen.events.STArgumentKVUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -76,6 +85,7 @@ public class STArgumentKV {
 
 	public STArgumentKV removeStParameterKey() { 
 		node.removeProperty(_stParameterKey);
+		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
@@ -87,6 +97,7 @@ public class STArgumentKV {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("value"));
+		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
@@ -97,7 +108,10 @@ public class STArgumentKV {
 
 	public STArgumentKV removeValue() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getValueRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STArgumentKVUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -141,9 +155,14 @@ public class STArgumentKV {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
+		nextgen.events.STArgumentKVDeleted.post(uuid);
 	}
 
 }

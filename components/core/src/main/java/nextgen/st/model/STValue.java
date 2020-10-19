@@ -28,8 +28,12 @@ public class STValue {
 	private static final String _uuid = "uuid";
 
 	public STValue setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		 	nextgen.events.STValueUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -49,14 +53,19 @@ public class STValue {
 
 	public STValue removeUuid() { 
 		node.removeProperty(_uuid);
+		nextgen.events.STValueUpdated.post(this);
 		return this;
 	}
 
 	private static final String _value = "value";
 
 	public STValue setValue(String value) { 
-		if (value == null) node.removeProperty(_value); 
-		else node.setProperty(_value, value);
+		if (value == null) 
+			removeValue(); 
+		else {
+		 	node.setProperty(_value, value);
+		 	nextgen.events.STValueUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -76,12 +85,17 @@ public class STValue {
 
 	public STValue removeValue() { 
 		node.removeProperty(_value);
+		nextgen.events.STValueUpdated.post(this);
 		return this;
 	}
 
-	public STValue setType(STValueType value) { 
-		if (value == null) node.removeProperty("type"); 
-		else node.setProperty("type", value.name());
+	public STValue setType(STValueType value) {
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty("type", value.name());
+		 	nextgen.events.STValueUpdated.post(this);
+		} 
 		return this;
 	}
 
@@ -101,6 +115,7 @@ public class STValue {
 
 	public STValue removeType() { 
 		node.removeProperty("type");
+		nextgen.events.STValueUpdated.post(this);
 		return this;
 	}
 
@@ -112,6 +127,7 @@ public class STValue {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("stModel"));
+		nextgen.events.STValueUpdated.post(this);
 		return this;
 	}
 
@@ -122,7 +138,10 @@ public class STValue {
 
 	public STValue removeStModel() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStModelRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STValueUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -191,9 +210,14 @@ public class STValue {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
+		nextgen.events.STValueDeleted.post(uuid);
 	}
 
 }

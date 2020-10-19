@@ -25,6 +25,7 @@ public class STModelEditor extends JPanel {
    private final STModelEditorForm formComponent = new STModelEditorForm();
    private final JTabbedPane editors = new JTabbedPane();
    private final STModel stModel;
+   private final String uuid;
 
    private STModelEditorNavigator.STValueTreeNode currentTreeNode;
 
@@ -32,6 +33,7 @@ public class STModelEditor extends JPanel {
       super(new BorderLayout());
 
       this.stModel = stModel;
+      this.uuid = stModel.getUuid();
       setBackground(UIManager.getColor("Panel.background"));
 
       txtEditor.setEditable(false);
@@ -49,6 +51,11 @@ public class STModelEditor extends JPanel {
       formComponent.setModel(stModel);
       editorGrid.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
+   }
+
+
+   public String getUuid() {
+      return uuid;
    }
 
    private STAppPresentationModel appModel() {
@@ -211,6 +218,12 @@ public class STModelEditor extends JPanel {
 
       pop.addSeparator();
       pop.add(newAction("Save", actionEvent -> tryToSave()));
+      pop.add(newAction("Replace with Clipboard", actionEvent -> {
+         if (!txtEditor.isEditable()) return;
+         txtEditor.setText(SwingUtil.fromClipboard().trim());
+         txtEditor.setCaretPosition(0);
+         tryToSave();
+      }));
       pop.add(newAction("Append From Clipboard", actionEvent -> {
          if (!txtEditor.isEditable()) return;
          txtEditor.append(SwingUtil.fromClipboard().trim());

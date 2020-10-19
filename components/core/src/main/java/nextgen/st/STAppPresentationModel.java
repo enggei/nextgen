@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import static nextgen.st.STGenerator.toSTGroup;
 import static nextgen.templates.JavaPatterns.newPackageDeclaration;
 import static nextgen.templates.java.JavaST.*;
+import static nextgen.utils.STModelUtil.findSTTemplateByName;
 import static nextgen.utils.SwingUtil.newTextField;
 
 public class STAppPresentationModel {
@@ -35,9 +36,7 @@ public class STAppPresentationModel {
    public final STRenderer stRenderer;
    public final STModelDB db;
 
-   final Set<STGroupModel> stGroups = new java.util.TreeSet<>((v1, v2) -> v1
-         .getName()
-         .compareToIgnoreCase(v2.getName()));
+   final Set<STGroupModel> stGroups = new java.util.TreeSet<>((v1, v2) -> v1.getName().compareToIgnoreCase(v2.getName()));
    final STGroupModel generatorSTGroup;
 
    private final NeoChronicle chronicle;
@@ -46,13 +45,8 @@ public class STAppPresentationModel {
    private final WorkFlowFacade workFlowFacade;
 
    public STAppPresentationModel() throws IOException {
-      Arrays
-            .stream(Objects.requireNonNull(new File(AppModel
-                  .getInstance()
-                  .getTemplateDir())
-                  .listFiles(file -> file
-                        .getName()
-                        .endsWith(".json"))))
+
+      Arrays.stream(Objects.requireNonNull(new File(AppModel.getInstance().getTemplateDir()).listFiles(file -> file.getName().endsWith(".json"))))
             .forEach(file -> {
                try {
                   stGroups.add(new STGroupModel(file));
@@ -60,18 +54,12 @@ public class STAppPresentationModel {
                   System.out.println("Could not read stgroup file " + file.getAbsolutePath());
                }
             });
-      this.generatorSTGroup = new STGroupModel(new File(AppModel
-            .getInstance()
-            .getTemplateDir(), "StringTemplate.json"));
 
+      this.generatorSTGroup = new STGroupModel(new File(AppModel.getInstance().getTemplateDir(), "StringTemplate.json"));
       this.stRenderer = new STRenderer(stGroups);
-      this.db = new STModelDB(AppModel
-            .getInstance()
-            .getDbDir(), stGroups);
+      this.db = new STModelDB(AppModel.getInstance().getDbDir(), stGroups);
       this.workFlowFacade = new WorkFlowFacade(db.getDatabaseService());
-      this.chronicle = new NeoChronicle(AppModel
-            .getInstance()
-            .getDbDir(), db.getDatabaseService());
+      this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
    }
 
    public static Action newAction(String name, Consumer<ActionEvent> consumer) {
@@ -94,24 +82,12 @@ public class STAppPresentationModel {
 
    public static Optional<String> isValidTemplateName(JComponent parent, STGroupModel stGroupModel, String name) {
 
-      final Optional<STTemplate> existing = stGroupModel
-            .getTemplates()
-            .filter(stTemplate -> stTemplate
-                  .getName()
-                  .toLowerCase()
-                  .equals(name.toLowerCase()))
-            .findAny();
-
-      if (existing.isPresent()) {
+      if (findSTTemplateByName(stGroupModel, name).isPresent()) {
          SwingUtil.showMessage(name + " already in use in this group", parent);
          return Optional.empty();
       }
 
-      if (name
-            .toLowerCase()
-            .equals("eom") || name
-            .toLowerCase()
-            .equals("gt")) {
+      if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
          SwingUtil.showMessage(name + " is a reserved name", parent);
          return Optional.empty();
       }
@@ -123,6 +99,7 @@ public class STAppPresentationModel {
 
       return Optional.of(name);
    }
+
 
    public static void deleteSTGFile(String name) {
       final File stgFile = new File(AppModel
@@ -324,20 +301,6 @@ public class STAppPresentationModel {
       return db.getSTModelPackage(stModel, defaultName);
    }
 
-   public Collection<STArgumentKV> getStArgumentKVS(STParameter stParameter, STArgument stArgument) {
-      final Collection<STArgumentKV> kvSet = new LinkedHashSet<>();
-      stParameter
-            .getKeys()
-            .forEach(stParameterKey -> stArgument
-                  .getKeyValues()
-                  .filter(stArgumentKV -> stArgumentKV
-                        .getStParameterKey()
-                        .equals(stParameterKey
-                              .getUuid()))
-                  .forEach(kvSet::add));
-      return kvSet;
-   }
-
    public STWorkspace getWorkspace() {
       if (stWorkspace == null) stWorkspace = new STWorkspace();
       return stWorkspace;
@@ -345,7 +308,6 @@ public class STAppPresentationModel {
 
    public ImageIcon loadIcon(String iconName) {
       return loadIcon(iconName, "16x16");
-//      return loadIcon(iconName, "");
    }
 
    public ImageIcon loadIcon(String iconName, String dimension) {
@@ -378,14 +340,14 @@ public class STAppPresentationModel {
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, STValue value) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel);
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter);
       return stArgument;
    }
 
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, List<STArgumentKV> kvs) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, kvs);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel);
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter);
       return stArgument;
    }
 
@@ -436,6 +398,13 @@ public class STAppPresentationModel {
    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
       nextgen.events.NewSTModel.post(stModel);
+      return stModel;
+   }
+
+   public STModel newSTModel(String stGroupModel, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
+      final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
+      stProject.addModels(stModel);
+      nextgen.events.NewSTProjectSTModel.post(stModel, stProject);
       return stModel;
    }
 
@@ -646,31 +615,22 @@ public class STAppPresentationModel {
       this.lastDir = dir.getAbsolutePath();
    }
 
-   public STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
-      return new STArgumentConsumer(stParameter);
+   public nextgen.utils.STModelUtil.STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
+      return new nextgen.utils.STModelUtil.STArgumentConsumer(stParameter);
    }
 
    public String tryToFindArgument(Stream<STArgumentKV> set, STParameter stParameter, String kvName, Supplier<String> defaultValue) {
 
       final Optional<STParameterKey> kvNameFound = stParameter
             .getKeys()
-            .filter(stParameterKey -> stParameterKey
-                  .getName()
-                  .equals(kvName))
+            .filter(stParameterKey -> stParameterKey.getName().equals(kvName))
             .findFirst();
       if (!kvNameFound.isPresent()) return defaultValue.get();
 
-      final Optional<STArgumentKV> found = set
-            .filter(stArgumentKV -> stArgumentKV
-                  .getStParameterKey()
-                  .equals(kvNameFound
-                        .get()
-                        .getUuid()))
-            .findFirst();
+      final Optional<STArgumentKV> found = set.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(kvNameFound.get().getUuid()))
+                                              .findFirst();
       if (found.isPresent()) {
-         final String render = render(found
-               .get()
-               .getValue());
+         final String render = render(found.get().getValue());
          return render == null || render.length() == 0 ? "[EMPTY]" : render;
       }
 
@@ -680,22 +640,19 @@ public class STAppPresentationModel {
    public String tryToFindArgument(STModel stModel, String parameterName, Supplier<String> defaultValue) {
       final Optional<STParameter> parameter = findSTTemplateByUuid(stModel.getStTemplate())
             .getParameters()
-            .filter(stParameter -> stParameter
-                  .getName()
-                  .equals(parameterName))
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
             .findFirst();
       if (parameter.isPresent()) {
          final Optional<STArgument> argument = stModel
                .getArguments()
-               .filter(stArgument -> stArgument
-                     .getStParameter()
-                     .equals(parameter
-                           .get()
-                           .getUuid()))
+               .filter(stArgument -> stArgument.getStParameter().equals(parameter.get().getUuid()))
                .findFirst();
-         return argument.isPresent() ? render(argument
-               .get()
-               .getValue()) : defaultValue.get();
+         if (argument.isPresent()) {
+            final String render = render(argument.get().getValue());
+            return render==null ? defaultValue.get() : render;
+         } else {
+            return defaultValue.get();
+         }
       }
       return defaultValue.get();
    }
@@ -707,6 +664,15 @@ public class STAppPresentationModel {
                                                                                                                                     .getValue(), new java.io.File(stFile
                .getPath().getValue()));
       }));
+   }
+
+   public void addMultiple(JComponent owner, STModel stModel, STParameter stParameter) {
+
+      final String parameterName = stParameter.getName();
+      final String argumentType = stParameter.getArgumentType();
+
+
+
    }
 
    public void setMultiple(JComponent owner, STModel model, STTemplate stTemplate) {
@@ -902,7 +868,13 @@ public class STAppPresentationModel {
    }
 
    public Stream<STModel> findAllSTModelByStTemplate(String stTemplateUuid) {
-      return db.findAllSTModelByStTemplate(stTemplateUuid);
+      final java.util.stream.Stream<nextgen.st.model.STModel> modelStream = db.findAllSTModelByStTemplate(stTemplateUuid)
+                                                                              .sorted((m1, m2) -> {
+                                                                                 final String c1 = tryToFindArgument(m1, "name", m1::getUuid);
+                                                                                 final String c2 = tryToFindArgument(m2, "name", m2::getUuid);
+                                                                                 return c1.compareToIgnoreCase(c2);
+                                                                              });
+      return modelStream;
    }
 
    public nextgen.st.domain.STGroupModel findSTGroup(nextgen.st.domain.STTemplate model) {
@@ -943,6 +915,15 @@ public class STAppPresentationModel {
                                              .forEach(stArgument -> consumer.accept(stParameter, stArgument)));
    }
 
+   public void addToProject(nextgen.st.model.STProject project, nextgen.st.model.STModel model) {
+      project.addModels(model);
+      nextgen.events.NewSTProjectSTModel.post(model, project);
+   }
+
+   public void remove(nextgen.st.model.STArgument value) {
+      value.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(value));
+   }
+
    public static final class CompilationResult {
 
       public final String compilerOutput;
@@ -954,164 +935,7 @@ public class STAppPresentationModel {
       }
    }
 
-   public final class STArgumentConsumer implements Consumer<STArgument> {
 
-      private final STParameter stParameter;
-
-      private BiConsumer<STArgument, STValue> onSingleSTValueConsumer = (stArgument, stValue) -> {
-      };
-      private BiConsumer<STArgument, STValue> onSingleSTModelConsumer = (stArgument, stValue) -> {
-      };
-      private BiConsumer<STArgument, STValue> onSingleEnumConsumer = (stArgument, stValue) -> {
-      };
-
-      private BiConsumer<STArgument, STValue> onListSTValueConsumer = (stArgument, stValue) -> {
-      };
-      private BiConsumer<STArgument, STValue> onListSTModelConsumer = (stArgument, stValue) -> {
-      };
-      private BiConsumer<STArgument, STValue> onListEnumConsumer = (stArgument, stValue) -> {
-      };
-
-      private BiConsumer<STArgument, Collection<STArgumentKV>> onKVListConsumer = (stArgument, stArgumentKVS) -> {
-      };
-      private BiConsumer<STArgumentKV, STValue> onKVListSTValueConsumer = (stArgumentKV, stValue) -> {
-
-      };
-      private BiConsumer<STArgumentKV, STValue> onKVListSTModelConsumer = (stArgumentKV, stValue) -> {
-
-      };
-      private BiConsumer<STArgumentKV, STValue> onKVListEnumConsumer = (stArgumentKV, stValue) -> {
-
-      };
-
-      private STArgumentConsumer(STParameter stParameter) {
-         this.stParameter = stParameter;
-      }
-
-      @Override
-      public void accept(STArgument stArgument) {
-         final STValue value = stArgument.getValue();
-         switch (stParameter.getType()) {
-            case SINGLE:
-               if (value == null || value.getType() == null)
-                  break;
-               switch (value.getType()) {
-                  case STMODEL:
-                     if (value.getStModel() != null)
-                        onSingleSTModelConsumer.accept(stArgument, value);
-                     break;
-                  case PRIMITIVE:
-                     onSingleSTValueConsumer.accept(stArgument, value);
-                     break;
-                  case ENUM:
-                     onSingleEnumConsumer.accept(stArgument, value);
-                     break;
-               }
-               break;
-            case LIST:
-               if (value == null || value.getType() == null)
-                  break;
-               switch (value.getType()) {
-                  case STMODEL:
-                     if (value.getStModel() != null)
-                        onListSTModelConsumer.accept(stArgument, value);
-                     break;
-                  case PRIMITIVE:
-                     onListSTValueConsumer.accept(stArgument, value);
-                     break;
-                  case ENUM:
-                     onListEnumConsumer.accept(stArgument, value);
-                     break;
-               }
-               break;
-            case KVLIST:
-
-               onKVListConsumer.accept(stArgument, getStArgumentKVS(stParameter, stArgument));
-
-               stParameter
-                     .getKeys()
-                     .forEach(stParameterKey -> stArgument
-                           .getKeyValues()
-                           .filter(stArgumentKV -> stArgumentKV
-                                 .getStParameterKey()
-                                 .equals(stParameterKey
-                                       .getUuid()))
-                           .filter(stArgumentKV -> stArgumentKV
-                                 .getValue() != null)
-                           .forEach(stArgumentKV -> {
-                              final STValue kvValue = stArgumentKV
-                                    .getValue();
-                              switch (kvValue.getType()) {
-                                 case STMODEL:
-                                    if (kvValue.getStModel() != null)
-                                       onKVListSTModelConsumer
-                                             .accept(stArgumentKV, kvValue);
-                                    break;
-                                 case PRIMITIVE:
-                                    onKVListSTValueConsumer
-                                          .accept(stArgumentKV, kvValue);
-                                    break;
-                                 case ENUM:
-                                    onKVListEnumConsumer
-                                          .accept(stArgumentKV, kvValue);
-                                    break;
-                              }
-                           }));
-
-               break;
-         }
-      }
-
-      public STArgumentConsumer onKVListConsumer(BiConsumer<STArgument, Collection<STArgumentKV>> consumer) {
-         this.onKVListConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListEnum(BiConsumer<STArgumentKV, STValue> consumer) {
-         this.onKVListEnumConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListSTModel(BiConsumer<STArgumentKV, STValue> consumer) {
-         this.onKVListSTModelConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListSTValue(BiConsumer<STArgumentKV, STValue> consumer) {
-         this.onKVListSTValueConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onListEnum(BiConsumer<STArgument, STValue> consumer) {
-         this.onListEnumConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onListSTModel(BiConsumer<STArgument, STValue> consumer) {
-         this.onListSTModelConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onListSTValue(BiConsumer<STArgument, STValue> consumer) {
-         this.onListSTValueConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onSingleEnum(BiConsumer<STArgument, STValue> consumer) {
-         this.onSingleEnumConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onSingleSTModel(BiConsumer<STArgument, STValue> consumer) {
-         this.onSingleSTModelConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onSingleSTValue(BiConsumer<STArgument, STValue> consumer) {
-         this.onSingleSTValueConsumer = consumer;
-         return this;
-      }
-   }
 
    public Stream<STArgument> getArguments(STModel stModel, STParameter stParameter) {
       return stModel
@@ -1158,10 +982,10 @@ public class STAppPresentationModel {
             }
          } else {
             final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
-            final STTemplate stTemplate = STModelUtil.findSTemplateByName(argumentType, stGroupModel);
-            if (stTemplate != null) {
+            final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = findSTTemplateByName(stGroupModel,argumentType);
+            if (stTemplate.isPresent()) {
                if (singleValue) removeArgument(stModel, stParameter);
-               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
+               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate.get()));
                addParameter(stParameter, stModel, consumer, stValue);
             } else {
 

@@ -28,8 +28,12 @@ public class STModel {
 	private static final String _uuid = "uuid";
 
 	public STModel setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		 	nextgen.events.STModelUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -49,14 +53,19 @@ public class STModel {
 
 	public STModel removeUuid() { 
 		node.removeProperty(_uuid);
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
 	private static final String _stTemplate = "stTemplate";
 
 	public STModel setStTemplate(String value) { 
-		if (value == null) node.removeProperty(_stTemplate); 
-		else node.setProperty(_stTemplate, value);
+		if (value == null) 
+			removeStTemplate(); 
+		else {
+		 	node.setProperty(_stTemplate, value);
+		 	nextgen.events.STModelUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -76,14 +85,19 @@ public class STModel {
 
 	public STModel removeStTemplate() { 
 		node.removeProperty(_stTemplate);
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
 	private static final String _stGroup = "stGroup";
 
 	public STModel setStGroup(String value) { 
-		if (value == null) node.removeProperty(_stGroup); 
-		else node.setProperty(_stGroup, value);
+		if (value == null) 
+			removeStGroup(); 
+		else {
+		 	node.setProperty(_stGroup, value);
+		 	nextgen.events.STModelUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -103,6 +117,7 @@ public class STModel {
 
 	public STModel removeStGroup() { 
 		node.removeProperty(_stGroup);
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
@@ -113,6 +128,7 @@ public class STModel {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _files);
 		relationship.setProperty("_t", System.nanoTime());
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
@@ -126,12 +142,16 @@ public class STModel {
 
 	public STModel removeFiles(STFile dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STModelUpdated.post(this);
+		});
 		return this;
 	}
 
 	public STModel removeAllFiles() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).forEach(org.neo4j.graphdb.Relationship::delete);
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
@@ -146,6 +166,7 @@ public class STModel {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _arguments);
 		relationship.setProperty("_t", System.nanoTime());
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
@@ -159,12 +180,16 @@ public class STModel {
 
 	public STModel removeArguments(STArgument dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STModelUpdated.post(this);
+		});
 		return this;
 	}
 
 	public STModel removeAllArguments() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).forEach(org.neo4j.graphdb.Relationship::delete);
+		nextgen.events.STModelUpdated.post(this);
 		return this;
 	}
 
@@ -210,9 +235,14 @@ public class STModel {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
+		nextgen.events.STModelDeleted.post(uuid);
 	}
 
 }

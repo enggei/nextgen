@@ -8,6 +8,8 @@ public class EnumListAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _removeStatements = new java.util.ArrayList<>();
 
 	EnumListAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +25,8 @@ public class EnumListAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		for (Object o : _setStatements) st.add("setStatements", o);
+		for (Object o : _removeStatements) st.add("removeStatements", o);
 		return st.render().trim();
 	}
 
@@ -92,6 +96,63 @@ public class EnumListAccessors {
 		return this;
 	} 
 
+	public EnumListAccessors addSetStatements(Object value) {
+		this._setStatements.add(value);
+		return this;
+	}
+
+	public EnumListAccessors setSetStatements(Object[] value) {
+		this._setStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumListAccessors setSetStatements(java.util.Collection<Object> values) {
+		this._setStatements.addAll(values);
+		return this;
+	}
+
+	public EnumListAccessors removeSetStatements(Object value) {
+		this._setStatements.remove(value);
+		return this;
+	}
+
+	public EnumListAccessors removeSetStatements(int index) {
+		this._setStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getSetStatements() {
+		return this._setStatements;
+	} 
+
+	public EnumListAccessors addRemoveStatements(Object value) {
+		this._removeStatements.add(value);
+		return this;
+	}
+
+	public EnumListAccessors setRemoveStatements(Object[] value) {
+		this._removeStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumListAccessors setRemoveStatements(java.util.Collection<Object> values) {
+		this._removeStatements.addAll(values);
+		return this;
+	}
+
+	public EnumListAccessors removeRemoveStatements(Object value) {
+		this._removeStatements.remove(value);
+		return this;
+	}
+
+	public EnumListAccessors removeRemoveStatements(int index) {
+		this._removeStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRemoveStatements() {
+		return this._removeStatements;
+	} 
 
 
 	@Override
@@ -107,12 +168,13 @@ public class EnumListAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "enumListAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
+	static final String st = "enumListAccessors(className,name,type,setStatements,removeStatements) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n" + 
 				"	if (existing.isPresent()) return this;\n" + 
 				"	final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label(\"~type~\"));\n" + 
 				"	newNode.setProperty(\"value\", dst.name());\n" + 
 				"	node.createRelationshipTo(newNode, org.neo4j.graphdb.RelationshipType.withName(\"~name~\"));\n" + 
+				"	~setStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -122,6 +184,7 @@ public class EnumListAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"	~removeStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

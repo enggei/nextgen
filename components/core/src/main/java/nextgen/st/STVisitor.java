@@ -12,150 +12,147 @@ import java.util.stream.Collectors;
 
 public class STVisitor {
 
-    protected final STModelDB db;
+   protected final STModelDB db;
 
-    public STVisitor(STModelDB db) {
-        this.db = db;
-    }
+   public STVisitor(STModelDB db) {
+      this.db = db;
+   }
 
-    public final void visit(STModel stModel) {
+   public final void visit(STModel stModel) {
 
-        if (stModel == null) return;
+      if (stModel == null) return;
 
-        final STTemplate stTemplate = db.findSTTemplateByUuid(stModel.getStTemplate());
-        if (stTemplate == null) return;
+      final STTemplate stTemplate = db.findSTTemplateByUuid(stModel.getStTemplate());
+      if (stTemplate == null) return;
 
-        stTemplate.getParameters().forEach(stParameter ->
-                stModel.getArgumentsSorted()
-                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
-                        .forEach(stArgument -> {
-                            switch (stParameter.getType()) {
-                                case SINGLE:
-                                    visitSingle(stModel, stParameter, stArgument);
-                                    break;
-                                case LIST:
-                                    visitList(stModel, stParameter, stArgument);
-                                    break;
-                                case KVLIST:
-                                    visitKVList(stModel, stParameter, stArgument);
-                                    break;
-                            }
-                        }));
-    }
+      stTemplate.getParameters().forEach(stParameter ->
+            stModel.getArgumentsSorted()
+                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                   .forEach(stArgument -> {
+                      switch (stParameter.getType()) {
+                         case SINGLE:
+                            visitSingle(stModel, stParameter, stArgument);
+                            break;
+                         case LIST:
+                            visitList(stModel, stParameter, stArgument);
+                            break;
+                         case KVLIST:
+                            visitKVList(stModel, stParameter, stArgument);
+                            break;
+                      }
+                   }));
+   }
 
-    public final void visitSingle(STModel stModel, STParameter stParameter, STArgument stArgument) {
+   public final void visitSingle(STModel stModel, STParameter stParameter, STArgument stArgument) {
 
-        final STValue value = stArgument.getValue();
-        if (value == null) return;
+      final STValue value = stArgument.getValue();
+      if (value == null) return;
 
-        switch (value.getType()) {
+      switch (value.getType()) {
+         case STMODEL:
+            if (value.getStModel() == null) return;
+            visitSingleSTModel(stModel, stParameter, stArgument, value.getStModel());
+            break;
+         case PRIMITIVE:
+            if (value.getValue() == null) return;
+            visitSinglePrimitive(stModel, stParameter, stArgument, value.getValue());
+            break;
+         case ENUM:
+            if (value.getValue() == null) return;
+            visitSingleEnum(stModel, stParameter, stArgument, value.getValue());
+            break;
+      }
+   }
+
+   public final void visitList(STModel stModel, STParameter stParameter, STArgument stArgument) {
+
+      final STValue value = stArgument.getValue();
+      if (value == null) return;
+
+      switch (value.getType()) {
+         case STMODEL:
+            if (value.getStModel() == null) return;
+            visitListSTModel(stModel, stParameter, stArgument, value.getStModel());
+            break;
+         case PRIMITIVE:
+            if (value.getValue() == null) return;
+            visitListPrimitive(stModel, stParameter, stArgument, value.getValue());
+            break;
+         case ENUM:
+            if (value.getValue() == null) return;
+            visitListEnum(stModel, stParameter, stArgument, value.getValue());
+            break;
+      }
+   }
+
+   public final void visitKVList(STModel stModel, STParameter stParameter, STArgument stArgument) {
+      final java.util.Map<nextgen.st.domain.STParameterKey, nextgen.st.model.STArgumentKV> kvMap = getStParameterKeySTArgumentKVMap(stParameter, stArgument);
+
+      kvMap.forEach((stParameterKey, stArgumentKV) -> {
+
+         final STValue value = stArgumentKV.getValue();
+         if (value == null) return;
+
+         switch (value.getType()) {
             case STMODEL:
-                if (value.getStModel() == null) return;
-                visitSingleSTModel(stModel, stParameter, stArgument, value.getStModel());
-                break;
+               if (value.getStModel() == null) return;
+               visitKVEntrySTModel(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getStModel());
+               break;
             case PRIMITIVE:
-                if (value.getValue() == null) return;
-                visitSinglePrimitive(stModel, stParameter, stArgument, value.getValue());
-                break;
+               if (value.getValue() == null) return;
+               visitKVEntryPrimitive(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getValue());
+               break;
             case ENUM:
-                if (value.getValue() == null) return;
-                visitSingleEnum(stModel, stParameter, stArgument, value.getValue());
-                break;
-        }
-    }
+               if (value.getValue() == null) return;
+               visitKVEntryEnum(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getValue());
+               break;
+         }
+      });
+   }
 
-    public final void visitList(STModel stModel, STParameter stParameter, STArgument stArgument) {
+   protected void visitSingleSTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STModel valueStModel) {
 
-        final STValue value = stArgument.getValue();
-        if (value == null) return;
+   }
 
-        switch (value.getType()) {
-            case STMODEL:
-                if (value.getStModel() == null) return;
-                visitListSTModel(stModel, stParameter, stArgument, value.getStModel());
-                break;
-            case PRIMITIVE:
-                if (value.getValue() == null) return;
-                visitListPrimitive(stModel, stParameter, stArgument, value.getValue());
-                break;
-            case ENUM:
-                if (value.getValue() == null) return;
-                visitListEnum(stModel, stParameter, stArgument, value.getValue());
-                break;
-        }
-    }
+   protected void visitSinglePrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
 
-    public final void visitKVList(STModel stModel, STParameter stParameter, STArgument stArgument) {
-        visitKVArgumentMap(stModel, stParameter, stArgument, getStParameterKeySTArgumentKVMap(stParameter, stArgument));
-    }
+   }
 
-    protected void visitSingleSTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STModel valueStModel) {
+   protected void visitSingleEnum(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
 
-    }
+   }
 
-    protected void visitSinglePrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
+   protected void visitListSTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STModel valueStModel) {
 
-    }
+   }
 
-    protected void visitSingleEnum(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
+   protected void visitListPrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
 
-    }
+   }
 
-    protected void visitListSTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STModel valueStModel) {
+   protected void visitListEnum(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
 
-    }
+   }
 
-    protected void visitListPrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
+   protected void visitKVEntrySTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, STModel kvSTModel) {
 
-    }
+   }
 
-    protected void visitListEnum(STModel stModel, STParameter stParameter, STArgument stArgument, String value) {
+   protected void visitKVEntryPrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, String kvValue) {
 
-    }
+   }
 
-    private void visitKVArgumentMap(STModel stModel, STParameter stParameter, STArgument stArgument, Map<STParameterKey, STArgumentKV> stArgumentKVMap) {
+   protected void visitKVEntryEnum(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, String kvValue) {
 
-        stArgumentKVMap.forEach((stParameterKey, stArgumentKV) -> {
+   }
 
-            final STValue value = stArgumentKV.getValue();
-            if (value == null) return;
-
-            switch (value.getType()) {
-                case STMODEL:
-                    if (value.getStModel() == null) return;
-                    visitKVEntrySTModel(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getStModel());
-                    break;
-                case PRIMITIVE:
-                    if (value.getValue() == null) return;
-                    visitKVEntryPrimitive(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getValue());
-                    break;
-                case ENUM:
-                    if (value.getValue() == null) return;
-                    visitKVEntryEnum(stModel, stParameter, stArgument, stParameterKey, stArgumentKV, value.getValue());
-                    break;
-            }
-        });
-    }
-
-    protected void visitKVEntrySTModel(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, STModel kvSTModel) {
-
-    }
-
-    protected void visitKVEntryPrimitive(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, String kvValue) {
-
-    }
-
-    protected void visitKVEntryEnum(STModel stModel, STParameter stParameter, STArgument stArgument, STParameterKey stParameterKey, STArgumentKV stArgumentKV, String kvValue) {
-
-    }
-
-    private Map<STParameterKey, STArgumentKV> getStParameterKeySTArgumentKVMap(STParameter stParameter, STArgument stArgument) {
-        final Set<STParameterKey> stParameterKeys = stParameter.getKeys().collect(Collectors.toSet());
-        final Map<STParameterKey, STArgumentKV> stArgumentKVMap = new LinkedHashMap<>();
-        stParameterKeys.forEach(stParameterKey -> stArgument.getKeyValues()
-                .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
-                .findFirst()
-                .ifPresent(stArgumentKV -> stArgumentKVMap.put(stParameterKey, stArgumentKV)));
-        return stArgumentKVMap;
-    }
+   private Map<STParameterKey, STArgumentKV> getStParameterKeySTArgumentKVMap(STParameter stParameter, STArgument stArgument) {
+      final Set<STParameterKey> stParameterKeys = stParameter.getKeys().collect(Collectors.toSet());
+      final Map<STParameterKey, STArgumentKV> stArgumentKVMap = new LinkedHashMap<>();
+      stParameterKeys.forEach(stParameterKey -> stArgument.getKeyValues()
+                                                          .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                                                          .findFirst()
+                                                          .ifPresent(stArgumentKV -> stArgumentKVMap.put(stParameterKey, stArgumentKV)));
+      return stArgumentKVMap;
+   }
 }

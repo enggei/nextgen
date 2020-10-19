@@ -6,9 +6,7 @@ public class NextgenST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(AppEvents.st + "\n")
-	.append(AppEvent.st + "\n")
 	.append(EventSubscriber.st + "\n")
-	.append(NewOpenRemovedEvents.st + "\n")
 	.append(Canvas.st + "\n")
 	.append(BaseCanvasNode.st + "\n")
 	.append(CanvasNode.st + "\n")
@@ -65,16 +63,8 @@ public class NextgenST {
 		return new AppEvents(stGroup);
 	}  
 
-	public static AppEvent newAppEvent() {
-		return new AppEvent(stGroup);
-	}  
-
 	public static EventSubscriber newEventSubscriber() {
 		return new EventSubscriber(stGroup);
-	}  
-
-	public static NewOpenRemovedEvents newNewOpenRemovedEvents() {
-		return new NewOpenRemovedEvents(stGroup);
 	}  
 
 	public static Canvas newCanvas() {

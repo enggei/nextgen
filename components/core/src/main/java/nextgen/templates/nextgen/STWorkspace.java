@@ -9,6 +9,7 @@ public class STWorkspace {
 	private Object _name;
 	private java.util.List<Object> _constructorParameters = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	STWorkspace(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -25,6 +26,7 @@ public class STWorkspace {
 		st.add("name", _name);
 		for (Object o : _constructorParameters) st.add("constructorParameters", o);
 		for (Object o : _methods) st.add("methods", o);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		return st.render().trim();
 	}
 
@@ -130,6 +132,73 @@ public class STWorkspace {
 		return this._methods;
 	} 
 
+	public STWorkspace addFields(Object _type, Object _name, Object _init) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("init", _init);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public STWorkspace addFields(STWorkspace_Fields value) {
+		return addFields(value._type, value._name, value._init);
+	}
+
+	public java.util.stream.Stream<STWorkspace_Fields> streamFields() {
+		return this._fields.stream().map(STWorkspace_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(STWorkspace_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(STWorkspace_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Init() {
+		return streamFields().map(STWorkspace_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class STWorkspace_Fields {
+
+		Object _type;
+		Object _name;
+		Object _init;
+
+		public STWorkspace_Fields(Object _type, Object _name, Object _init) {
+			this._type = _type;
+			this._name = _name;
+			this._init = _init;
+		}
+
+		private STWorkspace_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._init = (Object) map.get("init");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -144,7 +213,7 @@ public class STWorkspace {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "STWorkspace(packageName,name,fields,constructorParameters,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.st.domain.STGroupModel;\n" + 
 				"import nextgen.st.domain.STTemplate;\n" + 
@@ -160,21 +229,28 @@ public class STWorkspace {
 				"\n" + 
 				"public class ~name~ extends JTabbedPane {\n" + 
 				"\n" + 
-				"	private final STAppPresentationModel presentationModel;\n" + 
-				"\n" + 
-				"	public ~name~(STAppPresentationModel presentationModel) {\n" + 
-				"		this.presentationModel = presentationModel;\n" + 
+				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+				"	\n" + 
+				"	public ~name~() {\n" + 
 				"		setPreferredSize(new Dimension(1200, 1024));\n" + 
 				"		~constructorParameters:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	~fields:{it|public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
+				"		return ~it.name~;\n" + 
+				"	~eom()~\n" + 
+				"	};separator=\"\\n\\n\"~\n" + 
+				"	\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
-				"\n" + 
+				"	private STAppPresentationModel appModel() {\n" + 
+				"		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public STRenderPanel findRenderer() {\n" + 
 				"		return (STRenderPanel) find(component -> component instanceof STRenderPanel)\n" + 
 				"				.orElseGet(() -> {\n" + 
-				"					final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);\n" + 
+				"					final STRenderPanel stRenderPanel = new STRenderPanel();\n" + 
 				"					addPane(\"Renderer\", stRenderPanel);\n" + 
 				"					return stRenderPanel;\n" + 
 				"				});\n" + 
@@ -190,7 +266,7 @@ public class STWorkspace {
 				"	public STModelCanvas findCanvas() {\n" + 
 				"		return (STModelCanvas) find(component -> component instanceof STModelCanvas)\n" + 
 				"				.orElseGet(() -> {\n" + 
-				"					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor(\"Panel.background\"), new Dimension(800, 600), presentationModel);\n" + 
+				"					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor(\"Panel.background\"), new Dimension(800, 600));\n" + 
 				"					addPane(\"Canvas\", stModelCanvas);\n" + 
 				"					return stModelCanvas;\n" + 
 				"				});\n" + 
@@ -205,11 +281,36 @@ public class STWorkspace {
 				"				}\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);\n" + 
+				"		final STModelGrid stModelGrid = new STModelGrid(stTemplate);\n" + 
 				"		addPane(stTemplate.getName() + \"-Models\", stModelGrid);\n" + 
 				"		return stModelGrid;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	public STModelEditor findModelEditor(STModel stModel, java.util.function.Supplier<STTemplate> stTemplateSupplier) {\n" + 
+				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
+				"				final Component tabComponentAt = getComponentAt(i);\n" + 
+				"				if (tabComponentAt instanceof STModelEditor) {\n" + 
+				"					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))\n" + 
+				"						return (STModelEditor) tabComponentAt;\n" + 
+				"				}\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		final STModelEditor component = new STModelEditor(stModel);\n" + 
+				"		addPane(appModel().tryToFindArgument(stModel, \"name\", () -> stTemplateSupplier.get().getName() + \"Model\"), component);\n" + 
+				"		return component;\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public void removeModelEditor(String uuid) {\n" + 
+				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
+				"			final Component tabComponentAt = getComponentAt(i);\n" + 
+				"			if (tabComponentAt instanceof STModelEditor) {\n" + 
+				"				if (((STModelEditor) tabComponentAt).getUuid().equals(uuid)) {\n" + 
+				"					remove(i);\n" + 
+				"				}\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {\n" + 
 				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
 				"				final Component tabComponentAt = getComponentAt(i);\n" + 
@@ -219,8 +320,8 @@ public class STWorkspace {
 				"				}\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		final STModelEditor component = new STModelEditor(presentationModel, stModel);\n" + 
-				"		addPane(stTemplate.getName() + \"Model\", component);\n" + 
+				"		final STModelEditor component = new STModelEditor(stModel);\n" + 
+				"		addPane(appModel().tryToFindArgument(stModel, \"name\", () -> stTemplate.getName() + \"Model\"), component);\n" + 
 				"		return component;\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -248,7 +349,7 @@ public class STWorkspace {
 				"				}\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		final STEditor component = new STEditor(stGroup, presentationModel);\n" + 
+				"		final STEditor component = new STEditor(stGroup);\n" + 
 				"		component.setSTTemplate(null);\n" + 
 				"		addPane(stGroup.getName(), component);\n" + 
 				"		setSelectedComponent(component);\n" + 
@@ -262,7 +363,7 @@ public class STWorkspace {
 				"					return (STValueGrid) tabComponentAt;\n" + 
 				"		}\n" + 
 				"\n" + 
-				"		final STValueGrid component = new STValueGrid(presentationModel);\n" + 
+				"		final STValueGrid component = new STValueGrid();\n" + 
 				"		addPane(\"Values\", component);\n" + 
 				"		return component;\n" + 
 				"	}\n" + 
@@ -286,17 +387,6 @@ public class STWorkspace {
 				"			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
 				"			add(label);\n" + 
 				"\n" + 
-				"			final JButton btnClose = new JButton(presentationModel.loadIcon(\"close\", \"12x12\"));\n" + 
-				"			final Dimension dimension = new Dimension(12, 16);\n" + 
-				"			btnClose.setMaximumSize(dimension);\n" + 
-				"			btnClose.setPreferredSize(dimension);\n" + 
-				"			btnClose.setMinimumSize(dimension);\n" + 
-				"			btnClose.setOpaque(false);\n" + 
-				"			btnClose.setContentAreaFilled(false);\n" + 
-				"			btnClose.setBorderPainted(false);\n" + 
-				"			btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));\n" + 
-				"			add(btnClose);\n" + 
-				"\n" + 
 				"			addMouseListener(new MouseAdapter() {\n" + 
 				"				@Override\n" + 
 				"				public void mouseClicked(MouseEvent e) {\n" + 
@@ -314,14 +404,14 @@ public class STWorkspace {
 				"							pop.add(new AbstractAction(\"Close Others\") {\n" + 
 				"								@Override\n" + 
 				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
-				"									presentationModel.getWorkspace().closeAllExcept(component);\n" + 
+				"									appModel().getWorkspace().closeAllExcept(component);\n" + 
 				"								}\n" + 
 				"							});\n" + 
 				"\n" + 
 				"							pop.add(new AbstractAction(\"Close All\") {\n" + 
 				"								@Override\n" + 
 				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
-				"									presentationModel.getWorkspace().closeAll();\n" + 
+				"									appModel().getWorkspace().closeAll();\n" + 
 				"								}\n" + 
 				"							});\n" + 
 				"\n" + 

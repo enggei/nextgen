@@ -15,6 +15,7 @@ public class Canvas {
 	private java.util.List<Object> _canvasNodes = new java.util.ArrayList<>();
 	private java.util.List<Object> _canvasRelations = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _finalFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
 
@@ -39,6 +40,7 @@ public class Canvas {
 		for (Object o : _canvasNodes) st.add("canvasNodes", o);
 		for (Object o : _canvasRelations) st.add("canvasRelations", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _finalFields) st.addAggr("finalFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
 		return st.render().trim();
@@ -346,6 +348,74 @@ public class Canvas {
 
 	}  
 
+	public Canvas addFinalFields(Object _type, Object _name, Object _init) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("init", _init);
+		this._finalFields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFinalFields() {
+		return this._finalFields;
+	}
+
+	public Canvas addFinalFields(Canvas_FinalFields value) {
+		return addFinalFields(value._type, value._name, value._init);
+	}
+
+	public java.util.stream.Stream<Canvas_FinalFields> streamFinalFields() {
+		return this._finalFields.stream().map(Canvas_FinalFields::new);
+	}
+
+	public java.util.List<Object> getFinalFields_Type() {
+		return streamFinalFields().map(Canvas_FinalFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFinalFields_Name() {
+		return streamFinalFields().map(Canvas_FinalFields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFinalFields_Init() {
+		return streamFinalFields().map(Canvas_FinalFields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Canvas_FinalFields {
+
+		Object _type;
+		Object _name;
+		Object _init;
+
+		public Canvas_FinalFields(Object _type, Object _name, Object _init) {
+			this._type = _type;
+			this._name = _name;
+			this._init = _init;
+		}
+
+		private Canvas_FinalFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._init = (Object) map.get("init");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+	}  
+
 	public Canvas addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -456,7 +526,7 @@ public class Canvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Canvas(packageName,imports,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
+	static final String st = "Canvas(packageName,imports,name,fields,finalFields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -504,6 +574,7 @@ public class Canvas {
 				"	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+				"	~finalFields:{it|private final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		this(UIManager.getColor(\"Panel.background\"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 

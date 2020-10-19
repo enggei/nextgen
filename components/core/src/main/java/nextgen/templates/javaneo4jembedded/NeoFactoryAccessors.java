@@ -6,6 +6,7 @@ public class NeoFactoryAccessors {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private java.util.List<Object> _newInstanceStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _properties = new java.util.ArrayList<>();
 
 	NeoFactoryAccessors(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,6 +21,7 @@ public class NeoFactoryAccessors {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NeoFactoryAccessors");
 		st.add("name", _name);
+		for (Object o : _newInstanceStatements) st.add("newInstanceStatements", o);
 		for (Object o : _properties) st.add("properties", o);
 		return st.render().trim();
 	}
@@ -44,6 +46,35 @@ public class NeoFactoryAccessors {
 	public NeoFactoryAccessors removeName() {
 		this._name = null;
 		return this;
+	} 
+
+	public NeoFactoryAccessors addNewInstanceStatements(Object value) {
+		this._newInstanceStatements.add(value);
+		return this;
+	}
+
+	public NeoFactoryAccessors setNewInstanceStatements(Object[] value) {
+		this._newInstanceStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NeoFactoryAccessors setNewInstanceStatements(java.util.Collection<Object> values) {
+		this._newInstanceStatements.addAll(values);
+		return this;
+	}
+
+	public NeoFactoryAccessors removeNewInstanceStatements(Object value) {
+		this._newInstanceStatements.remove(value);
+		return this;
+	}
+
+	public NeoFactoryAccessors removeNewInstanceStatements(int index) {
+		this._newInstanceStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getNewInstanceStatements() {
+		return this._newInstanceStatements;
 	} 
 
 	public NeoFactoryAccessors addProperties(Object value) {
@@ -89,14 +120,16 @@ public class NeoFactoryAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NeoFactoryAccessors(name,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
+	static final String st = "NeoFactoryAccessors(name,newInstanceStatements,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
 				"\n" + 
 				"public static boolean is~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) {\n" + 
 				"	return node != null && node.hasLabel(~name~Label);\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n" + 
-				"	return new~name;format=\"capitalize\"~(db.createNode(~name~Label));\n" + 
+				"	~name;format=\"capitalize\"~ newInstance = new~name;format=\"capitalize\"~(db.createNode(~name~Label));\n" + 
+				"	~newInstanceStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	return newInstance;\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n" + 

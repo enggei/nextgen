@@ -28,8 +28,12 @@ public class STFile {
 	private static final String _uuid = "uuid";
 
 	public STFile setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		 	nextgen.events.STFileUpdated.post(this);
+		}
 		return this;
 	}
 
@@ -49,6 +53,7 @@ public class STFile {
 
 	public STFile removeUuid() { 
 		node.removeProperty(_uuid);
+		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -60,6 +65,7 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("name"));
+		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -70,7 +76,10 @@ public class STFile {
 
 	public STFile removeName() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getNameRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STFileUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -86,6 +95,7 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("type"));
+		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -96,7 +106,10 @@ public class STFile {
 
 	public STFile removeType() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getTypeRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STFileUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -112,6 +125,7 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("packageName"));
+		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -122,7 +136,10 @@ public class STFile {
 
 	public STFile removePackageName() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPackageNameRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STFileUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -138,6 +155,7 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("path"));
+		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -148,7 +166,10 @@ public class STFile {
 
 	public STFile removePath() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPathRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+			nextgen.events.STFileUpdated.post(this);
+		});
 		return this;
 	}
 
@@ -200,9 +221,14 @@ public class STFile {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
+		nextgen.events.STFileDeleted.post(uuid);
 	}
 
 }

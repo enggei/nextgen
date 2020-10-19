@@ -44,7 +44,7 @@ public class BaseTreeNode {
 				"\n" + 
 				"	public BaseTreeNode(T model, ImageIcon icon) {\n" + 
 				"		setUserObject(model);\n" + 
-				"		this.label = model.toString();\n" + 
+				"		setLabel(model.toString());\n" + 
 				"		this.icon = icon;\n" + 
 				"		this.tooltip = \"\";\n" + 
 				"	}\n" + 
@@ -52,6 +52,11 @@ public class BaseTreeNode {
 				"	@SuppressWarnings(\"unchecked\")\n" + 
 				"	public T getModel() {\n" + 
 				"		return (T) getUserObject();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	protected void setLabel(String label) {\n" + 
+				"		this.label = label;\n" + 
+				"		if (this.label == null || this.label.trim().length() == 0) this.label = \"[EMPTY]\";\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public String getLabel() {\n" + 
@@ -103,10 +108,24 @@ public class BaseTreeNode {
 				"	}\n" + 
 				"\n" + 
 				"	protected TreePath addChild(BaseTreeNode<?> child) {\n" + 
+				"\n" + 
+				"		int n = getChildCount();\n" + 
+				"		if (n == 0) {\n" + 
+				"			add(child);\n" + 
+				"			return new javax.swing.tree.TreePath(child.getPath());\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		for (int i = 0; i < n; i++) {\n" + 
+				"			final BaseTreeNode<?> node = (BaseTreeNode<?>) getChildAt(i);\n" + 
+				"			if (node.getLabel().compareTo(child.getLabel()) > 0) {\n" + 
+				"				insert(child, i);\n" + 
+				"				return new javax.swing.tree.TreePath(child.getPath());\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"\n" + 
 				"		add(child);\n" + 
-				"		final TreePath path = new TreePath(child.getPath());\n" + 
-				"		treeModel.nodesWereInserted(BaseTreeNode.this, new int[]{getIndex(child)});\n" + 
-				"		return path;\n" + 
+				"\n" + 
+				"		return new javax.swing.tree.TreePath(child.getPath());\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	protected void addAndSelectChild(BaseTreeNode<?> child) {\n" + 
@@ -139,7 +158,7 @@ public class BaseTreeNode {
 				"		}\n" + 
 				"		return null;\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	protected TreePath getThisPath() {\n" + 
 				"		return new TreePath(getPath());\n" + 
 				"	}\n" + 

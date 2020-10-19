@@ -8,6 +8,8 @@ public class EnumAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _removeStatements = new java.util.ArrayList<>();
 
 	EnumAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +25,8 @@ public class EnumAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		for (Object o : _setStatements) st.add("setStatements", o);
+		for (Object o : _removeStatements) st.add("removeStatements", o);
 		return st.render().trim();
 	}
 
@@ -92,6 +96,63 @@ public class EnumAccessors {
 		return this;
 	} 
 
+	public EnumAccessors addSetStatements(Object value) {
+		this._setStatements.add(value);
+		return this;
+	}
+
+	public EnumAccessors setSetStatements(Object[] value) {
+		this._setStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumAccessors setSetStatements(java.util.Collection<Object> values) {
+		this._setStatements.addAll(values);
+		return this;
+	}
+
+	public EnumAccessors removeSetStatements(Object value) {
+		this._setStatements.remove(value);
+		return this;
+	}
+
+	public EnumAccessors removeSetStatements(int index) {
+		this._setStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getSetStatements() {
+		return this._setStatements;
+	} 
+
+	public EnumAccessors addRemoveStatements(Object value) {
+		this._removeStatements.add(value);
+		return this;
+	}
+
+	public EnumAccessors setRemoveStatements(Object[] value) {
+		this._removeStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EnumAccessors setRemoveStatements(java.util.Collection<Object> values) {
+		this._removeStatements.addAll(values);
+		return this;
+	}
+
+	public EnumAccessors removeRemoveStatements(Object value) {
+		this._removeStatements.remove(value);
+		return this;
+	}
+
+	public EnumAccessors removeRemoveStatements(int index) {
+		this._removeStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRemoveStatements() {
+		return this._removeStatements;
+	} 
 
 
 	@Override
@@ -107,9 +168,13 @@ public class EnumAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "enumAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
-				"	if (value == null) node.removeProperty(\"~name~\"); \n" + 
-				"	else node.setProperty(\"~name~\", value.name());\n" + 
+	static final String st = "enumAccessors(className,name,type,setStatements,removeStatements) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n" + 
+				"	if (value == null) \n" + 
+				"		remove~name;format=\"capitalize\"~(); \n" + 
+				"	else {\n" + 
+				"	 	node.setProperty(\"~name~\", value.name());\n" + 
+				"	 	~setStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	} \n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
@@ -129,6 +194,7 @@ public class EnumAccessors {
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() { \n" + 
 				"	node.removeProperty(\"~name~\");\n" + 
+				"	~removeStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

@@ -69,7 +69,9 @@ public class STModelNeoFactory {
 	}
 
 	public STModel newSTModel() { 
-		return newSTModel(db.createNode(STModelLabel));
+		STModel newInstance = newSTModel(db.createNode(STModelLabel));
+		nextgen.events.NewSTModel.post(newInstance);
+		return newInstance;
 	}
 
 	public STModel newSTModel(org.neo4j.graphdb.Node node) { 
@@ -129,7 +131,9 @@ public class STModelNeoFactory {
 	}
 
 	public STFile newSTFile() { 
-		return newSTFile(db.createNode(STFileLabel));
+		STFile newInstance = newSTFile(db.createNode(STFileLabel));
+		nextgen.events.NewSTFile.post(newInstance);
+		return newInstance;
 	}
 
 	public STFile newSTFile(org.neo4j.graphdb.Node node) { 
@@ -161,7 +165,9 @@ public class STModelNeoFactory {
 	}
 
 	public STValue newSTValue() { 
-		return newSTValue(db.createNode(STValueLabel));
+		STValue newInstance = newSTValue(db.createNode(STValueLabel));
+		nextgen.events.NewSTValue.post(newInstance);
+		return newInstance;
 	}
 
 	public STValue newSTValue(org.neo4j.graphdb.Node node) { 
@@ -221,7 +227,9 @@ public class STModelNeoFactory {
 	}
 
 	public STArgument newSTArgument() { 
-		return newSTArgument(db.createNode(STArgumentLabel));
+		STArgument newInstance = newSTArgument(db.createNode(STArgumentLabel));
+		nextgen.events.NewSTArgument.post(newInstance);
+		return newInstance;
 	}
 
 	public STArgument newSTArgument(org.neo4j.graphdb.Node node) { 
@@ -267,7 +275,9 @@ public class STModelNeoFactory {
 	}
 
 	public STArgumentKV newSTArgumentKV() { 
-		return newSTArgumentKV(db.createNode(STArgumentKVLabel));
+		STArgumentKV newInstance = newSTArgumentKV(db.createNode(STArgumentKVLabel));
+		nextgen.events.NewSTArgumentKV.post(newInstance);
+		return newInstance;
 	}
 
 	public STArgumentKV newSTArgumentKV(org.neo4j.graphdb.Node node) { 
@@ -313,7 +323,9 @@ public class STModelNeoFactory {
 	}
 
 	public STProject newSTProject() { 
-		return newSTProject(db.createNode(STProjectLabel));
+		STProject newInstance = newSTProject(db.createNode(STProjectLabel));
+		nextgen.events.NewSTProject.post(newInstance);
+		return newInstance;
 	}
 
 	public STProject newSTProject(org.neo4j.graphdb.Node node) { 

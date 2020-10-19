@@ -8,6 +8,7 @@ public class ExternalAccessors {
 	private Object _className;
 	private Object _name;
 	private Object _type;
+	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
 
 	ExternalAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,6 +24,7 @@ public class ExternalAccessors {
 		st.add("className", _className);
 		st.add("name", _name);
 		st.add("type", _type);
+		for (Object o : _setStatements) st.add("setStatements", o);
 		return st.render().trim();
 	}
 
@@ -92,6 +94,34 @@ public class ExternalAccessors {
 		return this;
 	} 
 
+	public ExternalAccessors addSetStatements(Object value) {
+		this._setStatements.add(value);
+		return this;
+	}
+
+	public ExternalAccessors setSetStatements(Object[] value) {
+		this._setStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ExternalAccessors setSetStatements(java.util.Collection<Object> values) {
+		this._setStatements.addAll(values);
+		return this;
+	}
+
+	public ExternalAccessors removeSetStatements(Object value) {
+		this._setStatements.remove(value);
+		return this;
+	}
+
+	public ExternalAccessors removeSetStatements(int index) {
+		this._setStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getSetStatements() {
+		return this._setStatements;
+	} 
 
 
 	@Override
@@ -107,8 +137,9 @@ public class ExternalAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "externalAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "externalAccessors(className,name,type,setStatements) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	this._~name~ = value;\n" + 
+				"	~setStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 

@@ -229,7 +229,7 @@ public class CanvasNodeAction {
 				"	@Override\n" + 
 				"	void actionPerformed(PInputEvent event, ActionEvent e) {\n" + 
 				"~if(transactional)~\n" + 
-				"		presentationModel.doLaterInTransaction(transaction -> {\n" + 
+				"		appModel().doLaterInTransaction(transaction -> {\n" + 
 				"			~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"		});\n" + 
 				"~else~\n" + 

@@ -1,78 +1,13 @@
 delimiters "~","~"
 
-AppEvents(packageName,name,events,newOpenRemovedEvents) ::= <<package ~packageName~;
-
-public class ~name~ {
-
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
-
-	~events:{it|~it~};separator="\n\n"~
-
-	~newOpenRemovedEvents:{it|~it~};separator="\n\n"~
-}  >>
-
-AppEvent(name,fields) ::= <<public static void post~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
-	log.info("post ~name~");
-	org.greenrobot.eventbus.EventBus.getDefault().post(new ~name~(~fields:{it|~it.name~};separator=", "~));
-}
-
-public static class ~name~ {
-
-	~fields:{it|public final ~it.type~ ~it.name~;};separator="\n"~
-	
-	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
-		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-	}
-}  >>
-
-NewOpenRemovedEvents(name,type) ::= <<public static void postNew~name~(~type~ ~name;format="lowFirst"~) {
-	log.info("post New~name~");
-	org.greenrobot.eventbus.EventBus.getDefault().post(new New~name~(~name;format="lowFirst"~));
-}
-
-public static void postRemoved~name~(java.lang.String uuid) {
-	log.info("post Removed~name~");
-	org.greenrobot.eventbus.EventBus.getDefault().post(new Removed~name~(uuid));
-}
-
-public static void postOpen~name~(~type~ ~name;format="lowFirst"~) {
-	log.info("post Open~name~");
-	org.greenrobot.eventbus.EventBus.getDefault().post(new Open~name~(~name;format="lowFirst"~));
-}
-
-public static class New~name~ {
-
-	public final ~type~ ~name;format="lowFirst"~;
-
-	public New~name~(~type~ ~name;format="lowFirst"~) {
-		this.~name;format="lowFirst"~ = ~name;format="lowFirst"~;
-	}
-}
-
-public static class Removed~name~ {
-
-	public final java.lang.String uuid;
-
-	public Removed~name~(java.lang.String uuid) {
-		this.uuid = uuid;
-	}
-}
-
-public static class Open~name~ {
-
-	public final ~type~ ~name;format="lowFirst"~;
-
-	public Open~name~(~type~ ~name;format="lowFirst"~) {
-		this.~name;format="lowFirst"~ = ~name;format="lowFirst"~;
-	}
-}  >>
+AppEvents() ::= <<// deprecated  >>
 
 EventSubscriber(eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe()
 public void on~eventName~(~eventType~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-Canvas(packageName,imports,name,fields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
+Canvas(packageName,imports,name,fields,finalFields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -120,6 +55,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	final CanvasZoomHandler canvasZoomHandler = new CanvasZoomHandler();
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	~finalFields:{it|private final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
@@ -1246,7 +1182,7 @@ CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::=
 	@Override
 	void actionPerformed(PInputEvent event, ActionEvent e) {
 ~if(transactional)~
-		presentationModel.doLaterInTransaction(transaction -> {
+		appModel().doLaterInTransaction(transaction -> {
 			~statements:{it|~it~};separator="\n"~
 		});
 ~else~
@@ -2228,7 +2164,7 @@ public class ~name~ extends javax.swing.JPanel {
 	}
 }  >>
 
-STWorkspace(packageName,name,constructorParameters,methods) ::= <<package ~packageName~;
+STWorkspace(packageName,name,fields,constructorParameters,methods) ::= <<package ~packageName~;
 
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STTemplate;
@@ -2244,21 +2180,28 @@ import java.util.function.Predicate;
 
 public class ~name~ extends JTabbedPane {
 
-	private final STAppPresentationModel presentationModel;
-
-	public ~name~(STAppPresentationModel presentationModel) {
-		this.presentationModel = presentationModel;
+	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	
+	public ~name~() {
 		setPreferredSize(new Dimension(1200, 1024));
 		~constructorParameters:{it|~it~};separator="\n"~
 	}
 
+	~fields:{it|public ~it.type~ get~it.name;format="capitalize"~() {
+		return ~it.name~;
+	~eom()~
+	};separator="\n\n"~
+	
 	~methods:{it|~it~};separator="\n\n"~
 
-
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+	
 	public STRenderPanel findRenderer() {
 		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
 				.orElseGet(() -> {
-					final STRenderPanel stRenderPanel = new STRenderPanel(presentationModel);
+					final STRenderPanel stRenderPanel = new STRenderPanel();
 					addPane("Renderer", stRenderPanel);
 					return stRenderPanel;
 				});
@@ -2274,7 +2217,7 @@ public class ~name~ extends JTabbedPane {
 	public STModelCanvas findCanvas() {
 		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
 				.orElseGet(() -> {
-					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600), presentationModel);
+					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600));
 					addPane("Canvas", stModelCanvas);
 					return stModelCanvas;
 				});
@@ -2289,11 +2232,36 @@ public class ~name~ extends JTabbedPane {
 				}
 		}
 
-		final STModelGrid stModelGrid = new STModelGrid(presentationModel, stTemplate);
+		final STModelGrid stModelGrid = new STModelGrid(stTemplate);
 		addPane(stTemplate.getName() + "-Models", stModelGrid);
 		return stModelGrid;
 	}
 
+	public STModelEditor findModelEditor(STModel stModel, java.util.function.Supplier<STTemplate> stTemplateSupplier) {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STModelEditor) {
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
+						return (STModelEditor) tabComponentAt;
+				}
+		}
+
+		final STModelEditor component = new STModelEditor(stModel);
+		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
+		return component;
+	}
+	
+	public void removeModelEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STModelEditor) {
+				if (((STModelEditor) tabComponentAt).getUuid().equals(uuid)) {
+					remove(i);
+				}
+			}
+		}
+	}
+	
 	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
 		for (int i = 0; i < getTabCount(); i++) {
 				final Component tabComponentAt = getComponentAt(i);
@@ -2303,8 +2271,8 @@ public class ~name~ extends JTabbedPane {
 				}
 		}
 
-		final STModelEditor component = new STModelEditor(presentationModel, stModel);
-		addPane(stTemplate.getName() + "Model", component);
+		final STModelEditor component = new STModelEditor(stModel);
+		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplate.getName() + "Model"), component);
 		return component;
 	}
 
@@ -2332,7 +2300,7 @@ public class ~name~ extends JTabbedPane {
 				}
 		}
 
-		final STEditor component = new STEditor(stGroup, presentationModel);
+		final STEditor component = new STEditor(stGroup);
 		component.setSTTemplate(null);
 		addPane(stGroup.getName(), component);
 		setSelectedComponent(component);
@@ -2346,7 +2314,7 @@ public class ~name~ extends JTabbedPane {
 					return (STValueGrid) tabComponentAt;
 		}
 
-		final STValueGrid component = new STValueGrid(presentationModel);
+		final STValueGrid component = new STValueGrid();
 		addPane("Values", component);
 		return component;
 	}
@@ -2370,17 +2338,6 @@ public class ~name~ extends JTabbedPane {
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 
-			final JButton btnClose = new JButton(presentationModel.loadIcon("close", "12x12"));
-			final Dimension dimension = new Dimension(12, 16);
-			btnClose.setMaximumSize(dimension);
-			btnClose.setPreferredSize(dimension);
-			btnClose.setMinimumSize(dimension);
-			btnClose.setOpaque(false);
-			btnClose.setContentAreaFilled(false);
-			btnClose.setBorderPainted(false);
-			btnClose.addActionListener(e -> SwingUtilities.invokeLater(() -> pane.remove(component)));
-			add(btnClose);
-
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -2398,14 +2355,14 @@ public class ~name~ extends JTabbedPane {
 							pop.add(new AbstractAction("Close Others") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									presentationModel.getWorkspace().closeAllExcept(component);
+									appModel().getWorkspace().closeAllExcept(component);
 								}
 							});
 
 							pop.add(new AbstractAction("Close All") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									presentationModel.getWorkspace().closeAll();
+									appModel().getWorkspace().closeAll();
 								}
 							});
 
@@ -2438,7 +2395,7 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-TreeNavigator(packageName,imports,name,fields,rootNodeExpression,onSelectionStatements,preferredWidth,preferredHeight,constructorStatements,baseTreeNode,treeNodes,methods) ::= <<package ~packageName~;
+TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
 
 import nextgen.utils.SwingUtil;
 ~imports:{it|import ~it~;};separator="\n"~
@@ -2464,71 +2421,14 @@ public class ~name~ extends JPanel {
 		super(new BorderLayout());
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-		
+
 		treeModel = new ~name~TreeModel(~rootNodeExpression~);
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
-		tree.setCellRenderer(new DefaultTreeCellRenderer() {
-
-			@Override
-			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-				final boolean isBaseTreeNode = value instanceof BaseTreeNode;
-				if (isBaseTreeNode) {
-					final BaseTreeNode<?> baseTreeNode = (BaseTreeNode<?>) value;
-					final ImageIcon icon = baseTreeNode.getIcon();
-					setIcon(icon);
-					setOpenIcon(icon);
-					setClosedIcon(icon);
-					setLeafIcon(icon);
-					setToolTipText(baseTreeNode.getTooltip());
-					return super.getTreeCellRendererComponent(tree, baseTreeNode.getLabel(), sel, expanded, leaf, row, hasFocus);
-				}
-				return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-			}
-		});
-
-		tree.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e)) {
-
-					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-					if (selectionPath == null) return;
-					final Object lastPathComponent = selectionPath.getLastPathComponent();
-					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
-					showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
-
-				} else {
-
-					final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-					if (selectionPath == null) return;
-					final Object lastPathComponent = selectionPath.getLastPathComponent();
-					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
-					~onSelectionStatements:{it|~it~};separator="\n"~
-				}
-			}
-		});
-
-		tree.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					final TreePath selectionPath = tree.getSelectionPath();
-					if (selectionPath == null) return;
-					final Object lastPathComponent = selectionPath.getLastPathComponent();
-					if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
-
-					final Rectangle bounds = tree.getPathBounds(selectionPath);
-					if (bounds == null) return;
-
-					showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
-				}
-			}
-		});
+		tree.setCellRenderer(new ~name~.~name~CellRenderer());
+		tree.addKeyListener(new ~name~.~name~KeyListener());
+		tree.addMouseListener(new ~name~.~name~MouseListener());
 
 		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
@@ -2536,6 +2436,69 @@ public class ~name~ extends JPanel {
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
 
+	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {
+		@Override
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;
+			final ImageIcon icon = node.getIcon();
+			setIcon(icon);
+			setOpenIcon(icon);
+			setClosedIcon(icon);
+			setLeafIcon(icon);
+			setToolTipText(node.getTooltip());
+			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);
+		}
+	}
+
+	private final class ~name~KeyListener extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				final TreePath selectionPath = tree.getSelectionPath();
+				if (selectionPath == null) return;
+				final Object lastPathComponent = selectionPath.getLastPathComponent();
+				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				final Rectangle bounds = tree.getPathBounds(selectionPath);
+				if (bounds == null) return;
+
+				showPopup((BaseTreeNode<?>) lastPathComponent, (int) bounds.getX(), (int) bounds.getY());
+			}
+		}
+	}
+
+	private final class ~name~MouseListener extends MouseAdapter {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+         if (SwingUtilities.isRightMouseButton(e)) {
+
+            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+            if (selectionPath == null) return;
+            final Object lastPathComponent = selectionPath.getLastPathComponent();
+            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+            showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+
+         } else {
+
+            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+            if (selectionPath == null) return;
+            final Object lastPathComponent = selectionPath.getLastPathComponent();
+            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+
+            appModel().doLaterInTransaction(transaction -> {
+					~treeNodesSelected:{it|if (is~it~(lastPathComponent)) 
+	on~it~Selected((~it~) lastPathComponent);
+};separator="else "~~if(treeNodesSelected)~					else 
+		~endif~						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);
+            });
+         }
+      }
+   }
+
+   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
+   	~unhandledNodeSelectedStatements:{it|~it~};separator="\n"~
+   }
+   
 	~baseTreeNode~
 
 	~treeNodes:{it|~it~};separator="\n\n"~	
@@ -2544,7 +2507,7 @@ public class ~name~ extends JPanel {
 		return new AbstractAction(name) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionEventConsumer.accept(e);
+				SwingUtilities.invokeLater(() -> actionEventConsumer.accept(e));
 			}
 		};
 	}
@@ -2553,17 +2516,16 @@ public class ~name~ extends JPanel {
 		return new AbstractAction(name) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AppModel.getInstance().getSTAppPresentationModel().doInTransaction(transaction -> actionEventConsumer.accept(e));
+				SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionEventConsumer.accept(e)));
 			}
 		};
 	}
-	
+
 	private void showPopup(BaseTreeNode<?> lastPathComponent, int x, int y) {
 		final List<Action> actions = lastPathComponent.getActions();
 		if (actions.isEmpty()) return;
 
 		final JPopupMenu pop = new JPopupMenu();
-		pop.add("With " + AppModel.getInstance().getSTAppPresentationModel().cut(lastPathComponent.getLabel()) + " :");
 		for (Action action : actions)
 			pop.add(action);
 
@@ -2579,13 +2541,25 @@ public class ~name~ extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
+	public <T> java.util.stream.Stream<T> getSelectedNodes() {
+		final TreePath[] selectionPaths = tree.getSelectionPaths();
+		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
+		return Arrays.stream(selectionPaths)
+				.filter(treePath -> treePath.getLastPathComponent() != null)
+				.map(treePath -> (T) treePath.getLastPathComponent());
+	}
+
+	private STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
 	~methods:{it|~it~};separator="\n\n"~
 
 	class ~name~TreeModel extends DefaultTreeModel {
 
 		public ~name~TreeModel(BaseTreeNode root) {
 			super(root);
-			~constructorStatements:{it|~it~};separator="\n"~
+			~treeModelConstructorStatements:{it|~it~};separator="\n"~
 		}
 
 		protected Optional<BaseTreeNode<?>~gt()~ find(java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
@@ -2593,11 +2567,15 @@ public class ~name~ extends JPanel {
 		}
 
 		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode ->
 					navigatorTreeNode.getClass().isAssignableFrom(nodeType));
 		}
 
 		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) return Optional.of((T) root);
 			return find((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
 		}
@@ -2616,9 +2594,15 @@ public class ~name~ extends JPanel {
 			return Optional.empty();
 		}
 
-		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {
 			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
+			addNodeInSortedOrder(parent, child);
+			tree.scrollPathToVisible(child.getThisPath());
+			tree.setSelectionPath(child.getThisPath());
 		}
 
 		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
@@ -2653,7 +2637,7 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 
 	public BaseTreeNode(T model, ImageIcon icon) {
 		setUserObject(model);
-		this.label = model.toString();
+		setLabel(model.toString());
 		this.icon = icon;
 		this.tooltip = "";
 	}
@@ -2661,6 +2645,11 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	@SuppressWarnings("unchecked")
 	public T getModel() {
 		return (T) getUserObject();
+	}
+
+	protected void setLabel(String label) {
+		this.label = label;
+		if (this.label == null || this.label.trim().length() == 0) this.label = "[EMPTY]";
 	}
 
 	public String getLabel() {
@@ -2712,10 +2701,24 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	}
 
 	protected TreePath addChild(BaseTreeNode<?> child) {
+
+		int n = getChildCount();
+		if (n == 0) {
+			add(child);
+			return new javax.swing.tree.TreePath(child.getPath());
+		}
+
+		for (int i = 0; i < n; i++) {
+			final BaseTreeNode<?> node = (BaseTreeNode<?>) getChildAt(i);
+			if (node.getLabel().compareTo(child.getLabel()) > 0) {
+				insert(child, i);
+				return new javax.swing.tree.TreePath(child.getPath());
+			}
+		}
+
 		add(child);
-		final TreePath path = new TreePath(child.getPath());
-		treeModel.nodesWereInserted(BaseTreeNode.this, new int[]{getIndex(child)});
-		return path;
+
+		return new javax.swing.tree.TreePath(child.getPath());
 	}
 
 	protected void addAndSelectChild(BaseTreeNode<?> child) {
@@ -2748,7 +2751,7 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 		}
 		return null;
 	}
-	
+
 	protected TreePath getThisPath() {
 		return new TreePath(getPath());
 	}
@@ -2768,7 +2771,7 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	}
 }  >>
 
-TreeNode(name,modelType,hasUuid,fields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods) ::= <<// ~name~
+TreeNode(name,modelType,hasUuid,fields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~
 public class ~name~ extends BaseTreeNode<~modelType~> {
 ~if(hasUuid)~
 
@@ -2780,7 +2783,7 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 		super(model, ~if(icon)~~icon~~else~null~endif~);
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-		this.label = ~if(labelExpression)~~labelExpression~~else~model.toString();~endif~
+		setLabel(~if(labelExpression)~~labelExpression~~else~model.toString()~endif~);
 		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
 		~if(hasUuid)~this.uuid = model.getUuid();~endif~
 
@@ -2793,7 +2796,7 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 
 	@Override
 	public void nodeChanged() {
-		this.label = ~if(labelExpression)~~labelExpression~~else~getModel().toString();~endif~
+		setLabel(~if(labelExpression)~~labelExpression~~else~getModel().toString()~endif~);
 		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
 		super.nodeChanged();
 	}
@@ -2807,6 +2810,26 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 	}
 
 	~methods:{it|~it~};separator="\n\n"~
+}
+
+private boolean is~name;format="capitalize"~(Object treeNode) {
+	return treeNode instanceof ~name~;
+}
+
+private Optional<~name~> find~name;format="capitalize"~(java.util.function.Predicate<~name~> predicate) {
+	return treeModel.find(~name~.class, predicate);
+}
+
+private Optional<~name~> find~name;format="capitalize"~(BaseTreeNode<?> parent, java.util.function.Predicate<~name~> predicate) {
+	return treeModel.find(parent, ~name~.class, predicate);
+}
+
+private java.util.stream.Stream<~name~> getSelected~name~s() {
+	return getSelectedNodes(~name~.class);
+}
+
+private void on~name~Selected(~name~ selectedNode) {
+	~selectionStatements:{it|~it~};separator="\n"~
 }  >>
 
 TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action("~title~", actionEvent -> {
