@@ -20,12 +20,11 @@ public class STModelDB extends STModelNeoFactory {
 
    public STModelDB(String dbDir, String templatesDir) {
       super(dbDir);
+
       groupModels = new ArrayList<>();
+
       java.util.Optional
-            .ofNullable(new java.io.File(templatesDir).listFiles(pathname -> pathname.isFile() && pathname
-                  .getName()
-                  .toLowerCase()
-                  .endsWith(".json")))
+            .ofNullable(new java.io.File(templatesDir).listFiles(pathname -> pathname.isFile() && pathname.getName().toLowerCase().endsWith(".json")))
             .ifPresent(files -> {
                for (java.io.File file : files)
                   groupModels.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
@@ -73,9 +72,7 @@ public class STModelDB extends STModelNeoFactory {
 
    @Override
    public STValue findOrCreateSTValueByValue(String value) {
-      return super
-            .findOrCreateSTValueByValue(value)
-            .setType(PRIMITIVE);
+      return super.findOrCreateSTValueByValue(value).setType(PRIMITIVE);
    }
 
    public STModelDB remove(STValue stValue) {
@@ -99,9 +96,7 @@ public class STModelDB extends STModelNeoFactory {
       final String uuid = stModel.getUuid();
       final STModel found = findSTModelByUuid(uuid);
       if (found == null) return this;
-      stModel
-            .getArguments()
-            .forEach(this::remove);
+      stModel.getArguments().forEach(this::remove);
       delete(found.getNode());
       nextgen.events.STModelDeleted.post(uuid);
       return this;
@@ -113,22 +108,14 @@ public class STModelDB extends STModelNeoFactory {
 
       final Optional<STParameter> foundParameter = stTemplate
             .getParameters()
-            .filter(stParameter -> stParameter
-                  .getName()
-                  .equals(parameterName))
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
             .findAny();
       if (!foundParameter.isPresent()) return defaultValue;
 
       return stModel
             .getArguments()
-            .filter(stArgument -> stArgument
-                  .getStParameter()
-                  .equals(foundParameter
-                        .get()
-                        .getUuid()))
-            .map(stArgument -> stArgument
-                  .getValue()
-                  .getValue())
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get().getUuid()))
+            .map(stArgument -> stArgument.getValue().getValue())
             .findFirst()
             .orElse(defaultValue);
    }
@@ -144,9 +131,7 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public static Optional<STTemplate> findSTTemplateByName(STGroupModel groupModel, String name) {
-      final Iterator<STTemplate> iterator = groupModel
-            .getTemplates()
-            .iterator();
+      final Iterator<STTemplate> iterator = groupModel.getTemplates().iterator();
       while (iterator.hasNext()) {
          final STTemplate stTemplate = findSTTemplateByName(iterator.next(), name);
          if (stTemplate != null) return Optional.of(stTemplate);
@@ -156,10 +141,7 @@ public class STModelDB extends STModelNeoFactory {
 
    public static STTemplate findSTTemplateByName(STTemplate stTemplate, String name) {
       if (name.equals(stTemplate.getName())) return stTemplate;
-
-      final Iterator<STTemplate> iterator = stTemplate
-            .getChildren()
-            .iterator();
+      final Iterator<STTemplate> iterator = stTemplate.getChildren().iterator();
       while (iterator.hasNext()) {
          final STTemplate child = findSTTemplateByName(iterator.next(), name);
          if (child != null) return child;
@@ -172,9 +154,7 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STTemplate findSTTemplateByUuid(String uuid) {
-
       if (templateMap.containsKey(uuid)) return templateMap.get(uuid);
-
       for (STGroupModel groupModel : groupModels) {
          final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
          if (stTemplate != null) {
@@ -186,9 +166,7 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    private STTemplate findSTTemplateByUuid(STGroupModel groupModel, String stTemplateUuid) {
-      final Iterator<STTemplate> iterator = groupModel
-            .getTemplates()
-            .iterator();
+      final Iterator<STTemplate> iterator = groupModel.getTemplates().iterator();
       while (iterator.hasNext()) {
          final STTemplate stTemplate = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
          if (stTemplate != null) return stTemplate;
@@ -198,10 +176,7 @@ public class STModelDB extends STModelNeoFactory {
 
    private STTemplate findSTTemplateByUuid(STTemplate stTemplate, String stTemplateUuid) {
       if (stTemplateUuid.equals(stTemplate.getUuid())) return stTemplate;
-
-      final Iterator<STTemplate> iterator = stTemplate
-            .getChildren()
-            .iterator();
+      final Iterator<STTemplate> iterator = stTemplate.getChildren().iterator();
       while (iterator.hasNext()) {
          final STTemplate child = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
          if (child != null) return child;
@@ -213,18 +188,14 @@ public class STModelDB extends STModelNeoFactory {
       final AtomicReference<T> found = new AtomicReference<>();
       findSTTemplateByUuid(stTemplateUuid)
             .getParameters()
-            .filter(stParameter -> stParameter
-                  .getName()
-                  .equals(name))
+            .filter(stParameter -> stParameter.getName().equals(name))
             .findFirst()
             .ifPresent(stParameter -> findAllSTModelByStTemplate(stTemplateUuid)
                   .filter(stModel -> found.get() == null)
                   .forEach(stModel -> stModel
                         .getArguments()
                         .filter(stArgument -> found.get() == null)
-                        .filter(stArgument -> stArgument
-                              .getStParameter()
-                              .equals(stParameter.getUuid()))
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                         .map(STArgument::getValue)
                         .filter(value::equals)
                         .findFirst()
@@ -241,9 +212,7 @@ public class STModelDB extends STModelNeoFactory {
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
       return newSTFile()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setName(newSTValue(name))
             .setType(findOrCreateSTValueByValue(type))
             .setPath(newSTValue(path))
@@ -252,17 +221,13 @@ public class STModelDB extends STModelNeoFactory {
 
    public STProject newSTProject(String name) {
       return newSTProject()
-            .setUuid(java.util.UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(java.util.UUID.randomUUID().toString())
             .setName(name);
    }
 
    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
       return newSTModel()
-            .setUuid(java.util.UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(java.util.UUID.randomUUID().toString())
             .setStTemplate(stTemplate.getUuid())
             .setStGroup(stGroupModel);
    }
@@ -274,60 +239,40 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
-      return newSTArgument(stParameter)
-            .setValue(stValue);
+      return newSTArgument(stParameter).setValue(stValue);
    }
 
    public STValue newSTValue(STModel stModel) {
-      final STValue stValue = newSTValue()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
-            .setType(STMODEL)
-            .setStModel(stModel);
+      final STValue stValue = newSTValue().setUuid(UUID.randomUUID().toString()).setType(STMODEL).setStModel(stModel);
       nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
    public STValue newSTValue(String value) {
-      final STValue stValue = newSTValue()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
-            .setType(PRIMITIVE)
-            .setValue(value);
+      final STValue stValue = newSTValue().setUuid(UUID.randomUUID().toString()).setType(PRIMITIVE).setValue(value);
       nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
    public STValue newSTValue(STEnumValue stEnumValue) {
       final STValue stValue = newSTValue()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setType(ENUM)
-            .setValue(stEnumValue.getLexical() == null || stEnumValue
-                  .getLexical()
-                  .trim()
-                  .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
+            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical().trim().length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
       nextgen.events.NewSTValue.post(stValue);
       return stValue;
    }
 
    public STArgumentKV newSTArgumentKV(STParameterKey key, STValue stValue) {
       return newSTArgumentKV()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setStParameterKey(key.getUuid())
             .setValue(stValue);
    }
 
    private STArgument newSTArgument(STParameter stParameter) {
       return newSTArgument()
-            .setUuid(UUID
-                  .randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setStParameter(stParameter.getUuid());
    }
 
@@ -340,35 +285,22 @@ public class STModelDB extends STModelNeoFactory {
 
    public void deleteUnnusedFiles() {
       findAllSTFile().forEach(stFile -> {
-         if (stFile
-               .getIncomingFilesSTModel()
-               .iterator()
-               .hasNext()) return;
+         if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
          log.info("deleting unnused stFile-" + stFile.getUuid());
          log.info(Neo4JUtil.toString(stFile.getNode()));
-         stFile
-               .getNode()
-               .getRelationships()
-               .forEach(Relationship::delete);
-         stFile
-               .getNode()
-               .delete();
+         stFile.getNode().getRelationships().forEach(Relationship::delete);
+         stFile.getNode().delete();
       });
    }
 
    public void deleteUnnusedNodes() {
-      getDatabaseService()
-            .getAllNodes()
-            .forEach(node -> {
-               if (node
-                     .getRelationships()
-                     .iterator()
-                     .hasNext()) return;
-               if (isSTProject(node)) return;
-               log.info("deleting unnused node");
-               log.info(Neo4JUtil.toString(node));
-               node.delete();
-            });
+      getDatabaseService().getAllNodes().forEach(node -> {
+         if (node.getRelationships().iterator().hasNext()) return;
+         if (isSTProject(node)) return;
+         log.info("deleting unnused node");
+         log.info(Neo4JUtil.toString(node));
+         node.delete();
+      });
    }
 
    public STModel cloneSTModel(String stModelUuid) {
@@ -415,6 +347,4 @@ public class STModelDB extends STModelNeoFactory {
 
       return clone;
    }
-
-
 }

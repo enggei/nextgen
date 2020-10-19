@@ -162,7 +162,7 @@ public class STModelGrid extends JPanel {
         private void save(STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter) {
             appModel().doInTransaction(transaction -> {
                 final String s = txtValue.getText().trim();
-                final STValue stValue = appModel().newSTValue(s);
+                final STValue stValue = appModel().db.newSTValue(s);
                 if (stArgument == null) {
                     stArgument = appModel().newSTArgument(stModel, stParameter, stValue);
                 } else

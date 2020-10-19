@@ -138,7 +138,7 @@ public class STAppPresentationModel {
                for (Map.Entry<STParameterKey, JTextField> fieldEntry : fieldMap.entrySet()) {
                   final String value = fieldEntry.getValue().getText().trim();
                   if (value.length() == 0) continue;
-                  kvs.add(newSTArgumentKV(fieldEntry.getKey(), newSTValue(value)));
+                  kvs.add(newSTArgumentKV(fieldEntry.getKey(), db.newSTValue(value)));
                }
                stArgumentConsumer.accept(newSTArgument(stModel, stParameter, kvs));
             });
@@ -326,13 +326,13 @@ public class STAppPresentationModel {
    }
 
    public Pair<STArgument, STValue> newSTArgument(STModel stModel, STParameter stParameter, String value) {
-      final nextgen.st.model.STValue stValue = newSTValue(value);
+      final nextgen.st.model.STValue stValue = db.newSTValue(value);
       final nextgen.st.model.STArgument stArgument = newSTArgument(stModel, stParameter, stValue);
       return new Pair<>(stArgument, stValue);
    }
 
    public Pair<STArgument, STValue> newSTArgument(STModel stModel, STParameter stParameter, STModel value) {
-      final nextgen.st.model.STValue stValue = newSTValue(value);
+      final nextgen.st.model.STValue stValue = db.newSTValue(value);
       final nextgen.st.model.STArgument stArgument = newSTArgument(stModel, stParameter, stValue);
       return new Pair<>(stArgument, stValue);
    }
@@ -436,30 +436,6 @@ public class STAppPresentationModel {
       parent.addChildren(stTemplate);
       nextgen.events.NewSTTemplate.post(stTemplate, parent);
       return stTemplate;
-   }
-
-   public STValue newSTValue(String s) {
-      final nextgen.st.model.STValue stValue = db.newSTValue(s);
-      nextgen.events.NewSTValue.post(stValue);
-      return stValue;
-   }
-
-   public STValue newSTValue(STModel stModel) {
-      final nextgen.st.model.STValue stValue = db.newSTValue(stModel);
-      nextgen.events.NewSTValue.post(stValue);
-      return stValue;
-   }
-
-   public STValue newSTValue(STEnumValue stEnum) {
-      final nextgen.st.model.STValue stValue = db.newSTValue(stEnum);
-      nextgen.events.NewSTValue.post(stValue);
-      return stValue;
-   }
-
-   public STValue newSTValue(Node node) {
-      final nextgen.st.model.STValue stValue = db.newSTValue(node);
-      nextgen.events.NewSTValue.post(stValue);
-      return stValue;
    }
 
    public void reconcileValues() {
@@ -754,7 +730,7 @@ public class STAppPresentationModel {
                   } else if (value.length() != 0 && stArgument != null) {
                      final String existingValue = render(stArgument.getValue());
                      if (!value.equals(existingValue))
-                        stArgument.setValue(newSTValue(value));
+                        stArgument.setValue(db.newSTValue(value));
                   } else if (value.length() != 0) {
                      newSTArgument(model, stParameter, value);
                   }
@@ -970,7 +946,7 @@ public class STAppPresentationModel {
                if (singleValue) removeArgument(stModel, stParameter);
                final STTemplate stTemplate = stTemplateSet.iterator().next();
                final STGroupModel stGroupModel = stRenderer.findSTGroupModel(stTemplate);
-               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
+               final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
                addParameter(stParameter, stModel, consumer, stValue);
 
             } else {
@@ -985,7 +961,7 @@ public class STAppPresentationModel {
             final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = findSTTemplateByName(stGroupModel,argumentType);
             if (stTemplate.isPresent()) {
                if (singleValue) removeArgument(stModel, stParameter);
-               final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate.get()));
+               final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate.get()));
                addParameter(stParameter, stModel, consumer, stValue);
             } else {
 
@@ -995,7 +971,7 @@ public class STAppPresentationModel {
                   if (interfaces.size() == 1) {
                      doLaterInTransaction(transaction2 -> {
                         if (singleValue) removeArgument(stModel, stParameter);
-                        final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), interfaces.iterator().next()));
+                        final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), interfaces.iterator().next()));
                         addParameter(stParameter, stModel, consumer, stValue);
                      });
                      return;
@@ -1003,7 +979,7 @@ public class STAppPresentationModel {
 
                   SwingUtil.showSelectDialog("Select", parent, interfaces, stTemplate1 -> doLaterInTransaction(transaction2 -> {
                      if (singleValue) removeArgument(stModel, stParameter);
-                     final STValue stValue = newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
+                     final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
                      addParameter(stParameter, stModel, consumer, stValue);
                   }));
 
@@ -1016,7 +992,7 @@ public class STAppPresentationModel {
                            .getValues()
                            .collect(Collectors.toSet()), stEnumValue -> doLaterInTransaction(transaction2 -> {
                         if (singleValue) removeArgument(stModel, stParameter);
-                        final STValue stValue = newSTValue(stEnumValue);
+                        final STValue stValue = db.newSTValue(stEnumValue);
                         addParameter(stParameter, stModel, consumer, stValue);
                      }));
 

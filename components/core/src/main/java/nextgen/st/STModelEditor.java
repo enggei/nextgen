@@ -97,7 +97,7 @@ public class STModelEditor extends JPanel {
                            .showInputDialog(stParameter.getName(), txtEditor, s -> {
                               appModel().doLaterInTransaction(tx -> {
                                  appModel().removeArgument(getModel(), stParameter);
-                                 appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s));
+                                 appModel().newSTArgument(getModel(), stParameter, appModel().db.newSTValue(s));
                                  setText(appModel().render(stModel), null);
                               });
                            })));
@@ -112,7 +112,7 @@ public class STModelEditor extends JPanel {
                         if (s == null || s.trim().length() == 0) return;
                         appModel().doLaterInTransaction(tx -> {
                            appModel().removeArgument(getModel(), stParameter);
-                           final nextgen.st.model.STArgument stArgument = appModel().newSTArgument(getModel(),stParameter, appModel().newSTValue(s.trim()));
+                           final nextgen.st.model.STArgument stArgument = appModel().newSTArgument(getModel(),stParameter, appModel().db.newSTValue(s.trim()));
                            setText(appModel().render(stModel), null);
                         });
                      }));
@@ -140,7 +140,7 @@ public class STModelEditor extends JPanel {
                         public void accept(ActionEvent actionEvent) {
                            nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), txtEditor, s -> {
                               appModel().doLaterInTransaction(tx -> {
-                                 appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s));
+                                 appModel().newSTArgument(getModel(), stParameter, appModel().db.newSTValue(s));
                                  setText(appModel().render(stModel), null);
                               });
                            });
@@ -155,7 +155,7 @@ public class STModelEditor extends JPanel {
                         final String s = SwingUtil.fromClipboard();
                         if (s == null || s.trim().length() == 0) return;
                         appModel().doLaterInTransaction(tx -> {
-                           appModel().newSTArgument(getModel(), stParameter, appModel().newSTValue(s.trim()));
+                           appModel().newSTArgument(getModel(), stParameter, appModel().db.newSTValue(s.trim()));
                            setText(appModel().render(stModel), null);
                         });
                      }));

@@ -13,11 +13,9 @@ import nextgen.templates.java.Singleton;
 import nextgen.templates.javaeasyflows.WorkFlowFacade;
 import nextgen.templates.maven.MavenST;
 import nextgen.templates.maven.Pom;
-import nextgen.templates.nextgen.AppEvents;
-import nextgen.templates.nextgen.NextgenST;
 import nextgen.utils.StringUtil;
 import org.junit.Before;
-
+import nextgen.templates.javaneo4jembedded.*;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -273,50 +271,50 @@ public class NextgenProject {
 
       DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
 
-      final org.javatuples.Pair<nextgen.templates.javaneo4jembedded.NeoFactory, java.util.Map<nextgen.templates.domain.Entity, nextgen.templates.javaneo4jembedded.NodeWrapper>> neo = transform(stModelPackage, domain);
+      final org.javatuples.Pair<NeoFactory, java.util.Map<nextgen.templates.domain.Entity, NodeWrapper>> neo = transform(stModelPackage, domain);
 
-      final nextgen.templates.javaneo4jembedded.NeoFactory neoFactory = neo.getValue0();
-      final java.util.Map<nextgen.templates.domain.Entity, nextgen.templates.javaneo4jembedded.NodeWrapper> nodeWrapperMap = neo.getValue1();
+      final NeoFactory neoFactory = neo.getValue0();
+      final java.util.Map<nextgen.templates.domain.Entity, NodeWrapper> nodeWrapperMap = neo.getValue1();
 
-      for (nextgen.templates.javaneo4jembedded.NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
+      for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
 
          final Object className = nodeWrapper.getName();
          final String updateStatement = eventsPackage.getName() + "." + className + "Updated.post(this);";
 
          nodeWrapper.getMethods().stream()
-                    .filter(o -> o instanceof nextgen.templates.javaneo4jembedded.DeleteNode)
-                    .map(o -> (nextgen.templates.javaneo4jembedded.DeleteNode) o)
+                    .filter(o -> o instanceof DeleteNode)
+                    .map(o -> (DeleteNode) o)
                     .findFirst()
                     .ifPresent(deleteNode -> deleteNode.addDeleteStatements(eventsPackage.getName() + "." + className + "Deleted.post(uuid);"));
 
          nodeWrapper.getAccessors().forEach(o -> {
 
-            if (o instanceof nextgen.templates.javaneo4jembedded.PrimitiveAccessors) {
-               nextgen.templates.javaneo4jembedded.PrimitiveAccessors accessors = (nextgen.templates.javaneo4jembedded.PrimitiveAccessors) o;
+            if (o instanceof PrimitiveAccessors) {
+               PrimitiveAccessors accessors = (PrimitiveAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.ReferenceAccessors) {
-               nextgen.templates.javaneo4jembedded.ReferenceAccessors accessors = (nextgen.templates.javaneo4jembedded.ReferenceAccessors) o;
+            } else if (o instanceof ReferenceAccessors) {
+               ReferenceAccessors accessors = (ReferenceAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.ListReferenceAccessors) {
-               nextgen.templates.javaneo4jembedded.ListReferenceAccessors accessors = (nextgen.templates.javaneo4jembedded.ListReferenceAccessors) o;
+            } else if (o instanceof ListReferenceAccessors) {
+               ListReferenceAccessors accessors = (ListReferenceAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors) {
-               nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors accessors = (nextgen.templates.javaneo4jembedded.ListPrimitiveAccessors) o;
+            } else if (o instanceof ListPrimitiveAccessors) {
+               ListPrimitiveAccessors accessors = (ListPrimitiveAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.ExternalAccessors) {
-               nextgen.templates.javaneo4jembedded.ExternalAccessors accessors = (nextgen.templates.javaneo4jembedded.ExternalAccessors) o;
+            } else if (o instanceof ExternalAccessors) {
+               ExternalAccessors accessors = (ExternalAccessors) o;
                accessors.addSetStatements(updateStatement);
 //               accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.EnumListAccessors) {
-               nextgen.templates.javaneo4jembedded.EnumListAccessors accessors = (nextgen.templates.javaneo4jembedded.EnumListAccessors) o;
+            } else if (o instanceof EnumListAccessors) {
+               EnumListAccessors accessors = (EnumListAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
-            } else if (o instanceof nextgen.templates.javaneo4jembedded.EnumAccessors) {
-               nextgen.templates.javaneo4jembedded.EnumAccessors accessors = (nextgen.templates.javaneo4jembedded.EnumAccessors) o;
+            } else if (o instanceof EnumAccessors) {
+               EnumAccessors accessors = (EnumAccessors) o;
                accessors.addSetStatements(updateStatement);
                accessors.addRemoveStatements(updateStatement);
             }
@@ -336,13 +334,13 @@ public class NextgenProject {
          STGenerator.writeJavaFile(deletedEvent, eventsPackage, deletedEvent.getName(), mainJava);
       }
 
-      for (nextgen.templates.javaneo4jembedded.NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
+      for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
          STGenerator.writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
       }
 
       neoFactory.getAccessors().stream()
-                .filter(o -> o instanceof nextgen.templates.javaneo4jembedded.NeoFactoryAccessors)
-                .map(o -> (nextgen.templates.javaneo4jembedded.NeoFactoryAccessors) o)
+                .filter(o -> o instanceof NeoFactoryAccessors)
+                .map(o -> (NeoFactoryAccessors) o)
                 .forEach(neoFactoryAccessors -> neoFactoryAccessors
                       .addNewInstanceStatements(eventsPackage.getName() + ".New" + neoFactoryAccessors.getName() + ".post(newInstance);"));
 

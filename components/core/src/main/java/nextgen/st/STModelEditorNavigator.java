@@ -462,7 +462,7 @@ public class STModelEditorNavigator extends JPanel {
 							SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
 									appModel().doLaterInTransaction(transaction1 -> {
 											int childCount = getChildCount();
-											final STValue stValue = appModel().newSTValue(inputValue);
+											final STValue stValue = appModel().db.newSTValue(inputValue);
 											for (int i = 0; i < childCount; i++) {
 												final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
 												final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
@@ -483,7 +483,7 @@ public class STModelEditorNavigator extends JPanel {
 					actions.add(newAction(stParameterKey.getName() + " from Clipboard " + appModel().cut(SwingUtil.fromClipboard(), 30), actionEvent -> {
 							appModel().doLaterInTransaction(transaction1 -> {
 								int childCount = getChildCount();
-								final STValue stValue = appModel().newSTValue(SwingUtil.fromClipboard());
+								final STValue stValue = appModel().db.newSTValue(SwingUtil.fromClipboard());
 								for (int i = 0; i < childCount; i++) {
 									final STKVTreeNode stkvTreeNode = (STKVTreeNode) getChildAt(i);
 									final STArgumentKV stArgumentKV = stkvTreeNode.getModel();
@@ -603,7 +603,7 @@ public class STModelEditorNavigator extends JPanel {
 
 				appModel().getSelectedSTModels().forEach(selectedModel -> {
 					actions.add(newTransactionAction("Set " + appModel().render(selectedModel, 30), actionEvent -> {
-						getModel().setValue(appModel().newSTValue(selectedModel));
+						getModel().setValue(appModel().db.newSTValue(selectedModel));
 						while (getChildCount() != 0)
 							treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
 						addAndSelectChild(new STModelTreeNode(selectedModel, appModel().findSTTemplateByUuid(selectedModel.getStTemplate()), getModel()));
@@ -614,7 +614,7 @@ public class STModelEditorNavigator extends JPanel {
 				actions.add(newAction("Set from input", actionEvent -> {
 					SwingUtil.showInputDialog(stParameterKey.getName(), tree, inputValue ->
 							appModel().doLaterInTransaction(transaction1 -> {
-								final STValue stValue = appModel().newSTValue(inputValue);
+								final STValue stValue = appModel().db.newSTValue(inputValue);
 								getModel().setValue(stValue);
 								while (getChildCount() != 0)
 									treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
@@ -625,7 +625,7 @@ public class STModelEditorNavigator extends JPanel {
 
 				actions.add(newAction("Set '" + appModel().cut(SwingUtil.fromClipboard(), 30) + "'", actionEvent -> {
 					appModel().doLaterInTransaction(transaction1 -> {
-						final STValue stValue = appModel().newSTValue(SwingUtil.fromClipboard());
+						final STValue stValue = appModel().db.newSTValue(SwingUtil.fromClipboard());
 						getModel().setValue(stValue);
 						while (getChildCount() != 0)
 							treeModel.removeNodeFromParent((MutableTreeNode) getChildAt(0));
