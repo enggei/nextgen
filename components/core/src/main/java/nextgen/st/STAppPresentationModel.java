@@ -384,6 +384,10 @@ public class STAppPresentationModel {
       return db.newSTModel(node);
    }
 
+   public nextgen.st.model.STValue newSTValue(Node node) {
+      return db.newSTValue(node);
+   }
+
    public STModel newSTModel(STTemplate stTemplate) {
       final nextgen.st.model.STModel stModel = db.newSTModel(findSTGroup(stTemplate).getUuid(), stTemplate);
       nextgen.events.NewSTModel.post(stModel);
@@ -944,7 +948,7 @@ public class STAppPresentationModel {
 
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.ArgumentAdded.post(stModel, stArgument, stParameter, value);
+      nextgen.events.STArgumentAdded.post(stModel, stArgument, stParameter, value);
    }
 
    public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
@@ -958,7 +962,7 @@ public class STAppPresentationModel {
    public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.ArgumentAdded.post(stModel, stArgument, stParameter, value);
+      nextgen.events.STArgumentAdded.post(stModel, stArgument, stParameter, value);
    }
 
    public void set(nextgen.st.model.STValue stValue, String value) {
@@ -1083,15 +1087,15 @@ public class STAppPresentationModel {
                   .equals(stParameter.getUuid()));
    }
 
-   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer) {
-      setParameter(stParameter, stModel, parent, consumer, true);
+   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent) {
+      setParameter(stParameter, stModel, parent, true);
    }
 
-   public void addList(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer) {
-      setParameter(stParameter, stModel, parent, consumer, false);
+   public void addList(STParameter stParameter, STModel stModel, JComponent parent) {
+      setParameter(stParameter, stModel, parent, false);
    }
 
-   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent, Consumer<org.javatuples.Pair<STArgument, STValue>> consumer, boolean singleValue) {
+   public void setParameter(STParameter stParameter, STModel stModel, JComponent parent, boolean singleValue) {
 
       doInTransaction(transaction -> {
 
@@ -1109,13 +1113,13 @@ public class STAppPresentationModel {
                final STTemplate stTemplate = stTemplateSet.iterator().next();
                final STGroupModel stGroupModel = stRenderer.findSTGroupModel(stTemplate);
                final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate));
-               addParameter(stParameter, stModel, consumer, stValue);
+               newSTArgument(stModel, stParameter, stValue);
 
             } else {
                SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
                      doLaterInTransaction(transaction2 -> {
                         if (singleValue) removeArgument(stModel, stParameter);
-                        addParameter(stParameter, stModel, consumer, inputValue);
+                        newSTArgument(stModel, stParameter, inputValue);
                      }));
             }
          } else {
@@ -1124,7 +1128,7 @@ public class STAppPresentationModel {
             if (stTemplate.isPresent()) {
                if (singleValue) removeArgument(stModel, stParameter);
                final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate.get()));
-               addParameter(stParameter, stModel, consumer, stValue);
+               newSTArgument(stModel, stParameter, stValue);
             } else {
 
                final Set<STTemplate> interfaces = STModelUtil.findSTInterfacesByName(argumentType, stGroupModel);
@@ -1134,7 +1138,7 @@ public class STAppPresentationModel {
                      doLaterInTransaction(transaction2 -> {
                         if (singleValue) removeArgument(stModel, stParameter);
                         final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), interfaces.iterator().next()));
-                        addParameter(stParameter, stModel, consumer, stValue);
+                        newSTArgument(stModel, stParameter, stValue);
                      });
                      return;
                   }
@@ -1142,7 +1146,7 @@ public class STAppPresentationModel {
                   SwingUtil.showSelectDialog("Select", parent, interfaces, stTemplate1 -> doLaterInTransaction(transaction2 -> {
                      if (singleValue) removeArgument(stModel, stParameter);
                      final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate1));
-                     addParameter(stParameter, stModel, consumer, stValue);
+                     newSTArgument(stModel, stParameter, stValue);
                   }));
 
                } else {
@@ -1155,27 +1159,19 @@ public class STAppPresentationModel {
                            .collect(Collectors.toSet()), stEnumValue -> doLaterInTransaction(transaction2 -> {
                         if (singleValue) removeArgument(stModel, stParameter);
                         final STValue stValue = db.newSTValue(stEnumValue);
-                        addParameter(stParameter, stModel, consumer, stValue);
+                        newSTArgument(stModel, stParameter, stValue);
                      }));
 
                   } else {
                      SwingUtil.showInputDialog(stParameter.getName(), parent, inputValue ->
                            doLaterInTransaction(transaction2 -> {
                               if (singleValue) removeArgument(stModel, stParameter);
-                              addParameter(stParameter, stModel, consumer, inputValue);
+                              newSTArgument(stModel, stParameter, inputValue);
                            }));
                   }
                }
             }
          }
       });
-   }
-
-   public void addParameter(STParameter stParameter, STModel stModel, Consumer<Pair<STArgument, STValue>> consumer, String value) {
-      consumer.accept(newSTArgument(stModel, stParameter, value));
-   }
-
-   public void addParameter(STParameter stParameter, STModel stModel, Consumer<Pair<STArgument, STValue>> consumer, STValue value) {
-      consumer.accept(new Pair<>(newSTArgument(stModel, stParameter, value), value));
    }
 }
