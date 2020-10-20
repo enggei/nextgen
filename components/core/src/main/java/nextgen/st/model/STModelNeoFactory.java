@@ -70,7 +70,6 @@ public class STModelNeoFactory {
 
 	public STModel newSTModel() { 
 		STModel newInstance = newSTModel(db.createNode(STModelLabel));
-		nextgen.events.NewSTModel.post(newInstance);
 		return newInstance;
 	}
 
@@ -132,7 +131,6 @@ public class STModelNeoFactory {
 
 	public STFile newSTFile() { 
 		STFile newInstance = newSTFile(db.createNode(STFileLabel));
-		nextgen.events.NewSTFile.post(newInstance);
 		return newInstance;
 	}
 
@@ -166,7 +164,6 @@ public class STModelNeoFactory {
 
 	public STValue newSTValue() { 
 		STValue newInstance = newSTValue(db.createNode(STValueLabel));
-		nextgen.events.NewSTValue.post(newInstance);
 		return newInstance;
 	}
 
@@ -228,7 +225,6 @@ public class STModelNeoFactory {
 
 	public STArgument newSTArgument() { 
 		STArgument newInstance = newSTArgument(db.createNode(STArgumentLabel));
-		nextgen.events.NewSTArgument.post(newInstance);
 		return newInstance;
 	}
 
@@ -276,7 +272,6 @@ public class STModelNeoFactory {
 
 	public STArgumentKV newSTArgumentKV() { 
 		STArgumentKV newInstance = newSTArgumentKV(db.createNode(STArgumentKVLabel));
-		nextgen.events.NewSTArgumentKV.post(newInstance);
 		return newInstance;
 	}
 
@@ -324,7 +319,6 @@ public class STModelNeoFactory {
 
 	public STProject newSTProject() { 
 		STProject newInstance = newSTProject(db.createNode(STProjectLabel));
-		nextgen.events.NewSTProject.post(newInstance);
 		return newInstance;
 	}
 

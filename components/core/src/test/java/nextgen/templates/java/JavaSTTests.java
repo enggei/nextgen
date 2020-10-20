@@ -24,7 +24,7 @@ public class JavaSTTests {
 		testPrimitiveAccessors();
 		testReferenceAccessors();
 		testPojoFactory();
-		testScript();
+		testRunnable();
 		testSingleton();
 		testValueObject();
 		testArrayCreationLevel();
@@ -108,6 +108,7 @@ public class JavaSTTests {
 		testTypeParameter();
 		testJavaLibrary();
 		testJavaPackage();
+		testJavaType();
 		testJavaPatterns();
 		testPasswordUtils();
 	}
@@ -188,8 +189,8 @@ public class JavaSTTests {
 	}  
 
 	@org.junit.Test
-	public void testScript() {
-		System.out.println("Script:\n" + newScript());
+	public void testRunnable() {
+		System.out.println("Runnable:\n" + newRunnable());
 	}  
 
 	@org.junit.Test
@@ -605,6 +606,11 @@ public class JavaSTTests {
 	@org.junit.Test
 	public void testJavaPackage() {
 		System.out.println("JavaPackage:\n" + newJavaPackage());
+	}  
+
+	@org.junit.Test
+	public void testJavaType() {
+		System.out.println("JavaType:\n" + newJavaType());
 	}  
 
 	@org.junit.Test

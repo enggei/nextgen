@@ -397,27 +397,16 @@ public class Nextgen2Project {
       // Swing Appmodel
       final Singleton appModel = JavaPatterns.newSingleton(appModelName, swingPackage)
             .addFields(stringType, "title", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "title", appModelName))
             .addFields(awtDimensionType, "appSize", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "appSize", appModelName))
             .addFields(awtDimensionType, "navigatorSize", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "navigatorSize", appModelName))
             .addFields(awtDimensionType, "workspaceSize", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(awtDimensionType, "workspaceSize", appModelName))
             .addFields(stringType, "rootDir", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "rootDir", appModelName))
             .addFields(stringType, "outputPackage", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "outputPackage", appModelName))
             .addFields(stringType, "outputPath", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "outputPath", appModelName))
             .addFields(stringType, "stDelimiter", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(stringType, "stDelimiter", appModelName))
             .addFields(integerType, "editorFontSize", null)
-            .addAccessors(JavaPatterns.newPrimitiveAccessors(integerType, "editorFontSize", appModelName))
             .addFields(jFrameType, "frame", null)
-            .addAccessors(JavaPatterns.newReferenceAccessors(jFrameType, "frame", appModelName))
-            .addFields(typesMap.get(domainFacadeName), "domain", null)
-            .addAccessors(JavaPatterns.newReferenceAccessors(typesMap.get(domainFacadeName), "domain", appModelName));
+            .addFields(typesMap.get(domainFacadeName), "domain", null);
       typesMap.put(appModelName, newClassOrInterfaceType(swingPackage, appModelName));
 
       navigator

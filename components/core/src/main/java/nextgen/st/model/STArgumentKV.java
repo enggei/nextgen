@@ -32,7 +32,6 @@ public class STArgumentKV {
 			removeUuid(); 
 		else {
 		 	node.setProperty(_uuid, value);
-		 	nextgen.events.STArgumentKVUpdated.post(this);
 		}
 		return this;
 	}
@@ -53,7 +52,6 @@ public class STArgumentKV {
 
 	public STArgumentKV removeUuid() { 
 		node.removeProperty(_uuid);
-		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
@@ -64,7 +62,6 @@ public class STArgumentKV {
 			removeStParameterKey(); 
 		else {
 		 	node.setProperty(_stParameterKey, value);
-		 	nextgen.events.STArgumentKVUpdated.post(this);
 		}
 		return this;
 	}
@@ -85,7 +82,6 @@ public class STArgumentKV {
 
 	public STArgumentKV removeStParameterKey() { 
 		node.removeProperty(_stParameterKey);
-		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
@@ -97,7 +93,6 @@ public class STArgumentKV {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("value"));
-		nextgen.events.STArgumentKVUpdated.post(this);
 		return this;
 	}
 
@@ -110,7 +105,6 @@ public class STArgumentKV {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getValueRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STArgumentKVUpdated.post(this);
 		});
 		return this;
 	}

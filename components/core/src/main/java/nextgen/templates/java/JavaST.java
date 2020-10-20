@@ -20,7 +20,7 @@ public class JavaST {
 	.append(PrimitiveAccessors.st + "\n")
 	.append(ReferenceAccessors.st + "\n")
 	.append(PojoFactory.st + "\n")
-	.append(Script.st + "\n")
+	.append(Runnable.st + "\n")
 	.append(Singleton.st + "\n")
 	.append(ValueObject.st + "\n")
 	.append(ArrayCreationLevel.st + "\n")
@@ -104,6 +104,7 @@ public class JavaST {
 	.append(TypeParameter.st + "\n")
 	.append(JavaLibrary.st + "\n")
 	.append(JavaPackage.st + "\n")
+	.append(JavaType.st + "\n")
 	.append(JavaPatterns.st + "\n")
 	.append(PasswordUtils.st + "\n")
 	.toString()  ;
@@ -202,8 +203,8 @@ public class JavaST {
 		return new PojoFactory(stGroup);
 	}  
 
-	public static Script newScript() {
-		return new Script(stGroup);
+	public static Runnable newRunnable() {
+		return new Runnable(stGroup);
 	}  
 
 	public static Singleton newSingleton() {
@@ -536,6 +537,10 @@ public class JavaST {
 
 	public static JavaPackage newJavaPackage() {
 		return new JavaPackage(stGroup);
+	}  
+
+	public static JavaType newJavaType() {
+		return new JavaType(stGroup);
 	}  
 
 	public static JavaPatterns newJavaPatterns() {

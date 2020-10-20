@@ -808,7 +808,7 @@ public class SwingUtil {
    }
 
    public static Optional<Boolean> confirm(JComponent parent, String description) {
-      final boolean b = SwingUtil.showConfirmDialog(parent, description);
+      final boolean b = SwingUtil.showConfirmDialog(parent, description + " ?");
       return Optional.ofNullable(b ? Boolean.TRUE : null);
    }
 

@@ -19,8 +19,10 @@ public class NextgenST {
 	.append(EntityConstraints.st + "\n")
 	.append(STTemplateEditor.st + "\n")
 	.append(STWorkspace.st + "\n")
+	.append(TransactionAction.st + "\n")
 	.append(TreeNavigator.st + "\n")
 	.append(BaseTreeNode.st + "\n")
+	.append(EventSubscription.st + "\n")
 	.append(TreeNode.st + "\n")
 	.append(TreeNodeAction.st + "\n")
 	.toString()  ;
@@ -115,12 +117,20 @@ public class NextgenST {
 		return new STWorkspace(stGroup);
 	}  
 
+	public static TransactionAction newTransactionAction() {
+		return new TransactionAction(stGroup);
+	}  
+
 	public static TreeNavigator newTreeNavigator() {
 		return new TreeNavigator(stGroup);
 	}  
 
 	public static BaseTreeNode newBaseTreeNode() {
 		return new BaseTreeNode(stGroup);
+	}  
+
+	public static EventSubscription newEventSubscription() {
+		return new EventSubscription(stGroup);
 	}  
 
 	public static TreeNode newTreeNode() {

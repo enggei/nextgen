@@ -32,7 +32,6 @@ public class STArgument {
 			removeUuid(); 
 		else {
 		 	node.setProperty(_uuid, value);
-		 	nextgen.events.STArgumentUpdated.post(this);
 		}
 		return this;
 	}
@@ -53,7 +52,6 @@ public class STArgument {
 
 	public STArgument removeUuid() { 
 		node.removeProperty(_uuid);
-		nextgen.events.STArgumentUpdated.post(this);
 		return this;
 	}
 
@@ -64,7 +62,6 @@ public class STArgument {
 			removeStParameter(); 
 		else {
 		 	node.setProperty(_stParameter, value);
-		 	nextgen.events.STArgumentUpdated.post(this);
 		}
 		return this;
 	}
@@ -85,7 +82,6 @@ public class STArgument {
 
 	public STArgument removeStParameter() { 
 		node.removeProperty(_stParameter);
-		nextgen.events.STArgumentUpdated.post(this);
 		return this;
 	}
 
@@ -97,7 +93,6 @@ public class STArgument {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("value"));
-		nextgen.events.STArgumentUpdated.post(this);
 		return this;
 	}
 
@@ -110,7 +105,6 @@ public class STArgument {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getValueRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STArgumentUpdated.post(this);
 		});
 		return this;
 	}
@@ -126,7 +120,6 @@ public class STArgument {
 		if (existing.isPresent()) return this;
 		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _keyValues);
 		relationship.setProperty("_t", System.nanoTime());
-		nextgen.events.STArgumentUpdated.post(this);
 		return this;
 	}
 
@@ -142,14 +135,12 @@ public class STArgument {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STArgumentUpdated.post(this);
 		});
 		return this;
 	}
 
 	public STArgument removeAllKeyValues() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).forEach(org.neo4j.graphdb.Relationship::delete);
-		nextgen.events.STArgumentUpdated.post(this);
 		return this;
 	}
 

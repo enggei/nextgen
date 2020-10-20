@@ -6,7 +6,7 @@ public class JavaPackage {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _name;
-	private java.util.List<ClassOrInterfaceType> _types = new java.util.ArrayList<>();
+	private java.util.List<JavaType> _types = new java.util.ArrayList<>();
 
 	JavaPackage(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -46,22 +46,22 @@ public class JavaPackage {
 		return this;
 	} 
 
-	public JavaPackage addTypes(ClassOrInterfaceType value) {
+	public JavaPackage addTypes(JavaType value) {
 		this._types.add(value);
 		return this;
 	}
 
-	public JavaPackage setTypes(ClassOrInterfaceType[] value) {
+	public JavaPackage setTypes(JavaType[] value) {
 		this._types.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JavaPackage setTypes(java.util.Collection<ClassOrInterfaceType> values) {
+	public JavaPackage setTypes(java.util.Collection<JavaType> values) {
 		this._types.addAll(values);
 		return this;
 	}
 
-	public JavaPackage removeTypes(ClassOrInterfaceType value) {
+	public JavaPackage removeTypes(JavaType value) {
 		this._types.remove(value);
 		return this;
 	}
@@ -71,7 +71,7 @@ public class JavaPackage {
 		return this;
 	}
 
-	public java.util.List<ClassOrInterfaceType> getTypes() {
+	public java.util.List<JavaType> getTypes() {
 		return this._types;
 	} 
 

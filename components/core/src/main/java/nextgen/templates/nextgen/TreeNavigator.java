@@ -15,7 +15,8 @@ public class TreeNavigator {
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
 	private java.util.List<Object> _unhandledNodeSelectedStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _treeNodes = new java.util.ArrayList<>();
+	private java.util.List<EventSubscription> _events = new java.util.ArrayList<>();
+	private java.util.List<TreeNode> _treeNodes = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -41,6 +42,7 @@ public class TreeNavigator {
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _treeNodesSelected) st.add("treeNodesSelected", o);
 		for (Object o : _unhandledNodeSelectedStatements) st.add("unhandledNodeSelectedStatements", o);
+		for (Object o : _events) st.add("events", o);
 		for (Object o : _treeNodes) st.add("treeNodes", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
@@ -296,22 +298,51 @@ public class TreeNavigator {
 		return this._unhandledNodeSelectedStatements;
 	} 
 
-	public TreeNavigator addTreeNodes(Object value) {
+	public TreeNavigator addEvents(EventSubscription value) {
+		this._events.add(value);
+		return this;
+	}
+
+	public TreeNavigator setEvents(EventSubscription[] value) {
+		this._events.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setEvents(java.util.Collection<EventSubscription> values) {
+		this._events.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeEvents(EventSubscription value) {
+		this._events.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeEvents(int index) {
+		this._events.remove(index);
+		return this;
+	}
+
+	public java.util.List<EventSubscription> getEvents() {
+		return this._events;
+	} 
+
+	public TreeNavigator addTreeNodes(TreeNode value) {
 		this._treeNodes.add(value);
 		return this;
 	}
 
-	public TreeNavigator setTreeNodes(Object[] value) {
+	public TreeNavigator setTreeNodes(TreeNode[] value) {
 		this._treeNodes.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNavigator setTreeNodes(java.util.Collection<Object> values) {
+	public TreeNavigator setTreeNodes(java.util.Collection<TreeNode> values) {
 		this._treeNodes.addAll(values);
 		return this;
 	}
 
-	public TreeNavigator removeTreeNodes(Object value) {
+	public TreeNavigator removeTreeNodes(TreeNode value) {
 		this._treeNodes.remove(value);
 		return this;
 	}
@@ -321,7 +352,7 @@ public class TreeNavigator {
 		return this;
 	}
 
-	public java.util.List<Object> getTreeNodes() {
+	public java.util.List<TreeNode> getTreeNodes() {
 		return this._treeNodes;
 	} 
 
@@ -451,7 +482,7 @@ public class TreeNavigator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
+	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.utils.SwingUtil;\n" + 
 				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
@@ -554,6 +585,8 @@ public class TreeNavigator {
 				"   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {\n" + 
 				"   	~unhandledNodeSelectedStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"   }\n" + 
+				"\n" + 
+				"	~events:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"   \n" + 
 				"	~baseTreeNode~\n" + 
 				"\n" + 

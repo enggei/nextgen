@@ -6,7 +6,7 @@ public class JavaLibrary {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _name;
-	private java.util.List<Object> _packages = new java.util.ArrayList<>();
+	private java.util.List<JavaPackage> _packages = new java.util.ArrayList<>();
 
 	JavaLibrary(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -46,22 +46,22 @@ public class JavaLibrary {
 		return this;
 	} 
 
-	public JavaLibrary addPackages(Object value) {
+	public JavaLibrary addPackages(JavaPackage value) {
 		this._packages.add(value);
 		return this;
 	}
 
-	public JavaLibrary setPackages(Object[] value) {
+	public JavaLibrary setPackages(JavaPackage[] value) {
 		this._packages.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JavaLibrary setPackages(java.util.Collection<Object> values) {
+	public JavaLibrary setPackages(java.util.Collection<JavaPackage> values) {
 		this._packages.addAll(values);
 		return this;
 	}
 
-	public JavaLibrary removePackages(Object value) {
+	public JavaLibrary removePackages(JavaPackage value) {
 		this._packages.remove(value);
 		return this;
 	}
@@ -71,7 +71,7 @@ public class JavaLibrary {
 		return this;
 	}
 
-	public java.util.List<Object> getPackages() {
+	public java.util.List<JavaPackage> getPackages() {
 		return this._packages;
 	} 
 

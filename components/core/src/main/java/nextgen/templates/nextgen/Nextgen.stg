@@ -1,5 +1,7 @@
 delimiters "~","~"
 
+ActionCall() ::= << >>
+
 AppEvents() ::= <<// deprecated  >>
 
 EventSubscriber(eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe()
@@ -2395,7 +2397,33 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
+TransactionAction(name,fields,title,statements) ::= <<package nextgen.actions;
+
+public class ~name~ extends TransactionAction {
+
+   ~fields:{it|private final ~it.type~ ~it.name~;};separator="\n"~
+~if(title)~
+
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super("~title~");
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+~else~
+
+	public ~name~(String name~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+      super(name);
+      ~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+   }
+
+~endif~
+   @Override
+   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      ~statements:{it|~it~};separator="\n"~
+   }
+}  >>
+
+TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
 
 import nextgen.utils.SwingUtil;
 ~imports:{it|import ~it~;};separator="\n"~
@@ -2498,6 +2526,8 @@ public class ~name~ extends JPanel {
    private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
    	~unhandledNodeSelectedStatements:{it|~it~};separator="\n"~
    }
+
+	~events:{it|~it~};separator="\n\n"~
    
 	~baseTreeNode~
 
@@ -2835,6 +2865,11 @@ private void on~name~Selected(~name~ selectedNode) {
 TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action("~title~", actionEvent -> {
 	~statements:{it|~it~};separator="\n"~
 })  >>
+
+EventSubscription(threadMode,eventName,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
+public void on~eventName;format="capitalize"~(nextgen.events.~eventName~ event) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
 
 eom() ::= "}"
 

@@ -190,7 +190,7 @@ public class STAppPresentationModel {
                   .forEach(stArgument -> consumer.accept(stArgument, stParameter)));
    }
 
-   void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
+   public void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
 
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
@@ -356,9 +356,7 @@ public class STAppPresentationModel {
    }
 
    public STEnum newSTEnum(String name) {
-      return STJsonFactory
-            .newSTEnum()
-            .setName(name);
+      return STJsonFactory.newSTEnum().setName(name);
    }
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -370,19 +368,16 @@ public class STAppPresentationModel {
    }
 
    public STGroupModel newSTGroupModel(String name) {
-      final nextgen.st.domain.STGroupModel stGroupModel = nextgen.st.domain.STJsonFactory
-            .newSTGroupModel()
-            .setName(name)
-            .setDelimiter(nextgen.st.STGenerator.DELIMITER);
+      final nextgen.st.domain.STGroupModel stGroupModel = nextgen.st.domain.STJsonFactory.newSTGroupModel()
+                                                                                         .setName(name)
+                                                                                         .setDelimiter(nextgen.st.STGenerator.DELIMITER);
       stGroups.add(stGroupModel);
       stRenderer.addGroupModel(stGroupModel);
       return stGroupModel;
    }
 
    public STInterface newSTInterface(String name) {
-      return STJsonFactory
-            .newSTInterface()
-            .setName(name);
+      return STJsonFactory.newSTInterface().setName(name);
    }
 
    public STModel newSTModel(Node node) {
@@ -409,30 +404,21 @@ public class STAppPresentationModel {
    }
 
    public nextgen.st.domain.STTemplate newSTTemplate(String name, String text, nextgen.st.domain.STGroupModel parent) {
-      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory
-            .newSTTemplate()
-            .setName(name)
-            .setText(text);
+      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(text);
       parent.addTemplates(stTemplate);
       nextgen.events.NewSTTemplate.post(stTemplate, parent);
       return stTemplate;
    }
 
    public nextgen.st.domain.STTemplate newSTTemplate(String name, nextgen.st.domain.STGroupModel parent) {
-      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory
-            .newSTTemplate()
-            .setName(name)
-            .setText("");
+      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText("");
       parent.addTemplates(stTemplate);
       nextgen.events.NewSTTemplate.post(stTemplate, parent);
       return stTemplate;
    }
 
    public nextgen.st.domain.STTemplate newSTTemplate(String name, nextgen.st.domain.STTemplate parent) {
-      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory
-            .newSTTemplate()
-            .setName(name)
-            .setText("");
+      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText("");
       parent.addChildren(stTemplate);
       nextgen.events.NewSTTemplate.post(stTemplate, parent);
       return stTemplate;
@@ -625,7 +611,7 @@ public class STAppPresentationModel {
                .findFirst();
          if (argument.isPresent()) {
             final String render = render(argument.get().getValue());
-            return render==null ? defaultValue.get() : render;
+            return render == null ? defaultValue.get() : render;
          } else {
             return defaultValue.get();
          }
@@ -642,11 +628,19 @@ public class STAppPresentationModel {
       }));
    }
 
+   public void writeToFile(nextgen.st.model.STProject project) {
+      project.getModels().forEach(stModel -> stModel.getFiles().
+            forEach(stFile -> nextgen.st.STGenerator
+                  .writeToFile(render(stModel), stFile.getPackageName().getValue(), stFile.getName().getValue(), stFile.getType()
+                                                                                                                       .getValue(), new java.io.File(stFile
+                        .getPath().getValue()))));
+   }
+
+
    public void addMultiple(JComponent owner, STModel stModel, STParameter stParameter) {
 
       final String parameterName = stParameter.getName();
       final String argumentType = stParameter.getArgumentType();
-
 
 
    }
@@ -827,10 +821,6 @@ public class STAppPresentationModel {
       return findSTGroup(stTemplate).getName() + "." + stTemplate.getName();
    }
 
-   public void renderToClipboard(STValue model) {
-      SwingUtil.toClipboard(render(model).trim());
-   }
-
    public void remove(STValue model) {
       db.remove(model);
    }
@@ -893,11 +883,184 @@ public class STAppPresentationModel {
 
    public void addToProject(nextgen.st.model.STProject project, nextgen.st.model.STModel model) {
       project.addModels(model);
-      nextgen.events.NewSTProjectSTModel.post(model, project);
+      nextgen.events.ModelAddedToProject.post(model, project);
+   }
+
+   public void remove(nextgen.st.model.STArgumentKV value) {
+      value.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> stArgument.removeKeyValues(value));
    }
 
    public void remove(nextgen.st.model.STArgument value) {
       value.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> stModel.removeArguments(value));
+   }
+
+   public nextgen.st.model.STValue newSTValue(String value) {
+      return db.newSTValue(value);
+   }
+
+   public nextgen.st.model.STValue newSTValue(nextgen.st.model.STModel value) {
+      return db.newSTValue(value);
+   }
+
+   public void set(nextgen.st.model.STArgument model, nextgen.st.domain.STParameterKey stParameterKey, STModel stModel) {
+      set(model, stParameterKey, newSTArgumentKV(stParameterKey, newSTValue(stModel)));
+   }
+
+   public void set(nextgen.st.model.STArgument model, nextgen.st.domain.STParameterKey stParameterKey, STValue stValue) {
+      set(model, stParameterKey, newSTArgumentKV(stParameterKey, stValue));
+   }
+
+   public void set(nextgen.st.model.STArgument model, nextgen.st.domain.STParameterKey stParameterKey, String inputValue) {
+      set(model, stParameterKey, newSTArgumentKV(stParameterKey, newSTValue(inputValue)));
+   }
+
+   public void set(nextgen.st.model.STArgument model, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV) {
+      model.getKeyValues()
+           .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))
+           .findFirst()
+           .ifPresent(existing -> remove(model, existing));
+
+      model.addKeyValues(stArgumentKV);
+   }
+
+   private void remove(nextgen.st.model.STArgument stArgument, nextgen.st.model.STArgumentKV stArgumentKV) {
+      stArgument.removeKeyValues(stArgumentKV);
+   }
+
+   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, String value) {
+      set(stModel, stParameter, db.newSTValue(value));
+   }
+
+   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
+      set(stModel, stParameter, db.newSTValue(value));
+   }
+
+   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
+
+      stModel.getArguments()
+             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+             .findAny()
+             .ifPresent(this::remove);
+
+      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
+      stModel.addArguments(stArgument);
+      nextgen.events.ArgumentAdded.post(stModel, stArgument, stParameter, value);
+   }
+
+   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
+      add(stModel, stParameter, db.newSTValue(value));
+   }
+
+   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, String value) {
+      add(stModel, stParameter, db.newSTValue(value));
+   }
+
+   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
+      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
+      stModel.addArguments(stArgument);
+      nextgen.events.ArgumentAdded.post(stModel, stArgument, stParameter, value);
+   }
+
+   public void set(nextgen.st.model.STValue stValue, String value) {
+      stValue.removeStModel();
+      stValue.setValue(value);
+      stValue.setType(nextgen.st.model.STValueType.PRIMITIVE);
+      nextgen.events.STValueChanged.post(stValue);
+   }
+
+   public void delete(nextgen.st.model.STValue stValue) {
+      final String uuid = stValue.getUuid();
+      final STValue found = db.findSTValueByUuid(uuid);
+      if (found != null) db.delete(found.getNode());
+      nextgen.events.STValueDeleted.post(uuid);
+   }
+
+   public void delete(nextgen.st.model.STModel stModel) {
+      final String uuid = stModel.getUuid();
+      final STValue found = db.findSTValueByUuid(uuid);
+      if (found != null) db.delete(found.getNode());
+      nextgen.events.STModelDeleted.post(uuid);
+   }
+
+   public java.util.Optional<nextgen.st.domain.STGroupModel> findSTGroup(String name) {
+      return stGroups.stream()
+                     .filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
+                     .findAny();
+   }
+
+   public void generateAllGroups() {
+      stGroups.stream().forEach(stGroupModel -> generateSTGroup(stGroupModel, false));
+   }
+
+   public void addEnum(nextgen.st.domain.STGroupModel stGroup, String name) {
+      final nextgen.st.domain.STEnum stEnum = newSTEnum(name);
+      stGroup.addEnums(stEnum);
+   }
+
+   public void addInterface(nextgen.st.domain.STGroupModel stGroup, String name) {
+      final nextgen.st.domain.STInterface stInterface = newSTInterface(name);
+      stGroup.addInterfaces(stInterface);
+   }
+
+   public void addInterface(java.util.Set<nextgen.st.domain.STTemplate> templates, String interfaceName) {
+
+   }
+
+   public void setName(nextgen.st.domain.STGroupModel stGroup, String name) {
+      stGroup.setName(name);
+   }
+
+   public void setName(nextgen.st.domain.STEnum stEnum, String name) {
+      stEnum.setName(name);
+   }
+
+   public void setName(nextgen.st.domain.STInterface stInterface, String name) {
+      stInterface.setName(name);
+   }
+
+   public void delete(nextgen.st.domain.STGroupModel stGroup) {
+
+   }
+
+   public void update(nextgen.st.domain.STEnum stEnum) {
+
+   }
+
+   public void delete(nextgen.st.domain.STEnum stEnum, nextgen.st.domain.STGroupModel stGroup) {
+      stGroup.removeEnums(stEnum);
+   }
+
+   public void delete(nextgen.st.domain.STTemplate stTemplate, nextgen.st.domain.STGroupModel stGroup) {
+      stGroup.removeTemplates(stTemplate);
+   }
+
+   public void setParent(nextgen.st.domain.STTemplate stTemplate, java.util.Set<nextgen.st.domain.STTemplate> children) {
+
+   }
+
+   public void newSTModel(nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject project) {
+      final nextgen.st.model.STModel stModel = newSTModel(stTemplate);
+      project.addModels(stModel);
+   }
+
+   public void removeInterface(nextgen.st.domain.STTemplate stTemplate, String interfaceName) {
+      stTemplate.removeImplements(interfaceName);
+   }
+
+   public void setParameterTypes(nextgen.st.domain.STTemplate stTemplate) {
+
+   }
+
+   public void setInterfaces(nextgen.st.domain.STTemplate stTemplate) {
+
+   }
+
+   public void setName(nextgen.st.domain.STTemplate stTemplate, String name) {
+      stTemplate.setName(name);
+   }
+
+   public void delete(nextgen.st.domain.STInterface stInterface, nextgen.st.domain.STGroupModel stGroup) {
+      stGroup.removeInterfaces(stInterface);
    }
 
    public static final class CompilationResult {
@@ -910,7 +1073,6 @@ public class STAppPresentationModel {
          this.aClass = aClass;
       }
    }
-
 
 
    public Stream<STArgument> getArguments(STModel stModel, STParameter stParameter) {
@@ -958,7 +1120,7 @@ public class STAppPresentationModel {
             }
          } else {
             final STGroupModel stGroupModel = stRenderer.findSTGroupModel(db.getSTTemplate(stModel));
-            final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = findSTTemplateByName(stGroupModel,argumentType);
+            final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = findSTTemplateByName(stGroupModel, argumentType);
             if (stTemplate.isPresent()) {
                if (singleValue) removeArgument(stModel, stParameter);
                final STValue stValue = db.newSTValue(db.newSTModel(stGroupModel.getUuid(), stTemplate.get()));

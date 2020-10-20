@@ -32,7 +32,6 @@ public class STFile {
 			removeUuid(); 
 		else {
 		 	node.setProperty(_uuid, value);
-		 	nextgen.events.STFileUpdated.post(this);
 		}
 		return this;
 	}
@@ -53,7 +52,6 @@ public class STFile {
 
 	public STFile removeUuid() { 
 		node.removeProperty(_uuid);
-		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -65,7 +63,6 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("name"));
-		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -78,7 +75,6 @@ public class STFile {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getNameRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STFileUpdated.post(this);
 		});
 		return this;
 	}
@@ -95,7 +91,6 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("type"));
-		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -108,7 +103,6 @@ public class STFile {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getTypeRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STFileUpdated.post(this);
 		});
 		return this;
 	}
@@ -125,7 +119,6 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("packageName"));
-		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -138,7 +131,6 @@ public class STFile {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPackageNameRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STFileUpdated.post(this);
 		});
 		return this;
 	}
@@ -155,7 +147,6 @@ public class STFile {
 		}
 		if (dst == null) return this;
 		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("path"));
-		nextgen.events.STFileUpdated.post(this);
 		return this;
 	}
 
@@ -168,7 +159,6 @@ public class STFile {
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPathRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
-			nextgen.events.STFileUpdated.post(this);
 		});
 		return this;
 	}

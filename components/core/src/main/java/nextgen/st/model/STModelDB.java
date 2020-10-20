@@ -239,7 +239,8 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
-      return newSTArgument(stParameter).setValue(stValue);
+      return newSTArgument(stParameter)
+            .setValue(stValue);
    }
 
    public STValue newSTValue(STModel stModel) {
@@ -249,9 +250,10 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STValue newSTValue(String value) {
-      final STValue stValue = newSTValue().setUuid(UUID.randomUUID().toString()).setType(PRIMITIVE).setValue(value);
-      nextgen.events.NewSTValue.post(stValue);
-      return stValue;
+      return newSTValue()
+            .setUuid(java.util.UUID.randomUUID().toString())
+            .setType(PRIMITIVE)
+            .setValue(value);
    }
 
    public STValue newSTValue(STEnumValue stEnumValue) {

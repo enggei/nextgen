@@ -326,7 +326,7 @@
       }, {
         "uuid" : "7704c494-fa83-4f9b-b1bb-741a72088738",
         "name" : "deleteNode",
-        "text" : "public void delete() {\n\n\tfinal String uuid = node.hasProperty(\"uuid\") ? node.getProperty(\"uuid\").toString() : null;\n\n\tnode.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.delete();\n\n\t~deleteStatements:{it|~it~};separator=\"\\n\"~\n} ",
+        "text" : "public void delete() {\n~if(deleteStatements)~\n\tfinal String uuid = node.hasProperty(\"uuid\") ? node.getProperty(\"uuid\").toString() : null;\n~endif~\n\tnode.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n\tnode.delete();\n\n\t~deleteStatements:{it|~it~};separator=\"\\n\"~\n} ",
         "parameters" : [ {
           "uuid" : "b0971141-27af-4ecc-b30f-e18a3b7e9c00",
           "name" : "deleteStatements",

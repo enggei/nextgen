@@ -7,7 +7,7 @@ public class Singleton {
 
 	private String _packageName;
 	private String _name;
-	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Singleton(org.stringtemplate.v4.STGroup stGroup) {
@@ -23,7 +23,7 @@ public class Singleton {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Singleton");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
-		for (Object o : _accessors) st.add("accessors", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
 		return st.render().trim();
 	}
@@ -72,33 +72,33 @@ public class Singleton {
 		return this;
 	} 
 
-	public Singleton addAccessors(Object value) {
-		this._accessors.add(value);
+	public Singleton addMethods(Object value) {
+		this._methods.add(value);
 		return this;
 	}
 
-	public Singleton setAccessors(Object[] value) {
-		this._accessors.addAll(java.util.Arrays.asList(value));
+	public Singleton setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public Singleton setAccessors(java.util.Collection<Object> values) {
-		this._accessors.addAll(values);
+	public Singleton setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
 		return this;
 	}
 
-	public Singleton removeAccessors(Object value) {
-		this._accessors.remove(value);
+	public Singleton removeMethods(Object value) {
+		this._methods.remove(value);
 		return this;
 	}
 
-	public Singleton removeAccessors(int index) {
-		this._accessors.remove(index);
+	public Singleton removeMethods(int index) {
+		this._methods.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getAccessors() {
-		return this._accessors;
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public Singleton addFields(Object _type, Object _name, Object _initializer) {
@@ -182,21 +182,32 @@ public class Singleton {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Singleton(packageName,name,fields,accessors) ::= <<package ~packageName~;\n" + 
+	static final String st = "Singleton(packageName,name,fields,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public final class ~name~ {\n" + 
-				" \n" + 
-				"    private static ~name~ INSTANCE;\n" + 
-				"    ~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
-				"    \n" + 
-				"    private ~name~() {        \n" + 
-				"    }\n" + 
-				"    \n" + 
-				"    public static synchronized ~name~ getInstance() {\n" + 
-				"        if(INSTANCE == null) INSTANCE = new ~name~();\n" + 
-				"        return INSTANCE;\n" + 
-				"    }\n" + 
-				" \n" + 
-				"    ~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	private static ~name~ INSTANCE;\n" + 
+				"	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	private ~name~() {		  \n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public static synchronized ~name~ getInstance() {\n" + 
+				"		if(INSTANCE == null) INSTANCE = new ~name~();\n" + 
+				"		return INSTANCE;\n" + 
+				"	}\n" + 
+				"\n" + 
+				"~fields:{it|\n" + 
+				"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
+				"		return _~it.name~;\n" + 
+				"	~eom()~\n" + 
+				"\n" + 
+				"	public ~name~ set~it.name;format=\"capitalize\"~(~it.type~ value) {\n" + 
+				"		this._~it.name~ = value;\n" + 
+				"		return this;\n" + 
+				"	~eom()~\n" + 
+				"};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

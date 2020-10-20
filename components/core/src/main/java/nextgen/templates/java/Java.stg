@@ -317,7 +317,7 @@ BeanListener(name,singleProperties,listProperties) ::= <<public static class ~na
 };separator="\n\n"~
 }  >>
 
-Script(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;
+Runnable(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;
 
 public class ~name~ implements Runnable {
 
@@ -371,22 +371,33 @@ public class ~name~ {
 	}
 }  >>
 
-Singleton(packageName,name,fields,accessors) ::= <<package ~packageName~;
+Singleton(packageName,name,fields,methods) ::= <<package ~packageName~;
 
 public final class ~name~ {
- 
-    private static ~name~ INSTANCE;
-    ~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
-    
-    private ~name~() {        
-    }
-    
-    public static synchronized ~name~ getInstance() {
-        if(INSTANCE == null) INSTANCE = new ~name~();
-        return INSTANCE;
-    }
- 
-    ~accessors:{it|~it~};separator="\n\n"~
+
+	private static ~name~ INSTANCE;
+	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+
+	private ~name~() {		  
+	}
+
+	public static synchronized ~name~ getInstance() {
+		if(INSTANCE == null) INSTANCE = new ~name~();
+		return INSTANCE;
+	}
+
+~fields:{it|
+	public ~it.type~ get~it.name;format="capitalize"~() {
+		return _~it.name~;
+	~eom()~
+
+	public ~name~ set~it.name;format="capitalize"~(~it.type~ value) {
+		this._~it.name~ = value;
+		return this;
+	~eom()~
+};separator="\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 Grammar() ::= << >>
@@ -619,6 +630,8 @@ JavaLibrary(name,packages) ::= <<~name~
 
 JavaPackage(name,types) ::= <<~name~
 ~types:{it|~it~};separator="\n"~  >>
+
+JavaType(packageName,name) ::= <<~packageName~.~name~  >>
 
 JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.java.JavaST {
 
