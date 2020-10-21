@@ -2081,10 +2081,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			appModel().doInTransaction(tx -> {
 					stParameter.getKeys().forEach(stParameterKey -> {
 						final JMenu stParameterMenu = new JMenu(stParameterKey.getName());
-						stValueNodes.forEach(stNode -> stParameterMenu.add(new SetSTValueArgumentAction(event, stParameterKey, getModel(), stNode)));
-						stModelNodes.forEach(stNode -> stParameterMenu.add(new SetSTModelArgumentAction(event, stParameterKey, getModel(), stNode)));
-						stParameterMenu.add(new SetInputValueArgumentAction(event, stParameterKey, getModel()));
-						stParameterMenu.add(new SetClipboardValueArgumentAction(event, stParameterKey, getModel()));
+						stValueNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTValue("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
+						stModelNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
+						stParameterMenu.add(new nextgen.actions.SetKVArgumentFromInput("Set from Input", getModel(), stParameterKey, thisCanvas()));
+						stParameterMenu.add(new nextgen.actions.SetKVArgumentFromClipboard("Set from Clipboard", getModel(), stParameterKey));
 						getModel().getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())).filter(stArgumentKV -> stArgumentKV.getValue() != null).forEach(stArgumentKV -> {
 								stParameterMenu.add(new OpenArgument(event, getModel(), stParameterKey, stArgumentKV));
 								stParameterMenu.add(new RemoveArgument(event, getModel(), stArgumentKV));
@@ -2096,18 +2096,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			pop.add(new OpenAllArguments(event));
 			super.onNodeRightClick(event, pop);
 		}
-
-		@Override
-		protected void onNodeKeyPressed(PInputEvent event) {
-			switch (event.getKeyCode()) {
-				case VK_E:
-					new OpenAllArguments(event).actionPerformed(null);
-					break;
-
-			}
-			super.onNodeKeyPressed(event);
-		}
-
 
 		final class OpenAllArguments extends NodeAction {
 
@@ -2151,30 +2139,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 								stArgument.addKeyValues(stArgumentKV);
 								thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameterKey, stArgumentKV));
 							});
-						});
-			}
-		}
-
-		final class SetSTValueArgumentAction extends NodeAction {
-
-			private nextgen.st.domain.STParameterKey stParameterKey;
-			private nextgen.st.model.STArgument stArgument;
-			private STValueNode stValueNode;
-
-			SetSTValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgument stArgument, STValueNode stValueNode) {
-				super(appModel().cut(stValueNode.getText(), 30), event);
-				this.stParameterKey = stParameterKey;
-				this.stArgument = stArgument;
-				this.stValueNode = stValueNode;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().appModel().doLaterInTransaction(tx -> {
-							appModel().removeArgument(getModel(), stParameterKey);
-							final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValueNode.getModel());
-							stArgument.addKeyValues(stArgumentKV);
-							thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), stValueNode, stArgument, stParameterKey, stArgumentKV));
 						});
 			}
 		}
@@ -2256,29 +2220,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 				appModel().doLaterInTransaction(tx -> {
 						stArgument.removeKeyValues(stArgumentKV);
 						thisCanvas().removeRelation(stArgumentKV.getUuid());
-					});
-			}
-		}
-
-		final class SetClipboardValueArgumentAction extends NodeAction {
-
-			private nextgen.st.domain.STParameterKey stParameterKey;
-			private nextgen.st.model.STArgument stArgument;
-
-			SetClipboardValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgument stArgument) {
-				super("From Clipboard", event);
-				this.stParameterKey = stParameterKey;
-				this.stArgument = stArgument;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(tx -> {
-						final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-						appModel().removeArgument(getModel(), stParameterKey);
-						final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValue);
-						stArgument.addKeyValues(stArgumentKV);
-						thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameterKey, stArgumentKV));
 					});
 			}
 		}
@@ -2372,7 +2313,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));
 							addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput("Set from Input", getModel(), stParameter, thisCanvas()));
-							addstParameterMenu.add(new SetBooleanValue(event, stParameter));
+							addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue("Set true", getModel(), stParameter));
 							addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard("Set from Clipboard", getModel(), stParameter));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
@@ -2383,11 +2324,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument(event, stArgument));
+								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
 								existingSelections.put(stParameter.getUuid(), stArgument.getValue());
 							});
-							if (openstParameterMenu.getMenuComponentCount() > 1)
-								openstParameterMenu.add(new OpenAllOf(event, stParameter));
 
 							
 							break;
@@ -2399,52 +2338,52 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));
 							addstParameterMenu.add(new nextgen.actions.AddArgumentFromInput("Add from Input", getModel(), stParameter, thisCanvas()));
-							//addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard("Add from Clipboard", getModel(), stParameter));
+							addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard("Add from Clipboard", getModel(), stParameter));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
 							stParameterMenu.add(openstParameterMenu);
-							openstParameterMenu.add(new OpenAllOf(event, stParameter));
 
 							final JMenu removestParameterMenu = new JMenu("Remove");
 							stParameterMenu.add(removestParameterMenu);
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument(event, stArgument));
+								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
 							});
 							break;
 						}
 						case KVLIST: {
 							final JMenu addstParameterMenu = new JMenu("Add");
 							stParameterMenu.add(addstParameterMenu);
-							addstParameterMenu.add(new AddKVInputValueArgumentAction(event, stParameter));
+							addstParameterMenu.add(new nextgen.actions.AddKVArgument("Add", getModel(), stParameter, thisCanvas()));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
 							stParameterMenu.add(openstParameterMenu);
-							openstParameterMenu.add(new OpenAllOf(event, stParameter));
 
 							final JMenu removestParameterMenu = new JMenu("Remove");
 							stParameterMenu.add(removestParameterMenu);
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new RemoveArgument(event, stArgument));
+								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
 							});
 							break;
 						}
 					}
 				});
 
-				pop.add(new SetMultipleFields(event));
+				pop.add(new nextgen.actions.SetMultipleFields(stTemplate, getModel(), thisCanvas()));
 
 			});
-			pop.add(new Edit(event));
+
+
+			pop.add(new nextgen.actions.OpenTemplate(stTemplate));
+			pop.add(new nextgen.actions.EditSTModel(getModel()));
 			pop.add(new ToClipboard(event));
 			pop.add(new Delete(event));
 			pop.add(new Clone(event));
 			pop.add(new AddFileSink(event));
 			pop.add(new OpenFileSink(event));
-			pop.add(new OpenTemplate(event));
 			pop.add(new WriteToFile(event));
 			super.onNodeRightClick(event, pop);
 		}
@@ -2460,24 +2399,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		@Override
 		protected void onNodeKeyPressed(PInputEvent event) {
 			switch (event.getKeyCode()) {
-				case VK_D:
-					new Delete(event).actionPerformed(null);
-					break;
-
-				case VK_W:
-					new WriteToFile(event).actionPerformed(null);
-					break;
-
-				case VK_I:
-					new OpenIncoming(event).actionPerformed(null);
-					break;
-
 				case VK_T:
-					new OpenTemplate(event).actionPerformed(null);
-					break;
-
-				case VK_E:
-					new OpenAllArguments(event).actionPerformed(null);
+					new nextgen.actions.OpenTemplate(stTemplate).actionPerformed(null);;
 					break;
 
 			}
@@ -2512,38 +2435,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				appModel().setParameter(stParameter, getModel(), thisCanvas());
-			}
-		}
-
-		final class Edit extends NodeAction {
-
-
-			Edit(PInputEvent event) {
-				super("Edit", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(transaction -> {
-					final STModelEditor modelEditor = appModel().getWorkspace().getModelEditor(appModel().findSTTemplateByUuid(getModel().getStTemplate()), getModel());
-					appModel().getWorkspace().setSelectedComponent(modelEditor);
-				});
-			}
-		}
-
-		final class OpenUsages extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-			private STModelNode stModelNode;
-
-			OpenUsages(PInputEvent event, nextgen.st.domain.STParameter stParameter, STModelNode stModelNode) {
-				super("Open Usages", event);
-				this.stParameter = stParameter;
-				this.stModelNode = stModelNode;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
 			}
 		}
 
@@ -2756,35 +2647,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			}
 		}
 
-
-
-
-
-
-
-
-		final class SetBooleanValue extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-
-			SetBooleanValue(PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-				super("Set TRUE", event);
-				this.stParameter = stParameter;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				thisCanvas().appModel().doLaterInTransaction(tx -> {
-					appModel().removeArgument(getModel(), stParameter);
-					final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue("true");
-					final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().db.newSTArgument(stParameter, stValue);
-					getModel().addArguments(stArgument);
-					setText(thisCanvas().appModel().render(getModel()));
-				});
-			}
-		}
-
-
 		final class OpenArgument extends NodeAction {
 
 			private boolean layoutAfter;
@@ -2825,102 +2687,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 					if (layoutAfter)
 						new LayoutTreeAction(thisNode(), event).actionPerformed(null);
 				});
-			}
-		}
-
-		final class RemoveArgument extends NodeAction {
-
-			private nextgen.st.model.STArgument stArgument;
-
-			RemoveArgument(PInputEvent event, nextgen.st.model.STArgument stArgument) {
-				super(appModel().cut(appModel().render(stArgument), 30), event);
-				this.stArgument = stArgument;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				nextgen.utils.SwingUtil.confirm(thisCanvas(), "Remove argument ?")
-						.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {
-							thisCanvas().removeRelation(stArgument.getUuid());
-							getModel().removeArguments(stArgument);
-							setText(thisCanvas().appModel().render(getModel()));
-						}));
-			}
-		}
-
-		final class OpenAllOf extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-
-			OpenAllOf(PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-				super("Open All", event);
-				this.stParameter = stParameter;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(tx -> {
-						appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {
-								if (this.stParameter.equals(stParameter))
-									new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null);
-						});
-						new LayoutTreeAction(thisNode(), event).actionPerformed(null);
-					});
-			}
-		}
-
-
-
-
-
-
-
-
-
-		final class AddKVInputValueArgumentAction extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-
-			AddKVInputValueArgumentAction(PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-				super("From input", event);
-				this.stParameter = stParameter;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(tx -> {
-						appModel().addKVArgument(getModel(), stParameter, thisCanvas(), stArgument -> {
-								final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
-								thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stkvNode, stArgument, stParameter));
-								setText(thisCanvas().appModel().render(getModel()));
-						});
-					});
-			}
-		}
-
-		final class SetMultipleFields extends NodeAction {
-
-
-			SetMultipleFields(PInputEvent event) {
-				super("Set Multiple", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(transaction -> appModel().setMultiple(thisCanvas(), getModel(), stTemplate));
-			}
-		}
-
-		final class OpenTemplate extends NodeAction {
-
-
-			OpenTemplate(PInputEvent event) {
-				super("Open Template", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(transaction -> nextgen.events.OpenSTTemplate.post(stTemplate));
 			}
 		}
 

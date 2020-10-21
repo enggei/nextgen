@@ -15,6 +15,6 @@ public class AddKVArgument extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().addKVArgument(stModel, stParameter, owner, stArgument -> {});
+      appModel().addKVArgument(stModel, stParameter, owner);
    }
 }

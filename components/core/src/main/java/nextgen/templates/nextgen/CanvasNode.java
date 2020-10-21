@@ -519,7 +519,7 @@ public class CanvasNode {
 				"		switch (event.getKeyCode()) {\n" + 
 				"~keyPressActions:{it|\n" + 
 				"			case VK_~it.key~:\n" + 
-				"				new ~it.name~(event).actionPerformed(null);\n" + 
+				"				~it.name~;\n" + 
 				"				break;\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"		}\n" + 

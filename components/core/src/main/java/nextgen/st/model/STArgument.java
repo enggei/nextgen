@@ -191,7 +191,6 @@ public class STArgument {
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 
-		nextgen.events.STArgumentDeleted.post(uuid);
 	}
 
 }

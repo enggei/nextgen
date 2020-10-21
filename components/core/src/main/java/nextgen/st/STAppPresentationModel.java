@@ -119,7 +119,7 @@ public class STAppPresentationModel {
       });
    }
 
-   public void addKVArgument(STModel stModel, STParameter stParameter, Component owner, Consumer<STArgument> stArgumentConsumer) {
+   public void addKVArgument(STModel stModel, STParameter stParameter, Component owner) {
 
       final Map<STParameterKey, JTextField> fieldMap = new LinkedHashMap<>();
       stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40)));
@@ -140,7 +140,6 @@ public class STAppPresentationModel {
                   if (value.length() == 0) continue;
                   kvs.add(newSTArgumentKV(fieldEntry.getKey(), db.newSTValue(value)));
                }
-               stArgumentConsumer.accept(newSTArgument(stModel, stParameter, kvs));
             });
          }
       });
@@ -340,14 +339,14 @@ public class STAppPresentationModel {
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, STValue value) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter);
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
       return stArgument;
    }
 
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, List<STArgumentKV> kvs) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, kvs);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter);
+   //   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter,value);
       return stArgument;
    }
 
@@ -390,13 +389,13 @@ public class STAppPresentationModel {
 
    public STModel newSTModel(STTemplate stTemplate) {
       final nextgen.st.model.STModel stModel = db.newSTModel(findSTGroup(stTemplate).getUuid(), stTemplate);
-      nextgen.events.NewSTModel.post(stModel);
+      nextgen.events.NewSTModel.post(stModel, stTemplate);
       return stModel;
    }
 
    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
-      nextgen.events.NewSTModel.post(stModel);
+      nextgen.events.NewSTModel.post(stModel, stTemplate);
       return stModel;
    }
 
@@ -887,7 +886,7 @@ public class STAppPresentationModel {
 
    public void addToProject(nextgen.st.model.STProject project, nextgen.st.model.STModel model) {
       project.addModels(model);
-      nextgen.events.ModelAddedToProject.post(model, project);
+      nextgen.events.NewSTProjectSTModel.post(model, project);
    }
 
    public void remove(nextgen.st.model.STArgumentKV value) {
@@ -948,7 +947,7 @@ public class STAppPresentationModel {
 
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.STArgumentAdded.post(stModel, stArgument, stParameter, value);
+      nextgen.events.NewSTArgument.post(stArgument,stModel, stParameter, value);
    }
 
    public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
@@ -962,7 +961,7 @@ public class STAppPresentationModel {
    public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.STArgumentAdded.post(stModel, stArgument, stParameter, value);
+      nextgen.events.NewSTArgument.post(stArgument, stModel,stParameter, value);
    }
 
    public void set(nextgen.st.model.STValue stValue, String value) {
@@ -976,14 +975,12 @@ public class STAppPresentationModel {
       final String uuid = stValue.getUuid();
       final STValue found = db.findSTValueByUuid(uuid);
       if (found != null) db.delete(found.getNode());
-      nextgen.events.STValueDeleted.post(uuid);
+//      nextgen.events.STValueDeleted.post(uuid);
    }
 
    public void delete(nextgen.st.model.STModel stModel) {
-      final String uuid = stModel.getUuid();
-      final STValue found = db.findSTValueByUuid(uuid);
-      if (found != null) db.delete(found.getNode());
-      nextgen.events.STModelDeleted.post(uuid);
+
+//      nextgen.events.STModelDeleted.post(uuid);
    }
 
    public java.util.Optional<nextgen.st.domain.STGroupModel> findSTGroup(String name) {

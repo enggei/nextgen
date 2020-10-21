@@ -410,7 +410,7 @@ public class STModelEditorNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 			appModel().doInTransaction(transaction -> stParameter.getKeys().forEach(stParameterKey -> {
 				actions.add(new nextgen.actions.SetKVArgumentFromInput("Set " + stParameterKey.getName() + " from input", getModel(), stParameterKey, tree));
-				actions.add(new nextgen.actions.SetKVArgumentFromClipboard("Set " + stParameterKey.getName() + " from Clipboard", getModel(), stParameterKey, tree));
+				actions.add(new nextgen.actions.SetKVArgumentFromClipboard("Set " + stParameterKey.getName() + " from Clipboard", getModel(), stParameterKey));
 			}));
 			actions.add(new nextgen.actions.RemoveKVArgument(getModel(), tree));
 			return actions;
@@ -486,7 +486,7 @@ public class STModelEditorNavigator extends JPanel {
 				appModel().getSelectedSTValues().forEach(selectedValue -> actions.add(new nextgen.actions.SetKVArgumentFromSTValue("Set " + appModel().render(selectedValue, 30), stArgument, stParameterKey, selectedValue)));
 				appModel().getSelectedSTModels().forEach(selectedModel -> actions.add(new nextgen.actions.SetKVArgumentFromSTModel("Set " + appModel().render(selectedModel, 30), stArgument, stParameterKey, selectedModel)));
 				actions.add(new nextgen.actions.SetKVArgumentFromInput("Set from input", stArgument, stParameterKey, tree));
-				actions.add(new nextgen.actions.SetKVArgumentFromClipboard("Set from Clipboard", stArgument, stParameterKey, tree));
+				actions.add(new nextgen.actions.SetKVArgumentFromClipboard("Set from Clipboard", stArgument, stParameterKey));
 			});
 			actions.add(new nextgen.actions.RemoveKV(getModel(), tree));
 			return actions;
@@ -583,7 +583,7 @@ public class STModelEditorNavigator extends JPanel {
 						if (fromClipboard != null && fromClipboard.startsWith("stmodel-"))
 							actions.add(new nextgen.actions.AddArgumentFromSTModelUuid("Set STModel " + fromClipboard.substring(8), stModel, getModel(), fromClipboard.substring(8)));
 						else if (fromClipboard != null && fromClipboard.trim().length() !=0)
-							actions.add(new nextgen.actions.AddArgumentFromClipboard("Set from Clipboard", stModel, getModel(), tree));
+							actions.add(new nextgen.actions.AddArgumentFromClipboard("Set from Clipboard", stModel, getModel()));
 
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType("Add", stModel, getModel(), tree));
 						actions.add(new nextgen.actions.AddMultipleArgumentsFromArgumentType("Add", stModel, getModel(), tree));
@@ -619,8 +619,8 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTParameterTreeNodeSelected(STParameterTreeNode selectedNode) {
-		selectedNode.getParentNode(nextgen.st.STModelEditorNavigator.STModelTreeNode.class)
-				.ifPresent(treeNode -> nextgen.events.STParameterEditorTreeNodeClicked.post(selectedNode.getModel(), treeNode.getModel()));
+//		selectedNode.getParentNode(nextgen.st.STModelEditorNavigator.STModelTreeNode.class)
+//				.ifPresent(treeNode -> nextgen.events.STParameterEditorTreeNodeClicked.post(selectedNode.getModel(), treeNode.getModel()));
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
@@ -673,27 +673,8 @@ public class STModelEditorNavigator extends JPanel {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
-		findSTModelTreeNode(stModelTreeNode -> stModelTreeNode.uuid.equals(event.uuid))
-				.filter(treeNode -> treeNode.getParent() != null)
-				.ifPresent(treeModel::removeNodeFromParent);
-	}
 
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTArgumentAdded(nextgen.events.NewSTArgument event) {
-		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel))
-					.ifPresent(stModelTreeNode -> findSTParameterTreeNode(stModelTreeNode, stParameterTreeNode -> stParameterTreeNode.getModel().getUuid().equals(event.stArgument.getStParameter()))
-							.ifPresent(stParameterTreeNode -> {
-								appModel().stArgumentConsumer(event.stParameter)
-											 .onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STValueTreeNode(stValue, event.stArgument)))
-											 .onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))
-											 .onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STValueTreeNode(stValue, event.stArgument)))
-											 .onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))
-											 .onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STKVArgumentTreeNode(event.stArgument, event.stParameter)));
-								stModelTreeNode.nodeChanged();
-							}));
-	}
+
 
 	class STModelEditorNavigatorTreeModel extends DefaultTreeModel {
 

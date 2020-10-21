@@ -16,4 +16,8 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    protected nextgen.st.STAppPresentationModel appModel() {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
+
+   protected void confirm(javax.swing.JComponent owner, String description, java.util.function.Consumer<Void> onConfirm) {
+      nextgen.utils.SwingUtil.confirm(owner, description).ifPresent(aBoolean -> onConfirm.accept(null));
+   }
 }

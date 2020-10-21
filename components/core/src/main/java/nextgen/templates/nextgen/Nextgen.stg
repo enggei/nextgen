@@ -1133,7 +1133,7 @@ CanvasNode(name,modelType,fields,uuidExpression,labelExpression,addedToCanvasSta
 		switch (event.getKeyCode()) {
 ~keyPressActions:{it|
 			case VK_~it.key~:
-				new ~it.name~(event).actionPerformed(null);
+				~it.name~;
 				break;
 };separator="\n"~
 		}

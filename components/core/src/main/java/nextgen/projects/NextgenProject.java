@@ -42,6 +42,7 @@ public class NextgenProject {
    final String integerType = "Integer";
    final String jFrameType = "javax.swing.JFrame";
 
+
    final PackageDeclaration corePackage = JavaPatterns.newPackageDeclaration("nextgen");
    final PackageDeclaration stPackage = JavaPatterns.newPackageDeclaration(corePackage, "st");
    final PackageDeclaration eventsPackage = JavaPatterns.newPackageDeclaration(corePackage, "events");
@@ -54,7 +55,7 @@ public class NextgenProject {
 
    final PackageDeclaration stModelPackage = JavaPatterns.newPackageDeclaration(stPackage, "model");
    final nextgen.templates.java.ClassOrInterfaceType stArgumentType = newClassOrInterfaceType(stModelPackage, "STArgument");
-   final nextgen.templates.java.ClassOrInterfaceType projectType = newClassOrInterfaceType(stModelPackage, "STProject");
+   final nextgen.templates.java.ClassOrInterfaceType stProjectType = newClassOrInterfaceType(stModelPackage, "STProject");
    final nextgen.templates.java.ClassOrInterfaceType stModelType = newClassOrInterfaceType(stModelPackage, "STModel");
    final nextgen.templates.java.ClassOrInterfaceType stValueType = newClassOrInterfaceType(stModelPackage, "STValue");
    final nextgen.templates.java.ClassOrInterfaceType stFileType = newClassOrInterfaceType(stModelPackage, "STFile");
@@ -69,39 +70,6 @@ public class NextgenProject {
 
    final nextgen.templates.java.ClassOrInterfaceType ownerType = newClassOrInterfaceType("javax.swing", "JComponent");
 
-   final nextgen.templates.greenrobot.Event stArgumentAdded = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("STArgumentAdded")
-         .addFields(stModelType, "stModel")
-         .addFields(stArgumentType, "stArgument")
-         .addFields(stParameterType, "stParameter")
-         .addFields(stValueType, "stValue")
-         .setPackageName(eventsPackage.getName());
-
-   final nextgen.templates.greenrobot.Event kvArgumentRemoved = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("KVArgumentRemoved")
-         .addFields(stArgumentType, "argument")
-         .setPackageName(eventsPackage.getName());
-
-   final nextgen.templates.greenrobot.Event ModelAddedToProject = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("ModelAddedToProject")
-         .addFields(stModelType, "stModel")
-         .addFields(projectType, "project")
-         .setPackageName(eventsPackage.getName());
-
-   final nextgen.templates.greenrobot.Event STValueChanged = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("STValueChanged")
-         .addFields(stValueType, "stValue")
-         .setPackageName(eventsPackage.getName());
-
-   final nextgen.templates.greenrobot.Event STInterfaceDeleted = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("STInterfaceDeleted")
-         .addFields(stInterfaceType, "stInterface")
-         .setPackageName(eventsPackage.getName());
-
-   final nextgen.templates.greenrobot.Event STModelTreeNodeClicked = nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("STModelTreeNodeClicked")
-         .addFields(stModelType, "model")
-         .setPackageName(eventsPackage.getName());
 
    @Before
    public void init() {
@@ -110,6 +78,7 @@ public class NextgenProject {
 
    @org.junit.Test
    public void generateWorkspace() {
+
 
       final nextgen.templates.nextgen.STWorkspace stWorkspace = nextgen.templates.nextgen.NextgenST.newSTWorkspace()
             .setPackageName(stPackage.getName())
@@ -122,16 +91,17 @@ public class NextgenProject {
                   "	templateNavigator = new STTemplateNavigator(this);\n" +
                   "	modelNavigator = new STModelNavigator(this);\n" +
                   "});")
-            .addMethods(nextgen.templates.nextgen.NextgenST.newEventSubscriber()
-                  .setEventName("STModelCanvasNodeClicked")
-                  .setEventType("nextgen.events.STModelTreeNodeClicked")
-                  .addStatements("setSelectedComponent(findModelEditor(event.model, () -> appModel().findSTTemplateByUuid(event.model.getStTemplate())));"))
-            .addMethods(nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
-                  .setEventName("STModelDeleted")
-                  .setEventType(nextgen.templates.java.JavaST.newJavaType()
-                        .setPackageName("nextgen.events")
-                        .setName("STModelDeleted"))
-                  .addStatements("SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));"));
+//            .addMethods(nextgen.templates.nextgen.NextgenST.newEventSubscriber()
+//                  .setEventName("STModelCanvasNodeClicked")
+//                  .setEventType("nextgen.events.STModelTreeNodeClicked")
+//                  .addStatements("setSelectedComponent(findModelEditor(event.model, () -> appModel().findSTTemplateByUuid(event.model.getStTemplate())));"))
+//            .addMethods(newSubscribe()
+//                  .setEventName("STModelDeleted")
+//                  .setEventType(nextgen.templates.java.JavaST.newJavaType()
+//                        .setPackageName("nextgen.events")
+//                        .setName("STModelDeleted"))
+//                  .addStatements("SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));"))
+            ;
 
       nextgen.st.STGenerator.writeJavaFile(stWorkspace, stPackage, stWorkspace.getName(), mainJava);
    }
@@ -146,16 +116,31 @@ public class NextgenProject {
             .addStatements("nextgen.utils.SwingUtil.toClipboard(\"stmodel-\" + stModel.getUuid());"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
+            .setName("SetMultipleFields")
+            .setTitle("Set Fields")
+            .addFields(stTemplateType, "stTemplate")
+            .addFields(stModelType, "stModel")
+            .addFields(ownerType, "owner")
+            .addStatements("appModel().doLaterInTransaction(t -> appModel().setMultiple(owner, stModel, stTemplate));"));
+
+      write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("OpenModel")
             .setTitle("Open")
             .addFields(stModelType, "stModel")
             .addStatements("nextgen.events.OpenSTModel.post(stModel);"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
-            .setName("VisitModel")
-            .setTitle("Visit")
-            .addFields(stModelType, "stModel")
-            .addStatements("new nextgen.st.STVisitorTest(appModel()).visit(stModel);"));
+            .setName("OpenTemplate")
+            .setTitle("Open")
+            .addFields(stTemplateType, "stTemplate")
+            .addStatements("appModel().doLaterInTransaction(transaction -> nextgen.events.OpenSTTemplate.post(stTemplate));"));
+
+      write(nextgen.templates.NextgenPatterns.newTransactionAction()
+            .setName("OpenTemplate")
+            .setTitle("Open")
+            .addFields(stTemplateType, "stTemplate")
+            .addStatements("nextgen.events.OpenSTTemplate.post(stTemplate);"));
+
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("WriteSTModelToFile")
@@ -211,7 +196,12 @@ public class NextgenProject {
             .setTitle("Delete")
             .addFields(stModelType, "stModel")
             .addFields(ownerType, "owner")
-            .addStatements("nextgen.utils.SwingUtil.confirm(owner, \"Delete\").ifPresent(aBoolean -> appModel().doLaterInTransaction(t -> appModel().delete(stModel)));"));
+            .addStatements("confirm(owner, \"Delete\", unused -> {\n" +
+                  "         final String uuid = stModel.getUuid();\n" +
+                  "         final nextgen.st.model.STValue found = appModel().db.findSTValueByUuid(uuid);\n" +
+                  "         if (found != null) appModel().db.delete(found.getNode());\n" +
+                  "         nextgen.events.STModelDeleted.post(uuid);\n" +
+                  "      });"));
 
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
@@ -259,7 +249,6 @@ public class NextgenProject {
             .setName("SetKVArgumentFromClipboard")
             .addFields(stArgumentType, "stArgument")
             .addFields(stParameterKeyType, "stParameterKey")
-            .addFields(ownerType, "owner")
             .addStatements("appModel().doLaterInTransaction(transaction1 -> appModel().set(stArgument, stParameterKey, nextgen.utils.SwingUtil.fromClipboard()));"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
@@ -313,7 +302,10 @@ public class NextgenProject {
             .setName("AddArgumentFromClipboard")
             .addFields(stModelType, "stModel")
             .addFields(stParameterType, "stParameter")
-            .addStatements("appModel().doLaterInTransaction(transaction1 -> appModel().add(stModel, stParameter, nextgen.utils.SwingUtil.fromClipboard()));"));
+            .addStatements("      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" +
+                  "      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
+                  "      stModel.addArguments(stArgument);\n" +
+                  "      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("SetArgumentFromSTValue")
@@ -362,7 +354,7 @@ public class NextgenProject {
             .addFields(stModelType, "stModel")
             .addFields(stParameterType, "stParameter")
             .addFields(ownerType, "owner")
-            .addStatements("appModel().addKVArgument(stModel, stParameter, owner, stArgument -> {});"));
+            .addStatements("appModel().addKVArgument(stModel, stParameter, owner);"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("SetArgumentFromSTTemplate")
@@ -417,14 +409,14 @@ public class NextgenProject {
       // STProject actions
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("AddModelToProject")
-            .addFields(projectType, "project")
+            .addFields(stProjectType, "project")
             .addFields(stModelType, "stModel")
             .addStatements("appModel().addToProject(project, stModel);"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("GenerateAllProjectModels")
             .setTitle("Generate all")
-            .addFields(projectType, "project")
+            .addFields(stProjectType, "project")
             .addStatements("appModel().writeToFile(project);"));
 
 
@@ -636,7 +628,7 @@ public class NextgenProject {
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName("AddTemplateModelToProject")
             .addFields(stTemplateType, "stTemplate")
-            .addFields(projectType, "project")
+            .addFields(stProjectType, "project")
             .addFields(ownerType, "owner")
             .addStatements("appModel().newSTModel(stTemplate, project);"));
 
@@ -823,22 +815,87 @@ public class NextgenProject {
             .addFields(stInterfaceType, "stInterface")
             .addFields(stGroupModelType, "stGroup")
             .addFields(ownerType, "owner")
-            .setStatements(new Object[]{
-                  "stGroup.removeInterfaces(stInterface);",
-                  "nextgen.events.STInterfaceDeleted.post(stInterface);"
-            }));
+            .addStatements("confirm(owner, \"Delete\", unused -> {\n" +
+                  "         stGroup.removeInterfaces(stInterface);\n" +
+                  "         nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());   \n" +
+                  "      });"));
 
    }
 
    @org.junit.Test
    public void generateEvents() {
 
-      write(kvArgumentRemoved);
-      write(stArgumentAdded);
-      write(ModelAddedToProject);
-      write(STValueChanged);
-      write(STInterfaceDeleted);
-      write(STModelTreeNodeClicked);
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("NewSTArgument")
+            .addFields(stArgumentType, "argument")
+            .addFields(stModelType, "model")
+            .addFields(stParameterType, "parameter")
+            .addFields(stValueType, "value")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("NewSTModel")
+            .addFields(stModelType, "model")
+            .addFields(stTemplateType, "template")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("NewSTProjectSTModel")
+            .addFields(stModelType, "model")
+            .addFields(stProjectType, "project")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("NewSTTemplate")
+            .addFields(stTemplateType, "template")
+            .addFields("Object", "parent")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("NewSTProject")
+            .addFields(stProjectType, "project")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("STValueChanged")
+            .addFields(stValueType, "value")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("STValueDeleted")
+            .addFields("String", "uuid")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("STModelDeleted")
+            .addFields("String", "uuid")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("STInterfaceDeleted")
+            .addFields("String", "uuid")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("STModelEditorTreeNodeClicked")
+            .addFields(stModelType, "model")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("OpenSTModel")
+            .addFields(stModelType, "model")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("OpenSTTemplate")
+            .addFields(stTemplateType, "template")
+            .setPackageName(eventsPackage.getName()));
+
+      write(nextgen.templates.GreenRobotPatterns.newEvent()
+            .setName("CanvasSTModelClicked")
+            .addFields(stModelType, "model")
+            .setPackageName(eventsPackage.getName()));
+
    }
 
    @org.junit.Test
@@ -967,7 +1024,7 @@ public class NextgenProject {
                   "		.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
                   "		.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));")
             .setGetActionsStatements(new Object[]{
-                  "actions.add(new nextgen.actions.OpenSTModel(getModel()));",
+                  "actions.add(new nextgen.actions.OpenModel(getModel()));",
                   "actions.add(new nextgen.actions.GenerateSource(getModel()));",
                   "actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));",
                   "actions.add(new nextgen.actions.DeleteSTModel(getModel(), tree));"
@@ -996,7 +1053,7 @@ public class NextgenProject {
                   .setPackageName("nextgen.st.model")
                   .setName("STArgument"))
             .addFields("nextgen.st.domain.STParameter", "stParameter");
-      final nextgen.templates.greenrobot.Subscribe newSTProject = nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
+      final nextgen.templates.greenrobot.Subscribe newSTProject = newSubscribe()
             .setEventName("NewSTProject")
             .setEventType(nextgen.templates.java.JavaST.newJavaType()
                   .setPackageName("nextgen.events")
@@ -1004,6 +1061,7 @@ public class NextgenProject {
             .addStatements("treeModel\n" +
                   "		.find(RootNode.class)\n" +
                   "		.ifPresent(rootNode -> treeModel.addNodeInSortedOrder(rootNode, new nextgen.st.STModelNavigator.STProjectTreeNode(event.model)));");
+
       final nextgen.templates.nextgen.EventSubscriber stArgumentAdded = nextgen.templates.nextgen.NextgenST.newEventSubscriber()
             .setEventName("STArgumentAdded")
             .setEventType(nextgen.templates.java.JavaST.newJavaType()
@@ -1020,7 +1078,7 @@ public class NextgenProject {
                   "									 .onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STKVArgumentTreeNode(event.stArgument, event.stParameter)));\n" +
                   "						stModelTreeNode.nodeChanged();\n" +
                   "					}));");
-      final nextgen.templates.greenrobot.Subscribe stProjectSTModel = nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
+      final nextgen.templates.greenrobot.Subscribe stProjectSTModel = newSubscribe()
             .setEventName("STProjectSTModel")
             .setEventType("nextgen.events.NewSTProjectSTModel")
             .addStatements("findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.stProject))\n" +
@@ -1048,7 +1106,7 @@ public class NextgenProject {
                   "			treeModel.addNodeInSortedOrderAndSelect(templateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.stModel, stTemplate, null));\n" +
                   "		});");
 
-      final nextgen.templates.greenrobot.Subscribe stModelDeleted = nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
+      final nextgen.templates.greenrobot.Subscribe stModelDeleted = newSubscribe()
             .setEventName("STModelDeleted")
             .setEventType("nextgen.events.STModelDeleted")
             .addStatements("findModelsTreeNode(modelsTreeNode -> true)\n" +
@@ -1098,11 +1156,12 @@ public class NextgenProject {
             .addTreeNodes(stModelTreeNode)
             .addTreeNodes(stParameterTreeNode)
             .addTreeNodes(stKVArgumentTreeNode)
-            .addMethods(newSTProject)
-            .addMethods(stArgumentAdded)
-            .addMethods(stProjectSTModel)
-            .addMethods(stModelDeleted)
-            .addMethods(stModelCanvasNodeClicked);
+//            .addMethods(newSTProject)
+//            .addMethods(stArgumentAdded)
+//            .addMethods(stProjectSTModel)
+//            .addMethods(stModelDeleted)
+//            .addMethods(stModelCanvasNodeClicked)
+            ;
 
       nextgen.st.STGenerator.writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
    }
@@ -1286,11 +1345,12 @@ public class NextgenProject {
             .addTreeNodes(stEnumTreeNode)
             .addTreeNodes(stTemplateTreeNode)
             .addTreeNodes(stInterfaceTreeNode)
-            .addMethods(onNewSTTemplate)
-            .addMethods(stModelEditorTreeNodeClicked)
-            .addMethods(openTemplate)
-            .addMethods(canvasSTModelClicked)
-            .addMethods(stModelCanvasNodeClicked);
+//            .addMethods(onNewSTTemplate)
+//            .addMethods(stModelEditorTreeNodeClicked)
+//            .addMethods(openTemplate)
+//            .addMethods(canvasSTModelClicked)
+//            .addMethods(stModelCanvasNodeClicked)
+            ;
 
       nextgen.st.STGenerator.writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
    }
@@ -1346,7 +1406,7 @@ public class NextgenProject {
             .setGetActionsStatements(new Object[]{
                   "appModel().doInTransaction(transaction -> stParameter.getKeys().forEach(stParameterKey -> {",
                   "	actions.add(new nextgen.actions.SetKVArgumentFromInput(\"Set \" + stParameterKey.getName() + \" from input\", getModel(), stParameterKey, tree));",
-                  "	actions.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set \" + stParameterKey.getName() + \" from Clipboard\", getModel(), stParameterKey, tree));",
+                  "	actions.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set \" + stParameterKey.getName() + \" from Clipboard\", getModel(), stParameterKey));",
                   "}));",
                   "actions.add(new nextgen.actions.RemoveKVArgument(getModel(), tree));"
             });
@@ -1378,7 +1438,7 @@ public class NextgenProject {
                   "	appModel().getSelectedSTValues().forEach(selectedValue -> actions.add(new nextgen.actions.SetKVArgumentFromSTValue(\"Set \" + appModel().render(selectedValue, 30), stArgument, stParameterKey, selectedValue)));",
                   "	appModel().getSelectedSTModels().forEach(selectedModel -> actions.add(new nextgen.actions.SetKVArgumentFromSTModel(\"Set \" + appModel().render(selectedModel, 30), stArgument, stParameterKey, selectedModel)));",
                   "	actions.add(new nextgen.actions.SetKVArgumentFromInput(\"Set from input\", stArgument, stParameterKey, tree));",
-                  "	actions.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set from Clipboard\", stArgument, stParameterKey, tree));",
+                  "	actions.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set from Clipboard\", stArgument, stParameterKey));",
                   "});",
                   "actions.add(new nextgen.actions.RemoveKV(getModel(), tree));"
             });
@@ -1450,7 +1510,7 @@ public class NextgenProject {
             .addSelectionStatements("selectedNode.getParentNode(nextgen.st.STModelEditorNavigator.STModelTreeNode.class)\n" +
                   "		.ifPresent(treeNode -> nextgen.events.STParameterEditorTreeNodeClicked.post(selectedNode.getModel(), treeNode.getModel()));");
 
-      final nextgen.templates.greenrobot.Subscribe onSTModelDeleted = nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
+      final nextgen.templates.greenrobot.Subscribe onSTModelDeleted = newSubscribe()
             .setEventName("STModelDeleted")
             .setEventType(nextgen.templates.java.JavaST.newJavaType()
                   .setPackageName("nextgen.events")
@@ -1459,9 +1519,24 @@ public class NextgenProject {
                   "		.filter(treeNode -> treeNode.getParent() != null)\n" +
                   "		.ifPresent(treeModel::removeNodeFromParent);");
 
-      final nextgen.templates.greenrobot.Subscribe onSTArgumentAdded = nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
+      final nextgen.templates.greenrobot.Subscribe onSTArgumentAdded = newSubscribe()
             .setEventName("STArgumentAdded")
             .setEventType("nextgen.events.NewSTArgument")
+            .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel))\n" +
+                  "			.ifPresent(stModelTreeNode -> findSTParameterTreeNode(stModelTreeNode, stParameterTreeNode -> stParameterTreeNode.getModel().getUuid().equals(event.stArgument.getStParameter()))\n" +
+                  "					.ifPresent(stParameterTreeNode -> {\n" +
+                  "						appModel().stArgumentConsumer(event.stParameter)\n" +
+                  "									 .onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STValueTreeNode(stValue, event.stArgument)))\n" +
+                  "									 .onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))\n" +
+                  "									 .onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STValueTreeNode(stValue, event.stArgument)))\n" +
+                  "									 .onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))\n" +
+                  "									 .onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STKVArgumentTreeNode(event.stArgument, event.stParameter)));\n" +
+                  "						stModelTreeNode.nodeChanged();\n" +
+                  "					}));");
+
+      final nextgen.templates.greenrobot.Subscribe onNewSTModel = newSubscribe()
+            .setEventName("NewSTModel")
+            .setEventType("nextgen.events.NewSTModel")
             .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel))\n" +
                   "			.ifPresent(stModelTreeNode -> findSTParameterTreeNode(stModelTreeNode, stParameterTreeNode -> stParameterTreeNode.getModel().getUuid().equals(event.stArgument.getStParameter()))\n" +
                   "					.ifPresent(stParameterTreeNode -> {\n" +
@@ -1496,10 +1571,16 @@ public class NextgenProject {
             .addTreeNodes(stKVArgumentTreeNode)
             .addTreeNodes(stKVTreeNode)
             .addTreeNodes(stParameterTreeNode)
-            .addMethods(onSTModelDeleted)
-            .addMethods(onSTArgumentAdded);
+//            .addMethods(onSTModelDeleted)
+//            .addMethods(onSTArgumentAdded)
+            ;
 
       nextgen.st.STGenerator.writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
+   }
+
+   @org.jetbrains.annotations.NotNull
+   public nextgen.templates.greenrobot.Subscribe newSubscribe() {
+      return nextgen.templates.greenrobot.GreenRobotST.newSubscribe();
    }
 
    @org.junit.Test
@@ -1720,10 +1801,10 @@ public class NextgenProject {
             .addRightClickStatements("appModel().doInTransaction(tx -> {\n" +
                   "		stParameter.getKeys().forEach(stParameterKey -> {\n" +
                   "			final JMenu stParameterMenu = new JMenu(stParameterKey.getName());\n" +
-                  "			stValueNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetArgumentFromSTValue(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel()));\n" +
-                  "			stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
-                  "			stParameterMenu.add(new SetInputValueArgumentAction(event, stParameterKey, getModel()));\n" +
-                  "			stParameterMenu.add(new SetClipboardValueArgumentAction(event, stParameterKey, getModel()));\n" +
+                  "			stValueNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTValue(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));\n" +
+                  "			stModelNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTModel(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));\n" +
+                  "			stParameterMenu.add(new nextgen.actions.SetKVArgumentFromInput(\"Set from Input\", getModel(), stParameterKey, thisCanvas()));\n" +
+                  "			stParameterMenu.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set from Clipboard\", getModel(), stParameterKey));\n" +
                   "			getModel().getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())).filter(stArgumentKV -> stArgumentKV.getValue() != null).forEach(stArgumentKV -> {\n" +
                   "					stParameterMenu.add(new OpenArgument(event, getModel(), stParameterKey, stArgumentKV));\n" +
                   "					stParameterMenu.add(new RemoveArgument(event, getModel(), stArgumentKV));\n" +
@@ -1733,7 +1814,7 @@ public class NextgenProject {
                   "		if (pop.getComponents().length != 0) pop.addSeparator();\n" +
                   "	});")
             .addRightClickActions("OpenAllArguments")
-            .addKeyPressActions("E", "OpenAllArguments")
+            //.addKeyPressActions("E", "OpenAllArguments")
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("OpenAllArguments")
                   .setTitle("Open All")
@@ -1805,18 +1886,6 @@ public class NextgenProject {
                   .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
                         "		stArgument.removeKeyValues(stArgumentKV);\n" +
                         "		thisCanvas().removeRelation(stArgumentKV.getUuid());\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetClipboardValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameterKey", "stParameterKey")
-                  .addFields("nextgen.st.model.STArgument", "stArgument")
-                  .setTitle("From Clipboard")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "		final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" +
-                        "		appModel().removeArgument(getModel(), stParameterKey);\n" +
-                        "		final nextgen.st.model.STArgumentKV stArgumentKV = thisCanvas().appModel().db.newSTArgumentKV(stParameterKey, stValue);\n" +
-                        "		stArgument.addKeyValues(stArgumentKV);\n" +
-                        "		thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(thisNode(), thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue)), stArgument, stParameterKey, stArgumentKV));\n" +
                         "	});"));
 
       final nextgen.templates.nextgen.CanvasNode stModelNode = nextgen.templates.nextgen.NextgenST.newCanvasNode()
@@ -1867,7 +1936,7 @@ public class NextgenProject {
                   "				stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
                   "				addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput(\"Set from Input\", getModel(), stParameter, thisCanvas()));\n" +
-                  "				addstParameterMenu.add(new SetBooleanValue(event, stParameter));\n" +
+                  "				addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue(\"Set true\", getModel(), stParameter));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard(\"Set from Clipboard\", getModel(), stParameter));\n" +
                   "\n" +
                   "				final JMenu openstParameterMenu = new JMenu(\"Open\");\n" +
@@ -1878,11 +1947,9 @@ public class NextgenProject {
                   "\n" +
                   "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
-                  "					removestParameterMenu.add(new RemoveArgument(event, stArgument));\n" +
+                  "					removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));\n" +
                   "					existingSelections.put(stParameter.getUuid(), stArgument.getValue());\n" +
                   "				});\n" +
-                  "				if (openstParameterMenu.getMenuComponentCount() > 1)\n" +
-                  "					openstParameterMenu.add(new OpenAllOf(event, stParameter));\n" +
                   "\n" +
                   "				\n" +
                   "				break;\n" +
@@ -1898,56 +1965,56 @@ public class NextgenProject {
                   "\n" +
                   "				final JMenu openstParameterMenu = new JMenu(\"Open\");\n" +
                   "				stParameterMenu.add(openstParameterMenu);\n" +
-                  "				openstParameterMenu.add(new OpenAllOf(event, stParameter));\n" +
                   "\n" +
                   "				final JMenu removestParameterMenu = new JMenu(\"Remove\");\n" +
                   "				stParameterMenu.add(removestParameterMenu);\n" +
                   "\n" +
                   "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
-                  "					removestParameterMenu.add(new RemoveArgument(event, stArgument));\n" +
+                  "					removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));\n" +
                   "				});\n" +
                   "				break;\n" +
                   "			}\n" +
                   "			case KVLIST: {\n" +
                   "				final JMenu addstParameterMenu = new JMenu(\"Add\");\n" +
                   "				stParameterMenu.add(addstParameterMenu);\n" +
-                  "				addstParameterMenu.add(new AddKVInputValueArgumentAction(event, stParameter));\n" +
+                  "				addstParameterMenu.add(new nextgen.actions.AddKVArgument(\"Add\", getModel(), stParameter, thisCanvas()));\n" +
                   "\n" +
                   "				final JMenu openstParameterMenu = new JMenu(\"Open\");\n" +
                   "				stParameterMenu.add(openstParameterMenu);\n" +
-                  "				openstParameterMenu.add(new OpenAllOf(event, stParameter));\n" +
                   "\n" +
                   "				final JMenu removestParameterMenu = new JMenu(\"Remove\");\n" +
                   "				stParameterMenu.add(removestParameterMenu);\n" +
                   "\n" +
                   "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
-                  "					removestParameterMenu.add(new RemoveArgument(event, stArgument));\n" +
+                  "					removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));\n" +
                   "				});\n" +
                   "				break;\n" +
                   "			}\n" +
                   "		}\n" +
                   "	});\n" +
                   "\n" +
-                  "	pop.add(new SetMultipleFields(event));\n" +
+                  "	pop.add(new nextgen.actions.SetMultipleFields(stTemplate, getModel(), thisCanvas()));\n" +
                   "\n" +
-                  "});")
-            .addRightClickActions("Edit")
+                  "});\n" +
+                  "\n" +
+                  "\npop.add(new nextgen.actions.OpenTemplate(stTemplate));" +
+                  "\npop.add(new nextgen.actions.EditSTModel(getModel()));"
+            )
             .addRightClickActions("ToClipboard")
             .addRightClickActions("Delete")
             .addRightClickActions("Clone")
             .addRightClickActions("AddFileSink")
             .addRightClickActions("OpenFileSink")
-            .addRightClickActions("OpenTemplate")
             .addRightClickActions("WriteToFile")
             .addLeftClickStatements("appModel().doLaterInTransaction(tx -> setText(stTemplate.getName() + \" : \\n\" + appModel().render(getModel())));\n" +
                   "nextgen.events.CanvasSTModelClicked.post(getModel());")
-            .addKeyPressActions("D", "Delete")
-            .addKeyPressActions("W", "WriteToFile")
-            .addKeyPressActions("I", "OpenIncoming")
-            .addKeyPressActions("T", "OpenTemplate")
-            .addKeyPressActions("E", "OpenAllArguments")
+//            .addKeyPressActions("D", "Delete")
+//            .addKeyPressActions("W", "WriteToFile")
+//            .addKeyPressActions("I", "OpenIncoming")
+            .addKeyPressActions("T", "new nextgen.actions.OpenTemplate(stTemplate).actionPerformed(null);")
+//            .addKeyPressActions("E", "OpenAllArguments")
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("AddParameterTypeAction")
                   .addFields("nextgen.st.domain.STParameter", "stParameter")
@@ -1958,17 +2025,6 @@ public class NextgenProject {
                   .addFields("nextgen.st.domain.STParameter", "stParameter")
                   .setTitle("Set")
                   .addStatements("appModel().setParameter(stParameter, getModel(), thisCanvas());"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("Edit")
-                  .setTitle("Edit")
-                  .setTransactional("True")
-                  .addStatements("final STModelEditor modelEditor = appModel().getWorkspace().getModelEditor(appModel().findSTTemplateByUuid(getModel().getStTemplate()), getModel());\n" +
-                        "appModel().getWorkspace().setSelectedComponent(modelEditor);"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("OpenUsages")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STModelNode", "stModelNode")
-                  .setTitle("Open Usages"))
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("WriteToFile")
                   .setTitle("Write To File")
@@ -2107,90 +2163,6 @@ public class NextgenProject {
                         "			})\n" +
                         ");"))
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetSTValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STValueNode", "stValueNode")
-                  .setTitleExpression("appModel().cut(stValueNode.getText(), 30)")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "	if (appModel().sameArgumentValue(getModel(), stParameter, stValueNode.getModel())) return;\n" +
-                        "	appModel().removeArgument(getModel(), stParameter);\n" +
-                        "	final nextgen.st.model.STArgument stArgument = appModel().newSTArgument(stParameter, stValueNode.getModel());\n" +
-                        "	getModel().addArguments(stArgument);\n" +
-                        "	thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "	setText(appModel().render(getModel()));\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetSTModelArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STModelNode", "stModelNode")
-                  .setTitleExpression("appModel().cut(stModelNode.getText(), 30)")
-                  .addStatements("thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
-                        "	appModel().removeArgument(getModel(), stParameter);\n" +
-                        "	final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(stModelNode.getModel());\n" +
-                        "	final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "	getModel().addArguments(stArgument);\n" +
-                        "	thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stModelNode, stArgument, stParameter));\n" +
-                        "	setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetToSameAsArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STModelNode", "stModelNode")
-                  .setTitleExpression("\"Same as \" + appModel().cut(stModelNode.getText(), 30)")
-                  .addStatements("thisCanvas().appModel().doInTransaction(transaction -> stModelNode.getModel().getArguments()\n" +
-                        "		.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" +
-                        "		.filter(stArgument -> stArgument.getValue() != null)\n" +
-                        "		.findFirst()\n" +
-                        "		.ifPresent(sourceArgument -> {\n" +
-                        "				appModel().removeArgument(getModel(), stParameter);\n" +
-                        "				final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, sourceArgument.getValue());\n" +
-                        "				getModel().addArguments(stArgument);\n" +
-                        "				final STValueNode stValueNode = thisCanvas().addNode(sourceArgument.getValue().getUuid(), () -> new STValueNode(sourceArgument.getValue()));\n" +
-                        "				thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "				setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "		}));"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetInputValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("From input")
-                  .addStatements("nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), thisCanvas(), s -> {\n" +
-                        "	thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
-                        "			final nextgen.st.model.STValue stValue = appModel().newSTValue(s);\n" +
-                        "			appModel().removeArgument(getModel(), stParameter);\n" +
-                        "			final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "			getModel().addArguments(stArgument);\n" +
-                        "			final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));\n" +
-                        "			thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "			setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "	});\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetBooleanValue")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("Set TRUE")
-                  .addStatements("thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
-                        "	appModel().removeArgument(getModel(), stParameter);\n" +
-                        "	final nextgen.st.model.STValue stValue = thisCanvas().appModel().db.newSTValue(\"true\");\n" +
-                        "	final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().db.newSTArgument(stParameter, stValue);\n" +
-                        "	getModel().addArguments(stArgument);\n" +
-                        "	setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetClipboardValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("From Clipboard")
-                  .addStatements("final String s = nextgen.utils.SwingUtil.fromClipboard();\n" +
-                        "if (s == null || s.trim().length() == 0) return;\n" +
-                        "thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
-                        "	appModel().removeArgument(getModel(), stParameter);\n" +
-                        "	final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());\n" +
-                        "	final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "	getModel().addArguments(stArgument);\n" +
-                        "	thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));\n" +
-                        "	thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), thisCanvas().getNode(stValue.getUuid()), stArgument, stParameter));\n" +
-                        "	setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("OpenArgument")
                   .addFields("boolean", "layoutAfter")
                   .addFields("nextgen.st.domain.STParameter", "stParameter")
@@ -2221,97 +2193,35 @@ public class NextgenProject {
                         "	if (layoutAfter)\n" +
                         "		new LayoutTreeAction(thisNode(), event).actionPerformed(null);\n" +
                         "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("RemoveArgument")
-                  .addFields("nextgen.st.model.STArgument", "stArgument")
-                  .setTitleExpression("appModel().cut(appModel().render(stArgument), 30)")
-                  .addStatements("nextgen.utils.SwingUtil.confirm(thisCanvas(), \"Remove argument ?\")\n" +
-                        "		.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
-                        "			thisCanvas().removeRelation(stArgument.getUuid());\n" +
-                        "			getModel().removeArguments(stArgument);\n" +
-                        "			setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "		}));"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("OpenAllOf")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("Open All")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "		appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {\n" +
-                        "				if (this.stParameter.equals(stParameter))\n" +
-                        "					new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null);\n" +
-                        "		});\n" +
-                        "		new LayoutTreeAction(thisNode(), event).actionPerformed(null);\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddSTValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STValueNode", "stValueNode")
-                  .setTitleExpression("appModel().cut(stValueNode.getText(), 30)")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "		final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValueNode.getModel());\n" +
-                        "		getModel().addArguments(stArgument);\n" +
-                        "		thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "		setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddSTModelArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .addFields("STModelNode", "stModelNode")
-                  .setTitleExpression("appModel().cut(stModelNode.getText(), 30)")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "		final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(stModelNode.getModel());\n" +
-                        "		final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "		getModel().addArguments(stArgument);\n" +
-                        "		thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stModelNode, stArgument, stParameter));\n" +
-                        "		setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddInputValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("From input")
-                  .addStatements("nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), thisCanvas(), s -> {\n" +
-                        "		appModel().doLaterInTransaction(tx -> {\n" +
-                        "				final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());\n" +
-                        "				final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "				getModel().addArguments(stArgument);\n" +
-                        "				final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));\n" +
-                        "				thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "				setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "		});\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddClipboardValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("From Clipboard")
-                  .addStatements("final String s = nextgen.utils.SwingUtil.fromClipboard();\n" +
-                        "if (s == null || s.trim().length() == 0) return;\n" +
-                        "appModel().doLaterInTransaction(tx -> {\n" +
-                        "	final nextgen.st.model.STValue stValue = thisCanvas().appModel().newSTValue(s.trim());\n" +
-                        "	final nextgen.st.model.STArgument stArgument = thisCanvas().appModel().newSTArgument(stParameter, stValue);\n" +
-                        "	getModel().addArguments(stArgument);\n" +
-                        "	final STValueNode stValueNode = thisCanvas().addNode(stValue.getUuid(), () -> new STValueNode(stValue));\n" +
-                        "	thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stValueNode, stArgument, stParameter));\n" +
-                        "	setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddKVInputValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameter", "stParameter")
-                  .setTitle("From input")
-                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "		appModel().addKVArgument(getModel(), stParameter, thisCanvas(), stArgument -> {\n" +
-                        "				final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));\n" +
-                        "				thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(thisNode(), stkvNode, stArgument, stParameter));\n" +
-                        "				setText(thisCanvas().appModel().render(getModel()));\n" +
-                        "		});\n" +
-                        "	});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetMultipleFields")
-                  .setTitle("Set Multiple")
-                  .addStatements("appModel().doLaterInTransaction(transaction -> appModel().setMultiple(thisCanvas(), getModel(), stTemplate));"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("OpenTemplate")
-                  .setTitle("Open Template")
-                  .addStatements("appModel().doLaterInTransaction(transaction -> nextgen.events.OpenSTTemplate.post(stTemplate));"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("RemoveArgument")
+//                  .addFields("nextgen.st.model.STArgument", "stArgument")
+//                  .setTitleExpression("appModel().cut(appModel().render(stArgument), 30)")
+//                  .addStatements("nextgen.utils.SwingUtil.confirm(thisCanvas(), \"Remove argument ?\")\n" +
+//                        "		.ifPresent(confirm -> thisCanvas().appModel().doLaterInTransaction(tx -> {\n" +
+//                        "			thisCanvas().removeRelation(stArgument.getUuid());\n" +
+//                        "			getModel().removeArguments(stArgument);\n" +
+//                        "			setText(thisCanvas().appModel().render(getModel()));\n" +
+//                        "		}));"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("OpenAllOf")
+//                  .addFields("nextgen.st.domain.STParameter", "stParameter")
+//                  .setTitle("Open All")
+//                  .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
+//                        "		appModel().forEachArgument(stTemplate, getModel(), (stArgument, stParameter) -> {\n" +
+//                        "				if (this.stParameter.equals(stParameter))\n" +
+//                        "					new OpenArgument(event, false, stParameter, stArgument).actionPerformed(null);\n" +
+//                        "		});\n" +
+//                        "		new LayoutTreeAction(thisNode(), event).actionPerformed(null);\n" +
+//                        "	});"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("SetMultipleFields")
+//                  .setTitle("Set Multiple")
+//                  .addStatements("appModel().doLaterInTransaction(transaction -> appModel().setMultiple(thisCanvas(), getModel(), stTemplate));"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("OpenTemplate")
+//                  .setTitle("Open Template")
+//                  .addStatements("appModel().doLaterInTransaction(transaction -> nextgen.events.OpenSTTemplate.post(stTemplate));"))
             .addMethods("@Override\n" +
                   "public void setText(String text) {\n" +
                   "	super.setText(text.substring(0, Math.min(text.length(), 2000)));\n" +
@@ -2495,15 +2405,15 @@ public class NextgenProject {
             .addMethods("private STAppPresentationModel appModel() {\n" +
                   "	return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" +
                   "}")
-            .addMethods("@org.greenrobot.eventbus.Subscribe()\n" +
-                  "public void onNewSTModel(nextgen.events.NewSTModel event) {\n" +
-                  "	addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));\n" +
-                  "}")
-            .addMethods("@org.greenrobot.eventbus.Subscribe()\n" +
-                  "public void onOpenSTModel(nextgen.events.OpenSTModel event) {\n" +
-                  "	addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));\n" +
-                  "	appModel().getWorkspace().showCanvas();\n" +
-                  "}")
+//            .addMethods("@org.greenrobot.eventbus.Subscribe()\n" +
+//                  "public void onNewSTModel(nextgen.events.NewSTModel event) {\n" +
+//                  "	addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));\n" +
+//                  "}")
+//            .addMethods("@org.greenrobot.eventbus.Subscribe()\n" +
+//                  "public void onOpenSTModel(nextgen.events.OpenSTModel event) {\n" +
+//                  "	addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));\n" +
+//                  "	appModel().getWorkspace().showCanvas();\n" +
+//                  "}")
             .addRightClickActions("Debug")
             .addRightClickActions("SaveLastLayoutAction")
             .addRightClickActions("LoadLastLayoutAction")
@@ -2622,7 +2532,9 @@ public class NextgenProject {
             .addCanvasRelations(sinkRelation)
             .addCanvasRelations(stValueModelRelation);
 
-      STGenerator.writeJavaFile(canvas, canvas.getPackageName().toString(), canvas.getName().toString(), mainJava);
+      STGenerator.writeJavaFile(canvas, canvas.getPackageName()
+            .toString(), canvas.getName()
+            .toString(), mainJava);
    }
 
    @org.junit.Test
@@ -2817,82 +2729,14 @@ public class NextgenProject {
             .addEntities(stModel)
             .addEntities(stProject);
 
-      //DomainPatterns.writeNeo(mainJava, stModelPackage, domain);
-
       final org.javatuples.Pair<NeoFactory, java.util.Map<nextgen.templates.domain.Entity, NodeWrapper>> neo = transform(stModelPackage, domain);
 
       final NeoFactory neoFactory = neo.getValue0();
       final java.util.Map<nextgen.templates.domain.Entity, NodeWrapper> nodeWrapperMap = neo.getValue1();
 
       for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
-
-         final Object className = nodeWrapper.getName();
-         final String updateStatement = eventsPackage.getName() + "." + className + "Updated.post(this);";
-
-         nodeWrapper.getMethods()
-               .stream()
-               .filter(o -> o instanceof DeleteNode)
-               .map(o -> (DeleteNode) o)
-               .findFirst()
-               .ifPresent(deleteNode -> deleteNode.addDeleteStatements(eventsPackage.getName() + "." + className + "Deleted.post(uuid);"));
-
-         nodeWrapper.getAccessors()
-               .forEach(o -> {
-
-//            if (o instanceof PrimitiveAccessors) {
-//               PrimitiveAccessors accessors = (PrimitiveAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof ReferenceAccessors) {
-//               ReferenceAccessors accessors = (ReferenceAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof ListReferenceAccessors) {
-//               ListReferenceAccessors accessors = (ListReferenceAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof ListPrimitiveAccessors) {
-//               ListPrimitiveAccessors accessors = (ListPrimitiveAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof ExternalAccessors) {
-//               ExternalAccessors accessors = (ExternalAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-////               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof EnumListAccessors) {
-//               EnumListAccessors accessors = (EnumListAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            } else if (o instanceof EnumAccessors) {
-//               EnumAccessors accessors = (EnumAccessors) o;
-//               accessors.addSetStatements(updateStatement);
-//               accessors.addRemoveStatements(updateStatement);
-//            }
-               });
-
-         final nextgen.templates.greenrobot.Event updatedEvent = nextgen.templates.GreenRobotPatterns.newEvent()
-               .setName(className + "Updated")
-               .setPackageName(eventsPackage.getName())
-               .addFields(newClassOrInterfaceType(stModelPackage, className
-                     .toString()), "model");
-         write(updatedEvent);
-
-         final nextgen.templates.greenrobot.Event deletedEvent = nextgen.templates.GreenRobotPatterns.newEvent()
-               .setName(className + "Deleted")
-               .setPackageName(eventsPackage.getName())
-               .addFields("String", "uuid");
-         write(deletedEvent);
-      }
-
-      for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
          STGenerator.writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
       }
-
-//      neoFactory.getAccessors().stream()
-//                .filter(o -> o instanceof NeoFactoryAccessors)
-//                .map(o -> (NeoFactoryAccessors) o)
-//                .forEach(neoFactoryAccessors -> neoFactoryAccessors
-//                      .addNewInstanceStatements(eventsPackage.getName() + ".New" + neoFactoryAccessors.getName() + ".post(newInstance);"));
 
       STGenerator.writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
    }

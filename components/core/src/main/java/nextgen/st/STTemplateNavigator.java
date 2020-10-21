@@ -1,7 +1,5 @@
 package nextgen.st;
 
-import nextgen.utils.SwingUtil;
-import nextgen.swing.AppModel;
 import nextgen.st.domain.*;
 
 import javax.swing.*;
@@ -611,16 +609,7 @@ public class STTemplateNavigator extends JPanel {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
-	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTTemplate(nextgen.events.NewSTTemplate event) {
-		if(event.parent instanceof STGroupModel) {
-					findSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.parent))
-							.ifPresent(stGroupTreeNode -> stGroupTreeNode.addAndSelectChild(new nextgen.st.STTemplateNavigator.STTemplateTreeNode(event.model)));
-				} else if(event.parent instanceof STTemplate) {
-					findSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.parent))
-							.ifPresent(stTemplateTreeNode -> stTemplateTreeNode.addAndSelectChild(new nextgen.st.STTemplateNavigator.STTemplateTreeNode(event.model)));
-				}
-	}
+
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelEditorTreeNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
@@ -633,17 +622,7 @@ public class STTemplateNavigator extends JPanel {
 		}
 	}
 
-	@org.greenrobot.eventbus.Subscribe()
-	public void onOpenTemplate(nextgen.events.OpenSTTemplate event) {
-		SwingUtilities.invokeLater(() -> {
-			final RootNode rootNode = (RootNode) treeModel.getRoot();
-			final TreePath path = rootNode.find(baseTreeNode -> isSTTemplateTreeNode(baseTreeNode) && ((STTemplateTreeNode) baseTreeNode).getModel().equals(event.model));
-			if (path != null) {
-				tree.scrollPathToVisible(path);
-				tree.setSelectionPath(path);
-			}
-		});
-	}
+
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onCanvasSTModelClicked(nextgen.events.CanvasSTModelClicked event) {
@@ -659,7 +638,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTModelCanvasNodeClicked(nextgen.events.STModelTreeNodeClicked event) {
+	public void onSTModelCanvasNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
 		appModel().doLaterInTransaction(transaction -> {
 			final STTemplate stTemplate = appModel().findSTTemplateByUuid(event.model.getStTemplate());
 			final RootNode rootNode = (RootNode) treeModel.getRoot();
