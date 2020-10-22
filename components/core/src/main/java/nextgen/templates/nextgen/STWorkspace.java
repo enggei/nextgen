@@ -230,7 +230,7 @@ public class STWorkspace {
 				"public class ~name~ extends JTabbedPane {\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public ~name~() {\n" + 
 				"		setPreferredSize(new Dimension(1200, 1024));\n" + 
 				"		~constructorParameters:{it|~it~};separator=\"\\n\"~\n" + 
@@ -240,13 +240,13 @@ public class STWorkspace {
 				"		return ~it.name~;\n" + 
 				"	~eom()~\n" + 
 				"	};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	private STAppPresentationModel appModel() {\n" + 
 				"		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public STRenderPanel findRenderer() {\n" + 
 				"		return (STRenderPanel) find(component -> component instanceof STRenderPanel)\n" + 
 				"				.orElseGet(() -> {\n" + 
@@ -299,7 +299,7 @@ public class STWorkspace {
 				"		addPane(appModel().tryToFindArgument(stModel, \"name\", () -> stTemplateSupplier.get().getName() + \"Model\"), component);\n" + 
 				"		return component;\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public void removeModelEditor(String uuid) {\n" + 
 				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
 				"			final Component tabComponentAt = getComponentAt(i);\n" + 
@@ -310,18 +310,22 @@ public class STWorkspace {
 				"			}\n" + 
 				"		}\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {\n" + 
 				"		for (int i = 0; i < getTabCount(); i++) {\n" + 
 				"				final Component tabComponentAt = getComponentAt(i);\n" + 
 				"				if (tabComponentAt instanceof STModelEditor) {\n" + 
-				"					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))\n" + 
-				"						return (STModelEditor) tabComponentAt;\n" + 
+				"					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {\n" + 
+				"						final nextgen.st.STModelEditor editor = (nextgen.st.STModelEditor) tabComponentAt;\n" + 
+				"						setSelectedComponent(editor);\n" + 
+				"						return editor;\n" + 
+				"					}\n" + 
 				"				}\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		final STModelEditor component = new STModelEditor(stModel);\n" + 
 				"		addPane(appModel().tryToFindArgument(stModel, \"name\", () -> stTemplate.getName() + \"Model\"), component);\n" + 
+				"		setSelectedComponent(component);\n" + 
 				"		return component;\n" + 
 				"	}\n" + 
 				"\n" + 

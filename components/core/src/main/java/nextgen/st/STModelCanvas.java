@@ -64,7 +64,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		removeInputEventListener(getZoomEventHandler());
 		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
-//		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(null).actionPerformed(null));
 	}
 

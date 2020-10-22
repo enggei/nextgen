@@ -690,8 +690,7 @@ public class TreeNavigator {
 				"\n" + 
 				"		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 
 				"			addNodeInSortedOrder(parent, child);\n" + 
-				"			tree.scrollPathToVisible(child.getThisPath());\n" + 
-				"			tree.setSelectionPath(child.getThisPath());\n" + 
+				"			select(child);\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 
@@ -714,6 +713,11 @@ public class TreeNavigator {
 				"\n" + 
 				"			parent.add(child);\n" + 
 				"			nodesWereInserted(parent, new int[]{n});\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		public void select(BaseTreeNode<?> treeNode) {\n" + 
+				"			tree.scrollPathToVisible(treeNode.getThisPath());\n" + 
+				"			tree.setSelectionPath(treeNode.getThisPath());\n" + 
 				"		}\n" + 
 				"	}\n" + 
 				"} >>";

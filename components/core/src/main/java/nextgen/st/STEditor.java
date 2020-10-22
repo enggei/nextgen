@@ -88,6 +88,11 @@ public class STEditor extends JPanel {
         return stGroupModel;
     }
 
+    public void clear() {
+        stTemplate = null;
+        reset(STGenerator.toStg(stGroupModel).trim());
+    }
+
     public void setSTEnum(STEnum stEnum) {
         stTemplate = null;
         final StringBuilder text = new StringBuilder();

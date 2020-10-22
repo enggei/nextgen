@@ -893,6 +893,10 @@ public class STAppPresentationModel {
       return stRenderer.findSTGroupModelByTemplate(stTemplate);
    }
 
+   public nextgen.st.domain.STTemplate findSTTemplate(nextgen.st.model.STModel model) {
+      return findSTTemplateByUuid(model.getStTemplate());
+   }
+
    public static final class CompilationResult {
 
       public final String compilerOutput;

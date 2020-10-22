@@ -19,12 +19,12 @@ public class STWorkspace extends JTabbedPane {
 
 	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
-		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		findCanvas();
 		appModel().doInTransaction(transaction -> {
 			templateNavigator = new STTemplateNavigator(this);
 			modelNavigator = new STModelNavigator(this);
 		});
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	public STTemplateNavigator getTemplateNavigator() {
@@ -38,12 +38,63 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorStModelTreeNodeClicked(nextgen.events.ModelNavigatorStModelTreeNodeClicked event) {
+		System.out.println("ModelNavigatorStModelTreeNodeClicked");
+		getModelEditor(event.stTemplate, event.stModel);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupTreeNodeClicked(nextgen.events.STGroupTreeNodeClicked event) {
+		System.out.println("STGroupTreeNodeClicked");
+		getSTEditor(event.stGroup);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTTemplateTreeNodeClicked(nextgen.events.STTemplateTreeNodeClicked event) {
+		System.out.println("STTemplateTreeNodeClicked");
+		getSTEditor(event.stGroup).setSTTemplate(event.stTemplate);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTEnumTreeNodeClicked(nextgen.events.STEnumTreeNodeClicked event) {
+		System.out.println("STEnumTreeNodeClicked");
+		getSTEditor(event.stGroup).setSTEnum(event.stEnum);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTInterfaceTreeNodeClicked(nextgen.events.STInterfaceTreeNodeClicked event) {
+		System.out.println("STInterfaceTreeNodeClicked");
+		getSTEditor(event.stGroup).setSTInterface(event.stInterface);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
+		System.out.println("STModelDeleted");
 		SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
+		System.out.println("STGroupDeleted");
+
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
+		System.out.println("STEnumDeleted");
+
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
+		System.out.println("STTemplateDeleted");
+
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
+		System.out.println("STInterfaceDeleted");
+
 	}
 
 	private STAppPresentationModel appModel() {
@@ -118,13 +169,17 @@ public class STWorkspace extends JTabbedPane {
 		for (int i = 0; i < getTabCount(); i++) {
 				final Component tabComponentAt = getComponentAt(i);
 				if (tabComponentAt instanceof STModelEditor) {
-					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
-						return (STModelEditor) tabComponentAt;
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {
+						final nextgen.st.STModelEditor editor = (nextgen.st.STModelEditor) tabComponentAt;
+						setSelectedComponent(editor);
+						return editor;
+					}
 				}
 		}
 
 		final STModelEditor component = new STModelEditor(stModel);
 		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplate.getName() + "Model"), component);
+		setSelectedComponent(component);
 		return component;
 	}
 

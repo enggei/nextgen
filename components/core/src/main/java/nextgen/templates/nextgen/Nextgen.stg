@@ -2183,7 +2183,7 @@ import java.util.function.Predicate;
 public class ~name~ extends JTabbedPane {
 
 	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
-	
+
 	public ~name~() {
 		setPreferredSize(new Dimension(1200, 1024));
 		~constructorParameters:{it|~it~};separator="\n"~
@@ -2193,13 +2193,13 @@ public class ~name~ extends JTabbedPane {
 		return ~it.name~;
 	~eom()~
 	};separator="\n\n"~
-	
+
 	~methods:{it|~it~};separator="\n\n"~
 
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
-	
+
 	public STRenderPanel findRenderer() {
 		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
 				.orElseGet(() -> {
@@ -2252,7 +2252,7 @@ public class ~name~ extends JTabbedPane {
 		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
 		return component;
 	}
-	
+
 	public void removeModelEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
@@ -2263,18 +2263,22 @@ public class ~name~ extends JTabbedPane {
 			}
 		}
 	}
-	
+
 	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
 		for (int i = 0; i < getTabCount(); i++) {
 				final Component tabComponentAt = getComponentAt(i);
 				if (tabComponentAt instanceof STModelEditor) {
-					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
-						return (STModelEditor) tabComponentAt;
+					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {
+						final nextgen.st.STModelEditor editor = (nextgen.st.STModelEditor) tabComponentAt;
+						setSelectedComponent(editor);
+						return editor;
+					}
 				}
 		}
 
 		final STModelEditor component = new STModelEditor(stModel);
 		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplate.getName() + "Model"), component);
+		setSelectedComponent(component);
 		return component;
 	}
 
@@ -2631,8 +2635,7 @@ public class ~name~ extends JPanel {
 
 		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
 			addNodeInSortedOrder(parent, child);
-			tree.scrollPathToVisible(child.getThisPath());
-			tree.setSelectionPath(child.getThisPath());
+			select(child);
 		}
 
 		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
@@ -2655,6 +2658,11 @@ public class ~name~ extends JPanel {
 
 			parent.add(child);
 			nodesWereInserted(parent, new int[]{n});
+		}
+
+		public void select(BaseTreeNode<?> treeNode) {
+			tree.scrollPathToVisible(treeNode.getThisPath());
+			tree.setSelectionPath(treeNode.getThisPath());
 		}
 	}
 }  >>

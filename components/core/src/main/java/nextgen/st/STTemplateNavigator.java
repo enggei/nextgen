@@ -37,6 +37,7 @@ public class STTemplateNavigator extends JPanel {
 		setPreferredSize(new Dimension(600, 500));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	private final class STTemplateNavigatorCellRenderer extends DefaultTreeCellRenderer {
@@ -89,6 +90,15 @@ public class STTemplateNavigator extends JPanel {
             if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
             appModel().doLaterInTransaction(transaction -> {
+					if (isSTGroupTreeNode(lastPathComponent)) 
+						onSTGroupTreeNodeSelected((STGroupTreeNode) lastPathComponent);
+					else if (isSTEnumTreeNode(lastPathComponent)) 
+						onSTEnumTreeNodeSelected((STEnumTreeNode) lastPathComponent);
+					else if (isSTTemplateTreeNode(lastPathComponent)) 
+						onSTTemplateTreeNodeSelected((STTemplateTreeNode) lastPathComponent);
+					else if (isSTInterfaceTreeNode(lastPathComponent)) 
+						onSTInterfaceTreeNodeSelected((STInterfaceTreeNode) lastPathComponent);
+					else 
 						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);
             });
          }
@@ -605,6 +615,83 @@ public class STTemplateNavigator extends JPanel {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorStModelTreeNodeClicked(nextgen.events.ModelNavigatorStModelTreeNodeClicked event) {
+		System.out.println("ModelNavigatorStModelTreeNodeClicked");
+		findSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.stTemplate)).ifPresent(treeModel::select);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
+		System.out.println("STGroupDeleted");
+		findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
+		System.out.println("STEnumDeleted");
+		findSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
+		System.out.println("STTemplateDeleted");
+		findSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
+		System.out.println("STInterfaceDeleted");
+		findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTGroup(nextgen.events.NewSTGroup event) {
+		System.out.println("NewSTGroup");
+		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.st.STTemplateNavigator.STGroupTreeNode(event.group));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTGroupTemplate(nextgen.events.NewSTGroupTemplate event) {
+		System.out.println("NewSTGroupTemplate");
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
+					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTTemplateChild(nextgen.events.NewSTTemplateChild event) {
+		System.out.println("NewSTTemplateChild");
+		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
+					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
+		System.out.println("STGroupNameChanged");
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+					.ifPresent(nextgen.st.STTemplateNavigator.STGroupTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
+		System.out.println("STTemplateNameChanged");
+		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
+					.ifPresent(nextgen.st.STTemplateNavigator.STTemplateTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTInterfaceNameChanged(nextgen.events.STInterfaceNameChanged event) {
+		System.out.println("STInterfaceNameChanged");
+		findSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))
+					.ifPresent(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTEnumNameChanged(nextgen.events.STEnumNameChanged event) {
+		System.out.println("STEnumNameChanged");
+		findSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
+					.ifPresent(STTemplateNavigator.STEnumTreeNode::nodeChanged);
+	}
 
 	class STTemplateNavigatorTreeModel extends DefaultTreeModel {
 
@@ -651,8 +738,7 @@ public class STTemplateNavigator extends JPanel {
 
 		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
 			addNodeInSortedOrder(parent, child);
-			tree.scrollPathToVisible(child.getThisPath());
-			tree.setSelectionPath(child.getThisPath());
+			select(child);
 		}
 
 		private void addNodeInSortedOrder(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
@@ -675,6 +761,11 @@ public class STTemplateNavigator extends JPanel {
 
 			parent.add(child);
 			nodesWereInserted(parent, new int[]{n});
+		}
+
+		public void select(BaseTreeNode<?> treeNode) {
+			tree.scrollPathToVisible(treeNode.getThisPath());
+			tree.setSelectionPath(treeNode.getThisPath());
 		}
 	}
 }
