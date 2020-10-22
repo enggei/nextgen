@@ -2,11 +2,13 @@ package nextgen.actions;
 
 public class SetTemplateParameterTypes extends TransactionAction {
 
+   private final nextgen.st.domain.STGroupModel stGroup;
    private final nextgen.st.domain.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
 
-	public SetTemplateParameterTypes(nextgen.st.domain.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public SetTemplateParameterTypes(nextgen.st.domain.STGroupModel stGroup, nextgen.st.domain.STTemplate stTemplate, javax.swing.JComponent owner) {
 		super("Set parameter types");
+		this.stGroup = stGroup;
 		this.stTemplate = stTemplate;
 		this.owner = owner;
 	}
@@ -21,29 +23,26 @@ public class SetTemplateParameterTypes extends TransactionAction {
       		case SINGLE:
       		case LIST:
       			final String key = stParameter.getName();
-      			txtParameterMap.put(key, nextgen.utils.SwingUtil.newTextField(stParameter.getArgumentType("Object"), 15));
-
+      			txtParameterMap.put(key, newTextField(stParameter.getArgumentType("Object"), 15));
       			break;
+
       		case KVLIST:
       			stParameter.getKeys().forEach(stParameterKey -> {
       				final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
-      				txtParameterMap.put(kvListKey, nextgen.utils.SwingUtil.newTextField(stParameterKey.getArgumentType("Object"), 15));
+      				txtParameterMap.put(kvListKey, newTextField(stParameterKey.getArgumentType("Object"), 15));
       			});
       			break;
       	}
       });
 
-      final javax.swing.JDialog dialog = new javax.swing.JDialog((java.awt.Frame) javax.swing.SwingUtilities
-      		.getAncestorOfClass(javax.swing.JFrame.class, owner), "Set Parameter types", true);
       final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(txtParameterMap.size(), 2));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
       txtParameterMap.forEach((key, value) -> {
-      	contentPanel.add(new javax.swing.JLabel(key));
+      	contentPanel.add(newLabel(key));
       	contentPanel.add(value);
       });
-      dialog.add(contentPanel, java.awt.BorderLayout.CENTER);
 
-      final javax.swing.JButton btnSave = new javax.swing.JButton(nextgen.st.STAppPresentationModel.newAction("Save", actionEvent1 -> {
+      showDialog(owner, contentPanel, "Parameter Types", jDialog -> {
       	stTemplate.getParameters().forEach(stParameter -> {
 
       		switch (stParameter.getType()) {
@@ -65,11 +64,8 @@ public class SetTemplateParameterTypes extends TransactionAction {
       		}
       	});
 
-      	appModel().setParameterTypes(stTemplate);
-
-      	javax.swing.SwingUtilities.invokeLater(dialog::dispose);
-      }));
-
-      nextgen.utils.SwingUtil.showDialog(owner, dialog, btnSave);
+      	nextgen.events.STTemplateParameterTypesChanged.post(stGroup, stTemplate);
+      	javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
+      });
    }
 }

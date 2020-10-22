@@ -28,8 +28,11 @@ public class WorkInstance {
 	private static final String _uuid = "uuid";
 
 	public WorkInstance setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -52,9 +55,12 @@ public class WorkInstance {
 		return this;
 	}
 
-	public WorkInstance setType(WorkType value) { 
-		if (value == null) node.removeProperty("type"); 
-		else node.setProperty("type", value.name());
+	public WorkInstance setType(WorkType value) {
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty("type", value.name());
+		} 
 		return this;
 	}
 
@@ -95,7 +101,9 @@ public class WorkInstance {
 
 	public WorkInstance removeWork() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getWorkRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -121,7 +129,9 @@ public class WorkInstance {
 
 	public WorkInstance removeConditional() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getConditionalRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -159,7 +169,9 @@ public class WorkInstance {
 
 	public WorkInstance removeSequential() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getSequentialRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -193,7 +205,9 @@ public class WorkInstance {
 
 	public WorkInstance removeParallel() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getParallelRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -223,7 +237,9 @@ public class WorkInstance {
 
 	public WorkInstance removeRepeat() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getRepeatRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -279,9 +295,13 @@ public class WorkInstance {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

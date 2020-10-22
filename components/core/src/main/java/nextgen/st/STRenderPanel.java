@@ -44,6 +44,6 @@ public class STRenderPanel extends JPanel {
             workspace.setSelectedComponent(modelEditor);
         })));
         pop.add(newAction("To Clipboard", actionEvent -> SwingUtil.toClipboard(txtEditor.getText().trim())));
-        pop.add(newAction("Write to File", actionEvent -> appModel().writeToFile(stModel)));
+        pop.add(new nextgen.actions.WriteSTModelToFile(stModel));
     }
 }

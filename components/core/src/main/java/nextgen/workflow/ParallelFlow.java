@@ -28,8 +28,11 @@ public class ParallelFlow {
 	private static final String _uuid = "uuid";
 
 	public ParallelFlow setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class ParallelFlow {
 	private static final String _name = "name";
 
 	public ParallelFlow setName(String value) { 
-		if (value == null) node.removeProperty(_name); 
-		else node.setProperty(_name, value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
@@ -94,12 +100,14 @@ public class ParallelFlow {
 	}
 
 	public java.util.stream.Stream<WorkInstance> getExecuteSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _execute).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new WorkInstance(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _execute).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new WorkInstance(relationship.getOtherNode(node)));
 	}
 
 	public ParallelFlow removeExecute(WorkInstance dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _execute).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -145,9 +153,13 @@ public class ParallelFlow {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

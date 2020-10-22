@@ -244,8 +244,8 @@ public class SwingUtil {
       showInputDialog(message, owner, dimension, null, onConfirm);
    }
 
-   public static <T>void showSelectDialog(String message, Component owner, Set<T> set, Consumer<T> onConfirm) {
-      final JComboBox<T> content = newComboBox(set, set.iterator().next());
+   public static <T>void showSelectDialog(String message, Component owner, Collection<T> set, T defaultValue, Consumer<T> onConfirm) {
+      final JComboBox<T> content = newComboBox(set, defaultValue);
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
       dialog.add(content, BorderLayout.CENTER);
       final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -280,6 +280,10 @@ public class SwingUtil {
       dialog.add(commandPanel, BorderLayout.SOUTH);
 
       showDialog(dialog, owner);
+   }
+
+   public static <T>void showSelectDialog(String message, Component owner, Collection<T> set, Consumer<T> onConfirm) {
+      showSelectDialog(message, owner, set, set.iterator().next(), onConfirm);
    }
 
    public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {
@@ -451,7 +455,7 @@ public class SwingUtil {
    }
 
    @SuppressWarnings("unchecked")
-   public static <T> JComboBox<T> newComboBox(Set<T> enumValues, T selected) {
+   public static <T> JComboBox<T> newComboBox(Collection<T> enumValues, T selected) {
       final T[] values = (T[]) new Object[enumValues.size()];
       int index = 0;
       for (T enumValue : enumValues)

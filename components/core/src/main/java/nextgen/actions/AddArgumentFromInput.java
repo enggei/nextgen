@@ -15,6 +15,11 @@ public class AddArgumentFromInput extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      nextgen.utils.SwingUtil.showInputDialog(stParameter.getName(), owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> appModel().add(stModel, stParameter, inputValue)));
+      input(owner, stParameter.getName(), inputValue -> {
+         final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);
+         final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+         stModel.addArguments(stArgument);
+         nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+      });
    }
 }

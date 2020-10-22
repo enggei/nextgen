@@ -15,6 +15,20 @@ public class SetArgumentFromSTModel extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().doLaterInTransaction(transaction1 -> appModel().set(stModel, stParameter, value));
+       stModel.getArguments()
+                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                  .findAny()
+                  .ifPresent(stArgument -> {
+                     final String uuid = stArgument.getUuid();
+                     stModel.removeArguments(stArgument);
+                     stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
+                     stArgument.delete();
+                     nextgen.events.STArgumentDeleted.post(stModel, uuid);;
+                  });
+
+            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
+            final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+            stModel.addArguments(stArgument);
+            nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }
 }

@@ -28,8 +28,11 @@ public class LayoutNode {
 	private static final String _uuid = "uuid";
 
 	public LayoutNode setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class LayoutNode {
 	private static final String _x = "x";
 
 	public LayoutNode setX(Double value) { 
-		if (value == null) node.removeProperty(_x); 
-		else node.setProperty(_x, value);
+		if (value == null) 
+			removeX(); 
+		else {
+		 	node.setProperty(_x, value);
+		}
 		return this;
 	}
 
@@ -82,8 +88,11 @@ public class LayoutNode {
 	private static final String _y = "y";
 
 	public LayoutNode setY(Double value) { 
-		if (value == null) node.removeProperty(_y); 
-		else node.setProperty(_y, value);
+		if (value == null) 
+			removeY(); 
+		else {
+		 	node.setProperty(_y, value);
+		}
 		return this;
 	}
 
@@ -140,9 +149,13 @@ public class LayoutNode {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

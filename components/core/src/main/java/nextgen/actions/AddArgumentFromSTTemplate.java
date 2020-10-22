@@ -4,17 +4,24 @@ public class AddArgumentFromSTTemplate extends TransactionAction {
 
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.domain.STParameter stParameter;
-   private final nextgen.st.domain.STTemplate value;
+   private final nextgen.st.domain.STTemplate stTemplate;
 
-	public AddArgumentFromSTTemplate(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.domain.STTemplate value) {
+	public AddArgumentFromSTTemplate(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.domain.STTemplate stTemplate) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;
-      this.value = value;
+      this.stTemplate = stTemplate;
    }
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().doLaterInTransaction(transaction1 -> appModel().add(stModel, stParameter, appModel().newSTModel(value)));
+      final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);
+      nextgen.events.NewSTModel.post(value, stTemplate);
+
+      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
+      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+      stModel.addArguments(stArgument);
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+
    }
 }

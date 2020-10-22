@@ -5,7 +5,10 @@ public class LayoutNeoFactory {
 	private final org.neo4j.graphdb.GraphDatabaseService db;
 
 	public LayoutNeoFactory(java.lang.String dir) { 
-		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new java.io.File(dir)).setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true").newGraphDatabase());
+		this(new org.neo4j.graphdb.factory.GraphDatabaseFactory()
+				.newEmbeddedDatabaseBuilder(new java.io.File(dir))
+				.setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, "true")
+				.newGraphDatabase());
 		Runtime.getRuntime().addShutdownHook(new java.lang.Thread(db::shutdown));
 	}
 
@@ -66,7 +69,8 @@ public class LayoutNeoFactory {
 	}
 
 	public Layout newLayout() { 
-		return newLayout(db.createNode(LayoutLabel));
+		Layout newInstance = newLayout(db.createNode(LayoutLabel));
+		return newInstance;
 	}
 
 	public Layout newLayout(org.neo4j.graphdb.Node node) { 
@@ -112,7 +116,8 @@ public class LayoutNeoFactory {
 	}
 
 	public LayoutNode newLayoutNode() { 
-		return newLayoutNode(db.createNode(LayoutNodeLabel));
+		LayoutNode newInstance = newLayoutNode(db.createNode(LayoutNodeLabel));
+		return newInstance;
 	}
 
 	public LayoutNode newLayoutNode(org.neo4j.graphdb.Node node) { 

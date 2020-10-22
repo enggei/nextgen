@@ -11,6 +11,7 @@ public class NewSTModel extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().newSTModel(stTemplate);
+      final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);
+      nextgen.events.NewSTModel.post(stModel, stTemplate);
    }
 }

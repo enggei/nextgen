@@ -15,6 +15,9 @@ public class DeleteEnum extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().delete(stEnum, stGroup);
+      confirm(owner, "Delete", unused -> {
+         stGroup.removeEnums(stEnum);
+         nextgen.events.STEnumDeleted.post(stEnum.getUuid());
+      });
    }
 }

@@ -13,6 +13,9 @@ public class DeleteSTGroup extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      nextgen.utils.SwingUtil.confirm(owner, "Delete").ifPresent(aBoolean -> appModel().doLaterInTransaction(t -> appModel().delete(stGroup)));
+      confirm(owner, "Delete", unused -> {
+         appModel().delete(stGroup);
+         nextgen.events.STGroupDeleted.post(stGroup.getUuid());
+      });
    }
 }

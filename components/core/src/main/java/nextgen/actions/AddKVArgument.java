@@ -15,6 +15,31 @@ public class AddKVArgument extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().addKVArgument(stModel, stParameter, owner);
+      final java.util.Map<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+      stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40)));
+
+      final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));
+      inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
+      for (java.util.Map.Entry<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
+         inputPanel.add(new javax.swing.JLabel(fieldEntry.getKey().getName()));
+         inputPanel.add(fieldEntry.getValue());
+      }
+
+      showDialog(owner, inputPanel, stParameter.getName(), jDialog -> {
+         java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
+         for (java.util.Map.Entry<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
+            final String value = fieldEntry.getValue().getText().trim();
+            if (value.length() == 0) continue;
+
+            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
+            final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(fieldEntry.getKey(), stValue);
+            kvs.add(stArgumentKV);
+         }
+
+         final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, kvs);
+         nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument);
+
+         close(jDialog);
+      });
    }
 }

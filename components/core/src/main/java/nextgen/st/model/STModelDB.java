@@ -241,10 +241,13 @@ public class STModelDB extends STModelNeoFactory {
 
    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
       return newSTModel()
-            .setUuid(java.util.UUID.randomUUID()
-                  .toString())
+            .setUuid(java.util.UUID.randomUUID().toString())
             .setStTemplate(stTemplate.getUuid())
             .setStGroup(stGroupModel);
+   }
+
+   public STModel newSTModel(STGroupModel stGroupModel, STTemplate stTemplate) {
+      return newSTModel(stGroupModel.getUuid(), stTemplate);
    }
 
    public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {

@@ -13,14 +13,13 @@ public class ImportSTTemplate extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      nextgen.utils.SwingUtil.showOpenFile(owner, appModel().getLastDir())
-      				.ifPresent(file -> {
-      					appModel().setLastDir(file.getParentFile());
-      					appModel().doLaterInTransaction(t -> {
-      						final String fileName = file.getName();
-      						final String name = fileName.substring(0, fileName.indexOf("."));
-      						appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);
-      					});
-      				});
+      openFile(owner, file -> {
+      	appModel().setLastDir(file.getParentFile());
+      	appModel().doLaterInTransaction(t -> {
+      		final String fileName = file.getName();
+      		final String name = fileName.substring(0, fileName.indexOf("."));
+      		appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);
+      	});
+      });
    }
 }

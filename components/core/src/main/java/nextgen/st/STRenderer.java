@@ -234,6 +234,10 @@ public class STRenderer {
       return Objects.requireNonNull(findSTMapper(stTemplate.getUuid())).groupModel;
    }
 
+   public STGroupModel findSTGroupModelByTemplate(String stTemplate) {
+      return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
+   }
+
    private static final class STMapper {
 
       private final STGroupModel groupModel;

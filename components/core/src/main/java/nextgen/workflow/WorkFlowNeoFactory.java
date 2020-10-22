@@ -69,7 +69,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public Work newWork() { 
-		return newWork(db.createNode(WorkLabel));
+		Work newInstance = newWork(db.createNode(WorkLabel));
+		return newInstance;
 	}
 
 	public Work newWork(org.neo4j.graphdb.Node node) { 
@@ -129,7 +130,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public WorkInput newWorkInput() { 
-		return newWorkInput(db.createNode(WorkInputLabel));
+		WorkInput newInstance = newWorkInput(db.createNode(WorkInputLabel));
+		return newInstance;
 	}
 
 	public WorkInput newWorkInput(org.neo4j.graphdb.Node node) { 
@@ -189,7 +191,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public WorkStatement newWorkStatement() { 
-		return newWorkStatement(db.createNode(WorkStatementLabel));
+		WorkStatement newInstance = newWorkStatement(db.createNode(WorkStatementLabel));
+		return newInstance;
 	}
 
 	public WorkStatement newWorkStatement(org.neo4j.graphdb.Node node) { 
@@ -235,7 +238,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public WorkInstance newWorkInstance() { 
-		return newWorkInstance(db.createNode(WorkInstanceLabel));
+		WorkInstance newInstance = newWorkInstance(db.createNode(WorkInstanceLabel));
+		return newInstance;
 	}
 
 	public WorkInstance newWorkInstance(org.neo4j.graphdb.Node node) { 
@@ -281,7 +285,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public ConditionalFlow newConditionalFlow() { 
-		return newConditionalFlow(db.createNode(ConditionalFlowLabel));
+		ConditionalFlow newInstance = newConditionalFlow(db.createNode(ConditionalFlowLabel));
+		return newInstance;
 	}
 
 	public ConditionalFlow newConditionalFlow(org.neo4j.graphdb.Node node) { 
@@ -327,7 +332,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public SequentialFlow newSequentialFlow() { 
-		return newSequentialFlow(db.createNode(SequentialFlowLabel));
+		SequentialFlow newInstance = newSequentialFlow(db.createNode(SequentialFlowLabel));
+		return newInstance;
 	}
 
 	public SequentialFlow newSequentialFlow(org.neo4j.graphdb.Node node) { 
@@ -373,7 +379,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public ParallelFlow newParallelFlow() { 
-		return newParallelFlow(db.createNode(ParallelFlowLabel));
+		ParallelFlow newInstance = newParallelFlow(db.createNode(ParallelFlowLabel));
+		return newInstance;
 	}
 
 	public ParallelFlow newParallelFlow(org.neo4j.graphdb.Node node) { 
@@ -419,7 +426,8 @@ public class WorkFlowNeoFactory {
 	}
 
 	public RepeatFlow newRepeatFlow() { 
-		return newRepeatFlow(db.createNode(RepeatFlowLabel));
+		RepeatFlow newInstance = newRepeatFlow(db.createNode(RepeatFlowLabel));
+		return newInstance;
 	}
 
 	public RepeatFlow newRepeatFlow(org.neo4j.graphdb.Node node) { 

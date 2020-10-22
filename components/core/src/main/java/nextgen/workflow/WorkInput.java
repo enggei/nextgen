@@ -28,8 +28,11 @@ public class WorkInput {
 	private static final String _uuid = "uuid";
 
 	public WorkInput setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class WorkInput {
 	private static final String _type = "type";
 
 	public WorkInput setType(String value) { 
-		if (value == null) node.removeProperty(_type); 
-		else node.setProperty(_type, value);
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty(_type, value);
+		}
 		return this;
 	}
 
@@ -82,8 +88,11 @@ public class WorkInput {
 	private static final String _name = "name";
 
 	public WorkInput setName(String value) { 
-		if (value == null) node.removeProperty(_name); 
-		else node.setProperty(_name, value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
@@ -140,9 +149,13 @@ public class WorkInput {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

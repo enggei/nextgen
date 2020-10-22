@@ -14,10 +14,70 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    protected abstract void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction);
 
    protected nextgen.st.STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+      return nextgen.swing.AppModel.getInstance()
+            .getSTAppPresentationModel();
    }
 
    protected void confirm(javax.swing.JComponent owner, String description, java.util.function.Consumer<Void> onConfirm) {
-      nextgen.utils.SwingUtil.confirm(owner, description).ifPresent(aBoolean -> onConfirm.accept(null));
+      nextgen.utils.SwingUtil.confirm(owner, description)
+            .ifPresent(aBoolean -> onConfirm.accept(null));
+   }
+
+   protected void input(javax.swing.JComponent owner, String message, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+   protected void input(javax.swing.JComponent owner, String message, String defaultValue, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+   protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
+   protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, T defaultValue, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
+   protected void openFile(javax.swing.JComponent owner, java.util.function.Consumer<java.io.File> consumer) {
+      nextgen.utils.SwingUtil.showOpenFile(owner, appModel().getLastDir()).ifPresent(file -> consumer.accept(file));
+   }
+
+   protected javax.swing.JDialog newDialog(javax.swing.JComponent owner, String title) {
+      return new javax.swing.JDialog((java.awt.Frame) javax.swing.SwingUtilities.getAncestorOfClass(javax.swing.JFrame.class, owner), title, true);
+   }
+
+   protected javax.swing.JTextField newTextField() {
+      return newTextField("", 30);
+   }
+
+   protected javax.swing.JTextField newTextField(int columns) {
+      return newTextField("", columns);
+   }
+
+   protected javax.swing.JTextField newTextField(String text, int columns) {
+      return new javax.swing.JTextField(text, columns);
+   }
+
+   protected javax.swing.JLabel newLabel(String name) {
+      return new javax.swing.JLabel(name);
+   }
+
+   protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
+      return new javax.swing.JButton(appModel().newTransactionAction(name, onClick));
+   }
+
+   protected void showDialog(javax.swing.JComponent owner, javax.swing.JComponent component, String title, java.util.function.Consumer<javax.swing.JDialog> saveAction) {
+      final javax.swing.JDialog dialog = newDialog(owner, title);
+      dialog.add(component, java.awt.BorderLayout.CENTER);
+      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
+   }
+
+   protected void close(javax.swing.JDialog dialog) {
+      javax.swing.SwingUtilities.invokeLater(dialog::dispose);
+   }
+
+   protected void toClipboard(Object value) {
+      nextgen.utils.SwingUtil.toClipboard(value.toString());
    }
 }

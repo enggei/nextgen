@@ -64,7 +64,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		removeInputEventListener(getZoomEventHandler());
 		addInputEventListener(canvasZoomHandler);
 		addInputEventListener(canvasInputEventsHandler);
-		org.greenrobot.eventbus.EventBus.getDefault().register(this);
+//		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 		javax.swing.SwingUtilities.invokeLater(() -> new LoadLastLayoutAction(null).actionPerformed(null));
 	}
 
@@ -74,17 +74,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTModel(nextgen.events.NewSTModel event) {
-		addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onOpenSTModel(nextgen.events.OpenSTModel event) {
-		addSTModelNode(event.model, appModel().findSTTemplateByUuid(event.model.getStTemplate()));
-		appModel().getWorkspace().showCanvas();
 	}
 
 	@Override
@@ -2081,13 +2070,13 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			appModel().doInTransaction(tx -> {
 					stParameter.getKeys().forEach(stParameterKey -> {
 						final JMenu stParameterMenu = new JMenu(stParameterKey.getName());
-						stValueNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTValue("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
-						stModelNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
-						stParameterMenu.add(new nextgen.actions.SetKVArgumentFromInput("Set from Input", getModel(), stParameterKey, thisCanvas()));
-						stParameterMenu.add(new nextgen.actions.SetKVArgumentFromClipboard("Set from Clipboard", getModel(), stParameterKey));
+						//stValueNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTValue("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
+						//stModelNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));
+						//stParameterMenu.add(new nextgen.actions.SetKVArgumentFromInput("Set from Input", getModel(), stParameterKey, thisCanvas()));
+						//stParameterMenu.add(new nextgen.actions.SetKVArgumentFromClipboard("Set from Clipboard", getModel(), stParameterKey));
 						getModel().getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())).filter(stArgumentKV -> stArgumentKV.getValue() != null).forEach(stArgumentKV -> {
-								stParameterMenu.add(new OpenArgument(event, getModel(), stParameterKey, stArgumentKV));
-								stParameterMenu.add(new RemoveArgument(event, getModel(), stArgumentKV));
+								//stParameterMenu.add(new nextgen.actions.OpenArgument(event, getModel(), stParameterKey, stArgumentKV));
+								//stParameterMenu.add(new nextgen.actions.DeleteSTArgument(event, getModel(), stArgumentKV));
 						});
 						if (stParameterMenu.getMenuComponentCount() != 0) pop.add(stParameterMenu);
 					});
@@ -2324,7 +2313,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
+								removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));
 								existingSelections.put(stParameter.getUuid(), stArgument.getValue());
 							});
 
@@ -2348,7 +2337,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
+								removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));
 							});
 							break;
 						}
@@ -2365,7 +2354,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 							getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {
 								openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));
-								removestParameterMenu.add(new nextgen.actions.RemoveArgument(stArgument, thisCanvas()));
+								removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));
 							});
 							break;
 						}
@@ -2384,7 +2373,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			pop.add(new Clone(event));
 			pop.add(new AddFileSink(event));
 			pop.add(new OpenFileSink(event));
-			pop.add(new WriteToFile(event));
 			super.onNodeRightClick(event, pop);
 		}
 
@@ -2435,19 +2423,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				appModel().setParameter(stParameter, getModel(), thisCanvas());
-			}
-		}
-
-		final class WriteToFile extends NodeAction {
-
-
-			WriteToFile(PInputEvent event) {
-				super("Write To File", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().writeToFile(getModel());
 			}
 		}
 

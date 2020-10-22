@@ -28,8 +28,11 @@ public class RepeatFlow {
 	private static final String _uuid = "uuid";
 
 	public RepeatFlow setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class RepeatFlow {
 	private static final String _name = "name";
 
 	public RepeatFlow setName(String value) { 
-		if (value == null) node.removeProperty(_name); 
-		else node.setProperty(_name, value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
@@ -97,7 +103,9 @@ public class RepeatFlow {
 
 	public RepeatFlow removeRepeat() { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getRepeatRelation());
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
@@ -108,8 +116,11 @@ public class RepeatFlow {
 	private static final String _times = "times";
 
 	public RepeatFlow setTimes(Integer value) { 
-		if (value == null) node.removeProperty(_times); 
-		else node.setProperty(_times, value);
+		if (value == null) 
+			removeTimes(); 
+		else {
+		 	node.setProperty(_times, value);
+		}
 		return this;
 	}
 
@@ -132,9 +143,12 @@ public class RepeatFlow {
 		return this;
 	}
 
-	public RepeatFlow setUntil(UntilPredicate value) { 
-		if (value == null) node.removeProperty("until"); 
-		else node.setProperty("until", value.name());
+	public RepeatFlow setUntil(UntilPredicate value) {
+		if (value == null) 
+			removeUntil(); 
+		else {
+		 	node.setProperty("until", value.name());
+		} 
 		return this;
 	}
 
@@ -195,9 +209,13 @@ public class RepeatFlow {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

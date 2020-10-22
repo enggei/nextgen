@@ -38,13 +38,12 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTModelCanvasNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
-		setSelectedComponent(findModelEditor(event.model, () -> appModel().findSTTemplateByUuid(event.model.getStTemplate())));
+	public void onSTGroupTreeNodeClicked(nextgen.events.STGroupTreeNodeClicked event) {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
-		//SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
+		SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
 	}
 
 	private STAppPresentationModel appModel() {

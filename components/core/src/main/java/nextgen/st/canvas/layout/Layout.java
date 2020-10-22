@@ -28,8 +28,11 @@ public class Layout {
 	private static final String _uuid = "uuid";
 
 	public Layout setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class Layout {
 	private static final String _name = "name";
 
 	public Layout setName(String value) { 
-		if (value == null) node.removeProperty(_name); 
-		else node.setProperty(_name, value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
@@ -94,22 +100,20 @@ public class Layout {
 	}
 
 	public java.util.stream.Stream<LayoutNode> getNodesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _nodes).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t", o.getId()))).map((relationship) -> new LayoutNode(relationship.getOtherNode(node)));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _nodes).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new LayoutNode(relationship.getOtherNode(node)));
 	}
 
 	public Layout removeNodes(LayoutNode dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _nodes).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
 	public Layout removeAllNodes() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _nodes).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
-	}
-
-	public java.util.stream.Stream<LayoutNode> getIncomingNodesLayoutNode() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("nodes")).spliterator(), false).map((relationship) -> new LayoutNode(relationship.getOtherNode(node)));
 	}
 
 	@Override
@@ -145,9 +149,13 @@ public class Layout {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }

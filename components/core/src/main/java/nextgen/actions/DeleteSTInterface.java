@@ -16,8 +16,8 @@ public class DeleteSTInterface extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       confirm(owner, "Delete", unused -> {
-               stGroup.removeInterfaces(stInterface);
-               nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());   
-            });
+         stGroup.removeInterfaces(stInterface);
+         nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());   
+      });
    }
 }

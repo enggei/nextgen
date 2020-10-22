@@ -28,8 +28,11 @@ public class WorkStatement {
 	private static final String _uuid = "uuid";
 
 	public WorkStatement setUuid(String value) { 
-		if (value == null) node.removeProperty(_uuid); 
-		else node.setProperty(_uuid, value);
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
 		return this;
 	}
 
@@ -55,8 +58,11 @@ public class WorkStatement {
 	private static final String _statement = "statement";
 
 	public WorkStatement setStatement(String value) { 
-		if (value == null) node.removeProperty(_statement); 
-		else node.setProperty(_statement, value);
+		if (value == null) 
+			removeStatement(); 
+		else {
+		 	node.setProperty(_statement, value);
+		}
 		return this;
 	}
 
@@ -112,9 +118,13 @@ public class WorkStatement {
 	}
 
 	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
+
 	}
 
 }
