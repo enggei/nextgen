@@ -44,26 +44,32 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTGroupTreeNodeClicked(nextgen.events.STGroupTreeNodeClicked event) {
-		System.out.println("STGroupTreeNodeClicked");
+	public void onModelEditorStModelTreeNodeClicked(nextgen.events.ModelEditorStModelTreeNodeClicked event) {
+		System.out.println("ModelEditorStModelTreeNodeClicked");
+		getModelEditor(event.stTemplate, event.stModel);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onTemplateNavigatorSTGroupTreeNodeClicked(nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked event) {
+		System.out.println("TemplateNavigatorSTGroupTreeNodeClicked");
 		getSTEditor(event.stGroup);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTTemplateTreeNodeClicked(nextgen.events.STTemplateTreeNodeClicked event) {
-		System.out.println("STTemplateTreeNodeClicked");
+	public void onTemplateNavigatorSTTemplateTreeNodeClicked(nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked event) {
+		System.out.println("TemplateNavigatorSTTemplateTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTTemplate(event.stTemplate);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTEnumTreeNodeClicked(nextgen.events.STEnumTreeNodeClicked event) {
-		System.out.println("STEnumTreeNodeClicked");
+	public void onTemplateNavigatorSTEnumTreeNodeClicked(nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked event) {
+		System.out.println("TemplateNavigatorSTEnumTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTEnum(event.stEnum);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTInterfaceTreeNodeClicked(nextgen.events.STInterfaceTreeNodeClicked event) {
-		System.out.println("STInterfaceTreeNodeClicked");
+	public void onTemplateNavigatorSTInterfaceTreeNodeClicked(nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked event) {
+		System.out.println("TemplateNavigatorSTInterfaceTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTInterface(event.stInterface);
 	}
 

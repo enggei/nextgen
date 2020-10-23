@@ -21,12 +21,12 @@ public class SetArgumentToTrue extends TransactionAction {
                stModel.removeArguments(stArgument);
                stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
                stArgument.delete();
-               nextgen.events.STArgumentDeleted.post(stModel, uuid);;
+               nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
       final nextgen.st.model.STValue stValue = appModel().db.newSTValue("true");
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);;
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }
 }

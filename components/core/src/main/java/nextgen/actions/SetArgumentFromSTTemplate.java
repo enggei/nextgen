@@ -23,7 +23,7 @@ public class SetArgumentFromSTTemplate extends TransactionAction {
                stModel.removeArguments(stArgument);
                stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
                stArgument.delete();
-               nextgen.events.STArgumentDeleted.post(stModel, uuid);;
+               nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
       final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);

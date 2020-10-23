@@ -5,7 +5,7 @@ public class WriteSTModelToFile extends TransactionAction {
    private final nextgen.st.model.STModel stModel;
 
 	public WriteSTModelToFile(nextgen.st.model.STModel stModel) {
-		super("Visit");
+		super("Generate");
 		this.stModel = stModel;
 	}
 

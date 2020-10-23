@@ -17,6 +17,7 @@ public class TreeNode {
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _selectionStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _privateFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _parameters = new java.util.ArrayList<>();
 
 	TreeNode(org.stringtemplate.v4.STGroup stGroup) {
@@ -42,6 +43,7 @@ public class TreeNode {
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _selectionStatements) st.add("selectionStatements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _privateFields) st.addAggr("privateFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _parameters) st.addAggr("parameters.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
@@ -378,6 +380,74 @@ public class TreeNode {
 
 	}  
 
+	public TreeNode addPrivateFields(Object _type, Object _name, Object _init) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("init", _init);
+		this._privateFields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getPrivateFields() {
+		return this._privateFields;
+	}
+
+	public TreeNode addPrivateFields(TreeNode_PrivateFields value) {
+		return addPrivateFields(value._type, value._name, value._init);
+	}
+
+	public java.util.stream.Stream<TreeNode_PrivateFields> streamPrivateFields() {
+		return this._privateFields.stream().map(TreeNode_PrivateFields::new);
+	}
+
+	public java.util.List<Object> getPrivateFields_Type() {
+		return streamPrivateFields().map(TreeNode_PrivateFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getPrivateFields_Name() {
+		return streamPrivateFields().map(TreeNode_PrivateFields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getPrivateFields_Init() {
+		return streamPrivateFields().map(TreeNode_PrivateFields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class TreeNode_PrivateFields {
+
+		Object _type;
+		Object _name;
+		Object _init;
+
+		public TreeNode_PrivateFields(Object _type, Object _name, Object _init) {
+			this._type = _type;
+			this._name = _name;
+			this._init = _init;
+		}
+
+		private TreeNode_PrivateFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._init = (Object) map.get("init");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+	}  
+
 	public TreeNode addParameters(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -446,18 +516,21 @@ public class TreeNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNode(name,modelType,hasUuid,fields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~\n" + 
+	static final String st = "TreeNode(name,modelType,hasUuid,fields,privateFields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~\n" + 
 				"public class ~name~ extends BaseTreeNode<~modelType~> {\n" + 
 				"~if(hasUuid)~\n" + 
 				"\n" + 
 				"	private String uuid;\n" + 
 				"~endif~\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"	~privateFields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+				"	\n" + 
 				"	~name~(~modelType~ model~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~~if(parameters)~, ~parameters:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"		super(model, ~if(icon)~~icon~~else~null~endif~);\n" + 
 				"\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+				"		~privateFields:{it|this.~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
+				"		\n" + 
 				"		setLabel(~if(labelExpression)~~labelExpression~~else~model.toString()~endif~);\n" + 
 				"		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n" + 
 				"		~if(hasUuid)~this.uuid = model.getUuid();~endif~\n" + 

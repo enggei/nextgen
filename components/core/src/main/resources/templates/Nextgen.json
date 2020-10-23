@@ -99,7 +99,7 @@
     }, {
       "uuid" : "ecd9b597-6268-415b-9558-40ac8160f4a3",
       "name" : "TreeNode",
-      "text" : "// ~name~\npublic class ~name~ extends BaseTreeNode<~modelType~> {\n~if(hasUuid)~\n\n\tprivate String uuid;\n~endif~\n\t~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n\n\t~name~(~modelType~ model~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~~if(parameters)~, ~parameters:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(model, ~if(icon)~~icon~~else~null~endif~);\n\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\tsetLabel(~if(labelExpression)~~labelExpression~~else~model.toString()~endif~);\n\t\tthis.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n\t\t~if(hasUuid)~this.uuid = model.getUuid();~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~name~ thisNode() {\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic void nodeChanged() {\n\t\tsetLabel(~if(labelExpression)~~labelExpression~~else~getModel().toString()~endif~);\n\t\tthis.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n\t\tsuper.nodeChanged();\n\t}\n\n\t@Override\n\tprotected List<Action> getActions() {\n\t\tfinal List<Action> actions = super.getActions();\n\t\t~getActionsStatements:{it|~it~};separator=\"\\n\"~\n\t\t~actions:{it|actions.add(~it~);};separator=\"\\n\"~\n\t\treturn actions;\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n}\n\nprivate boolean is~name;format=\"capitalize\"~(Object treeNode) {\n\treturn treeNode instanceof ~name~;\n}\n\nprivate Optional<~name~> find~name;format=\"capitalize\"~(java.util.function.Predicate<~name~> predicate) {\n\treturn treeModel.find(~name~.class, predicate);\n}\n\nprivate Optional<~name~> find~name;format=\"capitalize\"~(BaseTreeNode<?> parent, java.util.function.Predicate<~name~> predicate) {\n\treturn treeModel.find(parent, ~name~.class, predicate);\n}\n\nprivate java.util.stream.Stream<~name~> getSelected~name~s() {\n\treturn getSelectedNodes(~name~.class);\n}\n\nprivate void on~name~Selected(~name~ selectedNode) {\n\t~selectionStatements:{it|~it~};separator=\"\\n\"~\n} ",
+      "text" : "// ~name~\npublic class ~name~ extends BaseTreeNode<~modelType~> {\n~if(hasUuid)~\n\n\tprivate String uuid;\n~endif~\n\t~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t~privateFields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\t~name~(~modelType~ model~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~~if(parameters)~, ~parameters:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n\t\tsuper(model, ~if(icon)~~icon~~else~null~endif~);\n\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t\t~privateFields:{it|this.~it.name~ = ~it.init~;};separator=\"\\n\"~\n\t\t\n\t\tsetLabel(~if(labelExpression)~~labelExpression~~else~model.toString()~endif~);\n\t\tthis.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n\t\t~if(hasUuid)~this.uuid = model.getUuid();~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t}\n\n\t~name~ thisNode() {\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic void nodeChanged() {\n\t\tsetLabel(~if(labelExpression)~~labelExpression~~else~getModel().toString()~endif~);\n\t\tthis.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~\"\";~endif~\n\t\tsuper.nodeChanged();\n\t}\n\n\t@Override\n\tprotected List<Action> getActions() {\n\t\tfinal List<Action> actions = super.getActions();\n\t\t~getActionsStatements:{it|~it~};separator=\"\\n\"~\n\t\t~actions:{it|actions.add(~it~);};separator=\"\\n\"~\n\t\treturn actions;\n\t}\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n}\n\nprivate boolean is~name;format=\"capitalize\"~(Object treeNode) {\n\treturn treeNode instanceof ~name~;\n}\n\nprivate Optional<~name~> find~name;format=\"capitalize\"~(java.util.function.Predicate<~name~> predicate) {\n\treturn treeModel.find(~name~.class, predicate);\n}\n\nprivate Optional<~name~> find~name;format=\"capitalize\"~(BaseTreeNode<?> parent, java.util.function.Predicate<~name~> predicate) {\n\treturn treeModel.find(parent, ~name~.class, predicate);\n}\n\nprivate java.util.stream.Stream<~name~> getSelected~name~s() {\n\treturn getSelectedNodes(~name~.class);\n}\n\nprivate void on~name~Selected(~name~ selectedNode) {\n\t~selectionStatements:{it|~it~};separator=\"\\n\"~\n} ",
       "parameters" : [ {
         "uuid" : "ca9215d3-0be1-4d48-b46f-ab856ba1cdab",
         "name" : "name",
@@ -127,6 +127,24 @@
         }, {
           "uuid" : "53a78064-00ab-44c9-aad2-a20f557b8a78",
           "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "def6fdca-0641-4d81-98e8-dfc55ec445ea",
+        "name" : "privateFields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "d3bf100c-7820-4a8e-90c6-9ed6306afaf0",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "76b20387-0f11-4549-9531-8b066b7c360c",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0d9dd492-e9a0-4a3c-879c-d3364ea1fd02",
+          "name" : "init",
           "argumentType" : "Object"
         } ]
       }, {

@@ -257,6 +257,7 @@ public class STTemplateNavigator extends JPanel {
 		RootNode(String model) {
 			super(model, null);
 
+
 			setLabel(getModel());
 			this.tooltip = "";
 
@@ -311,6 +312,7 @@ public class STTemplateNavigator extends JPanel {
 		STGroupTreeNode(nextgen.st.domain.STGroupModel model) {
 			super(model, null);
 
+
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
@@ -364,7 +366,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTGroupTreeNodeSelected(STGroupTreeNode selectedNode) {
-		nextgen.events.STGroupTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STEnumTreeNode
@@ -374,6 +376,7 @@ public class STTemplateNavigator extends JPanel {
 
 		STEnumTreeNode(nextgen.st.domain.STEnum model) {
 			super(model, appModel().loadIcon("sq-green"));
+
 
 			setLabel(getModel().getName());
 			this.tooltip = "";
@@ -420,7 +423,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTEnumTreeNodeSelected(STEnumTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> nextgen.events.STEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()));
+		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()));
 	}
 
 	// STTemplateTreeNode
@@ -430,6 +433,7 @@ public class STTemplateNavigator extends JPanel {
 
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
 			super(model, appModel().loadIcon("sq-teal"));
+
 
 			setLabel(getModel().getName());
 			this.tooltip = "";
@@ -506,7 +510,7 @@ public class STTemplateNavigator extends JPanel {
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
 		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> {
 		   final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
-		   nextgen.events.STTemplateTreeNodeClicked.post(stGroupTreeNode.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
+		   nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(stGroupTreeNode.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
 		});
 	}
 
@@ -517,6 +521,7 @@ public class STTemplateNavigator extends JPanel {
 
 		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
 			super(model, appModel().loadIcon("sq-red"));
+
 
 			setLabel(getModel().getName());
 			this.tooltip = "";
@@ -562,7 +567,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTInterfaceTreeNodeSelected(STInterfaceTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> nextgen.events.STInterfaceTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()));
+		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()));
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {

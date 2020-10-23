@@ -15,7 +15,7 @@ public class TreeNavigator {
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
 	private java.util.List<Object> _unhandledNodeSelectedStatements = new java.util.ArrayList<>();
-	private java.util.List<EventSubscription> _events = new java.util.ArrayList<>();
+	private java.util.List<Object> _events = new java.util.ArrayList<>();
 	private java.util.List<TreeNode> _treeNodes = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
@@ -298,22 +298,22 @@ public class TreeNavigator {
 		return this._unhandledNodeSelectedStatements;
 	} 
 
-	public TreeNavigator addEvents(EventSubscription value) {
+	public TreeNavigator addEvents(Object value) {
 		this._events.add(value);
 		return this;
 	}
 
-	public TreeNavigator setEvents(EventSubscription[] value) {
+	public TreeNavigator setEvents(Object[] value) {
 		this._events.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNavigator setEvents(java.util.Collection<EventSubscription> values) {
+	public TreeNavigator setEvents(java.util.Collection<Object> values) {
 		this._events.addAll(values);
 		return this;
 	}
 
-	public TreeNavigator removeEvents(EventSubscription value) {
+	public TreeNavigator removeEvents(Object value) {
 		this._events.remove(value);
 		return this;
 	}
@@ -323,7 +323,7 @@ public class TreeNavigator {
 		return this;
 	}
 
-	public java.util.List<EventSubscription> getEvents() {
+	public java.util.List<Object> getEvents() {
 		return this._events;
 	} 
 

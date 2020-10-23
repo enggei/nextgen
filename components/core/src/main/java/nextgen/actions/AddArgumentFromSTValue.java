@@ -17,6 +17,6 @@ public class AddArgumentFromSTValue extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);;
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
    }
 }

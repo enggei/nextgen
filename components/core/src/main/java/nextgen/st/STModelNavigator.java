@@ -264,6 +264,7 @@ public class STModelNavigator extends JPanel {
 		RootNode(String model) {
 			super(model, null);
 
+
 			setLabel(getModel());
 			this.tooltip = "";
 
@@ -318,6 +319,7 @@ public class STModelNavigator extends JPanel {
 
 		STProjectTreeNode(nextgen.st.model.STProject model) {
 			super(model, appModel().loadIcon("sq-white"));
+
 
 			setLabel(getModel().getName());
 			this.tooltip = getModel().getName();
@@ -390,6 +392,7 @@ public class STModelNavigator extends JPanel {
 		ModelsTreeNode(String model) {
 			super(model, appModel().loadIcon("sq-teal"));
 
+
 			setLabel(model.toString());
 			this.tooltip = "";
 
@@ -455,6 +458,7 @@ public class STModelNavigator extends JPanel {
 		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
 			super(model, appModel().loadIcon(model.getIcon()));
 
+
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
@@ -515,6 +519,7 @@ public class STModelNavigator extends JPanel {
 		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
 			super(model, null);
 
+
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
@@ -569,6 +574,7 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 			this.stModel = stModel;
+
 			setLabel(getModel().getName());
 			this.tooltip = "";
 
@@ -632,6 +638,7 @@ public class STModelNavigator extends JPanel {
 
 			this.stTemplate = stTemplate;
 			this.stArgument = stArgument;
+
 			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10)));
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();
@@ -692,6 +699,7 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 			this.stParameter = stParameter;
+
 			setLabel(model.toString());
 			this.tooltip = "";
 
@@ -745,6 +753,7 @@ public class STModelNavigator extends JPanel {
 			super(model, appModel().loadIcon("sq-orange"));
 
 			this.stArgument = stArgument;
+
 			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = appModel().tooltip(getModel());
 			this.uuid = model.getUuid();

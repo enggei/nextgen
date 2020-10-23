@@ -2809,18 +2809,21 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	}
 }  >>
 
-TreeNode(name,modelType,hasUuid,fields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~
+TreeNode(name,modelType,hasUuid,fields,privateFields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~
 public class ~name~ extends BaseTreeNode<~modelType~> {
 ~if(hasUuid)~
 
 	private String uuid;
 ~endif~
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
-
+	~privateFields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
 	~name~(~modelType~ model~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~~if(parameters)~, ~parameters:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super(model, ~if(icon)~~icon~~else~null~endif~);
 
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+		~privateFields:{it|this.~it.name~ = ~it.init~;};separator="\n"~
+		
 		setLabel(~if(labelExpression)~~labelExpression~~else~model.toString()~endif~);
 		this.tooltip = ~if(tooltipExpression)~~tooltipExpression~~else~"";~endif~
 		~if(hasUuid)~this.uuid = model.getUuid();~endif~

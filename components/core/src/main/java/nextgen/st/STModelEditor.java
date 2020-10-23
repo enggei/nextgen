@@ -39,10 +39,10 @@ public class STModelEditor extends JPanel {
    }
 
    @org.greenrobot.eventbus.Subscribe()
-   public void onSTModelEditorTreeNodeClicked(nextgen.events.STModelEditorTreeNodeClicked event) {
-      txtEditor.setStModel(event.model);
-      formComponent.setModel(event.model);
-      editorGrid.setModel(event.model);
+   public void onSTModelEditorTreeNodeClicked(nextgen.events.ModelEditorStModelTreeNodeClicked event) {
+      txtEditor.setStModel(event.stModel);
+      formComponent.setModel(event.stModel);
+      editorGrid.setModel(event.stModel);
    }
 
 //   @org.greenrobot.eventbus.Subscribe()

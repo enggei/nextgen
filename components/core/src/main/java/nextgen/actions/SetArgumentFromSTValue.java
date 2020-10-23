@@ -23,11 +23,11 @@ public class SetArgumentFromSTValue extends TransactionAction {
                stModel.removeArguments(stArgument);
                stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
                stArgument.delete();
-               nextgen.events.STArgumentDeleted.post(stModel, uuid);;
+               nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);;
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
    }
 }
