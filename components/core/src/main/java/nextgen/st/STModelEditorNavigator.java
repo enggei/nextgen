@@ -119,6 +119,18 @@ public class STModelEditorNavigator extends JPanel {
    }
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelEditorStModelTreeNodeClicked(nextgen.events.ModelEditorStModelTreeNodeClicked event) {
+		System.out.println("ModelEditorStModelTreeNodeClicked");
+
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onModelEditorStValueTreeNodeClicked(nextgen.events.ModelEditorStValueTreeNodeClicked event) {
+		System.out.println("ModelEditorStValueTreeNodeClicked");
+
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onKVDeleted(nextgen.events.KVDeleted event) {
 		System.out.println("KVDeleted");
 		findSTKVTreeNode(stkvTreeNode -> stkvTreeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
@@ -136,6 +148,24 @@ public class STModelEditorNavigator extends JPanel {
 		System.out.println("STValueDeleted");
 		findSTValueArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 		findSTValueKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTArgument(nextgen.events.NewSTArgument event) {
+		System.out.println("NewSTArgument");
+		findSTParameterTreeNode(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))
+		      .ifPresent(stParameterTreeNode -> {
+		         switch (event.value.getType()) {
+		            case STMODEL:
+		               treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STModelArgumentTreeNode(event.value.getStModel(), event.argument));
+		               break;
+		            case PRIMITIVE:
+		               treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelEditorNavigator.STValueArgumentTreeNode(event.value, event.argument));
+		               break;
+		            case ENUM:
+		               break;
+		         }
+		      });
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -314,11 +344,15 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.CopyModel(getModel()));
-			actions.add(new nextgen.actions.OpenSTModel(getModel()));
-			actions.add(new nextgen.actions.VisitModel(getModel()));
-			actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
-			actions.add(new nextgen.actions.EditSTModel(getModel()));
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.CopyModel(getModel()));
+				actions.add(new nextgen.actions.OpenSTModel(getModel()));
+				actions.add(new nextgen.actions.VisitModel(getModel()));
+				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
+				actions.add(new nextgen.actions.EditSTModel(getModel()));
+			});
+
 			return actions;
 		}
 
@@ -376,6 +410,10 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -445,6 +483,10 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -508,6 +550,26 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				final String fromClipboard = nextgen.utils.SwingUtil.fromClipboard();
+				switch (getModel().getType()) {
+					case SINGLE:
+						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), tree));
+						actions.add(new nextgen.actions.SetArgumentFromClipboard(stModel, getModel()));
+						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
+						break;
+					case LIST:
+						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), tree));
+						actions.add(new nextgen.actions.AddArgumentFromClipboard(stModel, getModel()));
+						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), tree));
+						break;
+					case KVLIST:
+						actions.add(new nextgen.actions.AddKVArgument(stModel, getModel(), tree));
+						break;
+				}
+			});
+
 			return actions;
 		}
 
@@ -569,6 +631,11 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));
+			});
+
 			return actions;
 		}
 
@@ -627,8 +694,12 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.STValueToClipboard(getModel()));
-			actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.STValueToClipboard(getModel()));
+				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));
+			});
+
 			return actions;
 		}
 
@@ -690,6 +761,10 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -748,6 +823,11 @@ public class STModelEditorNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));
+			});
+
 			return actions;
 		}
 

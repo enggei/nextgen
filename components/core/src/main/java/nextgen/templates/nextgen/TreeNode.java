@@ -552,8 +552,12 @@ public class TreeNode {
 				"	@Override\n" + 
 				"	protected List<Action> getActions() {\n" + 
 				"		final List<Action> actions = super.getActions();\n" + 
-				"		~getActionsStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		~actions:{it|actions.add(~it~);};separator=\"\\n\"~\n" + 
+				"		\n" + 
+				"		appModel().doInTransaction(tx -> {\n" + 
+				"			~getActionsStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"			~actions:{it|actions.add(~it~);};separator=\"\\n\"~\n" + 
+				"		});\n" + 
+				"		\n" + 
 				"		return actions;\n" + 
 				"	}\n" + 
 				"\n" + 

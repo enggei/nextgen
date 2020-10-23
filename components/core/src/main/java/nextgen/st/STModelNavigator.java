@@ -288,8 +288,12 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.NewProject(tree));
-			actions.add(new nextgen.actions.UndoDBTransaction());
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.NewProject(tree));
+				actions.add(new nextgen.actions.UndoDBTransaction());
+			});
+
 			return actions;
 		}
 
@@ -361,6 +365,10 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -419,6 +427,10 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -479,6 +491,10 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -540,8 +556,12 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.NewSTModel(getModel()));
-			actions.add(new nextgen.actions.EditModels(getModel()));
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.NewSTModel(getModel()));
+				actions.add(new nextgen.actions.EditModels(getModel()));
+			});
+
 			return actions;
 		}
 
@@ -602,6 +622,10 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -662,10 +686,14 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.OpenSTModel(getModel()));
-			actions.add(new nextgen.actions.GenerateSource(getModel()));
-			actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
-			actions.add(new nextgen.actions.DeleteSTModel(getModel(), tree));
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.OpenSTModel(getModel()));
+				actions.add(new nextgen.actions.GenerateSource(getModel()));
+				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
+				actions.add(new nextgen.actions.DeleteSTModel(getModel(), tree));
+			});
+
 			return actions;
 		}
 
@@ -719,6 +747,10 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
 			return actions;
 		}
 
@@ -774,9 +806,13 @@ public class STModelNavigator extends JPanel {
 		@Override
 		protected List<Action> getActions() {
 			final List<Action> actions = super.getActions();
-			actions.add(new nextgen.actions.STValueToClipboard(getModel()));
-			actions.add(new nextgen.actions.SetSTValueFromClipboard(getModel()));
-			actions.add(new nextgen.actions.DeleteSTValue(getModel(), tree));
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.STValueToClipboard(getModel()));
+				actions.add(new nextgen.actions.SetSTValueFromClipboard(getModel()));
+				actions.add(new nextgen.actions.DeleteSTValue(getModel(), tree));
+			});
+
 			return actions;
 		}
 

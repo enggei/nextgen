@@ -2845,8 +2845,12 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 	@Override
 	protected List<Action> getActions() {
 		final List<Action> actions = super.getActions();
-		~getActionsStatements:{it|~it~};separator="\n"~
-		~actions:{it|actions.add(~it~);};separator="\n"~
+		
+		appModel().doInTransaction(tx -> {
+			~getActionsStatements:{it|~it~};separator="\n"~
+			~actions:{it|actions.add(~it~);};separator="\n"~
+		});
+		
 		return actions;
 	}
 

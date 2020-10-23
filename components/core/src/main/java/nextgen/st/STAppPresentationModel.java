@@ -897,6 +897,10 @@ public class STAppPresentationModel {
       return findSTTemplateByUuid(model.getStTemplate());
    }
 
+   public boolean isBoolean(nextgen.st.domain.STParameter model) {
+      return model.getName().startsWith("is") || model.getName().startsWith("has");
+   }
+
    public static final class CompilationResult {
 
       public final String compilerOutput;

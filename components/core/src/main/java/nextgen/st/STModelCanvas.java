@@ -2300,9 +2300,9 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));
-							addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput("Set from Input", getModel(), stParameter, thisCanvas()));
-							addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue("Set true", getModel(), stParameter));
-							addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard("Set from Clipboard", getModel(), stParameter));
+							addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput(getModel(), stParameter, thisCanvas()));
+							addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue(getModel(), stParameter));
+							addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard(getModel(), stParameter));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
 							stParameterMenu.add(openstParameterMenu);
@@ -2325,8 +2325,8 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));
-							addstParameterMenu.add(new nextgen.actions.AddArgumentFromInput("Add from Input", getModel(), stParameter, thisCanvas()));
-							addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard("Add from Clipboard", getModel(), stParameter));
+							addstParameterMenu.add(new nextgen.actions.AddArgumentFromInput(getModel(), stParameter, thisCanvas()));
+							addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard(getModel(), stParameter));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
 							stParameterMenu.add(openstParameterMenu);
@@ -2343,7 +2343,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 						case KVLIST: {
 							final JMenu addstParameterMenu = new JMenu("Add");
 							stParameterMenu.add(addstParameterMenu);
-							addstParameterMenu.add(new nextgen.actions.AddKVArgument("Add", getModel(), stParameter, thisCanvas()));
+							addstParameterMenu.add(new nextgen.actions.AddKVArgument(getModel(), stParameter, thisCanvas()));
 
 							final JMenu openstParameterMenu = new JMenu("Open");
 							stParameterMenu.add(openstParameterMenu);
