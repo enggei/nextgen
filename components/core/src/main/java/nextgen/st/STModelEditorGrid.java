@@ -149,6 +149,10 @@ public class STModelEditorGrid extends JPanel {
       };
    }
 
+   public void reset() {
+      SwingUtilities.invokeLater(resultsModel::clear);
+   }
+
    private final class STValueElement {
 
       private final STValue stValue;

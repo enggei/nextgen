@@ -93,8 +93,9 @@ public class STModelEditorText extends javax.swing.JPanel {
    }
 
    void tryToSave() {
-      if (stValue == null || !stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
+      if (stValue == null) return;
       appModel().doLaterInTransaction(transaction -> {
+         if (!stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
          stValue.setValue(txtEditor.getText().trim());
       });
    }

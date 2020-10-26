@@ -1,11 +1,11 @@
 package nextgen.actions;
 
-public class VisitModel extends TransactionAction {
+public class VisitSTModel extends TransactionAction {
 
    private final nextgen.st.model.STModel stModel;
 
-	public VisitModel(nextgen.st.model.STModel stModel) {
-		super("Visit");
+	public VisitSTModel(nextgen.st.model.STModel stModel) {
+		super("VisitSTModel");
 		this.stModel = stModel;
 	}
 

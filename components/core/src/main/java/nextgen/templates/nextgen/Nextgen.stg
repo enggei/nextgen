@@ -2430,7 +2430,7 @@ public class ~name~ extends TransactionAction {
 TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
 
 import nextgen.utils.SwingUtil;
-~imports:{it|import ~it~;};separator="\n"~
+~imports:{it|~it~;};separator="\n"~
 
 import javax.swing.*;
 import javax.swing.tree.*;

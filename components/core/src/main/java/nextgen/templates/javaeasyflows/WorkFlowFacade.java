@@ -99,7 +99,7 @@ public class WorkFlowFacade {
 				"		super(dir);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkFlowFacade(GraphDatabaseService db) {\n" + 
+				"	public WorkFlowFacade(org.neo4j.graphdb.GraphDatabaseService db) {\n" + 
 				"		super(db);\n" + 
 				"	}\n" + 
 				"	\n" + 
@@ -235,5 +235,14 @@ public class WorkFlowFacade {
 				"		}\n" + 
 				"		throw new RuntimeException(\"unsupported untilPredicate \" + until);\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	public org.jeasy.flows.work.WorkReport run(org.jeasy.flows.work.WorkContext workContext, nextgen.templates.javaeasyflows.Work w) {\n" + 
+				"      final org.jeasy.flows.workflow.WorkFlow workflow = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()\n" + 
+				"            .execute(newInstance(w))\n" + 
+				"            .build();\n" + 
+				"      return org.jeasy.flows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine()\n" + 
+				"            .build()\n" + 
+				"            .run(workflow, workContext);\n" + 
+				"   }\n" + 
 				"} >>";
 }  

@@ -21,7 +21,11 @@ public class AddInterface extends TransactionAction {
       showDialog(owner, contentPanel, "Add interface", jDialog -> {
          final String interfaceName = txtImplements.getText().trim();
          if (interfaceName.length()==0) return;
-         appModel().addInterface(children, interfaceName);
+         for (nextgen.st.domain.STTemplate child : children) {
+            final java.util.Optional<String> optional = child.getImplements().filter(s -> s.toLowerCase().equals(interfaceName.toLowerCase())).findAny();
+            if(optional.isPresent()) continue;
+            child.addImplements(interfaceName);
+         }
          close(jDialog);   
       });
    }

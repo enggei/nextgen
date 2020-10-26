@@ -2299,7 +2299,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stParameterMenu.add(addstParameterMenu);
 							stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
-							addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));
+							//addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));
 							addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput(getModel(), stParameter, thisCanvas()));
 							addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue(getModel(), stParameter));
 							addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard(getModel(), stParameter));
@@ -2324,7 +2324,7 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 							stParameterMenu.add(addstParameterMenu);
 							stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
 							stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));
-							addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));
+							//addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));
 							addstParameterMenu.add(new nextgen.actions.AddArgumentFromInput(getModel(), stParameter, thisCanvas()));
 							addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard(getModel(), stParameter));
 
@@ -2394,85 +2394,6 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			super.onNodeKeyPressed(event);
 		}
 
-
-		final class AddParameterTypeAction extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-
-			AddParameterTypeAction(PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-				super("Add", event);
-				this.stParameter = stParameter;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().addList(stParameter, getModel(), thisCanvas());
-			}
-		}
-
-		final class SetParameterTypeAction extends NodeAction {
-
-			private nextgen.st.domain.STParameter stParameter;
-
-			SetParameterTypeAction(PInputEvent event, nextgen.st.domain.STParameter stParameter) {
-				super("Set", event);
-				this.stParameter = stParameter;
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().setParameter(stParameter, getModel(), thisCanvas());
-			}
-		}
-
-		final class OpenIncoming extends NodeAction {
-
-
-			OpenIncoming(PInputEvent event) {
-				super("Open Incoming", event);
-			}
-
-			@Override
-			void actionPerformed(PInputEvent event, ActionEvent e) {
-				appModel().doLaterInTransaction(transaction -> {
-
-					appModel().getIncomingSTArguments(getModel())
-							.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()
-									.forEach(stModel -> {
-										final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
-										if (stTemplateByUuid == null) return;
-										stTemplateByUuid.getParameters()
-												.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
-												.findFirst()
-												.ifPresent(stParameter -> {
-													final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
-													thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));
-												});
-									}));
-
-					appModel().getIncomingSTArgumentKVs(getModel())
-							.forEach(stArgumentKV -> {
-								stArgumentKV.getIncomingKeyValuesSTArgument()
-										.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {
-											final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());
-											if (stTemplateByUuid == null) return;
-											stTemplateByUuid.getParameters()
-													.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))
-													.findFirst()
-													.ifPresent(stParameter -> stParameter.getKeys()
-															.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
-															.findFirst()
-															.ifPresent(stParameterKey -> {
-																final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));
-																final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));
-																thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));
-																thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));
-															}));
-										}));
-							});
-				});
-			}
-		}
 
 		final class OpenAllArguments extends NodeAction {
 

@@ -115,6 +115,11 @@ public class STModelNavigator extends JPanel {
    private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
    }
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTModel(nextgen.events.NewSTModel event) {
+		System.out.println("NewSTModel");
+
+	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
 

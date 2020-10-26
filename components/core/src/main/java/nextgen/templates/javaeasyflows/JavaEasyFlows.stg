@@ -64,7 +64,7 @@ public class ~name~ extends WorkFlowNeoFactory {
 		super(dir);
 	}
 
-	public WorkFlowFacade(GraphDatabaseService db) {
+	public WorkFlowFacade(org.neo4j.graphdb.GraphDatabaseService db) {
 		super(db);
 	}
 	
@@ -200,6 +200,15 @@ public class ~name~ extends WorkFlowNeoFactory {
 		}
 		throw new RuntimeException("unsupported untilPredicate " + until);
 	}
+
+	public org.jeasy.flows.work.WorkReport run(org.jeasy.flows.work.WorkContext workContext, nextgen.templates.javaeasyflows.Work w) {
+      final org.jeasy.flows.workflow.WorkFlow workflow = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()
+            .execute(newInstance(w))
+            .build();
+      return org.jeasy.flows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine()
+            .build()
+            .run(workflow, workContext);
+   }
 }  >>
 
 eom() ::= "}"

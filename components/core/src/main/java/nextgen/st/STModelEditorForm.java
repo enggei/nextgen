@@ -77,6 +77,10 @@ public class STModelEditorForm extends JPanel {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 
+   public void reset() {
+      SwingUtilities.invokeLater(resultsModel::clear);
+   }
+
 
    final class STValueElement {
 

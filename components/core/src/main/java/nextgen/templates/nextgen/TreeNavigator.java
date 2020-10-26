@@ -485,7 +485,7 @@ public class TreeNavigator {
 	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.utils.SwingUtil;\n" + 
-				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
+				"~imports:{it|~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import javax.swing.tree.*;\n" + 

@@ -1,8 +1,8 @@
 package nextgen.st;
 
 import nextgen.utils.SwingUtil;
-import nextgen.st.model.*;
-import nextgen.st.domain.*;
+import nextgen.st.model.*;;
+import nextgen.st.domain.*;;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -133,7 +133,7 @@ public class STModelEditorNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onKVDeleted(nextgen.events.KVDeleted event) {
 		System.out.println("KVDeleted");
-		findSTKVTreeNode(stkvTreeNode -> stkvTreeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -348,7 +348,7 @@ public class STModelEditorNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.OpenSTModel(getModel()));
-				actions.add(new nextgen.actions.VisitModel(getModel()));
+				actions.add(new nextgen.actions.VisitSTModel(getModel()));
 				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
 				actions.add(new nextgen.actions.EditSTModel(getModel()));
 			});
@@ -380,9 +380,9 @@ public class STModelEditorNavigator extends JPanel {
 
 	// STKVArgumentTreeNode
 	public class STKVArgumentTreeNode extends BaseTreeNode<nextgen.st.model.STArgument> {
-		private STParameter stParameter;
+		private nextgen.st.domain.STParameter stParameter;
 
-		STKVArgumentTreeNode(nextgen.st.model.STArgument model, STParameter stParameter) {
+		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
 			super(model, null);
 
 			this.stParameter = stParameter;
@@ -442,10 +442,10 @@ public class STModelEditorNavigator extends JPanel {
 	public class STKVTreeNode extends BaseTreeNode<nextgen.st.model.STArgumentKV> {
 
 		private String uuid;
-		private STArgument stArgument;
-		private STParameterKey stParameterKey;
+		private nextgen.st.model.STArgument stArgument;
+		private nextgen.st.domain.STParameterKey stParameterKey;
 
-		STKVTreeNode(nextgen.st.model.STArgumentKV model, STArgument stArgument, STParameterKey stParameterKey) {
+		STKVTreeNode(nextgen.st.model.STArgumentKV model, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey) {
 			super(model, null);
 
 			this.stArgument = stArgument;
@@ -485,6 +485,9 @@ public class STModelEditorNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				getParentNode(STModelTreeNode.class).ifPresent(parent -> { 
+					actions.add(new nextgen.actions.SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, tree));
+				} );
 			});
 
 			return actions;
@@ -592,8 +595,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTParameterTreeNodeSelected(STParameterTreeNode selectedNode) {
-		selectedNode.getParentNode(nextgen.st.STModelEditorNavigator.STModelTreeNode.class)
-				.ifPresent(treeNode -> nextgen.events.ModelEditorStParameterTreeNodeClicked.post(selectedNode.getModel(), treeNode.getModel()));
+		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(parent -> nextgen.events.ModelEditorStParameterTreeNodeClicked.post(selectedNode.getModel(), parent.getModel()));
 	}
 
 	// STModelArgumentTreeNode
@@ -615,6 +617,9 @@ public class STModelEditorNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			stTemplate.getParameters()
+					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
 
 		STModelArgumentTreeNode thisNode() {
@@ -722,6 +727,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTValueArgumentTreeNodeSelected(STValueArgumentTreeNode selectedNode) {
+		nextgen.events.ModelEditorStValueTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STModelKVArgumentTreeNode

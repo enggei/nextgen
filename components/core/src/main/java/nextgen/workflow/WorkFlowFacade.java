@@ -150,4 +150,13 @@ public class WorkFlowFacade extends WorkFlowNeoFactory {
 		}
 		throw new RuntimeException("unsupported untilPredicate " + until);
 	}
+
+	public org.jeasy.flows.work.WorkReport run(org.jeasy.flows.work.WorkContext workContext, nextgen.templates.javaeasyflows.Work w) {
+      final org.jeasy.flows.workflow.WorkFlow workflow = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()
+            .execute(newInstance(w))
+            .build();
+      return org.jeasy.flows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine()
+            .build()
+            .run(workflow, workContext);
+   }
 }

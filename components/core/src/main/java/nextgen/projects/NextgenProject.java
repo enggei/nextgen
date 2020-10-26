@@ -21,8 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static nextgen.templates.DomainPatterns.*;
-import static nextgen.templates.JavaPatterns.newBlockStmt;
-import static nextgen.templates.JavaPatterns.newClassOrInterfaceType;
+import static nextgen.templates.JavaPatterns.*;
 import static nextgen.templates.java.JavaST.newExpressionStmt;
 import static nextgen.templates.java.JavaST.newMethodCallExpression;
 
@@ -31,9 +30,6 @@ public class NextgenProject {
    static final File root = new File("/home/goe/projects/nextgen/components/core");
 
    static final File mainJava = new File(root, "src/main/java");
-   static final File mainResources = new File(root, "src/main/resources");
-   static final File testJava = new File(root, "src/test/java");
-   static final File testResources = new File(root, "src/test/resources");
 
    static final Map<Object, ClassOrInterfaceType> typesMap = new LinkedHashMap<>();
    static final java.util.Set<Object> events = new java.util.LinkedHashSet<>();
@@ -73,6 +69,7 @@ public class NextgenProject {
 
    static final String openSTTemplate = "OpenSTTemplate";
    static final String openSTModel = "OpenSTModel";
+
    static final String stTemplateDeleted = "STTemplateDeleted";
    static final String stGroupDeleted = "STGroupDeleted";
    static final String stEnumDeleted = "STEnumDeleted";
@@ -81,6 +78,7 @@ public class NextgenProject {
    static final String stArgumentDeleted = "STArgumentDeleted";
    static final String stModelDeleted = "STModelDeleted";
    static final String stValueDeleted = "STValueDeleted";
+
    static final String stTemplateChildrenAdded = "STTemplateChildrenAdded";
    static final String stTemplateInterfaceRemoved = "STTemplateInterfaceRemoved";
    static final String stTemplateInterfacesChanged = "STTemplateInterfacesChanged";
@@ -194,12 +192,32 @@ public class NextgenProject {
    static final String stValueToClipboard = "STValueToClipboard";
    static final String stModelToClipboard = "STModelToClipboard";
    static final String undoDBTransaction = "UndoDBTransaction";
+   static final String visitSTModel = "VisitSTModel";
    static final String writeSTModelToFile = "WriteSTModelToFile";
 
    private final String workspace = "STWorkspace";
    private final String templateNavigator = "STTemplateNavigator";
    private final String modelNavigator = "STModelNavigator";
    private final String modelEditorNavigatorSTModelTreeNode = "STModelTreeNode";
+   private final String modelEditor = "STModelEditor";
+   private final String modelEditorNavigator = "STModelEditorNavigator";
+   private final String templateNavigatorRootNode = "RootNode";
+   private final String templateNavigatorSTGRoupTreeNode = "STGroupTreeNode";
+   private final String templateNavigatorSTEnumTreeNode = "STEnumTreeNode";
+   private final String templateNavigatorSTTemplateTreeNode = "STTemplateTreeNode";
+   private final String templateNavigatorSTInterfaceTreeNode = "STInterfaceTreeNode";
+   private final String modelsNavigatorSTProjectTreeNode = "STProjectTreeNode";
+   private final String modelsNavigatorModelsTreeNode = "ModelsTreeNode";
+   private final String modelsNavigatorSTValueTreeNode = "STValueTreeNode";
+   private final String modelsNavigatorRootNode = "RootNode";
+   private final String modelsNavigatorSTGroupModelTreeNode = "STGroupModelTreeNode";
+   private final String modelsNavigatorSTTemplateTreeNode = "STTemplateTreeNode";
+   private final String modelsNavigatorSTModelTreeNode = "STModelTreeNode";
+   private final String modelsNavigatorSTParameterTreeNode = "STParameterTreeNode";
+   private final String modelsNavigatorSTKVArgumentTreeNode = "STKVArgumentTreeNode";
+   private final String modelsNavigatorSTKVTreeNode = "STKVTreeNode";
+   private final String modelsNavigatorSTModelKVArgumentTreeNode = "STModelKVArgumentTreeNode";
+   private final String stFileNode = "STFileNode";
 
    @org.junit.BeforeClass
    public static void init() {
@@ -240,18 +258,10 @@ public class NextgenProject {
    @org.junit.Test
    public void generateSTTemplateNavigator() {
 
-      final nextgen.templates.nextgen.TreeNode rootNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("RootNode")
-            .setModelType("String")
-            .setLabelExpression("getModel()")
-            .addConstructorStatements("appModel().stGroups.forEach(stGroup -> add(new STGroupTreeNode(stGroup)));")
-            .setGetActionsStatements(new Object[]{
-                  addToActionsStatement(newAction(newSTGroup, "tree")),
-                  addToActionsStatement(newAction(generateAllSTGroups))
-            });
+      final nextgen.templates.nextgen.TreeNode rootNode = getTemplateNavigatorRootNode();
 
       final nextgen.templates.nextgen.TreeNode stGroupTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STGroupTreeNode")
+            .setName(templateNavigatorSTGRoupTreeNode)
             .setModelType(stGroupModelType)
             .setHasUuid(true)
             .setLabelExpression("getModel().getName()")
@@ -268,10 +278,10 @@ public class NextgenProject {
                   addToActionsStatement(newAction(renameSTGroup, "getModel()", "tree")),
                   addToActionsStatement(newAction(deleteSTGroup, "getModel()", "tree"))
             })
-            .addSelectionStatements(postEvent(templateNavigatorSTGroupTreeNodeClicked, "selectedNode.getModel()"));
+            .addSelectionStatements(postEventStatement(templateNavigatorSTGroupTreeNodeClicked, "selectedNode.getModel()"));
 
       final nextgen.templates.nextgen.TreeNode stEnumTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STEnumTreeNode")
+            .setName(templateNavigatorSTEnumTreeNode)
             .setModelType(stEnumType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(\"sq-green\")")
@@ -281,10 +291,10 @@ public class NextgenProject {
                   getParent(stGroupTreeNode, addToActions(newAction(renameEnum, "getModel()", "parent.getModel()", "tree"))),
                   getParent(stGroupTreeNode, addToActions(newAction(deleteEnum, "getModel()", "parent.getModel()", "tree")))
             })
-            .addSelectionStatements("selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { " + postEvent(templateNavigatorSTEnumTreeNodeClicked, "stGroupTreeNode.getModel()", "selectedNode.getModel()") + " });");
+            .addSelectionStatements("selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { " + postEventStatement(templateNavigatorSTEnumTreeNodeClicked, "stGroupTreeNode.getModel()", "selectedNode.getModel()") + " });");
 
       final nextgen.templates.nextgen.TreeNode stTemplateTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STTemplateTreeNode")
+            .setName(templateNavigatorSTTemplateTreeNode)
             .setModelType(stTemplateType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(\"sq-teal\")")
@@ -301,13 +311,13 @@ public class NextgenProject {
                   "final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());",
                   addToActionsStatement(newAction(newSTModel, "getModel()")),
                   getParent(stGroupTreeNode, newBlockStmt(new Object[]{
-                        addToActions(newAction(newSTTemplateChild, "getModel()", "parent.getModel()", "tree")),
-                        addToActions(newAction(setTemplateParameterTypes, "parent.getModel()", "getModel()", "tree")),
+                        addToActionsStatement(newAction(newSTTemplateChild, "getModel()", "parent.getModel()", "tree")),
+                        addToActionsStatement(newAction(setTemplateParameterTypes, "parent.getModel()", "getModel()", "tree")),
                         "if (!candidateChildren.isEmpty()) " + addToActionsStatement(newAction(addChildrenToTemplate, "\"Add \" + candidateChildren.size() + \" templates as children\"", "parent.getModel()", "getModel()", "candidateChildren", "tree")),
-                        "appModel().getProjects().forEach(stProject -> { " + addToActions(newAction(addTemplateModelToProject, "\"Add to \" + stProject.getName()", "getModel()", "stProject")) + " });",
+                        "appModel().getProjects().forEach(stProject -> " + addToActions(newAction(addTemplateModelToProject, "\"Add to \" + stProject.getName()", "getModel()", "stProject")) + ");",
                         "if (!childTemplates.isEmpty()) " + addToActionsStatement(newAction(addInterface, "\"Add interfaces to children\"", "childTemplates", "tree")),
                         addToActionsStatement(newAction(setInterfaces, "parent.getModel()", "getModel()", "tree")),
-                        "getModel().getImplements().forEach(implement -> { " + addToActions(newAction(removeInterfaceFromSTTemplate, "\"Remove \" + implement", "parent.getModel()", "getModel()", "implement", "tree")) + " });",
+                        "getModel().getImplements().forEach(implement -> " + addToActions(newAction(removeInterfaceFromSTTemplate, "\"Remove \" + implement", "parent.getModel()", "getModel()", "implement", "tree")) + ");",
                         addToActionsStatement(newAction(deleteSTTemplate, "getModel()", "parent.getModel()", "tree")),
                   })),
             })
@@ -317,21 +327,21 @@ public class NextgenProject {
             })));
 
       final nextgen.templates.nextgen.TreeNode stInterfaceTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STInterfaceTreeNode")
-            .setModelType("nextgen.st.domain.STInterface")
+            .setName(templateNavigatorSTInterfaceTreeNode)
+            .setModelType(stInterfaceType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(\"sq-red\")")
             .setLabelExpression("getModel().getName()")
             .setGetActionsStatements(new Object[]{
-                  "getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> actions.add(new nextgen.actions.RenameSTInterface(getModel(), stGroupTreeNode.getModel(), tree)));",
-                  "getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> actions.add(new nextgen.actions.DeleteSTInterface(getModel(), stGroupTreeNode.getModel(), tree)));"
+                  getParent(stGroupTreeNode, addToActions(newAction(renameSTInterface, "getModel()", "parent.getModel()", "tree"))),
+                  getParent(stGroupTreeNode, addToActions(newAction(deleteSTInterface, "getModel()", "parent.getModel()", "tree")))
             })
-            .addSelectionStatements("selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()));");
+            .addSelectionStatements(getParent("selectedNode", stGroupTreeNode, postEventExpression(templateNavigatorSTInterfaceTreeNodeClicked, "parent.getModel()", "selectedNode.getModel()")));
 
       final nextgen.templates.nextgen.TreeNavigator treeNavigator = nextgen.templates.nextgen.NextgenST.newTreeNavigator()
-            .setPackageName("nextgen.st")
-            .addImports("nextgen.swing.AppModel")
-            .addImports("nextgen.st.domain.*")
+            .setPackageName(stPackage.getName())
+            .addImports(newImportDeclaration(swingPackage, appModelName))
+            .addImports(newImportDeclaration(stDomainPackage))
             .setName(templateNavigator)
             .addFields(workspace, "workspace")
             .setRootNodeExpression("new RootNode(\"Templates\")")
@@ -349,7 +359,7 @@ public class NextgenProject {
             .addTreeNodesSelected(stTemplateTreeNode.getName())
             .addTreeNodesSelected(stInterfaceTreeNode.getName())
             .addMethods(newSubscribe(modelNavigatorStModelTreeNodeClicked)
-                  .addStatements("findSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.stTemplate)).ifPresent(treeModel::select);"))
+                  .addStatements("findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate)).ifPresent(treeModel::select);"))
             .addMethods(newSubscribe(stGroupDeleted)
                   .addStatements("findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
             .addMethods(newSubscribe(stEnumDeleted)
@@ -382,11 +392,23 @@ public class NextgenProject {
       nextgen.st.STGenerator.writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
    }
 
+   public nextgen.templates.nextgen.TreeNode getTemplateNavigatorRootNode() {
+      return nextgen.templates.nextgen.NextgenST.newTreeNode()
+            .setName(templateNavigatorRootNode)
+            .setModelType(stringType)
+            .setLabelExpression("getModel()")
+            .addConstructorStatements("appModel().stGroups.forEach(stGroup -> add(new STGroupTreeNode(stGroup)));")
+            .setGetActionsStatements(new Object[]{
+                  addToActionsStatement(newAction(newSTGroup, "tree")),
+                  addToActionsStatement(newAction(generateAllSTGroups))
+            });
+   }
+
    @org.junit.Test
    public void generateSTModelNavigator() {
 
       final nextgen.templates.nextgen.TreeNode stProjectTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STProjectTreeNode")
+            .setName(modelsNavigatorSTProjectTreeNode)
             .setModelType(stProjectType)
             .setIcon("appModel().loadIcon(\"sq-white\")")
             .setLabelExpression("getModel().getName()")
@@ -412,15 +434,15 @@ public class NextgenProject {
                   "\n" +
                   "	stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate, null));\n" +
                   "});")
-            .addSelectionStatements("nextgen.events.ModelNavigatorStProjectTreeNodeClicked.post(selectedNode.getModel());");
+            .addSelectionStatements(postEventStatement(modelNavigatorStProjectTreeNodeClicked, "selectedNode.getModel()"));
 //            .setGetActionsStatements(new Object[]{
 //                  "getSelectedSTModelTreeNodes().forEach(stModelTreeNode -> actions.add(new nextgen.actions.AddModelToProject(\"Add \" + stModelTreeNode.getLabel(), getModel(), stModelTreeNode.getModel())));",
 //                  "actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));"
 //            });
 
       final nextgen.templates.nextgen.TreeNode modelsTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("ModelsTreeNode")
-            .setModelType("String")
+            .setName(modelsNavigatorModelsTreeNode)
+            .setModelType(stringType)
             .setIcon("appModel().loadIcon(\"sq-teal\")")
             .addConstructorStatements("appModel().doInTransaction(transaction -> {\n" +
                   "	appModel().getGroupModels().forEach(stGroupModel -> {\n" +
@@ -439,7 +461,7 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode stValueTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STValueTreeNode")
+            .setName(modelsNavigatorSTValueTreeNode)
             .setModelType(stValueType)
             .setHasUuid(true)
             .addFields(stArgumentType, "stArgument")
@@ -454,8 +476,8 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode rootNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("RootNode")
-            .setModelType("String")
+            .setName(modelsNavigatorRootNode)
+            .setModelType(stringType)
             .setLabelExpression("getModel()")
             .addConstructorStatements("appModel().doInTransaction(transaction -> {\n" +
                   "	appModel().getProjects().forEach(stProject -> add(new STProjectTreeNode(stProject)));\n" +
@@ -468,7 +490,7 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode stGroupTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STGroupModelTreeNode")
+            .setName(modelsNavigatorSTGroupModelTreeNode)
             .setModelType(stGroupModelType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(model.getIcon())")
@@ -484,10 +506,8 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode stTemplateTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STTemplateTreeNode")
-            .setModelType(nextgen.templates.java.JavaST.newJavaType()
-                  .setPackageName("nextgen.st.domain")
-                  .setName("STTemplate"))
+            .setName(modelsNavigatorSTTemplateTreeNode)
+            .setModelType(stTemplateType)
             .setHasUuid(true)
             .setLabelExpression("getModel().getName()")
             .setGetActionsStatements(new Object[]{
@@ -497,12 +517,10 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode stModelTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STModelTreeNode")
-            .setModelType(nextgen.templates.java.JavaST.newJavaType()
-                  .setPackageName("nextgen.st.model")
-                  .setName("STModel"))
+            .setName(modelsNavigatorSTModelTreeNode)
+            .setModelType(stModelType)
             .setHasUuid(true)
-            .addFields("nextgen.st.domain.STTemplate", "stTemplate")
+            .addFields(stTemplateType, "stTemplate")
             .addFields(stArgumentType, "stArgument")
             .setIcon("appModel().loadIcon(\"sq-teal\")")
             .setLabelExpression("appModel().tryToFindArgument(getModel(), \"name\", () -> appModel().render(getModel(), 10))")
@@ -516,14 +534,12 @@ public class NextgenProject {
                   addToActionsStatement(newAction(writeSTModelToFile, "getModel()")),
                   addToActionsStatement(newAction(deleteSTModel, "getModel()", "tree"))
             })
-            .addSelectionStatements(postEvent(modelNavigatorStModelTreeNodeClicked, "appModel().findSTTemplate(selectedNode.getModel())", "selectedNode.getModel()"));
+            .addSelectionStatements(postEventStatement(modelNavigatorStModelTreeNodeClicked, "appModel().findSTTemplate(selectedNode.getModel())", "selectedNode.getModel()"));
 
       final nextgen.templates.nextgen.TreeNode stParameterTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STParameterTreeNode")
-            .setModelType(nextgen.templates.java.JavaST.newJavaType()
-                  .setPackageName("nextgen.st.domain")
-                  .setName("STParameter"))
-            .addFields("nextgen.st.model.STModel", "stModel")
+            .setName(modelsNavigatorSTParameterTreeNode)
+            .setModelType(stParameterType)
+            .addFields(stModelType, "stModel")
             .setLabelExpression("getModel().getName()")
             .addConstructorStatements("stModel.getArgumentsSorted()\n" +
                   "	.filter(stArgument -> stArgument.getStParameter().equals(model.getUuid()))\n" +
@@ -536,78 +552,10 @@ public class NextgenProject {
             .addSelectionStatements("");
 
       final nextgen.templates.nextgen.TreeNode stKVArgumentTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STKVArgumentTreeNode")
+            .setName(modelsNavigatorSTKVArgumentTreeNode)
             .setModelType(stArgumentType)
             .addFields(stParameterType, "stParameter")
             .addSelectionStatements("");
-
-//      final nextgen.templates.nextgen.EventSubscriber stArgumentAdded = nextgen.templates.nextgen.NextgenST.newEventSubscriber()
-//            .setEventName("STArgumentAdded")
-//            .setEventType(nextgen.templates.java.JavaST.newJavaType()
-//                  .setPackageName("nextgen.events")
-//                  .setName(newSTArgument))
-//            .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel))\n" +
-//                  "			.ifPresent(stModelTreeNode -> findSTParameterTreeNode(stModelTreeNode, stParameterTreeNode -> stParameterTreeNode.getModel().getUuid().equals(event.stArgument.getStParameter()))\n" +
-//                  "					.ifPresent(stParameterTreeNode -> {\n" +
-//                  "						appModel().stArgumentConsumer(event.stParameter)\n" +
-//                  "									 .onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STValueTreeNode(stValue, event.stArgument)))\n" +
-//                  "									 .onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))\n" +
-//                  "									 .onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STValueTreeNode(stValue, event.stArgument)))\n" +
-//                  "									 .onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), event.stArgument)))\n" +
-//                  "									 .onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STKVArgumentTreeNode(event.stArgument, event.stParameter)));\n" +
-//                  "						stModelTreeNode.nodeChanged();\n" +
-//                  "					}));");
-
-//      final nextgen.templates.greenrobot.Subscribe stProjectSTModel = newSubscribe()
-//            .setEventName("STProjectSTModel")
-//            .setEventType("nextgen.events.NewSTProjectSTModel")
-//            .addStatements("findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.stProject))\n" +
-//                  "		.ifPresent(stProjectTreeNode -> {\n" +
-//                  "\n" +
-//                  "			final nextgen.st.domain.STTemplate stTemplate = appModel().findSTTemplateByUuid(event.stModel.getStTemplate());\n" +
-//                  "			final nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(stTemplate);\n" +
-//                  "\n" +
-//                  "			final nextgen.st.STModelNavigator.STGroupModelTreeNode groupModelTreeNode = treeModel\n" +
-//                  "					.find(stProjectTreeNode, nextgen.st.STModelNavigator.STGroupModelTreeNode.class, treeNode -> treeNode.getModel().equals(stGroup))\n" +
-//                  "					.orElseGet(() -> {\n" +
-//                  "						final nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroup);\n" +
-//                  "						treeModel.addNodeInSortedOrder(stProjectTreeNode, stGroupModelTreeNode);\n" +
-//                  "						return stGroupModelTreeNode;\n" +
-//                  "					});\n" +
-//                  "\n" +
-//                  "			final nextgen.st.STModelNavigator.STTemplateTreeNode templateTreeNode = findSTTemplateTreeNode(groupModelTreeNode, stTemplateTreeNode -> stTemplateTreeNode\n" +
-//                  "					.getModel().equals(stTemplate))\n" +
-//                  "					.orElseGet(() -> {\n" +
-//                  "						final nextgen.st.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);\n" +
-//                  "						treeModel.addNodeInSortedOrder(groupModelTreeNode, stTemplateTreeNode);\n" +
-//                  "						return stTemplateTreeNode;\n" +
-//                  "					});\n" +
-//                  "\n" +
-//                  "			treeModel.addNodeInSortedOrderAndSelect(templateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.stModel, stTemplate, null));\n" +
-//                  "		});");
-//
-//      final nextgen.templates.greenrobot.Subscribe stModelDeleted = newSubscribe()
-//            .setEventName(this.stModelDeleted)
-//            .setEventType("nextgen.events.STModelDeleted")
-//            .addStatements("findModelsTreeNode(modelsTreeNode -> true)\n" +
-//                  "		.flatMap(modelsTreeNode -> findSTModelTreeNode(stModelTreeNode -> stModelTreeNode.uuid.equals(event.uuid))\n" +
-//                  "				.filter(treeNode -> treeNode.getParent() != null)).ifPresent(treeModel::removeNodeFromParent);\n" +
-//                  "\n" +
-//                  "findSTModelTreeNode(stModelTreeNode -> stModelTreeNode.uuid.equals(event.uuid))\n" +
-//                  "		.filter(treeNode -> treeNode.getParent() != null)\n" +
-//                  "		.ifPresent(treeModel::removeNodeFromParent);");
-//
-//      final nextgen.templates.nextgen.EventSubscriber stModelCanvasNodeClicked = nextgen.templates.nextgen.NextgenST.newEventSubscriber()
-//            .setEventName("STModelCanvasNodeClicked")
-//            .setEventType("nextgen.events.CanvasSTModelClicked")
-//            .addStatements("SwingUtilities.invokeLater(() -> {\n" +
-//                  "	final RootNode rootNode = (RootNode) treeModel.getRoot();\n" +
-//                  "	final TreePath path = rootNode.find(baseTreeNode -> isSTModelTreeNode(baseTreeNode) && ((STModelTreeNode) baseTreeNode).getModel().equals(event.model));\n" +
-//                  "	if (path != null) {\n" +
-//                  "		tree.scrollPathToVisible(path);\n" +
-//                  "		tree.setSelectionPath(path);\n" +
-//                  "	}\n" +
-//                  "});");
 
       final nextgen.templates.nextgen.TreeNavigator treeNavigator = nextgen.templates.nextgen.NextgenST.newTreeNavigator()
             .setPackageName(stPackage.getName())
@@ -636,6 +584,8 @@ public class NextgenProject {
             .addTreeNodesSelected(stModelTreeNode.getName())
             .addTreeNodesSelected(stKVArgumentTreeNode.getName())
             .addTreeNodesSelected(stValueTreeNode.getName())
+            .addEvents(newSubscribe(newSTModel)
+                  .addStatements(""))
 //            .addMethods(newSTProject)
 //            .addMethods(stArgumentAdded)
 //            .addMethods(stProjectSTModel)
@@ -660,12 +610,12 @@ public class NextgenProject {
 
       final nextgen.templates.nextgen.TreeNavigator treeNavigator = nextgen.templates.nextgen.NextgenST.newTreeNavigator()
             .setPackageName(stPackage.getName())
-            .addImports("nextgen.st.model.*")
-            .addImports("nextgen.st.domain.*")
-            .setName("STModelEditorNavigator")
+            .addImports(newImportDeclaration(stModelPackage))
+            .addImports(newImportDeclaration(stDomainPackage))
+            .setName(modelEditorNavigator)
             .addFields(stModelType, "model")
-            .addFields("STModelEditor", "editor")
-            .setRootNodeExpression("new STModelTreeNode(model)")
+            .addFields(modelEditor, "editor")
+            .setRootNodeExpression(newInstance(stModelTreeNode.getName(), "model"))
             .setPreferredWidth("600")
             .setPreferredHeight("600")
             .setBaseTreeNode(nextgen.templates.nextgen.NextgenST.newBaseTreeNode())
@@ -693,7 +643,7 @@ public class NextgenProject {
             .addEvents(newSubscribe(modelEditorStValueTreeNodeClicked)
                   .addStatements(""))
             .addEvents(newSubscribe(kvDeleted)
-                  .addStatements("findSTKVTreeNode(stkvTreeNode -> stkvTreeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
+                  .addStatements("findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
             .addEvents(newSubscribe(stArgumentDeleted)
                   .addStatements("findSTValueArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);\n" +
                         "findSTModelArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
@@ -797,9 +747,7 @@ public class NextgenProject {
 //                  "	}",
 //                  "});"
 //            })
-            .addSelectionStatements(getParent("selectedNode", modelEditorNavigatorSTModelTreeNode, postEventExpression(modelEditorStParameterTreeNodeClicked, "selectedNode.getModel()", "treeNode.getModel()")))
-            .addSelectionStatements("selectedNode.getParentNode(nextgen.st.STModelEditorNavigator.STModelTreeNode.class)\n" +
-                  "		.ifPresent(treeNode -> nextgen.events.ModelEditorStParameterTreeNodeClicked.post(selectedNode.getModel(), treeNode.getModel()));");
+            .addSelectionStatements(getParent("selectedNode", modelEditorNavigatorSTModelTreeNode, postEventExpression(modelEditorStParameterTreeNodeClicked, "selectedNode.getModel()", "parent.getModel()")));
    }
 
    public nextgen.templates.nextgen.TreeNode getStValueArgumentTreeNode() {
@@ -807,23 +755,26 @@ public class NextgenProject {
             .setName("STValueArgumentTreeNode")
             .setModelType(stValueType)
             .addFields(stArgumentType, "stArgument")
-            .addPrivateFields("String", "stArgumentUuid", "stArgument.getUuid()")
+            .addPrivateFields(stringType, "stArgumentUuid", "stArgument.getUuid()")
             .setIcon("appModel().loadIcon(\"sq-orange\")")
             .setLabelExpression("getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? \"[EMPTY]\" : getModel().getValue()")
             .setHasUuid(true)
-            .addGetActionsStatements("actions.add(new nextgen.actions.STValueToClipboard(getModel()));\n" +
-                  "actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));");
+            .addSelectionStatements(postEventStatement(modelEditorStValueTreeNodeClicked, "selectedNode.getModel()"))
+            .setGetActionsStatements(new Object[]{
+                  addToActionsStatement(newAction(stValueToClipboard, "getModel()")),
+                  addToActionsStatement(newAction(deleteSTArgument, "stArgument", "tree")),
+            });
    }
 
    public nextgen.templates.nextgen.TreeNode getStValueKVArgumentTreeNode() {
       return nextgen.templates.nextgen.NextgenST.newTreeNode()
             .setName("STValueKVArgumentTreeNode")
             .setModelType(stValueType)
+            .setHasUuid(true)
             .addFields(stArgumentType, "stArgument")
             .addFields(stParameterKeyType, "stParameterKey")
             .setIcon("appModel().loadIcon(\"sq-orange\")")
             .setLabelExpression("getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? \"[EMPTY]\" : getModel().getValue()")
-            .setHasUuid(true)
             .setGetActionsStatements(new Object[]{
                   addToActionsStatement(newAction(deleteSTArgument, "stArgument", "tree"))
             });
@@ -835,11 +786,14 @@ public class NextgenProject {
             .setModelType(stModelType)
             .setHasUuid(true)
             .addFields(stArgumentType, "stArgument")
-            .addPrivateFields("String", "stArgumentUuid", "stArgument.getUuid()")
+            .addPrivateFields(stringType, "stArgumentUuid", "stArgument.getUuid()")
             .addPrivateFields(stTemplateType, "stTemplate", "appModel().findSTTemplateByUuid(model.getStTemplate())")
             .setIcon("appModel().loadIcon(\"sq-teal\")")
             .setLabelExpression("appModel().tryToFindArgument(getModel(), \"name\", () -> \"[\" + stTemplate.getName() + \"]\")")
-            .addSelectionStatements(postEvent(modelEditorStModelTreeNodeClicked, "selectedNode.stTemplate", "selectedNode.getModel()"))
+            .addConstructorStatements("stTemplate.getParameters()\n" +
+                  "		.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
+                  "		.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));")
+            .addSelectionStatements(postEventStatement(modelEditorStModelTreeNodeClicked, "selectedNode.stTemplate", "selectedNode.getModel()"))
             .setGetActionsStatements(new Object[]{
                   addToActionsStatement(newAction(deleteSTArgument, "stArgument", "tree"))
             });
@@ -847,10 +801,10 @@ public class NextgenProject {
 
    public nextgen.templates.nextgen.TreeNode getStModelKVArgumentTreeNode() {
       return nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STModelKVArgumentTreeNode")
+            .setName(modelsNavigatorSTModelKVArgumentTreeNode)
             .setModelType(stModelType)
             .addFields(stArgumentType, "stArgument")
-            .addPrivateFields("String", "stArgumentUuid", "stArgument.getUuid()")
+            .addPrivateFields(stringType, "stArgumentUuid", "stArgument.getUuid()")
             .addFields(stParameterKeyType, "stParameterKey")
             .addPrivateFields(stTemplateType, "stTemplate", "appModel().findSTTemplateByUuid(model.getStTemplate())")
             .setIcon("appModel().loadIcon(\"sq-teal\")")
@@ -861,11 +815,11 @@ public class NextgenProject {
 
    public nextgen.templates.nextgen.TreeNode getStKVTreeNode() {
       return nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STKVTreeNode")
+            .setName(modelsNavigatorSTKVTreeNode)
             .setModelType(stArgumentKVType)
             .setHasUuid(true)
-            .addFields("STArgument", "stArgument")
-            .addFields("STParameterKey", "stParameterKey")
+            .addFields(stArgumentType, "stArgument")
+            .addFields(stParameterKeyType, "stParameterKey")
             .setLabelExpression("stParameterKey.getName()")
             .addConstructorStatements("final STValue stValue = model.getValue();\n" +
                   "if (stValue != null)\n" +
@@ -878,7 +832,11 @@ public class NextgenProject {
                   "			break;\n" +
                   "		case ENUM:\n" +
                   "			break;\n" +
-                  "	}");
+                  "	}")
+            .setGetActionsStatements(new Object[]{
+                  getParent(modelsNavigatorSTModelTreeNode, newBlockStmt()
+                        .addStatements(addToActionsStatement(newAction(setKVArgumentFromInput, "parent.getModel()", "stArgument", "stParameterKey", "tree"))))
+            });
 
       //            .setGetActionsStatements(new Object[]{
 //                  "appModel().doInTransaction(transaction -> {",
@@ -894,9 +852,9 @@ public class NextgenProject {
 
    public nextgen.templates.nextgen.TreeNode getStKVArgumentTreeNode() {
       return nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName("STKVArgumentTreeNode")
+            .setName(modelsNavigatorSTKVArgumentTreeNode)
             .setModelType(stArgumentType)
-            .addFields("STParameter", "stParameter")
+            .addFields(stParameterType, "stParameter")
             .setLabelExpression("appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, \"name\", stParameter::getName)")
             .addConstructorStatements("stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()\n" +
                   "		.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
@@ -926,18 +884,19 @@ public class NextgenProject {
                   "		.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
                   "		.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));")
             .setGetActionsStatements(new Object[]{
-                  "actions.add(new nextgen.actions.CopyModel(getModel()));",
-                  "actions.add(new nextgen.actions.OpenSTModel(getModel()));",
-                  "actions.add(new nextgen.actions.VisitModel(getModel()));",
-                  "actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));",
-                  "actions.add(new nextgen.actions.EditSTModel(getModel()));"});
+                  addToActionsStatement(newAction(copyModel, "getModel()")),
+                  addToActionsStatement(newAction(openSTModel, "getModel()")),
+                  addToActionsStatement(newAction(visitSTModel, "getModel()")),
+                  addToActionsStatement(newAction(writeSTModelToFile, "getModel()")),
+                  addToActionsStatement(newAction(editSTModel, "getModel()")),
+            });
    }
 
    @org.junit.Test
    public void generateCanvas() {
 
       final nextgen.templates.nextgen.CanvasNode stFileNode = nextgen.templates.nextgen.NextgenST.newCanvasNode()
-            .setName("STFileNode")
+            .setName(this.stFileNode)
             .setModelType(stFileType)
             .addFields(stModelType, "stModel")
             .setUuidExpression("model.getUuid()")
@@ -1240,8 +1199,8 @@ public class NextgenProject {
 
       final nextgen.templates.nextgen.CanvasNode stModelNode = nextgen.templates.nextgen.NextgenST.newCanvasNode()
             .setName("STModelNode")
-            .setModelType("nextgen.st.model.STModel")
-            .addFields("nextgen.st.domain.STTemplate", "stTemplate")
+            .setModelType(stModelType)
+            .addFields(stTemplateType, "stTemplate")
             .setUuidExpression("model.getUuid()")
             .setLabelExpression("appModel().canvasLabel(stTemplate, model)")
             .addAddedToCanvasStatements("thisCanvas().getAllNodes().forEach(this::newNodeAdded);")
@@ -1284,7 +1243,7 @@ public class NextgenProject {
                   "				stParameterMenu.add(addstParameterMenu);\n" +
                   "				stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTValue(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
                   "				stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.SetArgumentFromSTModel(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
-                  "				addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));\n" +
+                  "				//addstParameterMenu.add(new SetParameterTypeAction(event, stParameter));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.SetArgumentFromInput(getModel(), stParameter, thisCanvas()));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.SetArgumentToTrue(getModel(), stParameter));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.SetArgumentFromClipboard(getModel(), stParameter));\n" +
@@ -1309,7 +1268,7 @@ public class NextgenProject {
                   "				stParameterMenu.add(addstParameterMenu);\n" +
                   "				stValueNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTValue(\"Add \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
                   "				stModelNodes.forEach(stNode -> addstParameterMenu.add(new nextgen.actions.AddArgumentFromSTModel(\"Add \" + appModel().render(stNode.getModel(), 30), getModel(), stParameter, stNode.getModel())));\n" +
-                  "				addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));\n" +
+                  "				//addstParameterMenu.add(new AddParameterTypeAction(event, stParameter));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.AddArgumentFromInput(getModel(), stParameter, thisCanvas()));\n" +
                   "				addstParameterMenu.add(new nextgen.actions.AddArgumentFromClipboard(getModel(), stParameter));\n" +
                   "\n" +
@@ -1365,16 +1324,16 @@ public class NextgenProject {
 //            .addKeyPressActions("I", "OpenIncoming")
             .addKeyPressActions("T", "new nextgen.actions.OpenTemplate(stTemplate).actionPerformed(null);")
 //            .addKeyPressActions("E", "OpenAllArguments")
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("AddParameterTypeAction")
-                  .addFields(stParameterType, "stParameter")
-                  .setTitle("Add")
-                  .addStatements("appModel().addList(stParameter, getModel(), thisCanvas());"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
-                  .setName("SetParameterTypeAction")
-                  .addFields(stParameterType, "stParameter")
-                  .setTitle("Set")
-                  .addStatements("appModel().setParameter(stParameter, getModel(), thisCanvas());"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("AddParameterTypeAction")
+//                  .addFields(stParameterType, "stParameter")
+//                  .setTitle("Add")
+//                  .addStatements("appModel().addList(stParameter, getModel(), thisCanvas());"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .setName("SetParameterTypeAction")
+//                  .addFields(stParameterType, "stParameter")
+//                  .setTitle("Set")
+//                  .addStatements("appModel().setParameter(stParameter, getModel(), thisCanvas());"))
 //            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
 //                  .setName("WriteToFile")
 //                  .setTitle("Write To File")
@@ -1382,44 +1341,44 @@ public class NextgenProject {
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("OpenIncoming")
                   .setTitle("Open Incoming")
-                  .addStatements("appModel().doLaterInTransaction(transaction -> {\n" +
-                        "\n" +
-                        "	appModel().getIncomingSTArguments(getModel())\n" +
-                        "			.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()\n" +
-                        "					.forEach(stModel -> {\n" +
-                        "						final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
-                        "						if (stTemplateByUuid == null) return;\n" +
-                        "						stTemplateByUuid.getParameters()\n" +
-                        "								.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
-                        "								.findFirst()\n" +
-                        "								.ifPresent(stParameter -> {\n" +
-                        "									final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +
-                        "									thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));\n" +
-                        "								});\n" +
-                        "					}));\n" +
-                        "\n" +
-                        "	appModel().getIncomingSTArgumentKVs(getModel())\n" +
-                        "			.forEach(stArgumentKV -> {\n" +
-                        "				stArgumentKV.getIncomingKeyValuesSTArgument()\n" +
-                        "						.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {\n" +
-                        "							final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
-                        "							if (stTemplateByUuid == null) return;\n" +
-                        "							stTemplateByUuid.getParameters()\n" +
-                        "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
-                        "									.findFirst()\n" +
-                        "									.ifPresent(stParameter -> stParameter.getKeys()\n" +
-                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
-                        "											.findFirst()\n" +
-                        "											.ifPresent(stParameterKey -> {\n" +
-                        "												final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +
-                        "												final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));\n" +
-                        "												thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));\n" +
-                        "												thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));\n" +
-                        "											}));\n" +
-                        "						}));\n" +
-                        "			});\n" +
-                        "});"))
-            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
+//                  .addStatements("appModel().doLaterInTransaction(transaction -> {\n" +
+//                        "\n" +
+//                        "	appModel().getIncomingSTArguments(getModel())\n" +
+//                        "			.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()\n" +
+//                        "					.forEach(stModel -> {\n" +
+//                        "						final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+//                        "						if (stTemplateByUuid == null) return;\n" +
+//                        "						stTemplateByUuid.getParameters()\n" +
+//                        "								.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
+//                        "								.findFirst()\n" +
+//                        "								.ifPresent(stParameter -> {\n" +
+//                        "									final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +
+//                        "									thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, thisNode(), stArgument, stParameter));\n" +
+//                        "								});\n" +
+//                        "					}));\n" +
+//                        "\n" +
+//                        "	appModel().getIncomingSTArgumentKVs(getModel())\n" +
+//                        "			.forEach(stArgumentKV -> {\n" +
+//                        "				stArgumentKV.getIncomingKeyValuesSTArgument()\n" +
+//                        "						.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {\n" +
+//                        "							final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+//                        "							if (stTemplateByUuid == null) return;\n" +
+//                        "							stTemplateByUuid.getParameters()\n" +
+//                        "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
+//                        "									.findFirst()\n" +
+//                        "									.ifPresent(stParameter -> stParameter.getKeys()\n" +
+//                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
+//                        "											.findFirst()\n" +
+//                        "											.ifPresent(stParameterKey -> {\n" +
+//                        "												final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +
+//                        "												final STKVNode stkvNode = thisCanvas().addNode(stArgument.getUuid(), () -> new STKVNode(stArgument, stParameter));\n" +
+//                        "												thisCanvas().addRelation(stArgument.getUuid(), () -> new STArgumentRelation(stModelNode, stkvNode, stArgument, stParameter));\n" +
+//                        "												thisCanvas().addRelation(stArgumentKV.getUuid(), () -> new STKVArgumentRelation(stkvNode, thisNode(), stArgument, stParameterKey, stArgumentKV));\n" +
+//                        "											}));\n" +
+//                        "						}));\n" +
+//                        "			});\n" +
+//                        "});"))
+//            .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("OpenAllArguments")
                   .setTitle("Open All")
                   .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
@@ -2177,7 +2136,7 @@ public class NextgenProject {
             .newWorkFlowFacade()
             .setName("WorkFlowFacade")
             .setPackageName(workflowPackage.getName());
-//      STGenerator.writeJavaFile(workFlowFacade, workflowPackage, workFlowFacade.getName(), mainJava);
+      STGenerator.writeJavaFile(workFlowFacade, workflowPackage, workFlowFacade.getName(), mainJava);
 
       DomainPatterns.writeGreenrobotEvents(mainJava, workflowPackage, workflowPackage, domain);
    }
@@ -2429,7 +2388,6 @@ public class NextgenProject {
             .addFields(stParameterType, "stParameter")
             .addFields(stTemplateType, "stTemplate")
             .addStatements("final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);\n" +
-                  "nextgen.events.NewSTModel.post(value, stTemplate);\n" +
                   "\n" +
                   "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                   "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
@@ -2476,7 +2434,11 @@ public class NextgenProject {
                   "showDialog(owner, contentPanel, \"Add interface\", jDialog -> {\n" +
                   "   final String interfaceName = txtImplements.getText().trim();\n" +
                   "   if (interfaceName.length()==0) return;\n" +
-                  "   appModel().addInterface(children, interfaceName);\n" +
+                  "   for (nextgen.st.domain.STTemplate child : children) {\n" +
+                  "      final java.util.Optional<String> optional = child.getImplements().filter(s -> s.toLowerCase().equals(interfaceName.toLowerCase())).findAny();\n" +
+                  "      if(optional.isPresent()) continue;\n" +
+                  "      child.addImplements(interfaceName);\n" +
+                  "   }\n" +
                   "   close(jDialog);   \n" +
                   "});"));
 
@@ -2853,8 +2815,7 @@ public class NextgenProject {
             .setName(newSTModel)
             .setTitle("New instance")
             .addFields(stTemplateType, "stTemplate")
-            .addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
-                  "nextgen.events.NewSTModel.post(stModel, stTemplate);"));
+            .addStatements("appModel().newSTModel(stTemplate);"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName(newSTTemplate)
@@ -3047,7 +3008,6 @@ public class NextgenProject {
                   "      });\n" +
                   "\n" +
                   "final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);\n" +
-                  "nextgen.events.NewSTModel.post(value, stTemplate);\n" +
                   "\n" +
                   "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                   "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
@@ -3128,6 +3088,7 @@ public class NextgenProject {
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName(setKVArgumentFromClipboard)
+            .setTitle("Set from Clipboard")
             .addFields(stModelType, "stModel")
             .addFields(stArgumentType, "stArgument")
             .addFields(stParameterKeyType, "stParameterKey")
@@ -3149,6 +3110,7 @@ public class NextgenProject {
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName(setKVArgumentFromInput)
+            .setTitle("Set from Input")
             .addFields(stModelType, "stModel")
             .addFields(stArgumentType, "stArgument")
             .addFields(stParameterKeyType, "stParameterKey")
@@ -3173,6 +3135,7 @@ public class NextgenProject {
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName(setKVArgumentFromSTModel)
+            .setTitle("Set from stModel")
             .addFields(stModelType, "stModel")
             .addFields(stArgumentType, "stArgument")
             .addFields(stParameterKeyType, "stParameterKey")
@@ -3396,6 +3359,12 @@ public class NextgenProject {
             .addStatements("appModel().undoLast();"));
 
       write(nextgen.templates.NextgenPatterns.newTransactionAction()
+            .setName(visitSTModel)
+            .setTitle("VisitSTModel")
+            .addFields(stModelType, "stModel")
+            .addStatements("new nextgen.st.STVisitorTest(appModel()).visit(stModel);"));
+
+      write(nextgen.templates.NextgenPatterns.newTransactionAction()
             .setName(writeSTModelToFile)
             .setTitle("Generate")
             .addFields(stModelType, "stModel")
@@ -3438,6 +3407,7 @@ public class NextgenProject {
       write(nextgen.templates.GreenRobotPatterns.newEvent()
             .setName(newSTModel)
             .addFields(stModelType, "model")
+            .addFields(stGroupModelType, "stGroup")
             .addFields(stTemplateType, "template")
       );
 
@@ -3729,7 +3699,7 @@ public class NextgenProject {
       return expression;
    }
 
-   private Object postEvent(String eventName, Object... arguments) {
+   private nextgen.templates.java.Statement postEventStatement(String eventName, Object... arguments) {
       return newExpressionStmt().setExpression(postEventExpression(eventName, arguments));
    }
 
@@ -3749,7 +3719,7 @@ public class NextgenProject {
 
    private Object addToActionsStatement(nextgen.templates.java.Expression action) {
       return newExpressionStmt()
-            .setExpression(action);
+            .setExpression(addToActions(action));
    }
 
    private String getParent(nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.Expression expression) {
@@ -3768,11 +3738,22 @@ public class NextgenProject {
       return getParent(null, parent, blockStmt);
    }
 
+   private String getParent(String parent, nextgen.templates.java.BlockStmt blockStmt) {
+      return getParent(null, parent, blockStmt);
+   }
+
    private String getParent(String scope, nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.BlockStmt blockStmt) {
       return getParent(scope, parent.getName(), blockStmt);
    }
 
    private String getParent(String scope, String parent, nextgen.templates.java.BlockStmt blockStmt) {
       return (scope == null ? "" : (scope + ".")) + "getParentNode(" + parent + ".class).ifPresent(parent -> " + blockStmt + " );";
+   }
+
+   private Object newInstance(String type, String... arguments) {
+      final nextgen.templates.java.ObjectCreationExpression objectCreationExpression = newObjectCreationExpression(type);
+      for (String argument : arguments)
+         objectCreationExpression.addArguments(argument);
+      return objectCreationExpression;
    }
 }
