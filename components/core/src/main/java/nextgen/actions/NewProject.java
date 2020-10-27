@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class NewProject extends TransactionAction {
 
+
    private final javax.swing.JComponent owner;
 
 	public NewProject(javax.swing.JComponent owner) {

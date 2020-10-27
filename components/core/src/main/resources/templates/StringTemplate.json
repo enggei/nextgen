@@ -601,7 +601,7 @@
     }, {
       "uuid" : "1fbd1175-c17d-4ad9-ae43-8ee06b6970e9",
       "name" : "FindBy",
-      "text" : "public Optional<~entity;format=\"capitalize\"~> find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n\treturn Optional.ofNullable(db.find(\"~name~\", value, ~entity;format=\"capitalize\"~.stTemplateUuid, ~entity;format=\"capitalize\"~::new));\n} ",
+      "text" : "public Optional<~entity;format=\"capitalize\"~> find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n\treturn value == null ? Optional.empty() : Optional.ofNullable(db.find(\"~name~\", value, ~entity;format=\"capitalize\"~.stTemplateUuid, ~entity;format=\"capitalize\"~::new));\n}\n\npublic ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n\treturn find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(value).orElseGet(() -> new ~entity;format=\"capitalize\"~(db).set~name;format=\"capitalize\"~(value));\n} ",
       "parameters" : [ {
         "uuid" : "7edc8c6d-095f-40e6-822e-a80008a098fb",
         "name" : "entity",

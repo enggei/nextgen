@@ -3,6 +3,7 @@ package nextgen.actions;
 public class GenerateAllSTGroups extends TransactionAction {
 
 
+
 	public GenerateAllSTGroups() {
 		super("Generate all");
 	}

@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class RenameSTGroup extends TransactionAction {
 
+
    private final nextgen.st.domain.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 

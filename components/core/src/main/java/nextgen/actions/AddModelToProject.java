@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddModelToProject extends TransactionAction {
 
+
    private final nextgen.st.model.STProject project;
    private final nextgen.st.model.STModel stModel;
 

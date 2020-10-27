@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class DeleteSTInterface extends TransactionAction {
 
+
    private final nextgen.st.domain.STInterface stInterface;
    private final nextgen.st.domain.STGroupModel stGroup;
    private final javax.swing.JComponent owner;

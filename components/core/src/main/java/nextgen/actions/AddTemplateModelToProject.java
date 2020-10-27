@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddTemplateModelToProject extends TransactionAction {
 
+
    private final nextgen.st.domain.STTemplate stTemplate;
    private final nextgen.st.model.STProject project;
 

@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddChildrenToTemplate extends TransactionAction {
 
+
    private final nextgen.st.domain.STGroupModel stGroup;
    private final nextgen.st.domain.STTemplate stTemplate;
    private final java.util.Set<nextgen.st.domain.STTemplate> children;

@@ -2401,10 +2401,12 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-TransactionAction(name,fields,title,statements) ::= <<package nextgen.actions;
+TransactionAction(name,staticFields,fields,title,statements) ::= <<package nextgen.actions;
 
 public class ~name~ extends TransactionAction {
 
+   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
+   
    ~fields:{it|private final ~it.type~ ~it.name~;};separator="\n"~
 ~if(title)~
 

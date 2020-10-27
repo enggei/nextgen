@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class SetSTValueFromInput extends TransactionAction {
 
+
    private final nextgen.st.model.STValue stValue;
    private final javax.swing.JComponent owner;
 

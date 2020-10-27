@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class SetSTValueFromClipboard extends TransactionAction {
 
+
    private final nextgen.st.model.STValue stValue;
 
 	public SetSTValueFromClipboard(nextgen.st.model.STValue stValue) {

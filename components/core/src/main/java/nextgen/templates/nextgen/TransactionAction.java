@@ -8,6 +8,7 @@ public class TransactionAction {
 	private Object _name;
 	private Object _title;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	TransactionAction(org.stringtemplate.v4.STGroup stGroup) {
@@ -24,6 +25,7 @@ public class TransactionAction {
 		st.add("name", _name);
 		st.add("title", _title);
 		for (Object o : _statements) st.add("statements", o);
+		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
@@ -101,6 +103,74 @@ public class TransactionAction {
 		return this._statements;
 	} 
 
+	public TransactionAction addStaticFields(Object _type, Object _name, Object _init) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		map.put("init", _init);
+		this._staticFields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getStaticFields() {
+		return this._staticFields;
+	}
+
+	public TransactionAction addStaticFields(TransactionAction_StaticFields value) {
+		return addStaticFields(value._type, value._name, value._init);
+	}
+
+	public java.util.stream.Stream<TransactionAction_StaticFields> streamStaticFields() {
+		return this._staticFields.stream().map(TransactionAction_StaticFields::new);
+	}
+
+	public java.util.List<Object> getStaticFields_Type() {
+		return streamStaticFields().map(TransactionAction_StaticFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getStaticFields_Name() {
+		return streamStaticFields().map(TransactionAction_StaticFields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getStaticFields_Init() {
+		return streamStaticFields().map(TransactionAction_StaticFields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class TransactionAction_StaticFields {
+
+		Object _type;
+		Object _name;
+		Object _init;
+
+		public TransactionAction_StaticFields(Object _type, Object _name, Object _init) {
+			this._type = _type;
+			this._name = _name;
+			this._init = _init;
+		}
+
+		private TransactionAction_StaticFields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+			this._init = (Object) map.get("init");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+	}  
+
 	public TransactionAction addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -169,10 +239,12 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(name,fields,title,statements) ::= <<package nextgen.actions;\n" + 
+	static final String st = "TransactionAction(name,staticFields,fields,title,statements) ::= <<package nextgen.actions;\n" + 
 				"\n" + 
 				"public class ~name~ extends TransactionAction {\n" + 
 				"\n" + 
+				"   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
+				"   \n" + 
 				"   ~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"~if(title)~\n" + 
 				"\n" + 

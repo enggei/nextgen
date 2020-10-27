@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class OpenTemplate extends TransactionAction {
 
+
    private final nextgen.st.domain.STTemplate stTemplate;
 
 	public OpenTemplate(nextgen.st.domain.STTemplate stTemplate) {

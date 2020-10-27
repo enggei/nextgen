@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddInterface extends TransactionAction {
 
+
    private final java.util.Set<nextgen.st.domain.STTemplate> children;
    private final javax.swing.JComponent owner;
 

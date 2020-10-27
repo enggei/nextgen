@@ -35,6 +35,7 @@ public class STModelNavigator extends JPanel {
 		setPreferredSize(new Dimension(600, 1200));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	private final class STModelNavigatorCellRenderer extends DefaultTreeCellRenderer {
@@ -118,7 +119,14 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTModel(nextgen.events.NewSTModel event) {
 		System.out.println("NewSTModel");
+		findSTGroupModelTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+		      .flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template)))
+		      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrder(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));
+	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTProjectSTModel(nextgen.events.NewSTProjectSTModel event) {
+		System.out.println("NewSTProjectSTModel");
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -352,7 +360,7 @@ public class STModelNavigator extends JPanel {
 					stTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);
 				}
 
-				stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate, null));
+				stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate));
 			});
 		}
 
@@ -443,7 +451,7 @@ public class STModelNavigator extends JPanel {
 			final nextgen.st.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);
 			parent.add(stTemplateTreeNode);
 
-			appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate, null)));
+			appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate)));
 			stTemplate.getChildren().forEach(stTemplateChild -> addSTTemplateChild(stTemplateChild, stTemplateTreeNode));
 		}
 	}
@@ -606,10 +614,10 @@ public class STModelNavigator extends JPanel {
 			stModel.getArgumentsSorted()
 				.filter(stArgument -> stArgument.getStParameter().equals(model.getUuid()))
 				.forEach(appModel().stArgumentConsumer(model)
-						.onSingleSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
-						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
-						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue, stArgument)))
-						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()), stArgument)))
+						.onSingleSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue)))
+						.onSingleSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()))))
+						.onListSTValue((stArgument, stValue) -> add(new STValueTreeNode(stValue)))
+						.onListSTModel((stArgument, stValue) -> add(new STModelTreeNode(stValue.getStModel(), appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()))))
 						.onKVListConsumer((stArgument, stKVValues) -> add(new STKVArgumentTreeNode(stArgument, model))));
 		}
 
@@ -660,13 +668,11 @@ public class STModelNavigator extends JPanel {
 
 		private String uuid;
 		private nextgen.st.domain.STTemplate stTemplate;
-		private nextgen.st.model.STArgument stArgument;
 
-		STModelTreeNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STArgument stArgument) {
+		STModelTreeNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
 			super(model, appModel().loadIcon("sq-teal"));
 
 			this.stTemplate = stTemplate;
-			this.stArgument = stArgument;
 
 			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> appModel().render(getModel(), 10)));
 			this.tooltip = appModel().tooltip(getModel());
@@ -784,12 +790,10 @@ public class STModelNavigator extends JPanel {
 	public class STValueTreeNode extends BaseTreeNode<nextgen.st.model.STValue> {
 
 		private String uuid;
-		private nextgen.st.model.STArgument stArgument;
 
-		STValueTreeNode(nextgen.st.model.STValue model, nextgen.st.model.STArgument stArgument) {
+		STValueTreeNode(nextgen.st.model.STValue model) {
 			super(model, appModel().loadIcon("sq-orange"));
 
-			this.stArgument = stArgument;
 
 			setLabel(getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? "[EMPTY]" : getModel().getValue());
 			this.tooltip = appModel().tooltip(getModel());

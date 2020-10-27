@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class DeleteEnum extends TransactionAction {
 
+
    private final nextgen.st.domain.STEnum stEnum;
    private final nextgen.st.domain.STGroupModel stGroup;
    private final javax.swing.JComponent owner;

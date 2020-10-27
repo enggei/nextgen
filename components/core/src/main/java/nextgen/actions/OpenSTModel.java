@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class OpenSTModel extends TransactionAction {
 
+
    private final nextgen.st.model.STModel stModel;
 
 	public OpenSTModel(nextgen.st.model.STModel stModel) {

@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddKVArgument extends TransactionAction {
 
+
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.domain.STParameter stParameter;
    private final javax.swing.JComponent owner;
@@ -15,8 +16,9 @@ public class AddKVArgument extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      final String[] selectedValues = appModel().getSelectedValues();
       final java.util.Map<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-      stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40)));
+      stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40, selectedValues)));
 
       final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));
       inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));

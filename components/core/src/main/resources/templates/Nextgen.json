@@ -190,7 +190,7 @@
         "uuid" : "706f675d-c5e2-4683-9c1e-682bd6391efa",
         "name" : "actions",
         "type" : "LIST",
-        "argumentType" : "TreeNodeAction"
+        "argumentType" : "Object"
       }, {
         "uuid" : "6fcc71e8-ffb9-43e0-a1cf-347a0dfd5189",
         "name" : "methods",
@@ -776,12 +776,30 @@
   }, {
     "uuid" : "54b49221-8a58-44a5-9ba6-2a75cbe9357f",
     "name" : "TransactionAction",
-    "text" : "package nextgen.actions;\n\npublic class ~name~ extends TransactionAction {\n\n   ~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n~if(title)~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(\"~title~\");\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n~else~\n\n\tpublic ~name~(String name~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n      super(name);\n      ~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n   }\n\n~endif~\n   @Override\n   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {\n      ~statements:{it|~it~};separator=\"\\n\"~\n   }\n} ",
+    "text" : "package nextgen.actions;\n\npublic class ~name~ extends TransactionAction {\n\n   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n   \n   ~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n~if(title)~\n\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n\t\tsuper(\"~title~\");\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\n~else~\n\n\tpublic ~name~(String name~if(fields)~, ~endif~~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n      super(name);\n      ~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n   }\n\n~endif~\n   @Override\n   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {\n      ~statements:{it|~it~};separator=\"\\n\"~\n   }\n} ",
     "parameters" : [ {
       "uuid" : "11537742-fe8c-4f04-adee-3fa4fcb58e5e",
       "name" : "name",
       "type" : "SINGLE",
       "argumentType" : "Object"
+    }, {
+      "uuid" : "c57938c2-8f40-4d67-9058-3518075f0c92",
+      "name" : "staticFields",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "92e1303e-a4a0-4169-9963-8cde340e1fba",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bdac0bd6-c49e-44c5-93c7-af33e0e32266",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ef74cc4e-0a6d-4fac-84e1-506bc86f01db",
+        "name" : "init",
+        "argumentType" : "Object"
+      } ]
     }, {
       "uuid" : "d7f4e8a6-1236-4e4e-8d8b-2466f0cd5f6a",
       "name" : "fields",

@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class CopyModel extends TransactionAction {
 
+
    private final nextgen.st.model.STModel stModel;
 
 	public CopyModel(nextgen.st.model.STModel stModel) {

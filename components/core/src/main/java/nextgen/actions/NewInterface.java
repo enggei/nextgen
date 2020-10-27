@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class NewInterface extends TransactionAction {
 
+
    private final nextgen.st.domain.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 

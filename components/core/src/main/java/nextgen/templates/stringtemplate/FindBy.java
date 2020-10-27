@@ -84,6 +84,10 @@ public class FindBy {
 	}
 
 	static final String st = "FindBy(entity,name) ::= <<public Optional<~entity;format=\"capitalize\"~> find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n" + 
-				"	return Optional.ofNullable(db.find(\"~name~\", value, ~entity;format=\"capitalize\"~.stTemplateUuid, ~entity;format=\"capitalize\"~::new));\n" + 
+				"	return value == null ? Optional.empty() : Optional.ofNullable(db.find(\"~name~\", value, ~entity;format=\"capitalize\"~.stTemplateUuid, ~entity;format=\"capitalize\"~::new));\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~entity;format=\"capitalize\"~ findOrCreate~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(STValue value) {\n" + 
+				"	return find~entity;format=\"capitalize\"~By~name;format=\"capitalize\"~(value).orElseGet(() -> new ~entity;format=\"capitalize\"~(db).set~name;format=\"capitalize\"~(value));\n" + 
 				"} >>";
 }  

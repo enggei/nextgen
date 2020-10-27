@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class AddArgumentFromSTValue extends TransactionAction {
 
+
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.domain.STParameter stParameter;
    private final nextgen.st.model.STValue value;

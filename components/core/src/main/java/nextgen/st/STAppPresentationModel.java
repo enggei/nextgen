@@ -343,7 +343,7 @@ public class STAppPresentationModel {
    public STModel newSTModel(STGroupModel stGroupModel, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
       stProject.addModels(stModel);
-      nextgen.events.NewSTProjectSTModel.post(stModel, stProject);
+//      nextgen.events.NewSTProjectSTModel.post(stModel, stProject);
       return stModel;
    }
 
@@ -696,6 +696,13 @@ public class STAppPresentationModel {
 
    public boolean isBoolean(nextgen.st.domain.STParameter model) {
       return model.getName().startsWith("is") || model.getName().startsWith("has");
+   }
+
+   public String[] getSelectedValues() {
+
+
+
+      return new String[0];
    }
 
    public static final class CompilationResult {

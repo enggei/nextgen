@@ -13,7 +13,7 @@ public class TreeNode {
 	private Object _tooltipExpression;
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _getActionsStatements = new java.util.ArrayList<>();
-	private java.util.List<TreeNodeAction> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _selectionStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -238,22 +238,22 @@ public class TreeNode {
 		return this._getActionsStatements;
 	} 
 
-	public TreeNode addActions(TreeNodeAction value) {
+	public TreeNode addActions(Object value) {
 		this._actions.add(value);
 		return this;
 	}
 
-	public TreeNode setActions(TreeNodeAction[] value) {
+	public TreeNode setActions(Object[] value) {
 		this._actions.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNode setActions(java.util.Collection<TreeNodeAction> values) {
+	public TreeNode setActions(java.util.Collection<Object> values) {
 		this._actions.addAll(values);
 		return this;
 	}
 
-	public TreeNode removeActions(TreeNodeAction value) {
+	public TreeNode removeActions(Object value) {
 		this._actions.remove(value);
 		return this;
 	}
@@ -263,7 +263,7 @@ public class TreeNode {
 		return this;
 	}
 
-	public java.util.List<TreeNodeAction> getActions() {
+	public java.util.List<Object> getActions() {
 		return this._actions;
 	} 
 

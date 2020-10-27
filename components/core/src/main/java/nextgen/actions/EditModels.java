@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class EditModels extends TransactionAction {
 
+
    private final nextgen.st.domain.STTemplate stTemplate;
 
 	public EditModels(nextgen.st.domain.STTemplate stTemplate) {

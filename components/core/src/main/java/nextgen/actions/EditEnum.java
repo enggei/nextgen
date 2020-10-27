@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class EditEnum extends TransactionAction {
 
+
    private final nextgen.st.domain.STEnum stEnum;
    private final javax.swing.JComponent owner;
 

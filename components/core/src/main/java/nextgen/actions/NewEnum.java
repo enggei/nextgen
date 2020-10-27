@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class NewEnum extends TransactionAction {
 
+
    private final nextgen.st.domain.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 

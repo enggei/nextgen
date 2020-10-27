@@ -59,6 +59,25 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       return new javax.swing.JTextField(text, columns);
    }
 
+   protected javax.swing.JTextField newTextField(int columns, String[] options) {
+      return newTextField(columns, options, 0);
+   }
+
+   protected javax.swing.JTextField newTextField(int columns, String[] options, int startIndex) {
+      final javax.swing.JTextField textField = newTextField(columns);
+      if (options != null && options.length > 0)
+         textField.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            final java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger(startIndex);
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+               textField.setText(options[index.incrementAndGet() & options.length]);
+            }
+         });
+      return textField;
+   }
+
    protected javax.swing.JLabel newLabel(String name) {
       return new javax.swing.JLabel(name);
    }

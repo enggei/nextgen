@@ -2,6 +2,7 @@ package nextgen.actions;
 
 public class GenerateAllProjectModels extends TransactionAction {
 
+
    private final nextgen.st.model.STProject project;
 
 	public GenerateAllProjectModels(nextgen.st.model.STProject project) {

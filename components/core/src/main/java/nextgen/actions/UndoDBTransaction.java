@@ -3,6 +3,7 @@ package nextgen.actions;
 public class UndoDBTransaction extends TransactionAction {
 
 
+
 	public UndoDBTransaction() {
 		super("Undo");
 	}
