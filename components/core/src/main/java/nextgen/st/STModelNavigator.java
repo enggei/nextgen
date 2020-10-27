@@ -404,7 +404,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTProjectTreeNodeSelected(STProjectTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorStProjectTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.ModelNavigatorSTProjectTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// ModelsTreeNode
@@ -727,7 +727,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelTreeNodeSelected(STModelTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorStModelTreeNodeClicked.post(appModel().findSTTemplate(selectedNode.getModel()), selectedNode.getModel());
+		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(appModel().findSTTemplate(selectedNode.getModel()), selectedNode.getModel());
 	}
 
 	// STKVArgumentTreeNode

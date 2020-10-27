@@ -38,7 +38,7 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorStModelTreeNodeClicked(nextgen.events.ModelNavigatorStModelTreeNodeClicked event) {
+	public void onModelNavigatorStModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
 		System.out.println("ModelNavigatorStModelTreeNodeClicked");
 		getModelEditor(event.stTemplate, event.stModel);
 	}

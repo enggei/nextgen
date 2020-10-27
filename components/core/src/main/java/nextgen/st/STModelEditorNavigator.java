@@ -119,14 +119,14 @@ public class STModelEditorNavigator extends JPanel {
    }
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelEditorStModelTreeNodeClicked(nextgen.events.ModelEditorStModelTreeNodeClicked event) {
-		System.out.println("ModelEditorStModelTreeNodeClicked");
+	public void onModelEditorSTModelTreeNodeClicked(nextgen.events.ModelEditorSTModelTreeNodeClicked event) {
+		System.out.println("ModelEditorSTModelTreeNodeClicked");
 
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelEditorStValueTreeNodeClicked(nextgen.events.ModelEditorStValueTreeNodeClicked event) {
-		System.out.println("ModelEditorStValueTreeNodeClicked");
+	public void onModelEditorSTValueTreeNodeClicked(nextgen.events.ModelEditorSTValueTreeNodeClicked event) {
+		System.out.println("ModelEditorSTValueTreeNodeClicked");
 
 	}
 
@@ -375,7 +375,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTModelTreeNodeSelected(STModelTreeNode selectedNode) {
-		nextgen.events.ModelEditorStModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelEditorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
 	}
 
 	// STKVArgumentTreeNode
@@ -595,7 +595,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTParameterTreeNodeSelected(STParameterTreeNode selectedNode) {
-		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(parent -> nextgen.events.ModelEditorStParameterTreeNodeClicked.post(selectedNode.getModel(), parent.getModel()));
+		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(parent -> nextgen.events.ModelEditorSTParameterTreeNodeClicked.post(selectedNode.getModel(), parent.getModel()));
 	}
 
 	// STModelArgumentTreeNode
@@ -663,7 +663,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTModelArgumentTreeNodeSelected(STModelArgumentTreeNode selectedNode) {
-		nextgen.events.ModelEditorStModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelEditorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
 	}
 
 	// STValueArgumentTreeNode
@@ -727,7 +727,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTValueArgumentTreeNodeSelected(STValueArgumentTreeNode selectedNode) {
-		nextgen.events.ModelEditorStValueTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.ModelEditorSTValueTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STModelKVArgumentTreeNode
@@ -793,7 +793,7 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	private void onSTModelKVArgumentTreeNodeSelected(STModelKVArgumentTreeNode selectedNode) {
-		nextgen.events.ModelEditorStModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelEditorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
 	}
 
 	// STValueKVArgumentTreeNode

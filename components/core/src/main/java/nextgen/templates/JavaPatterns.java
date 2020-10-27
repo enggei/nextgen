@@ -100,6 +100,12 @@ public class JavaPatterns extends JavaST {
       return newClassOrInterfaceType(packageName.toString(), name.toString());
    }
 
+   public static ClassOrInterfaceType newClassOrInterfaceType(PackageDeclaration packageDeclaration, Object name) {
+      return newClassOrInterfaceType()
+            .setScope(packageDeclaration.getName())
+            .addNames(name);
+   }
+
    public static ClassOrInterfaceType newClassOrInterfaceType(PackageDeclaration packageDeclaration, String name) {
       return newClassOrInterfaceType()
             .setScope(packageDeclaration.getName())
