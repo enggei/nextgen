@@ -94,6 +94,8 @@ public class STModelEditorNavigator extends JPanel {
             appModel().doLaterInTransaction(transaction -> {
 					if (isSTModelTreeNode(lastPathComponent)) 
 						onSTModelTreeNodeSelected((STModelTreeNode) lastPathComponent);
+					else if (isSTFileSinkTreeNode(lastPathComponent)) 
+						onSTFileSinkTreeNodeSelected((STFileSinkTreeNode) lastPathComponent);
 					else if (isSTKVArgumentTreeNode(lastPathComponent)) 
 						onSTKVArgumentTreeNodeSelected((STKVArgumentTreeNode) lastPathComponent);
 					else if (isSTKVTreeNode(lastPathComponent)) 
@@ -131,6 +133,18 @@ public class STModelEditorNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTFileDeleted(nextgen.events.STFileDeleted event) {
+		System.out.println("STFileDeleted");
+		findSTFileSinkTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewFileSink(nextgen.events.NewFileSink event) {
+		System.out.println("NewFileSink");
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel)).ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.st.STModelEditorNavigator.STFileSinkTreeNode(event.stFile)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onKVDeleted(nextgen.events.KVDeleted event) {
 		System.out.println("KVDeleted");
 		findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
@@ -148,6 +162,26 @@ public class STModelEditorNavigator extends JPanel {
 		System.out.println("STValueDeleted");
 		findSTValueArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 		findSTValueKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
+		System.out.println("NewSTKVArgument");
+		findSTParameterTreeNode(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))
+		      .ifPresent(stParameterTreeNode -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STKVArgumentTreeNode(event.argument, event.parameter)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelChanged(nextgen.events.STModelChanged event) {
+		System.out.println("STModelChanged");
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+				.ifPresent(treeNode -> {
+					treeNode.removeAllChildren();
+					treeNode.stTemplate.getParameters()
+							.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+							.forEach(stParameter -> treeNode.add(new STParameterTreeNode(stParameter, event.model)));
+					treeModel.nodeStructureChanged(treeNode);
+				});
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -325,6 +359,8 @@ public class STModelEditorNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			getModel().getFiles()
+					.forEach(stFile -> add(new nextgen.st.STModelEditorNavigator.STFileSinkTreeNode(stFile)));
 			stTemplate.getParameters()
 					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
 					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
@@ -346,6 +382,7 @@ public class STModelEditorNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.AddFileSink(getModel(), tree));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.OpenSTModel(getModel()));
 				actions.add(new nextgen.actions.VisitSTModel(getModel()));
@@ -376,6 +413,65 @@ public class STModelEditorNavigator extends JPanel {
 
 	private void onSTModelTreeNodeSelected(STModelTreeNode selectedNode) {
 		nextgen.events.ModelEditorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+	}
+
+	// STFileSinkTreeNode
+	public class STFileSinkTreeNode extends BaseTreeNode<nextgen.st.model.STFile> {
+
+		private String uuid;
+
+		STFileSinkTreeNode(nextgen.st.model.STFile model) {
+			super(model, appModel().loadIcon("sq-white"));
+
+
+			setLabel(appModel().render(getModel().getPath()));
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+		}
+
+		STFileSinkTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(appModel().render(getModel().getPath()));
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.DeleteSTFile(getModel(), tree));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isSTFileSinkTreeNode(Object treeNode) {
+		return treeNode instanceof STFileSinkTreeNode;
+	}
+
+	private Optional<STFileSinkTreeNode> findSTFileSinkTreeNode(java.util.function.Predicate<STFileSinkTreeNode> predicate) {
+		return treeModel.find(STFileSinkTreeNode.class, predicate);
+	}
+
+	private Optional<STFileSinkTreeNode> findSTFileSinkTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STFileSinkTreeNode> predicate) {
+		return treeModel.find(parent, STFileSinkTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<STFileSinkTreeNode> getSelectedSTFileSinkTreeNodes() {
+		return getSelectedNodes(STFileSinkTreeNode.class);
+	}
+
+	private void onSTFileSinkTreeNodeSelected(STFileSinkTreeNode selectedNode) {
+		nextgen.events.ModelEditorSTFileTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STKVArgumentTreeNode

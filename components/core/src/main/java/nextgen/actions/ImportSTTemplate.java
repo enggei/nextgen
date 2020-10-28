@@ -19,7 +19,8 @@ public class ImportSTTemplate extends TransactionAction {
       	appModel().doLaterInTransaction(t -> {
       		final String fileName = file.getName();
       		final String name = fileName.substring(0, fileName.indexOf("."));
-      		appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);
+      		final nextgen.st.domain.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);
+      		nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
       	});
       });
    }

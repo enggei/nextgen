@@ -34,13 +34,13 @@ public class AddArgumentFromArgumentType extends TransactionAction {
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
             stModel.addArguments(stArgument);
-            nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+            nextgen.events.STModelChanged.post(stModel);
          } else {
             input(owner, "New value", s -> {
                final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
                final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
                stModel.addArguments(stArgument);
-               nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+               nextgen.events.STModelChanged.post(stModel);
             });
          }
 
@@ -57,7 +57,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
             stModel.addArguments(stArgument);
-            nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+            nextgen.events.STModelChanged.post(stModel);
          } else {
             final java.util.Set<nextgen.st.domain.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
@@ -66,14 +66,14 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                   final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
                   stModel.addArguments(stArgument);
-                  nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+                  nextgen.events.STModelChanged.post(stModel);
                } else {
                   select(owner, interfaces, value -> {
                      final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, value);
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
                      stModel.addArguments(stArgument);
-                     nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+                     nextgen.events.STModelChanged.post(stModel);
                   });   
                }
 
@@ -84,14 +84,14 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
                      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
                      stModel.addArguments(stArgument);
-                     nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+                     nextgen.events.STModelChanged.post(stModel);
                   });
                } else {
                   input(owner, "New value", s -> {
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
                      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
                      stModel.addArguments(stArgument);
-                     nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+                     nextgen.events.STModelChanged.post(stModel);
                   });
                }
             }

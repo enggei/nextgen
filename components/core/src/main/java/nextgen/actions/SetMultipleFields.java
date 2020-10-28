@@ -89,7 +89,7 @@ public class SetMultipleFields extends TransactionAction {
             } else if (value.length() != 0) {
                final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
                final nextgen.st.model.STArgument newSTArgument = appModel().newSTArgument(stModel, stParameter, stValue);
-               nextgen.events.NewSTArgument.post(newSTArgument, stModel, stParameter, stValue);
+               nextgen.events.STModelChanged.post(stModel);
             }
          }
       });

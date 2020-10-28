@@ -277,14 +277,12 @@ public class STAppPresentationModel {
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, STValue value) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
       return stArgument;
    }
 
    public STArgument newSTArgument(STModel stModel, STParameter stParameter, List<STArgumentKV> kvs) {
       final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, kvs);
       stModel.addArguments(stArgument);
-      //   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter,value);
       return stArgument;
    }
 
@@ -336,21 +334,18 @@ public class STAppPresentationModel {
 
    public STModel newSTModel(STGroupModel stGroupModel, STTemplate stTemplate) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
-      nextgen.events.NewSTModel.post(stModel, stGroupModel, stTemplate);
       return stModel;
    }
 
    public STModel newSTModel(STGroupModel stGroupModel, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
       stProject.addModels(stModel);
-//      nextgen.events.NewSTProjectSTModel.post(stModel, stProject);
       return stModel;
    }
 
    public nextgen.st.domain.STTemplate newSTTemplate(String name, String text, nextgen.st.domain.STGroupModel parent) {
       final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(text);
       parent.addTemplates(stTemplate);
-      nextgen.events.NewSTGroupTemplate.post(stTemplate, parent);
       return stTemplate;
    }
 
@@ -641,7 +636,6 @@ public class STAppPresentationModel {
 //
 //      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
 //      stModel.addArguments(stArgument);
-//      nextgen.events.NewSTArgument.post(stArgument,stModel, stParameter, value);
 //   }
 //
 //   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
@@ -655,7 +649,6 @@ public class STAppPresentationModel {
 //   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
 //      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
 //      stModel.addArguments(stArgument);
-//      nextgen.events.NewSTArgument.post(stArgument, stModel,stParameter, value);
 //   }
 
    public java.util.Optional<nextgen.st.domain.STGroupModel> findSTGroup(String name) {
@@ -703,6 +696,10 @@ public class STAppPresentationModel {
 
 
       return new String[0];
+   }
+
+   public nextgen.st.domain.STTemplate getSTTemplate(nextgen.st.model.STModel stModel) {
+      return findSTTemplateByUuid(stModel.getStTemplate());
    }
 
    public static final class CompilationResult {

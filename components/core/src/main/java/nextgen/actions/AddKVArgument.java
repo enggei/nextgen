@@ -39,6 +39,7 @@ public class AddKVArgument extends TransactionAction {
          }
 
          final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, kvs);
+         stModel.addArguments(stArgument);
          nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument);
 
          close(jDialog);

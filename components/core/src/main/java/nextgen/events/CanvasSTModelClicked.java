@@ -4,14 +4,14 @@ public final class CanvasSTModelClicked {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CanvasSTModelClicked.class);
 
-	public static void post(nextgen.st.model.STModel model) {
+	public static void post(nextgen.st.model.STModel stModel) {
 		log.info("post CanvasSTModelClicked");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(model));
+		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelClicked(stModel));
 	}
 
-	public final nextgen.st.model.STModel model;
+	public final nextgen.st.model.STModel stModel;
 
-	public CanvasSTModelClicked(nextgen.st.model.STModel model) {
-		this.model = model;
+	public CanvasSTModelClicked(nextgen.st.model.STModel stModel) {
+		this.stModel = stModel;
 	}
 }

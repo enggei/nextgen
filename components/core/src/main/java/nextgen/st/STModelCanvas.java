@@ -2465,60 +2465,60 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 			void actionPerformed(PInputEvent event, ActionEvent e) {
 				thisCanvas().appModel().doLaterInTransaction(tx -> {
 
-final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
+					final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
 
-final String[] pathTypes = thisCanvas().appModel().db.findAllSTFile()
-			.filter(stFile -> stFile.getPath() != null)
-			.filter(stFile -> stFile.getPath().getValue() != null)
-			.map(stFile -> stFile.getPath().getValue())
-			.distinct()
-			.toArray(String[]::new);
+					final String[] pathTypes = thisCanvas().appModel().db.findAllSTFile()
+								.filter(stFile -> stFile.getPath() != null)
+								.filter(stFile -> stFile.getPath().getValue() != null)
+								.map(stFile -> stFile.getPath().getValue())
+								.distinct()
+								.toArray(String[]::new);
 
-final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-fieldMap.put("name", SwingUtil.newTextField(thisCanvas().appModel().getSTModelName(getModel(), ""), 15));
-fieldMap.put("type", SwingUtil.newTextField(15));
-fieldMap.put("path", SwingUtil.newTextField(15));
-fieldMap.put("package", SwingUtil.newTextField(thisCanvas().appModel().getSTModelPackage(getModel(), ""), 15));
-final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
-inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
-		inputPanel.add(new JLabel(fieldEntry.getKey()));
-		inputPanel.add(fieldEntry.getValue());
+					final java.util.LinkedHashMap<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+					fieldMap.put("name", SwingUtil.newTextField(thisCanvas().appModel().getSTModelName(getModel(), ""), 15));
+					fieldMap.put("type", SwingUtil.newTextField(15));
+					fieldMap.put("path", SwingUtil.newTextField(15));
+					fieldMap.put("package", SwingUtil.newTextField(thisCanvas().appModel().getSTModelPackage(getModel(), ""), 15));
+					final JPanel inputPanel = new JPanel(new GridLayout(fieldMap.size(), 2));
+					inputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+					for (Map.Entry<String, JTextField> fieldEntry : fieldMap.entrySet()) {
+							inputPanel.add(new JLabel(fieldEntry.getKey()));
+							inputPanel.add(fieldEntry.getValue());
 
-		if (fieldEntry.getKey().equals("type")) {
-			fieldEntry.getValue().setText(fileTypes[fileTypeIndex.get() % fileTypes.length]);
-			fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
-				@Override
-				public void mouseClicked(java.awt.event.MouseEvent e) {
-						fieldEntry.getValue().setText(fileTypes[fileTypeIndex.incrementAndGet() % fileTypes.length]);
-				}
-			});
-		} else if (fieldEntry.getKey().equals("path")) {
-			fieldEntry.getValue().setText(pathTypes[pathIndex.get() % pathTypes.length]);
-			fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
-				@Override
-				public void mouseClicked(java.awt.event.MouseEvent e) {
-						fieldEntry.getValue().setText(pathTypes[pathIndex.incrementAndGet() % pathTypes.length]);
-				}
-			});
-		}
-}
+							if (fieldEntry.getKey().equals("type")) {
+								fieldEntry.getValue().setText(fileTypes[fileTypeIndex.get() % fileTypes.length]);
+								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+									@Override
+									public void mouseClicked(java.awt.event.MouseEvent e) {
+											fieldEntry.getValue().setText(fileTypes[fileTypeIndex.incrementAndGet() % fileTypes.length]);
+									}
+								});
+							} else if (fieldEntry.getKey().equals("path")) {
+								fieldEntry.getValue().setText(pathTypes[pathIndex.get() % pathTypes.length]);
+								fieldEntry.getValue().addMouseListener(new java.awt.event.MouseAdapter() {
+									@Override
+									public void mouseClicked(java.awt.event.MouseEvent e) {
+											fieldEntry.getValue().setText(pathTypes[pathIndex.incrementAndGet() % pathTypes.length]);
+									}
+								});
+							}
+					}
 
-nextgen.utils.SwingUtil.showDialog(inputPanel, thisCanvas(), "New File sink", new nextgen.utils.SwingUtil.ConfirmAction() {
-		@Override
-		public void verifyAndCommit() throws Exception {
-			final String name = fieldMap.get("name").getText().trim();
-			final String type = fieldMap.get("type").getText().trim();
-			final String path = fieldMap.get("path").getText().trim();
-			final String packageName = fieldMap.get("package").getText().trim();
-			thisCanvas().appModel().doLaterInTransaction(tx -> {
-				final nextgen.st.model.STFile stFile = thisCanvas().appModel().newSTFile(name, type, path, packageName);
-				getModel().addFiles(stFile);
-				final STFileNode dstNode = thisCanvas().addNode(new STFileNode(stFile, getModel()));
-				thisCanvas().addRelation(dstNode.getUuid(), () -> new STSinkRelation(thisNode(), dstNode));
-			});
-		}
-});
+					nextgen.utils.SwingUtil.showDialog(inputPanel, thisCanvas(), "New File sink", new nextgen.utils.SwingUtil.ConfirmAction() {
+							@Override
+							public void verifyAndCommit() throws Exception {
+								final String name = fieldMap.get("name").getText().trim();
+								final String type = fieldMap.get("type").getText().trim();
+								final String path = fieldMap.get("path").getText().trim();
+								final String packageName = fieldMap.get("package").getText().trim();
+								thisCanvas().appModel().doLaterInTransaction(tx -> {
+									final nextgen.st.model.STFile stFile = thisCanvas().appModel().newSTFile(name, type, path, packageName);
+									getModel().addFiles(stFile);
+									final STFileNode dstNode = thisCanvas().addNode(new STFileNode(stFile, getModel()));
+									thisCanvas().addRelation(dstNode.getUuid(), () -> new STSinkRelation(thisNode(), dstNode));
+								});
+							}
+					});
 				});
 			}
 		}

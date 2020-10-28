@@ -101,11 +101,19 @@ public class STModelEditorForm extends JPanel {
 
       public void setValue(String s) {
          if (argument == null) {
-            argument = appModel().newSTArgument(model, stParameter, appModel().db.newSTValue(s));
+            final nextgen.st.model.STValue newSTValue = appModel().db.newSTValue(s);
+            argument = appModel().newSTArgument(model, stParameter, newSTValue);
+            nextgen.events.NewSTArgument.post(argument, model, stParameter, newSTValue);
          } else {
             final nextgen.st.model.STValue value = argument.getValue();
-            if (value == null) argument.setValue(appModel().db.newSTValue(s));
-            else argument.getValue().setValue(s);
+            if (value == null) {
+               argument.setValue(appModel().db.newSTValue(s));
+               nextgen.events.STArgumentChanged.post(model, argument);
+            }
+            else {
+               argument.getValue().setValue(s);
+               nextgen.events.STArgumentChanged.post(model, argument);
+            }
          }
 
          this.text = s;

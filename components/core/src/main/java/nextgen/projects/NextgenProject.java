@@ -77,12 +77,12 @@ public class NextgenProject {
          .addFields(stValueType, "value")
    );
 
-//   final nextgen.templates.greenrobot.Event newSTKVArgument = write(nextgen.templates.GreenRobotPatterns.newEvent()
-//         .setName("NewSTKVArgument")
-//         .addFields(stModelType, "model")
-//         .addFields(stParameterType, "parameter")
-//         .addFields(stArgumentType, "argument")
-//   );
+   final nextgen.templates.greenrobot.Event newSTKVArgument = write(nextgen.templates.GreenRobotPatterns.newEvent()
+         .setName("NewSTKVArgument")
+         .addFields(stModelType, "model")
+         .addFields(stParameterType, "parameter")
+         .addFields(stArgumentType, "argument")
+   );
 
    final nextgen.templates.greenrobot.Event newKV = write(nextgen.templates.GreenRobotPatterns.newEvent()
          .setName("NewKV")
@@ -99,10 +99,22 @@ public class NextgenProject {
          .addFields(stTemplateType, "template")
    );
 
+   final nextgen.templates.greenrobot.Event stModelChanged = write(nextgen.templates.GreenRobotPatterns.newEvent()
+         .setName("STModelChanged")
+         .addFields(stModelType, "model")
+   );
+
    final nextgen.templates.greenrobot.Event newSTProjectSTModel = write(nextgen.templates.GreenRobotPatterns.newEvent()
          .setName("NewSTProjectSTModel")
          .addFields(stModelType, "model")
          .addFields(stProjectType, "project")
+         .addFields(stTemplateType, "template")
+   );
+
+   final nextgen.templates.greenrobot.Event newSTFile = write(nextgen.templates.GreenRobotPatterns.newEvent()
+         .setName("NewFileSink")
+         .addFields(stModelType, "stModel")
+         .addFields(stFileType, "stFile")
    );
 
    final nextgen.templates.greenrobot.Event newSTGroupTemplate = write(nextgen.templates.GreenRobotPatterns.newEvent()
@@ -227,6 +239,11 @@ public class NextgenProject {
          .addFields("String", "uuid")
    );
 
+   final nextgen.templates.greenrobot.Event stFileDeleted = write(nextgen.templates.GreenRobotPatterns.newEvent()
+         .setName("STFileDeleted")
+         .addFields("String", "uuid")
+   );
+
    final nextgen.templates.greenrobot.Event kvDeleted = write(nextgen.templates.GreenRobotPatterns.newEvent()
          .setName("KVDeleted")
          .addFields(stModelType, "stModel")
@@ -266,11 +283,6 @@ public class NextgenProject {
    );
 
    // Clicked
-   final nextgen.templates.greenrobot.Event canvasSTModelClicked = write(nextgen.templates.GreenRobotPatterns.newEvent()
-         .setName("CanvasSTModelClicked")
-         .addFields(stModelType, "model")
-   );
-
    final nextgen.templates.greenrobot.Event templateNavigatorSTParameterTreeNodeClicked = write(nextgen.templates.GreenRobotPatterns.newEvent()
          .setName("TemplateNavigatorSTParameterTreeNodeClicked")
          .addFields(stParameterType, "parameter")
@@ -341,6 +353,9 @@ public class NextgenProject {
          .addFields(stTemplateType, "stTemplate")
          .addFields(stModelType, "stModel"));
 
+   final nextgen.templates.greenrobot.Event modelEditorSTFileTreeNodeClicked = write(nextgen.templates.GreenRobotPatterns.newEvent().setName("ModelEditorSTFileTreeNodeClicked")
+         .addFields(stFileType, "stFile"));
+
    final nextgen.templates.greenrobot.Event modelEditorSTKVArgumentTreeNodeClicked = write(nextgen.templates.GreenRobotPatterns.newEvent().setName("ModelEditorSTKVArgumentTreeNodeClicked")
          .addFields(stArgumentKVType, "kv"));
 
@@ -372,13 +387,13 @@ public class NextgenProject {
                "      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);\n" +
                "      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "      stModel.addArguments(stArgument);\n" +
-               "      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "      nextgen.events.STModelChanged.post(stModel);\n" +
                "   } else {\n" +
                "      input(owner, \"New value\", s -> {\n" +
                "         final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);\n" +
                "         final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "         stModel.addArguments(stArgument);\n" +
-               "         nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "         nextgen.events.STModelChanged.post(stModel);\n" +
                "      });\n" +
                "   }\n" +
                "\n" +
@@ -395,7 +410,7 @@ public class NextgenProject {
                "      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);\n" +
                "      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "      stModel.addArguments(stArgument);\n" +
-               "      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "      nextgen.events.STModelChanged.post(stModel);\n" +
                "   } else {\n" +
                "      final java.util.Set<nextgen.st.domain.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);\n" +
                "      if (!interfaces.isEmpty()) {\n" +
@@ -404,14 +419,14 @@ public class NextgenProject {
                "            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);\n" +
                "            final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "            stModel.addArguments(stArgument);\n" +
-               "            nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "            nextgen.events.STModelChanged.post(stModel);\n" +
                "         } else {\n" +
                "            select(owner, interfaces, value -> {\n" +
                "               final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, value);\n" +
                "               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);\n" +
                "               final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "               stModel.addArguments(stArgument);\n" +
-               "               nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "               nextgen.events.STModelChanged.post(stModel);\n" +
                "            });   \n" +
                "         }\n" +
                "\n" +
@@ -422,14 +437,14 @@ public class NextgenProject {
                "               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "               final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "               stModel.addArguments(stArgument);\n" +
-               "               nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "               nextgen.events.STModelChanged.post(stModel);\n" +
                "            });\n" +
                "         } else {\n" +
                "            input(owner, \"New value\", s -> {\n" +
                "               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);\n" +
                "               final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "               stModel.addArguments(stArgument);\n" +
-               "               nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "               nextgen.events.STModelChanged.post(stModel);\n" +
                "            });\n" +
                "         }\n" +
                "      }\n" +
@@ -444,7 +459,7 @@ public class NextgenProject {
          .addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction addArgumentFromInput = write(newTransactionAction()
          .setName("AddArgumentFromInput")
@@ -456,7 +471,7 @@ public class NextgenProject {
                "   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);\n" +
                "   final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "   stModel.addArguments(stArgument);\n" +
-               "   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "   nextgen.events.STModelChanged.post(stModel);\n" +
                "});"));
 
    final TransactionAction addArgumentFromSTModel = write(newTransactionAction()
@@ -467,7 +482,7 @@ public class NextgenProject {
          .addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction addArgumentFromSTModelUuid = write(newTransactionAction()
          .setName("AddArgumentFromSTModelUuid")
@@ -477,7 +492,7 @@ public class NextgenProject {
          .addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction addArgumentFromSTTemplate = write(newTransactionAction()
          .setName("AddArgumentFromSTTemplate")
@@ -489,7 +504,7 @@ public class NextgenProject {
                "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n"));
+               "nextgen.events.STModelChanged.post(stModel);\n"));
 
    final TransactionAction addArgumentFromSTValue = write(newTransactionAction()
          .setName("AddArgumentFromSTValue")
@@ -521,10 +536,10 @@ public class NextgenProject {
 
    final TransactionAction addFileSink = write(newTransactionAction()
          .setName("AddFileSink")
+         .setTitle("Add File Sink")
          .addStaticFields("java.util.concurrent.atomic.AtomicInteger", "fileTypeIndex", "new java.util.concurrent.atomic.AtomicInteger(0)")
          .addStaticFields("java.util.concurrent.atomic.AtomicInteger", "pathIndex", "new java.util.concurrent.atomic.AtomicInteger(0)")
          .addFields(stModelType, "stModel")
-         .addFields(stTemplateType, "stTemplate")
          .addFields(ownerType, "owner")
          .addStatements("final String[] fileTypes = new String[]{\"html\", \"java\", \"js\", \"xml\"};\n" +
                "\n" +
@@ -556,7 +571,8 @@ public class NextgenProject {
                "   final String packageName = fieldMap.get(\"package\").getText().trim();\n" +
                "   final nextgen.st.model.STFile stFile = appModel().newSTFile(name, type, path, packageName);\n" +
                "   stModel.addFiles(stFile);\n" +
-               "   //nextgen.events.NewFileSink.post(stModel, stFile);\n" +
+               "   nextgen.events.NewFileSink.post(stModel, stFile);\n" +
+               "   javax.swing.SwingUtilities.invokeLater(jDialog::dispose);\n" +
                "});"));
 
    final TransactionAction addInterface = write(newTransactionAction()
@@ -608,6 +624,7 @@ public class NextgenProject {
                "   }\n" +
                "\n" +
                "   final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, kvs);\n" +
+               "   stModel.addArguments(stArgument);\n" +
                "   nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument);\n" +
                "\n" +
                "   close(jDialog);\n" +
@@ -615,10 +632,11 @@ public class NextgenProject {
 
    final TransactionAction addModelToProject = write(newTransactionAction()
          .setName("AddModelToProject")
+         .setTitle("Add to Project")
          .addFields(stProjectType, "project")
          .addFields(stModelType, "stModel")
          .addStatements("project.addModels(stModel);\n" +
-               "nextgen.events.NewSTProjectSTModel.post(stModel, project);"));
+               "nextgen.events.NewSTProjectSTModel.post(stModel, project, appModel().getSTTemplate(stModel));"));
 
    final TransactionAction addMultipleArgumentsFromArgumentType = write(newTransactionAction()
          .setName("AddMultipleArgumentsFromArgumentType")
@@ -633,7 +651,7 @@ public class NextgenProject {
          .addFields(stProjectType, "project")
          .addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
                "project.addModels(stModel);\n" +
-               "nextgen.events.NewSTProjectSTModel.post(stModel, project);"));
+               "nextgen.events.NewSTProjectSTModel.post(stModel, project, stTemplate);"));
 
    final TransactionAction copyModel = write(newTransactionAction()
          .setName("CopyModel")
@@ -690,6 +708,18 @@ public class NextgenProject {
                "   nextgen.events.STGroupDeleted.post(stGroup.getUuid());\n" +
                "});"));
 
+   final TransactionAction deleteSTFile = write(newTransactionAction()
+         .setName("DeleteSTFile")
+         .setTitle("Delete")
+         .addFields(stFileType, "stFile")
+         .addFields(ownerType, "owner")
+         .addStatements("confirm(owner, \"Delete\", unused -> {\n" +
+               "   final String uuid = stFile.getUuid();\n" +
+               "   final nextgen.st.model.STFile found = appModel().db.findSTFileByUuid(uuid);\n" +
+               "   if (found != null) appModel().db.delete(found.getNode());\n" +
+               "   nextgen.events.STFileDeleted.post(uuid);\n" +
+               "});"));
+
    final TransactionAction deleteSTInterface = write(newTransactionAction()
          .setName("DeleteSTInterface")
          .setTitle("Delete")
@@ -719,7 +749,7 @@ public class NextgenProject {
          .addFields(ownerType, "owner")
          .addStatements("confirm(owner, \"Delete\", unused -> {\n" +
                "   final String uuid = stModel.getUuid();\n" +
-               "   final nextgen.st.model.STValue found = appModel().db.findSTValueByUuid(uuid);\n" +
+               "   final nextgen.st.model.STModel found = appModel().db.findSTModelByUuid(uuid);\n" +
                "   if (found != null) appModel().db.delete(found.getNode());\n" +
                "   nextgen.events.STModelDeleted.post(uuid);\n" +
                "});"));
@@ -896,7 +926,8 @@ public class NextgenProject {
                "\tappModel().doLaterInTransaction(t -> {\n" +
                "\t\tfinal String fileName = file.getName();\n" +
                "\t\tfinal String name = fileName.substring(0, fileName.indexOf(\".\"));\n" +
-               "\t\tappModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);\n" +
+               "\t\tfinal nextgen.st.domain.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);\n" +
+               "\t\tnextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);\n" +
                "\t});\n" +
                "});"));
 
@@ -959,7 +990,8 @@ public class NextgenProject {
          .setName("NewSTModel")
          .setTitle("New instance")
          .addFields(stTemplateType, "stTemplate")
-         .addStatements("appModel().newSTModel(stTemplate);"));
+         .addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
+               "nextgen.events.NewSTModel.post(stModel, appModel().findSTGroup(stTemplate), stTemplate);"));
 
    final TransactionAction newSTTemplate = write(newTransactionAction()
          .setName("NewSTTemplate")
@@ -1067,7 +1099,7 @@ public class NextgenProject {
                "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setArgumentFromInput = write(newTransactionAction()
          .setName("SetArgumentFromInput")
@@ -1090,7 +1122,7 @@ public class NextgenProject {
                "   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);\n" +
                "   final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "   stModel.addArguments(stArgument);\n" +
-               "   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" +
+               "   nextgen.events.STModelChanged.post(stModel);\n" +
                "});"));
 
    final TransactionAction setArgumentFromSTModel = write(newTransactionAction()
@@ -1112,7 +1144,7 @@ public class NextgenProject {
                "      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "      stModel.addArguments(stArgument);\n" +
-               "      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "      nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setArgumentFromSTModelUuid = write(newTransactionAction()
          .setName("SetArgumentFromSTModelUuid")
@@ -1133,7 +1165,7 @@ public class NextgenProject {
                "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setArgumentFromSTTemplate = write(newTransactionAction()
          .setName("SetArgumentFromSTTemplate")
@@ -1156,7 +1188,7 @@ public class NextgenProject {
                "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setArgumentFromSTValue = write(newTransactionAction()
          .setName("SetArgumentFromSTValue")
@@ -1176,7 +1208,7 @@ public class NextgenProject {
                "\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, value);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setArgumentToTrue = write(newTransactionAction()
          .setName("SetArgumentToTrue")
@@ -1197,7 +1229,7 @@ public class NextgenProject {
                "final nextgen.st.model.STValue stValue = appModel().db.newSTValue(\"true\");\n" +
                "final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
                "stModel.addArguments(stArgument);\n" +
-               "nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setInterfaces = write(newTransactionAction()
          .setName("SetInterfaces")
@@ -1250,7 +1282,7 @@ public class NextgenProject {
                "final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);\n" +
                "stArgument.addKeyValues(stArgumentKV);\n" +
                "\n" +
-               "nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setKVArgumentFromInput = write(newTransactionAction()
          .setName("SetKVArgumentFromInput")
@@ -1274,7 +1306,7 @@ public class NextgenProject {
                "   final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);\n" +
                "   stArgument.addKeyValues(stArgumentKV);\n" +
                "\n" +
-               "   nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stValue);\n" +
+               "   nextgen.events.STModelChanged.post(stModel);\n" +
                "});"));
 
    final TransactionAction setKVArgumentFromSTModel = write(newTransactionAction()
@@ -1298,7 +1330,7 @@ public class NextgenProject {
                "final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);\n" +
                "stArgument.addKeyValues(stArgumentKV);\n" +
                "\n" +
-               "nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setKVArgumentFromSTValue = write(newTransactionAction()
          .setName("SetKVArgumentFromSTValue")
@@ -1319,7 +1351,7 @@ public class NextgenProject {
                "final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);\n" +
                "stArgument.addKeyValues(stArgumentKV);\n" +
                "\n" +
-               "nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stValue);"));
+               "nextgen.events.STModelChanged.post(stModel);"));
 
    final TransactionAction setMultipleFields = write(newTransactionAction()
          .setName("SetMultipleFields")
@@ -1400,7 +1432,7 @@ public class NextgenProject {
                "      } else if (value.length() != 0) {\n" +
                "         final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
                "         final nextgen.st.model.STArgument newSTArgument = appModel().newSTArgument(stModel, stParameter, stValue);\n" +
-               "         nextgen.events.NewSTArgument.post(newSTArgument, stModel, stParameter, stValue);\n" +
+               "         nextgen.events.STModelChanged.post(stModel);\n" +
                "      }\n" +
                "   }\n" +
                "});"));
@@ -1736,9 +1768,8 @@ public class NextgenProject {
 //                  "actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));"
 //            });
 
-      String modelsNavigatorModelsTreeNode = "ModelsTreeNode";
       final nextgen.templates.nextgen.TreeNode modelsTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorModelsTreeNode)
+            .setName("ModelsTreeNode")
             .setModelType(stringType)
             .setIcon("appModel().loadIcon(\"sq-teal\")")
             .addConstructorStatements("appModel().doInTransaction(transaction -> {\n" +
@@ -1756,9 +1787,8 @@ public class NextgenProject {
                   "	stTemplate.getChildren().forEach(stTemplateChild -> addSTTemplateChild(stTemplateChild, stTemplateTreeNode));\n" +
                   "}");
 
-      String modelsNavigatorSTValueTreeNode = "STValueTreeNode";
       final nextgen.templates.nextgen.TreeNode stValueTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorSTValueTreeNode)
+            .setName("STValueTreeNode")
             .setModelType(stValueType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(\"sq-orange\")")
@@ -1770,9 +1800,8 @@ public class NextgenProject {
                   addToActionsStatement(newAction(deleteSTValue, "getModel()", "tree"))
             });
 
-      String modelsNavigatorRootNode = "RootNode";
       final nextgen.templates.nextgen.TreeNode rootNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorRootNode)
+            .setName("RootNode")
             .setModelType(stringType)
             .setLabelExpression("getModel()")
             .addConstructorStatements("appModel().doInTransaction(transaction -> {\n" +
@@ -1784,9 +1813,8 @@ public class NextgenProject {
                   addToActionsStatement(newAction(undoDBTransaction))
             });
 
-      String modelsNavigatorSTGroupModelTreeNode = "STGroupModelTreeNode";
       final nextgen.templates.nextgen.TreeNode stGroupTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorSTGroupModelTreeNode)
+            .setName("STGroupModelTreeNode")
             .setModelType(stGroupModelType)
             .setHasUuid(true)
             .setIcon("appModel().loadIcon(model.getIcon())")
@@ -1800,14 +1828,14 @@ public class NextgenProject {
                   "	return false;\n" +
                   "}");
 
-      String modelsNavigatorSTTemplateTreeNode = "STTemplateTreeNode";
       final nextgen.templates.nextgen.TreeNode stTemplateTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorSTTemplateTreeNode)
+            .setName("STTemplateTreeNode")
             .setModelType(stTemplateType)
             .setHasUuid(true)
             .setLabelExpression("getModel().getName()")
             .setGetActionsStatements(new Object[]{
-                  addToActionsStatement(newAction(newSTModelAction, "getModel()")),
+                  getParent(stProjectTreeNode, addToActions(newAction(addTemplateModelToProject, "\"New instance\"", "getModel()", "parent.getModel()"))),
+                  getParent(modelsTreeNode, addToActions(newAction(newSTModelAction, "getModel()"))),
                   addToActionsStatement(newAction(editModels, "getModel()"))
             });
 
@@ -1830,9 +1858,8 @@ public class NextgenProject {
             })
             .addSelectionStatements(postEventStatement(modelNavigatorSTModelTreeNodeClicked, "appModel().findSTTemplate(selectedNode.getModel())", "selectedNode.getModel()"));
 
-      String modelsNavigatorSTParameterTreeNode = "STParameterTreeNode";
       final nextgen.templates.nextgen.TreeNode stParameterTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(modelsNavigatorSTParameterTreeNode)
+            .setName("STParameterTreeNode")
             .setModelType(stParameterType)
             .addFields(stModelType, "stModel")
             .setLabelExpression("getModel().getName()")
@@ -1882,13 +1909,24 @@ public class NextgenProject {
                         "      .flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template)))\n" +
                         "      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrder(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));"))
             .addEvents(newSubscribe(newSTProjectSTModel)
-            )
-//            .addMethods(newSTProject)
-//            .addMethods(stArgumentAdded)
-//            .addMethods(stProjectSTModel)
-//            .addMethods(stModelDeleted)
-//            .addMethods(stModelCanvasNodeClicked)
-            ;
+                  .addStatements("findSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.project))\n" +
+                        "      .flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template)))\n" +
+                        "      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrder(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));"))
+            .addEvents(newSubscribe(stModelChanged)
+                  .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))\n" +
+                        "\t\t.ifPresent(treeNode -> {\n" +
+                        "\t\t\ttreeNode.removeAllChildren();\n" +
+                        "\t\t\ttreeNode.stTemplate.getParameters()\n" +
+                        "\t\t\t\t\t.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
+                        "\t\t\t\t\t.forEach(stParameter -> treeNode.add(new STParameterTreeNode(stParameter, event.model)));\n" +
+                        "\t\t\ttreeModel.nodeStructureChanged(treeNode);\n" +
+                        "\t\t});"))
+            .addEvents(newSubscribe(stModelDeleted)
+                  .addStatements("SwingUtilities.invokeLater(() -> findSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));"))
+            .addEvents(newSubscribe(stValueDeleted)
+                  .addStatements("SwingUtilities.invokeLater(() -> findSTValueTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));"))
+            .addEvents(newSubscribe(stGroupDeleted)
+                  .addStatements("SwingUtilities.invokeLater(() -> findSTGroupModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));"));
 
       writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
    }
@@ -1904,15 +1942,29 @@ public class NextgenProject {
             .setIcon("appModel().loadIcon(\"sq-teal\")")
             .setLabelExpression("appModel().tryToFindArgument(getModel(), \"name\", () -> \"[\" + stTemplate.getName() + \"]\")")
             .addSelectionStatements("nextgen.events.ModelEditorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());")
+            .addConstructorStatements("getModel().getFiles()\n" +
+                  "\t\t.forEach(stFile -> add(new nextgen.st.STModelEditorNavigator.STFileSinkTreeNode(stFile)));")
             .addConstructorStatements("stTemplate.getParameters()\n" +
                   "		.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
                   "		.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));")
             .setGetActionsStatements(new Object[]{
+                  addToActionsStatement(newAction(addFileSink, "getModel()", "tree")),
                   addToActionsStatement(newAction(copyModel, "getModel()")),
                   addToActionsStatement(newAction(openSTModelAction, "getModel()")),
                   addToActionsStatement(newAction(visitSTModel, "getModel()")),
                   addToActionsStatement(newAction(writeSTModelToFile, "getModel()")),
                   addToActionsStatement(newAction(editSTModel, "getModel()")),
+            });
+
+      final nextgen.templates.nextgen.TreeNode stFileSinkTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
+            .setName("STFileSinkTreeNode")
+            .setModelType(stFileType)
+            .setHasUuid(true)
+            .setIcon("appModel().loadIcon(\"sq-white\")")
+            .setLabelExpression("appModel().render(getModel().getPath())")
+            .addSelectionStatements(postEventStatement(modelEditorSTFileTreeNodeClicked, "selectedNode.getModel()"))
+            .setGetActionsStatements(new Object[]{
+                  addToActionsStatement(newAction(deleteSTFile, "getModel()", "tree")),
             });
 
       final nextgen.templates.nextgen.TreeNode stKVArgumentTreeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
@@ -2115,6 +2167,7 @@ public class NextgenProject {
             .setBaseTreeNode(nextgen.templates.nextgen.NextgenST.newBaseTreeNode())
             .addConstructorStatements(nextgen.templates.GreenRobotPatterns.newRegister())
             .addTreeNodes(stModelTreeNode)
+            .addTreeNodes(stFileSinkTreeNode)
             .addTreeNodes(stKVArgumentTreeNode)
             .addTreeNodes(stKVTreeNode)
             .addTreeNodes(stParameterTreeNode)
@@ -2124,6 +2177,7 @@ public class NextgenProject {
             .addTreeNodes(stValueKVArgumentTreeNode)
 
             .addTreeNodesSelected(stModelTreeNode.getName())
+            .addTreeNodesSelected(stFileSinkTreeNode.getName())
             .addTreeNodesSelected(stKVArgumentTreeNode.getName())
             .addTreeNodesSelected(stKVTreeNode.getName())
             .addTreeNodesSelected(stParameterTreeNode.getName())
@@ -2136,6 +2190,10 @@ public class NextgenProject {
                   .addStatements(""))
             .addEvents(newSubscribe(modelEditorSTValueTreeNodeClicked)
                   .addStatements(""))
+            .addEvents(newSubscribe(stFileDeleted)
+                  .addStatements("findSTFileSinkTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
+            .addEvents(newSubscribe(newSTFile)
+                  .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel)).ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.st.STModelEditorNavigator.STFileSinkTreeNode(event.stFile)));"))
             .addEvents(newSubscribe(kvDeleted)
                   .addStatements("findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
             .addEvents(newSubscribe(stArgumentDeleted)
@@ -2144,6 +2202,18 @@ public class NextgenProject {
             .addEvents(newSubscribe(stValueDeleted)
                   .addStatements("findSTValueArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);\n" +
                         "findSTValueKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
+            .addEvents(newSubscribe(newSTKVArgument)
+                  .addStatements("findSTParameterTreeNode(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))\n" +
+                        "      .ifPresent(stParameterTreeNode -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new nextgen.st.STModelEditorNavigator.STKVArgumentTreeNode(event.argument, event.parameter)));"))
+            .addEvents(newSubscribe(stModelChanged)
+                  .addStatements("findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))\n" +
+                        "\t\t.ifPresent(treeNode -> {\n" +
+                        "\t\t\ttreeNode.removeAllChildren();\n" +
+                        "\t\t\ttreeNode.stTemplate.getParameters()\n" +
+                        "\t\t\t\t\t.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))\n" +
+                        "\t\t\t\t\t.forEach(stParameter -> treeNode.add(new STParameterTreeNode(stParameter, event.model)));\n" +
+                        "\t\t\ttreeModel.nodeStructureChanged(treeNode);\n" +
+                        "\t\t});"))
             .addEvents(newSubscribe(newSTArgument)
                   .addStatements("findSTParameterTreeNode(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))\n" +
                         "      .ifPresent(stParameterTreeNode -> {\n" +
@@ -3545,6 +3615,7 @@ public class NextgenProject {
    private nextgen.templates.java.Expression postEventExpression(nextgen.templates.greenrobot.Event event, Object... arguments) {
       return postEventExpression(event.getName(), arguments);
    }
+
    private nextgen.templates.java.Expression postEventExpression(String eventName, Object... arguments) {
       final nextgen.templates.java.MethodCallExpression expression = newMethodCallExpression()
             .setScope(newClassOrInterfaceType(eventsPackage, eventName))
@@ -3591,6 +3662,10 @@ public class NextgenProject {
 
    private String getParent(nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.BlockStmt blockStmt) {
       return getParent(null, parent, blockStmt);
+   }
+
+   private String getParent(String parent, nextgen.templates.java.Expression expression) {
+      return getParent(null, parent, expression);
    }
 
    private String getParent(String parent, nextgen.templates.java.BlockStmt blockStmt) {

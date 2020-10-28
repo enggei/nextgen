@@ -29,6 +29,6 @@ public class SetArgumentFromSTValue extends TransactionAction {
 
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
+      nextgen.events.STModelChanged.post(stModel);
    }
 }

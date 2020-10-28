@@ -6,15 +6,13 @@ public class AddFileSink extends TransactionAction {
    private static final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
 
-	public AddFileSink(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STTemplate stTemplate, javax.swing.JComponent owner) {
-      super(name);
-      this.stModel = stModel;
-      this.stTemplate = stTemplate;
-      this.owner = owner;
-   }
+	public AddFileSink(nextgen.st.model.STModel stModel, javax.swing.JComponent owner) {
+		super("Add File Sink");
+		this.stModel = stModel;
+		this.owner = owner;
+	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
@@ -48,7 +46,8 @@ public class AddFileSink extends TransactionAction {
          final String packageName = fieldMap.get("package").getText().trim();
          final nextgen.st.model.STFile stFile = appModel().newSTFile(name, type, path, packageName);
          stModel.addFiles(stFile);
-         //nextgen.events.NewFileSink.post(stModel, stFile);
+         nextgen.events.NewFileSink.post(stModel, stFile);
+         javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
 }

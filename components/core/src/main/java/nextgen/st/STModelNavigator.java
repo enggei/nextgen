@@ -127,6 +127,40 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProjectSTModel(nextgen.events.NewSTProjectSTModel event) {
 		System.out.println("NewSTProjectSTModel");
+		findSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.project))
+		      .flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template)))
+		      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrder(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelChanged(nextgen.events.STModelChanged event) {
+		System.out.println("STModelChanged");
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+				.ifPresent(treeNode -> {
+					treeNode.removeAllChildren();
+					treeNode.stTemplate.getParameters()
+							.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+							.forEach(stParameter -> treeNode.add(new STParameterTreeNode(stParameter, event.model)));
+					treeModel.nodeStructureChanged(treeNode);
+				});
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
+		System.out.println("STModelDeleted");
+		SwingUtilities.invokeLater(() -> findSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTValueDeleted(nextgen.events.STValueDeleted event) {
+		System.out.println("STValueDeleted");
+		SwingUtilities.invokeLater(() -> findSTValueTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
+		System.out.println("STGroupDeleted");
+		SwingUtilities.invokeLater(() -> findSTGroupModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -571,7 +605,8 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.NewSTModel(getModel()));
+				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
+				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModel(getModel())));
 				actions.add(new nextgen.actions.EditModels(getModel()));
 			});
 

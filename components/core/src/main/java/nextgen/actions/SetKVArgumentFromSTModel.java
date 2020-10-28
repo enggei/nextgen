@@ -32,6 +32,6 @@ public class SetKVArgumentFromSTModel extends TransactionAction {
       final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
 
-      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stValue);
+      nextgen.events.STModelChanged.post(stModel);
    }
 }

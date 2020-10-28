@@ -28,6 +28,6 @@ public class SetArgumentToTrue extends TransactionAction {
       final nextgen.st.model.STValue stValue = appModel().db.newSTValue("true");
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+      nextgen.events.STModelChanged.post(stModel);
    }
 }

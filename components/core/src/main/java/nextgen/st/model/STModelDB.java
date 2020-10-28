@@ -174,8 +174,7 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    private STTemplate findSTTemplateByUuid(STGroupModel groupModel, String stTemplateUuid) {
-      final Iterator<STTemplate> iterator = groupModel.getTemplates()
-            .iterator();
+      final Iterator<STTemplate> iterator = groupModel.getTemplates().iterator();
       while (iterator.hasNext()) {
          final STTemplate stTemplate = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
          if (stTemplate != null) return stTemplate;
@@ -224,8 +223,7 @@ public class STModelDB extends STModelNeoFactory {
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
       return newSTFile()
-            .setUuid(UUID.randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setName(newSTValue(name))
             .setType(findOrCreateSTValueByValue(type))
             .setPath(newSTValue(path))
@@ -234,8 +232,7 @@ public class STModelDB extends STModelNeoFactory {
 
    public STProject newSTProject(String name) {
       return newSTProject()
-            .setUuid(java.util.UUID.randomUUID()
-                  .toString())
+            .setUuid(java.util.UUID.randomUUID().toString())
             .setName(name);
    }
 
@@ -278,26 +275,21 @@ public class STModelDB extends STModelNeoFactory {
 
    public STValue newSTValue(STEnumValue stEnumValue) {
       return newSTValue()
-            .setUuid(java.util.UUID.randomUUID()
-                  .toString())
+            .setUuid(java.util.UUID.randomUUID().toString())
             .setType(ENUM)
-            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical()
-                  .trim()
-                  .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
+            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical().trim().length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
    }
 
    public STArgumentKV newSTArgumentKV(STParameterKey key, STValue stValue) {
       return newSTArgumentKV()
-            .setUuid(UUID.randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setStParameterKey(key.getUuid())
             .setValue(stValue);
    }
 
    private STArgument newSTArgument(STParameter stParameter) {
       return newSTArgument()
-            .setUuid(UUID.randomUUID()
-                  .toString())
+            .setUuid(UUID.randomUUID().toString())
             .setStParameter(stParameter.getUuid());
    }
 
