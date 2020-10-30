@@ -545,7 +545,7 @@
       "children" : [ {
         "uuid" : "94c5783c-3daa-493b-aedb-10461d47068f",
         "name" : "SingleAccessors",
-        "text" : "public ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(String value) {\n\treturn set~name;format=\"capitalize\"~(db.newSTValue(value));\n}\n\npublic ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(STValue value) {\n\treturn set(value, \"~name~\");\n}\n\npublic STValue get~name;format=\"capitalize\"~() {\n\treturn get(\"~name~\");\n}\n\npublic STArgument get~name;format=\"capitalize\"~Argument() {\n\treturn getArgument(\"~name~\");\n}\n\npublic ~entity;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\treturn removeArgument(\"~name~\");\n} ",
+        "text" : "public ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(String value) {\n\tif (value == null) return this;\n\treturn set~name;format=\"capitalize\"~(db.newSTValue(value));\n}\n\npublic ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(STValue value) {\n\tif (value == null) return this;\n\treturn set(value, \"~name~\");\n}\n\npublic STValue get~name;format=\"capitalize\"~() {\n\treturn get(\"~name~\");\n}\n\npublic STArgument get~name;format=\"capitalize\"~Argument() {\n\treturn getArgument(\"~name~\");\n}\n\npublic ~entity;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\treturn removeArgument(\"~name~\");\n} ",
         "parameters" : [ {
           "uuid" : "9d0a3055-11f9-4a76-b556-80b78db2744d",
           "name" : "entity",
@@ -596,6 +596,26 @@
             "name" : "name",
             "argumentType" : "Object"
           } ]
+        } ]
+      }, {
+        "uuid" : "35852797-0dd5-497f-8b9c-e7933ee0efcc",
+        "name" : "SingleEntityMapper",
+        "text" : "set~name;format=\"capitalize\"~(template.get~name;format=\"capitalize\"~()); ",
+        "parameters" : [ {
+          "uuid" : "f1a0f285-e4db-41c2-b763-b0cd42789726",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "7f58406f-ab64-42df-9ef5-4a848afff58e",
+        "name" : "ListEntityMapper",
+        "text" : "template.get~name;format=\"capitalize\"~().forEach(element -> add~name;format=\"capitalize\"~()); ",
+        "parameters" : [ {
+          "uuid" : "db65793a-e4a3-49f9-a109-d4f78c4fb06e",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
         } ]
       } ]
     }, {

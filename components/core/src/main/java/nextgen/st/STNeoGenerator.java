@@ -41,6 +41,8 @@ public class STNeoGenerator {
             .setStGroupModel(groupModelUuid)
             .setStTemplate(stTemplate.getUuid());
 
+      //entityClass.setEntity(StringUtil.capitalize(stTemplate.getName()));
+
       stTemplate.getParameters().forEach(stParameter -> {
          switch (stParameter.getType()) {
             case SINGLE:

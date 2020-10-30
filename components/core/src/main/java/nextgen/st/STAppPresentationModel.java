@@ -167,10 +167,12 @@ public class STAppPresentationModel {
          parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
       }
    }
+
    public void delete(nextgen.st.domain.STGroupModel stGroup) {
       stGroups.remove(stGroup);
       deleteSTGFile(stGroup.getName());
    }
+
    public <T> T getInTransaction(java.util.function.Function<org.neo4j.graphdb.Transaction, T> action) {
       return db.getInTransaction(action);
    }
@@ -456,16 +458,9 @@ public class STAppPresentationModel {
 
    public boolean sameArgumentValue(STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue model) {
       final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
-      stModel
-            .getArguments()
-            .filter(existing -> existing
-                  .getStParameter()
-                  .equals(stParameter.getUuid()))
+      stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.getUuid()))
             .forEach(existing -> {
-               if (existing.getValue() != null && existing
-                     .getValue()
-                     .getUuid()
-                     .equals(model.getUuid()))
+               if (existing.getValue() != null && existing.getValue().getUuid().equals(model.getUuid()))
                   exists.set(true);
             });
       return exists.get();
@@ -474,23 +469,13 @@ public class STAppPresentationModel {
    public void save(STGroupModel stGroupModel) {
       final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
-      if (parseResult
-            .getErrors()
-            .count() == 0) {
-         final File file = new File(new File(AppModel
-               .getInstance()
-               .getTemplateDir()), stGroupModel.getName() + ".json");
+      if (parseResult.getErrors().count() == 0) {
+         final File file = new File(new File(AppModel.getInstance().getTemplateDir()), stGroupModel.getName() + ".json");
          log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-         STGenerator.write(file, stGroupModel
-               .getJsonObject()
-               .encodePrettily());
+         STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
-         parseResult
-               .getErrors()
-               .forEach(stgError -> log
-                     .error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError
-                           .getLine()));
+         parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
       }
    }
 
@@ -692,7 +677,6 @@ public class STAppPresentationModel {
    }
 
    public String[] getSelectedValues() {
-
 
 
       return new String[0];

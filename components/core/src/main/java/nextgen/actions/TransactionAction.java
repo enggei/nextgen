@@ -63,6 +63,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       return newTextField("", columns, options, 0);
    }
 
+   protected javax.swing.JTextField newTextField(String text, int columns, java.util.List<String> options, int startIndex) {
+      return newTextField(text, columns, options.toArray(new String[options.size()]), startIndex);
+   }
+
    protected javax.swing.JTextField newTextField(String text, int columns, String[] options, int startIndex) {
       final javax.swing.JTextField textField = new javax.swing.JTextField(text, columns);
 

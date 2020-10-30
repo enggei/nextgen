@@ -20,13 +20,11 @@ public class STModelEditor extends JPanel {
       this.uuid = stModel.getUuid();
       setBackground(UIManager.getColor("Panel.background"));
 
-      final STModelEditorNavigator stModelNavigator = new STModelEditorNavigator(stModel, this);
       final javax.swing.JTabbedPane editors = new javax.swing.JTabbedPane();
       editors.add("Editor", txtEditor);
       editors.add("Values", editorGrid);
       editors.add("Form", formComponent);
       add(editors, BorderLayout.CENTER);
-      add(stModelNavigator, BorderLayout.EAST);
 
       txtEditor.setStModel(stModel);
       formComponent.setModel(stModel);
@@ -39,25 +37,18 @@ public class STModelEditor extends JPanel {
    }
 
    @org.greenrobot.eventbus.Subscribe()
-   public void onSTModelEditorTreeNodeClicked(nextgen.events.ModelEditorSTModelTreeNodeClicked event) {
+   public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
       txtEditor.setStModel(event.stModel);
       formComponent.setModel(event.stModel);
       editorGrid.setModel(event.stModel);
    }
 
    @org.greenrobot.eventbus.Subscribe()
-   public void onSTValueEditorTreeNodeClicked(nextgen.events.ModelEditorSTValueTreeNodeClicked event) {
+   public void onModelNavigatorSTValueTreeNodeClicked(nextgen.events.ModelNavigatorSTValueTreeNodeClicked event) {
       txtEditor.setSTValue(event.stValue);
       formComponent.reset();
       editorGrid.reset();
    }
-
-//   @org.greenrobot.eventbus.Subscribe()
-//   public void onSTParameterEditorTreeNodeClicked(nextgen.events.STParameterEditorTreeNodeClicked event) {
-//      txtEditor.setStModel(event.stModel);
-//      formComponent.setModel(event.stModel);
-//      editorGrid.setModel(event.stModel);
-//   }
 
    public STModel getModel() {
       return stModel;

@@ -84,10 +84,12 @@ public class SingleAccessors {
 	}
 
 	static final String st = "SingleAccessors(entity,name) ::= <<public ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(String value) {\n" + 
+				"	if (value == null) return this;\n" + 
 				"	return set~name;format=\"capitalize\"~(db.newSTValue(value));\n" + 
 				"}\n" + 
 				"\n" + 
 				"public ~entity;format=\"capitalize\"~ set~name;format=\"capitalize\"~(STValue value) {\n" + 
+				"	if (value == null) return this;\n" + 
 				"	return set(value, \"~name~\");\n" + 
 				"}\n" + 
 				"\n" + 

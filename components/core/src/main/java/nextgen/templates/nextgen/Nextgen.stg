@@ -2431,7 +2431,6 @@ public class ~name~ extends TransactionAction {
 
 TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
 
-import nextgen.utils.SwingUtil;
 ~imports:{it|~it~;};separator="\n"~
 
 import javax.swing.*;
@@ -2443,8 +2442,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class ~name~ extends JPanel {
-
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
 
 	private final JTree tree = new JTree();
 	private final ~name~TreeModel treeModel;
@@ -2861,6 +2858,10 @@ public class ~name~ extends BaseTreeNode<~modelType~> {
 
 private boolean is~name;format="capitalize"~(Object treeNode) {
 	return treeNode instanceof ~name~;
+}
+
+private Optional<~name~> find~name;format="capitalize"~() {
+	return treeModel.find(~name~.class, treeNode -> true);
 }
 
 private Optional<~name~> find~name;format="capitalize"~(java.util.function.Predicate<~name~> predicate) {

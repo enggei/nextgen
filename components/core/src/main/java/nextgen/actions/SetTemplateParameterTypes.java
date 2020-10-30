@@ -65,6 +65,7 @@ public class SetTemplateParameterTypes extends TransactionAction {
       		}
       	});
 
+      	appModel().save(stGroup);
       	nextgen.events.STTemplateParameterTypesChanged.post(stGroup, stTemplate);
       	javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });

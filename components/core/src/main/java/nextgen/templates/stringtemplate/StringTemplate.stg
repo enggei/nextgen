@@ -269,10 +269,12 @@ public class ~name;format="capitalize"~ {
 }  >>
 
 SingleAccessors(entity,name) ::= <<public ~entity;format="capitalize"~ set~name;format="capitalize"~(String value) {
+	if (value == null) return this;
 	return set~name;format="capitalize"~(db.newSTValue(value));
 }
 
 public ~entity;format="capitalize"~ set~name;format="capitalize"~(STValue value) {
+	if (value == null) return this;
 	return set(value, "~name~");
 }
 
@@ -380,6 +382,10 @@ public final class ~entity;format="capitalize"~_~name;format="capitalize"~ {
 		return value.get();
 	}
 }  >>
+
+SingleEntityMapper(name) ::= <<set~name;format="capitalize"~(template.get~name;format="capitalize"~());  >>
+
+ListEntityMapper(name) ::= <<template.get~name;format="capitalize"~().forEach(element -> add~name;format="capitalize"~());  >>
 
 FindBy(entity,name) ::= <<public Optional<~entity;format="capitalize"~> find~entity;format="capitalize"~By~name;format="capitalize"~(STValue value) {
 	return value == null ? Optional.empty() : Optional.ofNullable(db.find("~name~", value, ~entity;format="capitalize"~.stTemplateUuid, ~entity;format="capitalize"~::new));

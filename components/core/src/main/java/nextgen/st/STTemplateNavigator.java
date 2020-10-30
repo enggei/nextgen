@@ -552,6 +552,7 @@ public class STTemplateNavigator extends JPanel {
 				final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
 				actions.add(new nextgen.actions.NewSTModel(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
+					actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
 					actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));
 					if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, tree));
 					appModel().getProjects().forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));

@@ -302,25 +302,18 @@ public class STModelDB extends STModelNeoFactory {
 
    public void deleteUnnusedFiles() {
       findAllSTFile().forEach(stFile -> {
-         if (stFile.getIncomingFilesSTModel()
-               .iterator()
-               .hasNext()) return;
+         if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
          log.info("deleting unnused stFile-" + stFile.getUuid());
          log.info(Neo4JUtil.toString(stFile.getNode()));
-         stFile.getNode()
-               .getRelationships()
-               .forEach(Relationship::delete);
-         stFile.getNode()
-               .delete();
+         stFile.getNode().getRelationships().forEach(Relationship::delete);
+         stFile.getNode().delete();
       });
    }
 
    public void deleteUnnusedNodes() {
       getDatabaseService().getAllNodes()
             .forEach(node -> {
-               if (node.getRelationships()
-                     .iterator()
-                     .hasNext()) return;
+               if (node.getRelationships().iterator().hasNext()) return;
                if (isSTProject(node)) return;
                log.info("deleting unnused node");
                log.info(Neo4JUtil.toString(node));
@@ -335,7 +328,6 @@ public class STModelDB extends STModelNeoFactory {
    public STModel clone(STModel stModel) {
 
       final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
-
       final STModel clone = newSTModel(stModel.getStGroup(), stTemplate);
 
       // ensure cloned-arguments are in same order as stModel-arguments:
@@ -343,9 +335,7 @@ public class STModelDB extends STModelNeoFactory {
             .getArgumentsSorted()
             .forEach(stArgument -> stTemplate
                   .getParameters()
-                  .filter(stParameter -> stArgument
-                        .getStParameter()
-                        .equals(stParameter.getUuid()))
+                  .filter(stParameter -> stArgument.getStParameter().equals(stParameter.getUuid()))
                   .findFirst()
                   .ifPresent(stParameter -> {
                      switch (stParameter.getType()) {
@@ -359,9 +349,7 @@ public class STModelDB extends STModelNeoFactory {
                                  .getKeys()
                                  .forEach(stParameterKey -> stArgument
                                        .getKeyValues()
-                                       .filter(stArgumentKV -> stArgumentKV
-                                             .getStParameterKey()
-                                             .equals(stParameterKey.getUuid()))
+                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
                                        .findAny()
                                        .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue()))));
                            clone.addArguments(newSTArgument(stParameter, kvs));

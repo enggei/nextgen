@@ -568,6 +568,10 @@ public class TreeNode {
 				"	return treeNode instanceof ~name~;\n" + 
 				"}\n" + 
 				"\n" + 
+				"private Optional<~name~> find~name;format=\"capitalize\"~() {\n" + 
+				"	return treeModel.find(~name~.class, treeNode -> true);\n" + 
+				"}\n" + 
+				"\n" + 
 				"private Optional<~name~> find~name;format=\"capitalize\"~(java.util.function.Predicate<~name~> predicate) {\n" + 
 				"	return treeModel.find(~name~.class, predicate);\n" + 
 				"}\n" + 

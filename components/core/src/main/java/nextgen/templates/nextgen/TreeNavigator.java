@@ -484,7 +484,6 @@ public class TreeNavigator {
 
 	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import nextgen.utils.SwingUtil;\n" + 
 				"~imports:{it|~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
@@ -496,8 +495,6 @@ public class TreeNavigator {
 				"import java.util.function.Consumer;\n" + 
 				"\n" + 
 				"public class ~name~ extends JPanel {\n" + 
-				"\n" + 
-				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 				"\n" + 
 				"	private final JTree tree = new JTree();\n" + 
 				"	private final ~name~TreeModel treeModel;\n" + 
