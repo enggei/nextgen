@@ -5,13 +5,13 @@ public class SetArgumentFromSTValue extends TransactionAction {
 
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.domain.STParameter stParameter;
-   private final nextgen.st.model.STValue value;
+   private final nextgen.st.model.STValue stValue;
 
-	public SetArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
+	public SetArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue stValue) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;
-      this.value = value;
+      this.stValue = stValue;
    }
 
    @Override
@@ -27,8 +27,8 @@ public class SetArgumentFromSTValue extends TransactionAction {
                nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, value);
+      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
-      nextgen.events.STModelChanged.post(stModel);
+      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }
 }

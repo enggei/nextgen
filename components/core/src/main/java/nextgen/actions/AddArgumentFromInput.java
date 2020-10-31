@@ -20,7 +20,7 @@ public class AddArgumentFromInput extends TransactionAction {
          final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);
          final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
          stModel.addArguments(stArgument);
-         nextgen.events.STModelChanged.post(stModel);
+         nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
       });
    }
 }

@@ -30,6 +30,6 @@ public class SetKVArgumentFromClipboard extends TransactionAction {
       final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
 
-      nextgen.events.STModelChanged.post(stModel);
+      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
    }
 }

@@ -130,6 +130,36 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTArgument(nextgen.events.NewSTArgument event) {
+		System.out.println("NewSTArgument");
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+		      .flatMap(treeNode -> findSTParameterTreeNode(treeNode, stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter)))
+		      .ifPresent(stParameterTreeNode -> appModel().stArgumentConsumer(event.parameter)
+		            .onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
+		            .onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+		            .onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
+		            .onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+		            .onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.st.STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter))));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
+		System.out.println("NewSTKVArgument");
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+				.flatMap(treeNode -> findSTParameterTreeNode(treeNode, stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.stParameter)))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.st.STModelNavigator.STKVArgumentTreeNode(event.argument, event.stParameter)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewKV(nextgen.events.NewKV event) {
+		System.out.println("NewKV");
+		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.argument.getUuid()))
+		      .ifPresent(treeNode -> {
+		         treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.st.STModelNavigator.STKVTreeNode(event.kv, treeNode.getModel(), event.stParameterKey));
+		      });
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTModel(nextgen.events.NewSTModel event) {
 		System.out.println("NewSTModel");
 		findModelsTreeNode()
@@ -143,7 +173,7 @@ public class STModelNavigator extends JPanel {
 		System.out.println("NewSTProjectSTModel");
 		findSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.project))
 		      .flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template)))
-		      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrder(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));
+		      .ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new nextgen.st.STModelNavigator.STModelTreeNode(event.model, event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -196,7 +226,9 @@ public class STModelNavigator extends JPanel {
 	public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
 		System.out.println("STArgumentDeleted");
 		findSTValueArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 		findSTModelArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -1067,6 +1099,8 @@ public class STModelNavigator extends JPanel {
 
 	// STKVArgumentTreeNode
 	public class STKVArgumentTreeNode extends BaseTreeNode<nextgen.st.model.STArgument> {
+
+		private String uuid;
 		private nextgen.st.domain.STParameter stParameter;
 
 		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
@@ -1076,6 +1110,7 @@ public class STModelNavigator extends JPanel {
 
 			setLabel(appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
+			this.uuid = model.getUuid();
 
 			stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()
 					.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
@@ -1099,6 +1134,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.DeleteSTArgument(getModel(), tree));
 			});
 
 			return actions;
@@ -1314,7 +1350,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, tree));
+				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteKV(parent.getModel(), tree)));
 			});
 
 			return actions;
