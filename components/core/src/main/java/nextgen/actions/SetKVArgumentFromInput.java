@@ -18,9 +18,6 @@ public class SetKVArgumentFromInput extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("SetKVArgumentFromInput");
-      System.out.println("SetKVArgumentFromInput");
-      System.out.println("SetKVArgumentFromInput");
       input(owner, stParameterKey.getName(), inputValue -> {
          stArgument.getKeyValues()
                .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))

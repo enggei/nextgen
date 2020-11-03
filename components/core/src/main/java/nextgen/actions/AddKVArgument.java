@@ -16,9 +16,6 @@ public class AddKVArgument extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("AddKVArgument");
-      System.out.println("AddKVArgument");
-      System.out.println("AddKVArgument");
       final String[] selectedValues = appModel().getSelectedValues();
       final java.util.Map<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
       stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40, selectedValues)));

@@ -16,9 +16,6 @@ public class RenameSTTemplate extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("RenameSTTemplate");
-      System.out.println("RenameSTTemplate");
-      System.out.println("RenameSTTemplate");
       input(owner, "Name", stTemplate.getName(), s -> {
          nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
             stTemplate.setName(name);

@@ -14,9 +14,6 @@ public class DeleteSTFileFromSTModels extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("DeleteSTFileFromSTModels");
-      System.out.println("DeleteSTFileFromSTModels");
-      System.out.println("DeleteSTFileFromSTModels");
       confirm(owner, "Delete", unused -> {
          for (nextgen.st.model.STModel stModel : stModels) {
             stModel.getFiles().forEach(stFile -> {

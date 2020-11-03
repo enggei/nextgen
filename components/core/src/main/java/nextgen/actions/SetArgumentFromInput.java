@@ -16,9 +16,6 @@ public class SetArgumentFromInput extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("SetArgumentFromInput");
-      System.out.println("SetArgumentFromInput");
-      System.out.println("SetArgumentFromInput");
       input(owner, stParameter.getName(), inputValue -> {
          stModel.getArguments()
                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))

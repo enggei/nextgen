@@ -2621,8 +2621,7 @@ public class NextgenProject {
                   stModel.addArguments(db.newSTArgument(stParameter, kvs));
                });
             } else if (stParameter.getName().toLowerCase().equals("statements")) {
-//               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue("System.out.println(\"" + action.getName() + "\");")));
-               action.getStatements().stream().filter(o -> !o.toString().trim().startsWith("System.out.println(\"")).forEach(o -> stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(o.toString()))));
+               action.getStatements().stream().forEach(o -> stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(o.toString()))));
             } else {
                System.out.println(stParameter.getName());
             }

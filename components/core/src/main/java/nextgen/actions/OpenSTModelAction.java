@@ -12,9 +12,6 @@ public class OpenSTModelAction extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("OpenSTModelAction");
-      System.out.println("OpenSTModelAction");
-      System.out.println("OpenSTModel");
       nextgen.events.OpenSTModel.post(stModel);
    }
 }

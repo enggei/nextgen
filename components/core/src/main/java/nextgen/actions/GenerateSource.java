@@ -12,9 +12,6 @@ public class GenerateSource extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("GenerateSource");
-      System.out.println("GenerateSource");
-      System.out.println("GenerateSource");
       final java.util.Set<String> imports = new java.util.LinkedHashSet<>();
 
       final String packageName = appModel().getSourceOutputPackage();

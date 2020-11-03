@@ -16,9 +16,6 @@ public class AddArgumentFromSTModelUuid extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("AddArgumentFromSTModelUuid");
-      System.out.println("AddArgumentFromSTModelUuid");
-      System.out.println("AddArgumentFromSTModelUuid");
       final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));
       final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);

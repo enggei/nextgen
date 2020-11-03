@@ -16,9 +16,6 @@ public class SetArgumentFromSTTemplate extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("SetArgumentFromSTTemplate");
-      System.out.println("SetArgumentFromSTTemplate");
-      System.out.println("SetArgumentFromSTTemplate");
       stModel.getArguments()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
             .findAny()

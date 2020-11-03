@@ -12,9 +12,6 @@ public class NewSTGroupAction extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      System.out.println("NewSTGroupAction");
-      System.out.println("NewSTGroupAction");
-      System.out.println("NewSTGroup");
       input(owner, "Name", name -> {
       	
       	final java.util.Optional<nextgen.st.domain.STGroupModel> existing = appModel().findSTGroup(name);
