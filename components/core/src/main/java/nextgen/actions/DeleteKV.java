@@ -15,6 +15,8 @@ public class DeleteKV extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("DeleteKV");
+      System.out.println("DeleteKV");
+      System.out.println("DeleteKV");
       confirm(owner, "Delete", unused ->
             argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> {
                stArgument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> {

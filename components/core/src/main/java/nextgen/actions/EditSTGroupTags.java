@@ -15,6 +15,8 @@ public class EditSTGroupTags extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("EditSTGroupTags");
+      System.out.println("EditSTGroupTags");
+      System.out.println("EditSTGroupTags");
       input(owner, "Tags", stGroup.getTags(""), tags -> {
          stGroup.setTags(tags);
          nextgen.events.STGroupTagsChanged.post(stGroup);

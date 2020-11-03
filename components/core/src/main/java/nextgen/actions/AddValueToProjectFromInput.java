@@ -15,6 +15,8 @@ public class AddValueToProjectFromInput extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("AddValueToProjectFromInput");
+      System.out.println("AddValueToProjectFromInput");
+      System.out.println("AddValueToProjectFromInput");
       input(owner, "New Value", value -> {
          final nextgen.st.model.STValue stValue = appModel().newSTValue(value);
          project.addValues(stValue);

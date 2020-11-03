@@ -15,6 +15,8 @@ public class SetArgumentFromClipboard extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("SetArgumentFromClipboard");
+      System.out.println("SetArgumentFromClipboard");
+      System.out.println("SetArgumentFromClipboard");
       stModel.getArguments()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
             .findAny()

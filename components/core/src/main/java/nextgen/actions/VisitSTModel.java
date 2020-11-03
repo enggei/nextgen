@@ -13,6 +13,8 @@ public class VisitSTModel extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("VisitSTModel");
+      System.out.println("VisitSTModel");
+      System.out.println("VisitSTModel");
       new nextgen.st.STVisitorTest(appModel()).visit(stModel);
    }
 }

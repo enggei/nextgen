@@ -15,6 +15,8 @@ public class ImportSTTemplate extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       System.out.println("ImportSTTemplate");
+      System.out.println("ImportSTTemplate");
+      System.out.println("ImportSTTemplate");
       openFile(owner, file -> {
       	appModel().setLastDir(file.getParentFile());
       	appModel().doLaterInTransaction(t -> {

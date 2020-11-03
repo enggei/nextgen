@@ -12,6 +12,8 @@ public class NewSTModelAction extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("NewSTModelAction");
+      System.out.println("NewSTModelAction");
       System.out.println("NewSTModel");
       final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);
       nextgen.events.NewSTModel.post(stModel, appModel().findSTGroup(stTemplate), stTemplate);
