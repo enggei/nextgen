@@ -368,7 +368,7 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.NewSTGroup(tree));
+				actions.add(new nextgen.actions.NewSTGroupAction(tree));
 				actions.add(new nextgen.actions.GenerateAllSTGroups());
 			});
 
@@ -573,7 +573,7 @@ public class STTemplateNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				final java.util.Set<STTemplate> candidateChildren = getSelectedTemplates();
 				final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
-				actions.add(new nextgen.actions.NewSTModel(getModel()));
+				actions.add(new nextgen.actions.NewSTModelAction(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
 					actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
 					actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));

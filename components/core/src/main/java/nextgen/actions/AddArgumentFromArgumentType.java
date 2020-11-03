@@ -16,6 +16,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("AddArgumentFromArgumentType");
       final String argumentType = stParameter.getArgumentType();
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {

@@ -12,6 +12,7 @@ public class STValueToClipboard extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("STValueToClipboard");
       nextgen.utils.SwingUtil.toClipboard(appModel().render(stValue));
    }
 }

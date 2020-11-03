@@ -14,6 +14,7 @@ public class AddInterface extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("AddInterface");
       final javax.swing.JTextField txtImplements = newTextField();
       final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 1));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));

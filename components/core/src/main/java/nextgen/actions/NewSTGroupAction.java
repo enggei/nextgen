@@ -1,17 +1,18 @@
 package nextgen.actions;
 
-public class NewSTGroup extends TransactionAction {
+public class NewSTGroupAction extends TransactionAction {
 
 
    private final javax.swing.JComponent owner;
 
-	public NewSTGroup(javax.swing.JComponent owner) {
+	public NewSTGroupAction(javax.swing.JComponent owner) {
 		super("New STGroup");
 		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("NewSTGroup");
       input(owner, "Name", name -> {
       	
       	final java.util.Optional<nextgen.st.domain.STGroupModel> existing = appModel().findSTGroup(name);

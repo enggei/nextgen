@@ -10,6 +10,7 @@ public class GenerateAllSTGroups extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("GenerateAllSTGroups");
       appModel().getSTGroups().forEach(stGroupModel -> appModel().generateSTGroup(stGroupModel, false));
    }
 }

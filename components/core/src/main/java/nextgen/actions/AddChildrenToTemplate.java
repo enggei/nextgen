@@ -18,6 +18,7 @@ public class AddChildrenToTemplate extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("AddChildrenToTemplate");
       confirm(owner, "Sure to move", unused -> {
          appModel().aggregateTemplates(stGroup).forEach(stGroupTemplate -> {
             for (nextgen.st.domain.STTemplate child : children) {

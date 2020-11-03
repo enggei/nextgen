@@ -734,7 +734,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
-				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModel(getModel())));
+				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModelAction(getModel())));
 				actions.add(new nextgen.actions.EditModels(getModel()));
 				final java.util.List<nextgen.st.model.STModel> stModels = getChildren(nextgen.st.STModelNavigator.STModelTreeNode.class)
 										.map(nextgen.st.STModelNavigator.BaseTreeNode::getModel)
@@ -815,7 +815,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.AddFileSink(getModel(), tree));
 				actions.add(new nextgen.actions.GenerateSource(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
-				actions.add(new nextgen.actions.OpenSTModel(getModel()));
+				actions.add(new nextgen.actions.OpenSTModelAction(getModel()));
 				actions.add(new nextgen.actions.VisitSTModel(getModel()));
 				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
 				actions.add(new nextgen.actions.EditSTModel(getModel()));

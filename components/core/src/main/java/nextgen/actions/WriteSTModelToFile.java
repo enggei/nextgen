@@ -12,6 +12,7 @@ public class WriteSTModelToFile extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("WriteSTModelToFile");
       stModel.getFiles().forEach(stFile -> {
          final String content = appModel().render(stModel);
          final String packageDeclaration = stFile.getPackageName().getValue();

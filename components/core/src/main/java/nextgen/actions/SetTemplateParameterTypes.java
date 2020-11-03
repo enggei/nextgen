@@ -16,6 +16,7 @@ public class SetTemplateParameterTypes extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("SetTemplateParameterTypes");
       final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();
       stTemplate.getParameters().forEach(stParameter -> {
 

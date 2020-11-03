@@ -14,6 +14,7 @@ public class NewInterface extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("NewInterface");
       input(owner, "New Interface", s ->
             nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
                final nextgen.st.domain.STInterface stInterface = appModel().newSTInterface(name);

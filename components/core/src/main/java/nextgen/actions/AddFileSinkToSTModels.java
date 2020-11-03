@@ -18,6 +18,7 @@ public class AddFileSinkToSTModels extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+      System.out.println("AddFileSinkToSTModels");
       final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
 
       final String[] pathTypes = appModel().db.findAllSTFile()
