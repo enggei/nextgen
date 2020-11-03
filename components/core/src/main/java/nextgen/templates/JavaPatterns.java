@@ -4,6 +4,18 @@ import nextgen.templates.java.*;
 
 public class JavaPatterns extends JavaST {
 
+   public static nextgen.templates.java.MethodDeclaration newMainMethod() {
+      return nextgen.templates.JavaPatterns.newMethodDeclaration()
+            .addModifiers("public")
+            .addModifiers("static")
+            .setName("main")
+            .addParameters(nextgen.templates.JavaPatterns.newParameter()
+                  .setType(nextgen.templates.JavaPatterns.newClassOrInterfaceType()
+                        .addNames("String")
+                        .setIsArrayType(true))
+                  .setName("args"));
+   }
+
    public static PackageDeclaration newPackageDeclaration(String packageName) {
       return newPackageDeclaration().setName(packageName);
    }
@@ -135,5 +147,11 @@ public class JavaPatterns extends JavaST {
       for (Object statement : statements)
          blockStmt.addStatements(statement);
       return blockStmt;
+   }
+
+   public static nextgen.templates.java.CompilationUnit newCompilationUnit(String packageName, nextgen.templates.java.ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
+      return newCompilationUnit()
+            .setPackageDeclaration(nextgen.templates.JavaPatterns.newPackageDeclaration(packageName))
+            .addTypes(classOrInterfaceDeclaration);
    }
 }

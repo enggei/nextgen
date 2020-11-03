@@ -627,12 +627,12 @@ public class TreeNavigator {
 				"				.map(treePath -> (T) treePath.getLastPathComponent());\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public <T> java.util.stream.Stream<T> getSelectedNodes() {\n" + 
+				"	public java.util.stream.Stream<BaseTreeNode> getSelectedNodes() {\n" + 
 				"		final TreePath[] selectionPaths = tree.getSelectionPaths();\n" + 
 				"		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();\n" + 
 				"		return Arrays.stream(selectionPaths)\n" + 
 				"				.filter(treePath -> treePath.getLastPathComponent() != null)\n" + 
-				"				.map(treePath -> (T) treePath.getLastPathComponent());\n" + 
+				"				.map(treePath -> (BaseTreeNode) treePath.getLastPathComponent());\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private STAppPresentationModel appModel() {\n" + 

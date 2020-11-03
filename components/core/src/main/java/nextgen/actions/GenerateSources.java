@@ -1,13 +1,15 @@
 package nextgen.actions;
 
-public class GenerateSource extends TransactionAction {
+public class GenerateSources extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
+   private final nextgen.st.domain.STTemplate stTemplate;
+   private final java.util.List<nextgen.st.model.STModel> stModels;
 
-	public GenerateSource(nextgen.st.model.STModel stModel) {
+	public GenerateSources(nextgen.st.domain.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels) {
 		super("As builder code");
-		this.stModel = stModel;
+		this.stTemplate = stTemplate;
+		this.stModels = stModels;
 	}
 
    @Override
@@ -15,14 +17,20 @@ public class GenerateSource extends TransactionAction {
       final java.util.Set<String> imports = new java.util.LinkedHashSet<>();
 
       final String packageName = appModel().getSourceOutputPackage();
-      final String templateName = appModel().getSTTemplate(stModel).getName();
-      final String className = appModel().getSTModelName(stModel, templateName);
-      final String variableName = nextgen.utils.StringUtil.lowFirst(templateName);
+      final String className = "GenerateAll_" + stTemplate.getName();
 
       final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.JavaPatterns.newBlockStmt();
-      final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.JavaPatterns
-            .newFinalVariableDeclarationExpression(templateName, variableName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
-      blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt().setExpression(variableDeclarationExpression));
+      final java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
+      for (nextgen.st.model.STModel stModel : stModels) {
+
+         final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
+         final String type = nextgen.utils.StringUtil.capitalize(stTemplate.getName());
+
+         final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.JavaPatterns
+               .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
+
+         blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt().setExpression(variableDeclarationExpression));
+      }
 
       final nextgen.templates.java.ClassOrInterfaceDeclaration classOrInterfaceDeclaration = nextgen.templates.JavaPatterns.newClassOrInterfaceDeclaration()
             .setName(className)

@@ -7,6 +7,7 @@ public class TransactionAction {
 
 	private Object _name;
 	private Object _title;
+	private Object _titleExpression;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -24,6 +25,7 @@ public class TransactionAction {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TransactionAction");
 		st.add("name", _name);
 		st.add("title", _title);
+		st.add("titleExpression", _titleExpression);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
@@ -71,6 +73,28 @@ public class TransactionAction {
 
 	public TransactionAction removeTitle() {
 		this._title = null;
+		return this;
+	} 
+
+	public TransactionAction setTitleExpression(Object value) {
+		this._titleExpression = value;
+		return this;
+	}
+
+	public Object getTitleExpression() {
+		return this._titleExpression;
+	}
+
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	}
+
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
+	}
+
+	public TransactionAction removeTitleExpression() {
+		this._titleExpression = null;
 		return this;
 	} 
 
@@ -239,7 +263,7 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(name,staticFields,fields,title,statements) ::= <<package nextgen.actions;\n" + 
+	static final String st = "TransactionAction(name,staticFields,fields,title,titleExpression,statements) ::= <<package nextgen.actions;\n" + 
 				"\n" + 
 				"public class ~name~ extends TransactionAction {\n" + 
 				"\n" + 
@@ -250,6 +274,13 @@ public class TransactionAction {
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(\"~title~\");\n" + 
+				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+				"	}\n" + 
+				"\n" + 
+				"~elseif(titleExpression)~\n" + 
+				"\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		super(~titleExpression~);\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 

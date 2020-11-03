@@ -8,7 +8,7 @@ public class SetKVArgumentFromClipboard extends TransactionAction {
    private final nextgen.st.domain.STParameterKey stParameterKey;
 
 	public SetKVArgumentFromClipboard(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey) {
-		super("Set from Clipboard");
+		super("Set " + stParameterKey.getName() + " from Clipboard");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
 		this.stParameterKey = stParameterKey;

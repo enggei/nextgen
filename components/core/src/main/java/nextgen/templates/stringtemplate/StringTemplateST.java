@@ -13,9 +13,7 @@ public class StringTemplateST {
 	.append(NeoEntity.st + "\n")
 	.append(KVAccessors.st + "\n")
 	.append(ListAccessors.st + "\n")
-	.append(ListEntityMapper.st + "\n")
 	.append(SingleAccessors.st + "\n")
-	.append(SingleEntityMapper.st + "\n")
 	.append(ScriptRunner.st + "\n")
 	.append(STDomain.st + "\n")
 	.append(NewEntityInstance.st + "\n")
@@ -97,17 +95,12 @@ public class StringTemplateST {
 		return new ListAccessors(stGroup);
 	}  
 
-	public static ListEntityMapper newListEntityMapper() {
-		return new ListEntityMapper(stGroup);
-	}  
+
 
 	public static SingleAccessors newSingleAccessors() {
 		return new SingleAccessors(stGroup);
 	}  
 
-	public static SingleEntityMapper newSingleEntityMapper() {
-		return new SingleEntityMapper(stGroup);
-	}  
 
 	public static ScriptRunner newScriptRunner() {
 		return new ScriptRunner(stGroup);

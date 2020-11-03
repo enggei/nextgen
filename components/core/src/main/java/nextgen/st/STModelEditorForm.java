@@ -52,25 +52,25 @@ public class STModelEditorForm extends JPanel {
       final STTemplate stTemplate = appModel().db.getSTTemplate(model);
 
       stTemplate.getParameters()
-                .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
-                .filter(stParameter -> stParameter.getArgumentType() != null)
-                .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
-                .forEach(stParameter -> {
+            .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getArgumentType() != null)
+            .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
+            .forEach(stParameter -> {
 
-                   final Optional<STArgument> argument = model.getArguments()
-                                                              .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
-                                                              .findFirst();
+               final Optional<STArgument> argument = model.getArguments()
+                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                     .findFirst();
 
-                   stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
-                });
+               stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
+            });
 
       model.getArguments()
-           .filter(stArgument -> stArgument.getValue() != null)
-           .map(STArgument::getValue)
-           .filter(stValue -> stValue.getType() != null)
-           .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
-           .filter(stValue -> stValue.getStModel() != null)
-           .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
+            .filter(stArgument -> stArgument.getValue() != null)
+            .map(STArgument::getValue)
+            .filter(stValue -> stValue.getType() != null)
+            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+            .filter(stValue -> stValue.getStModel() != null)
+            .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
 
    private STAppPresentationModel appModel() {
@@ -100,20 +100,15 @@ public class STModelEditorForm extends JPanel {
       }
 
       public void setValue(String s) {
+         final nextgen.st.model.STValue newSTValue = appModel().db.newSTValue(s);
          if (argument == null) {
-            final nextgen.st.model.STValue newSTValue = appModel().db.newSTValue(s);
             argument = appModel().newSTArgument(model, stParameter, newSTValue);
             nextgen.events.NewSTArgument.post(argument, model, stParameter, newSTValue);
+            if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
          } else {
-            final nextgen.st.model.STValue value = argument.getValue();
-            if (value == null) {
-               argument.setValue(appModel().db.newSTValue(s));
-               nextgen.events.STArgumentChanged.post(model, argument);
-            }
-            else {
-               argument.getValue().setValue(s);
-               nextgen.events.STArgumentChanged.post(model, argument);
-            }
+            argument.setValue(appModel().db.newSTValue(s));
+            nextgen.events.STArgumentChanged.post(model, argument);
+            if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
          }
 
          this.text = s;
@@ -167,8 +162,7 @@ public class STModelEditorForm extends JPanel {
       @Override
       public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
          appModel().doInTransaction(transaction -> {
-            final STValueElement stValueElement = content.get(rowIndex);
-            stValueElement.setValue(aValue.toString().trim());
+            content.get(rowIndex).setValue(aValue.toString().trim());
             fireTableCellUpdated(rowIndex, columnIndex);
          });
       }
@@ -236,7 +230,10 @@ public class STModelEditorForm extends JPanel {
       private void tryToSave() {
          if (element != null) {
             System.out.println("tryToSave : ");
-            appModel().doInTransaction(transaction -> element.setValue(component.getText()));
+            appModel().doInTransaction(transaction -> {
+               element.setValue(component.getText());
+               nextgen.events.STArgumentChanged.post(element.model, element.argument);
+            });
          }
       }
 

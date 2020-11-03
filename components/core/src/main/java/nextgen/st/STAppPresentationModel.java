@@ -686,6 +686,14 @@ public class STAppPresentationModel {
       return findSTTemplateByUuid(stModel.getStTemplate());
    }
 
+   public String getOutputPath() {
+      return "./components/core/src/main/java";
+   }
+
+   public String getSourceOutputPackage() {
+      return "tmp";
+   }
+
    public static final class CompilationResult {
 
       public final String compilerOutput;

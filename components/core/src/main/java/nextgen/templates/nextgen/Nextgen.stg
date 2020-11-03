@@ -2401,7 +2401,7 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-TransactionAction(name,staticFields,fields,title,statements) ::= <<package nextgen.actions;
+TransactionAction(name,staticFields,fields,title,titleExpression,statements) ::= <<package nextgen.actions;
 
 public class ~name~ extends TransactionAction {
 
@@ -2412,6 +2412,13 @@ public class ~name~ extends TransactionAction {
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super("~title~");
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+~elseif(titleExpression)~
+
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super(~titleExpression~);
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
@@ -2574,12 +2581,12 @@ public class ~name~ extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
-	public <T> java.util.stream.Stream<T> getSelectedNodes() {
+	public java.util.stream.Stream<BaseTreeNode> getSelectedNodes() {
 		final TreePath[] selectionPaths = tree.getSelectionPaths();
 		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
 		return Arrays.stream(selectionPaths)
 				.filter(treePath -> treePath.getLastPathComponent() != null)
-				.map(treePath -> (T) treePath.getLastPathComponent());
+				.map(treePath -> (BaseTreeNode) treePath.getLastPathComponent());
 	}
 
 	private STAppPresentationModel appModel() {

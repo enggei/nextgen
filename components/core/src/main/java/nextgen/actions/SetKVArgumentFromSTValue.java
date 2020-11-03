@@ -8,13 +8,13 @@ public class SetKVArgumentFromSTValue extends TransactionAction {
    private final nextgen.st.domain.STParameterKey stParameterKey;
    private final nextgen.st.model.STValue stValue;
 
-	public SetKVArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STValue stValue) {
-      super(name);
-      this.stModel = stModel;
-      this.stArgument = stArgument;
-      this.stParameterKey = stParameterKey;
-      this.stValue = stValue;
-   }
+	public SetKVArgumentFromSTValue(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STValue stValue) {
+		super("Set " + stParameterKey.getName() + " from STValue");
+		this.stModel = stModel;
+		this.stArgument = stArgument;
+		this.stParameterKey = stParameterKey;
+		this.stValue = stValue;
+	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {

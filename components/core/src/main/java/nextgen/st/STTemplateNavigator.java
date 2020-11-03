@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.utils.SwingUtil;
 import nextgen.swing.AppModel;;
 import nextgen.st.domain.*;;
 
@@ -13,8 +12,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class STTemplateNavigator extends JPanel {
-
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateNavigator.class);
 
 	private final JTree tree = new JTree();
 	private final STTemplateNavigatorTreeModel treeModel;
@@ -142,6 +139,20 @@ public class STTemplateNavigator extends JPanel {
 	public void onNewSTGroup(nextgen.events.NewSTGroup event) {
 		System.out.println("NewSTGroup");
 		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.st.STTemplateNavigator.STGroupTreeNode(event.group));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTEnum(nextgen.events.NewSTEnum event) {
+		System.out.println("NewSTEnum");
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTInterface(nextgen.events.NewSTInterface event) {
+		System.out.println("NewSTInterface");
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STInterfaceTreeNode(event.stInterface)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -370,6 +381,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeNode instanceof RootNode;
 	}
 
+	private Optional<RootNode> findRootNode() {
+		return treeModel.find(RootNode.class, treeNode -> true);
+	}
+
 	private Optional<RootNode> findRootNode(java.util.function.Predicate<RootNode> predicate) {
 		return treeModel.find(RootNode.class, predicate);
 	}
@@ -439,6 +454,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeNode instanceof STGroupTreeNode;
 	}
 
+	private Optional<STGroupTreeNode> findSTGroupTreeNode() {
+		return treeModel.find(STGroupTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STGroupTreeNode> findSTGroupTreeNode(java.util.function.Predicate<STGroupTreeNode> predicate) {
 		return treeModel.find(STGroupTreeNode.class, predicate);
 	}
@@ -498,6 +517,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private boolean isSTEnumTreeNode(Object treeNode) {
 		return treeNode instanceof STEnumTreeNode;
+	}
+
+	private Optional<STEnumTreeNode> findSTEnumTreeNode() {
+		return treeModel.find(STEnumTreeNode.class, treeNode -> true);
 	}
 
 	private Optional<STEnumTreeNode> findSTEnumTreeNode(java.util.function.Predicate<STEnumTreeNode> predicate) {
@@ -578,6 +601,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeNode instanceof STTemplateTreeNode;
 	}
 
+	private Optional<STTemplateTreeNode> findSTTemplateTreeNode() {
+		return treeModel.find(STTemplateTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STTemplateTreeNode> findSTTemplateTreeNode(java.util.function.Predicate<STTemplateTreeNode> predicate) {
 		return treeModel.find(STTemplateTreeNode.class, predicate);
 	}
@@ -641,6 +668,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeNode instanceof STInterfaceTreeNode;
 	}
 
+	private Optional<STInterfaceTreeNode> findSTInterfaceTreeNode() {
+		return treeModel.find(STInterfaceTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STInterfaceTreeNode> findSTInterfaceTreeNode(java.util.function.Predicate<STInterfaceTreeNode> predicate) {
 		return treeModel.find(STInterfaceTreeNode.class, predicate);
 	}
@@ -695,12 +726,12 @@ public class STTemplateNavigator extends JPanel {
 				.map(treePath -> (T) treePath.getLastPathComponent());
 	}
 
-	public <T> java.util.stream.Stream<T> getSelectedNodes() {
+	public java.util.stream.Stream<BaseTreeNode> getSelectedNodes() {
 		final TreePath[] selectionPaths = tree.getSelectionPaths();
 		if (selectionPaths == null || selectionPaths.length == 0) return java.util.stream.Stream.empty();
 		return Arrays.stream(selectionPaths)
 				.filter(treePath -> treePath.getLastPathComponent() != null)
-				.map(treePath -> (T) treePath.getLastPathComponent());
+				.map(treePath -> (BaseTreeNode) treePath.getLastPathComponent());
 	}
 
 	private STAppPresentationModel appModel() {
