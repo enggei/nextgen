@@ -1,7 +1,5 @@
 package nextgen.st;
 
-import nextgen.swing.AppModel;;
-import nextgen.st.domain.*;;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -107,94 +105,80 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
-		System.out.println("ModelNavigatorSTModelTreeNodeClicked");
 		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate)).ifPresent(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		System.out.println("STGroupDeleted");
 		findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
-		System.out.println("STEnumDeleted");
 		findSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
-		System.out.println("STTemplateDeleted");
 		findSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
-		System.out.println("STInterfaceDeleted");
 		findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroup(nextgen.events.NewSTGroup event) {
-		System.out.println("NewSTGroup");
 		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.st.STTemplateNavigator.STGroupTreeNode(event.group));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTEnum(nextgen.events.NewSTEnum event) {
-		System.out.println("NewSTEnum");
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
+							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTInterface(nextgen.events.NewSTInterface event) {
-		System.out.println("NewSTInterface");
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STInterfaceTreeNode(event.stInterface)));
+							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STInterfaceTreeNode(event.stInterface)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroupTemplate(nextgen.events.NewSTGroupTemplate event) {
-		System.out.println("NewSTGroupTemplate");
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
-					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTTemplateChild(nextgen.events.NewSTTemplateChild event) {
-		System.out.println("NewSTTemplateChild");
 		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
-					.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
-		System.out.println("STGroupNameChanged");
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-					.ifPresent(nextgen.st.STTemplateNavigator.STGroupTreeNode::nodeChanged);
+							.ifPresent(nextgen.st.STTemplateNavigator.STGroupTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
-		System.out.println("STTemplateNameChanged");
 		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
-					.ifPresent(nextgen.st.STTemplateNavigator.STTemplateTreeNode::nodeChanged);
+							.ifPresent(nextgen.st.STTemplateNavigator.STTemplateTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceNameChanged(nextgen.events.STInterfaceNameChanged event) {
-		System.out.println("STInterfaceNameChanged");
 		findSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))
-					.ifPresent(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
+							.ifPresent(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumNameChanged(nextgen.events.STEnumNameChanged event) {
-		System.out.println("STEnumNameChanged");
 		findSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
-					.ifPresent(STTemplateNavigator.STEnumTreeNode::nodeChanged);
+							.ifPresent(STTemplateNavigator.STEnumTreeNode::nodeChanged);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -413,9 +397,9 @@ public class STTemplateNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
-model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
-model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
+			model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
+			model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
+			model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
 		}
 
 		STGroupTreeNode thisNode() {
@@ -505,9 +489,9 @@ model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.get
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.EditEnum(getModel(), tree));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.RenameEnum(getModel(), parent.getModel(), tree)));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteEnum(getModel(), parent.getModel(), tree)));
+				actions.add(new nextgen.actions.EditEnum(getModel(), tree));
 			});
 
 			return actions;
@@ -536,7 +520,6 @@ model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.get
 	}
 
 	private void onSTEnumTreeNodeSelected(STEnumTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()); });
 	}
 
 	// STTemplateTreeNode
@@ -571,30 +554,30 @@ model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.get
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.Set<STTemplate> candidateChildren = getSelectedTemplates();
+				final java.util.Set<nextgen.st.domain.STTemplate> candidateChildren = getSelectedTemplates();
 				final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
 				actions.add(new nextgen.actions.NewSTModelAction(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-					actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
-					actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));
-					if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, tree));
-					appModel().getProjects().forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
-					if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, tree));
-					actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), tree));
-					getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, tree)));
-					actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));
-				} );
+									actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
+									actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));
+									if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, tree));
+									appModel().getProjects().forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
+									if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, tree));
+									actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), tree));
+									getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, tree)));
+									actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));
+								} );
 			});
 
 			return actions;
 		}
 
 		private java.util.Set<nextgen.st.domain.STTemplate> getSelectedTemplates() {
-			return getSelectedSTTemplateTreeNodes()
-					.filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this))
-					.map(nextgen.st.STTemplateNavigator.BaseTreeNode::getModel)
-					.collect(java.util.stream.Collectors.toSet());
-		}
+					return getSelectedSTTemplateTreeNodes()
+							.filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this))
+							.map(nextgen.st.STTemplateNavigator.BaseTreeNode::getModel)
+							.collect(java.util.stream.Collectors.toSet());
+				}
 	}
 
 	private boolean isSTTemplateTreeNode(Object treeNode) {
@@ -619,9 +602,9 @@ model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.get
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
 		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-			final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
-			nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
-		} );
+					final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
+					nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
+				} );
 	}
 
 	// STInterfaceTreeNode
@@ -685,7 +668,6 @@ model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.get
 	}
 
 	private void onSTInterfaceTreeNodeSelected(STInterfaceTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked.post(parent.getModel(), selectedNode.getModel()));
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
