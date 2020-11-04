@@ -26,9 +26,13 @@ public class STApp extends JFrame {
       final JPanel contentPanel = new JPanel(new BorderLayout());
       contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
       contentPanel.add(workspace.getTemplateNavigator(), BorderLayout.WEST);
-      contentPanel.add(workspace, BorderLayout.CENTER);
-      contentPanel.add(workspace.getModelNavigator(), BorderLayout.EAST);
-      contentPanel.setSize(new Dimension(1600, 1200));
+
+      final JSplitPane splitPane = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace, workspace.getModelNavigator());
+
+      contentPanel.add(splitPane, BorderLayout.CENTER);
+//      contentPanel.add(workspace, BorderLayout.CENTER);
+//      contentPanel.add(workspace.getModelNavigator(), BorderLayout.EAST);
+//      contentPanel.setSize(new Dimension(2400, 1200));
       add(contentPanel, BorderLayout.CENTER);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +61,7 @@ public class STApp extends JFrame {
             .getInstance()
             .setFontSize(appConfig.getFontSize(24))
             .setFontName(appConfig.getFontName("InputMono"))
-            .setAppSize(new Dimension(appConfig.getAppWidth(1600), appConfig.getAppHeight(1200)))
+            .setAppSize(new Dimension(appConfig.getAppWidth(2400), appConfig.getAppHeight(1200)))
             .setNavigatorSize(new Dimension(appConfig.getNavigatorWidth(400), appConfig.getNavigatorHeight(1200)))
             .setWorkspaceSize(new Dimension(appConfig.getWorkspaceWidth(1200), appConfig.getWorkspaceHeight(1200)))
             .setOutputPackage(appConfig.getOutputPackage("nextgen.templates"))

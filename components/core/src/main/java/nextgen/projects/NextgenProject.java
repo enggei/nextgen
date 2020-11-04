@@ -129,9 +129,7 @@ public class NextgenProject {
 
    @org.junit.Test
    public void generateSTTemplateNavigator() {
-
       final nextgen.templates.nextgen.TreeNavigator treeNavigator = tmp.STTemplateNavigatorGenerator.generate();
-
       writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
    }
 

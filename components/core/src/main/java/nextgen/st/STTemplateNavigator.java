@@ -520,6 +520,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTEnumTreeNodeSelected(STEnumTreeNode selectedNode) {
+		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()); });
 	}
 
 	// STTemplateTreeNode
@@ -558,15 +559,15 @@ public class STTemplateNavigator extends JPanel {
 				final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
 				actions.add(new nextgen.actions.NewSTModelAction(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-									actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
-									actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));
-									if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, tree));
-									appModel().getProjects().forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
-									if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, tree));
-									actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), tree));
-									getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, tree)));
-									actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));
-								} );
+					actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));
+					actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), tree));
+					if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, tree));
+					appModel().getProjects().forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
+					if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, tree));
+					actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), tree));
+					getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, tree)));
+					actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));
+				});
 			});
 
 			return actions;
@@ -602,9 +603,9 @@ public class STTemplateNavigator extends JPanel {
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
 		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-					final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
-					nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
-				} );
+			final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
+			nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
+		});
 	}
 
 	// STInterfaceTreeNode

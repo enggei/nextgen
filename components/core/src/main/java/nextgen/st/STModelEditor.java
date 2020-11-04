@@ -59,6 +59,51 @@ public class STModelEditor extends JPanel {
       }
    }
 
+   @org.greenrobot.eventbus.Subscribe()
+   public void onNewSTArgument(nextgen.events.NewSTArgument event) {
+      if(stModel.equals(event.model)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTArgumentChanged(nextgen.events.STArgumentChanged event) {
+      if(stModel.equals(event.stModel)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
+      if(stModel.equals(event.stModel)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
+      if(stModel.equals(event.model)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onKVDeleted(nextgen.events.KVDeleted event) {
+      if(stModel.equals(event.stModel)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
    public STModel getModel() {
       return stModel;
    }
