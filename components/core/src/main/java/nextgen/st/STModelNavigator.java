@@ -240,6 +240,7 @@ public class STModelNavigator extends JPanel {
 	public void onSTValueDeleted(nextgen.events.STValueDeleted event) {
 		System.out.println("STValueDeleted");
 		SwingUtilities.invokeLater(() -> {
+			findSTValueTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 			findSTValueArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 			findSTValueKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 		});
@@ -509,6 +510,8 @@ public class STModelNavigator extends JPanel {
 
 				stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate));
 			});
+
+			model.getValuesSorted().forEach(stValue -> add(new nextgen.st.STModelNavigator.STValueTreeNode(stValue)));
 		}
 
 		STProjectTreeNode thisNode() {
@@ -528,6 +531,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), tree));
+				actions.add(new nextgen.actions.AddMultipleValuesToProject(getModel(), tree));
 				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));
 			});
 
@@ -954,14 +958,23 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final String fromClipboard = nextgen.utils.SwingUtil.fromClipboard();
+				final java.util.Optional<nextgen.st.STModelNavigator.STModelTreeNode> parentNode = getParentNode(nextgen.st.STModelNavigator.STModelTreeNode.class);
+				final java.util.List<nextgen.st.model.STModel> selectedSTModels = getSelectedSTModels()
+										.filter(stModel1 -> parentNode.isPresent())
+										.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))
+										.collect(java.util.stream.Collectors.toList());
+				final java.util.List<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
 				switch (getModel().getType()) {
 					case SINGLE:
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.SetArgumentFromClipboard(stModel, getModel()));
 						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.AddArgumentFromClipboard(stModel, getModel()));
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), tree));
@@ -1106,7 +1119,10 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.SetSTValueFromInput(getModel(), tree));
+				actions.add(new nextgen.actions.SetSTValueFromClipboard(getModel()));
 				actions.add(new nextgen.actions.STValueToClipboard(getModel()));
+				actions.add(new nextgen.actions.DeleteSTValue(getModel(), tree));
 			});
 
 			return actions;
@@ -1213,7 +1229,7 @@ public class STModelNavigator extends JPanel {
 		private nextgen.st.domain.STParameter stParameter;
 
 		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
-			super(model, null);
+			super(model, appModel().loadIcon("sq-yellow"));
 
 			this.stParameter = stParameter;
 

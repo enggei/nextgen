@@ -50,6 +50,15 @@ public class STModelEditor extends JPanel {
       editorGrid.reset();
    }
 
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTModelChanged(nextgen.events.STModelChanged event) {
+      if(stModel.equals(event.model)) {
+         txtEditor.setStModel(stModel);
+         formComponent.setModel(stModel);
+         editorGrid.setModel(stModel);
+      }
+   }
+
    public STModel getModel() {
       return stModel;
    }

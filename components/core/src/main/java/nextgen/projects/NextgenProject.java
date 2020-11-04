@@ -311,26 +311,29 @@ public class NextgenProject {
                   "final Map<nextgen.st.domain.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();\n" +
                   "model.getModelsSorted().forEach(stModel -> {\n" +
                   "\n" +
-                  "	final nextgen.st.domain.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
-                  "	final nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(stTemplate);\n" +
+                  "\tfinal nextgen.st.domain.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+                  "\tfinal nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(stTemplate);\n" +
                   "\n" +
-                  "	if (!stGroupTreeNodeMap.containsKey(stGroup)) {\n" +
-                  "		final nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroup);\n" +
-                  "		add(stGroupModelTreeNode);\n" +
-                  "		stGroupTreeNodeMap.put(stGroup, stGroupModelTreeNode);\n" +
-                  "	}\n" +
+                  "\tif (!stGroupTreeNodeMap.containsKey(stGroup)) {\n" +
+                  "\t\tfinal nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroup);\n" +
+                  "\t\tadd(stGroupModelTreeNode);\n" +
+                  "\t\tstGroupTreeNodeMap.put(stGroup, stGroupModelTreeNode);\n" +
+                  "\t}\n" +
                   "\n" +
-                  "	if (!stTemplateTreeNodeMap.containsKey(stTemplate)) {\n" +
-                  "		final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);\n" +
-                  "		stGroupTreeNodeMap.get(stGroup).add(stTemplateTreeNode);\n" +
-                  "		stTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);\n" +
-                  "	}\n" +
+                  "\tif (!stTemplateTreeNodeMap.containsKey(stTemplate)) {\n" +
+                  "\t\tfinal STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);\n" +
+                  "\t\tstGroupTreeNodeMap.get(stGroup).add(stTemplateTreeNode);\n" +
+                  "\t\tstTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);\n" +
+                  "\t}\n" +
                   "\n" +
-                  "	stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate));\n" +
-                  "});")
+                  "\tstTemplateTreeNodeMap.get(stTemplate).add(new nextgen.st.STModelNavigator.STModelTreeNode(stModel, stTemplate));\n" +
+                  "});\n" +
+                  "\n" +
+                  "model.getValuesSorted().forEach(stValue -> add(new nextgen.st.STModelNavigator.STValueTreeNode(stValue)));")
             .addSelectionStatements(postEventStatement("ModelNavigatorSTProjectTreeNodeClicked", "selectedNode.getModel()"))
             .addGetActionsStatements(new Object[]{
                   addToActionsStatement(newAction("AddValueToProjectFromInput", "getModel()", "tree")),
+                  addToActionsStatement(newAction("AddMultipleValuesToProject", "getModel()", "tree")),
 //                  addToActionsStatement(newAction(addModelToProject, "getModel()")),
 //                  addToActionsStatement(newAction(addValueToProject, "getModel()")),
                   addToActionsStatement(newAction("GenerateAllProjectModels", "getModel()")),
@@ -427,14 +430,23 @@ public class NextgenProject {
                   "			.onListSTModel((stArgument, stValue) -> addChild(new STModelArgumentTreeNode(stValue.getStModel(),  stArgument)))\n" +
                   "			.onKVListConsumer((stArgument, stKVValues) -> addChild(new STKVArgumentTreeNode(stArgument, model))));")
             .setGetActionsStatements(new Object[]{
-                  "final String fromClipboard = nextgen.utils.SwingUtil.fromClipboard();",
+                  "final java.util.Optional<nextgen.st.STModelNavigator.STModelTreeNode> parentNode = getParentNode(nextgen.st.STModelNavigator.STModelTreeNode.class);",
+                  "final java.util.List<nextgen.st.model.STModel> selectedSTModels = getSelectedSTModels()\n" +
+                        "\t\t\t\t\t\t.filter(stModel1 -> parentNode.isPresent())\n" +
+                        "\t\t\t\t\t\t.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))\n" +
+                        "\t\t\t\t\t\t.collect(java.util.stream.Collectors.toList());",
+                  "final java.util.List<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());",
                   "switch (getModel().getType()) {" +
                         "\n\tcase SINGLE:" +
+                        "\n\t\t" + "selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel(\"Set \" + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));" +
+                        "\n\t\t" + "selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue(\"Set \" + appModel().render(stNode, 30), stModel, getModel(), stNode)));" +
                         "\n\t\t" + addToActionsStatement(newAction("SetArgumentFromInput", "stModel", "getModel()", "tree")) +
                         "\n\t\t" + addToActionsStatement(newAction("SetArgumentFromClipboard", "stModel", "getModel()")) +
                         "\n\t\t" + "if (appModel().isBoolean(getModel())) " + addToActionsStatement(newAction("SetArgumentToTrue", "stModel", "getModel()")) +
                         "\n\t\tbreak;" +
                         "\n\tcase LIST:" +
+                        "\n\t\t" + "selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel(\"Add \" + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));" +
+                        "\n\t\t" + "selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue(\"Add \" + appModel().render(stNode, 30), stModel, getModel(), stNode)));" +
                         "\n\t\t" + addToActionsStatement(newAction("AddArgumentFromInput", "stModel", "getModel()", "tree")) +
                         "\n\t\t" + addToActionsStatement(newAction("AddArgumentFromClipboard", "stModel", "getModel()")) +
                         "\n\t\t" + addToActionsStatement(newAction("AddArgumentFromArgumentType", "stModel", "getModel()", "tree")) +
@@ -468,7 +480,10 @@ public class NextgenProject {
             .setIcon("appModel().loadIcon(\"sq-orange\")")
             .setLabelExpression("getModel().getValue() == null || getModel().getValue().trim().length() == 0 ? \"[EMPTY]\" : getModel().getValue()")
             .setGetActionsStatements(new Object[]{
+                  addToActionsStatement(newAction("SetSTValueFromInput", "getModel()", "tree")),
+                  addToActionsStatement(newAction("SetSTValueFromClipboard", "getModel()")),
                   addToActionsStatement(newAction("STValueToClipboard", "getModel()")),
+                  addToActionsStatement(newAction("DeleteSTValue", "getModel()", "tree")),
             })
             .addSelectionStatements(postEventStatement("ModelNavigatorSTValueTreeNodeClicked", "selectedNode.getModel()"));
 
@@ -486,6 +501,7 @@ public class NextgenProject {
 
       newTreeNode(treeNavigator, "STKVArgumentTreeNode", stArgumentType)
             .setHasUuid(true)
+            .setIcon("appModel().loadIcon(\"sq-yellow\")")
             .addFields(stParameterType, "stParameter")
             .setLabelExpression("appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, \"name\", stParameter::getName)")
             .addConstructorStatements("stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()\n" +
@@ -625,6 +641,7 @@ public class NextgenProject {
                   .addStatements("SwingUtilities.invokeLater(() -> findSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));"))
             .addEvents(newSubscribe("STValueDeleted")
                   .addStatements("SwingUtilities.invokeLater(() -> {\n" +
+                        "\tfindSTValueTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);\n" +
                         "\tfindSTValueArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);\n" +
                         "\tfindSTValueKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);\n" +
                         "});"))

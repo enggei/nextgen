@@ -428,7 +428,7 @@ public class STAppPresentationModel {
 
    public String render(STValue stValue, int maxLength) {
       String s = render(stValue);
-      return s.substring(0, Math.min(s.length(), maxLength));
+      return s==null ? null : s.substring(0, Math.min(s.length(), maxLength));
    }
 
    public String render(STArgument stArgument) {
