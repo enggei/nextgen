@@ -18,12 +18,12 @@ public class STWorkspace extends JTabbedPane {
 	private STModelNavigator modelNavigator;
 
 	public STWorkspace() {
-		setPreferredSize(new Dimension(2400, 1024));
+		setPreferredSize(new Dimension(1200, 1024));
 		findCanvas();
 		appModel().doInTransaction(transaction -> {
-			templateNavigator = new STTemplateNavigator(this);
-			modelNavigator = new STModelNavigator(this);
-		});
+					templateNavigator = new STTemplateNavigator(this);
+					modelNavigator = new STModelNavigator(this);
+				});
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
@@ -39,62 +39,32 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
-		System.out.println("ModelNavigatorSTModelTreeNodeClicked");
 		getModelEditor(event.stTemplate, event.stModel);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTGroupTreeNodeClicked(nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked event) {
-		System.out.println("TemplateNavigatorSTGroupTreeNodeClicked");
 		getSTEditor(event.stGroup);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTTemplateTreeNodeClicked(nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked event) {
-		System.out.println("TemplateNavigatorSTTemplateTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTTemplate(event.stTemplate);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTEnumTreeNodeClicked(nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked event) {
-		System.out.println("TemplateNavigatorSTEnumTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTEnum(event.stEnum);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTInterfaceTreeNodeClicked(nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked event) {
-		System.out.println("TemplateNavigatorSTInterfaceTreeNodeClicked");
 		getSTEditor(event.stGroup).setSTInterface(event.stInterface);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
-		System.out.println("STModelDeleted");
 		SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		System.out.println("STGroupDeleted");
-
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
-		System.out.println("STEnumDeleted");
-
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
-		System.out.println("STTemplateDeleted");
-
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
-		System.out.println("STInterfaceDeleted");
-
 	}
 
 	private STAppPresentationModel appModel() {

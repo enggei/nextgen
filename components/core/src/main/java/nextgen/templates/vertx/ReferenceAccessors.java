@@ -1,6 +1,6 @@
 package nextgen.templates.vertx;
 
-public class ReferenceAccessors {
+public class ReferenceAccessors implements EntityAccessor {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

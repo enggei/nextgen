@@ -614,7 +614,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STInterfaceTreeNode(nextgen.st.domain.STInterface model) {
-			super(model, appModel().loadIcon("sq-red"));
+			super(model, appModel().loadIcon("sq-purple"));
 
 
 			setLabel(getModel().getName());
