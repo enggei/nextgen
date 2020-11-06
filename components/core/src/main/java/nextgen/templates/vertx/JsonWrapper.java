@@ -9,7 +9,7 @@ public class JsonWrapper {
 	private String _name;
 	private Object _neoNodeMapper;
 	private Object _lexical;
-	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
+	private java.util.List<EntityAccessor> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	JsonWrapper(org.stringtemplate.v4.STGroup stGroup) {
@@ -120,22 +120,22 @@ public class JsonWrapper {
 		return this;
 	} 
 
-	public JsonWrapper addAccessors(Object value) {
+	public JsonWrapper addAccessors(EntityAccessor value) {
 		this._accessors.add(value);
 		return this;
 	}
 
-	public JsonWrapper setAccessors(Object[] value) {
+	public JsonWrapper setAccessors(EntityAccessor[] value) {
 		this._accessors.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public JsonWrapper setAccessors(java.util.Collection<Object> values) {
+	public JsonWrapper setAccessors(java.util.Collection<EntityAccessor> values) {
 		this._accessors.addAll(values);
 		return this;
 	}
 
-	public JsonWrapper removeAccessors(Object value) {
+	public JsonWrapper removeAccessors(EntityAccessor value) {
 		this._accessors.remove(value);
 		return this;
 	}
@@ -145,7 +145,7 @@ public class JsonWrapper {
 		return this;
 	}
 
-	public java.util.List<Object> getAccessors() {
+	public java.util.List<EntityAccessor> getAccessors() {
 		return this._accessors;
 	} 
 

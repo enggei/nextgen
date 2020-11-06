@@ -43,7 +43,7 @@
         "uuid" : "733aec27-d21b-4751-82ab-02207cf0feae",
         "name" : "accessors",
         "type" : "LIST",
-        "argumentType" : "Object"
+        "argumentType" : "EntityAccessor"
       }, {
         "uuid" : "9884634b-6558-45f7-8c41-756730c2261b",
         "name" : "neoNodeMapper",
@@ -58,7 +58,7 @@
       "children" : [ {
         "uuid" : "f9d01bcc-c94a-4a4f-adaf-e0cf9715b3ea",
         "name" : "primitiveAccessors",
-        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"dotToCap\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"dotToCap\"~() { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n}",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n} ",
         "parameters" : [ {
           "uuid" : "4d6a3810-7799-4600-b42f-6aec6f8c77df",
           "name" : "className",
@@ -74,7 +74,8 @@
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "23f3083f-6cd5-47ab-8c39-bce21da141ab",
         "name" : "listReferenceAccessors",
@@ -91,7 +92,8 @@
           "uuid" : "9695d63e-90d4-42b1-98e1-13071b09e877",
           "name" : "type",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "f6ed57f1-6238-4590-82e1-27aff0ecf302",
         "name" : "referenceAccessors",
@@ -108,7 +110,8 @@
           "uuid" : "a0e59457-2f46-449b-8102-88371e0bf625",
           "name" : "type",
           "type" : "SINGLE"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "41c43c9b-5829-4dcf-8e64-c9130cd1ddae",
         "name" : "listPrimitiveAccessors",
@@ -128,7 +131,8 @@
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "5247ccdf-3c9d-4e65-bcd0-02d040a8806e",
         "name" : "externalAccessors",
@@ -148,7 +152,8 @@
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "d725755e-d593-4b9f-90d9-74a8b46aa511",
         "name" : "enumAccessors",
@@ -168,7 +173,8 @@
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       }, {
         "uuid" : "4f8d77ad-c484-4afb-a70c-9d6f3bf5c220",
         "name" : "listEnumAccessors",
@@ -188,7 +194,8 @@
           "name" : "type",
           "type" : "SINGLE",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "EntityAccessor" ]
       } ]
     }, {
       "uuid" : "cefddd6f-722b-42df-8a8e-ced8c58ae2e0",
@@ -450,5 +457,9 @@
       "lexical" : "io.vertx.core.json.JsonObject"
     } ]
   } ],
-  "tags" : "java"
+  "tags" : "java",
+  "interfaces" : [ {
+    "uuid" : "afc77325-04cc-42a0-9aa1-634d78b647ef",
+    "name" : "EntityAccessor"
+  } ]
 }

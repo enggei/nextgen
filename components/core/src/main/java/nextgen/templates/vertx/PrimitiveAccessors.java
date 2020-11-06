@@ -107,16 +107,16 @@ public class PrimitiveAccessors implements EntityAccessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "primitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"dotToCap\"~(~type~ value) { \n" + 
+	static final String st = "primitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	jsonObject.put(\"~name~\", value);\n" + 
 				"	return this;\n" + 
 				"}\n" + 
 				"\n" + 
-				"public ~type~ get~name;format=\"dotToCap\"~() { \n" + 
+				"public ~type~ get~name;format=\"capitalize\"~() { \n" + 
 				"	return jsonObject.get~type;format=\"capitalize\"~(\"~name~\");\n" + 
 				"}\n" + 
 				"\n" + 
-				"public ~type~ get~name;format=\"dotToCap\"~(~type~ defaultValue) { \n" + 
+				"public ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n" + 
 				"	return jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n" + 
 				"} >>";
 }  

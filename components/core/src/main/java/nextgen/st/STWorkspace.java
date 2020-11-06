@@ -67,6 +67,13 @@ public class STWorkspace extends JTabbedPane {
 		SwingUtilities.invokeLater(() -> removeModelEditor(event.uuid));
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTValueTreeNodeClicked(nextgen.events.ModelNavigatorSTValueTreeNodeClicked event) {
+		final nextgen.st.STValueEditor stValueEditor = getSTValueEditor();
+		stValueEditor.setSTValue(event.stValue);
+		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
+	}
+
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
@@ -121,6 +128,31 @@ public class STWorkspace extends JTabbedPane {
 
 		final STModelEditor component = new STModelEditor(stModel);
 		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
+		return component;
+	}
+
+	public void removeSTValueEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STValueEditor) {
+				if (((STValueEditor) tabComponentAt).getUuid().equals(uuid)) {
+					remove(i);
+				}
+			}
+		}
+	}
+
+	public STValueEditor getSTValueEditor() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STValueEditor) {
+					return (STValueEditor) tabComponentAt;
+				}
+		}
+
+		final STValueEditor component = new STValueEditor();
+		addPane("STValue", component);
+		setSelectedComponent(component);
 		return component;
 	}
 

@@ -132,7 +132,7 @@ public class STEditor extends JPanel {
 
     private void generate() {
         commit();
-        appModel().generateSTGroup(stGroupModel,true);
+        appModel().generateSTGroup(stGroupModel,false);
     }
 
     private Action newAction(String name, Consumer<ActionEvent> consumer) {

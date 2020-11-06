@@ -1076,26 +1076,10 @@ public class NextgenProject {
 
       final Singleton appModel = tmp.AppModelGenerator.generate();
 
-      final Entity config = newEntity("AppConfig")
-            .addRelations(newStringField("title"))
-            .addRelations(newIntegerField("appWidth"))
-            .addRelations(newIntegerField("appHeight"))
-            .addRelations(newIntegerField("navigatorWidth"))
-            .addRelations(newIntegerField("navigatorHeight"))
-            .addRelations(newIntegerField("workspaceWidth"))
-            .addRelations(newIntegerField("workspaceHeight"))
-            .addRelations(newIntegerField("editorWidth"))
-            .addRelations(newIntegerField("editorHeight"))
-            .addRelations(newStringField("rootDir"))
-            .addRelations(newStringField("dbDir"))
-            .addRelations(newStringField("outputPackage"))
-            .addRelations(newStringField("outputPath"))
-            .addRelations(newStringField("templateDir"))
-            .addRelations(newIntegerField("fontSize"))
-            .addRelations(newStringField("fontName"));
+      final nextgen.templates.vertx.JsonWrapper jsonWrapper = tmp.AppConfigGenerator.generate();
 
       writeJavaFile(appModel, appModel.getPackageName(), appModel.getName(), mainJava);
-      writeJsonWrapper(mainJava, swingConfigPackage, newDomain(config.getName()).addEntities(config));
+      writeJavaFile(appModel, jsonWrapper.getPackage(), jsonWrapper.getName(), mainJava);
    }
 
    /**

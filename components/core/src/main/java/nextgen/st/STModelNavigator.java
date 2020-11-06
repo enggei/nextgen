@@ -933,13 +933,20 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				final java.util.Optional<nextgen.st.STModelNavigator.STModelTreeNode> parentNode = getParentNode(nextgen.st.STModelNavigator.STModelTreeNode.class);
+
+				final String clipboard = nextgen.utils.SwingUtil.fromClipboard();
+				final String stModelUuid = clipboard.startsWith("stmodel-") ? clipboard.replaceAll("stmodel-","").trim() : null;
+
+				final java.util.List<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
+
 				final java.util.List<nextgen.st.model.STModel> selectedSTModels = getSelectedSTModels()
 										.filter(stModel1 -> parentNode.isPresent())
 										.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))
 										.collect(java.util.stream.Collectors.toList());
-				final java.util.List<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
+
 				switch (getModel().getType()) {
 					case SINGLE:
+						if (stModelUuid != null) actions.add(new nextgen.actions.SetArgumentFromSTModelUuid("Set " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), tree));
@@ -947,6 +954,7 @@ public class STModelNavigator extends JPanel {
 						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
+						if (stModelUuid != null) actions.add(new nextgen.actions.AddArgumentFromSTModelUuid("Add " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), tree));

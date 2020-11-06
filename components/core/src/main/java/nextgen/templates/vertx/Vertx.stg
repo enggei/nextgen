@@ -170,18 +170,18 @@ public class ~name;format="capitalize"~ {
 	}
 }  >>
 
-primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="dotToCap"~(~type~ value) { 
+primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
 	jsonObject.put("~name~", value);
 	return this;
 }
 
-public ~type~ get~name;format="dotToCap"~() { 
+public ~type~ get~name;format="capitalize"~() { 
 	return jsonObject.get~type;format="capitalize"~("~name~");
 }
 
-public ~type~ get~name;format="dotToCap"~(~type~ defaultValue) { 
+public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
 	return jsonObject.get~type;format="capitalize"~("~name~", defaultValue);
-} >>
+}  >>
 
 listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
 	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");

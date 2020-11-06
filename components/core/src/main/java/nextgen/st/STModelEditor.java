@@ -32,22 +32,35 @@ public class STModelEditor extends JPanel {
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      nextgen.st.STModelEditor that = (nextgen.st.STModelEditor) o;
+      return uuid.equals(that.uuid);
+   }
+
+   @Override
+   public int hashCode() {
+      return java.util.Objects.hash(uuid);
+   }
+
+   @Override
+   public String toString() {
+      return uuid;
+   }
+
    public String getUuid() {
       return uuid;
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
-      txtEditor.setStModel(event.stModel);
-      formComponent.setModel(event.stModel);
-      editorGrid.setModel(event.stModel);
-   }
-
-   @org.greenrobot.eventbus.Subscribe()
-   public void onModelNavigatorSTValueTreeNodeClicked(nextgen.events.ModelNavigatorSTValueTreeNodeClicked event) {
-      txtEditor.setSTValue(event.stValue);
-      formComponent.reset();
-      editorGrid.reset();
+      if(stModel.equals(event.stModel)) {
+         txtEditor.setStModel(event.stModel);
+         formComponent.setModel(event.stModel);
+         editorGrid.setModel(event.stModel);
+      }
    }
 
    @org.greenrobot.eventbus.Subscribe()

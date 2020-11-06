@@ -645,7 +645,6 @@ public class STAppPresentationModel {
    public java.util.stream.Stream<nextgen.st.domain.STTemplate> aggregateTemplates(nextgen.st.domain.STGroupModel stGroup) {
       final List<STTemplate> templates = new java.util.ArrayList<>();
       stGroup.getTemplates().forEach(stTemplate -> {
-         templates.add(stTemplate);
          aggregate(stTemplate, templates);
       });
 
@@ -653,7 +652,8 @@ public class STAppPresentationModel {
    }
 
    private void aggregate(nextgen.st.domain.STTemplate stTemplate, java.util.List<nextgen.st.domain.STTemplate> templates) {
-      stTemplate.getChildren().forEach(templates::add);
+      templates.add(stTemplate);
+      stTemplate.getChildren().forEach(stTemplate1 -> aggregate(stTemplate1, templates));
    }
 
    public java.util.stream.Stream<nextgen.st.domain.STGroupModel> getSTGroups() {

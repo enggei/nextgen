@@ -19,20 +19,21 @@ public class SetKVArgumentFromInput extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, stParameterKey.getName(), inputValue -> {
-         stArgument.getKeyValues()
-               .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))
-               .findFirst()
-               .ifPresent(existing -> {
-                  stArgument.removeKeyValues(existing);
-                  final String uuid = existing.getUuid();
-                  existing.delete();
-                  nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
-               });
+      	stArgument.getKeyValues()
+      			.filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))
+      			.findFirst()
+      			.ifPresent(existing -> {
+      				stArgument.removeKeyValues(existing);
+      				final String uuid = existing.getUuid();
+      				existing.delete();
+      				nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+      			});
 
-         final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);
-         final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
-         stArgument.addKeyValues(stArgumentKV);
+      	final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);
+      	final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
+      	stArgument.addKeyValues(stArgumentKV);
 
-         nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);});
+      	nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      });
    }
 }

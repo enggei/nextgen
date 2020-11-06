@@ -79,17 +79,17 @@ public class AppConfig {
 		return jsonObject.getString("title", defaultValue);
 	}
 
-	public AppConfig setAppWidth(Integer value) { 
-		jsonObject.put("appWidth", value);
+	public AppConfig setNavigatorWidth(Integer value) { 
+		jsonObject.put("navigatorWidth", value);
 		return this;
 	}
 
-	public Integer getAppWidth() { 
-		return jsonObject.getInteger("appWidth");
+	public Integer getNavigatorWidth() { 
+		return jsonObject.getInteger("navigatorWidth");
 	}
 
-	public Integer getAppWidth(Integer defaultValue) { 
-		return jsonObject.getInteger("appWidth", defaultValue);
+	public Integer getNavigatorWidth(Integer defaultValue) { 
+		return jsonObject.getInteger("navigatorWidth", defaultValue);
 	}
 
 	public AppConfig setAppHeight(Integer value) { 
@@ -105,17 +105,17 @@ public class AppConfig {
 		return jsonObject.getInteger("appHeight", defaultValue);
 	}
 
-	public AppConfig setNavigatorWidth(Integer value) { 
-		jsonObject.put("navigatorWidth", value);
+	public AppConfig setAppWidth(Integer value) { 
+		jsonObject.put("appWidth", value);
 		return this;
 	}
 
-	public Integer getNavigatorWidth() { 
-		return jsonObject.getInteger("navigatorWidth");
+	public Integer getAppWidth() { 
+		return jsonObject.getInteger("appWidth");
 	}
 
-	public Integer getNavigatorWidth(Integer defaultValue) { 
-		return jsonObject.getInteger("navigatorWidth", defaultValue);
+	public Integer getAppWidth(Integer defaultValue) { 
+		return jsonObject.getInteger("appWidth", defaultValue);
 	}
 
 	public AppConfig setNavigatorHeight(Integer value) { 
@@ -157,19 +157,6 @@ public class AppConfig {
 		return jsonObject.getInteger("workspaceHeight", defaultValue);
 	}
 
-	public AppConfig setEditorWidth(Integer value) { 
-		jsonObject.put("editorWidth", value);
-		return this;
-	}
-
-	public Integer getEditorWidth() { 
-		return jsonObject.getInteger("editorWidth");
-	}
-
-	public Integer getEditorWidth(Integer defaultValue) { 
-		return jsonObject.getInteger("editorWidth", defaultValue);
-	}
-
 	public AppConfig setEditorHeight(Integer value) { 
 		jsonObject.put("editorHeight", value);
 		return this;
@@ -181,6 +168,19 @@ public class AppConfig {
 
 	public Integer getEditorHeight(Integer defaultValue) { 
 		return jsonObject.getInteger("editorHeight", defaultValue);
+	}
+
+	public AppConfig setEditorWidth(Integer value) { 
+		jsonObject.put("editorWidth", value);
+		return this;
+	}
+
+	public Integer getEditorWidth() { 
+		return jsonObject.getInteger("editorWidth");
+	}
+
+	public Integer getEditorWidth(Integer defaultValue) { 
+		return jsonObject.getInteger("editorWidth", defaultValue);
 	}
 
 	public AppConfig setRootDir(String value) { 
@@ -248,19 +248,6 @@ public class AppConfig {
 		return jsonObject.getString("templateDir", defaultValue);
 	}
 
-	public AppConfig setFontSize(Integer value) { 
-		jsonObject.put("fontSize", value);
-		return this;
-	}
-
-	public Integer getFontSize() { 
-		return jsonObject.getInteger("fontSize");
-	}
-
-	public Integer getFontSize(Integer defaultValue) { 
-		return jsonObject.getInteger("fontSize", defaultValue);
-	}
-
 	public AppConfig setFontName(String value) { 
 		jsonObject.put("fontName", value);
 		return this;
@@ -272,6 +259,19 @@ public class AppConfig {
 
 	public String getFontName(String defaultValue) { 
 		return jsonObject.getString("fontName", defaultValue);
+	}
+
+	public AppConfig setFontSize(Integer value) { 
+		jsonObject.put("fontSize", value);
+		return this;
+	}
+
+	public Integer getFontSize() { 
+		return jsonObject.getInteger("fontSize");
+	}
+
+	public Integer getFontSize(Integer defaultValue) { 
+		return jsonObject.getInteger("fontSize", defaultValue);
 	}
 
 

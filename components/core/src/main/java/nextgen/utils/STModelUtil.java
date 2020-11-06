@@ -15,7 +15,7 @@ public class STModelUtil {
       return stGroupModel.getEnums()
                          .filter(stEnum -> stEnum.getName().equals(name))
                          .findFirst()
-                         .orElseGet(null);
+                         .orElse(null);
    }
 
    public static Set<STTemplate> findSTInterfacesByName(String name, STGroupModel stGroupModel) {
