@@ -2,7 +2,6 @@ package nextgen.projects;
 
 import nextgen.templates.DomainPatterns;
 import nextgen.templates.JavaEasyFlowsPatterns;
-import nextgen.templates.JavaPatterns;
 import nextgen.templates.MavenPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
@@ -12,8 +11,6 @@ import nextgen.templates.java.Singleton;
 import nextgen.templates.javaeasyflows.WorkFlowFacade;
 import nextgen.templates.maven.MavenST;
 import nextgen.templates.maven.Pom;
-import nextgen.templates.nextgen.TransactionAction;
-import nextgen.utils.StringUtil;
 import nextgen.templates.javaneo4jembedded.*;
 
 import java.io.File;
@@ -21,8 +18,6 @@ import java.io.File;
 import static nextgen.st.STGenerator.writeJavaFile;
 import static nextgen.templates.DomainPatterns.*;
 import static nextgen.templates.JavaPatterns.*;
-import static nextgen.templates.java.JavaST.newExpressionStmt;
-import static nextgen.templates.java.JavaST.newMethodCallExpression;
 
 public class NextgenProject {
 
@@ -31,72 +26,28 @@ public class NextgenProject {
    static final File root = new File("/home/goe/projects/nextgen/components/core");
    static final File mainJava = new File(root, "src/main/java");
 
-   static final String presentationModelName = "STAppPresentationModel";
-   static final String appModelName = "AppModel";
-   static final String workspace = "STWorkspace";
-   static final String templateNavigator = "STTemplateNavigator";
-   static final String modelNavigator = "STModelNavigator";
-
    static final PackageDeclaration corePackage = newPackageDeclaration("nextgen");
    static final PackageDeclaration stPackage = newPackageDeclaration(corePackage, "st");
    static final PackageDeclaration eventsPackage = newPackageDeclaration(corePackage, "events");
    static final PackageDeclaration canvasPackage = newPackageDeclaration(stPackage, "canvas");
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
-   static final PackageDeclaration swingPackage = newPackageDeclaration(corePackage, "swing");
-   static final PackageDeclaration swingConfigPackage = newPackageDeclaration(swingPackage, "config");
-   static final PackageDeclaration actionsPackage = newPackageDeclaration(corePackage, "actions");
 
    static final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
    static final ClassOrInterfaceType stArgumentType = newClassOrInterfaceType(stModelPackage, "STArgument");
-   static final ClassOrInterfaceType stArgumentKVType = newClassOrInterfaceType(stModelPackage, "STArgumentKV");
-   static final ClassOrInterfaceType stProjectType = newClassOrInterfaceType(stModelPackage, "STProject");
    static final ClassOrInterfaceType stModelType = newClassOrInterfaceType(stModelPackage, "STModel");
-   static final ClassOrInterfaceType stValueType = newClassOrInterfaceType(stModelPackage, "STValue");
    static final ClassOrInterfaceType stFileType = newClassOrInterfaceType(stModelPackage, "STFile");
 
    static final PackageDeclaration stDomainPackage = newPackageDeclaration(stPackage, "domain");
-   static final ClassOrInterfaceType stGroupModelType = newClassOrInterfaceType(stDomainPackage, "STGroupModel");
    static final ClassOrInterfaceType stTemplateType = newClassOrInterfaceType(stDomainPackage, "STTemplate");
-   static final ClassOrInterfaceType stEnumType = newClassOrInterfaceType(stDomainPackage, "STEnum");
-   static final ClassOrInterfaceType stInterfaceType = newClassOrInterfaceType(stDomainPackage, "STInterface");
    static final ClassOrInterfaceType stParameterType = newClassOrInterfaceType(stDomainPackage, "STParameter");
-   static final ClassOrInterfaceType stParameterKeyType = newClassOrInterfaceType(stDomainPackage, "STParameterKey");
 
-   static final ClassOrInterfaceType stringType = newClassOrInterfaceType().addNames("String");
-   static final ClassOrInterfaceType integerType = newClassOrInterfaceType().addNames("Integer");
-   static final ClassOrInterfaceType dimensionType = newClassOrInterfaceType("java.awt", "Dimension");
-   static final ClassOrInterfaceType jFrameType = newClassOrInterfaceType("javax.swing", "JFrame");
-   static final ClassOrInterfaceType ownerType = newClassOrInterfaceType("javax.swing", "JComponent");
    private static nextgen.st.model.STProject stProject;
 
    @org.junit.BeforeClass
    public static void init() {
       db = new nextgen.st.model.STModelDB("/home/goe/projects/nextgen/db", "src/main/resources/templates");
-
-      db.doInTransaction(transaction -> {
-         stProject = db.findOrCreateSTProjectByName("Nextgen");
-      });
-   }
-
-   @org.junit.Test
-   public void clearDB() {
-      db.doInTransaction(transaction -> {
-         db.getDatabaseService().getAllRelationships().forEach(org.neo4j.graphdb.Relationship::delete);
-         db.getDatabaseService().getAllNodes().forEach(org.neo4j.graphdb.Node::delete);
-
-         stProject = db.newSTProject("Nextgen");
-      });
-
-      db.doInTransaction(transaction -> {
-         for (nextgen.templates.greenrobot.Event event : tmp.GenerateAll_event.generate()) {
-            write(event);
-         }
-
-         for (nextgen.templates.nextgen.TransactionAction action : tmp.GenerateAll_TransactionAction.generate()) {
-            write(action);
-         }
-      });
+      db.doInTransaction(transaction -> stProject = db.findOrCreateSTProjectByName("Nextgen"));
    }
 
   @org.junit.Test
@@ -1073,11 +1024,8 @@ public class NextgenProject {
 
    @org.junit.Test
    public void generateSwing() {
-
       final Singleton appModel = tmp.AppModelGenerator.generate();
-
       final nextgen.templates.vertx.JsonWrapper jsonWrapper = tmp.AppConfigGenerator.generate();
-
       writeJavaFile(appModel, appModel.getPackageName(), appModel.getName(), mainJava);
       writeJavaFile(appModel, jsonWrapper.getPackage(), jsonWrapper.getName(), mainJava);
    }
@@ -1442,15 +1390,6 @@ public class NextgenProject {
             .setRoot(root.getAbsolutePath()), projectPom);
    }
 
-   private nextgen.templates.nextgen.TreeNode newTreeNode(nextgen.templates.nextgen.TreeNavigator treeNavigator, String name, ClassOrInterfaceType modelType) {
-      final nextgen.templates.nextgen.TreeNode treeNode = nextgen.templates.nextgen.NextgenST.newTreeNode()
-            .setName(name)
-            .setModelType(modelType);
-      treeNavigator.addTreeNodes(treeNode);
-      treeNavigator.addTreeNodesSelected(treeNode.getName());
-      return treeNode;
-   }
-
    public static nextgen.templates.greenrobot.Event write(nextgen.templates.greenrobot.Event event) {
 
       event.setPackageName(eventsPackage.getName());
@@ -1491,156 +1430,10 @@ public class NextgenProject {
 
       }, throwable -> {
          throwable.printStackTrace();
-         System.out.println("");
+         System.out.println();
       });
 
 
       return event;
-   }
-
-   private static TransactionAction write(TransactionAction action) {
-
-      writeJavaFile(action, actionsPackage, action.getName().toString(), mainJava);
-
-      db.doInTransaction(transaction -> {
-
-         final nextgen.st.domain.STTemplate stTemplate = db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f");
-         final nextgen.st.model.STModel stModel = db.newSTModel("483489b9-c91a-41c8-ad49-1dc7f9f1469f", stTemplate);
-         stProject.addModels(stModel);
-
-         stTemplate.getParameters().forEach(stParameter -> {
-
-            if (stParameter.getName().toLowerCase().equals("name")) {
-               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(action.getName().toString())));
-            } else if (stParameter.getName().toLowerCase().equals("title") && action.getTitle() != null) {
-               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(action.getTitle().toString())));
-            } else if (stParameter.getName().toLowerCase().equals("titleexpression") && action.getTitleExpression() != null) {
-               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(action.getTitleExpression().toString())));
-            } else if (stParameter.getName().toLowerCase().equals("fields")) {
-               action.streamFields().forEach(event_fields -> {
-                  final java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
-                  stParameter.getKeys().forEach(stParameterKey -> {
-                     if (stParameterKey.getName().equals("name")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getName().toString())));
-                     } else if (stParameterKey.getName().equals("type")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getType().toString())));
-                     } else {
-                        System.out.println("error");
-                     }
-                  });
-                  stModel.addArguments(db.newSTArgument(stParameter, kvs));
-               });
-            } else if (stParameter.getName().toLowerCase().equals("staticfields")) {
-               action.streamStaticFields().forEach(event_fields -> {
-                  final java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
-                  stParameter.getKeys().forEach(stParameterKey -> {
-                     if (stParameterKey.getName().equals("name")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getName().toString())));
-                     } else if (stParameterKey.getName().equals("type")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getType().toString())));
-                     } else if (stParameterKey.getName().equals("init")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getInit().toString())));
-                     } else {
-                        System.out.println("error");
-                     }
-                  });
-                  stModel.addArguments(db.newSTArgument(stParameter, kvs));
-               });
-            } else if (stParameter.getName().toLowerCase().equals("statements")) {
-               action.getStatements().stream().forEach(o -> stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(o.toString()))));
-            } else {
-               System.out.println(stParameter.getName());
-            }
-         });
-
-
-      }, throwable -> {
-         throwable.printStackTrace();
-         System.out.println("");
-      });
-
-      return action;
-   }
-
-   private nextgen.templates.greenrobot.Subscribe newSubscribe(String event) {
-      return nextgen.templates.greenrobot.GreenRobotST.newSubscribe()
-            .setEventName(event)
-            .setEventType(newClassOrInterfaceType(eventsPackage, event))
-            .addStatements("System.out.println(\"" + event + "\");");
-   }
-
-   private nextgen.templates.java.Expression postEventExpression(nextgen.templates.greenrobot.Event event, Object... arguments) {
-      return postEventExpression(event.getName(), arguments);
-   }
-
-   private nextgen.templates.java.Expression postEventExpression(String eventName, Object... arguments) {
-      final nextgen.templates.java.MethodCallExpression expression = newMethodCallExpression()
-            .setScope(newClassOrInterfaceType(eventsPackage, eventName))
-            .setName("post");
-      for (Object argument : arguments)
-         expression.addArguments(argument);
-      return expression;
-   }
-
-   private nextgen.templates.java.Statement postEventStatement(String event, Object... arguments) {
-      return newExpressionStmt().setExpression(postEventExpression(event, arguments));
-   }
-
-   private nextgen.templates.java.ObjectCreationExpression newAction(String action, Object... arguments) {
-      final nextgen.templates.java.ObjectCreationExpression expression = nextgen.templates.JavaPatterns.newObjectCreationExpression(newClassOrInterfaceType(actionsPackage, action));
-      for (Object argument : arguments)
-         expression.addArguments(argument);
-      return expression;
-   }
-
-   private nextgen.templates.java.Expression addToActions(nextgen.templates.java.ObjectCreationExpression action) {
-      return newMethodCallExpression()
-            .setScope("actions")
-            .setName("add")
-            .addArguments(action);
-   }
-
-   private Object addToActionsStatement(nextgen.templates.java.ObjectCreationExpression action) {
-      return newExpressionStmt()
-            .setExpression(addToActions(action));
-   }
-
-   private String getParent(nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.Expression expression) {
-      return getParent(null, parent.getName(), expression);
-   }
-
-   private String getParent(String scope, nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.Expression expression) {
-      return getParent(scope, parent.getName(), expression);
-   }
-
-   private String getParent(String scope, String parent, nextgen.templates.java.Expression expression) {
-      return (scope == null ? "" : (scope + ".")) + "getParentNode(" + parent + ".class).ifPresent(parent -> " + expression + ");";
-   }
-
-   private String getParent(nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.BlockStmt blockStmt) {
-      return getParent(null, parent, blockStmt);
-   }
-
-   private String getParent(String parent, nextgen.templates.java.Expression expression) {
-      return getParent(null, parent, expression);
-   }
-
-   private String getParent(String parent, nextgen.templates.java.BlockStmt blockStmt) {
-      return getParent(null, parent, blockStmt);
-   }
-
-   private String getParent(String scope, nextgen.templates.nextgen.TreeNode parent, nextgen.templates.java.BlockStmt blockStmt) {
-      return getParent(scope, parent.getName(), blockStmt);
-   }
-
-   private String getParent(String scope, String parent, nextgen.templates.java.BlockStmt blockStmt) {
-      return (scope == null ? "" : (scope + ".")) + "getParentNode(" + parent + ".class).ifPresent(parent -> " + blockStmt + " );";
-   }
-
-   private Object newInstance(String type, String... arguments) {
-      final nextgen.templates.java.ObjectCreationExpression objectCreationExpression = newObjectCreationExpression(type);
-      for (String argument : arguments)
-         objectCreationExpression.addArguments(argument);
-      return objectCreationExpression;
    }
 }
