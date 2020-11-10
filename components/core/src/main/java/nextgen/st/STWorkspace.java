@@ -19,6 +19,7 @@ public class STWorkspace extends JTabbedPane {
 
 	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
+		setMinimumSize(new Dimension(100, 100));
 		findCanvas();
 		appModel().doInTransaction(transaction -> {
 					templateNavigator = new STTemplateNavigator(this);

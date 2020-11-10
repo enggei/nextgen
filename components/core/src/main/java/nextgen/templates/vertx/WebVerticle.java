@@ -5,11 +5,11 @@ public class WebVerticle {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
+	private String _packageName;
+	private String _name;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _startStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _handlers = new java.util.ArrayList<>();
+	private java.util.List<RouteHandler> _handlers = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
@@ -36,16 +36,16 @@ public class WebVerticle {
 		return st.render().trim();
 	}
 
-	public WebVerticle setPackageName(Object value) {
+	public WebVerticle setPackageName(String value) {
 		this._packageName = value;
 		return this;
 	}
 
-	public Object getPackageName() {
+	public String getPackageName() {
 		return this._packageName;
 	}
 
-	public Object getPackageName(Object defaultValue) {
+	public String getPackageName(String defaultValue) {
 		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
@@ -58,16 +58,16 @@ public class WebVerticle {
 		return this;
 	} 
 
-	public WebVerticle setName(Object value) {
+	public WebVerticle setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -138,22 +138,22 @@ public class WebVerticle {
 		return this._startStatements;
 	} 
 
-	public WebVerticle addHandlers(Object value) {
+	public WebVerticle addHandlers(RouteHandler value) {
 		this._handlers.add(value);
 		return this;
 	}
 
-	public WebVerticle setHandlers(Object[] value) {
+	public WebVerticle setHandlers(RouteHandler[] value) {
 		this._handlers.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public WebVerticle setHandlers(java.util.Collection<Object> values) {
+	public WebVerticle setHandlers(java.util.Collection<RouteHandler> values) {
 		this._handlers.addAll(values);
 		return this;
 	}
 
-	public WebVerticle removeHandlers(Object value) {
+	public WebVerticle removeHandlers(RouteHandler value) {
 		this._handlers.remove(value);
 		return this;
 	}
@@ -163,7 +163,7 @@ public class WebVerticle {
 		return this;
 	}
 
-	public java.util.List<Object> getHandlers() {
+	public java.util.List<RouteHandler> getHandlers() {
 		return this._handlers;
 	} 
 
@@ -196,7 +196,7 @@ public class WebVerticle {
 		return this._methods;
 	} 
 
-	public WebVerticle addFields(Object _type, Object _name, Object _init) {
+	public WebVerticle addFields(Object _type, String _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -222,7 +222,7 @@ public class WebVerticle {
 	}
 
 
-	public java.util.List<Object> getFields_Name() {
+	public java.util.List<String> getFields_Name() {
 		return streamFields().map(WebVerticle_Fields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
@@ -235,10 +235,10 @@ public class WebVerticle {
 	public static final class WebVerticle_Fields {
 
 		Object _type;
-		Object _name;
+		String _name;
 		Object _init;
 
-		public WebVerticle_Fields(Object _type, Object _name, Object _init) {
+		public WebVerticle_Fields(Object _type, String _name, Object _init) {
 			this._type = _type;
 			this._name = _name;
 			this._init = _init;
@@ -246,7 +246,7 @@ public class WebVerticle {
 
 		private WebVerticle_Fields(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 			this._init = (Object) map.get("init");
 		}
 
@@ -254,7 +254,7 @@ public class WebVerticle {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 

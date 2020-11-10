@@ -369,28 +369,41 @@ public class ~name~ {
 	public ~name~(String configPath) throws IOException {
 		log.info("Starting server");
 
-		final ServerDeploymentOptions serverDeployment = configPath == null
-				? new ServerDeploymentOptions(getClass().getResourceAsStream("/config.json"))
-				: new ServerDeploymentOptions(new java.io.File(configPath));
+		final io.vertx.core.json.JsonObject serverDeployment = configPath == null
+				? new io.vertx.core.json.JsonObject(read(getClass().getResourceAsStream("/config.json")))
+				: new io.vertx.core.json.JsonObject(read(new java.io.FileInputStream(configPath)));
 
-		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment.getJsonObject());
-		log.info("serverDeploymentOptions " + serverDeployment.getJsonObject().encode());
-
+		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment);
+		log.info("serverDeploymentOptions " + serverDeployment.encode());
+		
 		final Vertx vertx = Vertx.vertx();
 
-		serverDeployment.getVerticles()
+		~startStatements:{it|~it~};separator="\n"~
+		
+		serverDeployment.getJsonArray("verticles")
+				.stream()
+				.map(o -> (io.vertx.core.json.JsonObject)o)
 				.forEach(verticleSettings -> {
-					log.info("deploying " + verticleSettings.getName());
-					vertx.deployVerticle(verticleSettings.getClassName(), deploymentOptions, result -> {
+					log.info("verticle settings " + verticleSettings.encodePrettily());
+					vertx.deployVerticle(verticleSettings.getString("className"), deploymentOptions, result -> {
 						if (result.failed())
 							log.error("deployment failed " + result.cause().getMessage(), result.cause());
 						else
 							log.info("deployment success");
 					});
 				});
+	}
 
-		~startStatements:{it|~it~};separator="\n"~
-
+	public static io.vertx.core.buffer.Buffer read(java.io.InputStream inputStream) throws java.io.IOException {
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+		return io.vertx.core.buffer.Buffer.buffer(content);
 	}
 
 	public static void main(java.lang.String[] args) throws IOException {

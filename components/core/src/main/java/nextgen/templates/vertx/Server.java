@@ -160,28 +160,41 @@ public class Server {
 				"	public ~name~(String configPath) throws IOException {\n" + 
 				"		log.info(\"Starting server\");\n" + 
 				"\n" + 
-				"		final ServerDeploymentOptions serverDeployment = configPath == null\n" + 
-				"				? new ServerDeploymentOptions(getClass().getResourceAsStream(\"/config.json\"))\n" + 
-				"				: new ServerDeploymentOptions(new java.io.File(configPath));\n" + 
+				"		final io.vertx.core.json.JsonObject serverDeployment = configPath == null\n" + 
+				"				? new io.vertx.core.json.JsonObject(read(getClass().getResourceAsStream(\"/config.json\")))\n" + 
+				"				: new io.vertx.core.json.JsonObject(read(new java.io.FileInputStream(configPath)));\n" + 
 				"\n" + 
-				"		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment.getJsonObject());\n" + 
-				"		log.info(\"serverDeploymentOptions \" + serverDeployment.getJsonObject().encode());\n" + 
-				"\n" + 
+				"		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment);\n" + 
+				"		log.info(\"serverDeploymentOptions \" + serverDeployment.encode());\n" + 
+				"		\n" + 
 				"		final Vertx vertx = Vertx.vertx();\n" + 
 				"\n" + 
-				"		serverDeployment.getVerticles()\n" + 
+				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		\n" + 
+				"		serverDeployment.getJsonArray(\"verticles\")\n" + 
+				"				.stream()\n" + 
+				"				.map(o -> (io.vertx.core.json.JsonObject)o)\n" + 
 				"				.forEach(verticleSettings -> {\n" + 
-				"					log.info(\"deploying \" + verticleSettings.getName());\n" + 
-				"					vertx.deployVerticle(verticleSettings.getClassName(), deploymentOptions, result -> {\n" + 
+				"					log.info(\"verticle settings \" + verticleSettings.encodePrettily());\n" + 
+				"					vertx.deployVerticle(verticleSettings.getString(\"className\"), deploymentOptions, result -> {\n" + 
 				"						if (result.failed())\n" + 
 				"							log.error(\"deployment failed \" + result.cause().getMessage(), result.cause());\n" + 
 				"						else\n" + 
 				"							log.info(\"deployment success\");\n" + 
 				"					});\n" + 
 				"				});\n" + 
+				"	}\n" + 
 				"\n" + 
-				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"	public static io.vertx.core.buffer.Buffer read(java.io.InputStream inputStream) throws java.io.IOException {\n" + 
+				"		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n" + 
+				"		int read;\n" + 
+				"		byte[] data = new byte[2048];\n" + 
+				"		while ((read = inputStream.read(data, 0, data.length)) != -1)\n" + 
+				"			buffer.write(data, 0, read);\n" + 
+				"		inputStream.close();\n" + 
+				"		final byte[] content = buffer.toByteArray();\n" + 
+				"		buffer.close();\n" + 
+				"		return io.vertx.core.buffer.Buffer.buffer(content);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public static void main(java.lang.String[] args) throws IOException {\n" + 

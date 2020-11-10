@@ -126,6 +126,11 @@ public class STModelNavigator extends JPanel {
    }
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTFileChanged(nextgen.events.STFileChanged event) {
+		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile)).ifPresent(nextgen.st.STModelNavigator.STFileSinkTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProject(nextgen.events.NewSTProject event) {
 		findRootNode().ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STProjectTreeNode(event.project)));
 	}
