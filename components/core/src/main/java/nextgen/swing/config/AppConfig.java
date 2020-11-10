@@ -66,19 +66,6 @@ public class AppConfig {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
-	public AppConfig setTitle(String value) { 
-		jsonObject.put("title", value);
-		return this;
-	}
-
-	public String getTitle() { 
-		return jsonObject.getString("title");
-	}
-
-	public String getTitle(String defaultValue) { 
-		return jsonObject.getString("title", defaultValue);
-	}
-
 	public AppConfig setNavigatorWidth(Integer value) { 
 		jsonObject.put("navigatorWidth", value);
 		return this;
@@ -272,6 +259,19 @@ public class AppConfig {
 
 	public Integer getFontSize(Integer defaultValue) { 
 		return jsonObject.getInteger("fontSize", defaultValue);
+	}
+
+	public AppConfig setTitle(String value) { 
+		jsonObject.put("title", value);
+		return this;
+	}
+
+	public String getTitle() { 
+		return jsonObject.getString("title");
+	}
+
+	public String getTitle(String defaultValue) { 
+		return jsonObject.getString("title", defaultValue);
 	}
 
 

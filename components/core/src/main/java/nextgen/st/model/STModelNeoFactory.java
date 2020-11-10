@@ -190,8 +190,15 @@ public class STModelNeoFactory {
 	}
 
 	public STValue findSTValueByValue(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "value", value);
-		return node == null ? null : newSTValue(node);
+		final org.neo4j.graphdb.ResourceIterator<org.neo4j.graphdb.Node> resourceIterator = db.findNodes(STValueLabel, "value", value);
+		if(resourceIterator.hasNext()) {
+			final org.neo4j.graphdb.Node next = resourceIterator.next();
+			resourceIterator.close();
+			return newSTValue(next);
+		} else {
+			resourceIterator.close();
+			return null;
+		}
 	}
 
 	public STValue findOrCreateSTValueByValue(String value) {

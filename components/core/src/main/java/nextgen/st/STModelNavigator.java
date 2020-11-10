@@ -889,6 +889,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTFileSinkTreeNodeSelected(STFileSinkTreeNode selectedNode) {
+		nextgen.events.ModelNavigatorSTFileTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STParameterTreeNode

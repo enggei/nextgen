@@ -23,17 +23,15 @@ public class STApp extends JFrame {
 
       workspace = presentationModel.getWorkspace();
 
-      final JPanel contentPanel = new JPanel(new BorderLayout());
-      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-      contentPanel.add(workspace.getTemplateNavigator(), BorderLayout.WEST);
+//      final JPanel contentPanel = new JPanel(new BorderLayout());
+//      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-      final JSplitPane splitPane = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace, workspace.getModelNavigator());
+      final JSplitPane west = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace.getTemplateNavigator(), workspace);
+      final JSplitPane center = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, west, workspace.getModelNavigator());
 
-      contentPanel.add(splitPane, BorderLayout.CENTER);
-//      contentPanel.add(workspace, BorderLayout.CENTER);
-//      contentPanel.add(workspace.getModelNavigator(), BorderLayout.EAST);
-//      contentPanel.setSize(new Dimension(2400, 1200));
-      add(contentPanel, BorderLayout.CENTER);
+//      contentPanel.add(center, BorderLayout.CENTER);
+//      add(contentPanel, BorderLayout.CENTER);
+      add(center, BorderLayout.CENTER);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }

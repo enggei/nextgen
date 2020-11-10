@@ -15,17 +15,17 @@
       "uuid" : "b8f56f81-fda0-4ee7-b876-c0c68d283dff",
       "name" : "name",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "fcb19822-9dca-4062-b280-506873b294fa",
       "name" : "groupId",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "32ff4f1d-72c4-425b-8a96-0e4dcfca6d99",
       "name" : "artifactId",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "72403059-fb1a-4fe5-af2c-e7b4490a51ff",
       "name" : "version",
@@ -50,7 +50,7 @@
       "uuid" : "e078cac5-a180-419b-b251-01ebd13a75cd",
       "name" : "build",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "build"
     }, {
       "uuid" : "c25f1803-7397-4f2b-90f1-033588580d33",
       "name" : "dependencyManagement",

@@ -19,7 +19,7 @@
         "uuid" : "ca02ee05-94c6-4ad7-9462-3dfa3a5a37ec",
         "name" : "name",
         "type" : "SINGLE",
-        "argumentType" : "Object"
+        "argumentType" : "String"
       }, {
         "uuid" : "44324363-3a3b-4d98-a3df-f7817d8d0ebc",
         "name" : "externalFields",
@@ -47,7 +47,7 @@
         "uuid" : "e3bf991a-a626-4faf-a571-faf60cea0008",
         "name" : "accessors",
         "type" : "LIST",
-        "argumentType" : "Object"
+        "argumentType" : "Accessor"
       }, {
         "uuid" : "fc684dcd-b259-44ba-a422-93ed533b9ee8",
         "name" : "methods",
@@ -83,7 +83,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "adb625e7-714e-4df2-8133-acd78e798abe",
         "name" : "listReferenceAccessors",
@@ -113,7 +114,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "d20dad1e-291a-4d48-85f6-4bb4d3173a57",
         "name" : "listPrimitiveAccessors",
@@ -143,7 +145,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "7c9142ef-d876-48c1-9e62-16d2ba9900e5",
         "name" : "enumAccessors",
@@ -173,7 +176,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "548f330d-68f5-40be-a037-16dfea33925b",
         "name" : "referenceAccessors",
@@ -203,7 +207,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "81e00ea3-95be-41d7-b4fe-b9bb7b3028e8",
         "name" : "externalAccessors",
@@ -228,7 +233,8 @@
           "name" : "setStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "4c1bf0fd-081b-4e21-942f-4b6b543661da",
         "name" : "incomingReferenceStream",
@@ -273,7 +279,8 @@
           "name" : "removeStatements",
           "type" : "LIST",
           "argumentType" : "Object"
-        } ]
+        } ],
+        "implements" : [ "Accessor" ]
       }, {
         "uuid" : "0247f33f-954e-4c95-ab1e-c2ef16852b21",
         "name" : "nodeToJsonObject",
@@ -443,5 +450,9 @@
       "name" : "Transaction",
       "lexical" : "org.neo4j.graphdb.Transaction"
     } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "24e9239f-1ee2-4bee-af97-347f8930b242",
+    "name" : "Accessor"
   } ]
 }

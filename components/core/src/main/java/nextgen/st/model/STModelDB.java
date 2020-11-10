@@ -174,7 +174,8 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    private STTemplate findSTTemplateByUuid(STGroupModel groupModel, String stTemplateUuid) {
-      final Iterator<STTemplate> iterator = groupModel.getTemplates().iterator();
+      final Iterator<STTemplate> iterator = groupModel.getTemplates()
+            .iterator();
       while (iterator.hasNext()) {
          final STTemplate stTemplate = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
          if (stTemplate != null) return stTemplate;
@@ -223,7 +224,8 @@ public class STModelDB extends STModelNeoFactory {
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
       return newSTFile()
-            .setUuid(UUID.randomUUID().toString())
+            .setUuid(UUID.randomUUID()
+                  .toString())
             .setName(newSTValue(name))
             .setType(findOrCreateSTValueByValue(type))
             .setPath(newSTValue(path))
@@ -232,13 +234,15 @@ public class STModelDB extends STModelNeoFactory {
 
    public STProject newSTProject(String name) {
       return newSTProject()
-            .setUuid(java.util.UUID.randomUUID().toString())
+            .setUuid(java.util.UUID.randomUUID()
+                  .toString())
             .setName(name);
    }
 
    public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
       return newSTModel()
-            .setUuid(java.util.UUID.randomUUID().toString())
+            .setUuid(java.util.UUID.randomUUID()
+                  .toString())
             .setStTemplate(stTemplate.getUuid())
             .setStGroup(stGroupModel);
    }
@@ -266,6 +270,8 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STValue newSTValue(String value) {
+      if (value == null || value.trim()
+            .length() == 0) return null;
       return newSTValue()
             .setUuid(java.util.UUID.randomUUID()
                   .toString())
@@ -275,21 +281,26 @@ public class STModelDB extends STModelNeoFactory {
 
    public STValue newSTValue(STEnumValue stEnumValue) {
       return newSTValue()
-            .setUuid(java.util.UUID.randomUUID().toString())
+            .setUuid(java.util.UUID.randomUUID()
+                  .toString())
             .setType(ENUM)
-            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical().trim().length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
+            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical()
+                  .trim()
+                  .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
    }
 
    public STArgumentKV newSTArgumentKV(STParameterKey key, STValue stValue) {
       return newSTArgumentKV()
-            .setUuid(UUID.randomUUID().toString())
+            .setUuid(UUID.randomUUID()
+                  .toString())
             .setStParameterKey(key.getUuid())
             .setValue(stValue);
    }
 
    private STArgument newSTArgument(STParameter stParameter) {
       return newSTArgument()
-            .setUuid(UUID.randomUUID().toString())
+            .setUuid(UUID.randomUUID()
+                  .toString())
             .setStParameter(stParameter.getUuid());
    }
 
@@ -302,18 +313,25 @@ public class STModelDB extends STModelNeoFactory {
 
    public void deleteUnnusedFiles() {
       findAllSTFile().forEach(stFile -> {
-         if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
+         if (stFile.getIncomingFilesSTModel()
+               .iterator()
+               .hasNext()) return;
          log.info("deleting unnused stFile-" + stFile.getUuid());
          log.info(Neo4JUtil.toString(stFile.getNode()));
-         stFile.getNode().getRelationships().forEach(Relationship::delete);
-         stFile.getNode().delete();
+         stFile.getNode()
+               .getRelationships()
+               .forEach(Relationship::delete);
+         stFile.getNode()
+               .delete();
       });
    }
 
    public void deleteUnnusedNodes() {
       getDatabaseService().getAllNodes()
             .forEach(node -> {
-               if (node.getRelationships().iterator().hasNext()) return;
+               if (node.getRelationships()
+                     .iterator()
+                     .hasNext()) return;
                if (isSTProject(node)) return;
                log.info("deleting unnused node");
                log.info(Neo4JUtil.toString(node));
@@ -335,7 +353,8 @@ public class STModelDB extends STModelNeoFactory {
             .getArgumentsSorted()
             .forEach(stArgument -> stTemplate
                   .getParameters()
-                  .filter(stParameter -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                  .filter(stParameter -> stArgument.getStParameter()
+                        .equals(stParameter.getUuid()))
                   .findFirst()
                   .ifPresent(stParameter -> {
                      switch (stParameter.getType()) {
@@ -349,7 +368,8 @@ public class STModelDB extends STModelNeoFactory {
                                  .getKeys()
                                  .forEach(stParameterKey -> stArgument
                                        .getKeyValues()
-                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
+                                             .equals(stParameterKey.getUuid()))
                                        .findAny()
                                        .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue()))));
                            clone.addArguments(newSTArgument(stParameter, kvs));
