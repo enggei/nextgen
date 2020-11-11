@@ -29,4 +29,5 @@ public class NewSTGroupAction extends TransactionAction {
       	nextgen.events.NewSTGroup.post(stGroupModel);
       });
    }
+
 }

@@ -23,4 +23,5 @@ public class AddArgumentFromInput extends TransactionAction {
          nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
       });
    }
+
 }

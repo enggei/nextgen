@@ -20,4 +20,5 @@ public class AddFileSink extends TransactionAction {
       stModel.addFiles(stFile);
       nextgen.events.NewFileSink.post(stModel, stFile);
    }
+
 }

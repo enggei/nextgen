@@ -22,4 +22,5 @@ public class GenerateAllProjectModels extends TransactionAction {
                nextgen.st.STGenerator.writeToFile(content, packageDeclaration, name, filetype, root);
             }));
    }
+
 }

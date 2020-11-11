@@ -38,4 +38,5 @@ public class AddMultipleValuesToProject extends TransactionAction {
          close(jDialog);
       });
    }
+
 }

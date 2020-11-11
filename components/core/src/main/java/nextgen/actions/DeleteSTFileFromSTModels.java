@@ -25,4 +25,5 @@ public class DeleteSTFileFromSTModels extends TransactionAction {
          }
       });
    }
+
 }

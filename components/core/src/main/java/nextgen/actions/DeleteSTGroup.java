@@ -19,4 +19,5 @@ public class DeleteSTGroup extends TransactionAction {
          nextgen.events.STGroupDeleted.post(stGroup.getUuid());
       });
    }
+
 }

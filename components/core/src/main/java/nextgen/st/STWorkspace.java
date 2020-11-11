@@ -75,6 +75,9 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTValueTreeNodeClicked(nextgen.events.ModelNavigatorSTValueTreeNodeClicked event) {
+		final nextgen.st.STValueEditor stValueEditor = getSTValueEditor();
+		stValueEditor.setSTValue(event.stValue);
+		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
 	}
 
 	private STAppPresentationModel appModel() {
@@ -195,22 +198,47 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	private nextgen.st.STFileEditor getSTFileEditor(nextgen.st.model.STFile stFile) {
-      for (int i = 0; i < getTabCount(); i++) {
-         final Component tabComponentAt = getComponentAt(i);
-         if (tabComponentAt instanceof STFileEditor) {
-            if (((STFileEditor) tabComponentAt).getSTFile().equals(stFile)) {
-               final nextgen.st.STFileEditor editor = (nextgen.st.STFileEditor) tabComponentAt;
-               setSelectedComponent(editor);
-               return editor;
-            }
-         }
-      }
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STFileEditor) {
+				if (((STFileEditor) tabComponentAt).getSTFile().equals(stFile)) {
+					final nextgen.st.STFileEditor editor = (nextgen.st.STFileEditor) tabComponentAt;
+					setSelectedComponent(editor);
+					return editor;
+				}
+			}
+		}
 
-      final STFileEditor component = new STFileEditor(stFile);
-      addPane("FileSink", component);
-      setSelectedComponent(component);
-      return component;
-   }
+		final STFileEditor component = new STFileEditor(stFile);
+		addPane("FileSink", component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeSTValueEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STValueEditor) {
+				if (((STValueEditor) tabComponentAt).getUuid().equals(uuid)) {
+					remove(i);
+				}
+			}
+		}
+	}
+
+	public STValueEditor getSTValueEditor() {
+		for (int i = 0; i < getTabCount(); i++) {
+				final Component tabComponentAt = getComponentAt(i);
+				if (tabComponentAt instanceof STValueEditor) {
+					return (STValueEditor) tabComponentAt;
+				}
+		}
+
+		final STValueEditor component = new STValueEditor();
+		addPane("STValue", component);
+		setSelectedComponent(component);
+		return component;
+	}
 
 	public STValueGrid getValueGrid() {
 		for (int i = 0; i < getTabCount(); i++) {

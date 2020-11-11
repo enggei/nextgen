@@ -21,4 +21,5 @@ public class DeleteSTInterface extends TransactionAction {
          nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());   
       });
    }
+
 }

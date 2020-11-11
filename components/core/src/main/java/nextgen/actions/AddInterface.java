@@ -30,4 +30,5 @@ public class AddInterface extends TransactionAction {
          close(jDialog);   
       });
    }
+
 }

@@ -21,4 +21,5 @@ public class DeleteSTFile extends TransactionAction {
          nextgen.events.STFileDeleted.post(uuid);
       });
    }
+
 }

@@ -21,4 +21,5 @@ public class DeleteEnum extends TransactionAction {
          nextgen.events.STEnumDeleted.post(stEnum.getUuid());
       });
    }
+
 }

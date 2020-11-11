@@ -23,4 +23,5 @@ public class RemoveInterfaceFromSTTemplate extends TransactionAction {
          nextgen.events.STTemplateInterfaceRemoved.post(stGroup, stTemplate, interfaceName);
       });
    }
+
 }

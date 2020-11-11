@@ -32,4 +32,5 @@ public class SetKVArgumentFromClipboard extends TransactionAction {
 
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
    }
+
 }

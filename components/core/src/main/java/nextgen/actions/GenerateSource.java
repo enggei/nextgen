@@ -42,4 +42,5 @@ public class GenerateSource extends TransactionAction {
 
       nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(appModel().getOutputPath()));
    }
+
 }

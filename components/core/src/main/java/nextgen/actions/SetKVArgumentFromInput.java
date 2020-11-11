@@ -36,4 +36,5 @@ public class SetKVArgumentFromInput extends TransactionAction {
       	nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
       });
    }
+
 }

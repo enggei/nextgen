@@ -23,4 +23,5 @@ public class RenameEnum extends TransactionAction {
          });
       });
    }
+
 }

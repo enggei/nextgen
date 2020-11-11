@@ -17,4 +17,5 @@ public class AddValueToProject extends TransactionAction {
       project.addValues(stValue);
       nextgen.events.NewSTProjectSTValue.post(stValue, project);
    }
+
 }

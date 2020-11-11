@@ -21,4 +21,5 @@ public class NewInterface extends TransactionAction {
                nextgen.events.NewSTInterface.post(stGroup, stInterface);
             }));
    }
+
 }

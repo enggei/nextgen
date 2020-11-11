@@ -17,4 +17,5 @@ public class SetSTValueFromClipboard extends TransactionAction {
       stValue.setType(nextgen.st.model.STValueType.PRIMITIVE);
       nextgen.events.STValueChanged.post(stValue);
    }
+
 }

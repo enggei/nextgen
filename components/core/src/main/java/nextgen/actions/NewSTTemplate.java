@@ -20,4 +20,5 @@ public class NewSTTemplate extends TransactionAction {
       	nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
       }));
    }
+
 }

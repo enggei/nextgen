@@ -21,4 +21,5 @@ public class NewEnum extends TransactionAction {
                nextgen.events.NewSTEnum.post(stGroup, stEnum);
             }));
    }
+
 }

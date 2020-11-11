@@ -62,4 +62,5 @@ public class EditEnum extends TransactionAction {
       	nextgen.events.STEnumChanged.post(stEnum);
       });
    }
+
 }

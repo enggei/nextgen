@@ -70,4 +70,5 @@ public class AddFileSinkToSTModels extends TransactionAction {
          javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
+
 }

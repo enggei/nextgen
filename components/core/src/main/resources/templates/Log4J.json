@@ -10,22 +10,22 @@
       "uuid" : "08164d7a-8ee7-4711-bfc5-83456d305cc1",
       "name" : "logLevel",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "LogLevel"
     }, {
       "uuid" : "f27b13f9-b914-4361-b73e-627db1d2049f",
       "name" : "rootAppender",
       "type" : "SINGLE",
-      "argumentType" : "Object"
+      "argumentType" : "String"
     }, {
       "uuid" : "dc99743d-0e1b-4e1b-89e2-ce392f39a26d",
       "name" : "categories",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "category"
     }, {
       "uuid" : "81b8bd5b-3736-421a-aa73-3ddd2d721546",
       "name" : "appenders",
       "type" : "LIST",
-      "argumentType" : "Object"
+      "argumentType" : "Appender"
     } ],
     "children" : [ {
       "uuid" : "846ee16c-7f12-49cf-8ba3-794011689f8a",
@@ -66,7 +66,8 @@
         "name" : "elseINFO",
         "type" : "SINGLE",
         "argumentType" : "Object"
-      } ]
+      } ],
+      "implements" : [ "Appender" ]
     }, {
       "uuid" : "51b21fd4-eab4-42e1-9e5a-5081552f9ce2",
       "name" : "consoleAppender",
@@ -81,7 +82,8 @@
         "name" : "threshold",
         "type" : "SINGLE",
         "argumentType" : "Object"
-      } ]
+      } ],
+      "implements" : [ "Appender" ]
     }, {
       "uuid" : "e26e9fe4-8719-4240-b096-245c989e6e6f",
       "name" : "category",
@@ -140,5 +142,9 @@
       "name" : "TRACE",
       "lexical" : null
     } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "4d99be2f-3e20-4586-aca1-f511d6d1f145",
+    "name" : "Appender"
   } ]
 }

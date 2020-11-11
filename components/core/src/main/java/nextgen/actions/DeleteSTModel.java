@@ -21,4 +21,5 @@ public class DeleteSTModel extends TransactionAction {
          nextgen.events.STModelDeleted.post(uuid);
       });
    }
+
 }

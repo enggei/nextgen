@@ -41,4 +41,5 @@ public class SetInterfaces extends TransactionAction {
          javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
+
 }

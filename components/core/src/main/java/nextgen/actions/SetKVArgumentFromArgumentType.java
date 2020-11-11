@@ -1,27 +1,29 @@
 package nextgen.actions;
 
-public class AddArgumentFromArgumentType extends TransactionAction {
+public class SetKVArgumentFromArgumentType extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
+   private final nextgen.st.model.STArgument stArgument;
+   private final nextgen.st.domain.STParameterKey stParameterKey;
    private final javax.swing.JComponent owner;
 
-	public AddArgumentFromArgumentType(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, javax.swing.JComponent owner) {
-		super("Add");
+	public SetKVArgumentFromArgumentType(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, javax.swing.JComponent owner) {
+		super("Set");
 		this.stModel = stModel;
-		this.stParameter = stParameter;
+		this.stArgument = stArgument;
+		this.stParameterKey = stParameterKey;
 		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final String argumentType = stParameter.getArgumentType();
+      final String argumentType = stParameterKey.getArgumentType();
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
          final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = stModel.getArguments()
-               .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+               .filter(stArgument -> stArgument.getStParameter().equals(stParameterKey.getUuid()))
                .map(nextgen.st.model.STArgument::getValue)
                .filter(nextgen.st.model.STValue::hasType)
                .filter(stValue -> stValue.getType() == nextgen.st.model.STValueType.STMODEL)
@@ -29,14 +31,14 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                .findFirst();
 
          if (stTemplate.isPresent()) {
+            removeExisting();
             final nextgen.st.domain.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());
             final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());
-            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-            addValue(stValue);
+            addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             input(owner, "New value", s -> {
-               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
-               addValue(stValue);
+               removeExisting();
+               addValue(appModel().db.newSTValue(s));
             });
          }
 
@@ -49,35 +51,35 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                .findAny();
 
          if (stTemplate.isPresent()) {
+            removeExisting();
             final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());
-            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-            addValue(stValue);
+            addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             final java.util.Set<nextgen.st.domain.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
+                  removeExisting();
                   final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, interfaces.iterator().next());
-                  final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-                  addValue(stValue);
+                  addValue(appModel().db.newSTValue(stTemplateModel));
                } else {
                   select(owner, interfaces, value -> {
+                     removeExisting();
                      final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, value);
-                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-                     addValue(stValue);
-                  });
+                     addValue(appModel().db.newSTValue(stTemplateModel));
+                  });   
                }
 
             } else {
                final nextgen.st.domain.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);
                if (stEnum != null) {
                   select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {
-                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
-                     addValue(stValue);
+                     removeExisting();
+                     addValue(appModel().db.newSTValue(value));
                   });
                } else {
                   input(owner, "New value", s -> {
-                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
-                     addValue(stValue);
+                     removeExisting();
+                     addValue(appModel().db.newSTValue(s));
                   });
                }
             }
@@ -85,9 +87,22 @@ public class AddArgumentFromArgumentType extends TransactionAction {
       }
    }
 
+   private void removeExisting() {
+      stArgument.getKeyValues()
+            .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))
+            .findFirst()
+            .ifPresent(existing -> {
+               stArgument.removeKeyValues(existing);
+               final String uuid = existing.getUuid();
+               existing.delete();
+               nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+            });
+   }
+
    private void addValue(nextgen.st.model.STValue stValue) {
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
-      stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
+      stArgument.addKeyValues(stArgumentKV);
+
+      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
    }
 }

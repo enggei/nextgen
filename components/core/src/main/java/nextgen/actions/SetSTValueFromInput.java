@@ -21,4 +21,5 @@ public class SetSTValueFromInput extends TransactionAction {
          nextgen.events.STValueChanged.post(stValue);
       });
    }
+
 }

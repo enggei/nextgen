@@ -23,4 +23,5 @@ public class AddChildToTemplate extends TransactionAction {
                nextgen.events.NewSTTemplateChild.post(newTemplate, stTemplate);
             }));
    }
+
 }

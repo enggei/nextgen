@@ -33,4 +33,5 @@ public class SetArgumentFromSTValue extends TransactionAction {
 
       if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
    }
+
 }

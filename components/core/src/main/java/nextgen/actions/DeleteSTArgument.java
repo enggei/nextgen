@@ -23,4 +23,5 @@ public class DeleteSTArgument extends TransactionAction {
                nextgen.events.STArgumentDeleted.post(stModel, uuid);
             }));
    }
+
 }

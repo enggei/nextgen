@@ -14,4 +14,5 @@ public class CopyModel extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       toClipboard("stmodel-" + stModel.getUuid());
    }
+
 }

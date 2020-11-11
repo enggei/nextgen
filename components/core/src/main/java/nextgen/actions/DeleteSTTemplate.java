@@ -21,4 +21,5 @@ public class DeleteSTTemplate extends TransactionAction {
          nextgen.events.STTemplateDeleted.post(stTemplate.getUuid());
       });
    }
+
 }

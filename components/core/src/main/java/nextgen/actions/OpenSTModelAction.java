@@ -14,4 +14,5 @@ public class OpenSTModelAction extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       nextgen.events.OpenSTModel.post(stModel);
    }
+
 }

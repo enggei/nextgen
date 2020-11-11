@@ -70,4 +70,5 @@ public class SetTemplateParameterTypes extends TransactionAction {
       	javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
+
 }

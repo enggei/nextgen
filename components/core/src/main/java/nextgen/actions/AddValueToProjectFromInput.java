@@ -20,4 +20,5 @@ public class AddValueToProjectFromInput extends TransactionAction {
          nextgen.events.NewSTProjectSTValue.post(stValue, project);
       });
    }
+
 }

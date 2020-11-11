@@ -31,4 +31,5 @@ public class AddChildrenToTemplate extends TransactionAction {
          nextgen.events.STTemplateChildrenAdded.post(stGroup, stTemplate, children);   
       });
    }
+
 }

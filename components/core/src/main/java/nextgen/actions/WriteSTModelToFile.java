@@ -21,4 +21,5 @@ public class WriteSTModelToFile extends TransactionAction {
          nextgen.st.STGenerator.writeToFile(content, packageDeclaration, name, filetype, root);
       });
    }
+
 }

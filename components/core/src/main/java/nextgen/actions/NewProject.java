@@ -17,4 +17,5 @@ public class NewProject extends TransactionAction {
          nextgen.events.NewSTProject.post(stProject);
       });
    }
+
 }

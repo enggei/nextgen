@@ -17,4 +17,5 @@ public class AddModelToProject extends TransactionAction {
       project.addModels(stModel);
       nextgen.events.NewSTProjectSTModel.post(stModel, project, appModel().getSTTemplate(stModel));
    }
+
 }

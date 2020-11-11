@@ -19,4 +19,5 @@ public class EditSTGroupTags extends TransactionAction {
          nextgen.events.STGroupTagsChanged.post(stGroup);
       });
    }
+
 }

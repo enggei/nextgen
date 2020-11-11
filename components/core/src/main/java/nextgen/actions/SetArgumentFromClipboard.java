@@ -32,4 +32,5 @@ public class SetArgumentFromClipboard extends TransactionAction {
 
       if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
    }
+
 }

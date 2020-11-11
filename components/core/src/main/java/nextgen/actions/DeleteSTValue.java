@@ -21,4 +21,5 @@ public class DeleteSTValue extends TransactionAction {
          nextgen.events.STValueDeleted.post(uuid);
       });
    }
+
 }

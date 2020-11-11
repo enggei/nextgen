@@ -19,4 +19,5 @@ public class AddArgumentFromClipboard extends TransactionAction {
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }
+
 }
