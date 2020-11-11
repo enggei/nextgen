@@ -9,7 +9,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public SetKVArgumentFromArgumentType(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, javax.swing.JComponent owner) {
-		super("Set");
+		super("Set " + stParameterKey.getName());
 		this.stModel = stModel;
 		this.stArgument = stArgument;
 		this.stParameterKey = stParameterKey;

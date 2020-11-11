@@ -1249,6 +1249,7 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				getParentNode(STModelTreeNode.class).ifPresent(parent -> {
 					stParameter.getKeys().forEach(stParameterKey -> {
+					actions.add(new nextgen.actions.SetKVArgumentFromArgumentType(parent.getModel(), getModel(), stParameterKey, tree));
 					actions.add(new nextgen.actions.SetKVArgumentFromInput(parent.getModel(), getModel(), stParameterKey, tree));
 					actions.add(new nextgen.actions.SetKVArgumentFromClipboard(parent.getModel(), getModel(), stParameterKey));
 					});
@@ -1387,6 +1388,9 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			stTemplate.getParameters()
+					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
 
 		STModelKVArgumentTreeNode thisNode() {
