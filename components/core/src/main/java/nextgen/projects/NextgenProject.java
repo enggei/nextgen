@@ -42,13 +42,7 @@ public class NextgenProject {
    static final ClassOrInterfaceType stTemplateType = newClassOrInterfaceType(stDomainPackage, "STTemplate");
    static final ClassOrInterfaceType stParameterType = newClassOrInterfaceType(stDomainPackage, "STParameter");
 
-   private static nextgen.st.model.STProject stProject;
 
-   @org.junit.BeforeClass
-   public static void init() {
-      db = new nextgen.st.model.STModelDB("/home/goe/projects/nextgen/db", "src/main/resources/templates");
-      db.doInTransaction(transaction -> stProject = db.findOrCreateSTProjectByName("Nextgen"));
-   }
 
   @org.junit.Test
    public void generateWorkspace() {
@@ -314,7 +308,7 @@ public class NextgenProject {
                         "	});"))
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("SetInputValueArgumentAction")
-                  .addFields("nextgen.st.domain.STParameterKey", "stParameterKey")
+                  .addFields("nextgen.st.model.STParameterKey", "stParameterKey")
                   .addFields(stArgumentType, "stArgument")
                   .setTitle("From input")
                   .addStatements("nextgen.utils.SwingUtil.showInputDialog(stParameterKey.getName(), thisCanvas(), s -> {\n" +
@@ -328,7 +322,7 @@ public class NextgenProject {
                         "		});"))
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("SetSTModelArgumentAction")
-                  .addFields("nextgen.st.domain.STParameterKey", "stParameterKey")
+                  .addFields("nextgen.st.model.STParameterKey", "stParameterKey")
                   .addFields(stArgumentType, "stArgument")
                   .addFields("STModelNode", "stModelNode")
                   .setTitleExpression("appModel().cut(stModelNode.getText(), 30)")
@@ -342,7 +336,7 @@ public class NextgenProject {
             .addActions(nextgen.templates.nextgen.NextgenST.newCanvasNodeAction()
                   .setName("OpenArgument")
                   .addFields(stArgumentType, "stArgument")
-                  .addFields("nextgen.st.domain.STParameterKey", "stParameterKey")
+                  .addFields("nextgen.st.model.STParameterKey", "stParameterKey")
                   .addFields("nextgen.st.model.STArgumentKV", "stArgumentKV")
                   .setTitleExpression("appModel().cut(thisCanvas().appModel().render(stArgument.getValue()))")
                   .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
@@ -522,7 +516,7 @@ public class NextgenProject {
 //                        "	appModel().getIncomingSTArguments(getModel())\n" +
 //                        "			.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()\n" +
 //                        "					.forEach(stModel -> {\n" +
-//                        "						final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+//                        "						final nextgen.st.model.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
 //                        "						if (stTemplateByUuid == null) return;\n" +
 //                        "						stTemplateByUuid.getParameters()\n" +
 //                        "								.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
@@ -537,7 +531,7 @@ public class NextgenProject {
 //                        "			.forEach(stArgumentKV -> {\n" +
 //                        "				stArgumentKV.getIncomingKeyValuesSTArgument()\n" +
 //                        "						.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {\n" +
-//                        "							final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+//                        "							final nextgen.st.model.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
 //                        "							if (stTemplateByUuid == null) return;\n" +
 //                        "							stTemplateByUuid.getParameters()\n" +
 //                        "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
@@ -654,7 +648,7 @@ public class NextgenProject {
                   .addFields(stArgumentType, "stArgument")
                   .setTitleExpression("appModel().cut(appModel().render(stArgument), 30)")
                   .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
-                        "	if (stParameter.getType().equals(nextgen.st.domain.STParameterType.KVLIST)) {\n" +
+                        "	if (stParameter.getType().equals(nextgen.st.model.STParameterType.KVLIST)) {\n" +
                         "		addSTKVNode(stArgument, stParameter);\n" +
                         "	} else {\n" +
                         "		final nextgen.st.model.STValue stValue = stArgument.getValue();\n" +
@@ -711,7 +705,7 @@ public class NextgenProject {
                   "public void setText(String text) {\n" +
                   "	super.setText(text.substring(0, Math.min(text.length(), 2000)));\n" +
                   "}")
-            .addMethods("public boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameter stParameter, BaseCanvasNode<?> node) {\n" +
+            .addMethods("public boolean refersTo(nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameter stParameter, BaseCanvasNode<?> node) {\n" +
                   "	if (stArgument == null || stParameter == null || node == null) return false;\n" +
                   "	switch (stParameter.getType()) {\n" +
                   "		case SINGLE: {\n" +
@@ -778,7 +772,7 @@ public class NextgenProject {
                         "	appModel().getIncomingSTArguments(getModel())\n" +
                         "			.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel()\n" +
                         "					.forEach(stModel -> {\n" +
-                        "						final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+                        "						final nextgen.st.model.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
                         "						if (stTemplateByUuid == null) return;\n" +
                         "						stTemplateByUuid.getParameters()\n" +
                         "								.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
@@ -793,7 +787,7 @@ public class NextgenProject {
                         "			.forEach(stArgumentKV -> {\n" +
                         "				stArgumentKV.getIncomingKeyValuesSTArgument()\n" +
                         "						.forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> {\n" +
-                        "							final nextgen.st.domain.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
+                        "							final nextgen.st.model.STTemplate stTemplateByUuid = appModel().findSTTemplateByUuid(stModel.getStTemplate());\n" +
                         "							if (stTemplateByUuid == null) return;\n" +
                         "							stTemplateByUuid.getParameters()\n" +
                         "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
@@ -866,7 +860,7 @@ public class NextgenProject {
             .setUuidExpression("stArgumentKV.getUuid()")
             .setLabelExpression("stParameterKey.getName()")
             .addFields(stArgumentType, "stArgument")
-            .addFields("nextgen.st.domain.STParameterKey", "stParameterKey")
+            .addFields("nextgen.st.model.STParameterKey", "stParameterKey")
             .addFields("nextgen.st.model.STArgumentKV", "stArgumentKV");
 
       final nextgen.templates.nextgen.CanvasRelation sinkRelation = nextgen.templates.nextgen.NextgenST.newCanvasRelation()
@@ -1201,11 +1195,13 @@ public class NextgenProject {
 
       final Entity stParameterKey = DomainPatterns
             .newEntity("STParameterKey")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
       final Entity stParameter = DomainPatterns
             .newEntity("STParameter")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newEnumField("type", stParameterType))
             .addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
@@ -1213,20 +1209,24 @@ public class NextgenProject {
 
       final Entity stInterface = DomainPatterns
             .newEntity("STInterface")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"));
 
       final Entity stEnumValue = DomainPatterns
             .newEntity("STEnumValue")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("lexical"));
 
       final Entity stEnum = DomainPatterns
             .newEntity("STEnum")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
 
       final Entity stTemplate = DomainPatterns
             .newEntity("STTemplate")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("text"))
             .addRelations(DomainPatterns.newOneToManyString("implements"))
@@ -1235,6 +1235,7 @@ public class NextgenProject {
 
       final Entity stGroupModel = DomainPatterns
             .newEntity("STGroupModel")
+            .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("delimiter"))
             .addRelations(DomainPatterns.newStringField("icon"))
@@ -1289,6 +1290,7 @@ public class NextgenProject {
       final Domain domain = DomainPatterns
             .newDomain("STModel")
             .addEntities(stGroupModel)
+            .addEntities(stParameterType)
             .addEntities(stModel)
             .addEntities(stProject);
 
@@ -1513,7 +1515,6 @@ public class NextgenProject {
 
          final nextgen.st.domain.STTemplate stTemplate = db.findSTTemplateByUuid("56afaa61-e68a-4ded-9563-4e9c38e6320d");
          final nextgen.st.model.STModel stModel = db.newSTModel("fd17be4e-a3b6-4b52-a001-b0b3257b6f21", stTemplate);
-         stProject.addModels(stModel);
 
          stTemplate.getParameters().forEach(stParameter -> {
 
