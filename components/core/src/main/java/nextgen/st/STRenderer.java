@@ -94,8 +94,7 @@ public class STRenderer {
 
       neoFacades.add("final " + facadeType + " " + facadeName + " = new " + facadeType + "(db);");
 
-      modelStatements.add(facadeName + ".find" + StringUtil.capitalize(stTemplate.getName()) + "Model(" + StringUtil.dq(stModel
-            .getUuid()) + ");");
+      modelStatements.add(facadeName + ".find" + StringUtil.capitalize(stTemplate.getName()) + "Model(" + StringUtil.dq(stModel.getUuid()) + ");");
    }
 
    public MethodCallExpression renderGeneratorCode(STModel stModel, Set<String> imports) {
@@ -165,8 +164,7 @@ public class STRenderer {
 
    public Object render(STArgument stArgument, STParameterKey stParameterKey) {
       final STArgumentKV found = stArgument.getKeyValues()
-            .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                  .equals(stParameterKey.getUuid()))
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
             .findFirst()
             .orElse(null);
       return found == null ? null : render(found.getValue());
@@ -195,8 +193,7 @@ public class STRenderer {
 
    public Object renderGeneratorCode(STArgument stArgument, STParameterKey stParameterKey, Set<String> imports) {
       final STArgumentKV found = stArgument.getKeyValues()
-            .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                  .equals(stParameterKey.getUuid()))
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
             .findFirst()
             .orElse(null);
       return found == null ? null : renderGeneratorCode(found.getValue(), imports);

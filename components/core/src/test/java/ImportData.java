@@ -16,6 +16,8 @@ public class ImportData {
       final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("/home/goe/projects/nextgen/db");
 
       db.doInTransaction(transaction -> db.findAllSTGroupModel().forEach(stGroupModel -> {
+         stGroupModel.getEnums().forEach(ImportData::delete);
+         stGroupModel.getInterfaces().forEach(ImportData::delete);
          stGroupModel.getTemplates().forEach(ImportData::delete);
          stGroupModel.delete();
       }));
@@ -55,15 +57,15 @@ public class ImportData {
                      stEnum.setName(stEnumJS.getString("name"));
                      groupModel.addEnums(stEnum);
 
-                     stGroupJS.getJsonArray("values", new io.vertx.core.json.JsonArray())
+                     stEnumJS.getJsonArray("values", new io.vertx.core.json.JsonArray())
                            .stream()
                            .map(o -> (io.vertx.core.json.JsonObject) o)
                            .forEach(stEnumValueJS -> {
 
                               final nextgen.st.model.STEnumValue stEnumValue = db.newSTEnumValue();
-                              stEnumValue.setUuid(stEnumJS.getString("uuid"));
-                              stEnumValue.setName(stEnumJS.getString("name"));
-                              stEnumValue.setLexical(stEnumJS.getString("lexical"));
+                              stEnumValue.setUuid(stEnumValueJS.getString("uuid"));
+                              stEnumValue.setName(stEnumValueJS.getString("name"));
+                              stEnumValue.setLexical(stEnumValueJS.getString("lexical"));
                               stEnum.addValues(stEnumValue);
                            });
                   });
@@ -174,5 +176,14 @@ public class ImportData {
       });
 
       stTemplate.delete();
+   }
+
+   private static void delete(nextgen.st.model.STEnum stEnum) {
+      stEnum.getValues().forEach(nextgen.st.model.STEnumValue::delete);
+      stEnum.delete();
+   }
+
+   private static void delete(nextgen.st.model.STInterface stInterface) {
+      stInterface.delete();
    }
 }

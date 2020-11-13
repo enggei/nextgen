@@ -131,15 +131,10 @@ public class STModelUtil {
                      .getKeys()
                      .forEach(stParameterKey -> stArgument
                            .getKeyValues()
-                           .filter(stArgumentKV -> stArgumentKV
-                                 .getStParameterKey()
-                                 .equals(stParameterKey
-                                       .getUuid()))
-                           .filter(stArgumentKV -> stArgumentKV
-                                 .getValue() != null)
+                           .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
+                           .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                            .forEach(stArgumentKV -> {
-                              final nextgen.st.model.STValue kvValue = stArgumentKV
-                                    .getValue();
+                              final nextgen.st.model.STValue kvValue = stArgumentKV.getValue();
                               switch (kvValue.getType()) {
                                  case STMODEL:
                                     if (kvValue.getStModel() != null)

@@ -381,9 +381,7 @@ public class STAppPresentationModel {
    public void removeArgument(STArgument stArgument, STParameterKey stParameterKey) {
       stArgument
             .getKeyValues()
-            .filter(stArgumentKV -> stArgumentKV
-                  .getStParameterKey()
-                  .equals(stParameterKey.getUuid()))
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
             .forEach(stArgument::removeKeyValues);
    }
 
@@ -420,9 +418,7 @@ public class STAppPresentationModel {
                      .append(":\n");
                kvArgument
                      .getKeyValues()
-                     .filter(stArgumentKV1 -> stArgumentKV1
-                           .getStParameterKey()
-                           .equals(stParameterKey.getUuid()))
+                     .filter(stArgumentKV1 -> stArgumentKV1.getStParameterKey().equals(stParameterKey))
                      .forEach(stArgumentKV1 -> out.append(render(stArgumentKV1.getValue())));
                out.append("\n\n");
             });
@@ -469,8 +465,7 @@ public class STAppPresentationModel {
             .findFirst();
       if (!kvNameFound.isPresent()) return defaultValue.get();
 
-      final Optional<STArgumentKV> found = set.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(kvNameFound.get().getUuid()))
-            .findFirst();
+      final Optional<STArgumentKV> found = set.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(kvNameFound.get())).findFirst();
       if (found.isPresent()) {
          final String render = render(found.get().getValue());
          return render == null || render.length() == 0 ? "[EMPTY]" : render;
