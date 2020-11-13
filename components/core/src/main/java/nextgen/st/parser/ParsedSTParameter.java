@@ -5,7 +5,7 @@ public class ParsedSTParameter {
 	private final java.util.UUID uuid;
 	private String _name;
 	private nextgen.st.domain.STParameterType _type;
-	private java.util.List<nextgen.st.domain.STParameterKey> _keys = new java.util.ArrayList<>();
+	private java.util.List<ParsedSTParameterKey> _keys = new java.util.ArrayList<>();
 	private String _argumentType;
 
 	public ParsedSTParameter() {
@@ -43,16 +43,16 @@ public class ParsedSTParameter {
 		return this;
 	}
 
-	public java.util.List<nextgen.st.domain.STParameterKey> getKeys() {
+	public java.util.List<ParsedSTParameterKey> getKeys() {
 		return this._keys;
 	}
 
-	public ParsedSTParameter addKeys(nextgen.st.domain.STParameterKey value) {
+	public ParsedSTParameter addKeys(ParsedSTParameterKey value) {
 		this._keys.add(value);
 		return this;
 	}
 
-	public ParsedSTParameter removeKeys(nextgen.st.domain.STParameterKey value) {
+	public ParsedSTParameter removeKeys(ParsedSTParameterKey value) {
 		this._keys.remove(value);
 		return this;
 	}

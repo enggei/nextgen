@@ -1058,19 +1058,13 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
 
-//      final Entity stTemplateAction = DomainPatterns.newEntity("STTemplateAction")
-//            .addRelations(DomainPatterns.newStringField("name", true))
-//            .addRelations(DomainPatterns.newOneToManyString("statements"));
-
       final Entity stTemplate = DomainPatterns
             .newEntity("STTemplate")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("text"))
             .addRelations(DomainPatterns.newOneToManyString("implements"))
             .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
-            .addRelations(DomainPatterns.newOneToManySelf("children"))
-//            .addRelations(DomainPatterns.newOneToMany("actions", stTemplateAction))
-            ;
+            .addRelations(DomainPatterns.newOneToManySelf("children"));
 
       final Entity stGroupModel = DomainPatterns
             .newEntity("STGroupModel")
@@ -1111,11 +1105,16 @@ public class NextgenProject {
             .addRelations(newEnumField("type", "AstNodeType", "ST, Expression, Name, Prop, Args, If, Else, ElseIf, Assign, Include, Subtemplate"));
       astNode.addRelations(newOneToOne("parent", astNode));
 
+      final Entity parsedSTParameterKey = DomainPatterns
+            .newEntity("ParsedSTParameterKey")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
       final Entity parsedSTParameter = DomainPatterns
             .newEntity("ParsedSTParameter")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stDomainPackage, stParameterType.getName())))
-            .addRelations(DomainPatterns.newOneToManyExternal("keys", newClassOrInterfaceType(stDomainPackage, stParameterKey.getName())))
+            .addRelations(DomainPatterns.newOneToMany("keys", parsedSTParameterKey))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
       final Entity parsedSTTemplate = DomainPatterns

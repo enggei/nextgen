@@ -22,6 +22,10 @@ public class STParserFactory {
 		return new ParsedSTParameter();
 	}	
 
+	public static ParsedSTParameterKey newParsedSTParameterKey() { 
+		return new ParsedSTParameterKey();
+	}	
+
 	public static ParserError newParserError() { 
 		return new ParserError();
 	}	
