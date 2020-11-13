@@ -28,6 +28,7 @@ public class NextgenProject {
 
    static final PackageDeclaration corePackage = newPackageDeclaration("nextgen");
    static final PackageDeclaration stPackage = newPackageDeclaration(corePackage, "st");
+   static final PackageDeclaration parsePackage = newPackageDeclaration(stPackage, "parser");
    static final PackageDeclaration eventsPackage = newPackageDeclaration(corePackage, "events");
    static final PackageDeclaration canvasPackage = newPackageDeclaration(stPackage, "canvas");
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
@@ -43,8 +44,7 @@ public class NextgenProject {
    static final ClassOrInterfaceType stParameterType = newClassOrInterfaceType(stDomainPackage, "STParameter");
 
 
-
-  @org.junit.Test
+   @org.junit.Test
    public void generateWorkspace() {
       final nextgen.templates.nextgen.STWorkspace stWorkspace = tmp.STWorkspaceGenerator.generate();
       writeJavaFile(stWorkspace, stPackage, stWorkspace.getName(), mainJava);
@@ -1082,14 +1082,7 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
             .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
-      final Entity stgErrorType = DomainPatterns.newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
 
-      final Entity stgError = DomainPatterns
-            .newEntity("STGError")
-            .addRelations(DomainPatterns.newEnumField("type", stgErrorType))
-            .addRelations(DomainPatterns.newStringField("message"))
-            .addRelations(DomainPatterns.newIntegerField("line"))
-            .addRelations(DomainPatterns.newIntegerField("charPosition"));
 
       final Entity stgDirectory = DomainPatterns
             .newEntity("STGDirectory")
@@ -1105,17 +1098,56 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newIntegerField("editorFontSize"))
             .addRelations(DomainPatterns.newOneToMany("directories", stgDirectory));
 
-      final Entity stgParseResult = DomainPatterns
-            .newEntity("STGParseResult")
-            .addRelations(DomainPatterns.newOneToOne("parsed", stGroupModel))
-            .addRelations(DomainPatterns.newOneToMany("errors", stgError));
-
       final Domain domain = DomainPatterns
             .newDomain("ST")
-            .addEntities(stAppModel)
-            .addEntities(stgParseResult);
+            .addEntities(stAppModel);
 
       DomainPatterns.writeJsonWrapper(mainJava, stDomainPackage, domain);
+
+
+      final Entity astNode = newEntity("AstNode")
+            .addRelations(newOneToOneExternal("ast", "org.antlr.runtime.tree.Tree"))
+            .addRelations(newOneToManySelf("children"))
+            .addRelations(newEnumField("type", "AstNodeType", "ST, Expression, Name, Prop, Args, If, Else, ElseIf, Assign, Include, Subtemplate"));
+      astNode.addRelations(newOneToOne("parent", astNode));
+
+      final Entity parsedSTParameter = DomainPatterns
+            .newEntity("ParsedSTParameter")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stDomainPackage, stParameterType.getName())))
+            .addRelations(DomainPatterns.newOneToManyExternal("keys", newClassOrInterfaceType(stDomainPackage, stParameterKey.getName())))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
+      final Entity parsedSTTemplate = DomainPatterns
+            .newEntity("ParsedSTTemplate")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("text"))
+            .addRelations(DomainPatterns.newOneToMany("parameters", parsedSTParameter));
+
+      final Entity parsedSTGroupModel = DomainPatterns
+            .newEntity("ParsedSTGroupModel")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("delimiter"))
+            .addRelations(DomainPatterns.newOneToMany("templates", parsedSTTemplate));
+
+      final Entity parserErrorType = DomainPatterns.newEnum("ParserErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
+
+      final Entity parserError = DomainPatterns
+            .newEntity("ParserError")
+            .addRelations(DomainPatterns.newEnumField("type", parserErrorType))
+            .addRelations(DomainPatterns.newStringField("message"))
+            .addRelations(DomainPatterns.newIntegerField("line"))
+            .addRelations(DomainPatterns.newIntegerField("charPosition"));
+
+      final Entity parseResult = DomainPatterns
+            .newEntity("ParseResult")
+            .addRelations(DomainPatterns.newOneToOne("parsed", parsedSTGroupModel))
+            .addRelations(DomainPatterns.newOneToMany("errors", parserError));
+
+      DomainPatterns.writePojo(mainJava, parsePackage, DomainPatterns
+            .newDomain("STParser")
+            .addEntities(astNode)
+            .addEntities(parseResult));
    }
 
    /**
@@ -1185,6 +1217,7 @@ public class NextgenProject {
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
    }
 
+
    /**
     * generateSTModelDomain
     */
@@ -1194,13 +1227,13 @@ public class NextgenProject {
       final Entity stParameterType = DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST");
 
       final Entity stParameterKey = DomainPatterns
-            .newEntity("STParameterKey")
+            .newEntityWithUuid("STParameterKey")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
       final Entity stParameter = DomainPatterns
-            .newEntity("STParameter")
+            .newEntityWithUuid("STParameter")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newEnumField("type", stParameterType))
@@ -1208,24 +1241,24 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
       final Entity stInterface = DomainPatterns
-            .newEntity("STInterface")
+            .newEntityWithUuid("STInterface")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"));
 
       final Entity stEnumValue = DomainPatterns
-            .newEntity("STEnumValue")
+            .newEntityWithUuid("STEnumValue")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("lexical"));
 
       final Entity stEnum = DomainPatterns
-            .newEntity("STEnum")
+            .newEntityWithUuid("STEnum")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
 
       final Entity stTemplate = DomainPatterns
-            .newEntity("STTemplate")
+            .newEntityWithUuid("STTemplate")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("text"))
@@ -1234,7 +1267,7 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToManySelf("children"));
 
       final Entity stGroupModel = DomainPatterns
-            .newEntity("STGroupModel")
+            .newEntityWithUuid("STGroupModel")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newStringField("delimiter"))
@@ -1304,6 +1337,9 @@ public class NextgenProject {
       }
 
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
+
+
+
    }
 
    /**
@@ -1505,49 +1541,49 @@ public class NextgenProject {
             .setRoot(root.getAbsolutePath()), projectPom);
    }
 
-   public static nextgen.templates.greenrobot.Event write(nextgen.templates.greenrobot.Event event) {
-
-      event.setPackageName(eventsPackage.getName());
-
-      writeJavaFile(event, eventsPackage, event.getName(), mainJava);
-
-      db.doInTransaction(transaction -> {
-
-         final nextgen.st.domain.STTemplate stTemplate = db.findSTTemplateByUuid("56afaa61-e68a-4ded-9563-4e9c38e6320d");
-         final nextgen.st.model.STModel stModel = db.newSTModel("fd17be4e-a3b6-4b52-a001-b0b3257b6f21", stTemplate);
-
-         stTemplate.getParameters().forEach(stParameter -> {
-
-            if (stParameter.getName().toLowerCase().equals("name")) {
-               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getName())));
-            } else if (stParameter.getName().toLowerCase().equals("packagename")) {
-               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getPackageName().toString())));
-            } else if (stParameter.getName().toLowerCase().equals("fields")) {
-               event.streamFields().forEach(event_fields -> {
-                  final java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
-                  stParameter.getKeys().forEach(stParameterKey -> {
-                     if (stParameterKey.getName().equals("name")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getName().toString())));
-                     } else if (stParameterKey.getName().equals("type")) {
-                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getType().toString())));
-                     } else {
-                        System.out.println("error");
-                     }
-                  });
-                  stModel.addArguments(db.newSTArgument(stParameter, kvs));
-               });
-            } else {
-               System.out.println("error");
-            }
-         });
-
-
-      }, throwable -> {
-         throwable.printStackTrace();
-         System.out.println();
-      });
-
-
-      return event;
-   }
+//   public static nextgen.templates.greenrobot.Event write(nextgen.templates.greenrobot.Event event) {
+//
+//      event.setPackageName(eventsPackage.getName());
+//
+//      writeJavaFile(event, eventsPackage, event.getName(), mainJava);
+//
+//      db.doInTransaction(transaction -> {
+//
+//         final nextgen.st.model.STTemplate stTemplate = db.findSTTemplateByUuid("56afaa61-e68a-4ded-9563-4e9c38e6320d");
+//         final nextgen.st.model.STModel stModel = db.newSTModel(stTemplate);
+//
+//         stTemplate.getParameters().forEach(stParameter -> {
+//
+//            if (stParameter.getName().toLowerCase().equals("name")) {
+//               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getName())));
+//            } else if (stParameter.getName().toLowerCase().equals("packagename")) {
+//               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getPackageName().toString())));
+//            } else if (stParameter.getName().toLowerCase().equals("fields")) {
+//               event.streamFields().forEach(event_fields -> {
+//                  final java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
+//                  stParameter.getKeys().forEach(stParameterKey -> {
+//                     if (stParameterKey.getName().equals("name")) {
+//                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getName().toString())));
+//                     } else if (stParameterKey.getName().equals("type")) {
+//                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getType().toString())));
+//                     } else {
+//                        System.out.println("error");
+//                     }
+//                  });
+//                  stModel.addArguments(db.newSTArgument(stParameter, kvs));
+//               });
+//            } else {
+//               System.out.println("error");
+//            }
+//         });
+//
+//
+//      }, throwable -> {
+//         throwable.printStackTrace();
+//         System.out.println();
+//      });
+//
+//
+//      return event;
+//   }
 }

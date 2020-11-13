@@ -183,11 +183,19 @@ public class DomainPatterns extends DomainST {
       return newRelation(EXT_REF, name).setDst(dstType);
    }
 
+   public static Relation newExternalRef(String name, ClassOrInterfaceType dstType) {
+      return newRelation(EXT_REF, name).setDst(dstType);
+   }
+
    public static Relation newExternalRef(String name, String dstType) {
       return newRelation(EXT_REF, name).setDst(dstType);
    }
 
    public static Relation newExternalList(String name, Class<?> dstType) {
+      return newRelation(EXT_LIST, name).setDst(dstType);
+   }
+
+   public static Relation newExternalList(String name, String dstType) {
       return newRelation(EXT_LIST, name).setDst(dstType);
    }
 
@@ -233,6 +241,10 @@ public class DomainPatterns extends DomainST {
 
    public static Relation newOneToManyExternal(String name, Class<?> type) {
       return newExternalList(name, type);
+   }
+
+   public static Relation newOneToManyExternal(String name, ClassOrInterfaceType type) {
+      return newExternalList(name, type.toString());
    }
 
    public static Relation newOneToMany(String name, Entity entity) {

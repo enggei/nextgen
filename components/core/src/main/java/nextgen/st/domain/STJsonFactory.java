@@ -211,44 +211,4 @@ public class STJsonFactory {
 		return newSTEnumValue(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
-	public static STGParseResult newSTGParseResult() { 
-		return new STGParseResult();
-	}
-
-	public static STGParseResult newSTGParseResultNoUuid() { 
-		return new STGParseResult().removeUuid();
-	}
-
-	public static STGParseResult newSTGParseResult(io.vertx.core.json.JsonObject jsonObject) { 
-		return new STGParseResult(jsonObject);
-	}
-
-	public static STGParseResult newSTGParseResult(java.io.File file) throws java.io.IOException { 
-		return new STGParseResult(load(file));
-	}
-
-	public static STGParseResult merge(STGParseResult lhs, STGParseResult rhs) {
-		return newSTGParseResult(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
-	}
-
-	public static STGError newSTGError() { 
-		return new STGError();
-	}
-
-	public static STGError newSTGErrorNoUuid() { 
-		return new STGError().removeUuid();
-	}
-
-	public static STGError newSTGError(io.vertx.core.json.JsonObject jsonObject) { 
-		return new STGError(jsonObject);
-	}
-
-	public static STGError newSTGError(java.io.File file) throws java.io.IOException { 
-		return new STGError(load(file));
-	}
-
-	public static STGError merge(STGError lhs, STGError rhs) {
-		return newSTGError(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
-	}
-
 }

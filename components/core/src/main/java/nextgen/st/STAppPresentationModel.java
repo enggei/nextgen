@@ -152,9 +152,9 @@ public class STAppPresentationModel {
 
    public void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
 
-      final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
+      final nextgen.st.parser.ParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
-      if (parseResult.getErrors().count() == 0) {
+      if (parseResult.getErrors().isEmpty()) {
          final STGenerator stGenerator = new STGenerator(generatorSTGroup);
          stGroups.stream()
                .filter(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid()))
@@ -467,9 +467,9 @@ public class STAppPresentationModel {
    }
 
    public void save(STGroupModel stGroupModel) {
-      final STGParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
+      final nextgen.st.parser.ParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
-      if (parseResult.getErrors().count() == 0) {
+      if (parseResult.getErrors().isEmpty()) {
          final File file = new File(new File(AppModel.getInstance().getTemplateDir()), stGroupModel.getName() + ".json");
          log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
          STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());

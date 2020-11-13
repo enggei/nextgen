@@ -3,7 +3,6 @@ package nextgen.st.importers;
 import nextgen.utils.FileUtil;
 import nextgen.st.STGenerator;
 import nextgen.st.STParser;
-import nextgen.st.domain.STGParseResult;
 import nextgen.st.domain.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
 import nextgen.st.domain.STTemplate;
@@ -23,10 +22,10 @@ public class Html5Importer extends BaseImporter {
     public Html5Importer() throws IOException {
 
         final File oldSTGFile = new File("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/html5/Html5Group.stg");
-        final STGParseResult stgParseResult = STParser.parse(oldSTGFile);
+        final nextgen.st.parser.ParseResult parseResult = STParser.parse(oldSTGFile);
 
-        stgParseResult.getErrors().forEach(System.out::println);
-        if (stgParseResult.getErrors().count() != 0L) return;
+        parseResult.getErrors().forEach(System.out::println);
+        if (!parseResult.getErrors().isEmpty()) return;
 
         final String groupName = "Html5";
         final File stGroupFile = new File(templatesDir, groupName + ".json");
@@ -34,7 +33,7 @@ public class Html5Importer extends BaseImporter {
                 ? STJsonFactory.newSTGroupModel(stGroupFile)
                 : STJsonFactory.newSTGroupModel().setName(groupName).setDelimiter("~");
 
-        final STGroupModel parsed = stgParseResult.getParsed();
+        final nextgen.st.parser.ParsedSTGroupModel parsed = parseResult.getParsed();
         parsed.getTemplates().forEach(oldTemplate -> {
             System.out.println(oldTemplate.getName());
 

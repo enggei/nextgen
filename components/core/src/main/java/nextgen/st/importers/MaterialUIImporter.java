@@ -2,7 +2,6 @@ package nextgen.st.importers;
 
 import io.vertx.core.json.JsonObject;
 import nextgen.st.STGenerator;
-import nextgen.st.domain.STGParseResult;
 import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 import com.github.kklisura.cdt.launch.ChromeLauncher;

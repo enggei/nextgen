@@ -45,6 +45,10 @@ public class STGenerator {
       return asST(newTemplateGroup(), stTemplate);
    }
 
+   public static ST asST(nextgen.st.parser.ParsedSTTemplate stTemplate) {
+      return asST(newTemplateGroup(), stTemplate);
+   }
+
    public static File asFile(STFile stFile) {
 
       final STValue stPath = stFile.getPath();
@@ -274,6 +278,14 @@ public class STGenerator {
    }
 
    public static ST asST(STGroup templateGroup, STTemplate stModel) {
+      final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
+      stTemplate.add("name", stModel.getName());
+      stTemplate.add("content", stModel.getText());
+      stModel.getParameters().forEach(stParameter -> stTemplate.add("params", stParameter.getName()));
+      return stTemplate;
+   }
+
+   public static ST asST(STGroup templateGroup, nextgen.st.parser.ParsedSTTemplate stModel) {
       final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
       stTemplate.add("name", stModel.getName());
       stTemplate.add("content", stModel.getText());

@@ -1,61 +1,12 @@
 package nextgen.st.parser;
 
-
 public class AstNode {
 
-	private org.antlr.runtime.tree.Tree ast;
-	private AstNodeType type;
-	private AstNode parent;
-	private final java.util.List<AstNode> children = new java.util.ArrayList<>();
 	private final java.util.UUID uuid;
-
-	public org.antlr.runtime.tree.Tree getAst() { 
-		return ast;
-	}
-
-	public Boolean hasAst() {
-		return ast != null;
-	}
-
-	public AstNode setAst(org.antlr.runtime.tree.Tree ast) {
-		this.ast = ast;
-		return this;
-	}
-
-	public AstNodeType getType() {
-		return type;
-	}
-
-	public Boolean hasType() {
-		return type != null;
-	}
-
-	public AstNode setType(AstNodeType type) {
-		this.type = type;
-		return this;
-	}
-
-	public AstNode getParent() {
-		return parent;
-	}
-
-	public Boolean hasParent() {
-		return parent != null;
-	}
-
-	public AstNode setParent(AstNode parent) {
-		this.parent = parent;
-		return this;
-	}
-
-	public java.util.List<AstNode> getChildren() {
-		return children;
-	}
-
-	public AstNode addChildren(AstNode children) {
-		this.children.add(children);
-		return this;
-	}
+	private org.antlr.runtime.tree.Tree _ast;
+	private java.util.List<AstNode> _children = new java.util.ArrayList<>();
+	private AstNodeType _type;
+	private AstNode _parent;
 
 	public AstNode() {
 		this.uuid = java.util.UUID.randomUUID();
@@ -67,19 +18,68 @@ public class AstNode {
 
 	public java.util.UUID getUuid() {
 		return this.uuid;
+	}	
+
+	public org.antlr.runtime.tree.Tree getAst() {
+		return this._ast;
 	}
 
+	public AstNode setAst(org.antlr.runtime.tree.Tree value) {
+		this._ast = value;
+		return this;
+	}
+
+	public AstNode removeAst() {
+		this._ast = null;
+		return this;
+	}
+
+	public java.util.List<AstNode> getChildren() {
+		return this._children;
+	}
+
+	public AstNode addChildren(AstNode value) {
+		this._children.add(value);
+		return this;
+	}
+
+	public AstNode removeChildren(AstNode value) {
+		this._children.remove(value);
+		return this;
+	}
+
+	public AstNodeType getType() {
+		return this._type;
+	}
+
+	public AstNode setType(AstNodeType value) {
+		this._type = value;
+		return this;
+	}
+
+	public AstNode getParent() {
+		return this._parent;
+	}
+
+	public AstNode setParent(AstNode value) {
+		this._parent = value;
+		return this;
+	}
+
+	public AstNode removeParent() {
+		this._parent = null;
+		return this;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final AstNode other = (AstNode) o;
-		return uuid != null ? uuid.equals(other.uuid) : other.uuid == null;
+		AstNode that = (AstNode) o;
+		return uuid.equals(that.uuid);
 	}
 
 	@Override
-	public int hashCode() { 
-		int result = uuid != null ? uuid.hashCode() : 0;
-		return result;
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
 	}
 }

@@ -2121,22 +2121,22 @@ public class ~name~ extends javax.swing.JPanel {
 		public void showParseErrors(java.util.List<STGError> errors) {
 			final StringBuilder info = new StringBuilder("Parsing errors:");
 
-			errors.forEach(stgError -> {
+			errors.forEach(parserError -> {
 
-				info.append("\n").append(stgError.getType());
+				info.append("\n").append(parserError.getType());
 
-				switch (stgError.getType()) {
+				switch (parserError.getType()) {
 					case COMPILE: {
-						info.append("\n\tline					").append(stgError.getLine());
-						info.append("\n\tpos					 ").append(stgError.getCharPosition());
-						info.append("\n\tmessage				").append(stgError.getMessage());
+						info.append("\n\tline					").append(parserError.getLine());
+						info.append("\n\tpos					 ").append(parserError.getCharPosition());
+						info.append("\n\tmessage				").append(parserError.getMessage());
 
-						if (stgError.getMessage().contains("expecting RDELIM")) {
+						if (parserError.getMessage().contains("expecting RDELIM")) {
 							info.append("\n\tpossible cause	  ")
 									.append("This is probably a '}' being interpreted as end-of a kv-iteration.");
 							info.append("\n\tpossible solution  ")
 									.append("Try escaping the previous '}' (i.e from '}' to '\\\\}')");
-						} else if (stgError.getMessage().contains("invalid character '>'")) {
+						} else if (parserError.getMessage().contains("invalid character '>'")) {
 							info.append("\n\tpossible cause	  ")
 									.append("This is probably a '>' being interpreted as end-of template.");
 							info.append("\n\tpossible solution  ")

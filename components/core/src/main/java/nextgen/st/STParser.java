@@ -31,65 +31,66 @@ public class STParser {
         STParser.parse(new File("./components/core/src/main/java/nextgen/templates/test/Test.stg"));
     }
 
-    public static STGParseResult parse(File stgFile) {
+    public static nextgen.st.parser.ParseResult parse(File stgFile) {
         final char delimiter = loadDelimiter(stgFile);
-        final STGParseResult parseResult = parse(new STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
-        if (parseResult.getErrors().count() == 0) parseResult.getParsed();
+        final nextgen.st.parser.ParseResult parseResult = parse(new STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
+        if (parseResult.getErrors().isEmpty()) parseResult.getParsed();
         return parseResult;
     }
 
-    public static Optional<STTemplate> parseTemplateAndGet(String text) {
+    public static Optional<nextgen.st.parser.ParsedSTTemplate> parseTemplateAndGet(String text) {
         return STParser
                 .parseTemplate(text)
                 .getParsed()
                 .getTemplates()
+                .stream()
                 .findFirst();
     }
 
-    public static STGParseResult parseTemplate(String text) {
+    public static nextgen.st.parser.ParseResult parseTemplate(String text) {
         final String stg = toStg(STJsonFactory.newSTGroupModel().addTemplates(STJsonFactory.newSTTemplate().setName("tmp").setText(text)).setDelimiter(STGenerator.DELIMITER));
         return parse(new STGroupString("tmp", stg, STGenerator.DELIMITERCHAR, STGenerator.DELIMITERCHAR));
     }
 
-    public static STGParseResult parse(STGroup stGroup) {
+    public static nextgen.st.parser.ParseResult parse(STGroup stGroup) {
 
-        final STGParseResult parseResult = new STGParseResult();
+        final nextgen.st.parser.ParseResult parseResult = new nextgen.st.parser.ParseResult();
 
         stGroup.setListener(new STErrorListener() {
             @Override
             public void compileTimeError(STMessage stMessage) {
 
-                final STGError stgError = new STGError()
-                        .setType(STGErrorType.COMPILE)
+                final nextgen.st.parser.ParserError parserError = new nextgen.st.parser.ParserError()
+                        .setType(nextgen.st.parser.ParserErrorType.COMPILE)
                         .setMessage(stMessage.toString());
 
                 if (stMessage instanceof STCompiletimeMessage) {
                     final STCompiletimeMessage message = (STCompiletimeMessage) stMessage;
-                    parseResult.addErrors(stgError
+                    parseResult.addErrors(parserError
                             .setLine(message.token.getLine())
                             .setCharPosition(message.token.getCharPositionInLine()));
                 }
 
-                parseResult.addErrors(stgError);
+                parseResult.addErrors(parserError);
             }
 
             @Override
             public void runTimeError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setType(STGErrorType.RUNTIME));
+                parseResult.addErrors(new nextgen.st.parser.ParserError().setType(nextgen.st.parser.ParserErrorType.RUNTIME));
             }
 
             @Override
             public void IOError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setType(STGErrorType.IO));
+                parseResult.addErrors(new nextgen.st.parser.ParserError().setType(nextgen.st.parser.ParserErrorType.IO));
             }
 
             @Override
             public void internalError(STMessage stMessage) {
-                parseResult.addErrors(new STGError().setType(STGErrorType.INTERNAL));
+                parseResult.addErrors(new nextgen.st.parser.ParserError().setType(nextgen.st.parser.ParserErrorType.INTERNAL));
             }
         });
 
-        final STGroupModel stGroupModel = new STGroupModel()
+        final nextgen.st.parser.ParsedSTGroupModel stGroupModel = STParserFactory.newParsedSTGroupModel()
                 .setName(stGroup.getName())
                 .setDelimiter(stGroup.delimiterStartChar + "");
 
@@ -108,12 +109,12 @@ public class STParser {
                     final TemplateVisitor visitor = new TemplateVisitor();
                     visitor.visit(st);
 
-                    final STTemplate stTemplate = STJsonFactory.newSTTemplate()
+                    final nextgen.st.parser.ParsedSTTemplate stTemplate = STParserFactory.newParsedSTTemplate()
                             .setName(st.getName().substring(1))
                             .setText(st.impl.template);
 
-                    final Map<String, STParameter> stParameterMap = new LinkedHashMap<>();
-                    visitor.astNodeStack.peek().getChildren().forEach(astNode -> addParameters(stParameterMap, astNode, new Stack<STParameter>()));
+                    final Map<String, nextgen.st.parser.ParsedSTParameter> stParameterMap = new LinkedHashMap<>();
+                    visitor.astNodeStack.peek().getChildren().forEach(astNode -> addParameters(stParameterMap, astNode, new Stack<nextgen.st.parser.ParsedSTParameter>()));
                     stParameterMap.values().forEach(stTemplate::addParameters);
 
                     if (debug) log.debug("=== >");
@@ -128,13 +129,13 @@ public class STParser {
                     stGroupModel.addTemplates(stTemplate);
                 });
 
-        if (parseResult.getErrors().count() == 0)
+        if (parseResult.getErrors().isEmpty())
             parseResult.setParsed(stGroupModel);
 
         return parseResult;
     }
 
-    private static void addParameters(Map<String, STParameter> stParameterMap, AstNode astNode, Stack<STParameter> stParameters) {
+    private static void addParameters(Map<String, nextgen.st.parser.ParsedSTParameter> stParameterMap, AstNode astNode, Stack<nextgen.st.parser.ParsedSTParameter> stParameters) {
 
         switch (astNode.getType()) {
             case Expression:
@@ -171,6 +172,7 @@ public class STParser {
                         .setArgumentType("Object");
 
                 final Optional<STParameterKey> exists = stParameters.peek().getKeys()
+                        .stream()
                         .filter(stParameterKey -> stParameterKey.getName().equals(parameterKey.getName()))
                         .findFirst();
 
@@ -238,15 +240,15 @@ public class STParser {
         }
     }
 
-    public static void mergeTemplate(STTemplate parsed, STTemplate model) {
+    public static void mergeTemplate(nextgen.st.parser.ParsedSTTemplate parsed, STTemplate model) {
 
         model.setText(parsed.getText());
 
         final List<STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
-        final List<STParameter> parsedParameters = parsed.getParameters().collect(Collectors.toList());
+        final java.util.List<nextgen.st.parser.ParsedSTParameter> parsedParameters = parsed.getParameters();
 
-        final Map<String, STParameter> newParameters = new LinkedHashMap<>();
-        for (STParameter parsedParameter : parsedParameters) {
+        final Map<String, Object> newParameters = new LinkedHashMap<>();
+        for (nextgen.st.parser.ParsedSTParameter parsedParameter : parsedParameters) {
 
             boolean foundExisting = false;
             for (STParameter existingParameter : existingParameters) {
@@ -256,7 +258,7 @@ public class STParser {
                     if (existingParameter.getType().equals(STParameterType.KVLIST)) {
 
                         final List<STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
-                        final List<STParameterKey> parsedKeys = parsedParameter.getKeys().collect(Collectors.toList());
+                        final List<STParameterKey> parsedKeys = parsedParameter.getKeys();
 
                         for (int i = existingKeys.size() - 1; i >= 0; i--) {
                             STParameterKey existingKey = existingKeys.get(i);
@@ -297,11 +299,19 @@ public class STParser {
         }
 
         model.clearParameters();
-        newParameters.values().forEach(model::addParameters);
+        newParameters.values().forEach(o -> {
+
+            if( o instanceof STParameter) {
+                model.addParameters((nextgen.st.domain.STParameter) o);
+            } else if(o instanceof nextgen.st.parser.ParsedSTParameter) {
+                final nextgen.st.parser.ParsedSTParameter parsedSTParameter = (nextgen.st.parser.ParsedSTParameter) o;
+//                model.addParameters();
+            }
+        });
     }
 
-    private static STParameter newSTParameter(String name) {
-        return new STParameter().setName(name).setType(STParameterType.SINGLE).setArgumentType((name != null && name.startsWith("is")) ? "Boolean" : "Object");
+    private static nextgen.st.parser.ParsedSTParameter newSTParameter(String name) {
+        return new nextgen.st.parser.ParsedSTParameter().setName(name).setType(STParameterType.SINGLE).setArgumentType((name != null && name.startsWith("is")) ? "Boolean" : "Object");
     }
 
     private static char loadDelimiter(File stgFile) {
@@ -345,7 +355,7 @@ public class STParser {
     }
 
     public static ST asST(String content) {
-        final STTemplate stTemplate = parseTemplate(content).getParsed().getTemplates().iterator().next();
+        final nextgen.st.parser.ParsedSTTemplate stTemplate = parseTemplate(content).getParsed().getTemplates().iterator().next();
         return STGenerator.asST(stTemplate);
     }
 

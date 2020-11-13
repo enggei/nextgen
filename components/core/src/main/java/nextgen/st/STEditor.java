@@ -3,9 +3,6 @@ package nextgen.st;
 import nextgen.utils.SwingUtil;
 import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 
@@ -16,10 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
@@ -207,10 +202,10 @@ public class STEditor extends JPanel {
 
             final String text = txtEditor.getText().trim();
 
-            final STGParseResult parseResult = STParser.parseTemplate(text);
+            final nextgen.st.parser.ParseResult parseResult = STParser.parseTemplate(text);
 
-            if (parseResult.getErrors().count() == 0) {
-                STParser.mergeTemplate(parseResult.getParsed().getTemplates().findFirst().get(), stTemplate);
+            if (parseResult.getErrors().isEmpty()) {
+                STParser.mergeTemplate(parseResult.getParsed().getTemplates().stream().findFirst().get(), stTemplate);
                 startText = text.trim();
                 appModel().save(stGroupModel);
                 txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
@@ -428,7 +423,7 @@ public class STEditor extends JPanel {
             });
         }
 
-        public void showParseErrors(Stream<STGError> errors) {
+        public void showParseErrors(java.util.List<nextgen.st.parser.ParserError> errors) {
 
             final StringBuilder info = new StringBuilder("Parsing errors:");
 
