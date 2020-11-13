@@ -159,7 +159,7 @@ public class STParser {
          case Prop:
             stParameters.peek().setType(nextgen.st.model.STParameterType.KVLIST);
 
-            final nextgen.st.model.STParameterKey parameterKey = new nextgen.st.model.STParameterKey()
+            final nextgen.st.parser.ParsedSTParameterKey parameterKey = new nextgen.st.parser.ParsedSTParameterKey()
                   .setName(astNode.getChildren().get(1).getAst().toString())
                   .setArgumentType("Object");
 
