@@ -2,55 +2,14 @@ package nextgen.st.model;
 
 public class STParameter {
 
-	private final io.vertx.core.json.JsonObject jsonObject;
+	private final org.neo4j.graphdb.Node node;
 
-	public STParameter() { 
-		this.jsonObject = new io.vertx.core.json.JsonObject();
-		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	public STParameter(org.neo4j.graphdb.Node node) { 
+		this.node = node;
 	}
 
-	public STParameter(io.vertx.core.json.JsonObject jsonObject) { 
-		this.jsonObject = jsonObject;
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public STParameter(java.io.File file) throws java.io.IOException {
-		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
-	}
-
-	public STParameter(java.io.InputStream inputStream) throws java.io.IOException {
-		if (inputStream == null) throw new java.io.IOException("inputStream is null");
-		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
-		int read;
-		byte[] data = new byte[2048];
-		while ((read = inputStream.read(data, 0, data.length)) != -1)
-			buffer.write(data, 0, read);
-		inputStream.close();
-		final byte[] content = buffer.toByteArray();
-		buffer.close();
-
-		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public io.vertx.core.json.JsonObject getJsonObject() { 
-		return this.jsonObject;
-	}
-
-	@Deprecated
-	public String uuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public String getUuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public STParameter removeUuid() {
-		this.jsonObject.remove("uuid");
-		return this;
+	public org.neo4j.graphdb.Node getNode() { 
+		return this.node;
 	}
 
 	@Override
@@ -58,85 +17,213 @@ public class STParameter {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STParameter other = (STParameter) o;
-		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+		return node.equals(other.node);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(jsonObject.getString("uuid"));
+		return java.util.Objects.hash(node);
 	}
 
-	public STParameter setName(String value) { 
-		jsonObject.put("name", value);
-		return this;
-	}
+	private static final String _uuid = "uuid";
 
-	public String getName() { 
-		return jsonObject.getString("name");
-	}
-
-	public String getName(String defaultValue) { 
-		return jsonObject.getString("name", defaultValue);
-	}
-
-	public STParameter setType(STParameterType value) { 
-		if (value == null) return this;
-		jsonObject.put("type", value.name());
-		return this;
-	}
-
-	public STParameterType getType() { 
-		return getType(null);
-	}
-
-	public STParameterType getType(STParameterType defaultValue) { 
-		return jsonObject.getString("type") == null ? defaultValue : STParameterType.valueOf(jsonObject.getString("type"));
-	}
-
-	public STParameter addKeys(STParameterKey value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("keys");
-		if (jsonArray == null) jsonObject.put("keys", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value.getJsonObject());
-		return this;
-	}
-
-	public java.util.stream.Stream<STParameterKey> getKeys() { 
-		return jsonObject.getJsonArray("keys", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STParameterKey((io.vertx.core.json.JsonObject) o));
-	}
-
-	public STParameter removeKeys(STParameterKey value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("keys", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
-			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
-				jsonArray.remove(i);
-				return this;
-			}
+	public STParameter setUuid(String value) { 
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
 		}
 		return this;
 	}
 
-	public STParameter clearKeys() { 
-		jsonObject.put("keys", new io.vertx.core.json.JsonArray());
+	public String getUuid() { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return null;
+	}
+
+	public String getUuid(String defaultValue) { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return defaultValue;
+	}
+
+	public boolean hasUuid() { 
+		return node.hasProperty(_uuid);
+	}
+
+	public STParameter removeUuid() { 
+		node.removeProperty(_uuid);
 		return this;
 	}
 
+	private static final String _name = "name";
+
+	public STParameter setName(String value) { 
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
+		return this;
+	}
+
+	public String getName() { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return null;
+	}
+
+	public String getName(String defaultValue) { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return defaultValue;
+	}
+
+	public boolean hasName() { 
+		return node.hasProperty(_name);
+	}
+
+	public STParameter removeName() { 
+		node.removeProperty(_name);
+		return this;
+	}
+
+	public STParameter setType(STParameterType value) {
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty("type", value.name());
+		} 
+		return this;
+	}
+
+	public STParameterType getType() { 
+		if (node.hasProperty("type")) return STParameterType.valueOf((java.lang.String) node.getProperty("type"));
+		return null;
+	}
+
+	public STParameterType getType(STParameterType defaultValue) { 
+		if (node.hasProperty("type")) return STParameterType.valueOf((java.lang.String) node.getProperty("type"));
+		return defaultValue;
+	}
+
+	public boolean hasType() { 
+		return node.hasProperty("type");
+	}
+
+	public STParameter removeType() { 
+		node.removeProperty("type");
+		return this;
+	}
+
+	private static final org.neo4j.graphdb.RelationshipType _keys = org.neo4j.graphdb.RelationshipType.withName("keys");
+
+	public STParameter addKeys(STParameterKey dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _keys);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<STParameterKey> getKeys() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).spliterator(), false).map((relationship) -> new STParameterKey(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STParameterKey> getKeysSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STParameterKey(relationship.getOtherNode(node)));
+	}
+
+	public STParameter removeKeys(STParameterKey dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
+		return this;
+	}
+
+	public STParameter removeAllKeys() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	private static final String _argumentType = "argumentType";
+
 	public STParameter setArgumentType(String value) { 
-		jsonObject.put("argumentType", value);
+		if (value == null) 
+			removeArgumentType(); 
+		else {
+		 	node.setProperty(_argumentType, value);
+		}
 		return this;
 	}
 
 	public String getArgumentType() { 
-		return jsonObject.getString("argumentType");
+		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+		return null;
 	}
 
 	public String getArgumentType(String defaultValue) { 
-		return jsonObject.getString("argumentType", defaultValue);
+		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+		return defaultValue;
 	}
 
+	public boolean hasArgumentType() { 
+		return node.hasProperty(_argumentType);
+	}
+
+	public STParameter removeArgumentType() { 
+		node.removeProperty(_argumentType);
+		return this;
+	}
+
+	public java.util.stream.Stream<STTemplate> getIncomingParametersSTTemplate() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("parameters")).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STArgument> getIncomingStParameterSTArgument() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stParameter")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	}
 
 	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
+	public String toString() {
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
+
+	public io.vertx.core.json.JsonObject toJsonObject() {
+		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
+		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
+		if (node.hasProperty("argumentType")) jsonObject.put("argumentType", node.getProperty("argumentType"));
+		final io.vertx.core.json.JsonArray _keys = new io.vertx.core.json.JsonArray();
+		getKeys().forEach(element -> _keys.add(element.toJsonObject()));
+		if (!_keys.isEmpty()) jsonObject.put("keys", _keys);
+
+		return jsonObject;
+	}
+
+	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();
+
+	}
+
 }

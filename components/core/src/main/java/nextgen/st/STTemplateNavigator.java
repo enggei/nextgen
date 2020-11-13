@@ -333,7 +333,7 @@ public class STTemplateNavigator extends JPanel {
 			setLabel(getModel());
 			this.tooltip = "";
 
-			appModel().stGroups.forEach(stGroup -> add(new STGroupTreeNode(stGroup)));
+			appModel().db.findAllSTGroupModel().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(stGroup -> add(new STGroupTreeNode(stGroup)));
 		}
 
 		RootNode thisNode() {

@@ -18,7 +18,7 @@ public class SetArgumentFromInput extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, stParameter.getName(), inputValue -> {
          stModel.getArguments()
-               .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+               .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                .findAny()
                .ifPresent(stArgument -> {
                   final String uuid = stArgument.getUuid();

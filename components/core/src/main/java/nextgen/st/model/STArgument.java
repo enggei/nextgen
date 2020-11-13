@@ -55,34 +55,32 @@ public class STArgument {
 		return this;
 	}
 
-	private static final String _stParameter = "stParameter";
-
-	public STArgument setStParameter(String value) { 
-		if (value == null) 
-			removeStParameter(); 
-		else {
-		 	node.setProperty(_stParameter, value);
+	public STArgument setStParameter(STParameter dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getStParameterRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("stParameter"));
 		return this;
 	}
 
-	public String getStParameter() { 
-		if (node.hasProperty(_stParameter)) return (String) node.getProperty(_stParameter);
-		return null;
-	}
-
-	public String getStParameter(String defaultValue) { 
-		if (node.hasProperty(_stParameter)) return (String) node.getProperty(_stParameter);
-		return defaultValue;
-	}
-
-	public boolean hasStParameter() { 
-		return node.hasProperty(_stParameter);
+	public STParameter getStParameter() { 
+		final org.neo4j.graphdb.Relationship relationship = getStParameterRelation();
+		return relationship == null ? null : new STParameter(relationship.getOtherNode(node));
 	}
 
 	public STArgument removeStParameter() { 
-		node.removeProperty(_stParameter);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStParameterRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getStParameterRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stParameter"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public STArgument setValue(STValue dst) { 
@@ -172,7 +170,9 @@ public class STArgument {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("stParameter")) jsonObject.put("stParameter", node.getProperty("stParameter"));
+		final STParameter _stParameter = getStParameter();
+		if (_stParameter != null) jsonObject.put("stParameter", _stParameter.toJsonObject());
+
 		final STValue _value = getValue();
 		if (_value != null) jsonObject.put("value", _value.toJsonObject());
 

@@ -1,6 +1,5 @@
 package nextgen.st;
 
-import nextgen.st.domain.*;
 import nextgen.st.model.*;
 import nextgen.swing.AppModel;
 import nextgen.utils.NeoChronicle;
@@ -14,7 +13,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -28,33 +26,26 @@ public class STAppPresentationModel {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-   public final STRenderer stRenderer;
+   public STRenderer stRenderer;
    public final STModelDB db;
 
-   final Set<STGroupModel> stGroups = new java.util.TreeSet<>((v1, v2) -> v1.getName().compareToIgnoreCase(v2.getName()));
-   final STGroupModel generatorSTGroup;
+   private STGroupModel generatorSTGroup;
 
    private final NeoChronicle chronicle;
    private STWorkspace stWorkspace;
    private String lastDir;
    private final WorkFlowFacade workFlowFacade;
 
-   public STAppPresentationModel() throws IOException {
+   public STAppPresentationModel() {
 
-      Arrays.stream(Objects.requireNonNull(new File(AppModel.getInstance().getTemplateDir()).listFiles(file -> file.getName().endsWith(".json"))))
-            .forEach(file -> {
-               try {
-                  stGroups.add(new STGroupModel(file));
-               } catch (IOException e) {
-                  System.out.println("Could not read stgroup file " + file.getAbsolutePath());
-               }
-            });
-
-      this.generatorSTGroup = new STGroupModel(new File(AppModel.getInstance().getTemplateDir(), "StringTemplate.json"));
-      this.stRenderer = new STRenderer(stGroups);
-      this.db = new STModelDB(AppModel.getInstance().getDbDir(), stGroups);
+      this.db = new STModelDB(AppModel.getInstance().getDbDir());
       this.workFlowFacade = new WorkFlowFacade(db.getDatabaseService());
       this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
+
+      this.db.doInTransaction(transaction -> {
+         stRenderer = new STRenderer(db.findAllSTGroupModel().collect(java.util.stream.Collectors.toList()));
+         generatorSTGroup = db.findSTGroupModelByName("StringTemplate");
+      });
    }
 
    public static Action newAction(String name, Consumer<ActionEvent> consumer) {
@@ -144,9 +135,7 @@ public class STAppPresentationModel {
             .getParameters()
             .forEach(stParameter -> stModel
                   .getArgumentsSorted()
-                  .filter(stArgument -> stArgument
-                        .getStParameter()
-                        .equals(stParameter.getUuid()))
+                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .forEach(stArgument -> consumer.accept(stArgument, stParameter)));
    }
 
@@ -156,20 +145,14 @@ public class STAppPresentationModel {
 
       if (parseResult.getErrors().isEmpty()) {
          final STGenerator stGenerator = new STGenerator(generatorSTGroup);
-         stGroups.stream()
-               .filter(stGroupModel1 -> stGroupModel1.getUuid().equals(stGroupModel.getUuid()))
-               .findFirst()
-               .ifPresent(directory -> {
-                  stGenerator.generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
-                  if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
-               });
+         stGenerator.generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
+         if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
       } else {
          parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
       }
    }
 
    public void delete(nextgen.st.model.STGroupModel stGroup) {
-      stGroups.remove(stGroup);
       deleteSTGFile(stGroup.getName());
    }
 
@@ -293,7 +276,7 @@ public class STAppPresentationModel {
    }
 
    public STEnum newSTEnum(String name) {
-      return new nextgen.st.model.STEnum().setName(name);
+      return db.newSTEnum().setName(name);
    }
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -305,16 +288,15 @@ public class STAppPresentationModel {
    }
 
    public STGroupModel newSTGroupModel(String name) {
-      final nextgen.st.model.STGroupModel stGroupModel = new nextgen.st.model.STGroupModel()
+      final nextgen.st.model.STGroupModel stGroupModel = db.newSTGroupModel()
             .setName(name)
             .setDelimiter(nextgen.st.STGenerator.DELIMITER);
-      stGroups.add(stGroupModel);
       stRenderer.addGroupModel(stGroupModel);
       return stGroupModel;
    }
 
    public STInterface newSTInterface(String name) {
-      return new nextgen.st.model.STInterface().setName(name);
+      return db.newSTInterface().setName(name);
    }
 
    public STModel newSTModel(Node node) {
@@ -326,27 +308,17 @@ public class STAppPresentationModel {
    }
 
    public STModel newSTModel(STTemplate stTemplate) {
-      return newSTModel(findSTGroup(stTemplate), stTemplate);
+      return db.newSTModel(stTemplate);
    }
 
-   public void newSTModel(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject project) {
-      final nextgen.st.model.STModel stModel = newSTModel(stTemplate);
-      project.addModels(stModel);
-   }
-
-   public STModel newSTModel(STGroupModel stGroupModel, STTemplate stTemplate) {
-      final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
-      return stModel;
-   }
-
-   public STModel newSTModel(STGroupModel stGroupModel, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
-      final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
+   public STModel newSTModel(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
+      final nextgen.st.model.STModel stModel = db.newSTModel(stTemplate);
       stProject.addModels(stModel);
       return stModel;
    }
 
    public nextgen.st.model.STTemplate newSTTemplate(String name, String text, nextgen.st.model.STGroupModel parent) {
-      final nextgen.st.model.STTemplate stTemplate = new nextgen.st.model.STTemplate()
+      final nextgen.st.model.STTemplate stTemplate = db.newSTTemplate()
             .setName(name)
             .setText(text);
       parent.addTemplates(stTemplate);
@@ -460,7 +432,7 @@ public class STAppPresentationModel {
 
    public boolean sameArgumentValue(STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue model) {
       final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
-      stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.getUuid()))
+      stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter))
             .forEach(existing -> {
                if (existing.getValue() != null && existing.getValue().getUuid().equals(model.getUuid()))
                   exists.set(true);
@@ -474,7 +446,7 @@ public class STAppPresentationModel {
       if (parseResult.getErrors().isEmpty()) {
          final File file = new File(new File(AppModel.getInstance().getTemplateDir()), stGroupModel.getName() + ".json");
          log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-         STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
+//         STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
       } else {
          log.error(stGroupModel.getName() + " has errors: ");
          parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
@@ -508,14 +480,14 @@ public class STAppPresentationModel {
    }
 
    public String tryToFindArgument(STModel stModel, String parameterName, Supplier<String> defaultValue) {
-      final Optional<STParameter> parameter = findSTTemplateByUuid(stModel.getStTemplate())
+      final Optional<STParameter> parameter = stModel.getStTemplate()
             .getParameters()
             .filter(stParameter -> stParameter.getName().equals(parameterName))
             .findFirst();
       if (parameter.isPresent()) {
          final Optional<STArgument> argument = stModel
                .getArguments()
-               .filter(stArgument -> stArgument.getStParameter().equals(parameter.get().getUuid()))
+               .filter(stArgument -> stArgument.getStParameter().equals(parameter.get()))
                .findFirst();
          if (argument.isPresent()) {
             final String render = render(argument.get().getValue());
@@ -533,7 +505,7 @@ public class STAppPresentationModel {
    }
 
    public STModelEditor getModelEditor(STModel model) {
-      return getWorkspace().getModelEditor(db.getSTTemplate(model), model);
+      return getWorkspace().getModelEditor(model.getStTemplate(), model);
    }
 
    public WorkFlowFacade getWorkspaceFacade() {
@@ -545,25 +517,16 @@ public class STAppPresentationModel {
    }
 
    public String tooltip(STModel model) {
-      final nextgen.st.model.STTemplate stTemplate = db.getSTTemplate(model);
+      final nextgen.st.model.STTemplate stTemplate = model.getStTemplate();
       return findSTGroup(stTemplate).getName() + "." + stTemplate.getName();
    }
 
    public Collection<STGroupModel> getGroupModels() {
-      return db.getGroupModels();
+      return db.findAllSTGroupModel().collect(java.util.stream.Collectors.toList());
    }
 
    public Stream<STValue> findAllSTValue() {
       return db.findAllSTValue();
-   }
-
-   public Stream<STModel> findAllSTModelByStTemplate(String stTemplateUuid) {
-      return db.findAllSTModelByStTemplate(stTemplateUuid)
-            .sorted((m1, m2) -> {
-               final String c1 = tryToFindArgument(m1, "name", m1::getUuid);
-               final String c2 = tryToFindArgument(m2, "name", m2::getUuid);
-               return c1.compareToIgnoreCase(c2);
-            });
    }
 
    public nextgen.st.model.STGroupModel findSTGroup(nextgen.st.model.STTemplate model) {
@@ -581,11 +544,11 @@ public class STAppPresentationModel {
    }
 
    public void getArguments(nextgen.st.model.STModel model, java.util.function.BiConsumer<nextgen.st.model.STParameter, nextgen.st.model.STArgument> consumer) {
-      db.getSTTemplate(model)
+      model.getStTemplate()
             .getParameters()
             .sorted(java.util.Comparator.comparing(nextgen.st.model.STParameter::getName))
             .forEach(stParameter -> model.getArguments()
-                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .filter(stArgument -> stArgument.getValue() != null)
                   .forEach(stArgument -> consumer.accept(stParameter, stArgument)));
    }
@@ -594,7 +557,7 @@ public class STAppPresentationModel {
       stTemplate.getParameters()
             .sorted(java.util.Comparator.comparing(nextgen.st.model.STParameter::getName))
             .forEach(stParameter -> model.getArguments()
-                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .forEach(stArgument -> consumer.accept(stParameter, stArgument)));
    }
 
@@ -617,7 +580,7 @@ public class STAppPresentationModel {
 //   public void set(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue value) {
 //
 //      stModel.getArguments()
-//             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+//             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 //             .findAny()
 //             .ifPresent(this::remove);
 //
@@ -639,9 +602,7 @@ public class STAppPresentationModel {
 //   }
 
    public java.util.Optional<nextgen.st.model.STGroupModel> findSTGroup(String name) {
-      return stGroups.stream()
-            .filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
-            .findAny();
+      return Optional.ofNullable(db.findSTGroupModelByName(name));
    }
 
    public java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
@@ -659,20 +620,20 @@ public class STAppPresentationModel {
    }
 
    public java.util.stream.Stream<nextgen.st.model.STGroupModel> getSTGroups() {
-      return stGroups.stream().sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
+      return db.findAllSTGroupModel().sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
    }
 
-   public nextgen.st.model.STGroupModel findSTGroupModel(nextgen.st.model.STTemplate stTemplate) {
-      return stRenderer.findSTGroupModel(stTemplate);
-   }
+//   public nextgen.st.model.STGroupModel findSTGroupModel(nextgen.st.model.STTemplate stTemplate) {
+//      return stRenderer.findSTGroupModel(stTemplate);
+//   }
 
-   public nextgen.st.model.STGroupModel findSTGroupModelByTemplateUuid(String stTemplate) {
-      return stRenderer.findSTGroupModelByTemplate(stTemplate);
-   }
+//   public nextgen.st.model.STGroupModel findSTGroupModelByTemplateUuid(String stTemplate) {
+//      return stRenderer.findSTGroupModelByTemplate(stTemplate);
+//   }
 
-   public nextgen.st.model.STTemplate findSTTemplate(nextgen.st.model.STModel model) {
-      return findSTTemplateByUuid(model.getStTemplate());
-   }
+//   public nextgen.st.model.STTemplate findSTTemplate(nextgen.st.model.STModel model) {
+//      return findSTTemplateByUuid(model.getStTemplate());
+//   }
 
    public boolean isBoolean(nextgen.st.model.STParameter model) {
       return model.getName().startsWith("is") || model.getName().startsWith("has");
@@ -685,7 +646,7 @@ public class STAppPresentationModel {
    }
 
    public nextgen.st.model.STTemplate getSTTemplate(nextgen.st.model.STModel stModel) {
-      return findSTTemplateByUuid(stModel.getStTemplate());
+      return stModel.getStTemplate();
    }
 
    public String getOutputPath() {
@@ -697,7 +658,7 @@ public class STAppPresentationModel {
    }
 
    public nextgen.st.model.STEnumValue newSTEnumValue() {
-      return new nextgen.st.model.STEnumValue();
+      return db.newSTEnumValue();
    }
 
    public static final class CompilationResult {

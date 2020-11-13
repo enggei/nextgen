@@ -894,7 +894,7 @@ public class STModelTreeTable extends JTable {
 
       private void addSTValues(nextgen.st.model.STModel model, java.util.List<STValueElement> stValues) {
 
-         final nextgen.st.model.STTemplate stTemplate = appModel().db.getSTTemplate(model);
+         final nextgen.st.model.STTemplate stTemplate = model.getStTemplate();
 
          stTemplate.getParameters()
                    .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
@@ -902,8 +902,7 @@ public class STModelTreeTable extends JTable {
                    .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
                    .forEach(stParameter -> {
                       final java.util.Optional<nextgen.st.model.STArgument> argument = model.getArguments()
-                                                                                            .filter(stArgument -> stArgument.getStParameter()
-                                                                                                                            .equals(stParameter.getUuid()))
+                                                                                            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                                                                                             .findFirst();
                       stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
                    });

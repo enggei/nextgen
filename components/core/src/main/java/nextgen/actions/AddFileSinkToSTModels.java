@@ -59,7 +59,7 @@ public class AddFileSinkToSTModels extends TransactionAction {
 
          for (nextgen.st.model.STModel stModel : stModels) {
             stModel.getArguments()
-                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
                   .ifPresent(stArgument -> {
                      final nextgen.st.model.STFile stFile = appModel().newSTFile(appModel().render(stArgument), type, path, packageName);

@@ -299,7 +299,7 @@ public class NeoEntity {
 				"				.ifPresent(stParameter -> {\n" + 
 				"\n" + 
 				"					stModel.getArguments()\n" + 
-				"							.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"							.filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 				"							.findAny()\n" + 
 				"							.ifPresent(stModel::removeArguments);\n" + 
 				"\n" + 
@@ -311,7 +311,7 @@ public class NeoEntity {
 				"	private STValue get(String name) {\n" + 
 				"		final AtomicReference<STValue> value = new AtomicReference<>();\n" + 
 				"		findParameter(name).flatMap(stParameter -> stModel.getArguments()\n" + 
-				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 				"				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));\n" + 
 				"		return value.get();\n" + 
 				"	}\n" + 
@@ -319,7 +319,7 @@ public class NeoEntity {
 				"	private STArgument getArgument(String name) {\n" + 
 				"		final AtomicReference<STArgument> value = new AtomicReference<>();\n" + 
 				"		findParameter(name).flatMap(stParameter -> stModel.getArguments()\n" + 
-				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"				.filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 				"				.findAny()).ifPresent(value::set);\n" + 
 				"		return value.get();\n" + 
 				"	}\n" + 
@@ -339,7 +339,7 @@ public class NeoEntity {
 				"	private Stream<STValue> stream(String name) {\n" + 
 				"		return findParameter(name)\n" + 
 				"				.map(stParameter -> stModel.getArguments()\n" + 
-				"						.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"						.filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 				"						.map(STArgument::getValue)).orElseGet(Stream::empty);\n" + 
 				"	}\n" + 
 				"\n" + 

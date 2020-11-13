@@ -105,28 +105,6 @@ public class STAppModel {
 		return jsonObject.getInteger("editorFontSize", defaultValue);
 	}
 
-	public STAppModel addDirectories(STGDirectory value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("directories");
-		if (jsonArray == null) jsonObject.put("directories", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value.getJsonObject());
-		return this;
-	}
-
-	public java.util.stream.Stream<STGDirectory> getDirectories() { 
-		return jsonObject.getJsonArray("directories", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STGDirectory((io.vertx.core.json.JsonObject) o));
-	}
-
-	public STAppModel removeDirectories(STGDirectory value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("directories", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
-			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
-				jsonArray.remove(i);
-				return this;
-			}
-		}
-		return this;
-	}
 
 	public STAppModel clearDirectories() { 
 		jsonObject.put("directories", new io.vertx.core.json.JsonArray());

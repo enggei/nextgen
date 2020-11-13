@@ -2,55 +2,14 @@ package nextgen.st.model;
 
 public class STEnumValue {
 
-	private final io.vertx.core.json.JsonObject jsonObject;
+	private final org.neo4j.graphdb.Node node;
 
-	public STEnumValue() { 
-		this.jsonObject = new io.vertx.core.json.JsonObject();
-		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	public STEnumValue(org.neo4j.graphdb.Node node) { 
+		this.node = node;
 	}
 
-	public STEnumValue(io.vertx.core.json.JsonObject jsonObject) { 
-		this.jsonObject = jsonObject;
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public STEnumValue(java.io.File file) throws java.io.IOException {
-		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
-	}
-
-	public STEnumValue(java.io.InputStream inputStream) throws java.io.IOException {
-		if (inputStream == null) throw new java.io.IOException("inputStream is null");
-		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
-		int read;
-		byte[] data = new byte[2048];
-		while ((read = inputStream.read(data, 0, data.length)) != -1)
-			buffer.write(data, 0, read);
-		inputStream.close();
-		final byte[] content = buffer.toByteArray();
-		buffer.close();
-
-		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public io.vertx.core.json.JsonObject getJsonObject() { 
-		return this.jsonObject;
-	}
-
-	@Deprecated
-	public String uuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public String getUuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public STEnumValue removeUuid() {
-		this.jsonObject.remove("uuid");
-		return this;
+	public org.neo4j.graphdb.Node getNode() { 
+		return this.node;
 	}
 
 	@Override
@@ -58,43 +17,145 @@ public class STEnumValue {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STEnumValue other = (STEnumValue) o;
-		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+		return node.equals(other.node);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(jsonObject.getString("uuid"));
+		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
+	public STEnumValue setUuid(String value) { 
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
+		return this;
+	}
+
+	public String getUuid() { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return null;
+	}
+
+	public String getUuid(String defaultValue) { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return defaultValue;
+	}
+
+	public boolean hasUuid() { 
+		return node.hasProperty(_uuid);
+	}
+
+	public STEnumValue removeUuid() { 
+		node.removeProperty(_uuid);
+		return this;
+	}
+
+	private static final String _name = "name";
+
 	public STEnumValue setName(String value) { 
-		jsonObject.put("name", value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
 	public String getName() { 
-		return jsonObject.getString("name");
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return null;
 	}
 
 	public String getName(String defaultValue) { 
-		return jsonObject.getString("name", defaultValue);
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return defaultValue;
 	}
 
+	public boolean hasName() { 
+		return node.hasProperty(_name);
+	}
+
+	public STEnumValue removeName() { 
+		node.removeProperty(_name);
+		return this;
+	}
+
+	private static final String _lexical = "lexical";
+
 	public STEnumValue setLexical(String value) { 
-		jsonObject.put("lexical", value);
+		if (value == null) 
+			removeLexical(); 
+		else {
+		 	node.setProperty(_lexical, value);
+		}
 		return this;
 	}
 
 	public String getLexical() { 
-		return jsonObject.getString("lexical");
+		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
+		return null;
 	}
 
 	public String getLexical(String defaultValue) { 
-		return jsonObject.getString("lexical", defaultValue);
+		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
+		return defaultValue;
 	}
 
+	public boolean hasLexical() { 
+		return node.hasProperty(_lexical);
+	}
+
+	public STEnumValue removeLexical() { 
+		node.removeProperty(_lexical);
+		return this;
+	}
+
+	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
+	}
 
 	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
+	public String toString() {
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
+
+	public io.vertx.core.json.JsonObject toJsonObject() {
+		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
+		if (node.hasProperty("lexical")) jsonObject.put("lexical", node.getProperty("lexical"));
+		return jsonObject;
+	}
+
+	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();
+
+	}
+
 }

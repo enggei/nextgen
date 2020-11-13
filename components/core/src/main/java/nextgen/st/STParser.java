@@ -26,6 +26,11 @@ public class STParser {
 
    public static boolean debug = false;
 
+   protected static nextgen.st.STAppPresentationModel appModel() {
+      return nextgen.swing.AppModel.getInstance()
+            .getSTAppPresentationModel();
+   }
+
    public static nextgen.st.parser.ParseResult parse(File stgFile) {
       final char delimiter = loadDelimiter(stgFile);
       return parse(new org.stringtemplate.v4.STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
@@ -278,7 +283,7 @@ public class STParser {
                      }
 
                      if (!foundExistingKey)
-                        existingParameter.addKeys(new nextgen.st.model.STParameterKey()
+                        existingParameter.addKeys(appModel().db.newSTParameterKey()
                               .setName(parsedKey.getName())
                               .setArgumentType(parsedKey.getArgumentType()));
                   }
@@ -294,19 +299,19 @@ public class STParser {
          }
       }
 
-      model.clearParameters();
+      model.removeAllParameters();
       newParameters.values().forEach(o -> {
 
          if (o instanceof nextgen.st.model.STParameter) {
             model.addParameters((nextgen.st.model.STParameter) o);
          } else if (o instanceof nextgen.st.parser.ParsedSTParameter) {
             final nextgen.st.parser.ParsedSTParameter parsedSTParameter = (nextgen.st.parser.ParsedSTParameter) o;
-            final nextgen.st.model.STParameter stParameter = new nextgen.st.model.STParameter()
+            final nextgen.st.model.STParameter stParameter = appModel().db.newSTParameter()
                   .setName(parsedSTParameter.getName())
                   .setArgumentType(parsedSTParameter.getArgumentType())
                   .setType(parsedSTParameter.getType());
 
-            parsedSTParameter.getKeys().forEach(stParameterKey -> stParameter.addKeys(new nextgen.st.model.STParameterKey()
+            parsedSTParameter.getKeys().forEach(stParameterKey -> stParameter.addKeys(appModel().db.newSTParameterKey()
                   .setName(stParameterKey.getName())
                   .setArgumentType(stParameterKey.getArgumentType())));
 

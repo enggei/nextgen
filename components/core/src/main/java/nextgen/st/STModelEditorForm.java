@@ -49,7 +49,7 @@ public class STModelEditorForm extends JPanel {
 
    private void addSTValues(STModel model, java.util.List<STValueElement> stValues) {
 
-      final STTemplate stTemplate = appModel().db.getSTTemplate(model);
+      final STTemplate stTemplate = model.getStTemplate();
 
       stTemplate.getParameters()
             .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
@@ -58,7 +58,7 @@ public class STModelEditorForm extends JPanel {
             .forEach(stParameter -> {
 
                final Optional<STArgument> argument = model.getArguments()
-                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                      .findFirst();
 
                stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));

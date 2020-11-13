@@ -51,24 +51,5 @@ public class STJsonFactory {
 		return newSTAppModel(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
 	}
 
-	public static STGDirectory newSTGDirectory() { 
-		return new STGDirectory();
-	}
-
-	public static STGDirectory newSTGDirectoryNoUuid() { 
-		return new STGDirectory().removeUuid();
-	}
-
-	public static STGDirectory newSTGDirectory(io.vertx.core.json.JsonObject jsonObject) { 
-		return new STGDirectory(jsonObject);
-	}
-
-	public static STGDirectory newSTGDirectory(java.io.File file) throws java.io.IOException { 
-		return new STGDirectory(load(file));
-	}
-
-	public static STGDirectory merge(STGDirectory lhs, STGDirectory rhs) {
-		return newSTGDirectory(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
-	}
 
 }

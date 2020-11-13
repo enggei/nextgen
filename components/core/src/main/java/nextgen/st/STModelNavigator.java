@@ -481,7 +481,7 @@ public class STModelNavigator extends JPanel {
 			final Map<nextgen.st.model.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
 			model.getModelsSorted().forEach(stModel -> {
 
-				final nextgen.st.model.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());
+				final nextgen.st.model.STTemplate stTemplate = stModel.getStTemplate();
 				final nextgen.st.model.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
@@ -596,7 +596,7 @@ public class STModelNavigator extends JPanel {
 			final nextgen.st.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);
 			parent.add(stTemplateTreeNode);
 
-			appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate)));
+			stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate)));
 			stTemplate.getChildren().forEach(stTemplateChild -> addSTTemplateChild(stTemplateChild, stTemplateTreeNode));
 		}
 	}
@@ -913,7 +913,7 @@ public class STModelNavigator extends JPanel {
 			this.uuid = model.getUuid();
 
 			stModel.getArgumentsSorted()
-				.filter(stArgument -> stArgument.getStParameter().equals(model.getUuid()))
+				.filter(stArgument -> stArgument.getStParameter().equals(model))
 				.forEach(appModel().stArgumentConsumer(model)
 						.onSingleSTValue((stArgument, stValue) -> addChild(new STValueArgumentTreeNode(stValue, stArgument)))
 						.onSingleSTModel((stArgument, stValue) -> addChild(new STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
@@ -1015,7 +1015,7 @@ public class STModelNavigator extends JPanel {
 
 			this.stArgument = stArgument;
 			this.stArgumentUuid = stArgument.getUuid();
-			this.stTemplate = appModel().findSTTemplateByUuid(model.getStTemplate());
+			this.stTemplate = model.getStTemplate();
 
 			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
 			this.tooltip = "";
@@ -1226,7 +1226,7 @@ public class STModelNavigator extends JPanel {
 			this.uuid = model.getUuid();
 
 			stParameter.getKeys().forEach(stParameterKey -> getModel().getKeyValues()
-					.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+					.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
 					.findFirst()
 					.ifPresent(stArgumentKV -> add(new STKVTreeNode(stArgumentKV, getModel(), stParameterKey))));
 		}
@@ -1382,7 +1382,7 @@ public class STModelNavigator extends JPanel {
 			this.stArgument = stArgument;
 			this.stParameterKey = stParameterKey;
 			this.stArgumentUuid = stArgument.getUuid();
-			this.stTemplate = appModel().findSTTemplateByUuid(model.getStTemplate());
+			this.stTemplate = model.getStTemplate();
 
 			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stParameterKey.getName() + "]"));
 			this.tooltip = "";

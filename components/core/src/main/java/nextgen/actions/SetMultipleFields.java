@@ -17,7 +17,7 @@ public class SetMultipleFields extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       final java.util.concurrent.atomic.AtomicInteger modelIndex = new java.util.concurrent.atomic.AtomicInteger(0);
-      final nextgen.st.model.STModel[] existingSTModels = appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).distinct().toArray(nextgen.st.model.STModel[]::new);
+      final nextgen.st.model.STModel[] existingSTModels = stTemplate.getIncomingStTemplateSTModel().distinct().toArray(nextgen.st.model.STModel[]::new);
 
       final java.util.Map<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
       final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
@@ -30,7 +30,7 @@ public class SetMultipleFields extends TransactionAction {
             .forEach(stParameter -> {
 
                final java.util.Optional<nextgen.st.model.STArgument> argument = stModel.getArguments()
-                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                      .findFirst();
                final String content = argument.isPresent() ? appModel().render(argument.get()) : "";
                fieldMap.put(stParameter.getName(), newTextField(content, 40));
@@ -40,7 +40,7 @@ public class SetMultipleFields extends TransactionAction {
                for (nextgen.st.model.STModel existingSTModel : existingSTModels) {
                   existingSTModel
                         .getArguments()
-                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                         .filter(stArgument -> stArgument.getValue() != null)
                         .findFirst()
                         .ifPresent(stArgument -> {

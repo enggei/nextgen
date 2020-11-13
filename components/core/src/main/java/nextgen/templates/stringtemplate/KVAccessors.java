@@ -148,7 +148,7 @@ public class KVAccessors {
 				"public java.util.stream.Stream<~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~> stream~name;format=\"capitalize\"~() {\n" + 
 				"	return findParameter(\"~name~\")\n" + 
 				"			.map(stParameter -> stModel.getArguments()\n" + 
-				"					.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+				"					.filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 				"					.map(stArgument -> new ~entity;format=\"capitalize\"~_~name;format=\"capitalize\"~(stArgument, stParameter)))\n" + 
 				"			.orElseGet(Stream::empty);\n" + 
 				"}\n" + 
@@ -185,7 +185,7 @@ public class KVAccessors {
 				"				.ifPresent(stParameterKey -> {\n" + 
 				"\n" + 
 				"					stArgument.getKeyValues()\n" + 
-				"							.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
+				"							.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))\n" +
 				"							.findAny()\n" + 
 				"							.ifPresent(stArgumentKV -> stArgument.removeKeyValues(stArgumentKV));\n" + 
 				"\n" + 

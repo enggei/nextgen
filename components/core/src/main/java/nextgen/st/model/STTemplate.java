@@ -2,55 +2,14 @@ package nextgen.st.model;
 
 public class STTemplate {
 
-	private final io.vertx.core.json.JsonObject jsonObject;
+	private final org.neo4j.graphdb.Node node;
 
-	public STTemplate() { 
-		this.jsonObject = new io.vertx.core.json.JsonObject();
-		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	public STTemplate(org.neo4j.graphdb.Node node) { 
+		this.node = node;
 	}
 
-	public STTemplate(io.vertx.core.json.JsonObject jsonObject) { 
-		this.jsonObject = jsonObject;
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public STTemplate(java.io.File file) throws java.io.IOException {
-		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
-	}
-
-	public STTemplate(java.io.InputStream inputStream) throws java.io.IOException {
-		if (inputStream == null) throw new java.io.IOException("inputStream is null");
-		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
-		int read;
-		byte[] data = new byte[2048];
-		while ((read = inputStream.read(data, 0, data.length)) != -1)
-			buffer.write(data, 0, read);
-		inputStream.close();
-		final byte[] content = buffer.toByteArray();
-		buffer.close();
-
-		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
-		java.lang.String uuidString = jsonObject.getString("uuid");
-		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
-	}
-
-	public io.vertx.core.json.JsonObject getJsonObject() { 
-		return this.jsonObject;
-	}
-
-	@Deprecated
-	public String uuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public String getUuid() {
-		return this.jsonObject.getString("uuid");
-	}
-
-	public STTemplate removeUuid() {
-		this.jsonObject.remove("uuid");
-		return this;
+	public org.neo4j.graphdb.Node getNode() { 
+		return this.node;
 	}
 
 	@Override
@@ -58,127 +17,253 @@ public class STTemplate {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STTemplate other = (STTemplate) o;
-		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+		return node.equals(other.node);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(jsonObject.getString("uuid"));
+		return java.util.Objects.hash(node);
 	}
 
+	private static final String _uuid = "uuid";
+
+	public STTemplate setUuid(String value) { 
+		if (value == null) 
+			removeUuid(); 
+		else {
+		 	node.setProperty(_uuid, value);
+		}
+		return this;
+	}
+
+	public String getUuid() { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return null;
+	}
+
+	public String getUuid(String defaultValue) { 
+		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);
+		return defaultValue;
+	}
+
+	public boolean hasUuid() { 
+		return node.hasProperty(_uuid);
+	}
+
+	public STTemplate removeUuid() { 
+		node.removeProperty(_uuid);
+		return this;
+	}
+
+	private static final String _name = "name";
+
 	public STTemplate setName(String value) { 
-		jsonObject.put("name", value);
+		if (value == null) 
+			removeName(); 
+		else {
+		 	node.setProperty(_name, value);
+		}
 		return this;
 	}
 
 	public String getName() { 
-		return jsonObject.getString("name");
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return null;
 	}
 
 	public String getName(String defaultValue) { 
-		return jsonObject.getString("name", defaultValue);
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return defaultValue;
 	}
 
+	public boolean hasName() { 
+		return node.hasProperty(_name);
+	}
+
+	public STTemplate removeName() { 
+		node.removeProperty(_name);
+		return this;
+	}
+
+	private static final String _text = "text";
+
 	public STTemplate setText(String value) { 
-		jsonObject.put("text", value);
+		if (value == null) 
+			removeText(); 
+		else {
+		 	node.setProperty(_text, value);
+		}
 		return this;
 	}
 
 	public String getText() { 
-		return jsonObject.getString("text");
+		if (node.hasProperty(_text)) return (String) node.getProperty(_text);
+		return null;
 	}
 
 	public String getText(String defaultValue) { 
-		return jsonObject.getString("text", defaultValue);
+		if (node.hasProperty(_text)) return (String) node.getProperty(_text);
+		return defaultValue;
 	}
 
-	public STTemplate addImplements(String value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("implements");
-		if (jsonArray == null) jsonObject.put("implements", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value);
+	public boolean hasText() { 
+		return node.hasProperty(_text);
+	}
+
+	public STTemplate removeText() { 
+		node.removeProperty(_text);
+		return this;
+	}
+
+	private static final org.neo4j.graphdb.RelationshipType _implements = org.neo4j.graphdb.RelationshipType.withName("implements");
+
+	public STTemplate addImplements(String dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label("String"));
+		newNode.setProperty("value", dst);
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, _implements);
+		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
 	public java.util.stream.Stream<String> getImplements() { 
-		return jsonObject.getJsonArray("implements", new io.vertx.core.json.JsonArray()).stream().map((o) -> (String)o);
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
 	}
 
-	public STTemplate removeImplements(String value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("implements", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final String o = jsonArray.getString(i);
-			if (value.equals(o))  { 
-				jsonArray.remove(i);
-				return this;
-			}
-		}
+	public java.util.stream.Stream<String> getImplementsSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
+	}
+
+	public STTemplate removeAllImplements() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public STTemplate clearImplements() { 
-		jsonObject.put("implements", new io.vertx.core.json.JsonArray());
-		return this;
-	}
+	private static final org.neo4j.graphdb.RelationshipType _parameters = org.neo4j.graphdb.RelationshipType.withName("parameters");
 
-	public STTemplate addParameters(STParameter value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("parameters");
-		if (jsonArray == null) jsonObject.put("parameters", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value.getJsonObject());
+	public STTemplate addParameters(STParameter dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _parameters);
+		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
 	public java.util.stream.Stream<STParameter> getParameters() { 
-		return jsonObject.getJsonArray("parameters", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STParameter((io.vertx.core.json.JsonObject) o));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).spliterator(), false).map((relationship) -> new STParameter(relationship.getOtherNode(node)));
 	}
 
-	public STTemplate removeParameters(STParameter value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("parameters", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
-			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
-				jsonArray.remove(i);
-				return this;
-			}
-		}
+	public java.util.stream.Stream<STParameter> getParametersSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STParameter(relationship.getOtherNode(node)));
+	}
+
+	public STTemplate removeParameters(STParameter dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
-	public STTemplate clearParameters() { 
-		jsonObject.put("parameters", new io.vertx.core.json.JsonArray());
+	public STTemplate removeAllParameters() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public STTemplate addChildren(STTemplate value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("children");
-		if (jsonArray == null) jsonObject.put("children", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value.getJsonObject());
+	private static final org.neo4j.graphdb.RelationshipType _children = org.neo4j.graphdb.RelationshipType.withName("children");
+
+	public STTemplate addChildren(STTemplate dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _children);
+		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
 	public java.util.stream.Stream<STTemplate> getChildren() { 
-		return jsonObject.getJsonArray("children", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STTemplate((io.vertx.core.json.JsonObject) o));
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
 	}
 
-	public STTemplate removeChildren(STTemplate value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("children", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
-			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
-				jsonArray.remove(i);
-				return this;
-			}
-		}
+	public java.util.stream.Stream<STTemplate> getChildrenSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
+	public STTemplate removeChildren(STTemplate dst) {
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
-	public STTemplate clearChildren() { 
-		jsonObject.put("children", new io.vertx.core.json.JsonArray());
+	public STTemplate removeAllChildren() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
+	public java.util.stream.Stream<STTemplate> getIncomingChildrenSTTemplate() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("children")).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STGroupModel> getIncomingTemplatesSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("templates")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STModel> getIncomingStTemplateSTModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stTemplate")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
+	}
 
 	@Override
-	public java.lang.String toString() { 
-		return jsonObject.getString("name");
+	public String toString() {
+		final StringBuilder out = new StringBuilder();
+		out.append("Node : ").append(node.getId()).append(" ");
+		node.getLabels().forEach(label -> out.append(label.name()).append(" "));
+		out.append("(");
+		node.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(node.getProperty(s)));
+		out.append(")");
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> {
+			out.append("\n\t -> ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> {
+			out.append("\n\t <- ").append(relationship.getType()).append(" (");
+			relationship.getPropertyKeys().forEach(s -> out.append(" ").append(s).append(":").append(relationship.getProperty(s)));
+			out.append(")");
+		});
+		return out.toString().trim();
 	}
+
+	public io.vertx.core.json.JsonObject toJsonObject() {
+		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
+		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
+		if (node.hasProperty("text")) jsonObject.put("text", node.getProperty("text"));
+		final io.vertx.core.json.JsonArray _parameters = new io.vertx.core.json.JsonArray();
+		getParameters().forEach(element -> _parameters.add(element.toJsonObject()));
+		if (!_parameters.isEmpty()) jsonObject.put("parameters", _parameters);
+
+		final io.vertx.core.json.JsonArray _children = new io.vertx.core.json.JsonArray();
+		getChildren().forEach(element -> _children.add(element.toJsonObject()));
+		if (!_children.isEmpty()) jsonObject.put("children", _children);
+
+		final io.vertx.core.json.JsonArray _implements = new io.vertx.core.json.JsonArray();
+		getImplements().forEach(_implements::add);
+		if (!_implements.isEmpty()) jsonObject.put("implements", _implements);
+
+		return jsonObject;
+	}
+
+	public void delete() {
+
+		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
+
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();
+
+	}
+
+
 }

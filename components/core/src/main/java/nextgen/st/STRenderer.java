@@ -47,7 +47,7 @@ public class STRenderer {
       stTemplate.getParameters()
             .forEach(stParameter ->
                   stModel.getArgumentsSorted()
-                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                         .forEach(stArgument -> {
                            switch (stParameter.getType()) {
 
@@ -118,7 +118,7 @@ public class STRenderer {
       stTemplate.getParameters()
             .forEach(stParameter ->
                   stModel.getArgumentsSorted()
-                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                        .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                         .forEach(stArgument -> {
 
                            switch (stParameter.getType()) {
@@ -222,7 +222,7 @@ public class STRenderer {
       return StringUtil.escape(s).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
    }
 
-   private STMapper findSTMapper(String stTemplate) {
+   private STMapper findSTMapper(STTemplate stTemplate) {
       for (STMapper mapper : mappers) {
          final STTemplate found = mapper.find(stTemplate);
          if (found != null) return mapper;
@@ -231,10 +231,10 @@ public class STRenderer {
    }
 
    public STGroupModel findSTGroupModel(STTemplate stTemplate) {
-      return Objects.requireNonNull(findSTMapper(stTemplate.getUuid())).groupModel;
+      return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
    }
 
-   public STGroupModel findSTGroupModelByTemplate(String stTemplate) {
+   public STGroupModel findSTGroupModelByTemplate(STTemplate stTemplate) {
       return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
    }
 
@@ -248,14 +248,14 @@ public class STRenderer {
          this.groupModel = groupModel;
       }
 
-      public STTemplate find(String stTemplate) {
+      public STTemplate find(STTemplate stTemplate) {
          return find(stTemplate, groupModel.getTemplates().iterator());
       }
 
-      private STTemplate find(String stTemplate, Iterator<STTemplate> iterator) {
+      private STTemplate find(STTemplate stTemplate, Iterator<STTemplate> iterator) {
          while (iterator.hasNext()) {
             final STTemplate next = iterator.next();
-            if (next.getUuid().equals(stTemplate)) return next;
+            if (next.equals(stTemplate)) return next;
             final STTemplate found = find(stTemplate, next.getChildren().iterator());
             if (found != null) return found;
          }

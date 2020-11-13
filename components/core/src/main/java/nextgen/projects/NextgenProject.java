@@ -284,7 +284,7 @@ public class NextgenProject {
                   "			//stModelNodes.forEach(stNode -> stParameterMenu.add(new nextgen.actions.SetKVArgumentFromSTModel(\"Set \" + appModel().render(stNode.getModel(), 30), getModel(), stParameterKey, stNode.getModel())));\n" +
                   "			//stParameterMenu.add(new nextgen.actions.SetKVArgumentFromInput(\"Set from Input\", getModel(), stParameterKey, thisCanvas()));\n" +
                   "			//stParameterMenu.add(new nextgen.actions.SetKVArgumentFromClipboard(\"Set from Clipboard\", getModel(), stParameterKey));\n" +
-                  "			getModel().getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid())).filter(stArgumentKV -> stArgumentKV.getValue() != null).forEach(stArgumentKV -> {\n" +
+                  "			getModel().getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).filter(stArgumentKV -> stArgumentKV.getValue() != null).forEach(stArgumentKV -> {\n" +
                   "					//stParameterMenu.add(new nextgen.actions.OpenArgument(event, getModel(), stParameterKey, stArgumentKV));\n" +
                   "					//stParameterMenu.add(new nextgen.actions.DeleteSTArgument(event, getModel(), stArgumentKV));\n" +
                   "			});\n" +
@@ -300,7 +300,7 @@ public class NextgenProject {
                   .addStatements("appModel().doLaterInTransaction(tx -> {\n" +
                         "		stParameter.getKeys()\n" +
                         "				.forEach(stParameterKey -> getModel().getKeyValues()\n" +
-                        "						.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
+                        "						.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))\n" +
                         "						.filter(stArgumentKV -> stArgumentKV.getValue() != null)\n" +
                         "						.findFirst()\n" +
                         "						.ifPresent(stArgumentKV -> new OpenArgument(event, getModel(), stParameterKey, stArgumentKV).actionPerformed(null)));\n" +
@@ -424,7 +424,7 @@ public class NextgenProject {
                   "				final JMenu removestParameterMenu = new JMenu(\"Remove\");\n" +
                   "				stParameterMenu.add(removestParameterMenu);\n" +
                   "\n" +
-                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
+                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
                   "					removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));\n" +
                   "					existingSelections.put(stParameter.getUuid(), stArgument.getValue());\n" +
@@ -448,7 +448,7 @@ public class NextgenProject {
                   "				final JMenu removestParameterMenu = new JMenu(\"Remove\");\n" +
                   "				stParameterMenu.add(removestParameterMenu);\n" +
                   "\n" +
-                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
+                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
                   "					removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));\n" +
                   "				});\n" +
@@ -465,7 +465,7 @@ public class NextgenProject {
                   "				final JMenu removestParameterMenu = new JMenu(\"Remove\");\n" +
                   "				stParameterMenu.add(removestParameterMenu);\n" +
                   "\n" +
-                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid())).forEach(stArgument -> {\n" +
+                  "				getModel().getArguments().filter(existing -> existing.getValue() != null).filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> {\n" +
                   "					openstParameterMenu.add(new OpenArgument(event, true, stParameter, stArgument));\n" +
                   "					removestParameterMenu.add(new nextgen.actions.DeleteSTArgument(stArgument, thisCanvas()));\n" +
                   "				});\n" +
@@ -537,7 +537,7 @@ public class NextgenProject {
 //                        "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
 //                        "									.findFirst()\n" +
 //                        "									.ifPresent(stParameter -> stParameter.getKeys()\n" +
-//                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
+//                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey))\n" +
 //                        "											.findFirst()\n" +
 //                        "											.ifPresent(stParameterKey -> {\n" +
 //                        "												final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +
@@ -793,7 +793,7 @@ public class NextgenProject {
                         "									.filter(stParameter -> stParameter.getUuid().equals(stArgument.getStParameter()))\n" +
                         "									.findFirst()\n" +
                         "									.ifPresent(stParameter -> stParameter.getKeys()\n" +
-                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))\n" +
+                        "											.filter(stParameterKey -> stArgumentKV.getStParameterKey().equals(stParameterKey))\n" +
                         "											.findFirst()\n" +
                         "											.ifPresent(stParameterKey -> {\n" +
                         "												final STModelNode stModelNode = thisCanvas().addNode(stModel.getUuid(), () -> new STModelNode(stModel, appModel().findSTTemplateByUuid(stModel.getStTemplate())));\n" +

@@ -11,7 +11,7 @@ public class GenerateAll_TransactionAction {
 					"if (argumentType.equals(\"Object\") || argumentType.equals(\"String\")) {\n" + 
 					"\n" + 
 					"   final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = stModel.getArguments()\n" +
-					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"         .map(nextgen.st.model.STArgument::getValue)\n" + 
 					"         .filter(nextgen.st.model.STValue::hasType)\n" + 
 					"         .filter(stValue -> stValue.getType() == nextgen.st.model.STValueType.STMODEL)\n" + 
@@ -200,7 +200,7 @@ public class GenerateAll_TransactionAction {
 					"\n" + 
 					"   for (nextgen.st.model.STModel stModel : stModels) {\n" + 
 					"      stModel.getArguments()\n" + 
-					"            .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"            .findFirst()\n" + 
 					"            .ifPresent(stArgument -> {\n" + 
 					"               final nextgen.st.model.STFile stFile = appModel().newSTFile(appModel().render(stArgument), type, path, packageName);\n" + 
@@ -566,7 +566,7 @@ public class GenerateAll_TransactionAction {
 					"   });\n" + 
 					"});");
 		final TransactionAction SetArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").setTitle("Set from Clipboard").addStatements("stModel.getArguments()\n" +
-					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -582,7 +582,7 @@ public class GenerateAll_TransactionAction {
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
 		final TransactionAction SetArgumentFromInput = NextgenST.newTransactionAction().setName("SetArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Set from Input").addStatements("input(owner, stParameter.getName(), inputValue -> {\n" +
 					"   stModel.getArguments()\n" + 
-					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"         .findAny()\n" + 
 					"         .ifPresent(stArgument -> {\n" + 
 					"            final String uuid = stArgument.getUuid();\n" + 
@@ -598,7 +598,7 @@ public class GenerateAll_TransactionAction {
 					"   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" + 
 					"});");
 		final TransactionAction SetArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STModel", "value").addStatements("stModel.getArguments()\n" +
-					"            .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"            .findAny()\n" + 
 					"            .ifPresent(stArgument -> {\n" + 
 					"               final String uuid = stArgument.getUuid();\n" + 
@@ -613,7 +613,7 @@ public class GenerateAll_TransactionAction {
 					"      stModel.addArguments(stArgument);\n" + 
 					"      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
 		final TransactionAction SetArgumentFromSTModelUuid = NextgenST.newTransactionAction().setName("SetArgumentFromSTModelUuid").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("String", "uuid").addStatements("stModel.getArguments()\n" +
-					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -628,7 +628,7 @@ public class GenerateAll_TransactionAction {
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
 		final TransactionAction SetArgumentFromSTTemplate = NextgenST.newTransactionAction().setName("SetArgumentFromSTTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STTemplate", "stTemplate").addStatements("stModel.getArguments()\n" +
-					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -645,7 +645,7 @@ public class GenerateAll_TransactionAction {
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
 		final TransactionAction SetArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STValue", "stValue").addStatements("stModel.getArguments()\n" +
-					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -659,7 +659,7 @@ public class GenerateAll_TransactionAction {
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
 		final TransactionAction SetArgumentToTrue = NextgenST.newTransactionAction().setName("SetArgumentToTrue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").setTitle("Set to true").addStatements("stModel.getArguments()\n" +
-					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -698,7 +698,7 @@ public class GenerateAll_TransactionAction {
 					"   javax.swing.SwingUtilities.invokeLater(jDialog::dispose);\n" + 
 					"});");
 		final TransactionAction SetKVArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetKVArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Clipboard\"").addStatements("stArgument.getKeyValues()\n" +
-					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
+					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey))\n" +
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
 					"         stArgument.removeKeyValues(existing);\n" + 
@@ -714,7 +714,7 @@ public class GenerateAll_TransactionAction {
 					"nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);");
 		final TransactionAction SetKVArgumentFromInput = NextgenST.newTransactionAction().setName("SetKVArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("javax.swing.JComponent", "owner").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Input\"").addStatements("input(owner, stParameterKey.getName(), inputValue -> {\n" +
 					"   stArgument.getKeyValues()\n" + 
-					"         .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
+					"         .filter(existing -> existing.getStParameterKey().equals(stParameterKey))\n" +
 					"         .findFirst()\n" + 
 					"         .ifPresent(existing -> {\n" + 
 					"            stArgument.removeKeyValues(existing);\n" + 
@@ -729,7 +729,7 @@ public class GenerateAll_TransactionAction {
 					"\n" + 
 					"   nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);});");
 		final TransactionAction SetKVArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STModel", "value").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STModel\"").addStatements("stArgument.getKeyValues()\n" +
-					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
+					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey))\n" +
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
 					"         stArgument.removeKeyValues(existing);\n" + 
@@ -744,7 +744,7 @@ public class GenerateAll_TransactionAction {
 					"\n" + 
 					"nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);");
 		final TransactionAction SetKVArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STValue", "stValue").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STValue\"").addStatements("stArgument.getKeyValues()\n" +
-					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
+					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey))\n" +
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
 					"         stArgument.removeKeyValues(existing);\n" + 
@@ -771,7 +771,7 @@ public class GenerateAll_TransactionAction {
 					"      .forEach(stParameter -> {\n" + 
 					"\n" + 
 					"         final java.util.Optional<nextgen.st.model.STArgument> argument = stModel.getArguments()\n" + 
-					"               .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"               .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"               .findFirst();\n" + 
 					"         final String content = argument.isPresent() ? appModel().render(argument.get()) : \"\";\n" + 
 					"         fieldMap.put(stParameter.getName(), newTextField(content, 40));\n" + 
@@ -781,7 +781,7 @@ public class GenerateAll_TransactionAction {
 					"         for (nextgen.st.model.STModel existingSTModel : existingSTModels) {\n" + 
 					"            existingSTModel\n" + 
 					"                  .getArguments()\n" + 
-					"                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
+					"                  .filter(stArgument -> stArgument.getStParameter().equals(stParameter))\n" +
 					"                  .filter(stArgument -> stArgument.getValue() != null)\n" + 
 					"                  .findFirst()\n" + 
 					"                  .ifPresent(stArgument -> {\n" + 

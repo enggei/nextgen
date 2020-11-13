@@ -6,7 +6,6 @@ import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static nextgen.st.model.STValueType.*;
 
@@ -14,27 +13,8 @@ public class STModelDB extends STModelNeoFactory {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModel.class);
 
-   private final Collection<STGroupModel> groupModels;
-   private final Map<String, STTemplate> templateMap = new LinkedHashMap<>();
-
-   public STModelDB(String dbDir, String templatesDir) {
+   public STModelDB(String dbDir) {
       super(dbDir);
-
-      groupModels = new ArrayList<>();
-
-      java.util.Optional
-            .ofNullable(new java.io.File(templatesDir).listFiles(pathname -> pathname.isFile() && pathname.getName()
-                  .toLowerCase()
-                  .endsWith(".json")))
-            .ifPresent(files -> {
-               for (java.io.File file : files)
-                  groupModels.add(new nextgen.st.model.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
-            });
-   }
-
-   public STModelDB(String dir, Collection<STGroupModel> groupModels) {
-      super(dir);
-      this.groupModels = groupModels;
 
       getDatabaseService().registerTransactionEventHandler(new TransactionEventHandler.Adapter<>() {
          @Override
@@ -65,10 +45,6 @@ public class STModelDB extends STModelNeoFactory {
       });
 
       cleanup();
-   }
-
-   public Collection<STGroupModel> getGroupModels() {
-      return groupModels;
    }
 
    @Override
@@ -105,7 +81,7 @@ public class STModelDB extends STModelNeoFactory {
 
    public String getSTModelValue(STModel stModel, String parameterName, String defaultValue) {
 
-      final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
+      final STTemplate stTemplate = stModel.getStTemplate();
 
       final Optional<STParameter> foundParameter = stTemplate
             .getParameters()
@@ -116,9 +92,7 @@ public class STModelDB extends STModelNeoFactory {
 
       return stModel
             .getArguments()
-            .filter(stArgument -> stArgument.getStParameter()
-                  .equals(foundParameter.get()
-                        .getUuid()))
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
             .map(stArgument -> stArgument.getValue()
                   .getValue())
             .findFirst()
@@ -156,64 +130,27 @@ public class STModelDB extends STModelNeoFactory {
       return null;
    }
 
-   public STTemplate getSTTemplate(STModel stmodel) {
-      return findSTTemplateByUuid(stmodel.getStTemplate());
-   }
-
-   public STTemplate findSTTemplateByUuid(String uuid) {
-      if (templateMap.containsKey(uuid)) return templateMap.get(uuid);
-      for (STGroupModel groupModel : groupModels) {
-         final STTemplate stTemplate = findSTTemplateByUuid(groupModel, uuid);
-         if (stTemplate != null) {
-            templateMap.putIfAbsent(uuid, stTemplate);
-            return stTemplate;
-         }
-      }
-      return null;
-   }
-
-   private STTemplate findSTTemplateByUuid(STGroupModel groupModel, String stTemplateUuid) {
-      final Iterator<STTemplate> iterator = groupModel.getTemplates()
-            .iterator();
-      while (iterator.hasNext()) {
-         final STTemplate stTemplate = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
-         if (stTemplate != null) return stTemplate;
-      }
-      return null;
-   }
-
-   private STTemplate findSTTemplateByUuid(STTemplate stTemplate, String stTemplateUuid) {
-      if (stTemplateUuid.equals(stTemplate.getUuid())) return stTemplate;
-      final Iterator<STTemplate> iterator = stTemplate.getChildren()
-            .iterator();
-      while (iterator.hasNext()) {
-         final STTemplate child = findSTTemplateByUuid(iterator.next(), stTemplateUuid);
-         if (child != null) return child;
-      }
-      return null;
-   }
-
-   public <T> T find(String name, STValue value, String stTemplateUuid, Mapper<T> supplier) {
-      final AtomicReference<T> found = new AtomicReference<>();
-      findSTTemplateByUuid(stTemplateUuid)
-            .getParameters()
-            .filter(stParameter -> stParameter.getName()
-                  .equals(name))
-            .findFirst()
-            .ifPresent(stParameter -> findAllSTModelByStTemplate(stTemplateUuid)
-                  .filter(stModel -> found.get() == null)
-                  .forEach(stModel -> stModel
-                        .getArguments()
-                        .filter(stArgument -> found.get() == null)
-                        .filter(stArgument -> stArgument.getStParameter()
-                              .equals(stParameter.getUuid()))
-                        .map(STArgument::getValue)
-                        .filter(value::equals)
-                        .findFirst()
-                        .ifPresent(stValue -> found.set(supplier.get(this, stModel)))));
-
-      return found.get();
-   }
+//   public <T> T find(String name, STValue value, String stTemplateUuid, Mapper<T> supplier) {
+//      final AtomicReference<T> found = new AtomicReference<>();
+//      findSTTemplateByUuid(stTemplateUuid)
+//            .getParameters()
+//            .filter(stParameter -> stParameter.getName()
+//                  .equals(name))
+//            .findFirst()
+//            .ifPresent(stParameter -> findAllSTModelByStTemplate(stTemplateUuid)
+//                  .filter(stModel -> found.get() == null)
+//                  .forEach(stModel -> stModel
+//                        .getArguments()
+//                        .filter(stArgument -> found.get() == null)
+//                        .filter(stArgument -> stArgument.getStParameter()
+//                              .equals(stParameter.getUuid()))
+//                        .map(STArgument::getValue)
+//                        .filter(value::equals)
+//                        .findFirst()
+//                        .ifPresent(stValue -> found.set(supplier.get(this, stModel)))));
+//
+//      return found.get();
+//   }
 
    public interface Mapper<T> {
 
@@ -238,16 +175,11 @@ public class STModelDB extends STModelNeoFactory {
             .setName(name);
    }
 
-   public STModel newSTModel(String stGroupModel, STTemplate stTemplate) {
+   public STModel newSTModel(STTemplate stTemplate) {
       return newSTModel()
             .setUuid(java.util.UUID.randomUUID()
                   .toString())
-            .setStTemplate(stTemplate.getUuid())
-            .setStGroup(stGroupModel);
-   }
-
-   public STModel newSTModel(STGroupModel stGroupModel, STTemplate stTemplate) {
-      return newSTModel(stGroupModel.getUuid(), stTemplate);
+            .setStTemplate(stTemplate);
    }
 
    public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {
@@ -292,7 +224,7 @@ public class STModelDB extends STModelNeoFactory {
       return newSTArgumentKV()
             .setUuid(UUID.randomUUID()
                   .toString())
-            .setStParameterKey(key.getUuid())
+            .setStParameterKey(key)
             .setValue(stValue);
    }
 
@@ -300,7 +232,7 @@ public class STModelDB extends STModelNeoFactory {
       return newSTArgument()
             .setUuid(UUID.randomUUID()
                   .toString())
-            .setStParameter(stParameter.getUuid());
+            .setStParameter(stParameter);
    }
 
    public void cleanup() {
@@ -344,16 +276,15 @@ public class STModelDB extends STModelNeoFactory {
 
    public STModel clone(STModel stModel) {
 
-      final STTemplate stTemplate = findSTTemplateByUuid(stModel.getStTemplate());
-      final STModel clone = newSTModel(stModel.getStGroup(), stTemplate);
+      final STTemplate stTemplate = stModel.getStTemplate();
+      final STModel clone = newSTModel(stTemplate);
 
       // ensure cloned-arguments are in same order as stModel-arguments:
       stModel
             .getArgumentsSorted()
             .forEach(stArgument -> stTemplate
                   .getParameters()
-                  .filter(stParameter -> stArgument.getStParameter()
-                        .equals(stParameter.getUuid()))
+                  .filter(stParameter -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
                   .ifPresent(stParameter -> {
                      switch (stParameter.getType()) {
@@ -367,8 +298,7 @@ public class STModelDB extends STModelNeoFactory {
                                  .getKeys()
                                  .forEach(stParameterKey -> stArgument
                                        .getKeyValues()
-                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey()
-                                             .equals(stParameterKey.getUuid()))
+                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                                        .findAny()
                                        .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue()))));
                            clone.addArguments(newSTArgument(stParameter, kvs));

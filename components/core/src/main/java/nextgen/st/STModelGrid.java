@@ -52,7 +52,7 @@ public class STModelGrid extends JPanel {
         });
 
         // rows
-        appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).forEach(stModel -> {
+        stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> {
             final Map<String, RSyntaxTextArea> txtMap = new LinkedHashMap<>();
             final Map<String, SingleHandler> singleHandlerMap = new LinkedHashMap<>();
             for (Map.Entry<String, JPanel> columnEntry : columns.entrySet()) {
@@ -67,15 +67,15 @@ public class STModelGrid extends JPanel {
                 txtMap.put(columnEntry.getKey(), txtValue);
 
                 final STParameter stParameter = stParameterMap.get(columnEntry.getKey());
-                singleHandlerMap.put(stParameter.getUuid(), new SingleHandler(stTemplate, stModel, txtValue, stParameter));
+                singleHandlerMap.put(stParameter.getUuid(), new SingleHandler(stModel, txtValue, stParameter));
             }
 
             stModel.getArguments()
                     .filter(stArgument -> stArgument.getValue() != null)
-                    .filter(stArgument -> stParameterMap.containsKey(stArgument.getStParameter()))
+                    .filter(stArgument -> stParameterMap.containsKey(stArgument.getStParameter().getUuid()))
                     .forEach(stArgument -> {
-                        final RSyntaxTextArea txtValue = txtMap.get(stArgument.getStParameter());
-                        final STParameter stParameter = stParameterMap.get(stArgument.getStParameter());
+                        final RSyntaxTextArea txtValue = txtMap.get(stArgument.getStParameter().getUuid());
+                        final STParameter stParameter = stParameterMap.get(stArgument.getStParameter().getUuid());
                         txtValue.setText(appModel().render(stArgument.getValue()));
                         singleHandlerMap.get(stParameter.getUuid()).stArgument = stArgument;
                     });
@@ -123,7 +123,7 @@ public class STModelGrid extends JPanel {
 
         STArgument stArgument;
 
-        public SingleHandler(STTemplate stTemplate, STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter) {
+        public SingleHandler(STModel stModel, RSyntaxTextArea txtValue, STParameter stParameter) {
             final JPopupMenu pop = txtValue.getPopupMenu();
             pop.addSeparator();
             pop.add(newAction("Save", actionEvent -> save(stModel, txtValue, stParameter)));

@@ -55,64 +55,32 @@ public class STModel {
 		return this;
 	}
 
-	private static final String _stTemplate = "stTemplate";
-
-	public STModel setStTemplate(String value) { 
-		if (value == null) 
-			removeStTemplate(); 
-		else {
-		 	node.setProperty(_stTemplate, value);
+	public STModel setStTemplate(STTemplate dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getStTemplateRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("stTemplate"));
 		return this;
 	}
 
-	public String getStTemplate() { 
-		if (node.hasProperty(_stTemplate)) return (String) node.getProperty(_stTemplate);
-		return null;
-	}
-
-	public String getStTemplate(String defaultValue) { 
-		if (node.hasProperty(_stTemplate)) return (String) node.getProperty(_stTemplate);
-		return defaultValue;
-	}
-
-	public boolean hasStTemplate() { 
-		return node.hasProperty(_stTemplate);
+	public STTemplate getStTemplate() { 
+		final org.neo4j.graphdb.Relationship relationship = getStTemplateRelation();
+		return relationship == null ? null : new STTemplate(relationship.getOtherNode(node));
 	}
 
 	public STModel removeStTemplate() { 
-		node.removeProperty(_stTemplate);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStTemplateRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
-	private static final String _stGroup = "stGroup";
-
-	public STModel setStGroup(String value) { 
-		if (value == null) 
-			removeStGroup(); 
-		else {
-		 	node.setProperty(_stGroup, value);
-		}
-		return this;
-	}
-
-	public String getStGroup() { 
-		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
-		return null;
-	}
-
-	public String getStGroup(String defaultValue) { 
-		if (node.hasProperty(_stGroup)) return (String) node.getProperty(_stGroup);
-		return defaultValue;
-	}
-
-	public boolean hasStGroup() { 
-		return node.hasProperty(_stGroup);
-	}
-
-	public STModel removeStGroup() { 
-		node.removeProperty(_stGroup);
-		return this;
+	public org.neo4j.graphdb.Relationship getStTemplateRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stTemplate"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	private static final org.neo4j.graphdb.RelationshipType _files = org.neo4j.graphdb.RelationshipType.withName("files");
@@ -209,8 +177,9 @@ public class STModel {
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("stTemplate")) jsonObject.put("stTemplate", node.getProperty("stTemplate"));
-		if (node.hasProperty("stGroup")) jsonObject.put("stGroup", node.getProperty("stGroup"));
+		final STTemplate _stTemplate = getStTemplate();
+		if (_stTemplate != null) jsonObject.put("stTemplate", _stTemplate.toJsonObject());
+
 		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
 		getFiles().forEach(element -> _files.add(element.toJsonObject()));
 		if (!_files.isEmpty()) jsonObject.put("files", _files);

@@ -22,12 +22,11 @@ public class STVisitor {
 
       if (stModel == null) return;
 
-      final STTemplate stTemplate = db.findSTTemplateByUuid(stModel.getStTemplate());
-      if (stTemplate == null) return;
+      final STTemplate stTemplate = stModel.getStTemplate();
 
       stTemplate.getParameters().forEach(stParameter ->
             stModel.getArgumentsSorted()
-                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                    .forEach(stArgument -> {
                       switch (stParameter.getType()) {
                          case SINGLE:
@@ -150,7 +149,7 @@ public class STVisitor {
       final Set<STParameterKey> stParameterKeys = stParameter.getKeys().collect(Collectors.toSet());
       final Map<STParameterKey, STArgumentKV> stArgumentKVMap = new LinkedHashMap<>();
       stParameterKeys.forEach(stParameterKey -> stArgument.getKeyValues()
-                                                          .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                                                          .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                                                           .findFirst()
                                                           .ifPresent(stArgumentKV -> stArgumentKVMap.put(stParameterKey, stArgumentKV)));
       return stArgumentKVMap;

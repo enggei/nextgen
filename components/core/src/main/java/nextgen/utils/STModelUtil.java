@@ -215,7 +215,7 @@ public class STModelUtil {
          final java.util.Collection<nextgen.st.model.STArgumentKV> kvSet = new LinkedHashSet<>();
          stParameter.getKeys()
                     .forEach(stParameterKey -> stArgument.getKeyValues()
-                                                         .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+                                                         .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                                                          .forEach(kvSet::add));
          return kvSet;
       }

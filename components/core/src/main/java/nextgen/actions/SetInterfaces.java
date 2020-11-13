@@ -30,7 +30,7 @@ public class SetInterfaces extends TransactionAction {
          contentPanel.add(txtImplement);
 
       showDialog(owner, contentPanel, "Edit", jDialog -> {
-         stTemplate.clearImplements();
+         stTemplate.removeAllImplements();
          for (javax.swing.JTextField txtImplement : txtImplements) {
             final String trim = txtImplement.getText().trim();
             if (trim.length() == 0) continue;

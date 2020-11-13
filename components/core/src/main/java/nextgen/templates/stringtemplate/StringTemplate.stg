@@ -210,7 +210,7 @@ public class ~name;format="capitalize"~ {
 				.ifPresent(stParameter -> {
 
 					stModel.getArguments()
-							.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+							.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 							.findAny()
 							.ifPresent(stModel::removeArguments);
 
@@ -222,7 +222,7 @@ public class ~name;format="capitalize"~ {
 	private STValue get(String name) {
 		final AtomicReference<STValue> value = new AtomicReference<>();
 		findParameter(name).flatMap(stParameter -> stModel.getArguments()
-				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+				.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 				.findAny()).ifPresent(stArgument -> value.set(stArgument.getValue()));
 		return value.get();
 	}
@@ -230,7 +230,7 @@ public class ~name;format="capitalize"~ {
 	private STArgument getArgument(String name) {
 		final AtomicReference<STArgument> value = new AtomicReference<>();
 		findParameter(name).flatMap(stParameter -> stModel.getArguments()
-				.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+				.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 				.findAny()).ifPresent(value::set);
 		return value.get();
 	}
@@ -250,7 +250,7 @@ public class ~name;format="capitalize"~ {
 	private Stream<STValue> stream(String name) {
 		return findParameter(name)
 				.map(stParameter -> stModel.getArguments()
-						.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+						.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 						.map(STArgument::getValue)).orElseGet(Stream::empty);
 	}
 
@@ -324,7 +324,7 @@ public ~entity;format="capitalize"~ add~name;format="capitalize"~(~keys:{it|STVa
 public java.util.stream.Stream<~entity;format="capitalize"~_~name;format="capitalize"~> stream~name;format="capitalize"~() {
 	return findParameter("~name~")
 			.map(stParameter -> stModel.getArguments()
-					.filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
+					.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
 					.map(stArgument -> new ~entity;format="capitalize"~_~name;format="capitalize"~(stArgument, stParameter)))
 			.orElseGet(Stream::empty);
 }
@@ -361,7 +361,7 @@ public final class ~entity;format="capitalize"~_~name;format="capitalize"~ {
 				.ifPresent(stParameterKey -> {
 
 					stArgument.getKeyValues()
-							.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey.getUuid()))
+							.filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
 							.findAny()
 							.ifPresent(stArgumentKV -> stArgument.removeKeyValues(stArgumentKV));
 

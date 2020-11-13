@@ -23,17 +23,16 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
          final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = stModel.getArguments()
-               .filter(stArgument -> stArgument.getStParameter().equals(stParameterKey.getUuid()))
+               .filter(stArgument -> stArgument.getStParameter().equals(stParameterKey))
                .map(nextgen.st.model.STArgument::getValue)
                .filter(nextgen.st.model.STValue::hasType)
                .filter(stValue -> stValue.getType() == nextgen.st.model.STValueType.STMODEL)
-               .map(stValue -> appModel().findSTTemplateByUuid(stValue.getStModel().getStTemplate()))
+               .map(stValue -> stValue.getStModel().getStTemplate())
                .findFirst();
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             input(owner, "New value", s -> {
@@ -44,7 +43,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
       } else {
 
-         final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModelByTemplateUuid(stModel.getStTemplate());
+         final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroup(stModel.getStTemplate());
          final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = appModel()
                .aggregateTemplates(stGroupModel)
                .filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))
@@ -52,19 +51,19 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   removeExisting();
-                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, interfaces.iterator().next());
+                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(interfaces.iterator().next());
                   addValue(appModel().db.newSTValue(stTemplateModel));
                } else {
                   select(owner, interfaces, value -> {
                      removeExisting();
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(value);
                      addValue(appModel().db.newSTValue(stTemplateModel));
                   });   
                }
@@ -89,7 +88,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
    private void removeExisting() {
       stArgument.getKeyValues()
-            .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))
+            .filter(existing -> existing.getStParameterKey().equals(stParameterKey))
             .findFirst()
             .ifPresent(existing -> {
                stArgument.removeKeyValues(existing);

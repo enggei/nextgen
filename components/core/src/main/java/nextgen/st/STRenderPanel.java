@@ -40,7 +40,7 @@ public class STRenderPanel extends JPanel {
         pop.addSeparator();
         pop.add(newAction("Edit", actionEvent -> appModel().doLaterInTransaction(transaction -> {
             final STWorkspace workspace = appModel().getWorkspace();
-            final STModelEditor modelEditor = workspace.getModelEditor(appModel().db.findSTTemplateByUuid(stModel.getStTemplate()), stModel);
+            final STModelEditor modelEditor = workspace.getModelEditor(stModel.getStTemplate(), stModel);
             workspace.setSelectedComponent(modelEditor);
         })));
         pop.add(newAction("To Clipboard", actionEvent -> SwingUtil.toClipboard(txtEditor.getText().trim())));
