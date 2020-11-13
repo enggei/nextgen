@@ -1,7 +1,6 @@
 package nextgen.st;
 
 import nextgen.utils.SwingUtil;
-import nextgen.st.domain.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
@@ -31,12 +30,12 @@ public class STEditor extends JPanel {
     private final Color errorColor = Color.decode("#e66101");
     private final Border defaultBorder = txtEditor.getBorder();
 
-    STGroupModel stGroupModel;
-    private STTemplate stTemplate;
+    nextgen.st.model.STGroupModel stGroupModel;
+    private nextgen.st.model.STTemplate stTemplate;
 
     private String startText;
 
-    public STEditor(STGroupModel stGroupModel) {
+    public STEditor(nextgen.st.model.STGroupModel stGroupModel) {
         super(new BorderLayout());
 
         this.stGroupModel = stGroupModel;
@@ -79,7 +78,7 @@ public class STEditor extends JPanel {
         return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
     }
 
-    public STGroupModel getModel() {
+    public nextgen.st.model.STGroupModel getModel() {
         return stGroupModel;
     }
 
@@ -88,7 +87,7 @@ public class STEditor extends JPanel {
         reset(STGenerator.toStg(stGroupModel).trim());
     }
 
-    public void setSTEnum(STEnum stEnum) {
+    public void setSTEnum(nextgen.st.model.STEnum stEnum) {
         stTemplate = null;
         final StringBuilder text = new StringBuilder();
         text.append(stEnum.getName());
@@ -96,12 +95,12 @@ public class STEditor extends JPanel {
         reset(text.toString());
     }
 
-    public void setSTInterface(STInterface stInterface) {
+    public void setSTInterface(nextgen.st.model.STInterface stInterface) {
         stTemplate = null;
         reset(stInterface.getName());
     }
 
-    public void setSTTemplate(STTemplate stTemplate) {
+    public void setSTTemplate(nextgen.st.model.STTemplate stTemplate) {
         this.stTemplate = stTemplate;
         this.startText = stTemplate == null ?
                 this.startText = STGenerator.toStg(stGroupModel).trim() :
@@ -139,7 +138,7 @@ public class STEditor extends JPanel {
         };
     }
 
-    public Optional<STTemplate> getSTTemplate() {
+    public Optional<nextgen.st.model.STTemplate> getSTTemplate() {
         return Optional.ofNullable(stTemplate);
     }
 

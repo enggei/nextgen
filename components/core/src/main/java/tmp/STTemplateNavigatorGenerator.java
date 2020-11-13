@@ -77,7 +77,7 @@ public class STTemplateNavigatorGenerator {
                   .addActions("new nextgen.actions.GenerateAllSTGroups()"))
             .addTreeNodes(NextgenST.newTreeNode()
                   .setName("STGroupTreeNode")
-                  .setModelType("nextgen.st.domain.STGroupModel")
+                  .setModelType("nextgen.st.model.STGroupModel")
                   .setHasUuid(true)
                   .setLabelExpression("getModel().getName()")
                   .addConstructorStatements("model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));\n" +
@@ -95,7 +95,7 @@ public class STTemplateNavigatorGenerator {
                   .addSelectionStatements("nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked.post(selectedNode.getModel());"))
             .addTreeNodes(NextgenST.newTreeNode()
                   .setName("STEnumTreeNode")
-                  .setModelType("nextgen.st.domain.STEnum")
+                  .setModelType("nextgen.st.model.STEnum")
                   .setHasUuid(true)
                   .setIcon("appModel().loadIcon(\"sq-green\")")
                   .setLabelExpression("getModel().getName()")
@@ -105,13 +105,13 @@ public class STTemplateNavigatorGenerator {
                   .addSelectionStatements("selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()); });"))
             .addTreeNodes(NextgenST.newTreeNode()
                   .setName("STTemplateTreeNode")
-                  .setModelType("nextgen.st.domain.STTemplate")
+                  .setModelType("nextgen.st.model.STTemplate")
                   .setHasUuid(true)
                   .setIcon("appModel().loadIcon(\"sq-teal\")")
                   .setLabelExpression("getModel().getName()")
                   .addConstructorStatements("model.getChildren().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));")
-                  .addGetActionsStatements("final java.util.Set<nextgen.st.domain.STTemplate> candidateChildren = getSelectedTemplates();")
-                  .addGetActionsStatements("final Set<nextgen.st.domain.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());")
+                  .addGetActionsStatements("final java.util.Set<nextgen.st.model.STTemplate> candidateChildren = getSelectedTemplates();")
+                  .addGetActionsStatements("final Set<nextgen.st.model.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());")
                   .addGetActionsStatements("actions.add(new nextgen.actions.NewSTModelAction(getModel()));")
                   .addGetActionsStatements("getParentNode(STGroupTreeNode.class).ifPresent(parent -> { \n" +
                         "	actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), tree));\n" +
@@ -123,7 +123,7 @@ public class STTemplateNavigatorGenerator {
                         "	getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate(\"Remove \" + implement, parent.getModel(), getModel(), implement, tree)));\n" +
                         "	actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));\n" +
                         "});")
-                  .addMethods("private java.util.Set<nextgen.st.domain.STTemplate> getSelectedTemplates() {\n" +
+                  .addMethods("private java.util.Set<nextgen.st.model.STTemplate> getSelectedTemplates() {\n" +
                         "			return getSelectedSTTemplateTreeNodes()\n" +
                         "					.filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this))\n" +
                         "					.map(nextgen.st.STTemplateNavigator.BaseTreeNode::getModel)\n" +
@@ -135,7 +135,7 @@ public class STTemplateNavigatorGenerator {
                         "});"))
             .addTreeNodes(NextgenST.newTreeNode()
                   .setName("STInterfaceTreeNode")
-                  .setModelType("nextgen.st.domain.STInterface")
+                  .setModelType("nextgen.st.model.STInterface")
                   .setHasUuid(true)
                   .setIcon("appModel().loadIcon(\"sq-red\")")
                   .setLabelExpression("getModel().getName()")

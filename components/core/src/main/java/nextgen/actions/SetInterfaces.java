@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetInterfaces extends TransactionAction {
 
 
-   private final nextgen.st.domain.STGroupModel stGroup;
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
 
-	public SetInterfaces(nextgen.st.domain.STGroupModel stGroup, nextgen.st.domain.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public SetInterfaces(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate stTemplate, javax.swing.JComponent owner) {
 		super("Set interfaces");
 		this.stGroup = stGroup;
 		this.stTemplate = stTemplate;

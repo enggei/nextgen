@@ -1,4 +1,4 @@
-package nextgen.st.domain;
+package nextgen.st.model;
 
 public class STTemplate {
 

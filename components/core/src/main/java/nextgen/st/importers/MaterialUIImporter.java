@@ -12,9 +12,9 @@ import com.github.kklisura.cdt.services.ChromeDevToolsService;
 import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
 import nextgen.st.STParser;
-import nextgen.st.domain.STGroupModel;
+import nextgen.st.model.STGroupModel;
 import nextgen.st.domain.STJsonFactory;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STModelDB;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,8 +45,8 @@ public class MaterialUIImporter extends BaseImporter {
       final String groupName = "MaterialUI";
       final File stGroupFile = new File(templatesDir, groupName + ".json");
       final STGroupModel stGroupModel = stGroupFile.exists()
-            ? STJsonFactory.newSTGroupModel(stGroupFile).setName(groupName).setDelimiter("~")
-            : STJsonFactory.newSTGroupModel().setName(groupName).setDelimiter("~");
+            ? new STGroupModel(stGroupFile).setName(groupName).setDelimiter("~")
+            : new STGroupModel().setName(groupName).setDelimiter("~");
 
       for (ApiComponent apiComponent : apiComponents) {
          final STTemplate componentTemplate = getComponentTemplate(stGroupModel, apiComponent);
@@ -83,7 +83,7 @@ public class MaterialUIImporter extends BaseImporter {
    public static STTemplate getComponentTemplate(STGroupModel stGroupModel, ApiComponent apiComponent) {
       return STModelDB.findSTTemplateByName(stGroupModel, apiComponent.templateName)
             .orElseGet(() -> {
-               final STTemplate newTemplate = STJsonFactory.newSTTemplate()
+               final STTemplate newTemplate = new STTemplate()
                      .setName(apiComponent.templateName)
                      .setText(apiComponent.componentName + "\n\n\t" + apiComponent.importTemplateName + "\n\n\t" + apiComponent.elementTemplateName);
                stGroupModel.addTemplates(newTemplate);
@@ -96,7 +96,7 @@ public class MaterialUIImporter extends BaseImporter {
             .ifPresent(stTemplate -> {
                final STTemplate importTemplate = STModelDB.findSTTemplateByName(stGroupModel, apiComponent.importTemplateName)
                      .orElseGet(() -> {
-                        final STTemplate newTemplate = STJsonFactory.newSTTemplate()
+                        final STTemplate newTemplate = new STTemplate()
                               .setName(apiComponent.importTemplateName);
                         componentTemplate.addChildren(newTemplate);
                         return newTemplate;
@@ -111,7 +111,7 @@ public class MaterialUIImporter extends BaseImporter {
             .ifPresent(stTemplate -> {
                final STTemplate elementTemplate = STModelDB.findSTTemplateByName(stGroupModel, apiComponent.elementTemplateName)
                      .orElseGet(() -> {
-                        final STTemplate newTemplate = STJsonFactory.newSTTemplate()
+                        final STTemplate newTemplate = new STTemplate()
                               .setName(apiComponent.elementTemplateName)
                               .setText(apiComponent.elementTemplateText());
                         componentTemplate.addChildren(newTemplate);

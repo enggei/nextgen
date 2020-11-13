@@ -6,11 +6,11 @@ public class GenerateAll_TransactionAction {
 
 	public static java.util.List<TransactionAction> generate(){ 
 		final java.util.List<TransactionAction> list = new java.util.ArrayList<>();
-		final TransactionAction AddArgumentFromArgumentType = NextgenST.newTransactionAction().setName("AddArgumentFromArgumentType").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add").addStatements("final String argumentType = stParameter.getArgumentType();\n" + 
+		final TransactionAction AddArgumentFromArgumentType = NextgenST.newTransactionAction().setName("AddArgumentFromArgumentType").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add").addStatements("final String argumentType = stParameter.getArgumentType();\n" +
 					"\n" + 
 					"if (argumentType.equals(\"Object\") || argumentType.equals(\"String\")) {\n" + 
 					"\n" + 
-					"   final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = stModel.getArguments()\n" + 
+					"   final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = stModel.getArguments()\n" +
 					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"         .map(nextgen.st.model.STArgument::getValue)\n" + 
 					"         .filter(nextgen.st.model.STValue::hasType)\n" + 
@@ -19,7 +19,7 @@ public class GenerateAll_TransactionAction {
 					"         .findFirst();\n" + 
 					"\n" + 
 					"   if (stTemplate.isPresent()) {\n" + 
-					"      final nextgen.st.domain.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());\n" + 
+					"      final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());\n" +
 					"      final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());\n" + 
 					"      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);\n" + 
 					"      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
@@ -36,8 +36,8 @@ public class GenerateAll_TransactionAction {
 					"\n" + 
 					"} else {\n" + 
 					"\n" + 
-					"   final nextgen.st.domain.STGroupModel stGroupModel = appModel().findSTGroupModelByTemplateUuid(stModel.getStTemplate());\n" + 
-					"   final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = appModel()\n" + 
+					"   final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModelByTemplateUuid(stModel.getStTemplate());\n" +
+					"   final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = appModel()\n" +
 					"         .aggregateTemplates(stGroupModel)\n" + 
 					"         .filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))\n" + 
 					"         .findAny();\n" + 
@@ -49,7 +49,7 @@ public class GenerateAll_TransactionAction {
 					"      stModel.addArguments(stArgument);\n" + 
 					"      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" + 
 					"   } else {\n" + 
-					"      final java.util.Set<nextgen.st.domain.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);\n" + 
+					"      final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);\n" +
 					"      if (!interfaces.isEmpty()) {\n" + 
 					"         if (interfaces.size() == 1) {\n" + 
 					"            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, interfaces.iterator().next());\n" + 
@@ -68,7 +68,7 @@ public class GenerateAll_TransactionAction {
 					"         }\n" + 
 					"\n" + 
 					"      } else {\n" + 
-					"         final nextgen.st.domain.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);\n" + 
+					"         final nextgen.st.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);\n" +
 					"         if (stEnum != null) {\n" + 
 					"            select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {\n" + 
 					"               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" + 
@@ -87,41 +87,41 @@ public class GenerateAll_TransactionAction {
 					"      }\n" + 
 					"   }\n" + 
 					"}");
-		final TransactionAction AddArgumentFromClipboard = NextgenST.newTransactionAction().setName("AddArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").setTitle("Add from Clipboard").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" + 
+		final TransactionAction AddArgumentFromClipboard = NextgenST.newTransactionAction().setName("AddArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").setTitle("Add from Clipboard").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());\n" +
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction AddArgumentFromInput = NextgenST.newTransactionAction().setName("AddArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add from Input").addStatements("input(owner, stParameter.getName(), inputValue -> {\n" + 
+		final TransactionAction AddArgumentFromInput = NextgenST.newTransactionAction().setName("AddArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add from Input").addStatements("input(owner, stParameter.getName(), inputValue -> {\n" +
 					"   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);\n" + 
 					"   final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"   stModel.addArguments(stArgument);\n" + 
 					"   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" + 
 					"});");
-		final TransactionAction AddArgumentFromSTModel = NextgenST.newTransactionAction().setName("AddArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.model.STModel", "value").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" + 
+		final TransactionAction AddArgumentFromSTModel = NextgenST.newTransactionAction().setName("AddArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STModel", "value").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" +
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction AddArgumentFromSTModelUuid = NextgenST.newTransactionAction().setName("AddArgumentFromSTModelUuid").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("String", "uuid").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));\n" + 
+		final TransactionAction AddArgumentFromSTModelUuid = NextgenST.newTransactionAction().setName("AddArgumentFromSTModelUuid").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("String", "uuid").addStatements("final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));\n" +
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction AddArgumentFromSTTemplate = NextgenST.newTransactionAction().setName("AddArgumentFromSTTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.domain.STTemplate", "stTemplate").addStatements("final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);\n" + 
+		final TransactionAction AddArgumentFromSTTemplate = NextgenST.newTransactionAction().setName("AddArgumentFromSTTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STTemplate", "stTemplate").addStatements("final nextgen.st.model.STModel value = appModel().newSTModel(stTemplate);\n" +
 					"\n" + 
 					"final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);\n" + 
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction AddArgumentFromSTValue = NextgenST.newTransactionAction().setName("AddArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.model.STValue", "stValue").addStatements("final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
+		final TransactionAction AddArgumentFromSTValue = NextgenST.newTransactionAction().setName("AddArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STValue", "stValue").addStatements("final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" +
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction AddChildrenToTemplate = NextgenST.newTransactionAction().setName("AddChildrenToTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("java.util.Set<nextgen.st.domain.STTemplate>", "children").addFields("javax.swing.JComponent", "owner").addStatements("confirm(owner, \"Sure to move\", unused -> {\n" + 
+		final TransactionAction AddChildrenToTemplate = NextgenST.newTransactionAction().setName("AddChildrenToTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("java.util.Set<nextgen.st.model.STTemplate>", "children").addFields("javax.swing.JComponent", "owner").addStatements("confirm(owner, \"Sure to move\", unused -> {\n" +
 					"   appModel().aggregateTemplates(stGroup).forEach(stGroupTemplate -> {\n" + 
-					"      for (nextgen.st.domain.STTemplate child : children) {\n" + 
+					"      for (nextgen.st.model.STTemplate child : children) {\n" +
 					"         stGroupTemplate.removeChildren(child);\n" + 
 					"      }\n" + 
 					"   });\n" + 
 					"\n" + 
-					"   for (nextgen.st.domain.STTemplate child : children)\n" + 
+					"   for (nextgen.st.model.STTemplate child : children)\n" +
 					"      stTemplate.addChildren(child);\n" + 
 					"\n" + 
 					"   nextgen.events.STTemplateChildrenAdded.post(stGroup, stTemplate, children);   \n" + 
@@ -159,7 +159,7 @@ public class GenerateAll_TransactionAction {
 					"   nextgen.events.NewFileSink.post(stModel, stFile);\n" + 
 					"   javax.swing.SwingUtilities.invokeLater(jDialog::dispose);\n" + 
 					"});");
-		final TransactionAction AddFileSinkToSTModels = NextgenST.newTransactionAction().setName("AddFileSinkToSTModels").addStaticFields("java.util.concurrent.atomic.AtomicInteger", "fileTypeIndex", "new java.util.concurrent.atomic.AtomicInteger(0)").addStaticFields("java.util.concurrent.atomic.AtomicInteger", "pathIndex", "new java.util.concurrent.atomic.AtomicInteger(0)").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("java.util.List<nextgen.st.model.STModel>", "stModels").addFields("javax.swing.JComponent", "owner").setTitle("Add File Sink").addStatements("final String[] fileTypes = new String[]{\"html\", \"java\", \"js\", \"xml\"};\n" + 
+		final TransactionAction AddFileSinkToSTModels = NextgenST.newTransactionAction().setName("AddFileSinkToSTModels").addStaticFields("java.util.concurrent.atomic.AtomicInteger", "fileTypeIndex", "new java.util.concurrent.atomic.AtomicInteger(0)").addStaticFields("java.util.concurrent.atomic.AtomicInteger", "pathIndex", "new java.util.concurrent.atomic.AtomicInteger(0)").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("java.util.List<nextgen.st.model.STModel>", "stModels").addFields("javax.swing.JComponent", "owner").setTitle("Add File Sink").addStatements("final String[] fileTypes = new String[]{\"html\", \"java\", \"js\", \"xml\"};\n" +
 					"\n" + 
 					"final String[] pathTypes = appModel().db.findAllSTFile()\n" + 
 					"      .filter(stFile -> stFile.getPath() != null)\n" + 
@@ -168,9 +168,9 @@ public class GenerateAll_TransactionAction {
 					"      .distinct()\n" + 
 					"      .toArray(String[]::new);\n" + 
 					"\n" + 
-					"final java.util.Map<String, nextgen.st.domain.STParameter> parameterMap = new java.util.LinkedHashMap<>();\n" + 
+					"final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();\n" +
 					"final java.util.List<String> nameOptions = stTemplate.getParameters()\n" + 
-					"      .filter(stParameter -> stParameter.getType().equals(nextgen.st.domain.STParameterType.SINGLE))\n" + 
+					"      .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))\n" +
 					"      .map(stParameter -> {\n" + 
 					"         parameterMap.put(stParameter.getName(), stParameter);\n" + 
 					"         return stParameter.getName();\n" + 
@@ -193,7 +193,7 @@ public class GenerateAll_TransactionAction {
 					"}\n" + 
 					"\n" + 
 					"showDialog(owner, inputPanel, \"New FileSink\", jDialog -> {\n" + 
-					"   final nextgen.st.domain.STParameter stParameter = parameterMap.get(fieldMap.get(\"name\").getText().trim());\n" + 
+					"   final nextgen.st.model.STParameter stParameter = parameterMap.get(fieldMap.get(\"name\").getText().trim());\n" +
 					"   final String type = fieldMap.get(\"type\").getText().trim();\n" + 
 					"   final String path = fieldMap.get(\"path\").getText().trim();\n" + 
 					"   final String packageName = fieldMap.get(\"package\").getText().trim();\n" + 
@@ -210,7 +210,7 @@ public class GenerateAll_TransactionAction {
 					"   }\n" + 
 					"   javax.swing.SwingUtilities.invokeLater(jDialog::dispose);\n" + 
 					"});");
-		final TransactionAction AddInterface = NextgenST.newTransactionAction().setName("AddInterface").addFields("java.util.Set<nextgen.st.domain.STTemplate>", "children").addFields("javax.swing.JComponent", "owner").addStatements("final javax.swing.JTextField txtImplements = newTextField();\n" + 
+		final TransactionAction AddInterface = NextgenST.newTransactionAction().setName("AddInterface").addFields("java.util.Set<nextgen.st.model.STTemplate>", "children").addFields("javax.swing.JComponent", "owner").addStatements("final javax.swing.JTextField txtImplements = newTextField();\n" +
 					"final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 1));\n" + 
 					"contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));\n" + 
 					"contentPanel.add(txtImplements);\n" + 
@@ -218,27 +218,27 @@ public class GenerateAll_TransactionAction {
 					"showDialog(owner, contentPanel, \"Add interface\", jDialog -> {\n" + 
 					"   final String interfaceName = txtImplements.getText().trim();\n" + 
 					"   if (interfaceName.length()==0) return;\n" + 
-					"   for (nextgen.st.domain.STTemplate child : children) {\n" + 
+					"   for (nextgen.st.model.STTemplate child : children) {\n" +
 					"      final java.util.Optional<String> optional = child.getImplements().filter(s -> s.toLowerCase().equals(interfaceName.toLowerCase())).findAny();\n" + 
 					"      if(optional.isPresent()) continue;\n" + 
 					"      child.addImplements(interfaceName);\n" + 
 					"   }\n" + 
 					"   close(jDialog);   \n" + 
 					"});");
-		final TransactionAction AddKVArgument = NextgenST.newTransactionAction().setName("AddKVArgument").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add").addStatements("final String[] selectedValues = appModel().getSelectedValues();\n" + 
-					"final java.util.Map<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();\n" + 
+		final TransactionAction AddKVArgument = NextgenST.newTransactionAction().setName("AddKVArgument").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Add").addStatements("final String[] selectedValues = appModel().getSelectedValues();\n" +
+					"final java.util.Map<nextgen.st.model.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();\n" +
 					"stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40, selectedValues)));\n" + 
 					"\n" + 
 					"final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));\n" + 
 					"inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));\n" + 
-					"for (java.util.Map.Entry<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {\n" + 
+					"for (java.util.Map.Entry<nextgen.st.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {\n" +
 					"   inputPanel.add(new javax.swing.JLabel(fieldEntry.getKey().getName()));\n" + 
 					"   inputPanel.add(fieldEntry.getValue());\n" + 
 					"}\n" + 
 					"\n" + 
 					"showDialog(owner, inputPanel, stParameter.getName(), jDialog -> {\n" + 
 					"   java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();\n" + 
-					"   for (java.util.Map.Entry<nextgen.st.domain.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {\n" + 
+					"   for (java.util.Map.Entry<nextgen.st.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {\n" +
 					"      final String value = fieldEntry.getValue().getText().trim();\n" + 
 					"      if (value.length() == 0) continue;\n" + 
 					"\n" + 
@@ -262,12 +262,12 @@ public class GenerateAll_TransactionAction {
 					"   project.addValues(stValue);\n" + 
 					"   nextgen.events.NewSTProjectSTValue.post(stValue, project);\n" + 
 					"});");
-		final TransactionAction AddMultipleArgumentsFromArgumentType = NextgenST.newTransactionAction().setName("AddMultipleArgumentsFromArgumentType").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner");
-		final TransactionAction AddTemplateModelToProject = NextgenST.newTransactionAction().setName("AddTemplateModelToProject").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("nextgen.st.model.STProject", "project").addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" + 
+		final TransactionAction AddMultipleArgumentsFromArgumentType = NextgenST.newTransactionAction().setName("AddMultipleArgumentsFromArgumentType").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner");
+		final TransactionAction AddTemplateModelToProject = NextgenST.newTransactionAction().setName("AddTemplateModelToProject").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STProject", "project").addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
 					"project.addModels(stModel);\n" + 
 					"nextgen.events.NewSTProjectSTModel.post(stModel, project, stTemplate);");
 		final TransactionAction CopyModel = NextgenST.newTransactionAction().setName("CopyModel").addFields("nextgen.st.model.STModel", "stModel").setTitle("Copy Model").addStatements("toClipboard(\"stmodel-\" + stModel.getUuid());");
-		final TransactionAction DeleteEnum = NextgenST.newTransactionAction().setName("DeleteEnum").addFields("nextgen.st.domain.STEnum", "stEnum").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" + 
+		final TransactionAction DeleteEnum = NextgenST.newTransactionAction().setName("DeleteEnum").addFields("nextgen.st.model.STEnum", "stEnum").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" +
 					"   stGroup.removeEnums(stEnum);\n" + 
 					"   nextgen.events.STEnumDeleted.post(stEnum.getUuid());\n" + 
 					"});");
@@ -287,7 +287,7 @@ public class GenerateAll_TransactionAction {
 					"         stArgument.delete();\n" + 
 					"         nextgen.events.STArgumentDeleted.post(stModel, uuid);\n" + 
 					"      }));");
-		final TransactionAction DeleteSTGroup = NextgenST.newTransactionAction().setName("DeleteSTGroup").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" + 
+		final TransactionAction DeleteSTGroup = NextgenST.newTransactionAction().setName("DeleteSTGroup").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" +
 					"   appModel().delete(stGroup);\n" + 
 					"   nextgen.events.STGroupDeleted.post(stGroup.getUuid());\n" + 
 					"});");
@@ -307,11 +307,11 @@ public class GenerateAll_TransactionAction {
 					"      });\n" + 
 					"   }\n" + 
 					"});");
-		final TransactionAction DeleteSTInterface = NextgenST.newTransactionAction().setName("DeleteSTInterface").addFields("nextgen.st.domain.STInterface", "stInterface").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" + 
+		final TransactionAction DeleteSTInterface = NextgenST.newTransactionAction().setName("DeleteSTInterface").addFields("nextgen.st.model.STInterface", "stInterface").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" +
 					"   stGroup.removeInterfaces(stInterface);\n" + 
 					"   nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());   \n" + 
 					"});");
-		final TransactionAction RemoveInterfaceFromSTTemplate = NextgenST.newTransactionAction().setName("RemoveInterfaceFromSTTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("String", "interfaceName").addFields("javax.swing.JComponent", "owner").addStatements("confirm(owner, \"Remove\", unused -> {\n" + 
+		final TransactionAction RemoveInterfaceFromSTTemplate = NextgenST.newTransactionAction().setName("RemoveInterfaceFromSTTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("String", "interfaceName").addFields("javax.swing.JComponent", "owner").addStatements("confirm(owner, \"Remove\", unused -> {\n" +
 					"   stTemplate.removeImplements(interfaceName);\n" + 
 					"   nextgen.events.STTemplateInterfaceRemoved.post(stGroup, stTemplate, interfaceName);\n" + 
 					"});");
@@ -321,7 +321,7 @@ public class GenerateAll_TransactionAction {
 					"   if (found != null) appModel().db.delete(found.getNode());\n" + 
 					"   nextgen.events.STModelDeleted.post(uuid);\n" + 
 					"});");
-		final TransactionAction DeleteSTTemplate = NextgenST.newTransactionAction().setName("DeleteSTTemplate").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" + 
+		final TransactionAction DeleteSTTemplate = NextgenST.newTransactionAction().setName("DeleteSTTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Delete").addStatements("confirm(owner, \"Delete\", unused -> {\n" +
 					"   stGroup.removeTemplates(stTemplate);\n" + 
 					"   nextgen.events.STTemplateDeleted.post(stTemplate.getUuid());\n" + 
 					"});");
@@ -331,15 +331,15 @@ public class GenerateAll_TransactionAction {
 					"   if (found != null) appModel().db.delete(found.getNode());\n" + 
 					"   nextgen.events.STValueDeleted.post(uuid);\n" + 
 					"});");
-		final TransactionAction EditEnum = NextgenST.newTransactionAction().setName("EditEnum").addFields("nextgen.st.domain.STEnum", "stEnum").addFields("javax.swing.JComponent", "owner").setTitle("Edit").addStatements("final int newFields = 5;\n" + 
+		final TransactionAction EditEnum = NextgenST.newTransactionAction().setName("EditEnum").addFields("nextgen.st.model.STEnum", "stEnum").addFields("javax.swing.JComponent", "owner").setTitle("Edit").addStatements("final int newFields = 5;\n" +
 					"final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout((int) stEnum.getValues().count() + newFields + 1, 2));\n" + 
 					"contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));\n" + 
 					"contentPanel.add(newLabel(\"Name\"));\n" + 
 					"contentPanel.add(newLabel(\"Lexical\"));\n" + 
 					"\n" + 
 					"// existing values:\n" + 
-					"final java.util.Map<nextgen.st.domain.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();\n" + 
-					"final java.util.Map<nextgen.st.domain.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();\n" + 
+					"final java.util.Map<nextgen.st.model.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();\n" +
+					"final java.util.Map<nextgen.st.model.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();\n" +
 					"stEnum.getValues().forEach(stEnumValue -> {\n" + 
 					"	txtEnumValuesName.put(stEnumValue, newTextField(stEnumValue.getName(), 10));\n" + 
 					"	txtEnumLexical.put(stEnumValue, newTextField(stEnumValue.getLexical(), 10));\n" + 
@@ -358,7 +358,7 @@ public class GenerateAll_TransactionAction {
 					"}\n" + 
 					"\n" + 
 					"showDialog(owner, contentPanel, \"Edit Enum\", jDialog -> {\n" + 
-					"	for (nextgen.st.domain.STEnumValue stEnumValue : txtEnumValuesName.keySet()) {\n" + 
+					"	for (nextgen.st.model.STEnumValue stEnumValue : txtEnumValuesName.keySet()) {\n" +
 					"		final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();\n" + 
 					"		final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();\n" + 
 					"\n" + 
@@ -378,12 +378,12 @@ public class GenerateAll_TransactionAction {
 					"\n" + 
 					"	nextgen.events.STEnumChanged.post(stEnum);\n" + 
 					"});");
-		final TransactionAction EditModels = NextgenST.newTransactionAction().setName("EditModels").addFields("nextgen.st.domain.STTemplate", "stTemplate").setTitle("Edit").addStatements("appModel().doLaterInTransaction(transaction1 -> {\n" + 
+		final TransactionAction EditModels = NextgenST.newTransactionAction().setName("EditModels").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("Edit").addStatements("appModel().doLaterInTransaction(transaction1 -> {\n" +
 					"   final nextgen.st.STModelGrid stModelGrid = appModel().getWorkspace().getModelGrid(stTemplate);\n" + 
 					"   appModel().getWorkspace().setSelectedComponent(stModelGrid);\n" + 
 					"   stModelGrid.requestFocusInWindow();   \n" + 
 					"});");
-		final TransactionAction EditSTGroupTags = NextgenST.newTransactionAction().setName("EditSTGroupTags").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Edit tags").addStatements("input(owner, \"Tags\", stGroup.getTags(\"\"), tags -> {\n" + 
+		final TransactionAction EditSTGroupTags = NextgenST.newTransactionAction().setName("EditSTGroupTags").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Edit tags").addStatements("input(owner, \"Tags\", stGroup.getTags(\"\"), tags -> {\n" +
 					"   stGroup.setTags(tags);\n" + 
 					"   nextgen.events.STGroupTagsChanged.post(stGroup);\n" + 
 					"});");
@@ -427,7 +427,7 @@ public class GenerateAll_TransactionAction {
 					"nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());\n" + 
 					"\n" + 
 					"nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(appModel().getOutputPath()));");
-		final TransactionAction GenerateSources = NextgenST.newTransactionAction().setName("GenerateSources").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("java.util.List<nextgen.st.model.STModel>", "stModels").setTitle("As builder code").addStatements("final java.util.Set<String> imports = new java.util.LinkedHashSet<>();\n" + 
+		final TransactionAction GenerateSources = NextgenST.newTransactionAction().setName("GenerateSources").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("java.util.List<nextgen.st.model.STModel>", "stModels").setTitle("As builder code").addStatements("final java.util.Set<String> imports = new java.util.LinkedHashSet<>();\n" +
 					"\n" + 
 					"final String packageName = appModel().getSourceOutputPackage();\n" + 
 					"final String className = \"GenerateAll_\" + stTemplate.getName();\n" + 
@@ -483,26 +483,26 @@ public class GenerateAll_TransactionAction {
 					"nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());\n" + 
 					"\n" + 
 					"nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(appModel().getOutputPath()));");
-		final TransactionAction GenerateSTGroup = NextgenST.newTransactionAction().setName("GenerateSTGroup").addFields("nextgen.st.domain.STGroupModel", "stGroup").setTitle("Generate STGroup").addStatements("appModel().generateSTGroup(stGroup, false);");
-		final TransactionAction GenerateSTGroupAndNeo = NextgenST.newTransactionAction().setName("GenerateSTGroupAndNeo").addFields("nextgen.st.domain.STGroupModel", "stGroup").setTitle("Generate STGroup and Neo").addStatements("appModel().generateSTGroup(stGroup, true);");
-		final TransactionAction ImportSTTemplate = NextgenST.newTransactionAction().setName("ImportSTTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Import from stg-file").addStatements("openFile(owner, file -> {\n" + 
+		final TransactionAction GenerateSTGroup = NextgenST.newTransactionAction().setName("GenerateSTGroup").addFields("nextgen.st.model.STGroupModel", "stGroup").setTitle("Generate STGroup").addStatements("appModel().generateSTGroup(stGroup, false);");
+		final TransactionAction GenerateSTGroupAndNeo = NextgenST.newTransactionAction().setName("GenerateSTGroupAndNeo").addFields("nextgen.st.model.STGroupModel", "stGroup").setTitle("Generate STGroup and Neo").addStatements("appModel().generateSTGroup(stGroup, true);");
+		final TransactionAction ImportSTTemplate = NextgenST.newTransactionAction().setName("ImportSTTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Import from stg-file").addStatements("openFile(owner, file -> {\n" +
 					"	appModel().setLastDir(file.getParentFile());\n" + 
 					"	appModel().doLaterInTransaction(t -> {\n" + 
 					"		final String fileName = file.getName();\n" + 
 					"		final String name = fileName.substring(0, fileName.indexOf(\".\"));\n" + 
-					"		final nextgen.st.domain.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);\n" + 
+					"		final nextgen.st.model.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);\n" +
 					"		nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);\n" + 
 					"	});\n" + 
 					"});");
-		final TransactionAction NewEnum = NextgenST.newTransactionAction().setName("NewEnum").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Enum").addStatements("input(owner, \"New Enum\", s ->\n" + 
+		final TransactionAction NewEnum = NextgenST.newTransactionAction().setName("NewEnum").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Enum").addStatements("input(owner, \"New Enum\", s ->\n" +
 					"      nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
-					"         final nextgen.st.domain.STEnum stEnum = appModel().newSTEnum(name);\n" + 
+					"         final nextgen.st.model.STEnum stEnum = appModel().newSTEnum(name);\n" +
 					"         stGroup.addEnums(stEnum);\n" + 
 					"         nextgen.events.NewSTEnum.post(stGroup, stEnum);\n" + 
 					"      }));");
-		final TransactionAction NewInterface = NextgenST.newTransactionAction().setName("NewInterface").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Interface").addStatements("input(owner, \"New Interface\", s ->\n" + 
+		final TransactionAction NewInterface = NextgenST.newTransactionAction().setName("NewInterface").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Interface").addStatements("input(owner, \"New Interface\", s ->\n" +
 					"      nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
-					"         final nextgen.st.domain.STInterface stInterface = appModel().newSTInterface(name);\n" + 
+					"         final nextgen.st.model.STInterface stInterface = appModel().newSTInterface(name);\n" +
 					"         stGroup.addInterfaces(stInterface);\n" + 
 					"         nextgen.events.NewSTInterface.post(stGroup, stInterface);\n" + 
 					"      }));");
@@ -512,7 +512,7 @@ public class GenerateAll_TransactionAction {
 					"});");
 		final TransactionAction NewSTGroupAction = NextgenST.newTransactionAction().setName("NewSTGroupAction").addFields("javax.swing.JComponent", "owner").setTitle("New STGroup").addStatements("input(owner, \"Name\", name -> {\n" + 
 					"	\n" + 
-					"	final java.util.Optional<nextgen.st.domain.STGroupModel> existing = appModel().findSTGroup(name);\n" + 
+					"	final java.util.Optional<nextgen.st.model.STGroupModel> existing = appModel().findSTGroup(name);\n" +
 					"	if (existing.isPresent()) {\n" + 
 					"		nextgen.utils.SwingUtil.showMessage(name + \" group already exists in this directory\", owner);\n" + 
 					"		return;\n" + 
@@ -523,49 +523,49 @@ public class GenerateAll_TransactionAction {
 					"		return;\n" + 
 					"	}\n" + 
 					"\n" + 
-					"	final nextgen.st.domain.STGroupModel stGroupModel = appModel().newSTGroupModel(name);\n" + 
+					"	final nextgen.st.model.STGroupModel stGroupModel = appModel().newSTGroupModel(name);\n" +
 					"	nextgen.events.NewSTGroup.post(stGroupModel);\n" + 
 					"});");
-		final TransactionAction NewSTModelAction = NextgenST.newTransactionAction().setName("NewSTModelAction").addFields("nextgen.st.domain.STTemplate", "stTemplate").setTitle("New instance").addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" + 
+		final TransactionAction NewSTModelAction = NextgenST.newTransactionAction().setName("NewSTModelAction").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("New instance").addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
 					"nextgen.events.NewSTModel.post(stModel, appModel().findSTGroup(stTemplate), stTemplate);");
-		final TransactionAction NewSTTemplate = NextgenST.newTransactionAction().setName("NewSTTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
-					"	final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" + 
+		final TransactionAction NewSTTemplate = NextgenST.newTransactionAction().setName("NewSTTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
+					"	final nextgen.st.model.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" +
 					"	stGroup.addTemplates(stTemplate);\n" + 
 					"	nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);\n" + 
 					"}));");
-		final TransactionAction AddChildToTemplate = NextgenST.newTransactionAction().setName("AddChildToTemplate").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Add Child template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s)\n" + 
+		final TransactionAction AddChildToTemplate = NextgenST.newTransactionAction().setName("AddChildToTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Add Child template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s)\n" +
 					"      .ifPresent(name -> {\n" + 
-					"         final nextgen.st.domain.STTemplate newTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" + 
+					"         final nextgen.st.model.STTemplate newTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" +
 					"         stTemplate.addChildren(newTemplate);\n" + 
 					"         nextgen.events.NewSTTemplateChild.post(newTemplate, stTemplate);\n" + 
 					"      }));");
 		final TransactionAction OpenSTModelAction = NextgenST.newTransactionAction().setName("OpenSTModelAction").addFields("nextgen.st.model.STModel", "stModel").setTitle("Open").addStatements("nextgen.events.OpenSTModel.post(stModel);");
-		final TransactionAction OpenTemplate = NextgenST.newTransactionAction().setName("OpenTemplate").addFields("nextgen.st.domain.STTemplate", "stTemplate").setTitle("Open").addStatements("nextgen.events.OpenSTTemplate.post(stTemplate);");
-		final TransactionAction RenameEnum = NextgenST.newTransactionAction().setName("RenameEnum").addFields("nextgen.st.domain.STEnum", "stEnum").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stEnum.getName(), s -> {\n" + 
+		final TransactionAction OpenTemplate = NextgenST.newTransactionAction().setName("OpenTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("Open").addStatements("nextgen.events.OpenSTTemplate.post(stTemplate);");
+		final TransactionAction RenameEnum = NextgenST.newTransactionAction().setName("RenameEnum").addFields("nextgen.st.model.STEnum", "stEnum").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stEnum.getName(), s -> {\n" +
 					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
 					"      stEnum.setName(name);\n" + 
 					"      nextgen.events.STEnumNameChanged.post(stGroup, stEnum);\n" + 
 					"   });\n" + 
 					"});");
-		final TransactionAction RenameSTGroup = NextgenST.newTransactionAction().setName("RenameSTGroup").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stGroup.getName(), s -> {\n" + 
+		final TransactionAction RenameSTGroup = NextgenST.newTransactionAction().setName("RenameSTGroup").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stGroup.getName(), s -> {\n" +
 					"	nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
 					"		stGroup.setName(name);\n" + 
 					"		nextgen.events.STGroupNameChanged.post(stGroup);\n" + 
 					"	});\n" + 
 					"});");
-		final TransactionAction RenameSTInterface = NextgenST.newTransactionAction().setName("RenameSTInterface").addFields("nextgen.st.domain.STInterface", "stInterface").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stInterface.getName(), s -> {\n" + 
+		final TransactionAction RenameSTInterface = NextgenST.newTransactionAction().setName("RenameSTInterface").addFields("nextgen.st.model.STInterface", "stInterface").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stInterface.getName(), s -> {\n" +
 					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
 					"      stInterface.setName(name);\n" + 
 					"      nextgen.events.STInterfaceNameChanged.post(stGroup, stInterface);\n" + 
 					"   });\n" + 
 					"});");
-		final TransactionAction RenameSTTemplate = NextgenST.newTransactionAction().setName("RenameSTTemplate").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stTemplate.getName(), s -> {\n" + 
+		final TransactionAction RenameSTTemplate = NextgenST.newTransactionAction().setName("RenameSTTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stTemplate.getName(), s -> {\n" +
 					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
 					"      stTemplate.setName(name);\n" + 
 					"      nextgen.events.STTemplateNameChanged.post(stGroup, stTemplate);\n" + 
 					"   });\n" + 
 					"});");
-		final TransactionAction SetArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").setTitle("Set from Clipboard").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").setTitle("Set from Clipboard").addStatements("stModel.getArguments()\n" +
 					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
@@ -580,7 +580,7 @@ public class GenerateAll_TransactionAction {
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetArgumentFromInput = NextgenST.newTransactionAction().setName("SetArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Set from Input").addStatements("input(owner, stParameter.getName(), inputValue -> {\n" + 
+		final TransactionAction SetArgumentFromInput = NextgenST.newTransactionAction().setName("SetArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("javax.swing.JComponent", "owner").setTitle("Set from Input").addStatements("input(owner, stParameter.getName(), inputValue -> {\n" +
 					"   stModel.getArguments()\n" + 
 					"         .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"         .findAny()\n" + 
@@ -597,7 +597,7 @@ public class GenerateAll_TransactionAction {
 					"   stModel.addArguments(stArgument);\n" + 
 					"   nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);\n" + 
 					"});");
-		final TransactionAction SetArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.model.STModel", "value").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STModel", "value").addStatements("stModel.getArguments()\n" +
 					"            .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"            .findAny()\n" + 
 					"            .ifPresent(stArgument -> {\n" + 
@@ -612,7 +612,7 @@ public class GenerateAll_TransactionAction {
 					"      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"      stModel.addArguments(stArgument);\n" + 
 					"      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetArgumentFromSTModelUuid = NextgenST.newTransactionAction().setName("SetArgumentFromSTModelUuid").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("String", "uuid").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentFromSTModelUuid = NextgenST.newTransactionAction().setName("SetArgumentFromSTModelUuid").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("String", "uuid").addStatements("stModel.getArguments()\n" +
 					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
@@ -627,7 +627,7 @@ public class GenerateAll_TransactionAction {
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetArgumentFromSTTemplate = NextgenST.newTransactionAction().setName("SetArgumentFromSTTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.domain.STTemplate", "stTemplate").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentFromSTTemplate = NextgenST.newTransactionAction().setName("SetArgumentFromSTTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STTemplate", "stTemplate").addStatements("stModel.getArguments()\n" +
 					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
@@ -644,7 +644,7 @@ public class GenerateAll_TransactionAction {
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").addFields("nextgen.st.model.STValue", "stValue").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").addFields("nextgen.st.model.STValue", "stValue").addStatements("stModel.getArguments()\n" +
 					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
@@ -658,7 +658,7 @@ public class GenerateAll_TransactionAction {
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetArgumentToTrue = NextgenST.newTransactionAction().setName("SetArgumentToTrue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.domain.STParameter", "stParameter").setTitle("Set to true").addStatements("stModel.getArguments()\n" + 
+		final TransactionAction SetArgumentToTrue = NextgenST.newTransactionAction().setName("SetArgumentToTrue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STParameter", "stParameter").setTitle("Set to true").addStatements("stModel.getArguments()\n" +
 					"      .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))\n" + 
 					"      .findAny()\n" + 
 					"      .ifPresent(stArgument -> {\n" + 
@@ -673,7 +673,7 @@ public class GenerateAll_TransactionAction {
 					"final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);\n" + 
 					"stModel.addArguments(stArgument);\n" + 
 					"nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);");
-		final TransactionAction SetInterfaces = NextgenST.newTransactionAction().setName("SetInterfaces").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("javax.swing.JComponent", "owner").setTitle("Set interfaces").addStatements("final java.util.List<javax.swing.JTextField> txtImplements = new java.util.ArrayList<>();\n" + 
+		final TransactionAction SetInterfaces = NextgenST.newTransactionAction().setName("SetInterfaces").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("javax.swing.JComponent", "owner").setTitle("Set interfaces").addStatements("final java.util.List<javax.swing.JTextField> txtImplements = new java.util.ArrayList<>();\n" +
 					"stTemplate.getImplements().forEach(implement -> {\n" + 
 					"   final javax.swing.JTextField textField = newTextField(implement, 15);\n" + 
 					"   txtImplements.add(textField);\n" + 
@@ -697,7 +697,7 @@ public class GenerateAll_TransactionAction {
 					"   nextgen.events.STTemplateInterfacesChanged.post(stGroup, stTemplate);\n" + 
 					"   javax.swing.SwingUtilities.invokeLater(jDialog::dispose);\n" + 
 					"});");
-		final TransactionAction SetKVArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetKVArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.domain.STParameterKey", "stParameterKey").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Clipboard\"").addStatements("stArgument.getKeyValues()\n" + 
+		final TransactionAction SetKVArgumentFromClipboard = NextgenST.newTransactionAction().setName("SetKVArgumentFromClipboard").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Clipboard\"").addStatements("stArgument.getKeyValues()\n" +
 					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
@@ -712,7 +712,7 @@ public class GenerateAll_TransactionAction {
 					"stArgument.addKeyValues(stArgumentKV);\n" + 
 					"\n" + 
 					"nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);");
-		final TransactionAction SetKVArgumentFromInput = NextgenST.newTransactionAction().setName("SetKVArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.domain.STParameterKey", "stParameterKey").addFields("javax.swing.JComponent", "owner").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Input\"").addStatements("input(owner, stParameterKey.getName(), inputValue -> {\n" + 
+		final TransactionAction SetKVArgumentFromInput = NextgenST.newTransactionAction().setName("SetKVArgumentFromInput").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("javax.swing.JComponent", "owner").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from Input\"").addStatements("input(owner, stParameterKey.getName(), inputValue -> {\n" +
 					"   stArgument.getKeyValues()\n" + 
 					"         .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
 					"         .findFirst()\n" + 
@@ -728,7 +728,7 @@ public class GenerateAll_TransactionAction {
 					"   stArgument.addKeyValues(stArgumentKV);\n" + 
 					"\n" + 
 					"   nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);});");
-		final TransactionAction SetKVArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.domain.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STModel", "value").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STModel\"").addStatements("stArgument.getKeyValues()\n" + 
+		final TransactionAction SetKVArgumentFromSTModel = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTModel").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STModel", "value").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STModel\"").addStatements("stArgument.getKeyValues()\n" +
 					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
@@ -743,7 +743,7 @@ public class GenerateAll_TransactionAction {
 					"stArgument.addKeyValues(stArgumentKV);\n" + 
 					"\n" + 
 					"nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);");
-		final TransactionAction SetKVArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.domain.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STValue", "stValue").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STValue\"").addStatements("stArgument.getKeyValues()\n" + 
+		final TransactionAction SetKVArgumentFromSTValue = NextgenST.newTransactionAction().setName("SetKVArgumentFromSTValue").addFields("nextgen.st.model.STModel", "stModel").addFields("nextgen.st.model.STArgument", "stArgument").addFields("nextgen.st.model.STParameterKey", "stParameterKey").addFields("nextgen.st.model.STValue", "stValue").setTitleExpression("\"Set \" + stParameterKey.getName() + \" from STValue\"").addStatements("stArgument.getKeyValues()\n" +
 					"      .filter(existing -> existing.getStParameterKey().equals(stParameterKey.getUuid()))\n" + 
 					"      .findFirst()\n" + 
 					"      .ifPresent(existing -> {\n" + 
@@ -757,17 +757,17 @@ public class GenerateAll_TransactionAction {
 					"stArgument.addKeyValues(stArgumentKV);\n" + 
 					"\n" + 
 					"nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);");
-		final TransactionAction SetMultipleFields = NextgenST.newTransactionAction().setName("SetMultipleFields").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("javax.swing.JComponent", "owner").setTitle("Set Fields").addStatements("final java.util.concurrent.atomic.AtomicInteger modelIndex = new java.util.concurrent.atomic.AtomicInteger(0);\n" + 
+		final TransactionAction SetMultipleFields = NextgenST.newTransactionAction().setName("SetMultipleFields").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STModel", "stModel").addFields("javax.swing.JComponent", "owner").setTitle("Set Fields").addStatements("final java.util.concurrent.atomic.AtomicInteger modelIndex = new java.util.concurrent.atomic.AtomicInteger(0);\n" +
 					"final nextgen.st.model.STModel[] existingSTModels = appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).distinct().toArray(nextgen.st.model.STModel[]::new);\n" + 
 					"\n" + 
 					"final java.util.Map<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();\n" + 
-					"final java.util.Map<String, nextgen.st.domain.STParameter> parameterMap = new java.util.LinkedHashMap<>();\n" + 
+					"final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();\n" +
 					"final java.util.Map<String, nextgen.st.model.STArgument> argumentMap = new java.util.LinkedHashMap<>();\n" + 
 					"final java.util.Map<String, java.util.List<String>> valuesMap = new java.util.LinkedHashMap<>();\n" + 
 					"\n" + 
 					"stTemplate\n" + 
 					"      .getParameters()\n" + 
-					"      .filter(stParameter -> stParameter.getType().equals(nextgen.st.domain.STParameterType.SINGLE))\n" + 
+					"      .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))\n" +
 					"      .forEach(stParameter -> {\n" + 
 					"\n" + 
 					"         final java.util.Optional<nextgen.st.model.STArgument> argument = stModel.getArguments()\n" + 
@@ -813,7 +813,7 @@ public class GenerateAll_TransactionAction {
 					"      final String name = fieldEntry.getKey();\n" + 
 					"      final String value = fieldEntry.getValue().getText().trim();\n" + 
 					"      final nextgen.st.model.STArgument stArgument = argumentMap.get(name);\n" + 
-					"      final nextgen.st.domain.STParameter stParameter = parameterMap.get(name);\n" + 
+					"      final nextgen.st.model.STParameter stParameter = parameterMap.get(name);\n" +
 					"\n" + 
 					"      if (value.length() == 0 && stArgument != null) {\n" + 
 					"         final String uuid = stArgument.getUuid();\n" + 
@@ -844,7 +844,7 @@ public class GenerateAll_TransactionAction {
 					"   stValue.setType(nextgen.st.model.STValueType.PRIMITIVE);\n" + 
 					"   nextgen.events.STValueChanged.post(stValue);\n" + 
 					"});");
-		final TransactionAction SetTemplateParameterTypes = NextgenST.newTransactionAction().setName("SetTemplateParameterTypes").addFields("nextgen.st.domain.STGroupModel", "stGroup").addFields("nextgen.st.domain.STTemplate", "stTemplate").addFields("javax.swing.JComponent", "owner").setTitle("Set parameter types").addStatements("final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();\n" + 
+		final TransactionAction SetTemplateParameterTypes = NextgenST.newTransactionAction().setName("SetTemplateParameterTypes").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("javax.swing.JComponent", "owner").setTitle("Set parameter types").addStatements("final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();\n" +
 					"stTemplate.getParameters().forEach(stParameter -> {\n" + 
 					"\n" + 
 					"	switch (stParameter.getType()) {\n" + 

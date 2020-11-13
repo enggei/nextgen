@@ -180,7 +180,7 @@ public class STModelNavigator extends JPanel {
 	public void onNewSTProjectSTModel(nextgen.events.NewSTProjectSTModel event) {
 		findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.project))
 				.ifPresent(stProjectTreeNode -> {
-					final nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(event.template);
+					final nextgen.st.model.STGroupModel stGroup = appModel().findSTGroup(event.template);
 					final java.util.Optional<nextgen.st.STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
 					if (groupModelTreeNode.isPresent()) {
 						final java.util.Optional<nextgen.st.STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
@@ -477,12 +477,12 @@ public class STModelNavigator extends JPanel {
 			setLabel(getModel().getName());
 			this.tooltip = "";
 
-			final Map<nextgen.st.domain.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
-			final Map<nextgen.st.domain.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
+			final Map<nextgen.st.model.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
+			final Map<nextgen.st.model.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
 			model.getModelsSorted().forEach(stModel -> {
 
-				final nextgen.st.domain.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());
-				final nextgen.st.domain.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
+				final nextgen.st.model.STTemplate stTemplate = appModel().findSTTemplateByUuid(stModel.getStTemplate());
+				final nextgen.st.model.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
 					final nextgen.st.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.st.STModelNavigator.STGroupModelTreeNode(stGroup);
@@ -592,7 +592,7 @@ public class STModelNavigator extends JPanel {
 			return actions;
 		}
 
-		private void addSTTemplateChild(nextgen.st.domain.STTemplate stTemplate, BaseTreeNode<?> parent) {
+		private void addSTTemplateChild(nextgen.st.model.STTemplate stTemplate, BaseTreeNode<?> parent) {
 			final nextgen.st.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.st.STModelNavigator.STTemplateTreeNode(stTemplate);
 			parent.add(stTemplateTreeNode);
 
@@ -625,11 +625,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STGroupModelTreeNode
-	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.st.domain.STGroupModel> {
+	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.st.model.STGroupModel> {
 
 		private String uuid;
 
-		STGroupModelTreeNode(nextgen.st.domain.STGroupModel model) {
+		STGroupModelTreeNode(nextgen.st.model.STGroupModel model) {
 			super(model, null);
 
 
@@ -687,11 +687,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STTemplateTreeNode
-	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.domain.STTemplate> {
+	public class STTemplateTreeNode extends BaseTreeNode<nextgen.st.model.STTemplate> {
 
 		private String uuid;
 
-		STTemplateTreeNode(nextgen.st.domain.STTemplate model) {
+		STTemplateTreeNode(nextgen.st.model.STTemplate model) {
 			super(model, null);
 
 
@@ -761,9 +761,9 @@ public class STModelNavigator extends JPanel {
 	public class STModelTreeNode extends BaseTreeNode<nextgen.st.model.STModel> {
 
 		private String uuid;
-		private nextgen.st.domain.STTemplate stTemplate;
+		private nextgen.st.model.STTemplate stTemplate;
 
-		STModelTreeNode(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate) {
+		STModelTreeNode(nextgen.st.model.STModel model, nextgen.st.model.STTemplate stTemplate) {
 			super(model, appModel().loadIcon("sq-teal"));
 
 			this.stTemplate = stTemplate;
@@ -898,12 +898,12 @@ public class STModelNavigator extends JPanel {
 	}
 
 	// STParameterTreeNode
-	public class STParameterTreeNode extends BaseTreeNode<nextgen.st.domain.STParameter> {
+	public class STParameterTreeNode extends BaseTreeNode<nextgen.st.model.STParameter> {
 
 		private String uuid;
 		private nextgen.st.model.STModel stModel;
 
-		STParameterTreeNode(nextgen.st.domain.STParameter model, nextgen.st.model.STModel stModel) {
+		STParameterTreeNode(nextgen.st.model.STParameter model, nextgen.st.model.STModel stModel) {
 			super(model, null);
 
 			this.stModel = stModel;
@@ -1008,7 +1008,7 @@ public class STModelNavigator extends JPanel {
 		private String uuid;
 		private nextgen.st.model.STArgument stArgument;
 		private String stArgumentUuid;
-		private nextgen.st.domain.STTemplate stTemplate;
+		private nextgen.st.model.STTemplate stTemplate;
 
 		STModelArgumentTreeNode(nextgen.st.model.STModel model, nextgen.st.model.STArgument stArgument) {
 			super(model, appModel().loadIcon("sq-teal"));
@@ -1214,9 +1214,9 @@ public class STModelNavigator extends JPanel {
 	public class STKVArgumentTreeNode extends BaseTreeNode<nextgen.st.model.STArgument> {
 
 		private String uuid;
-		private nextgen.st.domain.STParameter stParameter;
+		private nextgen.st.model.STParameter stParameter;
 
-		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.domain.STParameter stParameter) {
+		STKVArgumentTreeNode(nextgen.st.model.STArgument model, nextgen.st.model.STParameter stParameter) {
 			super(model, appModel().loadIcon("sq-yellow"));
 
 			this.stParameter = stParameter;
@@ -1290,9 +1290,9 @@ public class STModelNavigator extends JPanel {
 
 		private String uuid;
 		private nextgen.st.model.STArgument stArgument;
-		private nextgen.st.domain.STParameterKey stParameterKey;
+		private nextgen.st.model.STParameterKey stParameterKey;
 
-		STKVTreeNode(nextgen.st.model.STArgumentKV model, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey) {
+		STKVTreeNode(nextgen.st.model.STArgumentKV model, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey) {
 			super(model, null);
 
 			this.stArgument = stArgument;
@@ -1372,11 +1372,11 @@ public class STModelNavigator extends JPanel {
 
 		private String uuid;
 		private nextgen.st.model.STArgument stArgument;
-		private nextgen.st.domain.STParameterKey stParameterKey;
+		private nextgen.st.model.STParameterKey stParameterKey;
 		private String stArgumentUuid;
-		private nextgen.st.domain.STTemplate stTemplate;
+		private nextgen.st.model.STTemplate stTemplate;
 
-		STModelKVArgumentTreeNode(nextgen.st.model.STModel model, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey) {
+		STModelKVArgumentTreeNode(nextgen.st.model.STModel model, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey) {
 			super(model, appModel().loadIcon("sq-teal"));
 
 			this.stArgument = stArgument;
@@ -1446,9 +1446,9 @@ public class STModelNavigator extends JPanel {
 
 		private String uuid;
 		private nextgen.st.model.STArgument stArgument;
-		private nextgen.st.domain.STParameterKey stParameterKey;
+		private nextgen.st.model.STParameterKey stParameterKey;
 
-		STValueKVArgumentTreeNode(nextgen.st.model.STValue model, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey) {
+		STValueKVArgumentTreeNode(nextgen.st.model.STValue model, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey) {
 			super(model, appModel().loadIcon("sq-orange"));
 
 			this.stArgument = stArgument;

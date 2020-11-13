@@ -5,10 +5,10 @@ public class SetKVArgumentFromSTModel extends TransactionAction {
 
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.model.STArgument stArgument;
-   private final nextgen.st.domain.STParameterKey stParameterKey;
+   private final nextgen.st.model.STParameterKey stParameterKey;
    private final nextgen.st.model.STModel value;
 
-	public SetKVArgumentFromSTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STModel value) {
+	public SetKVArgumentFromSTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, nextgen.st.model.STModel value) {
 		super("Set " + stParameterKey.getName() + " from STModel");
 		this.stModel = stModel;
 		this.stArgument = stArgument;

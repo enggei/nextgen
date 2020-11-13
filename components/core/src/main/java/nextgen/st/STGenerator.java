@@ -1,8 +1,8 @@
 package nextgen.st;
 
-import nextgen.st.domain.STEnum;
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STEnum;
+import nextgen.st.model.STGroupModel;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STFile;
 import nextgen.st.model.STValue;
 import nextgen.templates.JavaPatterns;
@@ -255,6 +255,20 @@ public class STGenerator {
             .charAt(0), model.getDelimiter().charAt(0));
       stGroupString.registerRenderer(Object.class, new DefaultAttributeRenderer());
       return stGroupString;
+   }
+
+   public static String toStg(String templateText) {
+      final STGroup templateGroup = newTemplateGroup();
+
+      final ST stGroupTemplate = templateGroup.getInstanceOf("STGroupTemplate");
+      stGroupTemplate.add("delimiter", DELIMITER);
+
+      final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
+      stTemplate.add("name", "tmp");
+      stTemplate.add("content", templateText);
+      stGroupTemplate.add("templates", stTemplate);
+
+      return stGroupTemplate.render();
    }
 
    public static String toStg(STGroupModel model) {

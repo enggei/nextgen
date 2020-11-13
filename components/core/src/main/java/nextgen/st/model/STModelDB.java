@@ -1,6 +1,5 @@
 package nextgen.st.model;
 
-import nextgen.st.domain.*;
 import nextgen.utils.Neo4JUtil;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.TransactionData;
@@ -29,7 +28,7 @@ public class STModelDB extends STModelNeoFactory {
                   .endsWith(".json")))
             .ifPresent(files -> {
                for (java.io.File file : files)
-                  groupModels.add(new nextgen.st.domain.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
+                  groupModels.add(new nextgen.st.model.STGroupModel(nextgen.st.STParser.readJsonObject(file)));
             });
    }
 

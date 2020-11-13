@@ -3,10 +3,10 @@ package nextgen.actions;
 public class EditSTGroupTags extends TransactionAction {
 
 
-   private final nextgen.st.domain.STGroupModel stGroup;
+   private final nextgen.st.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public EditSTGroupTags(nextgen.st.domain.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public EditSTGroupTags(nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Edit tags");
 		this.stGroup = stGroup;
 		this.owner = owner;

@@ -3,10 +3,10 @@ package nextgen.actions;
 public class GenerateSources extends TransactionAction {
 
 
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final java.util.List<nextgen.st.model.STModel> stModels;
 
-	public GenerateSources(nextgen.st.domain.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels) {
+	public GenerateSources(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels) {
 		super("As builder code");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;

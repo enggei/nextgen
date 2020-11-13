@@ -1,7 +1,7 @@
 package nextgen.st;
 
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STGroupModel;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STModel;
 
 import javax.swing.*;

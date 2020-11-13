@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetMultipleFields extends TransactionAction {
 
 
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final nextgen.st.model.STModel stModel;
    private final javax.swing.JComponent owner;
 
-	public SetMultipleFields(nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel stModel, javax.swing.JComponent owner) {
+	public SetMultipleFields(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STModel stModel, javax.swing.JComponent owner) {
 		super("Set Fields");
 		this.stTemplate = stTemplate;
 		this.stModel = stModel;
@@ -20,13 +20,13 @@ public class SetMultipleFields extends TransactionAction {
       final nextgen.st.model.STModel[] existingSTModels = appModel().db.findAllSTModelByStTemplate(stTemplate.getUuid()).distinct().toArray(nextgen.st.model.STModel[]::new);
 
       final java.util.Map<String, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-      final java.util.Map<String, nextgen.st.domain.STParameter> parameterMap = new java.util.LinkedHashMap<>();
+      final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
       final java.util.Map<String, nextgen.st.model.STArgument> argumentMap = new java.util.LinkedHashMap<>();
       final java.util.Map<String, java.util.List<String>> valuesMap = new java.util.LinkedHashMap<>();
 
       stTemplate
             .getParameters()
-            .filter(stParameter -> stParameter.getType().equals(nextgen.st.domain.STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
             .forEach(stParameter -> {
 
                final java.util.Optional<nextgen.st.model.STArgument> argument = stModel.getArguments()
@@ -72,7 +72,7 @@ public class SetMultipleFields extends TransactionAction {
             final String name = fieldEntry.getKey();
             final String value = fieldEntry.getValue().getText().trim();
             final nextgen.st.model.STArgument stArgument = argumentMap.get(name);
-            final nextgen.st.domain.STParameter stParameter = parameterMap.get(name);
+            final nextgen.st.model.STParameter stParameter = parameterMap.get(name);
 
             if (value.length() == 0 && stArgument != null) {
                final String uuid = stArgument.getUuid();

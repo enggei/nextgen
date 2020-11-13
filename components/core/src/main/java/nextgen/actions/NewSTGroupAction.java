@@ -14,7 +14,7 @@ public class NewSTGroupAction extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "Name", name -> {
       	
-      	final java.util.Optional<nextgen.st.domain.STGroupModel> existing = appModel().findSTGroup(name);
+      	final java.util.Optional<nextgen.st.model.STGroupModel> existing = appModel().findSTGroup(name);
       	if (existing.isPresent()) {
       		nextgen.utils.SwingUtil.showMessage(name + " group already exists in this directory", owner);
       		return;
@@ -25,7 +25,7 @@ public class NewSTGroupAction extends TransactionAction {
       		return;
       	}
 
-      	final nextgen.st.domain.STGroupModel stGroupModel = appModel().newSTGroupModel(name);
+      	final nextgen.st.model.STGroupModel stGroupModel = appModel().newSTGroupModel(name);
       	nextgen.events.NewSTGroup.post(stGroupModel);
       });
    }

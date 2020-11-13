@@ -5,11 +5,11 @@ public class AddFileSinkToSTModels extends TransactionAction {
    private static final java.util.concurrent.atomic.AtomicInteger fileTypeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
    private static final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final java.util.List<nextgen.st.model.STModel> stModels;
    private final javax.swing.JComponent owner;
 
-	public AddFileSinkToSTModels(nextgen.st.domain.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels, javax.swing.JComponent owner) {
+	public AddFileSinkToSTModels(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels, javax.swing.JComponent owner) {
 		super("Add File Sink");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;
@@ -27,9 +27,9 @@ public class AddFileSinkToSTModels extends TransactionAction {
             .distinct()
             .toArray(String[]::new);
 
-      final java.util.Map<String, nextgen.st.domain.STParameter> parameterMap = new java.util.LinkedHashMap<>();
+      final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
       final java.util.List<String> nameOptions = stTemplate.getParameters()
-            .filter(stParameter -> stParameter.getType().equals(nextgen.st.domain.STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
             .map(stParameter -> {
                parameterMap.put(stParameter.getName(), stParameter);
                return stParameter.getName();
@@ -52,7 +52,7 @@ public class AddFileSinkToSTModels extends TransactionAction {
       }
 
       showDialog(owner, inputPanel, "New FileSink", jDialog -> {
-         final nextgen.st.domain.STParameter stParameter = parameterMap.get(fieldMap.get("name").getText().trim());
+         final nextgen.st.model.STParameter stParameter = parameterMap.get(fieldMap.get("name").getText().trim());
          final String type = fieldMap.get("type").getText().trim();
          final String path = fieldMap.get("path").getText().trim();
          final String packageName = fieldMap.get("package").getText().trim();

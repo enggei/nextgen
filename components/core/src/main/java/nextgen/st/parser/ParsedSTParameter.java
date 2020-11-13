@@ -4,7 +4,7 @@ public class ParsedSTParameter {
 
 	private final java.util.UUID uuid;
 	private String _name;
-	private nextgen.st.domain.STParameterType _type;
+	private nextgen.st.model.STParameterType _type;
 	private java.util.List<ParsedSTParameterKey> _keys = new java.util.ArrayList<>();
 	private String _argumentType;
 
@@ -29,11 +29,11 @@ public class ParsedSTParameter {
 		return this;
 	}
 
-	public nextgen.st.domain.STParameterType getType() {
+	public nextgen.st.model.STParameterType getType() {
 		return this._type;
 	}
 
-	public ParsedSTParameter setType(nextgen.st.domain.STParameterType value) {
+	public ParsedSTParameter setType(nextgen.st.model.STParameterType value) {
 		this._type = value;
 		return this;
 	}

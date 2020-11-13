@@ -4,10 +4,10 @@ public class SetArgumentFromSTValue extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
+   private final nextgen.st.model.STParameter stParameter;
    private final nextgen.st.model.STValue stValue;
 
-	public SetArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue stValue) {
+	public SetArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue stValue) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;

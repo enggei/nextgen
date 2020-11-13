@@ -1,8 +1,8 @@
 package nextgen.utils;
 
-import nextgen.st.domain.STEnum;
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STEnum;
+import nextgen.st.model.STGroupModel;
+import nextgen.st.model.STTemplate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -30,7 +30,7 @@ public class STModelUtil {
       return set;
    }
 
-   public static java.util.Optional<nextgen.st.domain.STTemplate> findSTTemplateByName(nextgen.st.domain.STGroupModel stGroupModel, String name) {
+   public static java.util.Optional<nextgen.st.model.STTemplate> findSTTemplateByName(nextgen.st.model.STGroupModel stGroupModel, String name) {
       return getAllSTTemplates(stGroupModel).stream().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
    }
 
@@ -55,7 +55,7 @@ public class STModelUtil {
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.st.model.STArgument> {
 
-      private final nextgen.st.domain.STParameter stParameter;
+      private final nextgen.st.model.STParameter stParameter;
 
       private java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.model.STValue> onSingleSTValueConsumer = (stArgument, stValue) -> {
       };
@@ -83,7 +83,7 @@ public class STModelUtil {
 
       };
 
-      public STArgumentConsumer(nextgen.st.domain.STParameter stParameter) {
+      public STArgumentConsumer(nextgen.st.model.STParameter stParameter) {
          this.stParameter = stParameter;
       }
 
@@ -211,7 +211,7 @@ public class STModelUtil {
          return this;
       }
 
-      public java.util.Collection<nextgen.st.model.STArgumentKV> getStArgumentKVS(nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
+      public java.util.Collection<nextgen.st.model.STArgumentKV> getStArgumentKVS(nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
          final java.util.Collection<nextgen.st.model.STArgumentKV> kvSet = new LinkedHashSet<>();
          stParameter.getKeys()
                     .forEach(stParameterKey -> stArgument.getKeyValues()

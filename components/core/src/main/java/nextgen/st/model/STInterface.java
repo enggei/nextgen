@@ -1,25 +1,25 @@
-package nextgen.st.domain;
+package nextgen.st.model;
 
-public class STEnum {
+public class STInterface {
 
 	private final io.vertx.core.json.JsonObject jsonObject;
 
-	public STEnum() { 
+	public STInterface() { 
 		this.jsonObject = new io.vertx.core.json.JsonObject();
 		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STEnum(io.vertx.core.json.JsonObject jsonObject) { 
+	public STInterface(io.vertx.core.json.JsonObject jsonObject) { 
 		this.jsonObject = jsonObject;
 		java.lang.String uuidString = jsonObject.getString("uuid");
 		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
 	}
 
-	public STEnum(java.io.File file) throws java.io.IOException {
+	public STInterface(java.io.File file) throws java.io.IOException {
 		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
 	}
 
-	public STEnum(java.io.InputStream inputStream) throws java.io.IOException {
+	public STInterface(java.io.InputStream inputStream) throws java.io.IOException {
 		if (inputStream == null) throw new java.io.IOException("inputStream is null");
 		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
 		int read;
@@ -48,7 +48,7 @@ public class STEnum {
 		return this.jsonObject.getString("uuid");
 	}
 
-	public STEnum removeUuid() {
+	public STInterface removeUuid() {
 		this.jsonObject.remove("uuid");
 		return this;
 	}
@@ -57,7 +57,7 @@ public class STEnum {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STEnum other = (STEnum) o;
+		final STInterface other = (STInterface) o;
 		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
 	}
 
@@ -66,7 +66,7 @@ public class STEnum {
 		return java.util.Objects.hash(jsonObject.getString("uuid"));
 	}
 
-	public STEnum setName(String value) { 
+	public STInterface setName(String value) { 
 		jsonObject.put("name", value);
 		return this;
 	}
@@ -79,37 +79,9 @@ public class STEnum {
 		return jsonObject.getString("name", defaultValue);
 	}
 
-	public STEnum addValues(STEnumValue value) { 
-		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("values");
-		if (jsonArray == null) jsonObject.put("values", jsonArray = new io.vertx.core.json.JsonArray());
-		jsonArray.add(value.getJsonObject());
-		return this;
-	}
-
-	public java.util.stream.Stream<STEnumValue> getValues() { 
-		return jsonObject.getJsonArray("values", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STEnumValue((io.vertx.core.json.JsonObject) o));
-	}
-
-	public STEnum removeValues(STEnumValue value) { 
-		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("values", new io.vertx.core.json.JsonArray());
-		for (int i = 0; i < jsonArray.size(); i++)  { 
-			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
-			if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
-				jsonArray.remove(i);
-				return this;
-			}
-		}
-		return this;
-	}
-
-	public STEnum clearValues() { 
-		jsonObject.put("values", new io.vertx.core.json.JsonArray());
-		return this;
-	}
-
 
 	@Override
 	public java.lang.String toString() { 
-		return jsonObject.getString("name");
+		return jsonObject.encode();
 	}
 }

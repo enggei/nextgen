@@ -3,11 +3,11 @@ package nextgen.actions;
 public class DeleteSTInterface extends TransactionAction {
 
 
-   private final nextgen.st.domain.STInterface stInterface;
-   private final nextgen.st.domain.STGroupModel stGroup;
+   private final nextgen.st.model.STInterface stInterface;
+   private final nextgen.st.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public DeleteSTInterface(nextgen.st.domain.STInterface stInterface, nextgen.st.domain.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public DeleteSTInterface(nextgen.st.model.STInterface stInterface, nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Delete");
 		this.stInterface = stInterface;
 		this.stGroup = stGroup;

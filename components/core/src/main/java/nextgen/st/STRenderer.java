@@ -1,8 +1,8 @@
 package nextgen.st;
 
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STParameterKey;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STGroupModel;
+import nextgen.st.model.STParameterKey;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STArgumentKV;
 import nextgen.st.model.STModel;
@@ -27,7 +27,7 @@ public class STRenderer {
          mappers.add(new STMapper(stGroupModel));
    }
 
-   public void addGroupModel(nextgen.st.domain.STGroupModel stGroupModel) {
+   public void addGroupModel(nextgen.st.model.STGroupModel stGroupModel) {
       mappers.add(new nextgen.st.STRenderer.STMapper(stGroupModel));
    }
 

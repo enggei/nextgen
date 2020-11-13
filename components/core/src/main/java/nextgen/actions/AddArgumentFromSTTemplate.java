@@ -4,10 +4,10 @@ public class AddArgumentFromSTTemplate extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STParameter stParameter;
+   private final nextgen.st.model.STTemplate stTemplate;
 
-	public AddArgumentFromSTTemplate(String name, nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.domain.STTemplate stTemplate) {
+	public AddArgumentFromSTTemplate(String name, nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STTemplate stTemplate) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;

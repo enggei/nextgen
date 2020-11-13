@@ -3,9 +3,9 @@ package nextgen.actions;
 public class GenerateSTGroupAndNeo extends TransactionAction {
 
 
-   private final nextgen.st.domain.STGroupModel stGroup;
+   private final nextgen.st.model.STGroupModel stGroup;
 
-	public GenerateSTGroupAndNeo(nextgen.st.domain.STGroupModel stGroup) {
+	public GenerateSTGroupAndNeo(nextgen.st.model.STGroupModel stGroup) {
 		super("Generate STGroup and Neo");
 		this.stGroup = stGroup;
 	}

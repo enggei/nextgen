@@ -105,18 +105,18 @@ public class STGDirectory {
 		return jsonObject.getString("outputPath", defaultValue);
 	}
 
-	public STGDirectory addGroups(STGroupModel value) { 
+	public STGDirectory addGroups(nextgen.st.model.STGroupModel value) {
 		io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("groups");
 		if (jsonArray == null) jsonObject.put("groups", jsonArray = new io.vertx.core.json.JsonArray());
 		jsonArray.add(value.getJsonObject());
 		return this;
 	}
 
-	public java.util.stream.Stream<STGroupModel> getGroups() { 
-		return jsonObject.getJsonArray("groups", new io.vertx.core.json.JsonArray()).stream().map((o) -> new STGroupModel((io.vertx.core.json.JsonObject) o));
+	public java.util.stream.Stream<nextgen.st.model.STGroupModel> getGroups() {
+		return jsonObject.getJsonArray("groups", new io.vertx.core.json.JsonArray()).stream().map((o) -> new nextgen.st.model.STGroupModel((io.vertx.core.json.JsonObject) o));
 	}
 
-	public STGDirectory removeGroups(STGroupModel value) { 
+	public STGDirectory removeGroups(nextgen.st.model.STGroupModel value) {
 		final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("groups", new io.vertx.core.json.JsonArray());
 		for (int i = 0; i < jsonArray.size(); i++)  { 
 			final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);

@@ -861,12 +861,12 @@ public class STModelTreeTable extends JTable {
 
          private final String name;
          private final nextgen.st.model.STModel model;
-         private final nextgen.st.domain.STParameter stParameter;
+         private final nextgen.st.model.STParameter stParameter;
 
          private nextgen.st.model.STArgument argument;
          private String text;
 
-         public STValueElement(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument argument) {
+         public STValueElement(nextgen.st.model.STModel model, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument argument) {
             this.model = model;
             this.stParameter = stParameter;
             this.argument = argument;
@@ -894,10 +894,10 @@ public class STModelTreeTable extends JTable {
 
       private void addSTValues(nextgen.st.model.STModel model, java.util.List<STValueElement> stValues) {
 
-         final nextgen.st.domain.STTemplate stTemplate = appModel().db.getSTTemplate(model);
+         final nextgen.st.model.STTemplate stTemplate = appModel().db.getSTTemplate(model);
 
          stTemplate.getParameters()
-                   .filter(stParameter -> stParameter.getType().equals(nextgen.st.domain.STParameterType.SINGLE))
+                   .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
                    .filter(stParameter -> stParameter.getArgumentType() != null)
                    .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
                    .forEach(stParameter -> {

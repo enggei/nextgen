@@ -3,10 +3,10 @@ package nextgen.actions;
 public class AddTemplateModelToProject extends TransactionAction {
 
 
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final nextgen.st.model.STProject project;
 
-	public AddTemplateModelToProject(String name, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject project) {
+	public AddTemplateModelToProject(String name, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject project) {
       super(name);
       this.stTemplate = stTemplate;
       this.project = project;

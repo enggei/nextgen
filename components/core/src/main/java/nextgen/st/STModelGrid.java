@@ -1,8 +1,8 @@
 package nextgen.st;
 
-import nextgen.st.domain.STParameter;
-import nextgen.st.domain.STParameterType;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STParameter;
+import nextgen.st.model.STParameterType;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;
 import nextgen.st.model.STValue;

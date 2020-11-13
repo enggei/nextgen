@@ -215,8 +215,8 @@ public class STWorkspace {
 
 	static final String st = "STWorkspace(packageName,name,fields,constructorParameters,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import nextgen.st.domain.STGroupModel;\n" + 
-				"import nextgen.st.domain.STTemplate;\n" + 
+				"import nextgen.st.model.STGroupModel;\n" +
+				"import nextgen.st.model.STTemplate;\n" +
 				"import nextgen.st.model.STModel;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 

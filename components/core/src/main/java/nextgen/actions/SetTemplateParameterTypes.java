@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetTemplateParameterTypes extends TransactionAction {
 
 
-   private final nextgen.st.domain.STGroupModel stGroup;
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.st.model.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
 
-	public SetTemplateParameterTypes(nextgen.st.domain.STGroupModel stGroup, nextgen.st.domain.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public SetTemplateParameterTypes(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate stTemplate, javax.swing.JComponent owner) {
 		super("Set parameter types");
 		this.stGroup = stGroup;
 		this.stTemplate = stTemplate;

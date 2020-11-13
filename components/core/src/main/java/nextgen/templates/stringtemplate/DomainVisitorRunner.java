@@ -323,7 +323,7 @@ public class DomainVisitorRunner {
 				"\n" + 
 				"import nextgen.domains.meta.DomainEntity;\n" + 
 				"import nextgen.st.STRenderer;\n" + 
-				"import nextgen.st.domain.STGroupModel;\n" + 
+				"import nextgen.st.model.STGroupModel;\n" +
 				"import nextgen.st.model.STModelDB;\n" + 
 				"import org.neo4j.graphdb.*;\n" + 
 				"\n" + 

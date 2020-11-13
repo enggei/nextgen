@@ -4,10 +4,10 @@ public class AddArgumentFromArgumentType extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
+   private final nextgen.st.model.STParameter stParameter;
    private final javax.swing.JComponent owner;
 
-	public AddArgumentFromArgumentType(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, javax.swing.JComponent owner) {
+	public AddArgumentFromArgumentType(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, javax.swing.JComponent owner) {
 		super("Add");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
@@ -20,7 +20,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
-         final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = stModel.getArguments()
+         final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = stModel.getArguments()
                .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                .map(nextgen.st.model.STArgument::getValue)
                .filter(nextgen.st.model.STValue::hasType)
@@ -29,7 +29,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                .findFirst();
 
          if (stTemplate.isPresent()) {
-            final nextgen.st.domain.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());
+            final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModel(stTemplate.get());
             final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, stTemplate.get());
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
@@ -42,8 +42,8 @@ public class AddArgumentFromArgumentType extends TransactionAction {
 
       } else {
 
-         final nextgen.st.domain.STGroupModel stGroupModel = appModel().findSTGroupModelByTemplateUuid(stModel.getStTemplate());
-         final java.util.Optional<nextgen.st.domain.STTemplate> stTemplate = appModel()
+         final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroupModelByTemplateUuid(stModel.getStTemplate());
+         final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = appModel()
                .aggregateTemplates(stGroupModel)
                .filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))
                .findAny();
@@ -53,7 +53,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
          } else {
-            final java.util.Set<nextgen.st.domain.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
+            final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stGroupModel, interfaces.iterator().next());
@@ -68,7 +68,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                }
 
             } else {
-               final nextgen.st.domain.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);
+               final nextgen.st.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);
                if (stEnum != null) {
                   select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);

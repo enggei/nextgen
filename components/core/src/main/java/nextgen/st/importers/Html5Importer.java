@@ -3,9 +3,8 @@ package nextgen.st.importers;
 import nextgen.utils.FileUtil;
 import nextgen.st.STGenerator;
 import nextgen.st.STParser;
-import nextgen.st.domain.STGroupModel;
-import nextgen.st.domain.STJsonFactory;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STGroupModel;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STModelDB;
 
 import java.io.File;
@@ -30,8 +29,8 @@ public class Html5Importer extends BaseImporter {
         final String groupName = "Html5";
         final File stGroupFile = new File(templatesDir, groupName + ".json");
         final STGroupModel stGroupModel = stGroupFile.exists()
-                ? STJsonFactory.newSTGroupModel(stGroupFile)
-                : STJsonFactory.newSTGroupModel().setName(groupName).setDelimiter("~");
+                ? new STGroupModel(stGroupFile)
+                : new STGroupModel().setName(groupName).setDelimiter("~");
 
         final nextgen.st.parser.ParsedSTGroupModel parsed = parseResult.getParsed();
         parsed.getTemplates().forEach(oldTemplate -> {
@@ -63,7 +62,7 @@ public class Html5Importer extends BaseImporter {
                     .ifPresent(stTemplate -> {
                         final STTemplate elementTemplate = STModelDB.findSTTemplateByName(stGroupModel, oldTemplate.getName())
                                 .orElseGet(() -> {
-                                    final STTemplate newTemplate = STJsonFactory.newSTTemplate()
+                                    final STTemplate newTemplate = new STTemplate()
                                             .setName(oldTemplate.getName())
                                             .setText(oldTemplate.getText());
                                     stGroupModel.addTemplates(newTemplate);

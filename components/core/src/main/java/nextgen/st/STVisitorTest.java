@@ -21,7 +21,7 @@ public class STVisitorTest extends STVisitor {
    }
 
    @Override
-   protected void visitSingleSTModel(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STModel valueStModel) {
+   protected void visitSingleSTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STModel valueStModel) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
       delims.incrementAndGet();
       new STVisitorTest(presentationModel).visit(valueStModel);
@@ -29,17 +29,17 @@ public class STVisitorTest extends STVisitor {
    }
 
    @Override
-   protected void visitSinglePrimitive(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
+   protected void visitSinglePrimitive(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
    }
 
    @Override
-   protected void visitSingleEnum(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
+   protected void visitSingleEnum(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
    }
 
    @Override
-   protected void visitListSTModel(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STModel valueStModel) {
+   protected void visitListSTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STModel valueStModel) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
       delims.incrementAndGet();
       new STVisitorTest(presentationModel).visit(valueStModel);
@@ -47,17 +47,17 @@ public class STVisitorTest extends STVisitor {
    }
 
    @Override
-   protected void visitListPrimitive(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
+   protected void visitListPrimitive(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
    }
 
    @Override
-   protected void visitListEnum(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
+   protected void visitListEnum(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, String value) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()));
    }
 
    @Override
-   protected void visitKVEntrySTModel(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, nextgen.st.model.STModel kvSTModel) {
+   protected void visitKVEntrySTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, nextgen.st.model.STModel kvSTModel) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName())+ "." + stParameterKey.getName());
       delims.incrementAndGet();
       new STVisitorTest(presentationModel).visit(kvSTModel);
@@ -65,12 +65,12 @@ public class STVisitorTest extends STVisitor {
    }
 
    @Override
-   protected void visitKVEntryPrimitive(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, String kvValue) {
+   protected void visitKVEntryPrimitive(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, String kvValue) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName()) + "." + stParameterKey.getName());
    }
 
    @Override
-   protected void visitKVEntryEnum(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, String kvValue) {
+   protected void visitKVEntryEnum(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, nextgen.st.model.STArgumentKV stArgumentKV, String kvValue) {
       debug("on" + nextgen.utils.StringUtil.capitalize(stParameter.getName())+ "." + stParameterKey.getName());
    }
 

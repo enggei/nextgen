@@ -139,7 +139,7 @@ public class STAppPresentationModel {
       return db.findSTTemplateByUuid(stTemplate);
    }
 
-   public void forEachArgument(STTemplate stTemplate, STModel stModel, java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.domain.STParameter> consumer) {
+   public void forEachArgument(STTemplate stTemplate, STModel stModel, java.util.function.BiConsumer<nextgen.st.model.STArgument, nextgen.st.model.STParameter> consumer) {
       stTemplate
             .getParameters()
             .forEach(stParameter -> stModel
@@ -168,7 +168,7 @@ public class STAppPresentationModel {
       }
    }
 
-   public void delete(nextgen.st.domain.STGroupModel stGroup) {
+   public void delete(nextgen.st.model.STGroupModel stGroup) {
       stGroups.remove(stGroup);
       deleteSTGFile(stGroup.getName());
    }
@@ -293,7 +293,7 @@ public class STAppPresentationModel {
    }
 
    public STEnum newSTEnum(String name) {
-      return STJsonFactory.newSTEnum().setName(name);
+      return new nextgen.st.model.STEnum().setName(name);
    }
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
@@ -305,7 +305,7 @@ public class STAppPresentationModel {
    }
 
    public STGroupModel newSTGroupModel(String name) {
-      final nextgen.st.domain.STGroupModel stGroupModel = nextgen.st.domain.STJsonFactory.newSTGroupModel()
+      final nextgen.st.model.STGroupModel stGroupModel = new nextgen.st.model.STGroupModel()
             .setName(name)
             .setDelimiter(nextgen.st.STGenerator.DELIMITER);
       stGroups.add(stGroupModel);
@@ -314,7 +314,7 @@ public class STAppPresentationModel {
    }
 
    public STInterface newSTInterface(String name) {
-      return STJsonFactory.newSTInterface().setName(name);
+      return new nextgen.st.model.STInterface().setName(name);
    }
 
    public STModel newSTModel(Node node) {
@@ -329,7 +329,7 @@ public class STAppPresentationModel {
       return newSTModel(findSTGroup(stTemplate), stTemplate);
    }
 
-   public void newSTModel(nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject project) {
+   public void newSTModel(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject project) {
       final nextgen.st.model.STModel stModel = newSTModel(stTemplate);
       project.addModels(stModel);
    }
@@ -339,14 +339,16 @@ public class STAppPresentationModel {
       return stModel;
    }
 
-   public STModel newSTModel(STGroupModel stGroupModel, nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
+   public STModel newSTModel(STGroupModel stGroupModel, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STProject stProject) {
       final nextgen.st.model.STModel stModel = db.newSTModel(stGroupModel, stTemplate);
       stProject.addModels(stModel);
       return stModel;
    }
 
-   public nextgen.st.domain.STTemplate newSTTemplate(String name, String text, nextgen.st.domain.STGroupModel parent) {
-      final nextgen.st.domain.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(text);
+   public nextgen.st.model.STTemplate newSTTemplate(String name, String text, nextgen.st.model.STGroupModel parent) {
+      final nextgen.st.model.STTemplate stTemplate = new nextgen.st.model.STTemplate()
+            .setName(name)
+            .setText(text);
       parent.addTemplates(stTemplate);
       return stTemplate;
    }
@@ -456,7 +458,7 @@ public class STAppPresentationModel {
       return out.toString();
    }
 
-   public boolean sameArgumentValue(STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue model) {
+   public boolean sameArgumentValue(STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue model) {
       final java.util.concurrent.atomic.AtomicBoolean exists = new java.util.concurrent.atomic.AtomicBoolean(false);
       stModel.getArguments().filter(existing -> existing.getStParameter().equals(stParameter.getUuid()))
             .forEach(existing -> {
@@ -543,7 +545,7 @@ public class STAppPresentationModel {
    }
 
    public String tooltip(STModel model) {
-      final nextgen.st.domain.STTemplate stTemplate = db.getSTTemplate(model);
+      final nextgen.st.model.STTemplate stTemplate = db.getSTTemplate(model);
       return findSTGroup(stTemplate).getName() + "." + stTemplate.getName();
    }
 
@@ -564,7 +566,7 @@ public class STAppPresentationModel {
             });
    }
 
-   public nextgen.st.domain.STGroupModel findSTGroup(nextgen.st.domain.STTemplate model) {
+   public nextgen.st.model.STGroupModel findSTGroup(nextgen.st.model.STTemplate model) {
       return stRenderer.findSTGroupModel(model);
    }
 
@@ -572,25 +574,25 @@ public class STAppPresentationModel {
       return db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.st.model.STProject::getName));
    }
 
-   public String canvasLabel(nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel model) {
+   public String canvasLabel(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STModel model) {
       final StringBuilder out = new StringBuilder(stTemplate.getName() + " :\n");
       getArguments(stTemplate, model, (stParameter, stArgument) -> out.append("\n").append(stParameter.getName()));
       return out.toString();
    }
 
-   public void getArguments(nextgen.st.model.STModel model, java.util.function.BiConsumer<nextgen.st.domain.STParameter, nextgen.st.model.STArgument> consumer) {
+   public void getArguments(nextgen.st.model.STModel model, java.util.function.BiConsumer<nextgen.st.model.STParameter, nextgen.st.model.STArgument> consumer) {
       db.getSTTemplate(model)
             .getParameters()
-            .sorted(java.util.Comparator.comparing(nextgen.st.domain.STParameter::getName))
+            .sorted(java.util.Comparator.comparing(nextgen.st.model.STParameter::getName))
             .forEach(stParameter -> model.getArguments()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                   .filter(stArgument -> stArgument.getValue() != null)
                   .forEach(stArgument -> consumer.accept(stParameter, stArgument)));
    }
 
-   public void getArguments(nextgen.st.domain.STTemplate stTemplate, nextgen.st.model.STModel model, java.util.function.BiConsumer<nextgen.st.domain.STParameter, nextgen.st.model.STArgument> consumer) {
+   public void getArguments(nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STModel model, java.util.function.BiConsumer<nextgen.st.model.STParameter, nextgen.st.model.STArgument> consumer) {
       stTemplate.getParameters()
-            .sorted(java.util.Comparator.comparing(nextgen.st.domain.STParameter::getName))
+            .sorted(java.util.Comparator.comparing(nextgen.st.model.STParameter::getName))
             .forEach(stParameter -> model.getArguments()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
                   .forEach(stArgument -> consumer.accept(stParameter, stArgument)));
@@ -604,15 +606,15 @@ public class STAppPresentationModel {
       return db.newSTValue(value);
    }
 
-//   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, String value) {
+//   public void set(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, String value) {
 //      set(stModel, stParameter, db.newSTValue(value));
 //   }
 //
-//   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
+//   public void set(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STModel value) {
 //      set(stModel, stParameter, db.newSTValue(value));
 //   }
 //
-//   public void set(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
+//   public void set(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue value) {
 //
 //      stModel.getArguments()
 //             .filter(stArgument -> stArgument.getStParameter().equals(stParameter.getUuid()))
@@ -623,26 +625,26 @@ public class STAppPresentationModel {
 //      stModel.addArguments(stArgument);
 //   }
 //
-//   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STModel value) {
+//   public void add(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STModel value) {
 //      add(stModel, stParameter, db.newSTValue(value));
 //   }
 //
-//   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, String value) {
+//   public void add(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, String value) {
 //      add(stModel, stParameter, db.newSTValue(value));
 //   }
 //
-//   public void add(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STValue value) {
+//   public void add(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue value) {
 //      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
 //      stModel.addArguments(stArgument);
 //   }
 
-   public java.util.Optional<nextgen.st.domain.STGroupModel> findSTGroup(String name) {
+   public java.util.Optional<nextgen.st.model.STGroupModel> findSTGroup(String name) {
       return stGroups.stream()
             .filter(groupModel -> groupModel.getName().toLowerCase().equals(name))
             .findAny();
    }
 
-   public java.util.stream.Stream<nextgen.st.domain.STTemplate> aggregateTemplates(nextgen.st.domain.STGroupModel stGroup) {
+   public java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
       final List<STTemplate> templates = new java.util.ArrayList<>();
       stGroup.getTemplates().forEach(stTemplate -> {
          aggregate(stTemplate, templates);
@@ -651,28 +653,28 @@ public class STAppPresentationModel {
       return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
    }
 
-   private void aggregate(nextgen.st.domain.STTemplate stTemplate, java.util.List<nextgen.st.domain.STTemplate> templates) {
+   private void aggregate(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STTemplate> templates) {
       templates.add(stTemplate);
       stTemplate.getChildren().forEach(stTemplate1 -> aggregate(stTemplate1, templates));
    }
 
-   public java.util.stream.Stream<nextgen.st.domain.STGroupModel> getSTGroups() {
+   public java.util.stream.Stream<nextgen.st.model.STGroupModel> getSTGroups() {
       return stGroups.stream().sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
    }
 
-   public nextgen.st.domain.STGroupModel findSTGroupModel(nextgen.st.domain.STTemplate stTemplate) {
+   public nextgen.st.model.STGroupModel findSTGroupModel(nextgen.st.model.STTemplate stTemplate) {
       return stRenderer.findSTGroupModel(stTemplate);
    }
 
-   public nextgen.st.domain.STGroupModel findSTGroupModelByTemplateUuid(String stTemplate) {
+   public nextgen.st.model.STGroupModel findSTGroupModelByTemplateUuid(String stTemplate) {
       return stRenderer.findSTGroupModelByTemplate(stTemplate);
    }
 
-   public nextgen.st.domain.STTemplate findSTTemplate(nextgen.st.model.STModel model) {
+   public nextgen.st.model.STTemplate findSTTemplate(nextgen.st.model.STModel model) {
       return findSTTemplateByUuid(model.getStTemplate());
    }
 
-   public boolean isBoolean(nextgen.st.domain.STParameter model) {
+   public boolean isBoolean(nextgen.st.model.STParameter model) {
       return model.getName().startsWith("is") || model.getName().startsWith("has");
    }
 
@@ -682,7 +684,7 @@ public class STAppPresentationModel {
       return new String[0];
    }
 
-   public nextgen.st.domain.STTemplate getSTTemplate(nextgen.st.model.STModel stModel) {
+   public nextgen.st.model.STTemplate getSTTemplate(nextgen.st.model.STModel stModel) {
       return findSTTemplateByUuid(stModel.getStTemplate());
    }
 
@@ -692,6 +694,10 @@ public class STAppPresentationModel {
 
    public String getSourceOutputPackage() {
       return "tmp";
+   }
+
+   public nextgen.st.model.STEnumValue newSTEnumValue() {
+      return new nextgen.st.model.STEnumValue();
    }
 
    public static final class CompilationResult {

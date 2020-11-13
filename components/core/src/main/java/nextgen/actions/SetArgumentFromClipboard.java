@@ -4,9 +4,9 @@ public class SetArgumentFromClipboard extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
+   private final nextgen.st.model.STParameter stParameter;
 
-	public SetArgumentFromClipboard(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter) {
+	public SetArgumentFromClipboard(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter) {
 		super("Set from Clipboard");
 		this.stModel = stModel;
 		this.stParameter = stParameter;

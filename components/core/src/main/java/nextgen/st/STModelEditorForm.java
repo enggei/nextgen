@@ -1,7 +1,7 @@
 package nextgen.st;
 
-import nextgen.st.domain.STParameterType;
-import nextgen.st.domain.STTemplate;
+import nextgen.st.model.STParameterType;
+import nextgen.st.model.STTemplate;
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;
 
@@ -86,12 +86,12 @@ public class STModelEditorForm extends JPanel {
 
       private final String name;
       private final nextgen.st.model.STModel model;
-      private final nextgen.st.domain.STParameter stParameter;
+      private final nextgen.st.model.STParameter stParameter;
 
       private nextgen.st.model.STArgument argument;
       private String text;
 
-      public STValueElement(nextgen.st.model.STModel model, nextgen.st.domain.STTemplate stTemplate, nextgen.st.domain.STParameter stParameter, nextgen.st.model.STArgument argument) {
+      public STValueElement(nextgen.st.model.STModel model, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument argument) {
          this.model = model;
          this.stParameter = stParameter;
          this.argument = argument;

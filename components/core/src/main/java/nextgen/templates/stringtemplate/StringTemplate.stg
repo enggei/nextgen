@@ -4,7 +4,7 @@ DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisit
 
 import nextgen.domains.meta.DomainEntity;
 import nextgen.st.STRenderer;
-import nextgen.st.domain.STGroupModel;
+import nextgen.st.model.STGroupModel;
 import nextgen.st.model.STModelDB;
 import org.neo4j.graphdb.*;
 

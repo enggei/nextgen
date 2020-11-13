@@ -1076,8 +1076,6 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
             .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
-
-
       final Entity stgDirectory = DomainPatterns
             .newEntity("STGDirectory")
             .addRelations(DomainPatterns.newStringField("path"))
@@ -1330,9 +1328,8 @@ public class NextgenProject {
       final NeoFactory neoFactory = neo.getValue0();
       final java.util.Map<nextgen.templates.domain.Entity, NodeWrapper> nodeWrapperMap = neo.getValue1();
 
-      for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
+      for (NodeWrapper nodeWrapper : nodeWrapperMap.values())
          writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
-      }
 
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
    }

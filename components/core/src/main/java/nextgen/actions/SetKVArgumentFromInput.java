@@ -5,10 +5,10 @@ public class SetKVArgumentFromInput extends TransactionAction {
 
    private final nextgen.st.model.STModel stModel;
    private final nextgen.st.model.STArgument stArgument;
-   private final nextgen.st.domain.STParameterKey stParameterKey;
+   private final nextgen.st.model.STParameterKey stParameterKey;
    private final javax.swing.JComponent owner;
 
-	public SetKVArgumentFromInput(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.domain.STParameterKey stParameterKey, javax.swing.JComponent owner) {
+	public SetKVArgumentFromInput(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, javax.swing.JComponent owner) {
 		super("Set " + stParameterKey.getName() + " from Input");
 		this.stModel = stModel;
 		this.stArgument = stArgument;

@@ -4,10 +4,10 @@ public class AddArgumentFromInput extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.domain.STParameter stParameter;
+   private final nextgen.st.model.STParameter stParameter;
    private final javax.swing.JComponent owner;
 
-	public AddArgumentFromInput(nextgen.st.model.STModel stModel, nextgen.st.domain.STParameter stParameter, javax.swing.JComponent owner) {
+	public AddArgumentFromInput(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, javax.swing.JComponent owner) {
 		super("Add from Input");
 		this.stModel = stModel;
 		this.stParameter = stParameter;

@@ -3,9 +3,9 @@ package nextgen.actions;
 public class NewSTModelAction extends TransactionAction {
 
 
-   private final nextgen.st.domain.STTemplate stTemplate;
+   private final nextgen.st.model.STTemplate stTemplate;
 
-	public NewSTModelAction(nextgen.st.domain.STTemplate stTemplate) {
+	public NewSTModelAction(nextgen.st.model.STTemplate stTemplate) {
 		super("New instance");
 		this.stTemplate = stTemplate;
 	}
