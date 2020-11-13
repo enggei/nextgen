@@ -1216,7 +1216,6 @@ public class NextgenProject {
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
    }
 
-
    /**
     * generateSTModelDomain
     */
@@ -1336,9 +1335,6 @@ public class NextgenProject {
       }
 
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
-
-
-
    }
 
    /**
