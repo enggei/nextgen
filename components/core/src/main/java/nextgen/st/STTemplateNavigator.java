@@ -721,6 +721,11 @@ public class STTemplateNavigator extends JPanel {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
+	public java.util.stream.Stream<nextgen.st.model.STTemplate> getSelectedSTTemplates() {
+		return getSelectedNodes()
+				.filter(baseTreeNode -> baseTreeNode.getModel() instanceof nextgen.st.model.STTemplate)
+				.map(baseTreeNode -> (nextgen.st.model.STTemplate) baseTreeNode.getModel());
+	}
 
 	class STTemplateNavigatorTreeModel extends DefaultTreeModel {
 

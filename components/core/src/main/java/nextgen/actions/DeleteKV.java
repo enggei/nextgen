@@ -15,13 +15,13 @@ public class DeleteKV extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       confirm(owner, "Delete", unused ->
-            argumentKV.getIncomingKeyValuesSTArgument().findFirst().ifPresent(stArgument -> {
-               stArgument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> {
-                  final String uuid = argumentKV.getUuid();
-                  stArgument.removeKeyValues(argumentKV);
-                  nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
-               });
-            }));
+            argumentKV.getIncomingKeyValuesSTArgument()
+                  .findFirst()
+                  .ifPresent(stArgument -> stArgument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> {
+                     final String uuid = argumentKV.getUuid();
+                     stArgument.removeKeyValues(argumentKV);
+                     nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+                  })));
    }
 
 }

@@ -18,7 +18,7 @@ public class AddChildToTemplate extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "Name", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s)
             .ifPresent(name -> {
-               final nextgen.st.model.STTemplate newTemplate = appModel().newSTTemplate(name, "", stGroup);
+               final nextgen.st.model.STTemplate newTemplate = appModel().db.newSTTemplate().setName(name).setText("");
                stTemplate.addChildren(newTemplate);
                nextgen.events.NewSTTemplateChild.post(newTemplate, stTemplate);
             }));

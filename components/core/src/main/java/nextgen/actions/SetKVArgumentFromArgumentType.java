@@ -19,11 +19,12 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       final String argumentType = stParameterKey.getArgumentType();
+      final nextgen.st.model.STParameter stParameter = stArgument.getStParameter();
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
          final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = stModel.getArguments()
-               .filter(stArgument -> stArgument.getStParameter().equals(stParameterKey))
+               .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                .map(nextgen.st.model.STArgument::getValue)
                .filter(nextgen.st.model.STValue::hasType)
                .filter(stValue -> stValue.getType() == nextgen.st.model.STValueType.STMODEL)
@@ -32,7 +33,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             input(owner, "New value", s -> {
@@ -51,19 +52,19 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   removeExisting();
-                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(interfaces.iterator().next());
+                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( interfaces.iterator().next());
                   addValue(appModel().db.newSTValue(stTemplateModel));
                } else {
                   select(owner, interfaces, value -> {
                      removeExisting();
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( value);
                      addValue(appModel().db.newSTValue(stTemplateModel));
                   });   
                }

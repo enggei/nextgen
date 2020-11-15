@@ -2,8 +2,6 @@ package nextgen.actions;
 
 public class AddFileSinkToSTModels extends TransactionAction {
 
-   private static final java.util.concurrent.atomic.AtomicInteger fileTypeIndex = new java.util.concurrent.atomic.AtomicInteger(0);
-   private static final java.util.concurrent.atomic.AtomicInteger pathIndex = new java.util.concurrent.atomic.AtomicInteger(0);
 
    private final nextgen.st.model.STTemplate stTemplate;
    private final java.util.List<nextgen.st.model.STModel> stModels;

@@ -19,7 +19,7 @@ public class RemoveInterfaceFromSTTemplate extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       confirm(owner, "Remove", unused -> {
-//         stTemplate.removeImplements(interfaceName);
+         stTemplate.removeImplements(interfaceName);
          nextgen.events.STTemplateInterfaceRemoved.post(stGroup, stTemplate, interfaceName);
       });
    }

@@ -29,7 +29,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                .findFirst();
 
          if (stTemplate.isPresent()) {
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
          } else {
@@ -48,19 +48,19 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                .findAny();
 
          if (stTemplate.isPresent()) {
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
          } else {
             final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
-                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(interfaces.iterator().next());
+                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( interfaces.iterator().next());
                   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                   addValue(stValue);
                } else {
                   select(owner, interfaces, value -> {
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( value);
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                      addValue(stValue);
                   });

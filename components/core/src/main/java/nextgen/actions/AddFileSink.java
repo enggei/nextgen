@@ -4,12 +4,10 @@ public class AddFileSink extends TransactionAction {
 
 
    private final nextgen.st.model.STModel stModel;
-   private final javax.swing.JComponent owner;
 
-	public AddFileSink(nextgen.st.model.STModel stModel, javax.swing.JComponent owner) {
+	public AddFileSink(nextgen.st.model.STModel stModel) {
 		super("Add File Sink");
 		this.stModel = stModel;
-		this.owner = owner;
 	}
 
    @Override

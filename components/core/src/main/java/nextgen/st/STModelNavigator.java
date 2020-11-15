@@ -518,6 +518,19 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				final java.util.Set<nextgen.st.model.STModel> selectedSTModels = getSelectedSTModels().collect(java.util.stream.Collectors.toSet());
+				final java.util.Set<nextgen.st.model.STModel> projectSTModels = appModel().aggregateModels(getModel());
+				selectedSTModels.removeAll(projectSTModels);
+
+				final java.util.Set<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toSet());
+				final java.util.Set<nextgen.st.model.STValue> projectSTValues = getModel().getValues().collect(java.util.stream.Collectors.toSet());
+				selectedSTValues.removeAll(projectSTValues);
+
+				for (nextgen.st.model.STModel selected : selectedSTModels) 
+					actions.add(new nextgen.actions.AddModelToProject(getModel(), selected));
+
+				for (nextgen.st.model.STValue selected : selectedSTValues) 
+					actions.add(new nextgen.actions.AddValueToProject(getModel(), selected));
 				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), tree));
 				actions.add(new nextgen.actions.AddMultipleValuesToProject(getModel(), tree));
 				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));
@@ -795,8 +808,9 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.STModelToClipboard(getModel()));
 				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
-				actions.add(new nextgen.actions.AddFileSink(getModel(), tree));
+				actions.add(new nextgen.actions.AddFileSink(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.GenerateSource(getModel()));
 				actions.add(new nextgen.actions.OpenSTModelAction(getModel()));
@@ -950,11 +964,15 @@ public class STModelNavigator extends JPanel {
 										.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))
 										.collect(java.util.stream.Collectors.toList());
 
+				final java.util.List<nextgen.st.model.STTemplate> stTemplates = appModel().getWorkspace().getTemplateNavigator().getSelectedSTTemplates().collect(java.util.stream.Collectors.toList());
+
 				switch (getModel().getType()) {
 					case SINGLE:
 						if (stModelUuid != null) actions.add(new nextgen.actions.SetArgumentFromSTModelUuid("Set " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
+						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTTemplate("Set New " + stNode.getName(), stModel, getModel(), stNode)));
+						actions.add(new nextgen.actions.SetArgumentFromArgumentType(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.SetArgumentFromClipboard(stModel, getModel()));
 						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
@@ -963,6 +981,7 @@ public class STModelNavigator extends JPanel {
 						if (stModelUuid != null) actions.add(new nextgen.actions.AddArgumentFromSTModelUuid("Add " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
+						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.AddArgumentFromClipboard(stModel, getModel()));
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), tree));
@@ -1333,9 +1352,11 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				getParentNode(STModelTreeNode.class).ifPresent(parent -> {
+					getSelectedSTModels().forEach(stModel -> actions.add(new nextgen.actions.SetKVArgumentFromSTModel(parent.getModel(), stArgument, stParameterKey, stModel)));
+					getSelectedSTValues().forEach(stValue -> actions.add(new nextgen.actions.SetKVArgumentFromSTValue(parent.getModel(), stArgument, stParameterKey, stValue)));
 					actions.add(new nextgen.actions.SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, tree));
 					actions.add(new nextgen.actions.SetKVArgumentFromClipboard(parent.getModel(), stArgument, stParameterKey));
-				} );
+				});
 				actions.add(new nextgen.actions.DeleteKV(getModel(), tree));
 			});
 
@@ -1559,10 +1580,10 @@ public class STModelNavigator extends JPanel {
 	}
 
 	public java.util.stream.Stream<nextgen.st.model.STModel> getSelectedSTModels() {
-			return getSelectedNodes()
-					.filter(baseTreeNode -> baseTreeNode.getModel() instanceof nextgen.st.model.STModel)
-					.map(baseTreeNode -> (nextgen.st.model.STModel) baseTreeNode.getModel());
-		}
+		return getSelectedNodes()
+				.filter(baseTreeNode -> baseTreeNode.getModel() instanceof nextgen.st.model.STModel)
+				.map(baseTreeNode -> (nextgen.st.model.STModel) baseTreeNode.getModel());
+	}
 
 	public java.util.stream.Stream<nextgen.st.model.STValue> getSelectedSTValues() {
 			return getSelectedNodes()

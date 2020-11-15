@@ -64,6 +64,11 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTProjectTreeNodeClicked(nextgen.events.ModelNavigatorSTProjectTreeNodeClicked event) {
+		getValueGrid();
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTInterfaceTreeNodeClicked(nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked event) {
 		getSTEditor(event.stGroup).setSTInterface(event.stInterface);
 	}

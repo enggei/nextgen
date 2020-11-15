@@ -195,8 +195,7 @@ public class STEditor extends JPanel {
             return;
         }
 
-        SwingUtilities.invokeLater(() -> {
-
+        appModel().doLaterInTransaction(transaction -> {
             txtEditor.setBorder(defaultBorder);
 
             final String text = txtEditor.getText().trim();

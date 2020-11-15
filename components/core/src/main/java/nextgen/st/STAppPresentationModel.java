@@ -400,7 +400,7 @@ public class STAppPresentationModel {
 
    public String render(STValue stValue, int maxLength) {
       String s = render(stValue);
-      return s==null ? null : s.substring(0, Math.min(s.length(), maxLength));
+      return s == null ? null : s.substring(0, Math.min(s.length(), maxLength));
    }
 
    public String render(STArgument stArgument) {
@@ -654,6 +654,35 @@ public class STAppPresentationModel {
 
    public nextgen.st.model.STEnumValue newSTEnumValue() {
       return db.newSTEnumValue();
+   }
+
+   public Set<nextgen.st.model.STModel> aggregateModels(nextgen.st.model.STProject stProject) {
+
+      java.util.Set<nextgen.st.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stProject.getModels().forEach(stModel -> {
+         models.add(stModel);
+         models.addAll(aggregateModels(stModel));
+      });
+
+      return models;
+   }
+
+   private java.util.Set<nextgen.st.model.STModel> aggregateModels(nextgen.st.model.STModel stModel) {
+      java.util.Set<nextgen.st.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stModel.getArguments().forEach(stArgument -> {
+         final nextgen.st.model.STValue value = stArgument.getValue();
+         if (value == null) return;
+
+         if (nextgen.st.model.STValueType.STMODEL.equals(value.getType())) {
+            final nextgen.st.model.STModel valueSTModel = value.getStModel();
+            models.add(valueSTModel);
+            models.addAll(aggregateModels(valueSTModel));
+         }
+      });
+
+      return models;
    }
 
    public static final class CompilationResult {

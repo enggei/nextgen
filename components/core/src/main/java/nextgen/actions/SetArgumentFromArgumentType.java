@@ -51,7 +51,7 @@ public class SetArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
          } else {
@@ -59,13 +59,13 @@ public class SetArgumentFromArgumentType extends TransactionAction {
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   removeExisting();
-                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(interfaces.iterator().next());
+                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( interfaces.iterator().next());
                   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                   addValue(stValue);
                } else {
                   select(owner, interfaces, value -> {
                      removeExisting();
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel(value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( value);
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                      addValue(stValue);
                   });   
