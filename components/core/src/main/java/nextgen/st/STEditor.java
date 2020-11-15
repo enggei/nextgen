@@ -30,15 +30,17 @@ public class STEditor extends JPanel {
     private final Color errorColor = Color.decode("#e66101");
     private final Border defaultBorder = txtEditor.getBorder();
 
-    nextgen.st.model.STGroupModel stGroupModel;
-    private nextgen.st.model.STTemplate stTemplate;
+    private final nextgen.st.model.STGroupModel stGroupModel;
+    private final String delimiter;
 
+    private nextgen.st.model.STTemplate stTemplate;
     private String startText;
 
     public STEditor(nextgen.st.model.STGroupModel stGroupModel) {
         super(new BorderLayout());
 
         this.stGroupModel = stGroupModel;
+        this.delimiter = stGroupModel.getDelimiter();
         this.infoPanel = new STEditorInfoPanel();
         final JPopupMenu pop = this.txtEditor.getPopupMenu();
         pop.addSeparator();
@@ -462,6 +464,10 @@ public class STEditor extends JPanel {
     }
 
     private String delim(String expression) {
-        return stGroupModel.getDelimiter() + expression + stGroupModel.getDelimiter();
+        return getDelimiter() + expression + getDelimiter();
+    }
+
+    private String getDelimiter() {
+        return delimiter;
     }
 }
