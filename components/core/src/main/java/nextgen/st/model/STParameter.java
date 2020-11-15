@@ -133,9 +133,7 @@ public class STParameter {
 
 	public STParameter removeKeys(STParameterKey dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keys).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -205,10 +203,7 @@ public class STParameter {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
-		if (node.hasProperty("argumentType")) jsonObject.put("argumentType", node.getProperty("argumentType"));
 		final io.vertx.core.json.JsonArray _keys = new io.vertx.core.json.JsonArray();
 		getKeys().forEach(element -> _keys.add(element.toJsonObject()));
 		if (!_keys.isEmpty()) jsonObject.put("keys", _keys);
@@ -217,9 +212,6 @@ public class STParameter {
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

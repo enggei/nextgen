@@ -195,9 +195,7 @@ public class STGroupModel {
 
 	public STGroupModel removeTemplates(STTemplate dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -226,9 +224,7 @@ public class STGroupModel {
 
 	public STGroupModel removeInterfaces(STInterface dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _interfaces).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -257,9 +253,7 @@ public class STGroupModel {
 
 	public STGroupModel removeEnums(STEnum dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _enums).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -291,11 +285,6 @@ public class STGroupModel {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
-		if (node.hasProperty("delimiter")) jsonObject.put("delimiter", node.getProperty("delimiter"));
-		if (node.hasProperty("icon")) jsonObject.put("icon", node.getProperty("icon"));
-		if (node.hasProperty("tags")) jsonObject.put("tags", node.getProperty("tags"));
 		final io.vertx.core.json.JsonArray _templates = new io.vertx.core.json.JsonArray();
 		getTemplates().forEach(element -> _templates.add(element.toJsonObject()));
 		if (!_templates.isEmpty()) jsonObject.put("templates", _templates);
@@ -312,9 +301,6 @@ public class STGroupModel {
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

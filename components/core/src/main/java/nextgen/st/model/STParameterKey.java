@@ -146,16 +146,10 @@ public class STParameterKey {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
-		if (node.hasProperty("argumentType")) jsonObject.put("argumentType", node.getProperty("argumentType"));
 		return jsonObject;
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

@@ -140,12 +140,13 @@ public class STTemplate {
 		return this;
 	}
 
-public STTemplate removeImplements(String value) {
-java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false)
-		.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
-		.forEach(org.neo4j.graphdb.Relationship::delete);
-return this;
-}
+	public STTemplate removeImplements(String value) { 
+		if (value == null) return this;
+		java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false)
+			.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
+			.forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
 
 	private static final org.neo4j.graphdb.RelationshipType _parameters = org.neo4j.graphdb.RelationshipType.withName("parameters");
 
@@ -167,9 +168,7 @@ return this;
 
 	public STTemplate removeParameters(STParameter dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _parameters).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -196,11 +195,9 @@ return this;
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
 	}
 
-	public STTemplate removeChildren(STTemplate dst) {
+	public STTemplate removeChildren(STTemplate dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _children).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -244,9 +241,6 @@ return this;
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
-		if (node.hasProperty("text")) jsonObject.put("text", node.getProperty("text"));
 		final io.vertx.core.json.JsonArray _parameters = new io.vertx.core.json.JsonArray();
 		getParameters().forEach(element -> _parameters.add(element.toJsonObject()));
 		if (!_parameters.isEmpty()) jsonObject.put("parameters", _parameters);
@@ -263,14 +257,10 @@ return this;
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();
 
 	}
-
 
 }

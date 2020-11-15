@@ -7,8 +7,8 @@ public class NodeToJsonObject {
 
 	private java.util.List<java.util.Map<String, Object>> _primitiveList = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _refList = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _refs = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _refList = new java.util.ArrayList<>();
 
 	NodeToJsonObject(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,8 +23,8 @@ public class NodeToJsonObject {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("nodeToJsonObject");
 		for (java.util.Map<String, Object> map : _primitiveList) st.addAggr("primitiveList.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _refs) st.addAggr("refs.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _refList) st.addAggr("refList.{name}", map.get("name"));
-		for (java.util.Map<String, Object> map : _refs) st.addAggr("refs.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -114,6 +114,61 @@ public class NodeToJsonObject {
 
 	}  
 
+	public NodeToJsonObject addRefs(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._refs.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRefs() {
+		return this._refs;
+	}
+
+	public NodeToJsonObject addRefs(NodeToJsonObject_Refs value) {
+		return addRefs(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<NodeToJsonObject_Refs> streamRefs() {
+		return this._refs.stream().map(NodeToJsonObject_Refs::new);
+	}
+
+	public java.util.List<Object> getRefs_Type() {
+		return streamRefs().map(NodeToJsonObject_Refs::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRefs_Name() {
+		return streamRefs().map(NodeToJsonObject_Refs::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class NodeToJsonObject_Refs {
+
+		Object _type;
+		Object _name;
+
+		public NodeToJsonObject_Refs(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private NodeToJsonObject_Refs(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
+
 	public NodeToJsonObject addRefList(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -156,61 +211,6 @@ public class NodeToJsonObject {
 
 	}  
 
-	public NodeToJsonObject addRefs(Object _name, Object _type) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("type", _type);
-		this._refs.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getRefs() {
-		return this._refs;
-	}
-
-	public NodeToJsonObject addRefs(NodeToJsonObject_Refs value) {
-		return addRefs(value._name, value._type);
-	}
-
-	public java.util.stream.Stream<NodeToJsonObject_Refs> streamRefs() {
-		return this._refs.stream().map(NodeToJsonObject_Refs::new);
-	}
-
-	public java.util.List<Object> getRefs_Name() {
-		return streamRefs().map(NodeToJsonObject_Refs::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getRefs_Type() {
-		return streamRefs().map(NodeToJsonObject_Refs::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class NodeToJsonObject_Refs {
-
-		Object _name;
-		Object _type;
-
-		public NodeToJsonObject_Refs(Object _name, Object _type) {
-			this._name = _name;
-			this._type = _type;
-		}
-
-		private NodeToJsonObject_Refs(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._type = (Object) map.get("type");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-	}  
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -224,7 +224,7 @@ public class NodeToJsonObject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "nodeToJsonObject(primitiveList,properties,refList,refs) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {\n" + 
+	static final String st = "nodeToJsonObject(primitiveList,properties,refs,refList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {\n" + 
 				"	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();\n" + 
 				"	~properties:{it|if (node.hasProperty(\"~it.name~\")) jsonObject.put(\"~it.name~\", node.getProperty(\"~it.name~\"));};separator=\"\\n\"~\n" + 
 				"~refs:{it|\n" + 

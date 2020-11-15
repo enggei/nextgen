@@ -105,9 +105,7 @@ public class STEnum {
 
 	public STEnum removeValues(STEnumValue dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
@@ -143,8 +141,6 @@ public class STEnum {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("name")) jsonObject.put("name", node.getProperty("name"));
 		final io.vertx.core.json.JsonArray _values = new io.vertx.core.json.JsonArray();
 		getValues().forEach(element -> _values.add(element.toJsonObject()));
 		if (!_values.isEmpty()) jsonObject.put("values", _values);
@@ -153,9 +149,6 @@ public class STEnum {
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

@@ -737,7 +737,6 @@ public class DomainPatterns extends DomainST {
                                                            .setClassName(entityName)
                                                            .setType(getSimpleName(o.getDst()))
                                                            .setName(o.getName()));
-               nodeToJsonObject.addProperties(o.getName());
                break;
             }
             case PRIM_LIST: {

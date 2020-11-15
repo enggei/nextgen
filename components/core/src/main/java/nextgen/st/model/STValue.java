@@ -192,8 +192,6 @@ public class STValue {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("value")) jsonObject.put("value", node.getProperty("value"));
 		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
 		final STModel _stModel = getStModel();
 		if (_stModel != null) jsonObject.put("stModel", _stModel.toJsonObject());
@@ -202,9 +200,6 @@ public class STValue {
 	}
 
 	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

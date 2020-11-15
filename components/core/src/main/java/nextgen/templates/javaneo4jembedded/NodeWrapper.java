@@ -9,7 +9,7 @@ public class NodeWrapper {
 	private String _name;
 	private Object _package;
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<Accessor> _accessors = new java.util.ArrayList<>();
+	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	NodeWrapper(org.stringtemplate.v4.STGroup stGroup) {
@@ -127,22 +127,22 @@ public class NodeWrapper {
 		return this._methods;
 	} 
 
-	public NodeWrapper addAccessors(Accessor value) {
+	public NodeWrapper addAccessors(Object value) {
 		this._accessors.add(value);
 		return this;
 	}
 
-	public NodeWrapper setAccessors(Accessor[] value) {
+	public NodeWrapper setAccessors(Object[] value) {
 		this._accessors.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public NodeWrapper setAccessors(java.util.Collection<Accessor> values) {
+	public NodeWrapper setAccessors(java.util.Collection<Object> values) {
 		this._accessors.addAll(values);
 		return this;
 	}
 
-	public NodeWrapper removeAccessors(Accessor value) {
+	public NodeWrapper removeAccessors(Object value) {
 		this._accessors.remove(value);
 		return this;
 	}
@@ -152,7 +152,7 @@ public class NodeWrapper {
 		return this;
 	}
 
-	public java.util.List<Accessor> getAccessors() {
+	public java.util.List<Object> getAccessors() {
 		return this._accessors;
 	} 
 

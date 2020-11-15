@@ -82,7 +82,7 @@ public class STModelNeoFactory {
 	}
 
 	public STGroupModel findSTGroupModelByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STGroupModelLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
@@ -96,7 +96,7 @@ public class STModelNeoFactory {
 	}
 
 	public STGroupModel findSTGroupModelByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STGroupModelLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
@@ -110,7 +110,7 @@ public class STModelNeoFactory {
 	}
 
 	public STGroupModel findSTGroupModelByDelimiter(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STGroupModelLabel, "delimiter", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "delimiter", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
@@ -124,7 +124,7 @@ public class STModelNeoFactory {
 	}
 
 	public STGroupModel findSTGroupModelByIcon(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STGroupModelLabel, "icon", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "icon", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
@@ -138,7 +138,7 @@ public class STModelNeoFactory {
 	}
 
 	public STGroupModel findSTGroupModelByTags(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STGroupModelLabel, "tags", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "tags", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
@@ -171,7 +171,7 @@ public class STModelNeoFactory {
 	}
 
 	public STTemplate findSTTemplateByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STTemplateLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STTemplateLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTTemplate(node);
 	}
 
@@ -185,7 +185,7 @@ public class STModelNeoFactory {
 	}
 
 	public STTemplate findSTTemplateByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STTemplateLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STTemplateLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTTemplate(node);
 	}
 
@@ -199,7 +199,7 @@ public class STModelNeoFactory {
 	}
 
 	public STTemplate findSTTemplateByText(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STTemplateLabel, "text", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STTemplateLabel, "text", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTTemplate(node);
 	}
 
@@ -232,7 +232,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameter findSTParameterByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameter(node);
 	}
 
@@ -246,7 +246,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameter findSTParameterByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameter(node);
 	}
 
@@ -260,7 +260,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameter findSTParameterByType(STParameterType value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterLabel, "type", value.name());
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterLabel, "type", value.name()).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameter(node);
 	}
 
@@ -274,7 +274,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameter findSTParameterByArgumentType(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterLabel, "argumentType", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterLabel, "argumentType", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameter(node);
 	}
 
@@ -307,7 +307,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameterKey findSTParameterKeyByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterKeyLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterKeyLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameterKey(node);
 	}
 
@@ -321,7 +321,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameterKey findSTParameterKeyByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterKeyLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterKeyLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameterKey(node);
 	}
 
@@ -335,7 +335,7 @@ public class STModelNeoFactory {
 	}
 
 	public STParameterKey findSTParameterKeyByArgumentType(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STParameterKeyLabel, "argumentType", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STParameterKeyLabel, "argumentType", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTParameterKey(node);
 	}
 
@@ -368,7 +368,7 @@ public class STModelNeoFactory {
 	}
 
 	public STInterface findSTInterfaceByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STInterfaceLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTInterface(node);
 	}
 
@@ -382,7 +382,7 @@ public class STModelNeoFactory {
 	}
 
 	public STInterface findSTInterfaceByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STInterfaceLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTInterface(node);
 	}
 
@@ -415,7 +415,7 @@ public class STModelNeoFactory {
 	}
 
 	public STEnum findSTEnumByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STEnumLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTEnum(node);
 	}
 
@@ -429,7 +429,7 @@ public class STModelNeoFactory {
 	}
 
 	public STEnum findSTEnumByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STEnumLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTEnum(node);
 	}
 
@@ -462,7 +462,7 @@ public class STModelNeoFactory {
 	}
 
 	public STEnumValue findSTEnumValueByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STEnumValueLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTEnumValue(node);
 	}
 
@@ -476,7 +476,7 @@ public class STModelNeoFactory {
 	}
 
 	public STEnumValue findSTEnumValueByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STEnumValueLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTEnumValue(node);
 	}
 
@@ -490,7 +490,7 @@ public class STModelNeoFactory {
 	}
 
 	public STEnumValue findSTEnumValueByLexical(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STEnumValueLabel, "lexical", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "lexical", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTEnumValue(node);
 	}
 
@@ -523,7 +523,7 @@ public class STModelNeoFactory {
 	}
 
 	public STModel findSTModelByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STModelLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STModelLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTModel(node);
 	}
 
@@ -556,7 +556,7 @@ public class STModelNeoFactory {
 	}
 
 	public STFile findSTFileByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STFileLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STFileLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTFile(node);
 	}
 
@@ -589,7 +589,7 @@ public class STModelNeoFactory {
 	}
 
 	public STValue findSTValueByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTValue(node);
 	}
 
@@ -617,7 +617,7 @@ public class STModelNeoFactory {
 	}
 
 	public STValue findSTValueByType(STValueType value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STValueLabel, "type", value.name());
+		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "type", value.name()).stream().findFirst().orElse(null);
 		return node == null ? null : newSTValue(node);
 	}
 
@@ -650,7 +650,7 @@ public class STModelNeoFactory {
 	}
 
 	public STArgument findSTArgumentByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STArgumentLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STArgumentLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTArgument(node);
 	}
 
@@ -683,7 +683,7 @@ public class STModelNeoFactory {
 	}
 
 	public STArgumentKV findSTArgumentKVByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STArgumentKVLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STArgumentKVLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTArgumentKV(node);
 	}
 
@@ -716,7 +716,7 @@ public class STModelNeoFactory {
 	}
 
 	public STProject findSTProjectByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STProjectLabel, "uuid", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STProjectLabel, "uuid", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTProject(node);
 	}
 
@@ -730,7 +730,7 @@ public class STModelNeoFactory {
 	}
 
 	public STProject findSTProjectByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNode(STProjectLabel, "name", value);
+		final org.neo4j.graphdb.Node node = db.findNodes(STProjectLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTProject(node);
 	}
 

@@ -262,7 +262,7 @@ public ~type~ get~name;format="capitalize"~(~type~ defaultValue) {
 	return this._~name~ == null ? defaultValue : this._~name~;
 }  >>
 
-listReferenceAccessors(setStatements,type,removeStatements,name,className) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
+listReferenceAccessors(className,name,setStatements,removeStatements,type) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName("~name~");
 
 public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
@@ -283,10 +283,7 @@ public java.util.stream.Stream<~type~> get~name;format="capitalize"~Sorted() {
 
 public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ dst) { 
 	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-	existing.ifPresent(relationship -> {
-		relationship.delete();
-		~removeStatements:{it|~it~};separator="\n"~
-	});
+	existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 	return this;
 }
 
@@ -331,7 +328,7 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ v
 	return this;
 }  >>
 
-nodeToJsonObject(primitiveList,properties,refList,refs) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {
+nodeToJsonObject(primitiveList,properties,refs,refList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {
 	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 	~properties:{it|if (node.hasProperty("~it.name~")) jsonObject.put("~it.name~", node.getProperty("~it.name~"));};separator="\n"~
 ~refs:{it|
