@@ -1,13 +1,13 @@
 package nextgen.templates.javaneo4jembedded;
 
-public class ListReferenceAccessors {
+public class ListReferenceAccessors implements Accessor {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _type;
 	private Object _name;
 	private Object _className;
-	private Object _type;
 	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _removeStatements = new java.util.ArrayList<>();
 
@@ -22,13 +22,35 @@ public class ListReferenceAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listReferenceAccessors");
+		st.add("type", _type);
 		st.add("name", _name);
 		st.add("className", _className);
-		st.add("type", _type);
 		for (Object o : _setStatements) st.add("setStatements", o);
 		for (Object o : _removeStatements) st.add("removeStatements", o);
 		return st.render().trim();
 	}
+
+	public ListReferenceAccessors setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public ListReferenceAccessors removeType() {
+		this._type = null;
+		return this;
+	} 
 
 	public ListReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -71,28 +93,6 @@ public class ListReferenceAccessors {
 
 	public ListReferenceAccessors removeClassName() {
 		this._className = null;
-		return this;
-	} 
-
-	public ListReferenceAccessors setType(Object value) {
-		this._type = value;
-		return this;
-	}
-
-	public Object getType() {
-		return this._type;
-	}
-
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
-	}
-
-	public boolean hasType() {
-		return this._type != null;
-	}
-
-	public ListReferenceAccessors removeType() {
-		this._type = null;
 		return this;
 	} 
 
@@ -168,7 +168,7 @@ public class ListReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listReferenceAccessors(name,className,type,setStatements,removeStatements) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
+	static final String st = "listReferenceAccessors(setStatements,type,removeStatements,name,className) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();\n" + 

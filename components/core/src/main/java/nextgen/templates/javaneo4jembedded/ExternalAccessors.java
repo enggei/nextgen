@@ -1,6 +1,6 @@
 package nextgen.templates.javaneo4jembedded;
 
-public class ExternalAccessors {
+public class ExternalAccessors implements Accessor {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;

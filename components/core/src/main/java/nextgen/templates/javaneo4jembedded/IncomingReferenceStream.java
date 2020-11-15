@@ -5,8 +5,8 @@ public class IncomingReferenceStream {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _type;
 	private Object _name;
+	private Object _type;
 
 	IncomingReferenceStream(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class IncomingReferenceStream {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("incomingReferenceStream");
-		st.add("type", _type);
 		st.add("name", _name);
+		st.add("type", _type);
 		return st.render().trim();
 	}
-
-	public IncomingReferenceStream setType(Object value) {
-		this._type = value;
-		return this;
-	}
-
-	public Object getType() {
-		return this._type;
-	}
-
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
-	}
-
-	public boolean hasType() {
-		return this._type != null;
-	}
-
-	public IncomingReferenceStream removeType() {
-		this._type = null;
-		return this;
-	} 
 
 	public IncomingReferenceStream setName(Object value) {
 		this._name = value;
@@ -68,6 +46,28 @@ public class IncomingReferenceStream {
 		return this;
 	} 
 
+	public IncomingReferenceStream setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public IncomingReferenceStream removeType() {
+		this._type = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,7 +83,7 @@ public class IncomingReferenceStream {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "incomingReferenceStream(type,name) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~~type;format=\"capitalize\"~() { \n" + 
+	static final String st = "incomingReferenceStream(name,type) ::= <<public java.util.stream.Stream<~type~> getIncoming~name;format=\"capitalize\"~~type;format=\"capitalize\"~() { \n" + 
 				"	return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName(\"~name~\")).spliterator(), false).map((relationship) -> new ~type~(relationship.getOtherNode(node)));\n" + 
 				"} >>";
 }  

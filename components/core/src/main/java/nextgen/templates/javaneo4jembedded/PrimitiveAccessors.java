@@ -1,6 +1,6 @@
 package nextgen.templates.javaneo4jembedded;
 
-public class PrimitiveAccessors {
+public class PrimitiveAccessors implements Accessor {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
@@ -168,7 +168,7 @@ public class PrimitiveAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "primitiveAccessors(name,className,type,setStatements,removeStatements) ::= <<private static final String _~name~ = \"~name~\";\n" + 
+	static final String st = "primitiveAccessors(name,setStatements,removeStatements,className,type) ::= <<private static final String _~name~ = \"~name~\";\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) \n" + 

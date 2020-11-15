@@ -67,9 +67,9 @@ public class DeleteNode {
 	}
 
 	static final String st = "deleteNode(deleteStatements) ::= <<public void delete() {\n" + 
-				"\n" + 
+				"~if(deleteStatements)~\n" + 
 				"	final String uuid = node.hasProperty(\"uuid\") ? node.getProperty(\"uuid\").toString() : null;\n" + 
-				"\n" + 
+				"~endif~\n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	node.delete();\n" + 

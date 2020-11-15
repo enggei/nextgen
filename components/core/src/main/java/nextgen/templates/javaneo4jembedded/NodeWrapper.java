@@ -5,11 +5,11 @@ public class NodeWrapper {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
-	private Object _name;
 	private Object _useUuid;
-	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
+	private String _name;
+	private Object _package;
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Accessor> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	NodeWrapper(org.stringtemplate.v4.STGroup stGroup) {
@@ -23,58 +23,14 @@ public class NodeWrapper {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeWrapper");
-		st.add("package", _package);
-		st.add("name", _name);
 		st.add("useUuid", _useUuid);
-		for (Object o : _accessors) st.add("accessors", o);
+		st.add("name", _name);
+		st.add("package", _package);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
+		for (Object o : _accessors) st.add("accessors", o);
+		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{name,initializer,type}", map.get("name"), map.get("initializer"), map.get("type"));
 		return st.render().trim();
 	}
-
-	public NodeWrapper setPackage(Object value) {
-		this._package = value;
-		return this;
-	}
-
-	public Object getPackage() {
-		return this._package;
-	}
-
-	public Object getPackage(Object defaultValue) {
-		return this._package == null ? defaultValue : this._package;
-	}
-
-	public boolean hasPackage() {
-		return this._package != null;
-	}
-
-	public NodeWrapper removePackage() {
-		this._package = null;
-		return this;
-	} 
-
-	public NodeWrapper setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public NodeWrapper removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public NodeWrapper setUseUuid(Object value) {
 		this._useUuid = value;
@@ -98,33 +54,48 @@ public class NodeWrapper {
 		return this;
 	} 
 
-	public NodeWrapper addAccessors(Object value) {
-		this._accessors.add(value);
+	public NodeWrapper setName(String value) {
+		this._name = value;
 		return this;
 	}
 
-	public NodeWrapper setAccessors(Object[] value) {
-		this._accessors.addAll(java.util.Arrays.asList(value));
+	public String getName() {
+		return this._name;
+	}
+
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public NodeWrapper removeName() {
+		this._name = null;
+		return this;
+	} 
+
+	public NodeWrapper setPackage(Object value) {
+		this._package = value;
 		return this;
 	}
 
-	public NodeWrapper setAccessors(java.util.Collection<Object> values) {
-		this._accessors.addAll(values);
-		return this;
+	public Object getPackage() {
+		return this._package;
 	}
 
-	public NodeWrapper removeAccessors(Object value) {
-		this._accessors.remove(value);
-		return this;
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
 	}
 
-	public NodeWrapper removeAccessors(int index) {
-		this._accessors.remove(index);
-		return this;
+	public boolean hasPackage() {
+		return this._package != null;
 	}
 
-	public java.util.List<Object> getAccessors() {
-		return this._accessors;
+	public NodeWrapper removePackage() {
+		this._package = null;
+		return this;
 	} 
 
 	public NodeWrapper addMethods(Object value) {
@@ -156,11 +127,40 @@ public class NodeWrapper {
 		return this._methods;
 	} 
 
-	public NodeWrapper addExternalFields(Object _type, Object _name, Object _initializer) {
+	public NodeWrapper addAccessors(Accessor value) {
+		this._accessors.add(value);
+		return this;
+	}
+
+	public NodeWrapper setAccessors(Accessor[] value) {
+		this._accessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NodeWrapper setAccessors(java.util.Collection<Accessor> values) {
+		this._accessors.addAll(values);
+		return this;
+	}
+
+	public NodeWrapper removeAccessors(Accessor value) {
+		this._accessors.remove(value);
+		return this;
+	}
+
+	public NodeWrapper removeAccessors(int index) {
+		this._accessors.remove(index);
+		return this;
+	}
+
+	public java.util.List<Accessor> getAccessors() {
+		return this._accessors;
+	} 
+
+	public NodeWrapper addExternalFields(Object _name, Object _initializer, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
 		map.put("initializer", _initializer);
+		map.put("type", _type);
 		this._externalFields.add(map);
 		return this;
 	}
@@ -170,17 +170,12 @@ public class NodeWrapper {
 	}
 
 	public NodeWrapper addExternalFields(NodeWrapper_ExternalFields value) {
-		return addExternalFields(value._type, value._name, value._initializer);
+		return addExternalFields(value._name, value._initializer, value._type);
 	}
 
 	public java.util.stream.Stream<NodeWrapper_ExternalFields> streamExternalFields() {
 		return this._externalFields.stream().map(NodeWrapper_ExternalFields::new);
 	}
-
-	public java.util.List<Object> getExternalFields_Type() {
-		return streamExternalFields().map(NodeWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
 
 	public java.util.List<Object> getExternalFields_Name() {
 		return streamExternalFields().map(NodeWrapper_ExternalFields::getName).collect(java.util.stream.Collectors.toList());
@@ -192,26 +187,27 @@ public class NodeWrapper {
 	}
 
 
+	public java.util.List<Object> getExternalFields_Type() {
+		return streamExternalFields().map(NodeWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class NodeWrapper_ExternalFields {
 
-		Object _type;
 		Object _name;
 		Object _initializer;
+		Object _type;
 
-		public NodeWrapper_ExternalFields(Object _type, Object _name, Object _initializer) {
-			this._type = _type;
+		public NodeWrapper_ExternalFields(Object _name, Object _initializer, Object _type) {
 			this._name = _name;
 			this._initializer = _initializer;
+			this._type = _type;
 		}
 
 		private NodeWrapper_ExternalFields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
 			this._initializer = (Object) map.get("initializer");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public Object getName() {
@@ -220,6 +216,10 @@ public class NodeWrapper {
 
 		public Object getInitializer() {
 			return this._initializer;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -237,7 +237,7 @@ public class NodeWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeWrapper(package,name,externalFields,useUuid,accessors,methods) ::= <<package ~package~;\n" + 
+	static final String st = "NodeWrapper(methods,useUuid,accessors,externalFields,name,package) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 

@@ -1,13 +1,13 @@
 package nextgen.templates.javaneo4jembedded;
 
-public class ListPrimitiveAccessors {
+public class ListPrimitiveAccessors implements Accessor {
 
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
-	private Object _className;
 	private Object _type;
+	private Object _className;
+	private Object _name;
 	private java.util.List<Object> _setStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _removeStatements = new java.util.ArrayList<>();
 
@@ -22,33 +22,33 @@ public class ListPrimitiveAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listPrimitiveAccessors");
-		st.add("name", _name);
-		st.add("className", _className);
 		st.add("type", _type);
+		st.add("className", _className);
+		st.add("name", _name);
 		for (Object o : _setStatements) st.add("setStatements", o);
 		for (Object o : _removeStatements) st.add("removeStatements", o);
 		return st.render().trim();
 	}
 
-	public ListPrimitiveAccessors setName(Object value) {
-		this._name = value;
+	public ListPrimitiveAccessors setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public Object getName() {
-		return this._name;
+	public Object getType() {
+		return this._type;
 	}
 
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasName() {
-		return this._name != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public ListPrimitiveAccessors removeName() {
-		this._name = null;
+	public ListPrimitiveAccessors removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -74,25 +74,25 @@ public class ListPrimitiveAccessors {
 		return this;
 	} 
 
-	public ListPrimitiveAccessors setType(Object value) {
-		this._type = value;
+	public ListPrimitiveAccessors setName(Object value) {
+		this._name = value;
 		return this;
 	}
 
-	public Object getType() {
-		return this._type;
+	public Object getName() {
+		return this._name;
 	}
 
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasType() {
-		return this._type != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public ListPrimitiveAccessors removeType() {
-		this._type = null;
+	public ListPrimitiveAccessors removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -168,7 +168,7 @@ public class ListPrimitiveAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listPrimitiveAccessors(name,className,type,setStatements,removeStatements) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
+	static final String st = "listPrimitiveAccessors(type,setStatements,removeStatements,className,name) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n" + 
@@ -192,6 +192,14 @@ public class ListPrimitiveAccessors {
 				"public ~className;format=\"capitalize\"~ removeAll~name;format=\"capitalize\"~() { \n" + 
 				"	node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	~removeStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	return this;\n" + 
+				"}\n" + 
+				"\n" + 
+				"public ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n" + 
+				"	if (value == null) return this;\n" + 
+				"	java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false)\n" + 
+				"		.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty(\"value\")))\n" + 
+				"		.forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
 				"	return this;\n" + 
 				"} >>";
 }  

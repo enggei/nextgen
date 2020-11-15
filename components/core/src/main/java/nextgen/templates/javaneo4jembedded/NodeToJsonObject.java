@@ -5,10 +5,10 @@ public class NodeToJsonObject {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _refs = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _refList = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _primitiveList = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _refList = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _refs = new java.util.ArrayList<>();
 
 	NodeToJsonObject(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,14 +21,56 @@ public class NodeToJsonObject {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("nodeToJsonObject");
-		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{name}", map.get("name"));
-		for (java.util.Map<String, Object> map : _refs) st.addAggr("refs.{type,name}", map.get("type"), map.get("name"));
-		for (java.util.Map<String, Object> map : _refList) st.addAggr("refList.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _primitiveList) st.addAggr("primitiveList.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _refList) st.addAggr("refList.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _refs) st.addAggr("refs.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
 
+
+	public NodeToJsonObject addPrimitiveList(Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		this._primitiveList.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getPrimitiveList() {
+		return this._primitiveList;
+	}
+
+	public NodeToJsonObject addPrimitiveList(NodeToJsonObject_PrimitiveList value) {
+		return addPrimitiveList(value._name);
+	}
+
+	public java.util.stream.Stream<NodeToJsonObject_PrimitiveList> streamPrimitiveList() {
+		return this._primitiveList.stream().map(NodeToJsonObject_PrimitiveList::new);
+	}
+
+	public java.util.List<Object> getPrimitiveList_Name() {
+		return streamPrimitiveList().map(NodeToJsonObject_PrimitiveList::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class NodeToJsonObject_PrimitiveList {
+
+		Object _name;
+
+		public NodeToJsonObject_PrimitiveList(Object _name) {
+			this._name = _name;
+		}
+
+		private NodeToJsonObject_PrimitiveList(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
 
 	public NodeToJsonObject addProperties(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -64,61 +106,6 @@ public class NodeToJsonObject {
 
 		private NodeToJsonObject_Properties(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
-
-	public NodeToJsonObject addRefs(Object _type, Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
-		this._refs.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getRefs() {
-		return this._refs;
-	}
-
-	public NodeToJsonObject addRefs(NodeToJsonObject_Refs value) {
-		return addRefs(value._type, value._name);
-	}
-
-	public java.util.stream.Stream<NodeToJsonObject_Refs> streamRefs() {
-		return this._refs.stream().map(NodeToJsonObject_Refs::new);
-	}
-
-	public java.util.List<Object> getRefs_Type() {
-		return streamRefs().map(NodeToJsonObject_Refs::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getRefs_Name() {
-		return streamRefs().map(NodeToJsonObject_Refs::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class NodeToJsonObject_Refs {
-
-		Object _type;
-		Object _name;
-
-		public NodeToJsonObject_Refs(Object _type, Object _name) {
-			this._type = _type;
-			this._name = _name;
-		}
-
-		private NodeToJsonObject_Refs(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
 		}
 
 		public Object getName() {
@@ -169,44 +156,57 @@ public class NodeToJsonObject {
 
 	}  
 
-	public NodeToJsonObject addPrimitiveList(Object _name) {
+	public NodeToJsonObject addRefs(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
-		this._primitiveList.add(map);
+		map.put("type", _type);
+		this._refs.add(map);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getPrimitiveList() {
-		return this._primitiveList;
+	public java.util.List<java.util.Map<String, Object>> getRefs() {
+		return this._refs;
 	}
 
-	public NodeToJsonObject addPrimitiveList(NodeToJsonObject_PrimitiveList value) {
-		return addPrimitiveList(value._name);
+	public NodeToJsonObject addRefs(NodeToJsonObject_Refs value) {
+		return addRefs(value._name, value._type);
 	}
 
-	public java.util.stream.Stream<NodeToJsonObject_PrimitiveList> streamPrimitiveList() {
-		return this._primitiveList.stream().map(NodeToJsonObject_PrimitiveList::new);
+	public java.util.stream.Stream<NodeToJsonObject_Refs> streamRefs() {
+		return this._refs.stream().map(NodeToJsonObject_Refs::new);
 	}
 
-	public java.util.List<Object> getPrimitiveList_Name() {
-		return streamPrimitiveList().map(NodeToJsonObject_PrimitiveList::getName).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getRefs_Name() {
+		return streamRefs().map(NodeToJsonObject_Refs::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
-	public static final class NodeToJsonObject_PrimitiveList {
+	public java.util.List<Object> getRefs_Type() {
+		return streamRefs().map(NodeToJsonObject_Refs::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class NodeToJsonObject_Refs {
 
 		Object _name;
+		Object _type;
 
-		public NodeToJsonObject_PrimitiveList(Object _name) {
+		public NodeToJsonObject_Refs(Object _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
-		private NodeToJsonObject_PrimitiveList(java.util.Map<String, Object> map) {
+		private NodeToJsonObject_Refs(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -224,7 +224,7 @@ public class NodeToJsonObject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "nodeToJsonObject(properties,refs,refList,primitiveList) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {\n" + 
+	static final String st = "nodeToJsonObject(primitiveList,properties,refList,refs) ::= <<public io.vertx.core.json.JsonObject toJsonObject() {\n" + 
 				"	io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();\n" + 
 				"	~properties:{it|if (node.hasProperty(\"~it.name~\")) jsonObject.put(\"~it.name~\", node.getProperty(\"~it.name~\"));};separator=\"\\n\"~\n" + 
 				"~refs:{it|\n" + 

@@ -141,10 +141,10 @@ public class STTemplate {
 	}
 
 public STTemplate removeImplements(String value) {
-	java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false)
-			.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
-			.forEach(org.neo4j.graphdb.Relationship::delete);
-	return this;
+java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _implements).spliterator(), false)
+		.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
+		.forEach(org.neo4j.graphdb.Relationship::delete);
+return this;
 }
 
 	private static final org.neo4j.graphdb.RelationshipType _parameters = org.neo4j.graphdb.RelationshipType.withName("parameters");
