@@ -1,9 +1,8 @@
 package nextgen.st;
 
-import static nextgen.st.STAppPresentationModel.newAction;
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
-public class STValueEditor extends javax.swing.JPanel {
+public class STValueEditor extends AbstractEditor {
 
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
    private final org.fife.ui.rtextarea.RTextScrollPane editorComponent = new org.fife.ui.rtextarea.RTextScrollPane(txtEditor);
@@ -17,9 +16,6 @@ public class STValueEditor extends javax.swing.JPanel {
    private String uuid;
 
    public STValueEditor() {
-      super(new java.awt.BorderLayout());
-
-      setBackground(javax.swing.UIManager.getColor("Panel.background"));
 
       txtEditor.setEditable(false);
       txtEditor.addKeyListener(getEditorKeyListener());
@@ -41,69 +37,45 @@ public class STValueEditor extends javax.swing.JPanel {
       setSTValue(event.stValue);
    }
 
-   private STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance()
-            .getSTAppPresentationModel();
-   }
-
    public void setSTValue(nextgen.st.model.STValue stValue) {
       this.stValue = stValue;
       this.uuid = stValue.getUuid();
       txtEditor.setText(appModel().render(stValue));
       txtEditor.setCaretPosition(0);
-      txtEditor.setEditable(stValue.getType()
-            .equals(nextgen.st.model.STValueType.PRIMITIVE));
+      txtEditor.setEditable(stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE));
    }
 
    private void replaceWithClipboard() {
       if (!txtEditor.isEditable()) return;
-      txtEditor.setText(nextgen.utils.SwingUtil.fromClipboard()
-            .trim());
+      txtEditor.setText(nextgen.utils.SwingUtil.fromClipboard().trim());
       txtEditor.setCaretPosition(0);
       tryToSave();
    }
 
    private void prependFromClipboard() {
       if (!txtEditor.isEditable()) return;
-      txtEditor.setText(nextgen.utils.SwingUtil.fromClipboard()
-            .trim() + txtEditor.getText());
+      txtEditor.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + txtEditor.getText());
       txtEditor.setCaretPosition(0);
       tryToSave();
    }
 
    private void appendFromClipboard() {
       if (!txtEditor.isEditable()) return;
-      txtEditor.append(nextgen.utils.SwingUtil.fromClipboard()
-            .trim());
+      txtEditor.append(nextgen.utils.SwingUtil.fromClipboard().trim());
       txtEditor.setCaretPosition(0);
       tryToSave();
    }
 
    private void toClipboard() {
-      nextgen.utils.SwingUtil.toClipboard(txtEditor.getText()
-            .trim());
+      nextgen.utils.SwingUtil.toClipboard(txtEditor.getText().trim());
    }
 
-   private java.awt.event.KeyListener getEditorKeyListener() {
-      return new java.awt.event.KeyAdapter() {
-         @Override
-         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
-            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-               tryToSave();
-            }
-         }
-      };
-   }
-
-   void tryToSave() {
+   @Override
+   protected void tryToSave() {
       if (stValue == null) return;
-      appModel().doLaterInTransaction(transaction -> {
-         if (!stValue.getType()
-               .equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
-         stValue.setValue(txtEditor.getText()
-               .trim());
-         nextgen.events.STValueChanged.post(stValue);
-      });
+      if (!stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
+      stValue.setValue(txtEditor.getText().trim());
+      nextgen.events.STValueChanged.post(stValue);
    }
 
    public String getUuid() {

@@ -175,6 +175,35 @@ public class STGroupModel {
 		return this;
 	}
 
+	private static final org.neo4j.graphdb.RelationshipType _files = org.neo4j.graphdb.RelationshipType.withName("files");
+
+	public STGroupModel addFiles(STGroupFile dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _files);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<STGroupFile> getFiles() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).map((relationship) -> new STGroupFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STGroupFile> getFilesSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STGroupFile(relationship.getOtherNode(node)));
+	}
+
+	public STGroupModel removeFiles(STGroupFile dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public STGroupModel removeAllFiles() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _files).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _templates = org.neo4j.graphdb.RelationshipType.withName("templates");
 
 	public STGroupModel addTemplates(STTemplate dst) { 
@@ -285,6 +314,10 @@ public class STGroupModel {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		final io.vertx.core.json.JsonArray _files = new io.vertx.core.json.JsonArray();
+		getFiles().forEach(element -> _files.add(element.toJsonObject()));
+		if (!_files.isEmpty()) jsonObject.put("files", _files);
+
 		final io.vertx.core.json.JsonArray _templates = new io.vertx.core.json.JsonArray();
 		getTemplates().forEach(element -> _templates.add(element.toJsonObject()));
 		if (!_templates.isEmpty()) jsonObject.put("templates", _templates);

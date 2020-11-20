@@ -9,15 +9,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
-public class STEditor extends JPanel {
+public class STEditor extends AbstractEditor {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STEditor.class);
 
@@ -37,11 +35,10 @@ public class STEditor extends JPanel {
     private String startText;
 
     public STEditor(nextgen.st.model.STGroupModel stGroupModel) {
-        super(new BorderLayout());
 
         this.stGroupModel = stGroupModel;
         this.delimiter = stGroupModel.getDelimiter();
-        this.infoPanel = new STEditorInfoPanel();
+        this.infoPanel = new nextgen.st.STEditor.STEditorInfoPanel();
         final JPopupMenu pop = this.txtEditor.getPopupMenu();
         pop.addSeparator();
         pop.add(newAction("Insert Single", actionEvent -> insertSingle()));
@@ -74,10 +71,6 @@ public class STEditor extends JPanel {
         add(commandPanel, BorderLayout.NORTH);
         add(infoPanel, BorderLayout.SOUTH);
         setPreferredSize(new Dimension(800, 600));
-    }
-
-    private STAppPresentationModel appModel() {
-        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
     }
 
     public nextgen.st.model.STGroupModel getModel() {
@@ -129,15 +122,6 @@ public class STEditor extends JPanel {
     private void generate() {
         commit();
         appModel().generateSTGroup(stGroupModel,false);
-    }
-
-    private Action newAction(String name, Consumer<ActionEvent> consumer) {
-        return new AbstractAction(name) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                consumer.accept(e);
-            }
-        };
     }
 
     public Optional<nextgen.st.model.STTemplate> getSTTemplate() {
@@ -402,7 +386,7 @@ public class STEditor extends JPanel {
         }
     }
 
-    private class STEditorInfoPanel extends JPanel {
+    private static class STEditorInfoPanel extends JPanel {
 
         private final JTextArea textArea = new JTextArea();
 

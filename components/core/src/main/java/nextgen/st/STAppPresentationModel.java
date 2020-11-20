@@ -139,6 +139,17 @@ public class STAppPresentationModel {
                   .forEach(stArgument -> consumer.accept(stArgument, stParameter)));
    }
 
+   public void generateSTGroupFromFile(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
+
+      final nextgen.st.parser.ParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
+
+      if (parseResult.getErrors().isEmpty()) {
+         new STGenerator(generatorSTGroup).generateSTGroup(stGroupFile);
+      } else {
+         parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
+      }
+   }
+
    public void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
 
       final nextgen.st.parser.ParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));

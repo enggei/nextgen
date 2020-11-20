@@ -22,7 +22,7 @@ public class MiniFooter {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MiniFooter");
 		st.add("heading", _heading);
 		for (Object o : _buttons) st.add("buttons", o);
-		for (java.util.Map<String, Object> map : _linkList) st.addAggr("linkList.{href,name}", map.get("href"), map.get("name"));
+		for (java.util.Map<String, Object> map : _linkList) st.addAggr("linkList.{name,href}", map.get("name"), map.get("href"));
 		return st.render().trim();
 	}
 
@@ -77,10 +77,10 @@ public class MiniFooter {
 		return this._buttons;
 	} 
 
-	public MiniFooter addLinkList(Object _href, Object _name) {
+	public MiniFooter addLinkList(Object _name, Object _href) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("href", _href);
 		map.put("name", _name);
+		map.put("href", _href);
 		this._linkList.add(map);
 		return this;
 	}
@@ -90,44 +90,44 @@ public class MiniFooter {
 	}
 
 	public MiniFooter addLinkList(MiniFooter_LinkList value) {
-		return addLinkList(value._href, value._name);
+		return addLinkList(value._name, value._href);
 	}
 
 	public java.util.stream.Stream<MiniFooter_LinkList> streamLinkList() {
 		return this._linkList.stream().map(MiniFooter_LinkList::new);
 	}
 
-	public java.util.List<Object> getLinkList_Href() {
-		return streamLinkList().map(MiniFooter_LinkList::getHref).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getLinkList_Name() {
 		return streamLinkList().map(MiniFooter_LinkList::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getLinkList_Href() {
+		return streamLinkList().map(MiniFooter_LinkList::getHref).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class MiniFooter_LinkList {
 
-		Object _href;
 		Object _name;
+		Object _href;
 
-		public MiniFooter_LinkList(Object _href, Object _name) {
-			this._href = _href;
+		public MiniFooter_LinkList(Object _name, Object _href) {
 			this._name = _name;
+			this._href = _href;
 		}
 
 		private MiniFooter_LinkList(java.util.Map<String, Object> map) {
-			this._href = (Object) map.get("href");
 			this._name = (Object) map.get("name");
-		}
-
-		public Object getHref() {
-			return this._href;
+			this._href = (Object) map.get("href");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getHref() {
+			return this._href;
 		}
 
 	}  
@@ -145,7 +145,7 @@ public class MiniFooter {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MiniFooter(heading,linkList,buttons) ::= <<<footer class=\"mdl-mini-footer\">\n" + 
+	static final String st = "MiniFooter(buttons,linkList,heading) ::= <<<footer class=\"mdl-mini-footer\">\n" + 
 				"	<div class=\"mdl-mini-footer__left-section\">\n" + 
 				"		<div class=\"mdl-logo\">\n" + 
 				"			~heading~\n" + 

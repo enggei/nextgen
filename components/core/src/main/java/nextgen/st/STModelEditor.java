@@ -2,10 +2,9 @@ package nextgen.st;
 
 import nextgen.st.model.STModel;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class STModelEditor extends JPanel {
+public class STModelEditor extends AbstractEditor {
 
    private final STModelEditorText txtEditor = new nextgen.st.STModelEditorText();
    private final STModelEditorGrid editorGrid = new STModelEditorGrid();
@@ -14,11 +13,9 @@ public class STModelEditor extends JPanel {
    private final String uuid;
 
    public STModelEditor(STModel stModel) {
-      super(new BorderLayout());
 
       this.stModel = stModel;
       this.uuid = stModel.getUuid();
-      setBackground(UIManager.getColor("Panel.background"));
 
       final javax.swing.JTabbedPane editors = new javax.swing.JTabbedPane();
       editors.add("Editor", txtEditor);

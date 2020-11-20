@@ -18,19 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static nextgen.st.STAppPresentationModel.newAction;
-
-public class STModelEditorGrid extends JPanel {
+public class STModelEditorGrid extends AbstractEditor {
 
    private final ResultsTableModel resultsModel;
    private  STModel stModel;
 
    public STModelEditorGrid() {
-      super(new BorderLayout());
 
       this.resultsModel = new ResultsTableModel();
-
-      setBackground(UIManager.getColor("Panel.background"));
 
       final JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       final JTextField txtSearch = new JTextField(30);
@@ -72,10 +67,6 @@ public class STModelEditorGrid extends JPanel {
    public void setModel(nextgen.st.model.STModel model) {
       this.stModel = model;
       SwingUtilities.invokeLater(resultsModel::clear);
-   }
-
-   private STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 
    private MouseListener getSearchFieldMouseListener(JTextField txtSearch) {

@@ -151,6 +151,67 @@ public class STModelNeoFactory {
 		return db.findNodes(STGroupModelLabel, "tags", value).stream().map(this::newSTGroupModel);
 	}
 
+	private static final org.neo4j.graphdb.Label STGroupFileLabel = org.neo4j.graphdb.Label.label("STGroupFile");
+
+	public static boolean isSTGroupFile(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STGroupFileLabel);
+	}
+
+	public STGroupFile newSTGroupFile() { 
+		STGroupFile newInstance = newSTGroupFile(db.createNode(STGroupFileLabel));
+		return newInstance;
+	}
+
+	public STGroupFile newSTGroupFile(org.neo4j.graphdb.Node node) { 
+		return new STGroupFile(node);
+	}
+
+	public java.util.stream.Stream<STGroupFile> findAllSTGroupFile() { 
+		return db.findNodes(STGroupFileLabel).stream().map(this::newSTGroupFile);
+	}
+
+	public STGroupFile findSTGroupFileByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupFileLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupFile(node);
+	}
+
+	public STGroupFile findOrCreateSTGroupFileByUuid(String value) {
+		final STGroupFile existing = findSTGroupFileByUuid(value);
+		return existing == null ? newSTGroupFile().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupFile> findAllSTGroupFileByUuid(String value) {
+		return db.findNodes(STGroupFileLabel, "uuid", value).stream().map(this::newSTGroupFile);
+	}
+
+	public STGroupFile findSTGroupFileByPackageName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupFileLabel, "packageName", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupFile(node);
+	}
+
+	public STGroupFile findOrCreateSTGroupFileByPackageName(String value) {
+		final STGroupFile existing = findSTGroupFileByPackageName(value);
+		return existing == null ? newSTGroupFile().setPackageName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupFile> findAllSTGroupFileByPackageName(String value) {
+		return db.findNodes(STGroupFileLabel, "packageName", value).stream().map(this::newSTGroupFile);
+	}
+
+	public STGroupFile findSTGroupFileByPath(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupFileLabel, "path", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupFile(node);
+	}
+
+	public STGroupFile findOrCreateSTGroupFileByPath(String value) {
+		final STGroupFile existing = findSTGroupFileByPath(value);
+		return existing == null ? newSTGroupFile().setPath(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupFile> findAllSTGroupFileByPath(String value) {
+		return db.findNodes(STGroupFileLabel, "path", value).stream().map(this::newSTGroupFile);
+	}
+
 	private static final org.neo4j.graphdb.Label STTemplateLabel = org.neo4j.graphdb.Label.label("STTemplate");
 
 	public static boolean isSTTemplate(org.neo4j.graphdb.Node node) {

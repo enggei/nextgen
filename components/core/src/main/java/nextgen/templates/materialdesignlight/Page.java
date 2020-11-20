@@ -5,9 +5,9 @@ public class Page {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _body;
 	private Object _description;
 	private Object _title;
-	private Object _body;
 
 	Page(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class Page {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Page");
+		st.add("body", _body);
 		st.add("description", _description);
 		st.add("title", _title);
-		st.add("body", _body);
 		return st.render().trim();
 	}
+
+	public Page setBody(Object value) {
+		this._body = value;
+		return this;
+	}
+
+	public Object getBody() {
+		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
+	}
+
+	public boolean hasBody() {
+		return this._body != null;
+	}
+
+	public Page removeBody() {
+		this._body = null;
+		return this;
+	} 
 
 	public Page setDescription(Object value) {
 		this._description = value;
@@ -70,28 +92,6 @@ public class Page {
 		return this;
 	} 
 
-	public Page setBody(Object value) {
-		this._body = value;
-		return this;
-	}
-
-	public Object getBody() {
-		return this._body;
-	}
-
-	public Object getBody(Object defaultValue) {
-		return this._body == null ? defaultValue : this._body;
-	}
-
-	public boolean hasBody() {
-		return this._body != null;
-	}
-
-	public Page removeBody() {
-		this._body = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,7 +107,7 @@ public class Page {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Page(description,title,body) ::= <<<!doctype html>\n" + 
+	static final String st = "Page(body,description,title) ::= <<<!doctype html>\n" + 
 				"<html lang=\"en\">\n" + 
 				"<head>\n" + 
 				"	<meta charset=\"utf-8\">\n" + 

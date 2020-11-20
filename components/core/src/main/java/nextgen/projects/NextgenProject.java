@@ -1262,17 +1262,6 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
             .addRelations(DomainPatterns.newOneToManySelf("children"));
 
-      final Entity stGroupModel = DomainPatterns
-            .newEntityWithUuid("STGroupModel")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("delimiter"))
-            .addRelations(DomainPatterns.newStringField("icon"))
-            .addRelations(DomainPatterns.newStringField("tags"))
-            .addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
-            .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
-            .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
-
       final Entity stValue = DomainPatterns
             .newEntityWithUuid("STValue")
             .setEqha("uuid")
@@ -1286,6 +1275,24 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToOne("type", stValue))
             .addRelations(DomainPatterns.newOneToOne("packageName", stValue))
             .addRelations(DomainPatterns.newOneToOne("path", stValue));
+
+      final Entity stGroupFile = DomainPatterns
+            .newEntityWithUuid("STGroupFile")
+            .setEqha("uuid")
+            .addRelations(DomainPatterns.newStringField("packageName"))
+            .addRelations(DomainPatterns.newStringField("path"));
+
+      final Entity stGroupModel = DomainPatterns
+            .newEntityWithUuid("STGroupModel")
+            .setEqha("uuid")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("delimiter"))
+            .addRelations(DomainPatterns.newStringField("icon"))
+            .addRelations(DomainPatterns.newStringField("tags"))
+            .addRelations(DomainPatterns.newOneToMany("files", stGroupFile))
+            .addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
+            .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
+            .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
 
       final Entity stArgumentKV = DomainPatterns
             .newEntityWithUuid("STArgumentKV")

@@ -80,6 +80,11 @@ public class STWorkspace extends JTabbedPane {
 		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onTemplateNavigatorSTGroupFileClicked(nextgen.events.TemplateNavigatorSTGroupFileClicked event) {
+		getSTGroupFileEditor(event.stGroupFile);
+	}
+
 	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
@@ -236,6 +241,24 @@ public class STWorkspace extends JTabbedPane {
 
 		final STValueEditor component = new STValueEditor();
 		addPane("STValue", component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	private nextgen.st.STGroupFileEditor getSTGroupFileEditor(nextgen.st.model.STGroupFile stFile) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof STFileEditor) {
+				if (((nextgen.st.STGroupFileEditor) tabComponentAt).getSTGroupFile().equals(stFile)) {
+					final nextgen.st.STGroupFileEditor editor = (nextgen.st.STGroupFileEditor) tabComponentAt;
+					setSelectedComponent(editor);
+					return editor;
+				}
+			}
+		}
+
+		final nextgen.st.STGroupFileEditor component = new nextgen.st.STGroupFileEditor(stFile);
+		addPane("GroupFile", component);
 		setSelectedComponent(component);
 		return component;
 	}

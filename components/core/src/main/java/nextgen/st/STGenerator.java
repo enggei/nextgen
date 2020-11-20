@@ -66,6 +66,24 @@ public class STGenerator {
       return new java.io.File(parent, fileNameValue + fileType);
    }
 
+   public void generateSTGroup(STGroupModel stGroupModel) {
+      stGroupModel.getFiles().forEach(stFile -> {
+
+         final String packageName = stFile.getPackageName();
+         final String path = stFile.getPath();
+
+         generateSTGroup(stGroupModel, packageName, path);
+      });
+   }
+
+   public void generateSTGroup(nextgen.st.model.STGroupFile stGroupFile) {
+      stGroupFile.getIncomingFilesSTGroupModel().forEach(stGroupModel -> {
+         final String packageName = stGroupFile.getPackageName();
+         final String path = stGroupFile.getPath();
+         generateSTGroup(stGroupModel, packageName, path);
+      });
+   }
+
    public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
 
       final File root = new File(rootPath);

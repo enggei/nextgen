@@ -1,23 +1,22 @@
 package nextgen.st;
 
-public class STFileEditor extends javax.swing.JPanel {
+public class STFileEditor extends AbstractEditor {
 
-   final javax.swing.JTextField txtName = new javax.swing.JTextField( 45);
-   final javax.swing.JTextField txtPackage = new javax.swing.JTextField( 45);
-   final javax.swing.JTextField txtType = new javax.swing.JTextField(45);
-   final javax.swing.JTextField txtPath = new javax.swing.JTextField( 45);
+   final javax.swing.JTextField txtName;
+   final javax.swing.JTextField txtPackage;
+   final javax.swing.JTextField txtType;
+   final javax.swing.JTextField txtPath;
 
    private final nextgen.st.model.STFile stFile;
 
    public STFileEditor(nextgen.st.model.STFile stFile) {
-      super(new java.awt.BorderLayout());
-      setBackground(javax.swing.UIManager.getColor("Panel.background"));
-      this.stFile = stFile;
 
-      txtName.setText(appModel().render(stFile.getName()));
-      txtPackage.setText(appModel().render(stFile.getPackageName()));
-      txtType.setText(appModel().render(stFile.getType()));
-      txtPath.setText(appModel().render(stFile.getPath()));
+      txtName = newTextField(appModel().render(stFile.getName()), 45);
+      txtPackage = newTextField(appModel().render(stFile.getPackageName()), 45);
+      txtType = newTextField(appModel().render(stFile.getType()), 45);
+      txtPath = newTextField(appModel().render(stFile.getPath()), 45);
+
+      this.stFile = stFile;
 
       final java.awt.event.KeyListener editorKeyListener = getEditorKeyListener();
       txtName.addKeyListener(editorKeyListener);
@@ -47,34 +46,18 @@ public class STFileEditor extends javax.swing.JPanel {
       return stFile;
    }
 
-   protected nextgen.st.STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
-   }
+   @Override
+   protected void tryToSave() {
+      final String name = txtName.getText().trim();
+      final String packageName = txtPackage.getText().trim();
+      final String type = txtType.getText().trim();
+      final String path = txtPath.getText().trim();
 
-   private java.awt.event.KeyListener getEditorKeyListener() {
-      return new java.awt.event.KeyAdapter() {
-         @Override
-         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
-            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-               tryToSave();
-            }
-         }
-      };
-   }
+      stFile.setName(appModel().db.findOrCreateSTValueByValue(name));
+      stFile.setPackageName(appModel().db.findOrCreateSTValueByValue(packageName));
+      stFile.setType(appModel().db.findOrCreateSTValueByValue(type));
+      stFile.setPath(appModel().db.findOrCreateSTValueByValue(path));
 
-   private void tryToSave() {
-      appModel().doInTransaction(transaction -> {
-         final String name = txtName.getText().trim();
-         final String packageName = txtPackage.getText().trim();
-         final String type = txtType.getText().trim();
-         final String path = txtPath.getText().trim();
-
-         stFile.setName(appModel().db.findOrCreateSTValueByValue(name));
-         stFile.setPackageName(appModel().db.findOrCreateSTValueByValue(packageName));
-         stFile.setType(appModel().db.findOrCreateSTValueByValue(type));
-         stFile.setPath(appModel().db.findOrCreateSTValueByValue(path));
-
-         nextgen.events.STFileChanged.post(stFile);
-      });
+      nextgen.events.STFileChanged.post(stFile);
    }
 }

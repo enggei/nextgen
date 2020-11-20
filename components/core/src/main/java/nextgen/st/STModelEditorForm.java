@@ -10,15 +10,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static nextgen.st.STAppPresentationModel.newAction;
-
-public class STModelEditorForm extends JPanel {
+public class STModelEditorForm extends AbstractEditor {
 
    private final ResultsTableModel resultsModel = new ResultsTableModel();
 
    public STModelEditorForm() {
-      super(new BorderLayout());
-      setBackground(UIManager.getColor("Panel.background"));
 
       final JTable results = new JTable(resultsModel);
       results.setIntercellSpacing(new Dimension(0, 5));
@@ -73,14 +69,9 @@ public class STModelEditorForm extends JPanel {
             .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
 
-   private STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
-   }
-
    public void reset() {
       SwingUtilities.invokeLater(resultsModel::clear);
    }
-
 
    final class STValueElement {
 
@@ -181,13 +172,14 @@ public class STModelEditorForm extends JPanel {
    private final class STValueElementEditor extends AbstractCellEditor implements javax.swing.table.TableCellEditor {
 
       private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component;
-      private final org.fife.ui.rtextarea.RTextScrollPane scrollPane;
       private STValueElement element;
 
       STValueElementEditor() {
+
          this.component = nextgen.utils.SwingUtil.newRSyntaxTextArea(1, 40);
          this.component.addKeyListener(getEditorKeyListener());
-         this.scrollPane = new org.fife.ui.rtextarea.RTextScrollPane(component);
+
+         org.fife.ui.rtextarea.RTextScrollPane scrollPane = new org.fife.ui.rtextarea.RTextScrollPane(component);
          for (java.awt.event.MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
             scrollPane.removeMouseWheelListener(mouseWheelListener);
 

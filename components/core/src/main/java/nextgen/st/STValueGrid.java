@@ -16,18 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static nextgen.st.STAppPresentationModel.newAction;
-
-public class STValueGrid extends JPanel {
+public class STValueGrid extends AbstractEditor {
 
     private final ResultsTableModel resultsModel;
 
     public STValueGrid() {
-        super(new BorderLayout());
 
         this.resultsModel = new ResultsTableModel();
-
-        setBackground(UIManager.getColor("Panel.background"));
 
         final JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         final JTextField txtSearch = new JTextField(30);
@@ -66,10 +61,6 @@ public class STValueGrid extends JPanel {
         add(jScrollPane, BorderLayout.CENTER);
     }
 
-    private STAppPresentationModel appModel() {
-        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
-    }
-    
     private MouseListener getSearchFieldMouseListener(JTextField txtSearch) {
         return new MouseAdapter() {
             @Override

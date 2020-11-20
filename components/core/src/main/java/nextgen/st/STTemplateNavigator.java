@@ -93,6 +93,8 @@ public class STTemplateNavigator extends JPanel {
 						onSTTemplateTreeNodeSelected((STTemplateTreeNode) lastPathComponent);
 					else if (isSTInterfaceTreeNode(lastPathComponent)) 
 						onSTInterfaceTreeNodeSelected((STInterfaceTreeNode) lastPathComponent);
+					else if (isSTGroupFileTreeNode(lastPathComponent)) 
+						onSTGroupFileTreeNodeSelected((STGroupFileTreeNode) lastPathComponent);
 					else 
 						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);
             });
@@ -102,6 +104,11 @@ public class STTemplateNavigator extends JPanel {
 
    private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
    }
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
+		findSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.stGroupFile)).ifPresent(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
+	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
@@ -179,6 +186,17 @@ public class STTemplateNavigator extends JPanel {
 	public void onSTEnumNameChanged(nextgen.events.STEnumNameChanged event) {
 		findSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
 							.ifPresent(STTemplateNavigator.STEnumTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTGroupFile(nextgen.events.NewSTGroupFile event) {
+		findSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.stGroupModel))
+				.ifPresent(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new nextgen.st.STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupFileDeleted(nextgen.events.STGroupFileDeleted event) {
+		findSTGroupFileTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -397,6 +415,7 @@ public class STTemplateNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			model.getFilesSorted().forEach(file -> add(new STGroupFileTreeNode(file)));
 			model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
 			model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
@@ -427,6 +446,7 @@ public class STTemplateNavigator extends JPanel {
 				actions.add(new nextgen.actions.NewInterface(getModel(), tree));
 				actions.add(new nextgen.actions.RenameSTGroup(getModel(), tree));
 				actions.add(new nextgen.actions.DeleteSTGroup(getModel(), tree));
+				actions.add(new nextgen.actions.AddFileSinkToGroup(getModel()));
 			});
 
 			return actions;
@@ -669,6 +689,70 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTInterfaceTreeNodeSelected(STInterfaceTreeNode selectedNode) {
+	}
+
+	// STGroupFileTreeNode
+	public class STGroupFileTreeNode extends BaseTreeNode<nextgen.st.model.STGroupFile> {
+
+		private String uuid;
+
+		STGroupFileTreeNode(nextgen.st.model.STGroupFile model) {
+			super(model, null);
+
+
+			setLabel(getModel().getPath());
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+		}
+
+		STGroupFileTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getPath());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.GenerateSTGroupFromFile(parent.getModel(), getModel())));
+				actions.add(new nextgen.actions.DeleteSTGroupFile(getModel(), tree));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isSTGroupFileTreeNode(Object treeNode) {
+		return treeNode instanceof STGroupFileTreeNode;
+	}
+
+	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode() {
+		return treeModel.find(STGroupFileTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode(java.util.function.Predicate<STGroupFileTreeNode> predicate) {
+		return treeModel.find(STGroupFileTreeNode.class, predicate);
+	}
+
+	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STGroupFileTreeNode> predicate) {
+		return treeModel.find(parent, STGroupFileTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<STGroupFileTreeNode> getSelectedSTGroupFileTreeNodes() {
+		return getSelectedNodes(STGroupFileTreeNode.class);
+	}
+
+	private void onSTGroupFileTreeNodeSelected(STGroupFileTreeNode selectedNode) {
+		nextgen.events.TemplateNavigatorSTGroupFileClicked.post(selectedNode.getModel());
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {

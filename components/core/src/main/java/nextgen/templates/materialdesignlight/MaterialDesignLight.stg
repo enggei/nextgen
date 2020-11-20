@@ -4,7 +4,7 @@ Element(name,children) ::= <<<~name~~if(children)~>
 	~children:{it|~it~};separator="\n"~
 </~name~>~else~ />~endif~  >>
 
-MiniFooter(heading,linkList,buttons) ::= <<<footer class="mdl-mini-footer">
+MiniFooter(buttons,linkList,heading) ::= <<<footer class="mdl-mini-footer">
 	<div class="mdl-mini-footer__left-section">
 		<div class="mdl-logo">
 			~heading~
@@ -18,7 +18,7 @@ MiniFooter(heading,linkList,buttons) ::= <<<footer class="mdl-mini-footer">
 	</div>
 </footer>  >>
 
-Page(description,title,body) ::= <<<!doctype html>
+Page(body,description,title) ::= <<<!doctype html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">

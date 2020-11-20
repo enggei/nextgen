@@ -12,7 +12,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelListener;
@@ -20,17 +19,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class STModelGrid extends JPanel {
+public class STModelGrid extends AbstractEditor {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelGrid.class);
 
     private final STTemplate model;
 
     public STModelGrid(STTemplate stTemplate) {
-        super(new BorderLayout());
 
         this.model = stTemplate;
 
@@ -90,10 +87,6 @@ public class STModelGrid extends JPanel {
         final JScrollPane jScrollPane = new JScrollPane(grid);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         add(jScrollPane, BorderLayout.CENTER);
-    }
-
-    private STAppPresentationModel appModel() {
-        return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
     }
 
     public RTextScrollPane decorate(RSyntaxTextArea txtValue) {
@@ -180,14 +173,5 @@ public class STModelGrid extends JPanel {
                 txtValue.setBackground(UIManager.getColor("Panel.background"));
             });
         }
-    }
-
-    private Action newAction(String name, Consumer<ActionEvent> consumer) {
-        return new AbstractAction(name) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                consumer.accept(e);
-            }
-        };
     }
 }
