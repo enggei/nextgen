@@ -2269,7 +2269,7 @@ public class ~name~ extends JTabbedPane {
 				final Component tabComponentAt = getComponentAt(i);
 				if (tabComponentAt instanceof STModelEditor) {
 					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {
-						final nextgen.st.STModelEditor editor = (nextgen.st.STModelEditor) tabComponentAt;
+						final nextgen.swing.STModelEditor editor = (nextgen.swing.STModelEditor) tabComponentAt;
 						setSelectedComponent(editor);
 						return editor;
 					}

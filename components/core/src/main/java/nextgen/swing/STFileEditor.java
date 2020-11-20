@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 public class STFileEditor extends AbstractEditor {
 
@@ -8,6 +8,7 @@ public class STFileEditor extends AbstractEditor {
    final javax.swing.JTextField txtPath;
 
    private final nextgen.st.model.STFile stFile;
+   private String uuid;
 
    public STFileEditor(nextgen.st.model.STFile stFile) {
 
@@ -17,6 +18,7 @@ public class STFileEditor extends AbstractEditor {
       txtPath = newTextField(appModel().render(stFile.getPath()), 45);
 
       this.stFile = stFile;
+      this.uuid = stFile.getUuid();
 
       final java.awt.event.KeyListener editorKeyListener = getEditorKeyListener();
       txtName.addKeyListener(editorKeyListener);
@@ -42,8 +44,12 @@ public class STFileEditor extends AbstractEditor {
       add(inputPanel, java.awt.BorderLayout.NORTH);
    }
 
-   public nextgen.st.model.STFile getSTFile() {
+   public nextgen.st.model.STFile getModel() {
       return stFile;
+   }
+
+   public String getUuid() {
+      return uuid;
    }
 
    @Override

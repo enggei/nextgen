@@ -32,7 +32,7 @@ public class STAppPresentationModel {
    private STGroupModel generatorSTGroup;
 
    private final NeoChronicle chronicle;
-   private STWorkspace stWorkspace;
+   private nextgen.swing.STWorkspace stWorkspace;
    private String lastDir;
    private final WorkFlowFacade workFlowFacade;
 
@@ -88,13 +88,9 @@ public class STAppPresentationModel {
 
 
    public static void deleteSTGFile(String name) {
-      final File stgFile = new File(AppModel
-            .getInstance()
-            .getTemplateDir(), name + ".json");
+      final File stgFile = new File(AppModel.getInstance().getTemplateDir(), name + ".json");
       if (stgFile.exists())
-         stgFile.renameTo(new File(AppModel
-               .getInstance()
-               .getTemplateDir(), name + ".json.deleted"));
+         stgFile.renameTo(new File(AppModel.getInstance().getTemplateDir(), name + ".json.deleted"));
    }
 
    public String cut(String text) {
@@ -139,7 +135,7 @@ public class STAppPresentationModel {
                   .forEach(stArgument -> consumer.accept(stArgument, stParameter)));
    }
 
-   public void generateSTGroupFromFile(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
+   public void generateSTGroup(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
 
       final nextgen.st.parser.ParseResult parseResult = STParser.parse(toSTGroup(stGroupModel));
 
@@ -234,8 +230,8 @@ public class STAppPresentationModel {
       return db.getSTModelPackage(stModel, defaultName);
    }
 
-   public STWorkspace getWorkspace() {
-      if (stWorkspace == null) stWorkspace = new STWorkspace();
+   public nextgen.swing.STWorkspace getWorkspace() {
+      if (stWorkspace == null) stWorkspace = new nextgen.swing.STWorkspace();
       return stWorkspace;
    }
 
@@ -510,8 +506,8 @@ public class STAppPresentationModel {
       chronicle.rollbackLast();
    }
 
-   public STModelEditor getModelEditor(STModel model) {
-      return getWorkspace().getModelEditor(model.getStTemplate(), model);
+   public nextgen.swing.STModelEditor getModelEditor(STModel model) {
+      return getWorkspace().getModelEditor(model);
    }
 
    public WorkFlowFacade getWorkspaceFacade() {
@@ -613,9 +609,7 @@ public class STAppPresentationModel {
 
    public java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
       final List<STTemplate> templates = new java.util.ArrayList<>();
-      stGroup.getTemplates().forEach(stTemplate -> {
-         aggregate(stTemplate, templates);
-      });
+      stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
 
       return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
    }

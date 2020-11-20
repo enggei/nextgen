@@ -17,8 +17,9 @@ public class DeleteSTTemplate extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       confirm(owner, "Delete", unused -> {
-         stGroup.removeTemplates(stTemplate);
-         nextgen.events.STTemplateDeleted.post(stTemplate.getUuid());
+      	final String uuid = stTemplate.getUuid();
+      	stTemplate.delete();
+      	nextgen.events.STTemplateDeleted.post(uuid);
       });
    }
 

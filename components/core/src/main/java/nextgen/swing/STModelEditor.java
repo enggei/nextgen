@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import nextgen.st.model.STModel;
 
@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class STModelEditor extends AbstractEditor {
 
-   private final STModelEditorText txtEditor = new nextgen.st.STModelEditorText();
+   private final STModelEditorText txtEditor = new nextgen.swing.STModelEditorText();
    private final STModelEditorGrid editorGrid = new STModelEditorGrid();
    private final STModelEditorForm formComponent = new STModelEditorForm();
    private final STModel stModel;
@@ -33,7 +33,7 @@ public class STModelEditor extends AbstractEditor {
    public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      nextgen.st.STModelEditor that = (nextgen.st.STModelEditor) o;
+      nextgen.swing.STModelEditor that = (nextgen.swing.STModelEditor) o;
       return uuid.equals(that.uuid);
    }
 

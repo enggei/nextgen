@@ -379,7 +379,7 @@ public class GenerateAll_TransactionAction {
 					"	nextgen.events.STEnumChanged.post(stEnum);\n" + 
 					"});");
 		final TransactionAction EditModels = NextgenST.newTransactionAction().setName("EditModels").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("Edit").addStatements("appModel().doLaterInTransaction(transaction1 -> {\n" +
-					"   final nextgen.st.STModelGrid stModelGrid = appModel().getWorkspace().getModelGrid(stTemplate);\n" + 
+					"   final nextgen.swing.STModelGrid stModelGrid = appModel().getWorkspace().getModelGrid(stTemplate);\n" +
 					"   appModel().getWorkspace().setSelectedComponent(stModelGrid);\n" + 
 					"   stModelGrid.requestFocusInWindow();   \n" + 
 					"});");

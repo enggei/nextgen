@@ -316,7 +316,7 @@ public class STWorkspace {
 				"				final Component tabComponentAt = getComponentAt(i);\n" + 
 				"				if (tabComponentAt instanceof STModelEditor) {\n" + 
 				"					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {\n" + 
-				"						final nextgen.st.STModelEditor editor = (nextgen.st.STModelEditor) tabComponentAt;\n" + 
+				"						final nextgen.swing.STModelEditor editor = (nextgen.swing.STModelEditor) tabComponentAt;\n" +
 				"						setSelectedComponent(editor);\n" + 
 				"						return editor;\n" + 
 				"					}\n" + 

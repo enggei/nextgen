@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 

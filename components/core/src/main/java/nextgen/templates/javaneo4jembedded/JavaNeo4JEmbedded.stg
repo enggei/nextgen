@@ -110,7 +110,7 @@ public java.util.stream.Stream<~entity;format="capitalize"~> findAll~entity;form
 	return db.findNodes(~entity;format="capitalize"~Label, "~propertyName~", value~if(isEnum)~.name()~endif~).stream().map(this::new~entity;format="capitalize"~);
 }  >>
 
-NeoFactoryAccessors(name,newInstanceStatements,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label("~name~");
+NeoFactoryAccessors(name,useUUID,newInstanceStatements,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label("~name~");
 
 public static boolean is~name;format="capitalize"~(org.neo4j.graphdb.Node node) {
 	return node != null && node.hasLabel(~name~Label);
@@ -118,6 +118,7 @@ public static boolean is~name;format="capitalize"~(org.neo4j.graphdb.Node node) 
 
 public ~name;format="capitalize"~ new~name;format="capitalize"~() { 
 	~name;format="capitalize"~ newInstance = new~name;format="capitalize"~(db.createNode(~name~Label));
+	~if(useUUID)~newInstance.setUuid(java.util.UUID.randomUUID().toString());~endif~
 	~newInstanceStatements:{it|~it~};separator="\n"~
 	return newInstance;
 }

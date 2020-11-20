@@ -34,7 +34,7 @@ public class STTemplateNavigatorGenerator {
                   .addStatements("findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);"))
             .addEvents(NextgenST.newEventSubscription()
                   .setEventName("NewSTGroup")
-                  .addStatements("treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.st.STTemplateNavigator.STGroupTreeNode(event.group));"))
+                  .addStatements("treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.swing.STTemplateNavigator.STGroupTreeNode(event.group));"))
             .addEvents(NextgenST.newEventSubscription()
                   .setEventName("NewSTEnum")
                   .addStatements("findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))\n" +
@@ -54,11 +54,11 @@ public class STTemplateNavigatorGenerator {
             .addEvents(NextgenST.newEventSubscription()
                   .setEventName("STGroupNameChanged")
                   .addStatements("findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))\n" +
-                        "					.ifPresent(nextgen.st.STTemplateNavigator.STGroupTreeNode::nodeChanged);"))
+                        "					.ifPresent(nextgen.swing.STTemplateNavigator.STGroupTreeNode::nodeChanged);"))
             .addEvents(NextgenST.newEventSubscription()
                   .setEventName("STTemplateNameChanged")
                   .addStatements("findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))\n" +
-                        "					.ifPresent(nextgen.st.STTemplateNavigator.STTemplateTreeNode::nodeChanged);"))
+                        "					.ifPresent(nextgen.swing.STTemplateNavigator.STTemplateTreeNode::nodeChanged);"))
             .addEvents(NextgenST.newEventSubscription()
                   .setEventName("STInterfaceNameChanged")
                   .addStatements("findSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))\n" +
@@ -126,11 +126,11 @@ public class STTemplateNavigatorGenerator {
                   .addMethods("private java.util.Set<nextgen.st.model.STTemplate> getSelectedTemplates() {\n" +
                         "			return getSelectedSTTemplateTreeNodes()\n" +
                         "					.filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this))\n" +
-                        "					.map(nextgen.st.STTemplateNavigator.BaseTreeNode::getModel)\n" +
+                        "					.map(nextgen.swing.STTemplateNavigator.BaseTreeNode::getModel)\n" +
                         "					.collect(java.util.stream.Collectors.toSet());\n" +
                         "		}")
                   .addSelectionStatements("selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> { \n" +
-                        "	final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);\n" +
+                        "	final nextgen.swing.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.swing.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);\n" +
                         "	nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());\n" +
                         "});"))
             .addTreeNodes(NextgenST.newTreeNode()

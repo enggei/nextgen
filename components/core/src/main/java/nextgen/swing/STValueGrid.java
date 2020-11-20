@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import nextgen.st.model.STValue;
 import nextgen.st.model.STValueType;

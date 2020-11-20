@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;

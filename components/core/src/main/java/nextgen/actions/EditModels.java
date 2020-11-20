@@ -12,11 +12,7 @@ public class EditModels extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().doLaterInTransaction(transaction1 -> {
-         final nextgen.st.STModelGrid stModelGrid = appModel().getWorkspace().getModelGrid(stTemplate);
-         appModel().getWorkspace().setSelectedComponent(stModelGrid);
-         stModelGrid.requestFocusInWindow();   
-      });
+      nextgen.events.EditSTModels.post(stTemplate);
    }
 
 }

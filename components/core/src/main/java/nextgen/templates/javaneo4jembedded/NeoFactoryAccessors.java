@@ -6,6 +6,7 @@ public class NeoFactoryAccessors {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
+	private Boolean _useUUID;
 	private java.util.List<Object> _newInstanceStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _properties = new java.util.ArrayList<>();
 
@@ -21,6 +22,7 @@ public class NeoFactoryAccessors {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NeoFactoryAccessors");
 		st.add("name", _name);
+		st.add("useUUID", _useUUID);
 		for (Object o : _newInstanceStatements) st.add("newInstanceStatements", o);
 		for (Object o : _properties) st.add("properties", o);
 		return st.render().trim();
@@ -45,6 +47,28 @@ public class NeoFactoryAccessors {
 
 	public NeoFactoryAccessors removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public NeoFactoryAccessors setUseUUID(Boolean value) {
+		this._useUUID = value;
+		return this;
+	}
+
+	public Boolean getUseUUID() {
+		return this._useUUID;
+	}
+
+	public Boolean getUseUUID(Boolean defaultValue) {
+		return this._useUUID == null ? defaultValue : this._useUUID;
+	}
+
+	public boolean hasUseUUID() {
+		return this._useUUID != null;
+	}
+
+	public NeoFactoryAccessors removeUseUUID() {
+		this._useUUID = null;
 		return this;
 	} 
 
@@ -120,7 +144,7 @@ public class NeoFactoryAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NeoFactoryAccessors(name,newInstanceStatements,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
+	static final String st = "NeoFactoryAccessors(name,useUUID,newInstanceStatements,properties) ::= <<private static final org.neo4j.graphdb.Label ~name~Label = org.neo4j.graphdb.Label.label(\"~name~\");\n" + 
 				"\n" + 
 				"public static boolean is~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) {\n" + 
 				"	return node != null && node.hasLabel(~name~Label);\n" + 
@@ -128,6 +152,7 @@ public class NeoFactoryAccessors {
 				"\n" + 
 				"public ~name;format=\"capitalize\"~ new~name;format=\"capitalize\"~() { \n" + 
 				"	~name;format=\"capitalize\"~ newInstance = new~name;format=\"capitalize\"~(db.createNode(~name~Label));\n" + 
+				"	~if(useUUID)~newInstance.setUuid(java.util.UUID.randomUUID().toString());~endif~\n" + 
 				"	~newInstanceStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return newInstance;\n" + 
 				"}\n" + 

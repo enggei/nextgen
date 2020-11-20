@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;

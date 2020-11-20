@@ -70,6 +70,7 @@ public class STModelNeoFactory {
 
 	public STGroupModel newSTGroupModel() { 
 		STGroupModel newInstance = newSTGroupModel(db.createNode(STGroupModelLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -159,6 +160,7 @@ public class STModelNeoFactory {
 
 	public STGroupFile newSTGroupFile() { 
 		STGroupFile newInstance = newSTGroupFile(db.createNode(STGroupFileLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -220,6 +222,7 @@ public class STModelNeoFactory {
 
 	public STTemplate newSTTemplate() { 
 		STTemplate newInstance = newSTTemplate(db.createNode(STTemplateLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -281,6 +284,7 @@ public class STModelNeoFactory {
 
 	public STParameter newSTParameter() { 
 		STParameter newInstance = newSTParameter(db.createNode(STParameterLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -356,6 +360,7 @@ public class STModelNeoFactory {
 
 	public STParameterKey newSTParameterKey() { 
 		STParameterKey newInstance = newSTParameterKey(db.createNode(STParameterKeyLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -417,6 +422,7 @@ public class STModelNeoFactory {
 
 	public STInterface newSTInterface() { 
 		STInterface newInstance = newSTInterface(db.createNode(STInterfaceLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -464,6 +470,7 @@ public class STModelNeoFactory {
 
 	public STEnum newSTEnum() { 
 		STEnum newInstance = newSTEnum(db.createNode(STEnumLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -511,6 +518,7 @@ public class STModelNeoFactory {
 
 	public STEnumValue newSTEnumValue() { 
 		STEnumValue newInstance = newSTEnumValue(db.createNode(STEnumValueLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -572,6 +580,7 @@ public class STModelNeoFactory {
 
 	public STModel newSTModel() { 
 		STModel newInstance = newSTModel(db.createNode(STModelLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -605,6 +614,7 @@ public class STModelNeoFactory {
 
 	public STFile newSTFile() { 
 		STFile newInstance = newSTFile(db.createNode(STFileLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -638,6 +648,7 @@ public class STModelNeoFactory {
 
 	public STValue newSTValue() { 
 		STValue newInstance = newSTValue(db.createNode(STValueLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -699,6 +710,7 @@ public class STModelNeoFactory {
 
 	public STArgument newSTArgument() { 
 		STArgument newInstance = newSTArgument(db.createNode(STArgumentLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -732,6 +744,7 @@ public class STModelNeoFactory {
 
 	public STArgumentKV newSTArgumentKV() { 
 		STArgumentKV newInstance = newSTArgumentKV(db.createNode(STArgumentKVLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 
@@ -765,6 +778,7 @@ public class STModelNeoFactory {
 
 	public STProject newSTProject() { 
 		STProject newInstance = newSTProject(db.createNode(STProjectLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
 		return newInstance;
 	}
 

@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 public class AbstractEditor extends javax.swing.JPanel {
 

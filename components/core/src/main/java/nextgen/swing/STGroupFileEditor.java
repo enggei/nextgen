@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 public class STGroupFileEditor extends AbstractEditor {
 
@@ -6,9 +6,12 @@ public class STGroupFileEditor extends AbstractEditor {
    final javax.swing.JTextField txtPath;
 
    private final nextgen.st.model.STGroupFile stGroupFile;
+   private String uuid;
 
    public STGroupFileEditor(nextgen.st.model.STGroupFile stGroupFile) {
+
       this.stGroupFile = stGroupFile;
+      this.uuid = stGroupFile.getUuid();
 
       txtPackage = newTextField(stGroupFile.getPackageName(), 45);
       txtPath = newTextField(stGroupFile.getPath(), 45);
@@ -29,7 +32,7 @@ public class STGroupFileEditor extends AbstractEditor {
       add(inputPanel, java.awt.BorderLayout.NORTH);
    }
 
-   public nextgen.st.model.STGroupFile getSTGroupFile() {
+   public nextgen.st.model.STGroupFile getModel() {
       return stGroupFile;
    }
 
@@ -42,5 +45,9 @@ public class STGroupFileEditor extends AbstractEditor {
       stGroupFile.setPath(path);
 
       nextgen.events.STGroupFileChanged.post(stGroupFile);
+   }
+
+   public String getUuid() {
+      return uuid;
    }
 }
