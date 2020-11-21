@@ -6,8 +6,9 @@ public class TransactionAction {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private Object _title;
 	private Object _titleExpression;
+	private Object _title;
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
@@ -24,11 +25,12 @@ public class TransactionAction {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TransactionAction");
 		st.add("name", _name);
-		st.add("title", _title);
 		st.add("titleExpression", _titleExpression);
+		st.add("title", _title);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -54,6 +56,28 @@ public class TransactionAction {
 		return this;
 	} 
 
+	public TransactionAction setTitleExpression(Object value) {
+		this._titleExpression = value;
+		return this;
+	}
+
+	public Object getTitleExpression() {
+		return this._titleExpression;
+	}
+
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	}
+
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
+	}
+
+	public TransactionAction removeTitleExpression() {
+		this._titleExpression = null;
+		return this;
+	} 
+
 	public TransactionAction setTitle(Object value) {
 		this._title = value;
 		return this;
@@ -76,26 +100,33 @@ public class TransactionAction {
 		return this;
 	} 
 
-	public TransactionAction setTitleExpression(Object value) {
-		this._titleExpression = value;
+	public TransactionAction addMethods(Object value) {
+		this._methods.add(value);
 		return this;
 	}
 
-	public Object getTitleExpression() {
-		return this._titleExpression;
-	}
-
-	public Object getTitleExpression(Object defaultValue) {
-		return this._titleExpression == null ? defaultValue : this._titleExpression;
-	}
-
-	public boolean hasTitleExpression() {
-		return this._titleExpression != null;
-	}
-
-	public TransactionAction removeTitleExpression() {
-		this._titleExpression = null;
+	public TransactionAction setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public TransactionAction setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public TransactionAction removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public TransactionAction removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public TransactionAction addStatements(Object value) {
@@ -195,10 +226,10 @@ public class TransactionAction {
 
 	}  
 
-	public TransactionAction addFields(Object _type, Object _name) {
+	public TransactionAction addFields(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		this._fields.add(map);
 		return this;
 	}
@@ -208,44 +239,44 @@ public class TransactionAction {
 	}
 
 	public TransactionAction addFields(TransactionAction_Fields value) {
-		return addFields(value._type, value._name);
+		return addFields(value._name, value._type);
 	}
 
 	public java.util.stream.Stream<TransactionAction_Fields> streamFields() {
 		return this._fields.stream().map(TransactionAction_Fields::new);
 	}
 
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getFields_Name() {
 		return streamFields().map(TransactionAction_Fields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TransactionAction_Fields {
 
-		Object _type;
 		Object _name;
+		Object _type;
 
-		public TransactionAction_Fields(Object _type, Object _name) {
-			this._type = _type;
+		public TransactionAction_Fields(Object _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
 		private TransactionAction_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -263,7 +294,7 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(name,staticFields,fields,title,titleExpression,statements) ::= <<package nextgen.actions;\n" + 
+	static final String st = "TransactionAction(name,staticFields,fields,titleExpression,title,methods,statements) ::= <<package nextgen.actions;\n" + 
 				"\n" + 
 				"public class ~name~ extends TransactionAction {\n" + 
 				"\n" + 
@@ -296,5 +327,7 @@ public class TransactionAction {
 				"   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {\n" + 
 				"      ~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"   }\n" + 
+				"\n" + 
+				"   ~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

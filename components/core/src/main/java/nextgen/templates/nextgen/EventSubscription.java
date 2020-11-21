@@ -5,8 +5,8 @@ public class EventSubscription {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _threadMode;
 	private Object _eventName;
+	private Object _threadMode;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	EventSubscription(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class EventSubscription {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EventSubscription");
-		st.add("threadMode", _threadMode);
 		st.add("eventName", _eventName);
+		st.add("threadMode", _threadMode);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
-
-	public EventSubscription setThreadMode(Object value) {
-		this._threadMode = value;
-		return this;
-	}
-
-	public Object getThreadMode() {
-		return this._threadMode;
-	}
-
-	public Object getThreadMode(Object defaultValue) {
-		return this._threadMode == null ? defaultValue : this._threadMode;
-	}
-
-	public boolean hasThreadMode() {
-		return this._threadMode != null;
-	}
-
-	public EventSubscription removeThreadMode() {
-		this._threadMode = null;
-		return this;
-	} 
 
 	public EventSubscription setEventName(Object value) {
 		this._eventName = value;
@@ -67,6 +45,28 @@ public class EventSubscription {
 
 	public EventSubscription removeEventName() {
 		this._eventName = null;
+		return this;
+	} 
+
+	public EventSubscription setThreadMode(Object value) {
+		this._threadMode = value;
+		return this;
+	}
+
+	public Object getThreadMode() {
+		return this._threadMode;
+	}
+
+	public Object getThreadMode(Object defaultValue) {
+		return this._threadMode == null ? defaultValue : this._threadMode;
+	}
+
+	public boolean hasThreadMode() {
+		return this._threadMode != null;
+	}
+
+	public EventSubscription removeThreadMode() {
+		this._threadMode = null;
 		return this;
 	} 
 
@@ -113,7 +113,7 @@ public class EventSubscription {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EventSubscription(threadMode,eventName,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)\n" + 
+	static final String st = "EventSubscription(statements,eventName,threadMode) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)\n" + 
 				"public void on~eventName;format=\"capitalize\"~(nextgen.events.~eventName~ event) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";

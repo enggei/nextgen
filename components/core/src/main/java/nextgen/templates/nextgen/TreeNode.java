@@ -5,16 +5,16 @@ public class TreeNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
 	private Object _modelType;
+	private String _name;
 	private Boolean _hasUuid;
 	private Object _icon;
-	private Object _labelExpression;
 	private Object _tooltipExpression;
-	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private Object _labelExpression;
 	private java.util.List<Object> _getActionsStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Object> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _selectionStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _privateFields = new java.util.ArrayList<>();
@@ -31,44 +31,22 @@ public class TreeNode {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TreeNode");
-		st.add("name", _name);
 		st.add("modelType", _modelType);
+		st.add("name", _name);
 		st.add("hasUuid", _hasUuid);
 		st.add("icon", _icon);
-		st.add("labelExpression", _labelExpression);
 		st.add("tooltipExpression", _tooltipExpression);
-		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		st.add("labelExpression", _labelExpression);
 		for (Object o : _getActionsStatements) st.add("getActionsStatements", o);
-		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _actions) st.add("actions", o);
 		for (Object o : _selectionStatements) st.add("selectionStatements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _privateFields) st.addAggr("privateFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _parameters) st.addAggr("parameters.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _parameters) st.addAggr("parameters.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
-
-	public TreeNode setName(String value) {
-		this._name = value;
-		return this;
-	}
-
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public TreeNode removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public TreeNode setModelType(Object value) {
 		this._modelType = value;
@@ -89,6 +67,28 @@ public class TreeNode {
 
 	public TreeNode removeModelType() {
 		this._modelType = null;
+		return this;
+	} 
+
+	public TreeNode setName(String value) {
+		this._name = value;
+		return this;
+	}
+
+	public String getName() {
+		return this._name;
+	}
+
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public TreeNode removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -136,28 +136,6 @@ public class TreeNode {
 		return this;
 	} 
 
-	public TreeNode setLabelExpression(Object value) {
-		this._labelExpression = value;
-		return this;
-	}
-
-	public Object getLabelExpression() {
-		return this._labelExpression;
-	}
-
-	public Object getLabelExpression(Object defaultValue) {
-		return this._labelExpression == null ? defaultValue : this._labelExpression;
-	}
-
-	public boolean hasLabelExpression() {
-		return this._labelExpression != null;
-	}
-
-	public TreeNode removeLabelExpression() {
-		this._labelExpression = null;
-		return this;
-	} 
-
 	public TreeNode setTooltipExpression(Object value) {
 		this._tooltipExpression = value;
 		return this;
@@ -180,33 +158,26 @@ public class TreeNode {
 		return this;
 	} 
 
-	public TreeNode addConstructorStatements(Object value) {
-		this._constructorStatements.add(value);
+	public TreeNode setLabelExpression(Object value) {
+		this._labelExpression = value;
 		return this;
 	}
 
-	public TreeNode setConstructorStatements(Object[] value) {
-		this._constructorStatements.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getLabelExpression() {
+		return this._labelExpression;
 	}
 
-	public TreeNode setConstructorStatements(java.util.Collection<Object> values) {
-		this._constructorStatements.addAll(values);
-		return this;
+	public Object getLabelExpression(Object defaultValue) {
+		return this._labelExpression == null ? defaultValue : this._labelExpression;
 	}
 
-	public TreeNode removeConstructorStatements(Object value) {
-		this._constructorStatements.remove(value);
-		return this;
+	public boolean hasLabelExpression() {
+		return this._labelExpression != null;
 	}
 
-	public TreeNode removeConstructorStatements(int index) {
-		this._constructorStatements.remove(index);
+	public TreeNode removeLabelExpression() {
+		this._labelExpression = null;
 		return this;
-	}
-
-	public java.util.List<Object> getConstructorStatements() {
-		return this._constructorStatements;
 	} 
 
 	public TreeNode addGetActionsStatements(Object value) {
@@ -238,33 +209,33 @@ public class TreeNode {
 		return this._getActionsStatements;
 	} 
 
-	public TreeNode addActions(Object value) {
-		this._actions.add(value);
+	public TreeNode addConstructorStatements(Object value) {
+		this._constructorStatements.add(value);
 		return this;
 	}
 
-	public TreeNode setActions(Object[] value) {
-		this._actions.addAll(java.util.Arrays.asList(value));
+	public TreeNode setConstructorStatements(Object[] value) {
+		this._constructorStatements.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNode setActions(java.util.Collection<Object> values) {
-		this._actions.addAll(values);
+	public TreeNode setConstructorStatements(java.util.Collection<Object> values) {
+		this._constructorStatements.addAll(values);
 		return this;
 	}
 
-	public TreeNode removeActions(Object value) {
-		this._actions.remove(value);
+	public TreeNode removeConstructorStatements(Object value) {
+		this._constructorStatements.remove(value);
 		return this;
 	}
 
-	public TreeNode removeActions(int index) {
-		this._actions.remove(index);
+	public TreeNode removeConstructorStatements(int index) {
+		this._constructorStatements.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getActions() {
-		return this._actions;
+	public java.util.List<Object> getConstructorStatements() {
+		return this._constructorStatements;
 	} 
 
 	public TreeNode addMethods(Object value) {
@@ -294,6 +265,35 @@ public class TreeNode {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
+	} 
+
+	public TreeNode addActions(Object value) {
+		this._actions.add(value);
+		return this;
+	}
+
+	public TreeNode setActions(Object[] value) {
+		this._actions.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNode setActions(java.util.Collection<Object> values) {
+		this._actions.addAll(values);
+		return this;
+	}
+
+	public TreeNode removeActions(Object value) {
+		this._actions.remove(value);
+		return this;
+	}
+
+	public TreeNode removeActions(int index) {
+		this._actions.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getActions() {
+		return this._actions;
 	} 
 
 	public TreeNode addSelectionStatements(Object value) {
@@ -448,10 +448,10 @@ public class TreeNode {
 
 	}  
 
-	public TreeNode addParameters(Object _type, String _name) {
+	public TreeNode addParameters(String _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		this._parameters.add(map);
 		return this;
 	}
@@ -461,44 +461,44 @@ public class TreeNode {
 	}
 
 	public TreeNode addParameters(TreeNode_Parameters value) {
-		return addParameters(value._type, value._name);
+		return addParameters(value._name, value._type);
 	}
 
 	public java.util.stream.Stream<TreeNode_Parameters> streamParameters() {
 		return this._parameters.stream().map(TreeNode_Parameters::new);
 	}
 
-	public java.util.List<Object> getParameters_Type() {
-		return streamParameters().map(TreeNode_Parameters::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<String> getParameters_Name() {
 		return streamParameters().map(TreeNode_Parameters::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getParameters_Type() {
+		return streamParameters().map(TreeNode_Parameters::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class TreeNode_Parameters {
 
-		Object _type;
 		String _name;
+		Object _type;
 
-		public TreeNode_Parameters(Object _type, String _name) {
-			this._type = _type;
+		public TreeNode_Parameters(String _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
 		private TreeNode_Parameters(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (String) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public String getName() {
 			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -516,7 +516,7 @@ public class TreeNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNode(name,modelType,hasUuid,fields,privateFields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~\n" + 
+	static final String st = "TreeNode(modelType,name,hasUuid,fields,privateFields,getActionsStatements,constructorStatements,methods,actions,icon,tooltipExpression,labelExpression,selectionStatements,parameters) ::= <<// ~name~\n" + 
 				"public class ~name~ extends BaseTreeNode<~modelType~> {\n" + 
 				"~if(hasUuid)~\n" + 
 				"\n" + 

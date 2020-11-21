@@ -5,20 +5,20 @@ public class TreeNavigator {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private BaseTreeNode _baseTreeNode;
 	private String _packageName;
 	private String _name;
+	private String _preferredHeight;
 	private Object _rootNodeExpression;
 	private String _preferredWidth;
-	private String _preferredHeight;
-	private BaseTreeNode _baseTreeNode;
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<TreeNode> _treeNodes = new java.util.ArrayList<>();
+	private java.util.List<Object> _events = new java.util.ArrayList<>();
+	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
 	private java.util.List<Object> _unhandledNodeSelectedStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _events = new java.util.ArrayList<>();
-	private java.util.List<TreeNode> _treeNodes = new java.util.ArrayList<>();
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	TreeNavigator(org.stringtemplate.v4.STGroup stGroup) {
@@ -32,23 +32,45 @@ public class TreeNavigator {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TreeNavigator");
+		st.add("baseTreeNode", _baseTreeNode);
 		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("preferredHeight", _preferredHeight);
 		st.add("rootNodeExpression", _rootNodeExpression);
 		st.add("preferredWidth", _preferredWidth);
-		st.add("preferredHeight", _preferredHeight);
-		st.add("baseTreeNode", _baseTreeNode);
+		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _treeNodes) st.add("treeNodes", o);
+		for (Object o : _events) st.add("events", o);
+		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _treeNodesSelected) st.add("treeNodesSelected", o);
 		for (Object o : _unhandledNodeSelectedStatements) st.add("unhandledNodeSelectedStatements", o);
-		for (Object o : _events) st.add("events", o);
-		for (Object o : _treeNodes) st.add("treeNodes", o);
-		for (Object o : _methods) st.add("methods", o);
-		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
+
+	public TreeNavigator setBaseTreeNode(BaseTreeNode value) {
+		this._baseTreeNode = value;
+		return this;
+	}
+
+	public BaseTreeNode getBaseTreeNode() {
+		return this._baseTreeNode;
+	}
+
+	public BaseTreeNode getBaseTreeNode(BaseTreeNode defaultValue) {
+		return this._baseTreeNode == null ? defaultValue : this._baseTreeNode;
+	}
+
+	public boolean hasBaseTreeNode() {
+		return this._baseTreeNode != null;
+	}
+
+	public TreeNavigator removeBaseTreeNode() {
+		this._baseTreeNode = null;
+		return this;
+	} 
 
 	public TreeNavigator setPackageName(String value) {
 		this._packageName = value;
@@ -91,6 +113,28 @@ public class TreeNavigator {
 
 	public TreeNavigator removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public TreeNavigator setPreferredHeight(String value) {
+		this._preferredHeight = value;
+		return this;
+	}
+
+	public String getPreferredHeight() {
+		return this._preferredHeight;
+	}
+
+	public String getPreferredHeight(String defaultValue) {
+		return this._preferredHeight == null ? defaultValue : this._preferredHeight;
+	}
+
+	public boolean hasPreferredHeight() {
+		return this._preferredHeight != null;
+	}
+
+	public TreeNavigator removePreferredHeight() {
+		this._preferredHeight = null;
 		return this;
 	} 
 
@@ -138,48 +182,120 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setPreferredHeight(String value) {
-		this._preferredHeight = value;
+	public TreeNavigator addMethods(Object value) {
+		this._methods.add(value);
 		return this;
 	}
 
-	public String getPreferredHeight() {
-		return this._preferredHeight;
-	}
-
-	public String getPreferredHeight(String defaultValue) {
-		return this._preferredHeight == null ? defaultValue : this._preferredHeight;
-	}
-
-	public boolean hasPreferredHeight() {
-		return this._preferredHeight != null;
-	}
-
-	public TreeNavigator removePreferredHeight() {
-		this._preferredHeight = null;
+	public TreeNavigator setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public TreeNavigator setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
-	public TreeNavigator setBaseTreeNode(BaseTreeNode value) {
-		this._baseTreeNode = value;
+	public TreeNavigator addTreeNodes(TreeNode value) {
+		this._treeNodes.add(value);
 		return this;
 	}
 
-	public BaseTreeNode getBaseTreeNode() {
-		return this._baseTreeNode;
-	}
-
-	public BaseTreeNode getBaseTreeNode(BaseTreeNode defaultValue) {
-		return this._baseTreeNode == null ? defaultValue : this._baseTreeNode;
-	}
-
-	public boolean hasBaseTreeNode() {
-		return this._baseTreeNode != null;
-	}
-
-	public TreeNavigator removeBaseTreeNode() {
-		this._baseTreeNode = null;
+	public TreeNavigator setTreeNodes(TreeNode[] value) {
+		this._treeNodes.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public TreeNavigator setTreeNodes(java.util.Collection<TreeNode> values) {
+		this._treeNodes.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodes(TreeNode value) {
+		this._treeNodes.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodes(int index) {
+		this._treeNodes.remove(index);
+		return this;
+	}
+
+	public java.util.List<TreeNode> getTreeNodes() {
+		return this._treeNodes;
+	} 
+
+	public TreeNavigator addEvents(Object value) {
+		this._events.add(value);
+		return this;
+	}
+
+	public TreeNavigator setEvents(Object[] value) {
+		this._events.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setEvents(java.util.Collection<Object> values) {
+		this._events.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeEvents(Object value) {
+		this._events.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeEvents(int index) {
+		this._events.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getEvents() {
+		return this._events;
+	} 
+
+	public TreeNavigator addTreeModelConstructorStatements(Object value) {
+		this._treeModelConstructorStatements.add(value);
+		return this;
+	}
+
+	public TreeNavigator setTreeModelConstructorStatements(Object[] value) {
+		this._treeModelConstructorStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setTreeModelConstructorStatements(java.util.Collection<Object> values) {
+		this._treeModelConstructorStatements.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeTreeModelConstructorStatements(Object value) {
+		this._treeModelConstructorStatements.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeTreeModelConstructorStatements(int index) {
+		this._treeModelConstructorStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getTreeModelConstructorStatements() {
+		return this._treeModelConstructorStatements;
 	} 
 
 	public TreeNavigator addImports(Object value) {
@@ -298,122 +414,6 @@ public class TreeNavigator {
 		return this._unhandledNodeSelectedStatements;
 	} 
 
-	public TreeNavigator addEvents(Object value) {
-		this._events.add(value);
-		return this;
-	}
-
-	public TreeNavigator setEvents(Object[] value) {
-		this._events.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setEvents(java.util.Collection<Object> values) {
-		this._events.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeEvents(Object value) {
-		this._events.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeEvents(int index) {
-		this._events.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getEvents() {
-		return this._events;
-	} 
-
-	public TreeNavigator addTreeNodes(TreeNode value) {
-		this._treeNodes.add(value);
-		return this;
-	}
-
-	public TreeNavigator setTreeNodes(TreeNode[] value) {
-		this._treeNodes.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setTreeNodes(java.util.Collection<TreeNode> values) {
-		this._treeNodes.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeTreeNodes(TreeNode value) {
-		this._treeNodes.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeTreeNodes(int index) {
-		this._treeNodes.remove(index);
-		return this;
-	}
-
-	public java.util.List<TreeNode> getTreeNodes() {
-		return this._treeNodes;
-	} 
-
-	public TreeNavigator addMethods(Object value) {
-		this._methods.add(value);
-		return this;
-	}
-
-	public TreeNavigator setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeMethods(int index) {
-		this._methods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
-	} 
-
-	public TreeNavigator addTreeModelConstructorStatements(Object value) {
-		this._treeModelConstructorStatements.add(value);
-		return this;
-	}
-
-	public TreeNavigator setTreeModelConstructorStatements(Object[] value) {
-		this._treeModelConstructorStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setTreeModelConstructorStatements(java.util.Collection<Object> values) {
-		this._treeModelConstructorStatements.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeTreeModelConstructorStatements(Object value) {
-		this._treeModelConstructorStatements.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeTreeModelConstructorStatements(int index) {
-		this._treeModelConstructorStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getTreeModelConstructorStatements() {
-		return this._treeModelConstructorStatements;
-	} 
-
 	public TreeNavigator addFields(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -482,7 +482,7 @@ public class TreeNavigator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;\n" + 
+	static final String st = "TreeNavigator(methods,treeNodes,baseTreeNode,events,treeModelConstructorStatements,packageName,imports,name,fields,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,rootNodeExpression,preferredWidth) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"~imports:{it|~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 

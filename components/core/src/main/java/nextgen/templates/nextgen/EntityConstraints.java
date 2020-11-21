@@ -6,8 +6,8 @@ public class EntityConstraints {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _entity;
-	private java.util.List<Object> _constraints = new java.util.ArrayList<>();
 	private java.util.List<Object> _deleteStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _constraints = new java.util.ArrayList<>();
 
 	EntityConstraints(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class EntityConstraints {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EntityConstraints");
 		st.add("entity", _entity);
-		for (Object o : _constraints) st.add("constraints", o);
 		for (Object o : _deleteStatements) st.add("deleteStatements", o);
+		for (Object o : _constraints) st.add("constraints", o);
 		return st.render().trim();
 	}
 
@@ -46,35 +46,6 @@ public class EntityConstraints {
 	public EntityConstraints removeEntity() {
 		this._entity = null;
 		return this;
-	} 
-
-	public EntityConstraints addConstraints(Object value) {
-		this._constraints.add(value);
-		return this;
-	}
-
-	public EntityConstraints setConstraints(Object[] value) {
-		this._constraints.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public EntityConstraints setConstraints(java.util.Collection<Object> values) {
-		this._constraints.addAll(values);
-		return this;
-	}
-
-	public EntityConstraints removeConstraints(Object value) {
-		this._constraints.remove(value);
-		return this;
-	}
-
-	public EntityConstraints removeConstraints(int index) {
-		this._constraints.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getConstraints() {
-		return this._constraints;
 	} 
 
 	public EntityConstraints addDeleteStatements(Object value) {
@@ -106,6 +77,35 @@ public class EntityConstraints {
 		return this._deleteStatements;
 	} 
 
+	public EntityConstraints addConstraints(Object value) {
+		this._constraints.add(value);
+		return this;
+	}
+
+	public EntityConstraints setConstraints(Object[] value) {
+		this._constraints.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public EntityConstraints setConstraints(java.util.Collection<Object> values) {
+		this._constraints.addAll(values);
+		return this;
+	}
+
+	public EntityConstraints removeConstraints(Object value) {
+		this._constraints.remove(value);
+		return this;
+	}
+
+	public EntityConstraints removeConstraints(int index) {
+		this._constraints.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getConstraints() {
+		return this._constraints;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -120,7 +120,7 @@ public class EntityConstraints {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EntityConstraints(entity,constraints,deleteStatements) ::= <<public static String canDelete(~entity~ entity) {\n" + 
+	static final String st = "EntityConstraints(deleteStatements,constraints,entity) ::= <<public static String canDelete(~entity~ entity) {\n" + 
 				"	final StringBuilder constraints = new StringBuilder(\"\");\n" + 
 				"	~constraints:{it|~it~};separator=\"\\n\"~\n" + 
 				"	return constraints.toString().trim();\n" + 

@@ -113,7 +113,7 @@ public class TreeNodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action(\"~title~\", actionEvent -> {\n" + 
+	static final String st = "TreeNodeAction(isTransactional,statements,title) ::= <<new~if(isTransactional)~Transaction~endif~Action(\"~title~\", actionEvent -> {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"}) >>";
 }  

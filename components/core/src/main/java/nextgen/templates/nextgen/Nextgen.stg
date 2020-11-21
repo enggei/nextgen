@@ -4,12 +4,12 @@ ActionCall() ::= << >>
 
 AppEvents() ::= <<// deprecated  >>
 
-EventSubscriber(eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe()
+EventSubscriber(eventType,statements,eventName) ::= <<@org.greenrobot.eventbus.Subscribe()
 public void on~eventName~(~eventType~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-Canvas(packageName,imports,name,fields,finalFields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;
+Canvas(imports,name,fields,packageName,constructorStatements,methods,rightClickStatements,finalFields,keyPressActions,rightClickActions,canvasRelations,canvasNodes,actions) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -528,6 +528,344 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	~canvasNodes:{it|~it~};separator="\n\n"~
 
 	~canvasRelations:{it|~it~};separator="\n\n"~
+}  >>
+
+BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Double implements Comparator<BaseCanvasRelation> {
+
+	final protected PText child;
+	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
+
+	public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid, String type) {
+		this.addAttribute("_defaultColor", Color.decode("#bababa"));
+		this.addAttribute("_selectedColor", Color.decode("#b2182b"));
+		this.addAttribute("_highlightedColor", Color.decode("#f4a582"));
+		this.addAttribute("_uuid", uuid);
+		this.addAttribute("_type", type);
+		this.addAttribute("_src", src);
+		this.addAttribute("_dst", dst);
+
+		src.addOutgoingRelation(getUuid());
+		dst.addIncomingRelation(getUuid());
+
+		this.child = new PText(type);
+
+		setPaint((Color) getAttribute("_defaultColor"));
+		child.setTextPaint((Color) getAttribute("_defaultColor"));
+
+		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
+		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
+		addInputEventListener(relationInputEventHandler);
+		addInputEventListener(canvasZoomHandler);
+
+		src.addPropertyChangeListener(nodeChangeListener);
+		dst.addPropertyChangeListener(nodeChangeListener);
+		addChild(this.child);
+
+		SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
+	}
+
+	@Override
+	public String toString() {
+		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
+	}
+
+	public void close() {
+		SwingUtilities.invokeLater(() -> {
+			log.info("R-" + getUuid() + " closed");
+			getSrc().outgoing.remove(getUuid());
+			getDst().incoming.remove(getUuid());
+			getSrc().removePropertyChangeListener(nodeChangeListener);
+			getDst().removePropertyChangeListener(nodeChangeListener);
+		});
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		BaseCanvasRelation other = (BaseCanvasRelation) o;
+
+		return getUuid().equals(other.getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return getUuid().hashCode();
+	}
+
+	public String getUuid() {
+		return (String) getAttribute("_uuid");
+	}
+
+	public String getType() {
+		return (String) getAttribute("_type");
+	}
+
+	public void unselect() {
+		addAttribute("_selected", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_defaultColor")));
+	}
+
+	public void select() {
+		addAttribute("_selected", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_selectedColor")));
+	}
+
+	public boolean isSelected() {
+		return getBooleanAttribute("_selected", false);
+	}
+
+	protected void unhighlight() {
+		addAttribute("_highlight", Boolean.FALSE);
+		SwingUtilities.invokeLater(() -> updatePath(isSelected() ? (Color) getAttribute("_selectedColor") : (Color) getAttribute("_defaultColor")));
+	}
+
+	protected void highlight() {
+		addAttribute("_highlight", Boolean.TRUE);
+		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_highlightedColor")));
+	}
+
+	protected BaseCanvasNode<?> getSrc() {
+		return (BaseCanvasNode<?>) getAttribute("_src");
+	}
+
+	protected BaseCanvasNode<?> getDst() {
+		return (BaseCanvasNode<?>) getAttribute("_dst");
+	}
+
+	public Long getOrder() {
+		return (Long) getAttribute("_order");
+	}
+
+	private void updatePath(Color color) {
+		child.setTextPaint(color);
+		setPaint(color);
+		setStrokePaint(color);
+		setPaintInvalid(true);
+		validateFullPaint();
+	}
+
+	private void updatePath(BaseCanvasNode<?> source, BaseCanvasNode<?> target) {
+		//log.info(getUuid() + " updatePath");
+		final PBounds src = source.getFullBoundsReference();
+		final PBounds dst = target.getFullBoundsReference();
+		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
+		final Point2D.Double startCenterBottom = new Point2D.Double(src.getCenterX(), src.getMaxY());
+		final Point2D.Double endCenterTop = new Point2D.Double(dst.getCenterX(), dst.getMinY());
+		final Point2D.Double startCenterTop = new Point2D.Double(src.getCenterX(), src.getMinY());
+		final Point2D.Double endCenterBottom = new Point2D.Double(dst.getCenterX(), dst.getMaxY());
+		if (src.getCenterX() < dst.getCenterX()) {
+			final Point2D.Double startRightCenter = new Point2D.Double(src.getMaxX(), src.getCenterY());
+			final Point2D.Double endRightCenter = new Point2D.Double(dst.getMinX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startRightCenter, endRightCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		} else {
+			final Point2D.Double startLeftCenter = new Point2D.Double(src.getMinX(), src.getCenterY());
+			final Point2D.Double endLeftCenter = new Point2D.Double(dst.getMaxX(), dst.getCenterY());
+			if (src.getCenterY() < dst.getCenterY()) {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterBottom, endCenterTop);
+				}
+			} else {
+				if (!horizontalOverlap) {
+					drawStraightPath(startLeftCenter, endLeftCenter);
+				} else {
+					drawStraightPath(startCenterTop, endCenterBottom);
+				}
+			}
+		}
+	}
+
+	private void drawStraightPath(Point2D start, Point2D end) {
+		reset();
+		setStrokePaint(child.getTextPaint());
+		moveTo(start.getX(), start.getY());
+		lineTo(end.getX(), end.getY());
+		child.setOffset(getBounds().getCenter2D());
+		final int ARR_SIZE = 4;
+		final double dx = end.getX() - start.getX();
+		final double dy = end.getY() - start.getY();
+		final double angle = Math.atan2(dy, dx);
+		final int len = (int) (Math.sqrt(dx * dx + dy * dy) - 10);
+		final AffineTransform at = AffineTransform.getTranslateInstance(start.getX(), start.getY());
+		at.concatenate(AffineTransform.getRotateInstance(angle));
+		append(new Polygon(new int[]{len,
+					len - ARR_SIZE,
+					len - ARR_SIZE,
+					len}, new int[]{0,
+					-ARR_SIZE,
+					ARR_SIZE,
+					0}, 4).getPathIterator(at), false);
+		setPaintInvalid(true);
+		validateFullPaint();
+	}
+
+	@Override
+	public int compare(BaseCanvasRelation o1, BaseCanvasRelation o2) {
+		return o1.getOrder().compareTo(o2.getOrder());
+	}
+
+	private final class PNodeChangeListener implements PropertyChangeListener {
+
+		private final java.util.UUID uuid = java.util.UUID.randomUUID();
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			PNodeChangeListener that = (PNodeChangeListener) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return java.util.Objects.hash(uuid);
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			switch (evt.getPropertyName()) {
+				case PNode.PROPERTY_FULL_BOUNDS:
+					break;
+				case PNode.PROPERTY_TRANSFORM:
+					SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
+					break;
+				case PNode.PROPERTY_PARENT:
+					break;
+			}
+		}
+	}  
+
+	private final class RelationInputEventHandler extends PBasicInputEventHandler {
+
+		@Override
+		public void mouseEntered(PInputEvent event) {
+			event.getInputManager().setKeyboardFocus(this);
+			highlight();
+		}
+
+		@Override
+		public void mouseExited(PInputEvent event) {
+			unhighlight();
+			event.getInputManager().setKeyboardFocus(thisCanvas());
+		}
+
+		@Override
+		public void mouseClicked(PInputEvent event) {
+			if (event.isRightMouseButton()) {
+				final JPopupMenu pop = new JPopupMenu();
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				onRelationRightClick(event, pop);
+				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
+			} else if (event.isLeftMouseButton()) {
+				SwingUtilities.invokeLater(() -> onRelationLeftClick(event));
+			}
+		}
+
+		@Override
+		public void keyPressed(PInputEvent event) {
+			onRelationKeyPressed(event);
+		}
+	}  
+
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+	}
+
+	protected void onRelationLeftClick(PInputEvent event) {
+		if (isSelected()) unselect();
+		else select();
+	}
+
+	protected void onRelationKeyPressed(PInputEvent event) {
+	}
+
+	abstract class RelationAction extends AbstractAction {
+
+		final PInputEvent event;
+
+		RelationAction(String name, PInputEvent event) {
+			super(name);
+			this.event = event;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			actionPerformed(event, e);
+		}
+
+		abstract void actionPerformed(PInputEvent event, ActionEvent e);
+	}
+}  >>
+
+CanvasRelation(actions,name,labelExpression,uuidExpression,fields,rightClickStatements,rightClickActions,keyPressActions) ::= <<public java.util.function.Supplier<STModelCanvas.~name~> new~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	return () -> new STModelCanvas.~name~(src, dst~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
+}
+
+public void add~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+	addRelation(~if(uuidExpression)~~uuidExpression~~else~src.getUuid() + dst.getUuid()~endif~, new~name~(src, dst~if(uuidExpression)~~else~, src.getUuid() + dst.getUuid()~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
+}
+
+final class ~name~ extends BaseCanvasRelation {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+
+	public ~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+		super(src, dst, ~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, ~if(labelExpression)~~labelExpression~~else~label~endif~);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
+		~rightClickStatements:{it|~it~};separator="\n"~
+
+		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
+	}
+~if(keyPressActions)~
+	
+	@Override
+	protected void onRelationKeyPressed(PInputEvent event) {
+		switch (event.getKeyCode()) {
+~keyPressActions:{it|
+			case VK_~it.key~:
+				new ~it.name~(event).actionPerformed(null);
+				break;
+};separator="\n"~
+		}
+		super.onRelationKeyPressed(event);
+	}
+~endif~
+
+	~actions:{it|~it~};separator="\n\n"~
+}  >>
+
+CanvasRelationAction(name,fields,title,statements) ::= <<final class ~name~ extends RelationAction {
+
+	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+		super("~title~", event);
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	void actionPerformed(PInputEvent event, ActionEvent e) {
+		~statements:{it|~it~};separator="\n"~
+	}
 }  >>
 
 BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
@@ -1087,7 +1425,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 	}
 }  >>
 
-CanvasNode(name,modelType,fields,uuidExpression,labelExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,rightClickActions,leftClickStatements,keyPressActions,actions,methods) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {
+CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftClickStatements,keyPressActions,actions,methods,fields,modelType,name,addedToCanvasStatements,labelExpression,uuidExpression) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
@@ -1172,7 +1510,7 @@ public Optional<~name~> isInstanceOf~name~(BaseCanvasNode<?> canvasNode) {
 	return Optional.ofNullable((canvasNode instanceof ~name~) ? (~name~) canvasNode : null);
 }  >>
 
-CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::= <<final class ~name~ extends NodeAction {
+CanvasNodeAction(statements,transactional,name,fields,titleExpression,title) ::= <<final class ~name~ extends NodeAction {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
@@ -1193,344 +1531,6 @@ CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::=
 	}
 }  >>
 
-BaseCanvasRelation() ::= <<protected class BaseCanvasRelation extends PPath.Double implements Comparator<BaseCanvasRelation> {
-
-	final protected PText child;
-	private final PNodeChangeListener nodeChangeListener = new PNodeChangeListener();
-
-	public BaseCanvasRelation(BaseCanvasNode<?> src, BaseCanvasNode<?> dst, String uuid, String type) {
-		this.addAttribute("_defaultColor", Color.decode("#bababa"));
-		this.addAttribute("_selectedColor", Color.decode("#b2182b"));
-		this.addAttribute("_highlightedColor", Color.decode("#f4a582"));
-		this.addAttribute("_uuid", uuid);
-		this.addAttribute("_type", type);
-		this.addAttribute("_src", src);
-		this.addAttribute("_dst", dst);
-
-		src.addOutgoingRelation(getUuid());
-		dst.addIncomingRelation(getUuid());
-
-		this.child = new PText(type);
-
-		setPaint((Color) getAttribute("_defaultColor"));
-		child.setTextPaint((Color) getAttribute("_defaultColor"));
-
-		final RelationInputEventHandler relationInputEventHandler = new RelationInputEventHandler();
-		relationInputEventHandler.getEventFilter().setMarksAcceptedEventsAsHandled(true);
-		addInputEventListener(relationInputEventHandler);
-		addInputEventListener(canvasZoomHandler);
-
-		src.addPropertyChangeListener(nodeChangeListener);
-		dst.addPropertyChangeListener(nodeChangeListener);
-		addChild(this.child);
-
-		SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
-	}
-
-	@Override
-	public String toString() {
-		return getUuid() + " " + getSrc() + " -> " + getType() + " -> " + getDst();
-	}
-
-	public void close() {
-		SwingUtilities.invokeLater(() -> {
-			log.info("R-" + getUuid() + " closed");
-			getSrc().outgoing.remove(getUuid());
-			getDst().incoming.remove(getUuid());
-			getSrc().removePropertyChangeListener(nodeChangeListener);
-			getDst().removePropertyChangeListener(nodeChangeListener);
-		});
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		BaseCanvasRelation other = (BaseCanvasRelation) o;
-
-		return getUuid().equals(other.getUuid());
-	}
-
-	@Override
-	public int hashCode() {
-		return getUuid().hashCode();
-	}
-
-	public String getUuid() {
-		return (String) getAttribute("_uuid");
-	}
-
-	public String getType() {
-		return (String) getAttribute("_type");
-	}
-
-	public void unselect() {
-		addAttribute("_selected", Boolean.FALSE);
-		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_defaultColor")));
-	}
-
-	public void select() {
-		addAttribute("_selected", Boolean.TRUE);
-		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_selectedColor")));
-	}
-
-	public boolean isSelected() {
-		return getBooleanAttribute("_selected", false);
-	}
-
-	protected void unhighlight() {
-		addAttribute("_highlight", Boolean.FALSE);
-		SwingUtilities.invokeLater(() -> updatePath(isSelected() ? (Color) getAttribute("_selectedColor") : (Color) getAttribute("_defaultColor")));
-	}
-
-	protected void highlight() {
-		addAttribute("_highlight", Boolean.TRUE);
-		SwingUtilities.invokeLater(() -> updatePath((Color) getAttribute("_highlightedColor")));
-	}
-
-	protected BaseCanvasNode<?> getSrc() {
-		return (BaseCanvasNode<?>) getAttribute("_src");
-	}
-
-	protected BaseCanvasNode<?> getDst() {
-		return (BaseCanvasNode<?>) getAttribute("_dst");
-	}
-
-	public Long getOrder() {
-		return (Long) getAttribute("_order");
-	}
-
-	private void updatePath(Color color) {
-		child.setTextPaint(color);
-		setPaint(color);
-		setStrokePaint(color);
-		setPaintInvalid(true);
-		validateFullPaint();
-	}
-
-	private void updatePath(BaseCanvasNode<?> source, BaseCanvasNode<?> target) {
-		//log.info(getUuid() + " updatePath");
-		final PBounds src = source.getFullBoundsReference();
-		final PBounds dst = target.getFullBoundsReference();
-		final boolean horizontalOverlap = !(src.getMaxX() < dst.getMinX() || src.getMinX() > dst.getMaxX());
-		final Point2D.Double startCenterBottom = new Point2D.Double(src.getCenterX(), src.getMaxY());
-		final Point2D.Double endCenterTop = new Point2D.Double(dst.getCenterX(), dst.getMinY());
-		final Point2D.Double startCenterTop = new Point2D.Double(src.getCenterX(), src.getMinY());
-		final Point2D.Double endCenterBottom = new Point2D.Double(dst.getCenterX(), dst.getMaxY());
-		if (src.getCenterX() < dst.getCenterX()) {
-			final Point2D.Double startRightCenter = new Point2D.Double(src.getMaxX(), src.getCenterY());
-			final Point2D.Double endRightCenter = new Point2D.Double(dst.getMinX(), dst.getCenterY());
-			if (src.getCenterY() < dst.getCenterY()) {
-				if (!horizontalOverlap) {
-					drawStraightPath(startRightCenter, endRightCenter);
-				} else {
-					drawStraightPath(startCenterBottom, endCenterTop);
-				}
-			} else {
-				if (!horizontalOverlap) {
-					drawStraightPath(startRightCenter, endRightCenter);
-				} else {
-					drawStraightPath(startCenterTop, endCenterBottom);
-				}
-			}
-		} else {
-			final Point2D.Double startLeftCenter = new Point2D.Double(src.getMinX(), src.getCenterY());
-			final Point2D.Double endLeftCenter = new Point2D.Double(dst.getMaxX(), dst.getCenterY());
-			if (src.getCenterY() < dst.getCenterY()) {
-				if (!horizontalOverlap) {
-					drawStraightPath(startLeftCenter, endLeftCenter);
-				} else {
-					drawStraightPath(startCenterBottom, endCenterTop);
-				}
-			} else {
-				if (!horizontalOverlap) {
-					drawStraightPath(startLeftCenter, endLeftCenter);
-				} else {
-					drawStraightPath(startCenterTop, endCenterBottom);
-				}
-			}
-		}
-	}
-
-	private void drawStraightPath(Point2D start, Point2D end) {
-		reset();
-		setStrokePaint(child.getTextPaint());
-		moveTo(start.getX(), start.getY());
-		lineTo(end.getX(), end.getY());
-		child.setOffset(getBounds().getCenter2D());
-		final int ARR_SIZE = 4;
-		final double dx = end.getX() - start.getX();
-		final double dy = end.getY() - start.getY();
-		final double angle = Math.atan2(dy, dx);
-		final int len = (int) (Math.sqrt(dx * dx + dy * dy) - 10);
-		final AffineTransform at = AffineTransform.getTranslateInstance(start.getX(), start.getY());
-		at.concatenate(AffineTransform.getRotateInstance(angle));
-		append(new Polygon(new int[]{len,
-					len - ARR_SIZE,
-					len - ARR_SIZE,
-					len}, new int[]{0,
-					-ARR_SIZE,
-					ARR_SIZE,
-					0}, 4).getPathIterator(at), false);
-		setPaintInvalid(true);
-		validateFullPaint();
-	}
-
-	@Override
-	public int compare(BaseCanvasRelation o1, BaseCanvasRelation o2) {
-		return o1.getOrder().compareTo(o2.getOrder());
-	}
-
-	private final class PNodeChangeListener implements PropertyChangeListener {
-
-		private final java.util.UUID uuid = java.util.UUID.randomUUID();
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			PNodeChangeListener that = (PNodeChangeListener) o;
-			return uuid.equals(that.uuid);
-		}
-
-		@Override
-		public int hashCode() {
-			return java.util.Objects.hash(uuid);
-		}
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			switch (evt.getPropertyName()) {
-				case PNode.PROPERTY_FULL_BOUNDS:
-					break;
-				case PNode.PROPERTY_TRANSFORM:
-					SwingUtilities.invokeLater(() -> updatePath((getSrc()), getDst()));
-					break;
-				case PNode.PROPERTY_PARENT:
-					break;
-			}
-		}
-	}  
-
-	private final class RelationInputEventHandler extends PBasicInputEventHandler {
-
-		@Override
-		public void mouseEntered(PInputEvent event) {
-			event.getInputManager().setKeyboardFocus(this);
-			highlight();
-		}
-
-		@Override
-		public void mouseExited(PInputEvent event) {
-			unhighlight();
-			event.getInputManager().setKeyboardFocus(thisCanvas());
-		}
-
-		@Override
-		public void mouseClicked(PInputEvent event) {
-			if (event.isRightMouseButton()) {
-				final JPopupMenu pop = new JPopupMenu();
-				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				onRelationRightClick(event, pop);
-				thisCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				pop.show(thisCanvas(), (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
-			} else if (event.isLeftMouseButton()) {
-				SwingUtilities.invokeLater(() -> onRelationLeftClick(event));
-			}
-		}
-
-		@Override
-		public void keyPressed(PInputEvent event) {
-			onRelationKeyPressed(event);
-		}
-	}  
-
-	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
-	}
-
-	protected void onRelationLeftClick(PInputEvent event) {
-		if (isSelected()) unselect();
-		else select();
-	}
-
-	protected void onRelationKeyPressed(PInputEvent event) {
-	}
-
-	abstract class RelationAction extends AbstractAction {
-
-		final PInputEvent event;
-
-		RelationAction(String name, PInputEvent event) {
-			super(name);
-			this.event = event;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			actionPerformed(event, e);
-		}
-
-		abstract void actionPerformed(PInputEvent event, ActionEvent e);
-	}
-}  >>
-
-CanvasRelation(name,uuidExpression,labelExpression,fields,rightClickStatements,rightClickActions,keyPressActions,actions) ::= <<public java.util.function.Supplier<STModelCanvas.~name~> new~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-	return () -> new STModelCanvas.~name~(src, dst~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
-}
-
-public void add~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-	addRelation(~if(uuidExpression)~~uuidExpression~~else~src.getUuid() + dst.getUuid()~endif~, new~name~(src, dst~if(uuidExpression)~~else~, src.getUuid() + dst.getUuid()~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
-}
-
-final class ~name~ extends BaseCanvasRelation {
-
-	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
-
-	public ~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
-		super(src, dst, ~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, ~if(labelExpression)~~labelExpression~~else~label~endif~);
-		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-	}
-
-	@Override
-	protected void onRelationRightClick(PInputEvent event, JPopupMenu pop) {
-		~rightClickStatements:{it|~it~};separator="\n"~
-
-		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
-	}
-~if(keyPressActions)~
-	
-	@Override
-	protected void onRelationKeyPressed(PInputEvent event) {
-		switch (event.getKeyCode()) {
-~keyPressActions:{it|
-			case VK_~it.key~:
-				new ~it.name~(event).actionPerformed(null);
-				break;
-};separator="\n"~
-		}
-		super.onRelationKeyPressed(event);
-	}
-~endif~
-
-	~actions:{it|~it~};separator="\n\n"~
-}  >>
-
-CanvasRelationAction(name,fields,title,statements) ::= <<final class ~name~ extends RelationAction {
-
-	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
-	
-	~name~(PInputEvent event~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=","~~endif~) {
-		super("~title~", event);
-		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
-	}
-
-	@Override
-	void actionPerformed(PInputEvent event, ActionEvent e) {
-		~statements:{it|~it~};separator="\n"~
-	}
-}  >>
-
 CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends CanvasAction {
 ~if(fields)~
 
@@ -1548,7 +1548,7 @@ CanvasAction(name,fields,title,statements) ::= <<final class ~name~ extends Canv
 	}
 }  >>
 
-DomainFacade(packageName,imports,name,factory,methods) ::= <<package ~packageName~;
+DomainFacade(methods,factory,name,imports,packageName) ::= <<package ~packageName~;
 
 import net.openhft.compiler.CompilerUtils;
 import org.jeasy.flows.work.WorkReportPredicate;
@@ -1830,7 +1830,7 @@ public class ~name~ extends ~factory~ {
 	}
 }  >>
 
-EntityConstraints(entity,constraints,deleteStatements) ::= <<public static String canDelete(~entity~ entity) {
+EntityConstraints(deleteStatements,constraints,entity) ::= <<public static String canDelete(~entity~ entity) {
 	final StringBuilder constraints = new StringBuilder("");
 	~constraints:{it|~it~};separator="\n"~
 	return constraints.toString().trim();
@@ -1841,7 +1841,7 @@ public static String delete(~entity~ entity) {
 	return entity.getUuid();
 }  >>
 
-STTemplateEditor(packageName,name) ::= <<package ~packageName~;
+STTemplateEditor(name,packageName) ::= <<package ~packageName~;
 
 import nextgen.DomainFacade;
 import nextgen.stparser.*;
@@ -2121,22 +2121,22 @@ public class ~name~ extends javax.swing.JPanel {
 		public void showParseErrors(java.util.List<STGError> errors) {
 			final StringBuilder info = new StringBuilder("Parsing errors:");
 
-			errors.forEach(parserError -> {
+			errors.forEach(stgError -> {
 
-				info.append("\n").append(parserError.getType());
+				info.append("\n").append(stgError.getType());
 
-				switch (parserError.getType()) {
+				switch (stgError.getType()) {
 					case COMPILE: {
-						info.append("\n\tline					").append(parserError.getLine());
-						info.append("\n\tpos					 ").append(parserError.getCharPosition());
-						info.append("\n\tmessage				").append(parserError.getMessage());
+						info.append("\n\tline					").append(stgError.getLine());
+						info.append("\n\tpos					 ").append(stgError.getCharPosition());
+						info.append("\n\tmessage				").append(stgError.getMessage());
 
-						if (parserError.getMessage().contains("expecting RDELIM")) {
+						if (stgError.getMessage().contains("expecting RDELIM")) {
 							info.append("\n\tpossible cause	  ")
 									.append("This is probably a '}' being interpreted as end-of a kv-iteration.");
 							info.append("\n\tpossible solution  ")
 									.append("Try escaping the previous '}' (i.e from '}' to '\\\\}')");
-						} else if (parserError.getMessage().contains("invalid character '>'")) {
+						} else if (stgError.getMessage().contains("invalid character '>'")) {
 							info.append("\n\tpossible cause	  ")
 									.append("This is probably a '>' being interpreted as end-of template.");
 							info.append("\n\tpossible solution  ")
@@ -2166,11 +2166,7 @@ public class ~name~ extends javax.swing.JPanel {
 	}
 }  >>
 
-STWorkspace(packageName,name,fields,constructorParameters,methods) ::= <<package ~packageName~;
-
-import nextgen.st.model.STGroupModel;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.STModel;
+STWorkspace(componentMethods,packageName,constructorParameters,name,fields,methods) ::= <<package ~packageName~;
 
 import javax.swing.*;
 import java.awt.*;
@@ -2186,27 +2182,23 @@ public class ~name~ extends JTabbedPane {
 
 	public ~name~() {
 		setPreferredSize(new Dimension(1200, 1024));
+		setMinimumSize(new Dimension(100, 100));
 		~constructorParameters:{it|~it~};separator="\n"~
 	}
 
 	~fields:{it|public ~it.type~ get~it.name;format="capitalize"~() {
-		return ~it.name~;
-	~eom()~
-	};separator="\n\n"~
+	return ~it.name~;
+~eom()~
+};separator="\n"~
 
 	~methods:{it|~it~};separator="\n\n"~
 
-	private STAppPresentationModel appModel() {
-		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
-	}
+	// components
+	
+	~componentMethods:{it|~it~};separator="\n\n"~
 
-	public STRenderPanel findRenderer() {
-		return (STRenderPanel) find(component -> component instanceof STRenderPanel)
-				.orElseGet(() -> {
-					final STRenderPanel stRenderPanel = new STRenderPanel();
-					addPane("Renderer", stRenderPanel);
-					return stRenderPanel;
-				});
+	private nextgen.st.STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
 	public <T extends Component> Optional<T> find(Predicate<Component> predicate) {
@@ -2215,123 +2207,10 @@ public class ~name~ extends JTabbedPane {
 				return Optional.of((T) getComponentAt(i));
 		return Optional.empty();
 	}
-
-	public STModelCanvas findCanvas() {
-		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
-				.orElseGet(() -> {
-					final STModelCanvas stModelCanvas = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600));
-					addPane("Canvas", stModelCanvas);
-					return stModelCanvas;
-				});
-	}
-
-	public STModelGrid getModelGrid(STTemplate stTemplate) {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STModelGrid) {
-					if (((STModelGrid) tabComponentAt).getModel().equals(stTemplate))
-						return (STModelGrid) tabComponentAt;
-				}
-		}
-
-		final STModelGrid stModelGrid = new STModelGrid(stTemplate);
-		addPane(stTemplate.getName() + "-Models", stModelGrid);
-		return stModelGrid;
-	}
-
-	public STModelEditor findModelEditor(STModel stModel, java.util.function.Supplier<STTemplate> stTemplateSupplier) {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STModelEditor) {
-					if (((STModelEditor) tabComponentAt).getModel().equals(stModel))
-						return (STModelEditor) tabComponentAt;
-				}
-		}
-
-		final STModelEditor component = new STModelEditor(stModel);
-		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplateSupplier.get().getName() + "Model"), component);
-		return component;
-	}
-
-	public void removeModelEditor(String uuid) {
-		for (int i = 0; i < getTabCount(); i++) {
-			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof STModelEditor) {
-				if (((STModelEditor) tabComponentAt).getUuid().equals(uuid)) {
-					remove(i);
-				}
-			}
-		}
-	}
-
-	public STModelEditor getModelEditor(STTemplate stTemplate, STModel stModel) {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STModelEditor) {
-					if (((STModelEditor) tabComponentAt).getModel().equals(stModel)) {
-						final nextgen.swing.STModelEditor editor = (nextgen.swing.STModelEditor) tabComponentAt;
-						setSelectedComponent(editor);
-						return editor;
-					}
-				}
-		}
-
-		final STModelEditor component = new STModelEditor(stModel);
-		addPane(appModel().tryToFindArgument(stModel, "name", () -> stTemplate.getName() + "Model"), component);
-		setSelectedComponent(component);
-		return component;
-	}
-
-	public void removeSTEditor(STGroupModel stGroup) {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STEditor) {
-					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
-						remove(i);
-					}
-				}
-		}
-	}
-
-	public STEditor getSTEditor(STGroupModel stGroup) {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STEditor) {
-					if (((STEditor) tabComponentAt).getModel().equals(stGroup)) {
-						final STEditor stEditor = (STEditor) tabComponentAt;
-						stEditor.setSTTemplate(null);
-						setSelectedComponent(stEditor);
-						return stEditor;
-					}
-				}
-		}
-
-		final STEditor component = new STEditor(stGroup);
-		component.setSTTemplate(null);
-		addPane(stGroup.getName(), component);
-		setSelectedComponent(component);
-		return component;
-	}
-
-	public STValueGrid getValueGrid() {
-		for (int i = 0; i < getTabCount(); i++) {
-				final Component tabComponentAt = getComponentAt(i);
-				if (tabComponentAt instanceof STValueGrid)
-					return (STValueGrid) tabComponentAt;
-		}
-
-		final STValueGrid component = new STValueGrid();
-		addPane("Values", component);
-		return component;
-	}
-
+	
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
 		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
-	}
-
-	public void showCanvas() {
-		SwingUtilities.invokeLater(() -> setSelectedComponent(findCanvas()));
 	}
 
 	class ButtonTabComponent extends JPanel {
@@ -2401,7 +2280,51 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-TransactionAction(name,staticFields,fields,title,titleExpression,statements) ::= <<package nextgen.actions;
+findEditor(modelType,titleExpression,componentType,componentName) ::= <<public ~componentType~ get~componentName;format="capitalize"~(~modelType~ model) {
+	for (int i = 0; i < getTabCount(); i++) {
+		final Component tabComponentAt = getComponentAt(i);
+		if (tabComponentAt instanceof ~componentType~ && (((~componentType~) tabComponentAt).getModel().equals(model))) {
+			final ~componentType~ component = (~componentType~) tabComponentAt;
+			setSelectedComponent(component);
+			return component;
+		}
+	}
+
+	final ~componentType~ component = new ~componentType~(model);
+	addPane(~titleExpression~, component);
+	setSelectedComponent(component);
+	return component;
+}
+
+public void remove~componentName;format="capitalize"~(String uuid) {
+	for (int i = 0; i < getTabCount(); i++) {
+	   if (getComponentAt(i) instanceof ~componentType~ && (((~componentType~) getComponentAt(i)).getUuid().equals(uuid))) {
+	      int componentIndex = i;
+	      SwingUtilities.invokeLater(() -> remove(componentIndex));
+	   }
+	}
+}  >>
+
+findSingletonComponent(componentType,newInstanceExpression,nameExpression,name) ::= <<public ~componentType~ get~name;format="capitalize"~() {
+	return (~componentType~) find(component -> component instanceof ~componentType~)
+			.orElseGet(() -> {
+				final ~componentType~ component = ~newInstanceExpression~;
+				addPane(~nameExpression~, component);
+				return component;
+			});
+}
+
+public void remove~name;format="capitalize"~() {
+   for (int i = 0; i < getTabCount(); i++) {
+      final Component tabComponentAt = getComponentAt(i);
+      if (tabComponentAt instanceof ~componentType~) {
+      	int componentIndex = i;
+			SwingUtilities.invokeLater(() -> remove(componentIndex));
+		}
+   }
+}  >>
+
+TransactionAction(name,staticFields,fields,titleExpression,title,methods,statements) ::= <<package nextgen.actions;
 
 public class ~name~ extends TransactionAction {
 
@@ -2434,9 +2357,11 @@ public class ~name~ extends TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       ~statements:{it|~it~};separator="\n"~
    }
+
+   ~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-TreeNavigator(packageName,imports,name,fields,rootNodeExpression,preferredWidth,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,events,baseTreeNode,treeNodes,methods,treeModelConstructorStatements) ::= <<package ~packageName~;
+TreeNavigator(methods,treeNodes,baseTreeNode,events,treeModelConstructorStatements,packageName,imports,name,fields,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,rootNodeExpression,preferredWidth) ::= <<package ~packageName~;
 
 ~imports:{it|~it~;};separator="\n"~
 
@@ -2815,7 +2740,12 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	}
 }  >>
 
-TreeNode(name,modelType,hasUuid,fields,privateFields,parameters,icon,labelExpression,tooltipExpression,constructorStatements,getActionsStatements,actions,methods,selectionStatements) ::= <<// ~name~
+EventSubscription(statements,eventName,threadMode) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
+public void on~eventName;format="capitalize"~(nextgen.events.~eventName~ event) {
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+TreeNode(modelType,name,hasUuid,fields,privateFields,getActionsStatements,constructorStatements,methods,actions,icon,tooltipExpression,labelExpression,selectionStatements,parameters) ::= <<// ~name~
 public class ~name~ extends BaseTreeNode<~modelType~> {
 ~if(hasUuid)~
 
@@ -2887,14 +2817,9 @@ private void on~name~Selected(~name~ selectedNode) {
 	~selectionStatements:{it|~it~};separator="\n"~
 }  >>
 
-TreeNodeAction(isTransactional,title,statements) ::= <<new~if(isTransactional)~Transaction~endif~Action("~title~", actionEvent -> {
+TreeNodeAction(isTransactional,statements,title) ::= <<new~if(isTransactional)~Transaction~endif~Action("~title~", actionEvent -> {
 	~statements:{it|~it~};separator="\n"~
 })  >>
-
-EventSubscription(threadMode,eventName,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
-public void on~eventName;format="capitalize"~(nextgen.events.~eventName~ event) {
-	~statements:{it|~it~};separator="\n"~
-}  >>
 
 eom() ::= "}"
 

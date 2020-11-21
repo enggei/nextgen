@@ -5,8 +5,8 @@ public class EventSubscriber {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _eventName;
 	private Object _eventType;
+	private Object _eventName;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	EventSubscriber(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class EventSubscriber {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("EventSubscriber");
-		st.add("eventName", _eventName);
 		st.add("eventType", _eventType);
+		st.add("eventName", _eventName);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
-
-	public EventSubscriber setEventName(Object value) {
-		this._eventName = value;
-		return this;
-	}
-
-	public Object getEventName() {
-		return this._eventName;
-	}
-
-	public Object getEventName(Object defaultValue) {
-		return this._eventName == null ? defaultValue : this._eventName;
-	}
-
-	public boolean hasEventName() {
-		return this._eventName != null;
-	}
-
-	public EventSubscriber removeEventName() {
-		this._eventName = null;
-		return this;
-	} 
 
 	public EventSubscriber setEventType(Object value) {
 		this._eventType = value;
@@ -67,6 +45,28 @@ public class EventSubscriber {
 
 	public EventSubscriber removeEventType() {
 		this._eventType = null;
+		return this;
+	} 
+
+	public EventSubscriber setEventName(Object value) {
+		this._eventName = value;
+		return this;
+	}
+
+	public Object getEventName() {
+		return this._eventName;
+	}
+
+	public Object getEventName(Object defaultValue) {
+		return this._eventName == null ? defaultValue : this._eventName;
+	}
+
+	public boolean hasEventName() {
+		return this._eventName != null;
+	}
+
+	public EventSubscriber removeEventName() {
+		this._eventName = null;
 		return this;
 	} 
 
@@ -113,7 +113,7 @@ public class EventSubscriber {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "EventSubscriber(eventName,eventType,statements) ::= <<@org.greenrobot.eventbus.Subscribe()\n" + 
+	static final String st = "EventSubscriber(eventType,statements,eventName) ::= <<@org.greenrobot.eventbus.Subscribe()\n" + 
 				"public void on~eventName~(~eventType~ event) {\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";

@@ -5,19 +5,19 @@ public class CanvasNode {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
 	private Object _modelType;
-	private Object _uuidExpression;
+	private String _name;
 	private Object _labelExpression;
-	private java.util.List<Object> _addedToCanvasStatements = new java.util.ArrayList<>();
+	private Object _uuidExpression;
 	private java.util.List<Object> _newNodeAddedStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _leftClickStatements = new java.util.ArrayList<>();
 	private java.util.List<CanvasNodeAction> _actions = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<Object> _addedToCanvasStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	CanvasNode(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -30,43 +30,21 @@ public class CanvasNode {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CanvasNode");
-		st.add("name", _name);
 		st.add("modelType", _modelType);
-		st.add("uuidExpression", _uuidExpression);
+		st.add("name", _name);
 		st.add("labelExpression", _labelExpression);
-		for (Object o : _addedToCanvasStatements) st.add("addedToCanvasStatements", o);
+		st.add("uuidExpression", _uuidExpression);
 		for (Object o : _newNodeAddedStatements) st.add("newNodeAddedStatements", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (Object o : _leftClickStatements) st.add("leftClickStatements", o);
 		for (Object o : _actions) st.add("actions", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
+		for (Object o : _addedToCanvasStatements) st.add("addedToCanvasStatements", o);
 		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
 		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
-
-	public CanvasNode setName(String value) {
-		this._name = value;
-		return this;
-	}
-
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public CanvasNode removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public CanvasNode setModelType(Object value) {
 		this._modelType = value;
@@ -90,25 +68,25 @@ public class CanvasNode {
 		return this;
 	} 
 
-	public CanvasNode setUuidExpression(Object value) {
-		this._uuidExpression = value;
+	public CanvasNode setName(String value) {
+		this._name = value;
 		return this;
 	}
 
-	public Object getUuidExpression() {
-		return this._uuidExpression;
+	public String getName() {
+		return this._name;
 	}
 
-	public Object getUuidExpression(Object defaultValue) {
-		return this._uuidExpression == null ? defaultValue : this._uuidExpression;
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasUuidExpression() {
-		return this._uuidExpression != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public CanvasNode removeUuidExpression() {
-		this._uuidExpression = null;
+	public CanvasNode removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -134,33 +112,26 @@ public class CanvasNode {
 		return this;
 	} 
 
-	public CanvasNode addAddedToCanvasStatements(Object value) {
-		this._addedToCanvasStatements.add(value);
+	public CanvasNode setUuidExpression(Object value) {
+		this._uuidExpression = value;
 		return this;
 	}
 
-	public CanvasNode setAddedToCanvasStatements(Object[] value) {
-		this._addedToCanvasStatements.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getUuidExpression() {
+		return this._uuidExpression;
 	}
 
-	public CanvasNode setAddedToCanvasStatements(java.util.Collection<Object> values) {
-		this._addedToCanvasStatements.addAll(values);
-		return this;
+	public Object getUuidExpression(Object defaultValue) {
+		return this._uuidExpression == null ? defaultValue : this._uuidExpression;
 	}
 
-	public CanvasNode removeAddedToCanvasStatements(Object value) {
-		this._addedToCanvasStatements.remove(value);
-		return this;
+	public boolean hasUuidExpression() {
+		return this._uuidExpression != null;
 	}
 
-	public CanvasNode removeAddedToCanvasStatements(int index) {
-		this._addedToCanvasStatements.remove(index);
+	public CanvasNode removeUuidExpression() {
+		this._uuidExpression = null;
 		return this;
-	}
-
-	public java.util.List<Object> getAddedToCanvasStatements() {
-		return this._addedToCanvasStatements;
 	} 
 
 	public CanvasNode addNewNodeAddedStatements(Object value) {
@@ -308,60 +279,34 @@ public class CanvasNode {
 		return this._methods;
 	} 
 
-	public CanvasNode addFields(Object _type, Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
-		this._fields.add(map);
+	public CanvasNode addAddedToCanvasStatements(Object value) {
+		this._addedToCanvasStatements.add(value);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
+	public CanvasNode setAddedToCanvasStatements(Object[] value) {
+		this._addedToCanvasStatements.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
-	public CanvasNode addFields(CanvasNode_Fields value) {
-		return addFields(value._type, value._name);
+	public CanvasNode setAddedToCanvasStatements(java.util.Collection<Object> values) {
+		this._addedToCanvasStatements.addAll(values);
+		return this;
 	}
 
-	public java.util.stream.Stream<CanvasNode_Fields> streamFields() {
-		return this._fields.stream().map(CanvasNode_Fields::new);
+	public CanvasNode removeAddedToCanvasStatements(Object value) {
+		this._addedToCanvasStatements.remove(value);
+		return this;
 	}
 
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(CanvasNode_Fields::getType).collect(java.util.stream.Collectors.toList());
+	public CanvasNode removeAddedToCanvasStatements(int index) {
+		this._addedToCanvasStatements.remove(index);
+		return this;
 	}
 
-
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(CanvasNode_Fields::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class CanvasNode_Fields {
-
-		Object _type;
-		Object _name;
-
-		public CanvasNode_Fields(Object _type, Object _name) {
-			this._type = _type;
-			this._name = _name;
-		}
-
-		private CanvasNode_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
+	public java.util.List<Object> getAddedToCanvasStatements() {
+		return this._addedToCanvasStatements;
+	} 
 
 	public CanvasNode addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -460,6 +405,61 @@ public class CanvasNode {
 
 	}  
 
+	public CanvasNode addFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public CanvasNode addFields(CanvasNode_Fields value) {
+		return addFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<CanvasNode_Fields> streamFields() {
+		return this._fields.stream().map(CanvasNode_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(CanvasNode_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(CanvasNode_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class CanvasNode_Fields {
+
+		Object _type;
+		Object _name;
+
+		public CanvasNode_Fields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private CanvasNode_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -473,7 +473,7 @@ public class CanvasNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CanvasNode(name,modelType,fields,uuidExpression,labelExpression,addedToCanvasStatements,newNodeAddedStatements,rightClickStatements,rightClickActions,leftClickStatements,keyPressActions,actions,methods) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {\n" + 
+	static final String st = "CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftClickStatements,keyPressActions,actions,methods,fields,modelType,name,addedToCanvasStatements,labelExpression,uuidExpression) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 

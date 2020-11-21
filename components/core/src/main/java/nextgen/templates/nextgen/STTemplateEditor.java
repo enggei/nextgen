@@ -5,8 +5,8 @@ public class STTemplateEditor {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
 	private Object _name;
+	private Object _packageName;
 
 	STTemplateEditor(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class STTemplateEditor {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STTemplateEditor");
-		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("packageName", _packageName);
 		return st.render().trim();
 	}
-
-	public STTemplateEditor setPackageName(Object value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public Object getPackageName() {
-		return this._packageName;
-	}
-
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public STTemplateEditor removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
 
 	public STTemplateEditor setName(Object value) {
 		this._name = value;
@@ -68,6 +46,28 @@ public class STTemplateEditor {
 		return this;
 	} 
 
+	public STTemplateEditor setPackageName(Object value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public Object getPackageName() {
+		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public STTemplateEditor removePackageName() {
+		this._packageName = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,7 +83,7 @@ public class STTemplateEditor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STTemplateEditor(packageName,name) ::= <<package ~packageName~;\n" + 
+	static final String st = "STTemplateEditor(name,packageName) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.DomainFacade;\n" + 
 				"import nextgen.stparser.*;\n" + 

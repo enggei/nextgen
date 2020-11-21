@@ -6,10 +6,10 @@ public class CanvasRelation {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private Object _uuidExpression;
 	private Object _labelExpression;
-	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
+	private Object _uuidExpression;
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
@@ -26,13 +26,13 @@ public class CanvasRelation {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CanvasRelation");
 		st.add("name", _name);
-		st.add("uuidExpression", _uuidExpression);
 		st.add("labelExpression", _labelExpression);
-		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
+		st.add("uuidExpression", _uuidExpression);
 		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
-		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
+		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{name,key}", map.get("name"), map.get("key"));
 		return st.render().trim();
 	}
 
@@ -58,28 +58,6 @@ public class CanvasRelation {
 		return this;
 	} 
 
-	public CanvasRelation setUuidExpression(Object value) {
-		this._uuidExpression = value;
-		return this;
-	}
-
-	public Object getUuidExpression() {
-		return this._uuidExpression;
-	}
-
-	public Object getUuidExpression(Object defaultValue) {
-		return this._uuidExpression == null ? defaultValue : this._uuidExpression;
-	}
-
-	public boolean hasUuidExpression() {
-		return this._uuidExpression != null;
-	}
-
-	public CanvasRelation removeUuidExpression() {
-		this._uuidExpression = null;
-		return this;
-	} 
-
 	public CanvasRelation setLabelExpression(Object value) {
 		this._labelExpression = value;
 		return this;
@@ -102,33 +80,26 @@ public class CanvasRelation {
 		return this;
 	} 
 
-	public CanvasRelation addRightClickStatements(Object value) {
-		this._rightClickStatements.add(value);
+	public CanvasRelation setUuidExpression(Object value) {
+		this._uuidExpression = value;
 		return this;
 	}
 
-	public CanvasRelation setRightClickStatements(Object[] value) {
-		this._rightClickStatements.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getUuidExpression() {
+		return this._uuidExpression;
 	}
 
-	public CanvasRelation setRightClickStatements(java.util.Collection<Object> values) {
-		this._rightClickStatements.addAll(values);
-		return this;
+	public Object getUuidExpression(Object defaultValue) {
+		return this._uuidExpression == null ? defaultValue : this._uuidExpression;
 	}
 
-	public CanvasRelation removeRightClickStatements(Object value) {
-		this._rightClickStatements.remove(value);
-		return this;
+	public boolean hasUuidExpression() {
+		return this._uuidExpression != null;
 	}
 
-	public CanvasRelation removeRightClickStatements(int index) {
-		this._rightClickStatements.remove(index);
+	public CanvasRelation removeUuidExpression() {
+		this._uuidExpression = null;
 		return this;
-	}
-
-	public java.util.List<Object> getRightClickStatements() {
-		return this._rightClickStatements;
 	} 
 
 	public CanvasRelation addActions(Object value) {
@@ -158,6 +129,35 @@ public class CanvasRelation {
 
 	public java.util.List<Object> getActions() {
 		return this._actions;
+	} 
+
+	public CanvasRelation addRightClickStatements(Object value) {
+		this._rightClickStatements.add(value);
+		return this;
+	}
+
+	public CanvasRelation setRightClickStatements(Object[] value) {
+		this._rightClickStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public CanvasRelation setRightClickStatements(java.util.Collection<Object> values) {
+		this._rightClickStatements.addAll(values);
+		return this;
+	}
+
+	public CanvasRelation removeRightClickStatements(Object value) {
+		this._rightClickStatements.remove(value);
+		return this;
+	}
+
+	public CanvasRelation removeRightClickStatements(int index) {
+		this._rightClickStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRightClickStatements() {
+		return this._rightClickStatements;
 	} 
 
 	public CanvasRelation addFields(Object _type, Object _name) {
@@ -257,10 +257,10 @@ public class CanvasRelation {
 
 	}  
 
-	public CanvasRelation addKeyPressActions(Object _key, Object _name) {
+	public CanvasRelation addKeyPressActions(Object _name, Object _key) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("key", _key);
 		map.put("name", _name);
+		map.put("key", _key);
 		this._keyPressActions.add(map);
 		return this;
 	}
@@ -270,44 +270,44 @@ public class CanvasRelation {
 	}
 
 	public CanvasRelation addKeyPressActions(CanvasRelation_KeyPressActions value) {
-		return addKeyPressActions(value._key, value._name);
+		return addKeyPressActions(value._name, value._key);
 	}
 
 	public java.util.stream.Stream<CanvasRelation_KeyPressActions> streamKeyPressActions() {
 		return this._keyPressActions.stream().map(CanvasRelation_KeyPressActions::new);
 	}
 
-	public java.util.List<Object> getKeyPressActions_Key() {
-		return streamKeyPressActions().map(CanvasRelation_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getKeyPressActions_Name() {
 		return streamKeyPressActions().map(CanvasRelation_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getKeyPressActions_Key() {
+		return streamKeyPressActions().map(CanvasRelation_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class CanvasRelation_KeyPressActions {
 
-		Object _key;
 		Object _name;
+		Object _key;
 
-		public CanvasRelation_KeyPressActions(Object _key, Object _name) {
-			this._key = _key;
+		public CanvasRelation_KeyPressActions(Object _name, Object _key) {
 			this._name = _name;
+			this._key = _key;
 		}
 
 		private CanvasRelation_KeyPressActions(java.util.Map<String, Object> map) {
-			this._key = (Object) map.get("key");
 			this._name = (Object) map.get("name");
-		}
-
-		public Object getKey() {
-			return this._key;
+			this._key = (Object) map.get("key");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getKey() {
+			return this._key;
 		}
 
 	}  
@@ -325,7 +325,7 @@ public class CanvasRelation {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CanvasRelation(name,uuidExpression,labelExpression,fields,rightClickStatements,rightClickActions,keyPressActions,actions) ::= <<public java.util.function.Supplier<STModelCanvas.~name~> new~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
+	static final String st = "CanvasRelation(actions,name,labelExpression,uuidExpression,fields,rightClickStatements,rightClickActions,keyPressActions) ::= <<public java.util.function.Supplier<STModelCanvas.~name~> new~name~(BaseCanvasNode<?> src, BaseCanvasNode<?> dst~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"	return () -> new STModelCanvas.~name~(src, dst~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 
 				"}\n" + 
 				"\n" + 

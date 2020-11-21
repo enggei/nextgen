@@ -1025,200 +1025,10 @@ public class NextgenProject {
    }
 
    /**
-    * generateSTTemplateDomain
-    */
-   @org.junit.Test
-   public void generateSTTemplateDomain() {
-
-      final Entity stParameterType = DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST");
-
-      final Entity stParameterKey = DomainPatterns
-            .newEntity("STParameterKey")
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newStringField("argumentType"));
-
-      final Entity stParameter = DomainPatterns
-            .newEntity("STParameter")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newEnumField("type", stParameterType))
-            .addRelations(DomainPatterns.newOneToMany("keys", stParameterKey))
-            .addRelations(DomainPatterns.newStringField("argumentType"));
-
-      final Entity stInterface = DomainPatterns
-            .newEntity("STInterface")
-            .addRelations(DomainPatterns.newStringField("name"));
-
-      final Entity stEnumValue = DomainPatterns
-            .newEntity("STEnumValue")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("lexical"));
-
-      final Entity stEnum = DomainPatterns
-            .newEntity("STEnum")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newOneToMany("values", stEnumValue));
-
-      final Entity stTemplate = DomainPatterns
-            .newEntity("STTemplate")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("text"))
-            .addRelations(DomainPatterns.newOneToManyString("implements"))
-            .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
-            .addRelations(DomainPatterns.newOneToManySelf("children"));
-
-      final Entity stGroupModel = DomainPatterns
-            .newEntity("STGroupModel")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("delimiter"))
-            .addRelations(DomainPatterns.newStringField("icon"))
-            .addRelations(DomainPatterns.newStringField("tags"))
-            .addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
-            .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
-            .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
-
-      final Entity stgDirectory = DomainPatterns
-            .newEntity("STGDirectory")
-            .addRelations(DomainPatterns.newStringField("path"))
-            .addRelations(DomainPatterns.newStringField("outputPackage"))
-            .addRelations(DomainPatterns.newStringField("outputPath"))
-            .addRelations(DomainPatterns.newOneToMany("groups", stGroupModel));
-
-      final Entity stAppModel = DomainPatterns
-            .newEntity("STAppModel")
-            .addRelations(DomainPatterns.newStringField("modelDb"))
-            .addRelations(DomainPatterns.newStringField("rootDir"))
-            .addRelations(DomainPatterns.newIntegerField("editorFontSize"))
-            .addRelations(DomainPatterns.newOneToMany("directories", stgDirectory));
-
-      final Domain domain = DomainPatterns
-            .newDomain("ST")
-            .addEntities(stAppModel);
-
-      DomainPatterns.writeJsonWrapper(mainJava, stDomainPackage, domain);
-
-
-      final Entity astNode = newEntity("AstNode")
-            .addRelations(newOneToOneExternal("ast", "org.antlr.runtime.tree.Tree"))
-            .addRelations(newOneToManySelf("children"))
-            .addRelations(newEnumField("type", "AstNodeType", "ST, Expression, Name, Prop, Args, If, Else, ElseIf, Assign, Include, Subtemplate"));
-      astNode.addRelations(newOneToOne("parent", astNode));
-
-      final Entity parsedSTParameterKey = DomainPatterns
-            .newEntity("ParsedSTParameterKey")
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newStringField("argumentType"));
-
-      final Entity parsedSTParameter = DomainPatterns
-            .newEntity("ParsedSTParameter")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stDomainPackage, stParameterType.getName())))
-            .addRelations(DomainPatterns.newOneToMany("keys", parsedSTParameterKey))
-            .addRelations(DomainPatterns.newStringField("argumentType"));
-
-      final Entity parsedSTTemplate = DomainPatterns
-            .newEntity("ParsedSTTemplate")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("text"))
-            .addRelations(DomainPatterns.newOneToMany("parameters", parsedSTParameter));
-
-      final Entity parsedSTGroupModel = DomainPatterns
-            .newEntity("ParsedSTGroupModel")
-            .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newStringField("delimiter"))
-            .addRelations(DomainPatterns.newOneToMany("templates", parsedSTTemplate));
-
-      final Entity parserErrorType = DomainPatterns.newEnum("ParserErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
-
-      final Entity parserError = DomainPatterns
-            .newEntity("ParserError")
-            .addRelations(DomainPatterns.newEnumField("type", parserErrorType))
-            .addRelations(DomainPatterns.newStringField("message"))
-            .addRelations(DomainPatterns.newIntegerField("line"))
-            .addRelations(DomainPatterns.newIntegerField("charPosition"));
-
-      final Entity parseResult = DomainPatterns
-            .newEntity("ParseResult")
-            .addRelations(DomainPatterns.newOneToOne("parsed", parsedSTGroupModel))
-            .addRelations(DomainPatterns.newOneToMany("errors", parserError));
-
-      DomainPatterns.writePojo(mainJava, parsePackage, DomainPatterns
-            .newDomain("STParser")
-            .addEntities(astNode)
-            .addEntities(parseResult));
-   }
-
-   /**
     * generateSTModelDomain
     */
    @org.junit.Test
-   public void generateSTModelDomain() {
-
-      final Entity stValue = DomainPatterns
-            .newEntityWithUuid("STValue")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("value"))
-            .addRelations(DomainPatterns.newEnumField("type", DomainPatterns.newEnum("STValueType", "STMODEL,PRIMITIVE,ENUM")));
-
-      final Entity stFile = DomainPatterns
-            .newEntityWithUuid("STFile")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newOneToOne("name", stValue, true))
-            .addRelations(DomainPatterns.newOneToOne("type", stValue))
-            .addRelations(DomainPatterns.newOneToOne("packageName", stValue))
-            .addRelations(DomainPatterns.newOneToOne("path", stValue));
-
-      final Entity stArgumentKV = DomainPatterns
-            .newEntityWithUuid("STArgumentKV")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("stParameterKey"))
-            .addRelations(DomainPatterns.newOneToOne("value", stValue));
-
-      final Entity stArgument = DomainPatterns
-            .newEntityWithUuid("STArgument")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("stParameter"))
-            .addRelations(DomainPatterns.newOneToOne("value", stValue))
-            .addRelations(DomainPatterns.newOneToMany("keyValues", stArgumentKV));
-
-      final Entity stModel = DomainPatterns
-            .newEntityWithUuid("STModel")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("stTemplate"))
-            .addRelations(DomainPatterns.newStringField("stGroup"))
-            .addRelations(DomainPatterns.newOneToMany("files", stFile))
-            .addRelations(DomainPatterns.newOneToMany("arguments", stArgument));
-
-      stValue.addRelations(DomainPatterns.newOneToOne("stModel", stModel));
-
-      final Entity stProject = DomainPatterns
-            .newEntityWithUuid("STProject")
-            .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToMany("models", stModel))
-            .addRelations(DomainPatterns.newOneToMany("values", stValue));
-
-      final Domain domain = DomainPatterns
-            .newDomain("STModel")
-            .addEntities(stModel)
-            .addEntities(stProject);
-
-      final org.javatuples.Pair<NeoFactory, java.util.Map<nextgen.templates.domain.Entity, NodeWrapper>> neo = transform(stModelPackage, domain);
-
-      final NeoFactory neoFactory = neo.getValue0();
-      final java.util.Map<nextgen.templates.domain.Entity, NodeWrapper> nodeWrapperMap = neo.getValue1();
-
-      for (NodeWrapper nodeWrapper : nodeWrapperMap.values()) {
-         writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
-      }
-
-      writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
-   }
-
-   /**
-    * generateSTModelDomain
-    */
-   @org.junit.Test
-   public void generateNewDomain() {
+   public void generateDomain() {
 
       final Entity stParameterType = DomainPatterns.newEnum("STParameterType", "SINGLE,LIST,KVLIST");
 
@@ -1339,6 +1149,55 @@ public class NextgenProject {
          writeJavaFile(nodeWrapper, stModelPackage, nodeWrapper.getName(), mainJava);
 
       writeJavaFile(neoFactory, stModelPackage, neoFactory.getName(), mainJava);
+
+      final Entity astNode = newEntity("AstNode")
+            .addRelations(newOneToOneExternal("ast", "org.antlr.runtime.tree.Tree"))
+            .addRelations(newOneToManySelf("children"))
+            .addRelations(newEnumField("type", "AstNodeType", "ST, Expression, Name, Prop, Args, If, Else, ElseIf, Assign, Include, Subtemplate"));
+      astNode.addRelations(newOneToOne("parent", astNode));
+
+      final Entity parsedSTParameterKey = DomainPatterns
+            .newEntity("ParsedSTParameterKey")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
+      final Entity parsedSTParameter = DomainPatterns
+            .newEntity("ParsedSTParameter")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stDomainPackage, stParameterType.getName())))
+            .addRelations(DomainPatterns.newOneToMany("keys", parsedSTParameterKey))
+            .addRelations(DomainPatterns.newStringField("argumentType"));
+
+      final Entity parsedSTTemplate = DomainPatterns
+            .newEntity("ParsedSTTemplate")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("text"))
+            .addRelations(DomainPatterns.newOneToMany("parameters", parsedSTParameter));
+
+      final Entity parsedSTGroupModel = DomainPatterns
+            .newEntity("ParsedSTGroupModel")
+            .addRelations(DomainPatterns.newStringField("name", true))
+            .addRelations(DomainPatterns.newStringField("delimiter"))
+            .addRelations(DomainPatterns.newOneToMany("templates", parsedSTTemplate));
+
+      final Entity parserErrorType = DomainPatterns.newEnum("ParserErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
+
+      final Entity parserError = DomainPatterns
+            .newEntity("ParserError")
+            .addRelations(DomainPatterns.newEnumField("type", parserErrorType))
+            .addRelations(DomainPatterns.newStringField("message"))
+            .addRelations(DomainPatterns.newIntegerField("line"))
+            .addRelations(DomainPatterns.newIntegerField("charPosition"));
+
+      final Entity parseResult = DomainPatterns
+            .newEntity("ParseResult")
+            .addRelations(DomainPatterns.newOneToOne("parsed", parsedSTGroupModel))
+            .addRelations(DomainPatterns.newOneToMany("errors", parserError));
+
+      DomainPatterns.writePojo(mainJava, parsePackage, DomainPatterns
+            .newDomain("STParser")
+            .addEntities(astNode)
+            .addEntities(parseResult));
    }
 
    /**

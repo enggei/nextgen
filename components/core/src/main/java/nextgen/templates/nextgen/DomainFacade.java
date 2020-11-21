@@ -5,11 +5,11 @@ public class DomainFacade {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
 	private Object _factory;
-	private java.util.List<Object> _imports = new java.util.ArrayList<>();
+	private Object _name;
+	private Object _packageName;
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 
 	DomainFacade(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -22,33 +22,33 @@ public class DomainFacade {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DomainFacade");
-		st.add("packageName", _packageName);
-		st.add("name", _name);
 		st.add("factory", _factory);
-		for (Object o : _imports) st.add("imports", o);
+		st.add("name", _name);
+		st.add("packageName", _packageName);
 		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _imports) st.add("imports", o);
 		return st.render().trim();
 	}
 
-	public DomainFacade setPackageName(Object value) {
-		this._packageName = value;
+	public DomainFacade setFactory(Object value) {
+		this._factory = value;
 		return this;
 	}
 
-	public Object getPackageName() {
-		return this._packageName;
+	public Object getFactory() {
+		return this._factory;
 	}
 
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
+	public Object getFactory(Object defaultValue) {
+		return this._factory == null ? defaultValue : this._factory;
 	}
 
-	public boolean hasPackageName() {
-		return this._packageName != null;
+	public boolean hasFactory() {
+		return this._factory != null;
 	}
 
-	public DomainFacade removePackageName() {
-		this._packageName = null;
+	public DomainFacade removeFactory() {
+		this._factory = null;
 		return this;
 	} 
 
@@ -74,55 +74,26 @@ public class DomainFacade {
 		return this;
 	} 
 
-	public DomainFacade setFactory(Object value) {
-		this._factory = value;
+	public DomainFacade setPackageName(Object value) {
+		this._packageName = value;
 		return this;
 	}
 
-	public Object getFactory() {
-		return this._factory;
+	public Object getPackageName() {
+		return this._packageName;
 	}
 
-	public Object getFactory(Object defaultValue) {
-		return this._factory == null ? defaultValue : this._factory;
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
-	public boolean hasFactory() {
-		return this._factory != null;
+	public boolean hasPackageName() {
+		return this._packageName != null;
 	}
 
-	public DomainFacade removeFactory() {
-		this._factory = null;
+	public DomainFacade removePackageName() {
+		this._packageName = null;
 		return this;
-	} 
-
-	public DomainFacade addImports(Object value) {
-		this._imports.add(value);
-		return this;
-	}
-
-	public DomainFacade setImports(Object[] value) {
-		this._imports.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public DomainFacade setImports(java.util.Collection<Object> values) {
-		this._imports.addAll(values);
-		return this;
-	}
-
-	public DomainFacade removeImports(Object value) {
-		this._imports.remove(value);
-		return this;
-	}
-
-	public DomainFacade removeImports(int index) {
-		this._imports.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getImports() {
-		return this._imports;
 	} 
 
 	public DomainFacade addMethods(Object value) {
@@ -154,6 +125,35 @@ public class DomainFacade {
 		return this._methods;
 	} 
 
+	public DomainFacade addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public DomainFacade setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public DomainFacade setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public DomainFacade removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public DomainFacade removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -168,7 +168,7 @@ public class DomainFacade {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainFacade(packageName,imports,name,factory,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "DomainFacade(methods,factory,name,imports,packageName) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import net.openhft.compiler.CompilerUtils;\n" + 
 				"import org.jeasy.flows.work.WorkReportPredicate;\n" + 

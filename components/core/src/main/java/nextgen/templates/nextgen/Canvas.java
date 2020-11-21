@@ -5,19 +5,19 @@ public class Canvas {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
+	private String _name;
+	private String _packageName;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
+	private java.util.List<CanvasRelation> _canvasRelations = new java.util.ArrayList<>();
+	private java.util.List<CanvasNode> _canvasNodes = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
-	private java.util.List<Object> _canvasNodes = new java.util.ArrayList<>();
-	private java.util.List<Object> _canvasRelations = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _finalFields = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 
 	Canvas(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -30,54 +30,32 @@ public class Canvas {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Canvas");
-		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("packageName", _packageName);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
-		for (Object o : _actions) st.add("actions", o);
-		for (Object o : _canvasNodes) st.add("canvasNodes", o);
 		for (Object o : _canvasRelations) st.add("canvasRelations", o);
+		for (Object o : _canvasNodes) st.add("canvasNodes", o);
+		for (Object o : _actions) st.add("actions", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
-		for (java.util.Map<String, Object> map : _finalFields) st.addAggr("finalFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _finalFields) st.addAggr("finalFields.{init,type,name}", map.get("init"), map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
+		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
 		return st.render().trim();
 	}
 
-	public Canvas setPackageName(Object value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public Object getPackageName() {
-		return this._packageName;
-	}
-
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public Canvas removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
-
-	public Canvas setName(Object value) {
+	public Canvas setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -87,6 +65,28 @@ public class Canvas {
 
 	public Canvas removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public Canvas setPackageName(String value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public String getPackageName() {
+		return this._packageName;
+	}
+
+	public String getPackageName(String defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public Canvas removePackageName() {
+		this._packageName = null;
 		return this;
 	} 
 
@@ -206,6 +206,64 @@ public class Canvas {
 		return this._rightClickStatements;
 	} 
 
+	public Canvas addCanvasRelations(CanvasRelation value) {
+		this._canvasRelations.add(value);
+		return this;
+	}
+
+	public Canvas setCanvasRelations(CanvasRelation[] value) {
+		this._canvasRelations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setCanvasRelations(java.util.Collection<CanvasRelation> values) {
+		this._canvasRelations.addAll(values);
+		return this;
+	}
+
+	public Canvas removeCanvasRelations(CanvasRelation value) {
+		this._canvasRelations.remove(value);
+		return this;
+	}
+
+	public Canvas removeCanvasRelations(int index) {
+		this._canvasRelations.remove(index);
+		return this;
+	}
+
+	public java.util.List<CanvasRelation> getCanvasRelations() {
+		return this._canvasRelations;
+	} 
+
+	public Canvas addCanvasNodes(CanvasNode value) {
+		this._canvasNodes.add(value);
+		return this;
+	}
+
+	public Canvas setCanvasNodes(CanvasNode[] value) {
+		this._canvasNodes.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setCanvasNodes(java.util.Collection<CanvasNode> values) {
+		this._canvasNodes.addAll(values);
+		return this;
+	}
+
+	public Canvas removeCanvasNodes(CanvasNode value) {
+		this._canvasNodes.remove(value);
+		return this;
+	}
+
+	public Canvas removeCanvasNodes(int index) {
+		this._canvasNodes.remove(index);
+		return this;
+	}
+
+	public java.util.List<CanvasNode> getCanvasNodes() {
+		return this._canvasNodes;
+	} 
+
 	public Canvas addActions(Object value) {
 		this._actions.add(value);
 		return this;
@@ -233,64 +291,6 @@ public class Canvas {
 
 	public java.util.List<Object> getActions() {
 		return this._actions;
-	} 
-
-	public Canvas addCanvasNodes(Object value) {
-		this._canvasNodes.add(value);
-		return this;
-	}
-
-	public Canvas setCanvasNodes(Object[] value) {
-		this._canvasNodes.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Canvas setCanvasNodes(java.util.Collection<Object> values) {
-		this._canvasNodes.addAll(values);
-		return this;
-	}
-
-	public Canvas removeCanvasNodes(Object value) {
-		this._canvasNodes.remove(value);
-		return this;
-	}
-
-	public Canvas removeCanvasNodes(int index) {
-		this._canvasNodes.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getCanvasNodes() {
-		return this._canvasNodes;
-	} 
-
-	public Canvas addCanvasRelations(Object value) {
-		this._canvasRelations.add(value);
-		return this;
-	}
-
-	public Canvas setCanvasRelations(Object[] value) {
-		this._canvasRelations.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Canvas setCanvasRelations(java.util.Collection<Object> values) {
-		this._canvasRelations.addAll(values);
-		return this;
-	}
-
-	public Canvas removeCanvasRelations(Object value) {
-		this._canvasRelations.remove(value);
-		return this;
-	}
-
-	public Canvas removeCanvasRelations(int index) {
-		this._canvasRelations.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getCanvasRelations() {
-		return this._canvasRelations;
 	} 
 
 	public Canvas addFields(Object _type, Object _name) {
@@ -348,11 +348,11 @@ public class Canvas {
 
 	}  
 
-	public Canvas addFinalFields(Object _type, Object _name, Object _init) {
+	public Canvas addFinalFields(Object _init, Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("init", _init);
 		map.put("type", _type);
 		map.put("name", _name);
-		map.put("init", _init);
 		this._finalFields.add(map);
 		return this;
 	}
@@ -362,12 +362,17 @@ public class Canvas {
 	}
 
 	public Canvas addFinalFields(Canvas_FinalFields value) {
-		return addFinalFields(value._type, value._name, value._init);
+		return addFinalFields(value._init, value._type, value._name);
 	}
 
 	public java.util.stream.Stream<Canvas_FinalFields> streamFinalFields() {
 		return this._finalFields.stream().map(Canvas_FinalFields::new);
 	}
+
+	public java.util.List<Object> getFinalFields_Init() {
+		return streamFinalFields().map(Canvas_FinalFields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public java.util.List<Object> getFinalFields_Type() {
 		return streamFinalFields().map(Canvas_FinalFields::getType).collect(java.util.stream.Collectors.toList());
@@ -379,77 +384,30 @@ public class Canvas {
 	}
 
 
-	public java.util.List<Object> getFinalFields_Init() {
-		return streamFinalFields().map(Canvas_FinalFields::getInit).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public static final class Canvas_FinalFields {
 
+		Object _init;
 		Object _type;
 		Object _name;
-		Object _init;
 
-		public Canvas_FinalFields(Object _type, Object _name, Object _init) {
+		public Canvas_FinalFields(Object _init, Object _type, Object _name) {
+			this._init = _init;
 			this._type = _type;
 			this._name = _name;
-			this._init = _init;
 		}
 
 		private Canvas_FinalFields(java.util.Map<String, Object> map) {
+			this._init = (Object) map.get("init");
 			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
-			this._init = (Object) map.get("init");
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-		public Object getName() {
-			return this._name;
 		}
 
 		public Object getInit() {
 			return this._init;
 		}
 
-	}  
-
-	public Canvas addRightClickActions(Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		this._rightClickActions.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getRightClickActions() {
-		return this._rightClickActions;
-	}
-
-	public Canvas addRightClickActions(Canvas_RightClickActions value) {
-		return addRightClickActions(value._name);
-	}
-
-	public java.util.stream.Stream<Canvas_RightClickActions> streamRightClickActions() {
-		return this._rightClickActions.stream().map(Canvas_RightClickActions::new);
-	}
-
-	public java.util.List<Object> getRightClickActions_Name() {
-		return streamRightClickActions().map(Canvas_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class Canvas_RightClickActions {
-
-		Object _name;
-
-		public Canvas_RightClickActions(Object _name) {
-			this._name = _name;
-		}
-
-		private Canvas_RightClickActions(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
+		public Object getType() {
+			return this._type;
 		}
 
 		public Object getName() {
@@ -513,6 +471,48 @@ public class Canvas {
 
 	}  
 
+	public Canvas addRightClickActions(Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		this._rightClickActions.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRightClickActions() {
+		return this._rightClickActions;
+	}
+
+	public Canvas addRightClickActions(Canvas_RightClickActions value) {
+		return addRightClickActions(value._name);
+	}
+
+	public java.util.stream.Stream<Canvas_RightClickActions> streamRightClickActions() {
+		return this._rightClickActions.stream().map(Canvas_RightClickActions::new);
+	}
+
+	public java.util.List<Object> getRightClickActions_Name() {
+		return streamRightClickActions().map(Canvas_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Canvas_RightClickActions {
+
+		Object _name;
+
+		public Canvas_RightClickActions(Object _name) {
+			this._name = _name;
+		}
+
+		private Canvas_RightClickActions(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -526,7 +526,7 @@ public class Canvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Canvas(packageName,imports,name,fields,finalFields,constructorStatements,methods,rightClickStatements,rightClickActions,keyPressActions,actions,canvasNodes,canvasRelations) ::= <<package ~packageName~;\n" + 
+	static final String st = "Canvas(imports,name,fields,packageName,constructorStatements,methods,rightClickStatements,finalFields,keyPressActions,rightClickActions,canvasRelations,canvasNodes,actions) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 

@@ -5,10 +5,10 @@ public class CanvasNodeAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _transactional;
 	private Object _name;
 	private Object _titleExpression;
 	private Object _title;
-	private Object _transactional;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -23,14 +23,36 @@ public class CanvasNodeAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CanvasNodeAction");
+		st.add("transactional", _transactional);
 		st.add("name", _name);
 		st.add("titleExpression", _titleExpression);
 		st.add("title", _title);
-		st.add("transactional", _transactional);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
+
+	public CanvasNodeAction setTransactional(Object value) {
+		this._transactional = value;
+		return this;
+	}
+
+	public Object getTransactional() {
+		return this._transactional;
+	}
+
+	public Object getTransactional(Object defaultValue) {
+		return this._transactional == null ? defaultValue : this._transactional;
+	}
+
+	public boolean hasTransactional() {
+		return this._transactional != null;
+	}
+
+	public CanvasNodeAction removeTransactional() {
+		this._transactional = null;
+		return this;
+	} 
 
 	public CanvasNodeAction setName(Object value) {
 		this._name = value;
@@ -95,28 +117,6 @@ public class CanvasNodeAction {
 
 	public CanvasNodeAction removeTitle() {
 		this._title = null;
-		return this;
-	} 
-
-	public CanvasNodeAction setTransactional(Object value) {
-		this._transactional = value;
-		return this;
-	}
-
-	public Object getTransactional() {
-		return this._transactional;
-	}
-
-	public Object getTransactional(Object defaultValue) {
-		return this._transactional == null ? defaultValue : this._transactional;
-	}
-
-	public boolean hasTransactional() {
-		return this._transactional != null;
-	}
-
-	public CanvasNodeAction removeTransactional() {
-		this._transactional = null;
 		return this;
 	} 
 
@@ -217,7 +217,7 @@ public class CanvasNodeAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CanvasNodeAction(name,fields,titleExpression,title,transactional,statements) ::= <<final class ~name~ extends NodeAction {\n" + 
+	static final String st = "CanvasNodeAction(statements,transactional,name,fields,titleExpression,title) ::= <<final class ~name~ extends NodeAction {\n" + 
 				"\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"\n" + 

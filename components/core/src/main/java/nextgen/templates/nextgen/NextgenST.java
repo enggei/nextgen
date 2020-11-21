@@ -19,6 +19,8 @@ public class NextgenST {
 	.append(EntityConstraints.st + "\n")
 	.append(STTemplateEditor.st + "\n")
 	.append(STWorkspace.st + "\n")
+	.append(FindEditor.st + "\n")
+	.append(FindSingletonComponent.st + "\n")
 	.append(TransactionAction.st + "\n")
 	.append(TreeNavigator.st + "\n")
 	.append(BaseTreeNode.st + "\n")
@@ -115,6 +117,14 @@ public class NextgenST {
 
 	public static STWorkspace newSTWorkspace() {
 		return new STWorkspace(stGroup);
+	}  
+
+	public static FindEditor newFindEditor() {
+		return new FindEditor(stGroup);
+	}  
+
+	public static FindSingletonComponent newFindSingletonComponent() {
+		return new FindSingletonComponent(stGroup);
 	}  
 
 	public static TransactionAction newTransactionAction() {
