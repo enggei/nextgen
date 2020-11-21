@@ -53,32 +53,6 @@ public class STModelDB extends STModelNeoFactory {
             .setType(PRIMITIVE);
    }
 
-   public STModelDB remove(STValue stValue) {
-      final String uuid = stValue.getUuid();
-      final STValue found = findSTValueByUuid(uuid);
-      if (found == null) return this;
-      delete(found.getNode());
-      return this;
-   }
-
-   public STModelDB remove(STArgument stArgument) {
-      final String uuid = stArgument.getUuid();
-      final STArgument found = findSTArgumentByUuid(uuid);
-      if (found == null) return this;
-      delete(found.getNode());
-      return this;
-   }
-
-   public STModelDB remove(STModel stModel) {
-      final String uuid = stModel.getUuid();
-      final STModel found = findSTModelByUuid(uuid);
-      if (found == null) return this;
-      stModel.getArguments()
-            .forEach(this::remove);
-      delete(found.getNode());
-      return this;
-   }
-
    public String getSTModelValue(STModel stModel, String parameterName, String defaultValue) {
 
       final STTemplate stTemplate = stModel.getStTemplate();
@@ -109,54 +83,6 @@ public class STModelDB extends STModelNeoFactory {
       return getSTModelValue(stModel, "packageName", defaultValue);
    }
 
-   public static Optional<STTemplate> findSTTemplateByName(STGroupModel groupModel, String name) {
-      final Iterator<STTemplate> iterator = groupModel.getTemplates()
-            .iterator();
-      while (iterator.hasNext()) {
-         final STTemplate stTemplate = findSTTemplateByName(iterator.next(), name);
-         if (stTemplate != null) return Optional.of(stTemplate);
-      }
-      return Optional.empty();
-   }
-
-   public static STTemplate findSTTemplateByName(STTemplate stTemplate, String name) {
-      if (name.equals(stTemplate.getName())) return stTemplate;
-      final Iterator<STTemplate> iterator = stTemplate.getChildren()
-            .iterator();
-      while (iterator.hasNext()) {
-         final STTemplate child = findSTTemplateByName(iterator.next(), name);
-         if (child != null) return child;
-      }
-      return null;
-   }
-
-//   public <T> T find(String name, STValue value, String stTemplateUuid, Mapper<T> supplier) {
-//      final AtomicReference<T> found = new AtomicReference<>();
-//      findSTTemplateByUuid(stTemplateUuid)
-//            .getParameters()
-//            .filter(stParameter -> stParameter.getName()
-//                  .equals(name))
-//            .findFirst()
-//            .ifPresent(stParameter -> findAllSTModelByStTemplate(stTemplateUuid)
-//                  .filter(stModel -> found.get() == null)
-//                  .forEach(stModel -> stModel
-//                        .getArguments()
-//                        .filter(stArgument -> found.get() == null)
-//                        .filter(stArgument -> stArgument.getStParameter()
-//                              .equals(stParameter.getUuid()))
-//                        .map(STArgument::getValue)
-//                        .filter(value::equals)
-//                        .findFirst()
-//                        .ifPresent(stValue -> found.set(supplier.get(this, stModel)))));
-//
-//      return found.get();
-//   }
-
-   public interface Mapper<T> {
-
-      T get(STModelDB db, STModel stModel);
-
-   }
 
    public STFile newSTFile(String name, String type, String path, String packageName) {
       return newSTFile()
@@ -168,24 +94,16 @@ public class STModelDB extends STModelNeoFactory {
             .setPackageName(newSTValue(packageName));
    }
 
-   public STProject newSTProject(String name) {
-      return newSTProject()
-            .setName(name);
-   }
-
-   public STModel newSTModel(STTemplate stTemplate) {
-      return newSTModel()
-            .setStTemplate(stTemplate);
-   }
 
    public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {
-      final STArgument stArgument = newSTArgument(stParameter);
+      final STArgument stArgument = newSTArgument().setStParameter(stParameter);
       for (STArgumentKV kv : kvs) stArgument.addKeyValues(kv);
       return stArgument;
    }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
-      return newSTArgument(stParameter)
+      return newSTArgument()
+            .setStParameter(stParameter)
             .setValue(stValue);
    }
 
@@ -209,16 +127,6 @@ public class STModelDB extends STModelNeoFactory {
             .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical()
                   .trim()
                   .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
-   }
-
-   public STArgumentKV newSTArgumentKV(STParameterKey key, STValue stValue) {
-      return newSTArgumentKV()
-            .setStParameterKey(key)
-            .setValue(stValue);
-   }
-
-   private STArgument newSTArgument(STParameter stParameter) {
-      return newSTArgument().setStParameter(stParameter);
    }
 
    public void cleanup() {
@@ -266,7 +174,7 @@ public class STModelDB extends STModelNeoFactory {
    public STModel clone(STModel stModel) {
 
       final STTemplate stTemplate = stModel.getStTemplate();
-      final STModel clone = newSTModel(stTemplate);
+      final STModel clone = newSTModel().setStTemplate(stTemplate);
 
       // ensure cloned-arguments are in same order as stModel-arguments:
       stModel
@@ -289,7 +197,7 @@ public class STModelDB extends STModelNeoFactory {
                                        .getKeyValues()
                                        .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                                        .findAny()
-                                       .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV(stParameterKey, stArgumentKV.getValue()))));
+                                       .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stArgumentKV.getValue()))));
                            clone.addArguments(newSTArgument(stParameter, kvs));
                            break;
                      }

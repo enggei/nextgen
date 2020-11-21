@@ -13,7 +13,7 @@ public class NewProject extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "Name", s -> {
-         final nextgen.st.model.STProject stProject = appModel().db.newSTProject(s);
+         final nextgen.st.model.STProject stProject = appModel().db.newSTProject().setName(s);
          nextgen.events.NewSTProject.post(stProject);
       });
    }

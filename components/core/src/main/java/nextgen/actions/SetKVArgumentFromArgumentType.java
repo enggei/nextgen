@@ -33,7 +33,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             input(owner, "New value", s -> {
@@ -52,19 +52,19 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
 
          if (stTemplate.isPresent()) {
             removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( stTemplate.get());
+            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
             addValue(appModel().db.newSTValue(stTemplateModel));
          } else {
             final java.util.Set<nextgen.st.model.STTemplate> interfaces = nextgen.utils.STModelUtil.findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   removeExisting();
-                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( interfaces.iterator().next());
+                  final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(interfaces.iterator().next());
                   addValue(appModel().db.newSTValue(stTemplateModel));
                } else {
                   select(owner, interfaces, value -> {
                      removeExisting();
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value);
                      addValue(appModel().db.newSTValue(stTemplateModel));
                   });   
                }
@@ -87,6 +87,12 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
       }
    }
 
+   private void addValue(nextgen.st.model.STValue stValue) {
+      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
+      stArgument.addKeyValues(stArgumentKV);
+      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+   }
+
    private void removeExisting() {
       stArgument.getKeyValues()
             .filter(existing -> existing.getStParameterKey().equals(stParameterKey))
@@ -97,12 +103,5 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
                existing.delete();
                nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
             });
-   }
-
-   private void addValue(nextgen.st.model.STValue stValue) {
-      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
-      stArgument.addKeyValues(stArgumentKV);
-
-      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
    }
 }

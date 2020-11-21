@@ -28,7 +28,7 @@ public class SetKVArgumentFromSTValue extends TransactionAction {
                nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
             });
 
-      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV(stParameterKey, stValue);
+      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
       stArgument.addKeyValues(stArgumentKV);
 
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);

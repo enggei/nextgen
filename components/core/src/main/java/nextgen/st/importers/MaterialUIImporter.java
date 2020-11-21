@@ -13,7 +13,6 @@ import com.github.kklisura.cdt.services.ChromeService;
 import com.github.kklisura.cdt.services.types.ChromeTab;
 import nextgen.st.STParser;
 import nextgen.st.model.STGroupModel;
-import nextgen.st.domain.STJsonFactory;
 import nextgen.st.model.STTemplate;
 import nextgen.st.model.STModelDB;
 import org.jsoup.Jsoup;

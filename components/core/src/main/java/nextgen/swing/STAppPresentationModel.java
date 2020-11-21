@@ -165,9 +165,6 @@ public class STAppPresentationModel {
       return stGroupModel;
    }
 
-   public STModel newSTModel(STTemplate stTemplate) {
-      return db.newSTModel(stTemplate);
-   }
 
    public nextgen.st.model.STTemplate newSTTemplate(String name, String text, nextgen.st.model.STGroupModel parent) {
       final nextgen.st.model.STTemplate stTemplate = db.newSTTemplate()

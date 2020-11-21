@@ -21,15 +21,12 @@ import static nextgen.templates.JavaPatterns.*;
 
 public class NextgenProject {
 
-   static nextgen.st.model.STModelDB db;
-
    static final File root = new File("/home/goe/projects/nextgen/components/core");
    static final File mainJava = new File(root, "src/main/java");
 
    static final PackageDeclaration corePackage = newPackageDeclaration("nextgen");
    static final PackageDeclaration stPackage = newPackageDeclaration(corePackage, "st");
    static final PackageDeclaration parsePackage = newPackageDeclaration(stPackage, "parser");
-   static final PackageDeclaration eventsPackage = newPackageDeclaration(corePackage, "events");
    static final PackageDeclaration canvasPackage = newPackageDeclaration(stPackage, "canvas");
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
@@ -1011,9 +1008,7 @@ public class NextgenProject {
             .addCanvasRelations(sinkRelation)
             .addCanvasRelations(stValueModelRelation);
 
-      writeJavaFile(canvas, canvas.getPackageName()
-            .toString(), canvas.getName()
-            .toString(), mainJava);
+      writeJavaFile(canvas, canvas.getPackageName(), canvas.getName(), mainJava);
    }
 
    @org.junit.Test
@@ -1398,50 +1393,4 @@ public class NextgenProject {
             .setName("Nextgen")
             .setRoot(root.getAbsolutePath()), projectPom);
    }
-
-//   public static nextgen.templates.greenrobot.Event write(nextgen.templates.greenrobot.Event event) {
-//
-//      event.setPackageName(eventsPackage.getName());
-//
-//      writeJavaFile(event, eventsPackage, event.getName(), mainJava);
-//
-//      db.doInTransaction(transaction -> {
-//
-//         final nextgen.st.model.STTemplate stTemplate = db.findSTTemplateByUuid("56afaa61-e68a-4ded-9563-4e9c38e6320d");
-//         final nextgen.st.model.STModel stModel = db.newSTModel(stTemplate);
-//
-//         stTemplate.getParameters().forEach(stParameter -> {
-//
-//            if (stParameter.getName().toLowerCase().equals("name")) {
-//               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getName())));
-//            } else if (stParameter.getName().toLowerCase().equals("packagename")) {
-//               stModel.addArguments(db.newSTArgument(stParameter, db.newSTValue(event.getPackageName().toString())));
-//            } else if (stParameter.getName().toLowerCase().equals("fields")) {
-//               event.streamFields().forEach(event_fields -> {
-//                  final java.util.Collection<nextgen.st.model.STArgumentKV> kvs = new java.util.ArrayList<>();
-//                  stParameter.getKeys().forEach(stParameterKey -> {
-//                     if (stParameterKey.getName().equals("name")) {
-//                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getName().toString())));
-//                     } else if (stParameterKey.getName().equals("type")) {
-//                        kvs.add(db.newSTArgumentKV(stParameterKey, db.newSTValue(event_fields.getType().toString())));
-//                     } else {
-//                        System.out.println("error");
-//                     }
-//                  });
-//                  stModel.addArguments(db.newSTArgument(stParameter, kvs));
-//               });
-//            } else {
-//               System.out.println("error");
-//            }
-//         });
-//
-//
-//      }, throwable -> {
-//         throwable.printStackTrace();
-//         System.out.println();
-//      });
-//
-//
-//      return event;
-//   }
 }
