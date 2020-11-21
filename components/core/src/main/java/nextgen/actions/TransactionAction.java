@@ -13,7 +13,7 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected abstract void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction);
 
-   protected nextgen.st.STAppPresentationModel appModel() {
+   protected nextgen.swing.STAppPresentationModel appModel() {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 

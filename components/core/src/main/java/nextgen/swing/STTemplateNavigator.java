@@ -137,7 +137,7 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroup(nextgen.events.NewSTGroup event) {
-		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new nextgen.st.STTemplateNavigator.STGroupTreeNode(event.group));
+		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new STTemplateNavigator.STGroupTreeNode(event.group));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -167,13 +167,13 @@ public class STTemplateNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-							.ifPresent(nextgen.st.STTemplateNavigator.STGroupTreeNode::nodeChanged);
+							.ifPresent(STTemplateNavigator.STGroupTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
 		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
-							.ifPresent(nextgen.st.STTemplateNavigator.STTemplateTreeNode::nodeChanged);
+							.ifPresent(STTemplateNavigator.STTemplateTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -191,7 +191,7 @@ public class STTemplateNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroupFile(nextgen.events.NewSTGroupFile event) {
 		findSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.stGroupModel))
-				.ifPresent(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new nextgen.st.STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
+				.ifPresent(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -596,7 +596,7 @@ public class STTemplateNavigator extends JPanel {
 		private java.util.Set<nextgen.st.model.STTemplate> getSelectedTemplates() {
 					return getSelectedSTTemplateTreeNodes()
 							.filter(stTemplateTreeNode -> !stTemplateTreeNode.equals(this))
-							.map(nextgen.st.STTemplateNavigator.BaseTreeNode::getModel)
+							.map(STTemplateNavigator.BaseTreeNode::getModel)
 							.collect(java.util.stream.Collectors.toSet());
 				}
 	}
@@ -623,7 +623,7 @@ public class STTemplateNavigator extends JPanel {
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
 		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-			final nextgen.st.STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(nextgen.st.STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
+			final STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
 			nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
 		});
 	}

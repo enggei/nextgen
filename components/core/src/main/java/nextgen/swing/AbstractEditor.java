@@ -7,7 +7,7 @@ public class AbstractEditor extends javax.swing.JPanel {
       setBackground(javax.swing.UIManager.getColor("Panel.background"));
    }
 
-   protected nextgen.st.STAppPresentationModel appModel() {
+   protected nextgen.swing.STAppPresentationModel appModel() {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 

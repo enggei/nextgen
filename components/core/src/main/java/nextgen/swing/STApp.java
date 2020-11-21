@@ -1,6 +1,5 @@
 package nextgen.swing;
 
-import nextgen.st.STAppPresentationModel;
 import nextgen.swing.config.AppConfig;
 import nextgen.swing.config.AppConfigJsonFactory;
 import nextgen.utils.SwingUtil;

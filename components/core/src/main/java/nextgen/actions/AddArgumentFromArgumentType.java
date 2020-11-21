@@ -42,7 +42,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
       } else {
 
          final nextgen.st.model.STGroupModel stGroupModel = appModel().findSTGroup(stModel.getStTemplate());
-         final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = appModel()
+         final java.util.Optional<nextgen.st.model.STTemplate> stTemplate = nextgen.utils.STModelUtil
                .aggregateTemplates(stGroupModel)
                .filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))
                .findAny();
@@ -52,7 +52,7 @@ public class AddArgumentFromArgumentType extends TransactionAction {
             final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
             addValue(stValue);
          } else {
-            final java.util.Set<nextgen.st.model.STTemplate> interfaces = appModel().findSTTemplatesByInterface(argumentType, stGroupModel);
+            final java.util.Set<nextgen.st.model.STTemplate> interfaces = nextgen.utils.STModelUtil.findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
                if (interfaces.size() == 1) {
                   final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel( interfaces.iterator().next());

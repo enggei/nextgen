@@ -127,7 +127,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileChanged(nextgen.events.STFileChanged event) {
-		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile)).ifPresent(nextgen.swing.STModelNavigator.STFileSinkTreeNode::nodeChanged);
+		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile)).ifPresent(STModelNavigator.STFileSinkTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -145,11 +145,11 @@ public class STModelNavigator extends JPanel {
 		treeModel.find(treeNode -> treeNode.getModel().equals(event.model))
 				.flatMap(treeNode -> findSTParameterTreeNode(treeNode, stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter)))
 				.ifPresent(stParameterTreeNode -> appModel().stArgumentConsumer(event.parameter)
-						.onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.swing.STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
-						.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.swing.STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-						.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.swing.STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
-						.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.swing.STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-						.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new nextgen.swing.STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter)))
+						.onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
+						.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+						.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
+						.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+						.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter)))
 						.accept(event.argument));
 	}
 
@@ -157,14 +157,14 @@ public class STModelNavigator extends JPanel {
 	public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
 		treeModel.find(treeNode -> treeNode.getModel().equals(event.model))
 				.flatMap(treeNode -> findSTParameterTreeNode(treeNode, stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.stParameter)))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new nextgen.swing.STModelNavigator.STKVArgumentTreeNode(event.argument, event.stParameter)));
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STModelNavigator.STKVArgumentTreeNode(event.argument, event.stParameter)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewKV(nextgen.events.NewKV event) {
 		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.argument.getUuid()))
 				.ifPresent(treeNode -> {
-					treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.swing.STModelNavigator.STKVTreeNode(event.kv, treeNode.getModel(), event.stParameterKey));
+					treeModel.addNodeInSortedOrderAndSelect(treeNode, new STModelNavigator.STKVTreeNode(event.kv, treeNode.getModel(), event.stParameterKey));
 				});
 	}
 
@@ -173,7 +173,7 @@ public class STModelNavigator extends JPanel {
 		findModelsTreeNode()
 				.flatMap(modelsTreeNode -> findSTGroupModelTreeNode(modelsTreeNode, treeNode -> treeNode.getModel().equals(event.stGroup))
 						.flatMap(treeNode -> findSTTemplateTreeNode(treeNode, stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.template))))
-				.ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new nextgen.swing.STModelNavigator.STModelTreeNode(event.model, event.template)));
+				.ifPresent(stTemplateTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new STModelNavigator.STModelTreeNode(event.model, event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -181,23 +181,23 @@ public class STModelNavigator extends JPanel {
 		findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.project))
 				.ifPresent(stProjectTreeNode -> {
 					final nextgen.st.model.STGroupModel stGroup = appModel().findSTGroup(event.template);
-					final java.util.Optional<nextgen.swing.STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
+					final java.util.Optional<STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
 					if (groupModelTreeNode.isPresent()) {
-						final java.util.Optional<nextgen.swing.STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
+						final java.util.Optional<STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
 						if (stTemplateTreeNode.isPresent()) {
-							treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode.get(), new nextgen.swing.STModelNavigator.STModelTreeNode(event.model, event.template));
+							treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode.get(), new STModelNavigator.STModelTreeNode(event.model, event.template));
 						} else {
-							final nextgen.swing.STModelNavigator.STTemplateTreeNode newSTTemplateTreeNode = new nextgen.swing.STModelNavigator.STTemplateTreeNode(event.template);
+							final STModelNavigator.STTemplateTreeNode newSTTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(event.template);
 							treeModel.addNodeInSortedOrder(groupModelTreeNode.get(), newSTTemplateTreeNode);
-							treeModel.addNodeInSortedOrderAndSelect(newSTTemplateTreeNode, new nextgen.swing.STModelNavigator.STModelTreeNode(event.model, event.template));
+							treeModel.addNodeInSortedOrderAndSelect(newSTTemplateTreeNode, new STModelNavigator.STModelTreeNode(event.model, event.template));
 						}
 
 					} else {
-						final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroup);
+						final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
 						treeModel.addNodeInSortedOrder(stProjectTreeNode, stGroupModelTreeNode);
-						final nextgen.swing.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.swing.STModelNavigator.STTemplateTreeNode(event.template);
+						final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(event.template);
 						treeModel.addNodeInSortedOrder(stGroupModelTreeNode, stTemplateTreeNode);
-						treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new nextgen.swing.STModelNavigator.STModelTreeNode(event.model, event.template));
+						treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new STModelNavigator.STModelTreeNode(event.model, event.template));
 					}
 				});
 	}
@@ -205,12 +205,12 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProjectSTValue(nextgen.events.NewSTProjectSTValue event) {
 		findSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.project))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.swing.STModelNavigator.STValueTreeNode(event.value)));
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STModelNavigator.STValueTreeNode(event.value)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTValueChanged(nextgen.events.STValueChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.value)).ifPresent(nextgen.swing.STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.value)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -221,7 +221,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelChanged(nextgen.events.STModelChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(nextgen.swing.STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -485,21 +485,21 @@ public class STModelNavigator extends JPanel {
 				final nextgen.st.model.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
-					final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroup);
+					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
 					add(stGroupModelTreeNode);
 					stGroupTreeNodeMap.put(stGroup, stGroupModelTreeNode);
 				}
 
 				if (!stTemplateTreeNodeMap.containsKey(stTemplate)) {
-					final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.swing.STModelNavigator.STTemplateTreeNode(stTemplate);
+					final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(stTemplate);
 					stGroupTreeNodeMap.get(stGroup).add(stTemplateTreeNode);
 					stTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);
 				}
 
-				stTemplateTreeNodeMap.get(stTemplate).add(new nextgen.swing.STModelNavigator.STModelTreeNode(stModel, stTemplate));
+				stTemplateTreeNodeMap.get(stTemplate).add(new STModelNavigator.STModelTreeNode(stModel, stTemplate));
 			});
 
-			model.getValuesSorted().forEach(stValue -> add(new nextgen.swing.STModelNavigator.STValueTreeNode(stValue)));
+			model.getValuesSorted().forEach(stValue -> add(new STModelNavigator.STValueTreeNode(stValue)));
 		}
 
 		STProjectTreeNode thisNode() {
@@ -519,7 +519,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				final java.util.Set<nextgen.st.model.STModel> selectedSTModels = getSelectedSTModels().collect(java.util.stream.Collectors.toSet());
-				final java.util.Set<nextgen.st.model.STModel> projectSTModels = appModel().aggregateModels(getModel());
+				final java.util.Set<nextgen.st.model.STModel> projectSTModels = nextgen.utils.STModelUtil.aggregateModels(getModel());
 				selectedSTModels.removeAll(projectSTModels);
 
 				final java.util.Set<nextgen.st.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toSet());
@@ -577,7 +577,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(transaction -> {
 				appModel().getGroupModels().forEach(stGroupModel -> {
-					final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroupModel);
+					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroupModel);
 					add(stGroupModelTreeNode);
 					stGroupModel.getTemplates().forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
 				});
@@ -606,7 +606,7 @@ public class STModelNavigator extends JPanel {
 		}
 
 		private void addSTTemplateChild(nextgen.st.model.STTemplate stTemplate, BaseTreeNode<?> parent) {
-			final nextgen.swing.STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new nextgen.swing.STModelNavigator.STTemplateTreeNode(stTemplate);
+			final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(stTemplate);
 			parent.add(stTemplateTreeNode);
 
 			stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate)));
@@ -730,8 +730,8 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.List<nextgen.st.model.STModel> stModels = getChildren(nextgen.swing.STModelNavigator.STModelTreeNode.class)
-												.map(nextgen.swing.STModelNavigator.BaseTreeNode::getModel)
+				final java.util.List<nextgen.st.model.STModel> stModels = getChildren(STModelNavigator.STModelTreeNode.class)
+												.map(STModelNavigator.BaseTreeNode::getModel)
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModelAction(getModel())));
@@ -952,7 +952,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.Optional<nextgen.swing.STModelNavigator.STModelTreeNode> parentNode = getParentNode(nextgen.swing.STModelNavigator.STModelTreeNode.class);
+				final java.util.Optional<STModelNavigator.STModelTreeNode> parentNode = getParentNode(STModelNavigator.STModelTreeNode.class);
 
 				final String clipboard = nextgen.utils.SwingUtil.fromClipboard();
 				final String stModelUuid = clipboard.startsWith("stmodel-") ? clipboard.replaceAll("stmodel-","").trim() : null;
@@ -1575,7 +1575,7 @@ public class STModelNavigator extends JPanel {
 				.map(treePath -> (BaseTreeNode) treePath.getLastPathComponent());
 	}
 
-	private nextgen.st.STAppPresentationModel appModel() {
+	private STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 

@@ -1,4 +1,4 @@
-package nextgen.st;
+package nextgen.swing;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -757,7 +757,7 @@ public class STModelTreeTable extends JTable {
       }
    }
 
-   private static STAppPresentationModel appModel() {
+   private static nextgen.swing.STAppPresentationModel appModel() {
       return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 
@@ -766,7 +766,7 @@ public class STModelTreeTable extends JTable {
       final nextgen.swing.AppModel appModel = nextgen.swing.STApp.loadConfig(args);
       appModel.getSTAppPresentationModel().doInTransaction(transaction -> {
          final nextgen.st.model.STModel stModelByUuid = appModel.getSTAppPresentationModel().db.findSTModelByUuid("485df1a0-1b9d-4d79-a3d5-881800c035ac");
-         nextgen.utils.SwingUtil.showPanel(new javax.swing.JScrollPane(new nextgen.st.STModelTreeTable(new STModelModel(stModelByUuid))));
+         nextgen.utils.SwingUtil.showPanel(new javax.swing.JScrollPane(new nextgen.swing.STModelTreeTable(new STModelModel(stModelByUuid))));
       });
    }
 

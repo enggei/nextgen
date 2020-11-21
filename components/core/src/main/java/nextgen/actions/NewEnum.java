@@ -15,11 +15,11 @@ public class NewEnum extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "New Enum", s ->
-            nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
-               final nextgen.st.model.STEnum stEnum = appModel().newSTEnum(name);
-               stGroup.addEnums(stEnum);
-               nextgen.events.NewSTEnum.post(stGroup, stEnum);
-            }));
+      		nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
+      			final nextgen.st.model.STEnum stEnum = appModel().db.newSTEnum().setName(s);
+      			stGroup.addEnums(stEnum);
+      			nextgen.events.NewSTEnum.post(stGroup, stEnum);
+      		}));
    }
 
 }

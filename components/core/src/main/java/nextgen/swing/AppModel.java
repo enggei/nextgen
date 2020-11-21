@@ -16,7 +16,7 @@ public final class AppModel {
 	private Integer _fontSize;
 	private String _fontName;
 	private javax.swing.JFrame _frame;
-	private nextgen.st.STAppPresentationModel _sTAppPresentationModel;
+	private nextgen.swing.STAppPresentationModel _sTAppPresentationModel;
 
 	private AppModel() {		  
 	}
@@ -143,11 +143,11 @@ public final class AppModel {
 		return this;
 	}
 
-	public nextgen.st.STAppPresentationModel getSTAppPresentationModel() {
+	public nextgen.swing.STAppPresentationModel getSTAppPresentationModel() {
 		return _sTAppPresentationModel;
 	}
 
-	public AppModel setSTAppPresentationModel(nextgen.st.STAppPresentationModel value) {
+	public AppModel setSTAppPresentationModel(nextgen.swing.STAppPresentationModel value) {
 		this._sTAppPresentationModel = value;
 		return this;
 	}

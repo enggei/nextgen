@@ -26,9 +26,8 @@ public class STParser {
 
    public static boolean debug = false;
 
-   protected static nextgen.st.STAppPresentationModel appModel() {
-      return nextgen.swing.AppModel.getInstance()
-            .getSTAppPresentationModel();
+   protected static nextgen.swing.STAppPresentationModel appModel() {
+      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
    }
 
    public static nextgen.st.parser.ParseResult parse(File stgFile) {

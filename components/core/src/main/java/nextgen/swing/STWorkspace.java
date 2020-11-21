@@ -269,7 +269,7 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	private nextgen.st.STAppPresentationModel appModel() {
+	private nextgen.swing.STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 

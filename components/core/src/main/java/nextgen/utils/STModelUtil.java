@@ -11,6 +11,57 @@ import java.util.Set;
 
 public class STModelUtil {
 
+   public static Set<nextgen.st.model.STModel> aggregateModels(nextgen.st.model.STProject stProject) {
+
+      java.util.Set<nextgen.st.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stProject.getModels().forEach(stModel -> {
+         models.add(stModel);
+         models.addAll(aggregateModels(stModel));
+      });
+
+      return models;
+   }
+
+   public static java.util.Set<nextgen.st.model.STModel> aggregateModels(nextgen.st.model.STModel stModel) {
+      java.util.Set<nextgen.st.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stModel.getArguments().forEach(stArgument -> {
+         final nextgen.st.model.STValue value = stArgument.getValue();
+         if (value == null) return;
+
+         if (nextgen.st.model.STValueType.STMODEL.equals(value.getType())) {
+            final nextgen.st.model.STModel valueSTModel = value.getStModel();
+            models.add(valueSTModel);
+            models.addAll(aggregateModels(valueSTModel));
+         }
+      });
+
+      return models;
+   }
+
+   public static Set<STTemplate> findSTTemplatesByInterface(String name, STGroupModel stGroupModel) {
+      final Set<STTemplate> set = new LinkedHashSet<>();
+      aggregateTemplates(stGroupModel)
+            .forEach(stTemplate -> stTemplate.getImplements()
+                  .filter(name::equals)
+                  .findFirst()
+                  .ifPresent(s -> set.add(stTemplate)));
+      return set;
+   }
+
+   public static java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
+      final List<STTemplate> templates = new java.util.ArrayList<>();
+      stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
+
+      return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+   }
+
+   public static void aggregate(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STTemplate> templates) {
+      templates.add(stTemplate);
+      stTemplate.getChildren().forEach(stTemplate1 -> aggregate(stTemplate1, templates));
+   }
+
    public static STEnum findSTEnumByName(String name, STGroupModel stGroupModel) {
       return stGroupModel.getEnums()
                          .filter(stEnum -> stEnum.getName().equals(name))

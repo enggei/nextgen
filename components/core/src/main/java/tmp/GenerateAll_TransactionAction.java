@@ -495,13 +495,13 @@ public class GenerateAll_TransactionAction {
 					"	});\n" + 
 					"});");
 		final TransactionAction NewEnum = NextgenST.newTransactionAction().setName("NewEnum").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Enum").addStatements("input(owner, \"New Enum\", s ->\n" +
-					"      nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"      nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"         final nextgen.st.model.STEnum stEnum = appModel().newSTEnum(name);\n" +
 					"         stGroup.addEnums(stEnum);\n" + 
 					"         nextgen.events.NewSTEnum.post(stGroup, stEnum);\n" + 
 					"      }));");
 		final TransactionAction NewInterface = NextgenST.newTransactionAction().setName("NewInterface").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Interface").addStatements("input(owner, \"New Interface\", s ->\n" +
-					"      nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"      nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"         final nextgen.st.model.STInterface stInterface = appModel().newSTInterface(name);\n" +
 					"         stGroup.addInterfaces(stInterface);\n" + 
 					"         nextgen.events.NewSTInterface.post(stGroup, stInterface);\n" + 
@@ -528,12 +528,12 @@ public class GenerateAll_TransactionAction {
 					"});");
 		final TransactionAction NewSTModelAction = NextgenST.newTransactionAction().setName("NewSTModelAction").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("New instance").addStatements("final nextgen.st.model.STModel stModel = appModel().newSTModel(stTemplate);\n" +
 					"nextgen.events.NewSTModel.post(stModel, appModel().findSTGroup(stTemplate), stTemplate);");
-		final TransactionAction NewSTTemplate = NextgenST.newTransactionAction().setName("NewSTTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
+		final TransactionAction NewSTTemplate = NextgenST.newTransactionAction().setName("NewSTTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("New Template").addStatements("input(owner, \"Name\", s -> nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"	final nextgen.st.model.STTemplate stTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" +
 					"	stGroup.addTemplates(stTemplate);\n" + 
 					"	nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);\n" + 
 					"}));");
-		final TransactionAction AddChildToTemplate = NextgenST.newTransactionAction().setName("AddChildToTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Add Child template").addStatements("input(owner, \"Name\", s -> nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s)\n" +
+		final TransactionAction AddChildToTemplate = NextgenST.newTransactionAction().setName("AddChildToTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Add Child template").addStatements("input(owner, \"Name\", s -> nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s)\n" +
 					"      .ifPresent(name -> {\n" + 
 					"         final nextgen.st.model.STTemplate newTemplate = nextgen.st.domain.STJsonFactory.newSTTemplate().setName(name).setText(\"\");\n" +
 					"         stTemplate.addChildren(newTemplate);\n" + 
@@ -542,25 +542,25 @@ public class GenerateAll_TransactionAction {
 		final TransactionAction OpenSTModelAction = NextgenST.newTransactionAction().setName("OpenSTModelAction").addFields("nextgen.st.model.STModel", "stModel").setTitle("Open").addStatements("nextgen.events.OpenSTModel.post(stModel);");
 		final TransactionAction OpenTemplate = NextgenST.newTransactionAction().setName("OpenTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").setTitle("Open").addStatements("nextgen.events.OpenSTTemplate.post(stTemplate);");
 		final TransactionAction RenameEnum = NextgenST.newTransactionAction().setName("RenameEnum").addFields("nextgen.st.model.STEnum", "stEnum").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stEnum.getName(), s -> {\n" +
-					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"   nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"      stEnum.setName(name);\n" + 
 					"      nextgen.events.STEnumNameChanged.post(stGroup, stEnum);\n" + 
 					"   });\n" + 
 					"});");
 		final TransactionAction RenameSTGroup = NextgenST.newTransactionAction().setName("RenameSTGroup").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stGroup.getName(), s -> {\n" +
-					"	nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"	nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"		stGroup.setName(name);\n" + 
 					"		nextgen.events.STGroupNameChanged.post(stGroup);\n" + 
 					"	});\n" + 
 					"});");
 		final TransactionAction RenameSTInterface = NextgenST.newTransactionAction().setName("RenameSTInterface").addFields("nextgen.st.model.STInterface", "stInterface").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stInterface.getName(), s -> {\n" +
-					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"   nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"      stInterface.setName(name);\n" + 
 					"      nextgen.events.STInterfaceNameChanged.post(stGroup, stInterface);\n" + 
 					"   });\n" + 
 					"});");
 		final TransactionAction RenameSTTemplate = NextgenST.newTransactionAction().setName("RenameSTTemplate").addFields("nextgen.st.model.STTemplate", "stTemplate").addFields("nextgen.st.model.STGroupModel", "stGroup").addFields("javax.swing.JComponent", "owner").setTitle("Rename").addStatements("input(owner, \"Name\", stTemplate.getName(), s -> {\n" +
-					"   nextgen.st.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" + 
+					"   nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {\n" +
 					"      stTemplate.setName(name);\n" + 
 					"      nextgen.events.STTemplateNameChanged.post(stGroup, stTemplate);\n" + 
 					"   });\n" + 

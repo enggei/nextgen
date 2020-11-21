@@ -13,9 +13,9 @@ public class STVisitorTest extends STVisitor {
       });
    }
 
-   private final nextgen.st.STAppPresentationModel presentationModel;
+   private final nextgen.swing.STAppPresentationModel presentationModel;
 
-   public STVisitorTest(nextgen.st.STAppPresentationModel presentationModel) {
+   public STVisitorTest(nextgen.swing.STAppPresentationModel presentationModel) {
       super(presentationModel.db);
       this.presentationModel = presentationModel;
    }
