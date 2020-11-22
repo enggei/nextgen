@@ -964,7 +964,7 @@ public class STModelNavigator extends JPanel {
 										.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))
 										.collect(java.util.stream.Collectors.toList());
 
-				final java.util.List<nextgen.st.model.STTemplate> stTemplates = appModel().getWorkspace().getTemplateNavigator().getSelectedSTTemplates().collect(java.util.stream.Collectors.toList());
+				final java.util.List<nextgen.st.model.STTemplate> stTemplates = nextgen.swing.AppModel.getInstance().getWorkspace().getSelectedSTTemplates().getSelectedSTTemplates().collect(java.util.stream.Collectors.toList());
 
 				switch (getModel().getType()) {
 					case SINGLE:

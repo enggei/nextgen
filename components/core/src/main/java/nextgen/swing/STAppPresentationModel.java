@@ -20,22 +20,22 @@ import static nextgen.utils.STModelUtil.findSTTemplateByName;
 
 public class STAppPresentationModel {
 
-   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
+   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
+
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
-   public nextgen.st.STRenderer stRenderer;
+
    public final STModelDB db;
-
-   private STGroupModel generatorSTGroup;
-
    private final NeoChronicle chronicle;
-   private nextgen.swing.STWorkspace stWorkspace;
+   private final STGroupModel generatorSTGroup;
+
    private String lastDir;
+   public nextgen.st.STRenderer stRenderer;
 
    public STAppPresentationModel() {
       this.db = new STModelDB(AppModel.getInstance().getDbDir());
       this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
       this.stRenderer = new nextgen.st.STRenderer();
-      this.db.doInTransaction(transaction -> generatorSTGroup = db.findSTGroupModelByName("StringTemplate"));
+      this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
    public Action newTransactionAction(String name, Consumer<Transaction> consumer) {
@@ -75,17 +75,6 @@ public class STAppPresentationModel {
       SwingUtilities.invokeLater(() -> doInTransaction(consumer));
    }
 
-   public void generateSTGroup(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
-
-      final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(toSTGroup(stGroupModel));
-
-      if (parseResult.getErrors().isEmpty()) {
-         new nextgen.st.STGenerator(generatorSTGroup).generateSTGroup(stGroupFile);
-      } else {
-         parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
-      }
-   }
-
    public void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
 
       final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(toSTGroup(stGroupModel));
@@ -101,11 +90,6 @@ public class STAppPresentationModel {
 
    public String getLastDir() {
       return lastDir == null ? System.getProperty("user.home") : lastDir;
-   }
-
-   public nextgen.swing.STWorkspace getWorkspace() {
-      if (stWorkspace == null) stWorkspace = new nextgen.swing.STWorkspace();
-      return stWorkspace;
    }
 
    public ImageIcon loadIcon(String iconName) {
@@ -125,14 +109,6 @@ public class STAppPresentationModel {
 
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);
-   }
-
-   public nextgen.st.model.STTemplate newSTTemplate(String name, String text, nextgen.st.model.STGroupModel parent) {
-      final nextgen.st.model.STTemplate stTemplate = db.newSTTemplate()
-            .setName(name)
-            .setText(text);
-      parent.addTemplates(stTemplate);
-      return stTemplate;
    }
 
    public void reconcileValues() {
@@ -198,19 +174,6 @@ public class STAppPresentationModel {
       return render(stArgument.getValue());
    }
 
-   public void save(STGroupModel stGroupModel) {
-      final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(toSTGroup(stGroupModel));
-
-      if (parseResult.getErrors().isEmpty()) {
-         final File file = new File(new File(AppModel.getInstance().getTemplateDir()), stGroupModel.getName() + ".json");
-         log.info("saving stGroup " + stGroupModel.getName() + " to " + file.getAbsolutePath());
-//         STGenerator.write(file, stGroupModel.getJsonObject().encodePrettily());
-      } else {
-         log.error(stGroupModel.getName() + " has errors: ");
-         parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
-      }
-   }
-
    public void setLastDir(File dir) {
       this.lastDir = dir.getAbsolutePath();
    }
@@ -260,11 +223,6 @@ public class STAppPresentationModel {
    public void undoLast() {
       chronicle.rollbackLast();
    }
-
-   public nextgen.swing.STModelEditor getModelEditor(STModel model) {
-      return getWorkspace().getModelEditor(model);
-   }
-
 
    public Collection<STGroupModel> getGroupModels() {
       return db.findAllSTGroupModel().collect(java.util.stream.Collectors.toList());
@@ -318,4 +276,7 @@ public class STAppPresentationModel {
       return db.newSTEnumValue();
    }
 
+   public nextgen.st.STGenerator getSTGenerator() {
+      return new nextgen.st.STGenerator(generatorSTGroup);
+   }
 }

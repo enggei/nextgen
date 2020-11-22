@@ -16,11 +16,11 @@ public class STWorkspace extends JTabbedPane {
 	public STWorkspace() {
 		setPreferredSize(new Dimension(1200, 1024));
 		setMinimumSize(new Dimension(100, 100));
+		setPreferredSize(new Dimension(1200, 1024));
+		setMinimumSize(new Dimension(100, 100));
 		getCanvas();
-		appModel().doInTransaction(transaction -> {
-			templateNavigator = new STTemplateNavigator(this);
-			modelNavigator = new STModelNavigator(this);
-		});
+		templateNavigator = new STTemplateNavigator(this);
+		modelNavigator = new STModelNavigator(this);
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
@@ -315,6 +315,10 @@ public class STWorkspace extends JTabbedPane {
 		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
 	}
 
+	public java.util.stream.Stream<nextgen.st.model.STTemplate> getSelectedSTTemplates() {
+		return getTemplateNavigator().getSelectedSTTemplates();
+	}
+
 	class ButtonTabComponent extends JPanel {
 
 		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
@@ -342,14 +346,14 @@ public class STWorkspace extends JTabbedPane {
 							pop.add(new AbstractAction("Close Others") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									appModel().getWorkspace().closeAllExcept(component);
+									closeAllExcept(component);
 								}
 							});
 
 							pop.add(new AbstractAction("Close All") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									appModel().getWorkspace().closeAll();
+									closeAll();
 								}
 							});
 

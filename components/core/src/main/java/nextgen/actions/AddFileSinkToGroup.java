@@ -12,8 +12,7 @@ public class AddFileSinkToGroup extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.st.model.STGroupFile stGroupFile = appModel().db.newSTGroupFile()
-            .setUuid(java.util.UUID.randomUUID().toString());
+      final nextgen.st.model.STGroupFile stGroupFile = appModel().db.newSTGroupFile();
       stGroup.addFiles(stGroupFile);
       nextgen.events.NewSTGroupFile.post(stGroup, stGroupFile);
    }

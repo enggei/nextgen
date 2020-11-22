@@ -81,6 +81,19 @@ public class STModelDB extends STModelNeoFactory {
          findAllSTParameter().filter(node -> !node.hasUuid()).forEach(node -> node.setUuid(UUID.randomUUID().toString()));
          findAllSTParameterKey().filter(node -> !node.hasUuid()).forEach(node -> node.setUuid(UUID.randomUUID().toString()));
 
+         findAllSTGroupModel().forEach(stGroupModel -> {
+
+            final java.util.Optional<STGroupFile> exists = stGroupModel.getFiles().findAny();
+            if (exists.isPresent()) return;
+
+            final nextgen.st.model.STGroupFile stGroupFile = newSTGroupFile()
+                  .setPackageName(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + stGroupModel.getName().toLowerCase())
+                  .setPath(nextgen.swing.AppModel.getInstance().getOutputPath());
+
+            log.info("Adding STGroupFile " + stGroupFile.getPackageName() + " to " + stGroupFile.getPath());
+            stGroupModel.addFiles(stGroupFile);
+         });
+
          deleteUnnusedNodes();
          deleteUnnusedFiles();
       });

@@ -113,6 +113,20 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
    }
 
+   protected void showError(javax.swing.JComponent owner, String errors) {
+      final javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.BorderLayout());
+      final javax.swing.JTextArea textArea = new javax.swing.JTextArea(errors);
+      textArea.setEditable(false);
+      final javax.swing.JScrollPane content = new javax.swing.JScrollPane(textArea);
+      final java.awt.Dimension dimension = new java.awt.Dimension(1024, 800);
+      content.setMaximumSize(dimension);
+      content.setPreferredSize(dimension);
+      content.setMinimumSize(dimension);
+      content.setSize(dimension);
+      panel.add(content, java.awt.BorderLayout.CENTER);
+      javax.swing.JOptionPane.showMessageDialog(owner, panel, "Errors", javax.swing.JOptionPane.ERROR_MESSAGE);
+   }
+
    protected void close(javax.swing.JDialog dialog) {
       javax.swing.SwingUtilities.invokeLater(dialog::dispose);
    }

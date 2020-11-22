@@ -11,24 +11,16 @@ import java.io.IOException;
 
 public class STApp extends JFrame {
 
-   final STAppPresentationModel presentationModel;
    final STWorkspace workspace;
 
-   public STApp(AppModel appModel) throws HeadlessException {
+   public STApp() throws HeadlessException {
       super("ST Editor");
 
-      presentationModel = appModel.getSTAppPresentationModel();
-
-      workspace = presentationModel.getWorkspace();
-
-//      final JPanel contentPanel = new JPanel(new BorderLayout());
-//      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+      workspace = AppModel.getInstance().getSTAppPresentationModel().db.getInTransaction(transaction -> new STWorkspace());
+      AppModel.getInstance().setWorkspace(workspace);
 
       final JSplitPane west = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace.getTemplateNavigator(), workspace);
       final JSplitPane center = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, west, workspace.getModelNavigator());
-
-//      contentPanel.add(center, BorderLayout.CENTER);
-//      add(contentPanel, BorderLayout.CENTER);
       add(center, BorderLayout.CENTER);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,7 +37,7 @@ public class STApp extends JFrame {
       UIManager.put("TextField.font", font);
       UIManager.put("TextArea.font", font);
 
-      SwingUtil.show(new STApp(config));
+      SwingUtil.show(new STApp());
    }
 
    public static AppModel loadConfig(String[] args) throws IOException {

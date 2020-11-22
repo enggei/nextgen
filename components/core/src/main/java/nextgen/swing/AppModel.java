@@ -3,6 +3,7 @@ package nextgen.swing;
 public final class AppModel {
 
 	private static AppModel INSTANCE;
+	private nextgen.swing.STWorkspace _workspace;
 	private String _title;
 	private java.awt.Dimension _appSize;
 	private java.awt.Dimension _navigatorSize;
@@ -24,6 +25,15 @@ public final class AppModel {
 	public static synchronized AppModel getInstance() {
 		if(INSTANCE == null) INSTANCE = new AppModel();
 		return INSTANCE;
+	}
+
+	public nextgen.swing.STWorkspace getWorkspace() {
+		return _workspace;
+	}
+
+	public AppModel setWorkspace(nextgen.swing.STWorkspace value) {
+		this._workspace = value;
+		return this;
 	}
 
 	public String getTitle() {

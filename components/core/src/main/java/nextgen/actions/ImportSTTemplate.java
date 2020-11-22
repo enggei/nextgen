@@ -19,7 +19,10 @@ public class ImportSTTemplate extends TransactionAction {
       	appModel().doLaterInTransaction(t -> {
       		final String fileName = file.getName();
       		final String name = fileName.substring(0, fileName.indexOf("."));
-      		final nextgen.st.model.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file), stGroup);
+      		final nextgen.st.model.STTemplate stTemplate = appModel().db.newSTTemplate()
+                  .setName(name)
+                  .setText(nextgen.utils.FileUtil.readIntact(file));
+            stGroup.addTemplates(stTemplate);
       		nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
       	});
       });

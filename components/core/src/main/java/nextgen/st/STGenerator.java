@@ -76,14 +76,6 @@ public class STGenerator {
       });
    }
 
-   public void generateSTGroup(nextgen.st.model.STGroupFile stGroupFile) {
-      stGroupFile.getIncomingFilesSTGroupModel().forEach(stGroupModel -> {
-         final String packageName = stGroupFile.getPackageName();
-         final String path = stGroupFile.getPath();
-         generateSTGroup(stGroupModel, packageName, path);
-      });
-   }
-
    public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
 
       final File root = new File(rootPath);
@@ -269,8 +261,7 @@ public class STGenerator {
    }
 
    public static STGroup toSTGroup(STGroupModel model) {
-      final STGroupString stGroupString = new STGroupString(model.getName(), toStg(model), model.getDelimiter()
-            .charAt(0), model.getDelimiter().charAt(0));
+      final STGroupString stGroupString = new STGroupString(model.getName(), toStg(model), model.getDelimiter().charAt(0), model.getDelimiter().charAt(0));
       stGroupString.registerRenderer(Object.class, new DefaultAttributeRenderer());
       return stGroupString;
    }

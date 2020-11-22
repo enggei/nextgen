@@ -33,7 +33,7 @@ public class STEditor extends AbstractEditor {
 
    private nextgen.st.model.STTemplate stTemplate;
    private String startText;
-   private String uuid;
+   private final String uuid;
 
    public STEditor(nextgen.st.model.STGroupModel stGroupModel) {
 
@@ -143,7 +143,7 @@ public class STEditor extends AbstractEditor {
 
          SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
 
-         if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
+         if (keyEvent.getModifiersEx() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_L) {
             insertList();
          } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_I) {
             insertIf();
@@ -192,18 +192,13 @@ public class STEditor extends AbstractEditor {
          txtEditor.setBorder(defaultBorder);
 
          final String text = txtEditor.getText().trim();
-
          final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parseTemplate(text);
-
          if (parseResult.getErrors().isEmpty()) {
             nextgen.st.STParser.mergeTemplate(parseResult.getParsed().getTemplates().stream().findFirst().get(), stTemplate);
             startText = text.trim();
-            appModel().save(stGroupModel);
             txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
             infoPanel.clear();
-
          } else {
-
             txtEditor.setBorder(BorderFactory.createLineBorder(errorColor));
             infoPanel.showParseErrors(parseResult.getErrors());
          }

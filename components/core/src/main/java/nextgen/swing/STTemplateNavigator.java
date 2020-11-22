@@ -722,7 +722,7 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.GenerateSTGroupFromFile(parent.getModel(), getModel())));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.GenerateSTGroupFromFile(parent.getModel(), getModel(), tree)));
 				actions.add(new nextgen.actions.DeleteSTGroupFile(getModel(), tree));
 			});
 
