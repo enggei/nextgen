@@ -815,7 +815,6 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.GenerateSource(getModel()));
 				actions.add(new nextgen.actions.OpenSTModelAction(getModel()));
 				actions.add(new nextgen.actions.VisitSTModel(getModel()));
-				actions.add(new nextgen.actions.EditSTModel(getModel()));
 				actions.add(new nextgen.actions.DeleteSTModel(getModel(), tree));
 			});
 

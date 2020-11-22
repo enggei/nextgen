@@ -48,6 +48,10 @@ public class STWorkspace extends JTabbedPane {
 		getSTProjectEditorGrid(event.stProject);
 	}
 
+	public java.util.stream.Stream<nextgen.st.model.STTemplate> getSelectedSTTemplates() {
+		return getTemplateNavigator().getSelectedSTTemplates();
+	}
+
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
 		getModelEditor(event.stModel);
@@ -313,10 +317,6 @@ public class STWorkspace extends JTabbedPane {
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
 		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
-	}
-
-	public java.util.stream.Stream<nextgen.st.model.STTemplate> getSelectedSTTemplates() {
-		return getTemplateNavigator().getSelectedSTTemplates();
 	}
 
 	class ButtonTabComponent extends JPanel {
