@@ -22,22 +22,11 @@ public class STRenderer {
 
    private final Set<STMapper> mappers = new LinkedHashSet<>();
 
-   public STRenderer(Collection<STGroupModel> groupModels) {
-      for (STGroupModel stGroupModel : groupModels)
-         mappers.add(new STMapper(stGroupModel));
-   }
-
-   public void addGroupModel(nextgen.st.model.STGroupModel stGroupModel) {
-      mappers.add(new nextgen.st.STRenderer.STMapper(stGroupModel));
-   }
-
    public String render(STModel stModel) {
 
       if (stModel == null) return null;
 
       final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      if (stMapper == null) return null;
-
       final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
       if (stTemplate == null) return null;
 
@@ -82,8 +71,6 @@ public class STRenderer {
       if (stModel == null) return;
 
       final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      if (stMapper == null) return;
-
       final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
       if (stTemplate == null) return;
 
@@ -102,8 +89,6 @@ public class STRenderer {
       if (stModel == null) return null;
 
       final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      if (stMapper == null) return null;
-
       final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
       if (stTemplate == null) return null;
 
@@ -224,7 +209,11 @@ public class STRenderer {
          final STTemplate found = mapper.find(stTemplate);
          if (found != null) return mapper;
       }
-      return null;
+
+      final nextgen.st.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+      final nextgen.st.STRenderer.STMapper mapper = new nextgen.st.STRenderer.STMapper(stGroup);
+      mappers.add(mapper);
+      return mapper;
    }
 
    public STGroupModel findSTGroupModel(STTemplate stTemplate) {

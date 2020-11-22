@@ -876,7 +876,8 @@ public class STModelTreeTable extends JTable {
 
          public void setValue(String s) {
             if (argument == null) {
-               argument = appModel().newSTArgument(model, stParameter, appModel().db.newSTValue(s));
+               argument =  appModel().db.newSTArgument(stParameter, appModel().db.newSTValue(s));
+               model.addArguments(argument);
             } else {
                final nextgen.st.model.STValue value = argument.getValue();
                if (value == null) argument.setValue(appModel().db.newSTValue(s));

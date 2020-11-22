@@ -154,7 +154,8 @@ public class STModelGrid extends AbstractEditor {
             final String s = txtValue.getText().trim();
             final STValue stValue = appModel().db.newSTValue(s);
             if (stArgument == null) {
-               stArgument = appModel().newSTArgument(stModel, stParameter, stValue);
+               stArgument = appModel().db.newSTArgument(stParameter, stValue);
+               stModel.addArguments(stArgument);
             } else
                stArgument.setValue(stValue);
             log.info("saving " + appModel().render(stValue));

@@ -93,7 +93,8 @@ public class STModelEditorForm extends AbstractEditor {
       public void setValue(String s) {
          final nextgen.st.model.STValue newSTValue = appModel().db.newSTValue(s);
          if (argument == null) {
-            argument = appModel().newSTArgument(model, stParameter, newSTValue);
+            argument = appModel().db.newSTArgument(stParameter, newSTValue);
+            model.addArguments(argument);
             nextgen.events.NewSTArgument.post(argument, model, stParameter, newSTValue);
             if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
          } else {

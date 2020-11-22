@@ -73,9 +73,11 @@ public class STValueEditor extends AbstractEditor {
    @Override
    protected void tryToSave() {
       if (stValue == null) return;
-      if (!stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
-      stValue.setValue(txtEditor.getText().trim());
-      nextgen.events.STValueChanged.post(stValue);
+      appModel().doInTransaction(transaction -> {
+         if (!stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
+         stValue.setValue(txtEditor.getText().trim());
+         nextgen.events.STValueChanged.post(stValue);
+      });
    }
 
    public String getUuid() {

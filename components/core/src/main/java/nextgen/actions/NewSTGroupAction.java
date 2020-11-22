@@ -25,7 +25,9 @@ public class NewSTGroupAction extends TransactionAction {
       		return;
       	}
 
-      	final nextgen.st.model.STGroupModel stGroupModel = appModel().newSTGroupModel(name);
+      	final nextgen.st.model.STGroupModel stGroupModel = appModel().db.newSTGroupModel()
+      			.setName(name)
+      			.setDelimiter(nextgen.st.STGenerator.DELIMITER);
       	nextgen.events.NewSTGroup.post(stGroupModel);
       });
    }

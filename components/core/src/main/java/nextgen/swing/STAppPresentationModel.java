@@ -32,16 +32,11 @@ public class STAppPresentationModel {
    private String lastDir;
 
    public STAppPresentationModel() {
-
       this.db = new STModelDB(AppModel.getInstance().getDbDir());
       this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
-
-      this.db.doInTransaction(transaction -> {
-         stRenderer = new nextgen.st.STRenderer(db.findAllSTGroupModel().collect(java.util.stream.Collectors.toList()));
-         generatorSTGroup = db.findSTGroupModelByName("StringTemplate");
-      });
+      this.stRenderer = new nextgen.st.STRenderer();
+      this.db.doInTransaction(transaction -> generatorSTGroup = db.findSTGroupModelByName("StringTemplate"));
    }
-
 
    public Action newTransactionAction(String name, Consumer<Transaction> consumer) {
       return new AbstractAction(name) {
@@ -72,16 +67,13 @@ public class STAppPresentationModel {
       return Optional.of(name);
    }
 
-
    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       db.doInTransaction(consumer);
    }
 
-
    public void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       SwingUtilities.invokeLater(() -> doInTransaction(consumer));
    }
-
 
    public void generateSTGroup(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
 
@@ -107,11 +99,9 @@ public class STAppPresentationModel {
       }
    }
 
-
    public String getLastDir() {
       return lastDir == null ? System.getProperty("user.home") : lastDir;
    }
-
 
    public String getSTModelName(STModel stModel, String defaultName) {
       return nextgen.utils.STModelUtil.getSTModelName(stModel, defaultName);
@@ -144,27 +134,6 @@ public class STAppPresentationModel {
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);
    }
-
-
-   public STArgument newSTArgument(STModel stModel, STParameter stParameter, STValue value) {
-      final nextgen.st.model.STArgument stArgument = db.newSTArgument(stParameter, value);
-      stModel.addArguments(stArgument);
-      return stArgument;
-   }
-
-
-   public STFile newSTFile(String name, String type, String path, String packageName) {
-      return db.newSTFile(name, type, path, packageName);
-   }
-
-   public STGroupModel newSTGroupModel(String name) {
-      final nextgen.st.model.STGroupModel stGroupModel = db.newSTGroupModel()
-            .setName(name)
-            .setDelimiter(nextgen.st.STGenerator.DELIMITER);
-      stRenderer.addGroupModel(stGroupModel);
-      return stGroupModel;
-   }
-
 
    public nextgen.st.model.STTemplate newSTTemplate(String name, String text, nextgen.st.model.STGroupModel parent) {
       final nextgen.st.model.STTemplate stTemplate = db.newSTTemplate()

@@ -44,6 +44,11 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTProjectTreeNodeClicked(nextgen.events.ModelNavigatorSTProjectTreeNodeClicked event) {
+		getSTProjectEditorGrid(event.stProject);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
 		getModelEditor(event.stModel);
 	}
@@ -267,6 +272,31 @@ public class STWorkspace extends JTabbedPane {
 				SwingUtilities.invokeLater(() -> remove(componentIndex));
 			}
 	   }
+	}
+
+	public nextgen.swing.STProjectEditorGrid getSTProjectEditorGrid(nextgen.st.model.STProject model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STProjectEditorGrid component = (nextgen.swing.STProjectEditorGrid) tabComponentAt;
+				setSelectedComponent(component);
+				return component;
+			}
+		}
+
+		final nextgen.swing.STProjectEditorGrid component = new nextgen.swing.STProjectEditorGrid(model);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeSTProjectEditorGrid(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		      int componentIndex = i;
+		      SwingUtilities.invokeLater(() -> remove(componentIndex));
+		   }
+		}
 	}
 
 	private nextgen.swing.STAppPresentationModel appModel() {

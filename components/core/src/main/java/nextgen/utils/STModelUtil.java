@@ -53,7 +53,6 @@ public class STModelUtil {
    public static java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
       final List<STTemplate> templates = new java.util.ArrayList<>();
       stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
-
       return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
    }
 
@@ -63,21 +62,12 @@ public class STModelUtil {
    }
 
    public static STEnum findSTEnumByName(String name, STGroupModel stGroupModel) {
-      return stGroupModel.getEnums()
-                         .filter(stEnum -> stEnum.getName().equals(name))
-                         .findFirst()
-                         .orElse(null);
+      return stGroupModel.getEnums().filter(stEnum -> stEnum.getName().equals(name)).findFirst().orElse(null);
    }
 
    public static Set<STTemplate> findSTInterfacesByName(String name, STGroupModel stGroupModel) {
       final Set<STTemplate> set = new LinkedHashSet<>();
-      getAllSTTemplates(stGroupModel)
-            .forEach(stTemplate -> {
-               stTemplate.getImplements()
-                         .filter(name::equals)
-                         .findFirst()
-                         .ifPresent(s -> set.add(stTemplate));
-            });
+      getAllSTTemplates(stGroupModel).forEach(stTemplate -> stTemplate.getImplements().filter(name::equals).findFirst().ifPresent(s -> set.add(stTemplate)));
       return set;
    }
 
@@ -131,6 +121,14 @@ public class STModelUtil {
       return getSTModelValue(stModel, "packageName", defaultValue);
    }
 
+   public static nextgen.st.model.STGroupModel getSTGroup(nextgen.st.model.STTemplate stTemplate) {
+
+      final java.util.Optional<nextgen.st.model.STGroupModel> stGroupModel = stTemplate.getIncomingTemplatesSTGroupModel().findAny();
+      if (stGroupModel.isPresent()) return stGroupModel.get();
+
+      final java.util.Optional<nextgen.st.model.STTemplate> parent = stTemplate.getIncomingChildrenSTTemplate().findAny();
+      return parent.map(nextgen.utils.STModelUtil::getSTGroup).orElse(null);
+   }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.st.model.STArgument> {
 
@@ -287,13 +285,8 @@ public class STModelUtil {
 
       public java.util.Collection<nextgen.st.model.STArgumentKV> getStArgumentKVS(nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument stArgument) {
          final java.util.Collection<nextgen.st.model.STArgumentKV> kvSet = new LinkedHashSet<>();
-         stParameter.getKeys()
-                    .forEach(stParameterKey -> stArgument.getKeyValues()
-                                                         .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
-                                                         .forEach(kvSet::add));
+         stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).forEach(kvSet::add));
          return kvSet;
       }
-
-
    }
 }

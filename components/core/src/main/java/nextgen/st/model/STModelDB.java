@@ -54,13 +54,6 @@ public class STModelDB extends STModelNeoFactory {
             .setType(PRIMITIVE);
    }
 
-   public STFile newSTFile(String name, String type, String path, String packageName) {
-      return newSTFile()
-            .setName(newSTValue(name))
-            .setType(findOrCreateSTValueByValue(type))
-            .setPath(newSTValue(path))
-            .setPackageName(newSTValue(packageName));
-   }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
       return newSTArgument()
