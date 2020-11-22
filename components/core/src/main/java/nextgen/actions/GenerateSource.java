@@ -16,7 +16,7 @@ public class GenerateSource extends TransactionAction {
 
       final String packageName = appModel().getSourceOutputPackage();
       final String templateName = appModel().getSTTemplate(stModel).getName();
-      final String className = appModel().getSTModelName(stModel, templateName) + "Generator";
+      final String className = nextgen.utils.STModelUtil.getSTModelName(stModel, templateName) + "Generator";
 
       final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.JavaPatterns.newBlockStmt()
             .addStatements(nextgen.templates.JavaPatterns.newReturnStmt().setExpression(appModel().stRenderer.renderGeneratorCode(stModel, imports)));

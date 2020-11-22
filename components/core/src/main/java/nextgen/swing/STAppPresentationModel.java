@@ -103,14 +103,6 @@ public class STAppPresentationModel {
       return lastDir == null ? System.getProperty("user.home") : lastDir;
    }
 
-   public String getSTModelName(STModel stModel, String defaultName) {
-      return nextgen.utils.STModelUtil.getSTModelName(stModel, defaultName);
-   }
-
-   public String getSTModelPackage(STModel stModel, String defaultName) {
-      return nextgen.utils.STModelUtil.getSTModelPackage(stModel, defaultName);
-   }
-
    public nextgen.swing.STWorkspace getWorkspace() {
       if (stWorkspace == null) stWorkspace = new nextgen.swing.STWorkspace();
       return stWorkspace;

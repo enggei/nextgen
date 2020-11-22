@@ -13,7 +13,7 @@ public class AddFileSink extends TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       final String name = nextgen.utils.STModelUtil.getSTModelName(stModel, "");
-      final String packageName = appModel().getSTModelPackage(stModel, "");
+      final String packageName = nextgen.utils.STModelUtil.getSTModelPackage(stModel, "");
       final nextgen.st.model.STFile stFile = appModel().db.newSTFile()
                   .setName(appModel().newSTValue(name))
                   .setType(appModel().db.findOrCreateSTValueByValue("java"))

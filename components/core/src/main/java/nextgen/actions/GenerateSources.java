@@ -31,7 +31,7 @@ public class GenerateSources extends TransactionAction {
 
       java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.st.model.STModel stModel : stModels) {
-         final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
+         final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.JavaPatterns
                .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
          blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
@@ -40,7 +40,7 @@ public class GenerateSources extends TransactionAction {
 
       variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.st.model.STModel stModel : stModels) {
-         final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
+         final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
                .setExpression(nextgen.templates.JavaPatterns.newMethodCallExpression()
                      .setScope("list")
