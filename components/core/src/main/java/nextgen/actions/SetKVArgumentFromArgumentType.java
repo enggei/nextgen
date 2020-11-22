@@ -74,7 +74,10 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
                if (stEnum != null) {
                   select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {
                      removeExisting();
-                     addValue(appModel().db.newSTValue(value));
+                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue()
+                           .setType(nextgen.st.model.STValueType.ENUM)
+                           .setValue(value.getLexical() == null || value.getLexical().trim().length() == 0 ? value.getName() : value.getLexical());
+                     addValue(stValue);
                   });
                } else {
                   input(owner, "New value", s -> {

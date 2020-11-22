@@ -7,7 +7,8 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
 
-import static nextgen.st.model.STValueType.*;
+import static nextgen.st.model.STValueType.PRIMITIVE;
+import static nextgen.st.model.STValueType.STMODEL;
 
 public class STModelDB extends STModelNeoFactory {
 
@@ -53,52 +54,12 @@ public class STModelDB extends STModelNeoFactory {
             .setType(PRIMITIVE);
    }
 
-   public String getSTModelValue(STModel stModel, String parameterName, String defaultValue) {
-
-      final STTemplate stTemplate = stModel.getStTemplate();
-
-      final Optional<STParameter> foundParameter = stTemplate
-            .getParameters()
-            .filter(stParameter -> stParameter.getName()
-                  .equals(parameterName))
-            .findAny();
-      if (!foundParameter.isPresent()) return defaultValue;
-
-      return stModel
-            .getArguments()
-            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
-            .map(stArgument -> stArgument.getValue()
-                  .getValue())
-            .findFirst()
-            .orElse(defaultValue);
-   }
-
-   public String getSTModelName(STModel stModel, String defaultValue) {
-      return getSTModelValue(stModel, "name", defaultValue);
-   }
-
-   public String getSTModelPackage(STModel stModel, String defaultValue) {
-      final String found = getSTModelValue(stModel, "package", null);
-      if (found != null) return found;
-      return getSTModelValue(stModel, "packageName", defaultValue);
-   }
-
-
    public STFile newSTFile(String name, String type, String path, String packageName) {
       return newSTFile()
-            .setUuid(UUID.randomUUID()
-                  .toString())
             .setName(newSTValue(name))
             .setType(findOrCreateSTValueByValue(type))
             .setPath(newSTValue(path))
             .setPackageName(newSTValue(packageName));
-   }
-
-
-   public STArgument newSTArgument(STParameter stParameter, final Collection<STArgumentKV> kvs) {
-      final STArgument stArgument = newSTArgument().setStParameter(stParameter);
-      for (STArgumentKV kv : kvs) stArgument.addKeyValues(kv);
-      return stArgument;
    }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
@@ -114,19 +75,10 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STValue newSTValue(String value) {
-      if (value == null || value.trim()
-            .length() == 0) return null;
+      if (value == null || value.trim().length() == 0) return null;
       return newSTValue()
             .setType(PRIMITIVE)
             .setValue(value);
-   }
-
-   public STValue newSTValue(STEnumValue stEnumValue) {
-      return newSTValue()
-            .setType(ENUM)
-            .setValue(stEnumValue.getLexical() == null || stEnumValue.getLexical()
-                  .trim()
-                  .length() == 0 ? stEnumValue.getName() : stEnumValue.getLexical());
    }
 
    public void cleanup() {
@@ -179,10 +131,7 @@ public class STModelDB extends STModelNeoFactory {
       // ensure cloned-arguments are in same order as stModel-arguments:
       stModel
             .getArgumentsSorted()
-            .forEach(stArgument -> stTemplate
-                  .getParameters()
-                  .filter(stParameter -> stArgument.getStParameter().equals(stParameter))
-                  .findFirst()
+            .forEach(stArgument -> stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter)).findFirst()
                   .ifPresent(stParameter -> {
                      switch (stParameter.getType()) {
                         case SINGLE:
@@ -198,10 +147,12 @@ public class STModelDB extends STModelNeoFactory {
                                        .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
                                        .findAny()
                                        .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stArgumentKV.getValue()))));
-                           clone.addArguments(newSTArgument(stParameter, kvs));
+
+                           final nextgen.st.model.STArgument newArgument = newSTArgument().setStParameter(stParameter);
+                           for (nextgen.st.model.STArgumentKV kv : kvs) newArgument.addKeyValues(kv);
+                           clone.addArguments(newArgument);
                            break;
                      }
-
                   }));
 
       return clone;

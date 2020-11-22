@@ -103,6 +103,34 @@ public class STModelUtil {
       return list;
    }
 
+   public static String getSTModelValue(nextgen.st.model.STModel stModel, String parameterName, String defaultValue) {
+
+      final nextgen.st.model.STTemplate stTemplate = stModel.getStTemplate();
+
+      final java.util.Optional<nextgen.st.model.STParameter> foundParameter = stTemplate
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
+            .findAny();
+      if (!foundParameter.isPresent()) return defaultValue;
+
+      return stModel
+            .getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
+            .map(stArgument -> stArgument.getValue().getValue())
+            .findFirst()
+            .orElse(defaultValue);
+   }
+
+   public static String getSTModelName(nextgen.st.model.STModel stModel, String defaultValue) {
+      return getSTModelValue(stModel, "name", defaultValue);
+   }
+
+   public static String getSTModelPackage(nextgen.st.model.STModel stModel, String defaultValue) {
+      final String found = getSTModelValue(stModel, "package", null);
+      if (found != null) return found;
+      return getSTModelValue(stModel, "packageName", defaultValue);
+   }
+
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.st.model.STArgument> {
 

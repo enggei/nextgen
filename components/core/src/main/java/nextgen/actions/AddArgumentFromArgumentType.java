@@ -70,7 +70,10 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                final nextgen.st.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);
                if (stEnum != null) {
                   select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {
-                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
+
+                     final nextgen.st.model.STValue stValue = appModel().db.newSTValue()
+                           .setType(nextgen.st.model.STValueType.ENUM)
+                           .setValue(value.getLexical() == null || value.getLexical().trim().length() == 0 ? value.getName() : value.getLexical());
                      addValue(stValue);
                   });
                } else {

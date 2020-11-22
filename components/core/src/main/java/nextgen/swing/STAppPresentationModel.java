@@ -114,11 +114,11 @@ public class STAppPresentationModel {
 
 
    public String getSTModelName(STModel stModel, String defaultName) {
-      return db.getSTModelName(stModel, defaultName);
+      return nextgen.utils.STModelUtil.getSTModelName(stModel, defaultName);
    }
 
    public String getSTModelPackage(STModel stModel, String defaultName) {
-      return db.getSTModelPackage(stModel, defaultName);
+      return nextgen.utils.STModelUtil.getSTModelPackage(stModel, defaultName);
    }
 
    public nextgen.swing.STWorkspace getWorkspace() {
