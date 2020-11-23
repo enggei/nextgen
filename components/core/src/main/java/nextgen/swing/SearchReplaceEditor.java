@@ -82,7 +82,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          }
 
          private void addSTValues(nextgen.st.model.STModel stModel, java.util.List<STValueElement> stValues) {
-            stValues.addAll(stModel.getArguments()
+
+            stModel.getArguments()
                   .filter(stArgument -> stArgument.getValue() != null)
                   .map(nextgen.st.model.STArgument::getValue)
                   .filter(stValue -> stValue.getType() != null)
@@ -90,7 +91,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                   .filter(nextgen.st.model.STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                   .map(STValueElement::new)
-                  .collect(java.util.stream.Collectors.toList()));
+                  .forEach(stValues::add);
 
             stModel.getArguments()
                   .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
@@ -102,6 +103,15 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                         .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                         .map(STValueElement::new)
                         .collect(java.util.stream.Collectors.toList())));
+
+            stModel.getArguments()
+                  .forEach(stArgument -> stArgument.getKeyValues()
+                        .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                        .map(nextgen.st.model.STArgumentKV::getValue)
+                        .filter(stValue -> stValue.getType() != null)
+                        .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                        .filter(stValue -> stValue.getStModel() != null)
+                        .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
             stModel.getArguments()
                   .filter(stArgument -> stArgument.getValue() != null)
@@ -261,10 +271,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       }
 
       private void tryToSave() {
-         if (element != null) {
-            System.out.println("tryToSave : ");
-            appModel().doInTransaction(transaction -> element.stValue.setValue(component.getText()));
-         }
+         if (element != null) appModel().doInTransaction(transaction -> element.stValue.setValue(component.getText()));
       }
 
       @Override

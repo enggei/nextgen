@@ -33,6 +33,26 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
                .collect(java.util.stream.Collectors.toList());
 
          model.getIncomingStParameterSTArgument()
+               .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
+                     .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                     .map(nextgen.st.model.STArgumentKV::getValue)
+                     .filter(stValue -> stValue.getType() != null)
+                     .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
+                     .filter(nextgen.st.model.STValue::hasValue)
+                     .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
+                     .map(STValueElement::new)
+                     .collect(java.util.stream.Collectors.toList())));
+
+         model.getIncomingStParameterSTArgument()
+               .forEach(stArgument -> stArgument.getKeyValues()
+                     .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                     .map(nextgen.st.model.STArgumentKV::getValue)
+                     .filter(stValue -> stValue.getType() != null)
+                     .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                     .filter(stValue -> stValue.getStModel() != null)
+                     .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
+
+         model.getIncomingStParameterSTArgument()
                .filter(stArgument -> stArgument.getValue() != null)
                .map(nextgen.st.model.STArgument::getValue)
                .filter(stValue -> stValue.getType() != null)
@@ -65,6 +85,15 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                   .map(STValueElement::new)
                   .collect(java.util.stream.Collectors.toList())));
+
+      stModel.getArguments()
+            .forEach(stArgument -> stArgument.getKeyValues()
+                  .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                  .map(nextgen.st.model.STArgumentKV::getValue)
+                  .filter(stValue -> stValue.getType() != null)
+                  .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                  .filter(stValue -> stValue.getStModel() != null)
+                  .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
       stModel.getArguments()
             .filter(stArgument -> stArgument.getValue() != null)
