@@ -7,7 +7,6 @@ import java.awt.*;
 public class STModelEditor extends AbstractEditor {
 
    private final STModelEditorText txtEditor = new nextgen.swing.STModelEditorText();
-   private final STModelEditorGrid editorGrid = new STModelEditorGrid();
    private final STModelEditorForm formComponent = new STModelEditorForm();
    private final STModel stModel;
    private final String uuid;
@@ -19,13 +18,12 @@ public class STModelEditor extends AbstractEditor {
 
       final javax.swing.JTabbedPane editors = new javax.swing.JTabbedPane();
       editors.add("Editor", txtEditor);
-      editors.add("Values", editorGrid);
+      editors.add("Values", new STModelEditorGrid(stModel));
       editors.add("Form", formComponent);
       add(editors, BorderLayout.CENTER);
 
       txtEditor.setStModel(stModel);
       formComponent.setModel(stModel);
-      editorGrid.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
@@ -56,7 +54,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.stModel)) {
          txtEditor.setStModel(event.stModel);
          formComponent.setModel(event.stModel);
-         editorGrid.setModel(event.stModel);
       }
    }
 
@@ -65,7 +62,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.model)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 
@@ -74,7 +70,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.model)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 
@@ -83,7 +78,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.stModel)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 
@@ -92,7 +86,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.stModel)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 
@@ -101,7 +94,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.model)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 
@@ -110,7 +102,6 @@ public class STModelEditor extends AbstractEditor {
       if(stModel.equals(event.stModel)) {
          txtEditor.setStModel(stModel);
          formComponent.setModel(stModel);
-         editorGrid.setModel(stModel);
       }
    }
 

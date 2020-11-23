@@ -768,6 +768,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
+		nextgen.events.ModelNavigatorSTTemplateTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STModelTreeNode

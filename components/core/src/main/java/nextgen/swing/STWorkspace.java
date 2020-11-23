@@ -53,6 +53,11 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTTemplateTreeNodeClicked(nextgen.events.ModelNavigatorSTTemplateTreeNodeClicked event) {
+		getSTTemplatesEditorGrid(event.stTemplate);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
 		getModelEditor(event.stModel);
 	}
@@ -297,6 +302,31 @@ public class STWorkspace extends JTabbedPane {
 	public void removeSTProjectEditorGrid(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
 		   if (getComponentAt(i) instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		      int componentIndex = i;
+		      SwingUtilities.invokeLater(() -> remove(componentIndex));
+		   }
+		}
+	}
+
+	public nextgen.swing.STTemplatesEditorGrid getSTTemplatesEditorGrid(nextgen.st.model.STTemplate model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STTemplatesEditorGrid component = (nextgen.swing.STTemplatesEditorGrid) tabComponentAt;
+				setSelectedComponent(component);
+				return component;
+			}
+		}
+
+		final nextgen.swing.STTemplatesEditorGrid component = new nextgen.swing.STTemplatesEditorGrid(model);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeSTTemplatesEditorGrid(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }

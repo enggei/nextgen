@@ -1,11 +1,11 @@
 package nextgen.swing;
 
-public class STProjectEditorGrid extends SearchReplaceEditor {
+public class STTemplatesEditorGrid extends SearchReplaceEditor {
 
    private final String uuid;
-   private final nextgen.st.model.STProject model;
+   private final nextgen.st.model.STTemplate model;
 
-   public STProjectEditorGrid(nextgen.st.model.STProject model) {
+   public STTemplatesEditorGrid(nextgen.st.model.STTemplate model) {
       super();
 
       this.model = model;
@@ -14,14 +14,14 @@ public class STProjectEditorGrid extends SearchReplaceEditor {
 
    @Override
    protected java.util.stream.Stream<nextgen.st.model.STModel> getSTModels() {
-      return nextgen.utils.STModelUtil.aggregateModels(model).stream();
+      return model.getIncomingStTemplateSTModel();
    }
 
    public String getUuid() {
       return uuid;
    }
 
-   public nextgen.st.model.STProject getModel() {
+   public nextgen.st.model.STTemplate getModel() {
       return model;
    }
 }
