@@ -32,36 +32,7 @@ public class AbstractEditor extends javax.swing.JPanel {
    }
 
    protected javax.swing.JTextField newTextField(String text, int columns, String[] options, int startIndex) {
-      final javax.swing.JTextField textField = new javax.swing.JTextField(text, columns);
-
-      textField.addMouseListener(new java.awt.event.MouseAdapter() {
-
-         final java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger(startIndex);
-
-         @Override
-         public void mouseClicked(java.awt.event.MouseEvent e) {
-
-            if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
-
-               final javax.swing.JPopupMenu pop = new javax.swing.JPopupMenu();
-               pop.add(new javax.swing.AbstractAction("Set from Clipboard") {
-                  @Override
-                  public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-                     javax.swing.SwingUtilities.invokeLater(() -> textField.setText(nextgen.utils.SwingUtil.fromClipboard().trim()));
-                  }
-               });
-               pop.show(textField, e.getX(), e.getY());
-
-            } else if (options != null && options.length > 0) {
-               textField.setText(options[index.incrementAndGet() % options.length]);
-
-            } else {
-               javax.swing.SwingUtilities.invokeLater(() -> textField.setText(nextgen.utils.SwingUtil.fromClipboard().trim()));
-            }
-         }
-      });
-
-      return textField;
+      return nextgen.utils.SwingUtil.newTextField(text, columns, options, startIndex);
    }
 
    protected javax.swing.JLabel newLabel(String name) {
