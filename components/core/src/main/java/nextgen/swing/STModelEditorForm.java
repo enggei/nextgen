@@ -222,7 +222,6 @@ public class STModelEditorForm extends AbstractEditor {
 
       private void tryToSave() {
          if (element != null) {
-            System.out.println("tryToSave : ");
             appModel().doInTransaction(transaction -> {
                element.setValue(component.getText());
                nextgen.events.STArgumentChanged.post(element.model, element.argument);

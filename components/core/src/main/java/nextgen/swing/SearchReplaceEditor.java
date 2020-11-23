@@ -3,6 +3,8 @@ package nextgen.swing;
 public abstract class SearchReplaceEditor extends AbstractEditor {
 
    private final javax.swing.JTable results;
+
+   protected final javax.swing.JTextField txtSearch = new javax.swing.JTextField(30);
    protected final ResultsTableModel resultsModel;
 
    public SearchReplaceEditor() {
@@ -10,7 +12,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       this.resultsModel = new ResultsTableModel();
 
       final javax.swing.JPanel searchPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-      final javax.swing.JTextField txtSearch = new javax.swing.JTextField(30);
+
       final javax.swing.JButton btnSearch = new javax.swing.JButton(getSearchAction(txtSearch));
       searchPanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       searchPanel.add(new javax.swing.JLabel("Search"));

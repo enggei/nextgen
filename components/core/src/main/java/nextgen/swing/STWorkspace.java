@@ -58,6 +58,11 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTParameterTreeNodeClicked(nextgen.events.ModelNavigatorSTParameterTreeNodeClicked event) {
+		getSTParameterEditorGrid(event.stParameter);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
 		getModelEditor(event.stModel);
 	}
@@ -327,6 +332,31 @@ public class STWorkspace extends JTabbedPane {
 	public void removeSTTemplatesEditorGrid(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
 		   if (getComponentAt(i) instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		      int componentIndex = i;
+		      SwingUtilities.invokeLater(() -> remove(componentIndex));
+		   }
+		}
+	}
+
+	public nextgen.swing.STParameterEditorGrid getSTParameterEditorGrid(nextgen.st.model.STParameter model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof nextgen.swing.STParameterEditorGrid && (((nextgen.swing.STParameterEditorGrid) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STParameterEditorGrid component = (nextgen.swing.STParameterEditorGrid) tabComponentAt;
+				setSelectedComponent(component);
+				return component;
+			}
+		}
+
+		final nextgen.swing.STParameterEditorGrid component = new nextgen.swing.STParameterEditorGrid(model);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeSTParameterEditorGrid(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STParameterEditorGrid && (((nextgen.swing.STParameterEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }
