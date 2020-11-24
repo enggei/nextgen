@@ -1,5 +1,6 @@
 package nextgen.swing;
 
+import static nextgen.utils.SwingUtil.confirm;
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
 public class STValueEditor extends AbstractEditor {
@@ -10,6 +11,7 @@ public class STValueEditor extends AbstractEditor {
    private final javax.swing.Action replaceWithClipboardAction = newAction("Replace with Clipboard", actionEvent -> replaceWithClipboard());
    private final javax.swing.Action prependFromClipboardAction = newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard());
    private final javax.swing.Action appendFromClipboardAction = newAction("Append from Clipboard", actionEvent -> appendFromClipboard());
+   private final javax.swing.Action selectLineAction = newAction("Select Line", actionEvent -> selectLine());
    private final javax.swing.Action toClipboardAction = newAction("Copy to Clipboard", actionEvent -> toClipboard());
 
    private nextgen.st.model.STValue stValue;
@@ -27,6 +29,7 @@ public class STValueEditor extends AbstractEditor {
       pop.add(appendFromClipboardAction);
       pop.add(prependFromClipboardAction);
       pop.addSeparator();
+      pop.add(selectLineAction);
       pop.add(toClipboardAction);
 
       add(editorComponent, java.awt.BorderLayout.CENTER);
@@ -64,6 +67,18 @@ public class STValueEditor extends AbstractEditor {
       txtEditor.append(nextgen.utils.SwingUtil.fromClipboard().trim());
       txtEditor.setCaretPosition(0);
       tryToSave();
+   }
+
+   private void selectLine() {
+      final int startOffsetOfCurrentLine = txtEditor.getLineStartOffsetOfCurrentLine();
+      final int endOffsetOfCurrentLine = txtEditor.getLineEndOffsetOfCurrentLine();
+      try {
+         final String line = txtEditor.getText(startOffsetOfCurrentLine, endOffsetOfCurrentLine - startOffsetOfCurrentLine).trim();
+         System.out.println(line);
+         nextgen.utils.SwingUtil.toClipboard(line);
+      } catch (javax.swing.text.BadLocationException ignored) {
+
+      }
    }
 
    private void toClipboard() {

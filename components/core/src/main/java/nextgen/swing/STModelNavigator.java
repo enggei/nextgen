@@ -138,7 +138,8 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewFileSink(nextgen.events.NewFileSink event) {
-		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel)).ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STFileSinkTreeNode(event.stFile)));
+		findSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.stModel))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STFileSinkTreeNode(event.stFile)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -211,7 +212,8 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTValueChanged(nextgen.events.STValueChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.value)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.value))
+				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -222,12 +224,14 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelChanged(nextgen.events.STModelChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.model))
+				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
-		SwingUtilities.invokeLater(() -> findSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));
+		SwingUtilities.invokeLater(() -> findSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -241,17 +245,20 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		SwingUtilities.invokeLater(() -> findSTGroupModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent));
+		SwingUtilities.invokeLater(() -> findSTGroupModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileDeleted(nextgen.events.STFileDeleted event) {
-		findSTFileSinkTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTFileSinkTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onKVDeleted(nextgen.events.KVDeleted event) {
-		findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -527,6 +534,10 @@ public class STModelNavigator extends JPanel {
 				final java.util.Set<nextgen.st.model.STValue> projectSTValues = getModel().getValues().collect(java.util.stream.Collectors.toSet());
 				selectedSTValues.removeAll(projectSTValues);
 
+				final java.util.List<nextgen.st.model.STTemplate> stTemplates = nextgen.swing.AppModel.getInstance().getWorkspace().getSelectedSTTemplates().collect(java.util.stream.Collectors.toList());
+
+				stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add New " + stNode.getName(), stNode, getModel())));
+
 				for (nextgen.st.model.STModel selected : selectedSTModels) 
 					actions.add(new nextgen.actions.AddModelToProject(getModel(), selected));
 
@@ -736,7 +747,6 @@ public class STModelNavigator extends JPanel {
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModelAction(getModel())));
-				actions.add(new nextgen.actions.EditModels(getModel()));
 				actions.add(new nextgen.actions.WriteAllSTModelsToFile(stModels));
 				actions.add(new nextgen.actions.GenerateSources(getModel(), stModels));
 				actions.add(new nextgen.actions.AddFileSinkToSTModels(getModel(), stModels, tree));

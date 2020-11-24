@@ -130,6 +130,13 @@ public class STModelUtil {
       return parent.map(nextgen.utils.STModelUtil::getSTGroup).orElse(null);
    }
 
+   public static nextgen.st.model.STArgument findSTArgument(nextgen.st.model.STParameter stParameter, nextgen.st.model.STModel stModel) {
+      return stModel.getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
+            .findFirst()
+            .orElse(null);
+   }
+
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.st.model.STArgument> {
 
       private final nextgen.st.model.STParameter stParameter;

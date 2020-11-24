@@ -77,21 +77,16 @@ public class STModelDB extends STModelNeoFactory {
    public void cleanup() {
       doInTransaction(transaction -> {
 
-         findAllSTTemplate().filter(stTemplate -> !stTemplate.hasUuid()).forEach(stTemplate -> stTemplate.setUuid(UUID.randomUUID().toString()));
-         findAllSTParameter().filter(node -> !node.hasUuid()).forEach(node -> node.setUuid(UUID.randomUUID().toString()));
-         findAllSTParameterKey().filter(node -> !node.hasUuid()).forEach(node -> node.setUuid(UUID.randomUUID().toString()));
+         findAllSTParameter().forEach(stParameter -> {
+            if (stParameter.getArgumentType() != null) return;
+            System.out.println(stParameter.getUuid() + " " + stParameter.getName() + " adding Object argument type");
+            stParameter.setArgumentType("Object");
+         });
 
-         findAllSTGroupModel().forEach(stGroupModel -> {
-
-            final java.util.Optional<STGroupFile> exists = stGroupModel.getFiles().findAny();
-            if (exists.isPresent()) return;
-
-            final nextgen.st.model.STGroupFile stGroupFile = newSTGroupFile()
-                  .setPackageName(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + stGroupModel.getName().toLowerCase())
-                  .setPath(nextgen.swing.AppModel.getInstance().getOutputPath());
-
-            log.info("Adding STGroupFile " + stGroupFile.getPackageName() + " to " + stGroupFile.getPath());
-            stGroupModel.addFiles(stGroupFile);
+         findAllSTParameterKey().forEach(stParameterKey -> {
+            if(stParameterKey.getArgumentType()!=null) return;
+            System.out.println("ParameterKey " + stParameterKey.getUuid() + " " + stParameterKey.getName() + " adding Object argument type");
+            stParameterKey.setArgumentType("Object");
          });
 
          deleteUnnusedNodes();

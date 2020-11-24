@@ -243,7 +243,7 @@ public class SwingUtil {
       showInputDialog(message, owner, dimension, null, onConfirm);
    }
 
-   public static <T>void showSelectDialog(String message, Component owner, Collection<T> set, T defaultValue, Consumer<T> onConfirm) {
+   public static <T> void showSelectDialog(String message, Component owner, Collection<T> set, T defaultValue, Consumer<T> onConfirm) {
       final JComboBox<T> content = newComboBox(set, defaultValue);
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
       dialog.add(content, BorderLayout.CENTER);
@@ -281,7 +281,7 @@ public class SwingUtil {
       showDialog(dialog, owner);
    }
 
-   public static <T>void showSelectDialog(String message, Component owner, Collection<T> set, Consumer<T> onConfirm) {
+   public static <T> void showSelectDialog(String message, Component owner, Collection<T> set, Consumer<T> onConfirm) {
       showSelectDialog(message, owner, set, set.iterator().next(), onConfirm);
    }
 
@@ -368,7 +368,7 @@ public class SwingUtil {
 
    private static void setLookAndFeel() {
       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
-         if ("Nimbus" .equals(laf.getName())) {
+         if ("Nimbus".equals(laf.getName())) {
             try {
                UIManager.setLookAndFeel(laf.getClassName());
             } catch (Exception e) {
@@ -530,7 +530,11 @@ public class SwingUtil {
       private final CellConstraints.Alignment colAlign;
       private final CellConstraints.Alignment rowAlign;
 
-      DebugFormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+      public DebugFormPanel(String columns, String rows) {
+         this(columns, rows, CellConstraints.FILL, CellConstraints.FILL);
+      }
+
+      public DebugFormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
          this.cc = new CellConstraints();
          this.builder = FormBuilder.create().debug(true).columns(columns).rows(rows);
          this.colAlign = colAlign;

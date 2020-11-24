@@ -91,13 +91,30 @@ public class STModelEditorForm extends AbstractEditor {
       }
 
       public void setValue(String s) {
-         final nextgen.st.model.STValue newSTValue = appModel().db.newSTValue(s);
+
+         final String value = s.trim();
+
          if (argument == null) {
-            argument = appModel().db.newSTArgument(stParameter, newSTValue);
+            if (value.length() == 0) return;
+
+            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
+            argument = appModel().db.newSTArgument(stParameter, stValue);
             model.addArguments(argument);
-            nextgen.events.NewSTArgument.post(argument, model, stParameter, newSTValue);
+            nextgen.events.NewSTArgument.post(argument, model, stParameter, stValue);
             if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
+
          } else {
+
+            if (value.length() == 0) {
+               final String argumentUuid = argument.getUuid();
+               model.removeArguments(argument);
+               argument.delete();
+               argument = null;
+               nextgen.events.STArgumentDeleted.post(model, argumentUuid);
+               if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
+               return;
+            }
+
             argument.setValue(appModel().db.newSTValue(s));
             nextgen.events.STArgumentChanged.post(model, argument);
             if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
@@ -195,7 +212,7 @@ public class STModelEditorForm extends AbstractEditor {
          }));
          pop.add(newAction("Clear", actionEvent -> {
             if (!component.isEditable()) return;
-            component.append("");
+            component.setText("");
             component.setCaretPosition(0);
             tryToSave();
          }));
@@ -224,7 +241,6 @@ public class STModelEditorForm extends AbstractEditor {
          if (element != null) {
             appModel().doInTransaction(transaction -> {
                element.setValue(component.getText());
-               nextgen.events.STArgumentChanged.post(element.model, element.argument);
             });
          }
       }

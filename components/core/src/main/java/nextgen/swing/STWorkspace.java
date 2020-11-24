@@ -34,11 +34,6 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onEditSTModels(nextgen.events.EditSTModels event) {
-		getModelGrid(event.stModel).requestFocusInWindow();
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTFileTreeNodeClicked(nextgen.events.ModelNavigatorSTFileTreeNodeClicked event) {
 		getSTFileEditor(event.stFile);
 	}
@@ -105,31 +100,6 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	// components
-
-	public STModelGrid getModelGrid(nextgen.st.model.STTemplate model) {
-		for (int i = 0; i < getTabCount(); i++) {
-			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof STModelGrid && (((STModelGrid) tabComponentAt).getModel().equals(model))) {
-				final STModelGrid component = (STModelGrid) tabComponentAt;
-				setSelectedComponent(component);
-				return component;
-			}
-		}
-
-		final STModelGrid component = new STModelGrid(model);
-		addPane(model.getName() + "-Models", component);
-		setSelectedComponent(component);
-		return component;
-	}
-
-	public void removeModelGrid(String uuid) {
-		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof STModelGrid && (((STModelGrid) getComponentAt(i)).getUuid().equals(uuid))) {
-		      int componentIndex = i;
-		      SwingUtilities.invokeLater(() -> remove(componentIndex));
-		   }
-		}
-	}
 
 	public STModelCanvas getCanvas() {
 		return (STModelCanvas) find(component -> component instanceof STModelCanvas)

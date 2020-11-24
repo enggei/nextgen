@@ -53,15 +53,15 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>mavenCentral</id>
-            <name>mavenCentral</name>
-            <url>http://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>stardog-public</id>
-            <url>http://maven.stardog.com</url>
-        </repository>
+<repository>
+    <id>mavenCentral</id>
+    <name>mavenCentral</name>
+    <url>http://repo1.maven.org/maven2/</url>
+</repository>
+<repository>
+    <id>stardog-public</id>
+    <url>http://maven.stardog.com</url>
+</repository>
     </repositories>
 
 </project>
