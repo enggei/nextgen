@@ -77,7 +77,7 @@ public class STModelDB extends STModelNeoFactory {
       if (value == null) return null;
       return newSTValue()
             .setType(ENUM)
-            .setValue(value.getName());
+            .setStEnumValue(value);
    }
 
    public void cleanup() {

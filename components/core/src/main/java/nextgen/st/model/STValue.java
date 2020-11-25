@@ -141,6 +141,34 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stModel"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public STValue setStEnumValue(STEnumValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getStEnumValueRelation();
+		if (relationship != null)  { 
+			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("stEnumValue"));
+		return this;
+	}
+
+	public STEnumValue getStEnumValue() { 
+		final org.neo4j.graphdb.Relationship relationship = getStEnumValueRelation();
+		return relationship == null ? null : new STEnumValue(relationship.getOtherNode(node));
+	}
+
+	public STValue removeStEnumValue() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStEnumValueRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getStEnumValueRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stEnumValue"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
 	public java.util.stream.Stream<STFile> getIncomingNameSTFile() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("name")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
 	}
@@ -195,6 +223,9 @@ public class STValue {
 		if (node.hasProperty("type")) jsonObject.put("type", node.getProperty("type"));
 		final STModel _stModel = getStModel();
 		if (_stModel != null) jsonObject.put("stModel", _stModel.toJsonObject());
+
+		final STEnumValue _stEnumValue = getStEnumValue();
+		if (_stEnumValue != null) jsonObject.put("stEnumValue", _stEnumValue.toJsonObject());
 
 		return jsonObject;
 	}

@@ -170,8 +170,11 @@ public class STRenderer {
             final String s = value.getValue();
             return s == null || s.trim().length() == 0 ? null : s.trim();
          case ENUM:
-            final Object enumValue = value.getValue();
-            return enumValue == null ? null : enumValue.toString().trim();
+            final nextgen.st.model.STEnumValue enumValue = value.getStEnumValue();
+            if (enumValue == null) return null;
+
+            final String lexical = enumValue.getLexical();
+            return lexical == null || lexical.length() == 0 ? enumValue.getName() : lexical;
       }
       return null;
    }
@@ -192,10 +195,15 @@ public class STRenderer {
             return renderGeneratorCode(value.getStModel(), imports);
          case PRIMITIVE:
             final String s = value.getValue();
-            return s == null || s.trim().length() == 0 ? null : (s.equals("true")|| s.equals("false") ? s : ("\"" + asJavaString(s.trim()) + "\""));
+            return s == null || s.trim().length() == 0 ? null : (s.equals("true") || s.equals("false") ? s : ("\"" + asJavaString(s.trim()) + "\""));
          case ENUM:
-            final Object enumValue = value.getValue();
-            return enumValue == null ? null : ("\"" + enumValue.toString().trim() + "\"");
+            final nextgen.st.model.STEnumValue enumValue = value.getStEnumValue();
+            if (enumValue == null) return null;
+            return enumValue.getIncomingValuesSTEnum()
+                  .findFirst()
+                  .map(stEnum -> stEnum.getName() + "." + enumValue.getName())
+                  .orElse(null);
+
       }
       return null;
    }

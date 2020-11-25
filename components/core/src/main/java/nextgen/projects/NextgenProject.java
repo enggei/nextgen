@@ -30,7 +30,6 @@ public class NextgenProject {
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
    static final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
-   static final PackageDeclaration stDomainPackage = newPackageDeclaration(stPackage, "domain");
 
    @org.junit.Test
    public void generateWorkspace() {
@@ -197,7 +196,7 @@ public class NextgenProject {
       final Entity parsedSTParameter = DomainPatterns
             .newEntity("ParsedSTParameter")
             .addRelations(DomainPatterns.newStringField("name", true))
-            .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stDomainPackage, stParameterType.getName())))
+            .addRelations(DomainPatterns.newExternalRef("type", newClassOrInterfaceType(stModelPackage, stParameterType.getName())))
             .addRelations(DomainPatterns.newOneToMany("keys", parsedSTParameterKey))
             .addRelations(DomainPatterns.newStringField("argumentType"));
 
