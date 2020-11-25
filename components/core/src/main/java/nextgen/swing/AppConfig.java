@@ -1,4 +1,4 @@
-package nextgen.swing.config;
+package nextgen.swing;
 
 public class AppConfig {
 

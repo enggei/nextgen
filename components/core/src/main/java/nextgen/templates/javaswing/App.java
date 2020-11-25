@@ -88,7 +88,7 @@ public class App {
 				"import nextgen.DomainFacade;\n" + 
 				"import nextgen.swing.components.navigation.Navigator;\n" + 
 				"import nextgen.swing.components.workspace.Workspace;\n" + 
-				"import nextgen.swing.config.AppConfig;\n" + 
+				"import nextgen.swing.AppConfig;\n" +
 				"import nextgen.swing.config.AppConfigJsonFactory;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 

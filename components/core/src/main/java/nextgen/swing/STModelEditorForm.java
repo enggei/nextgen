@@ -1,14 +1,11 @@
 package nextgen.swing;
 
-import nextgen.st.model.STParameterType;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.STArgument;
 import nextgen.st.model.STModel;
+import nextgen.st.model.STTemplate;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class STModelEditorForm extends AbstractEditor {
 
@@ -47,25 +44,10 @@ public class STModelEditorForm extends AbstractEditor {
 
       final STTemplate stTemplate = model.getStTemplate();
 
-      stTemplate.getParameters()
-            .filter(stParameter -> stParameter.getType().equals(STParameterType.SINGLE))
-            .filter(stParameter -> stParameter.getArgumentType() != null)
-            .filter(stParameter -> stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"))
-            .forEach(stParameter -> {
+      nextgen.utils.STModelUtil.getSingleEnumsOrPrimitiveParameters(stTemplate)
+            .forEach(stParameter -> stValues.add(new nextgen.swing.STModelEditorForm.STValueElement(model, stTemplate, stParameter, nextgen.utils.STModelUtil.getArgument(stParameter, model))));
 
-               final Optional<STArgument> argument = model.getArguments()
-                     .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-                     .findFirst();
-
-               stValues.add(new STValueElement(model, stTemplate, stParameter, argument.orElse(null)));
-            });
-
-      model.getArguments()
-            .filter(stArgument -> stArgument.getValue() != null)
-            .map(STArgument::getValue)
-            .filter(stValue -> stValue.getType() != null)
-            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
-            .filter(stValue -> stValue.getStModel() != null)
+      nextgen.utils.STModelUtil.getSTModelValues(model)
             .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
 
@@ -78,6 +60,9 @@ public class STModelEditorForm extends AbstractEditor {
       private final String name;
       private final nextgen.st.model.STModel model;
       private final nextgen.st.model.STParameter stParameter;
+      private final java.util.List<nextgen.st.model.STEnumValue> stEnumValues;
+
+      public String[] enumStrings;
 
       private nextgen.st.model.STArgument argument;
       private String text;
@@ -88,16 +73,48 @@ public class STModelEditorForm extends AbstractEditor {
          this.argument = argument;
          this.name = stTemplate.getName() + "." + stParameter.getName();
          this.text = argument == null ? "" : appModel().render(argument);
+
+         final nextgen.st.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByArgumentType(stParameter);
+         this.stEnumValues = (stEnum == null) ? java.util.Collections.emptyList() : stEnum.getValuesSorted().collect(java.util.stream.Collectors.toList());
+         if (!this.stEnumValues.isEmpty()) {
+            enumStrings = new String[stEnumValues.size()];
+            for (int i = 0; i < stEnumValues.size(); i++)
+               enumStrings[i] = stEnumValues.get(i).getName();
+         }
       }
 
-      public void setValue(String s) {
+      public void setValue(Object object) {
 
-         final String value = s.trim();
+         if (!stEnumValues.isEmpty()) {
+
+            stEnumValues.stream()
+                  .filter(stEnumValue -> stEnumValue.getName().equals(object))
+                  .findAny()
+                  .ifPresent(stEnumValue -> {
+
+                     if (argument == null) {
+                        final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stEnumValue);
+                        argument = appModel().db.newSTArgument(stParameter, stValue);
+                        model.addArguments(argument);
+                        nextgen.events.NewSTArgument.post(argument, model, stParameter, stValue);
+
+                     } else {
+                        argument.setValue(appModel().db.newSTValue(stEnumValue));
+                        nextgen.events.STArgumentChanged.post(model, argument);
+                     }
+
+                     this.text = argument == null ? "" : appModel().render(argument);
+                  });
+
+            return;
+         }
+
+         final String value = object == null ? "" : object.toString().trim();
 
          if (argument == null) {
             if (value.length() == 0) return;
 
-            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(s);
+            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
             argument = appModel().db.newSTArgument(stParameter, stValue);
             model.addArguments(argument);
             nextgen.events.NewSTArgument.post(argument, model, stParameter, stValue);
@@ -115,12 +132,12 @@ public class STModelEditorForm extends AbstractEditor {
                return;
             }
 
-            argument.setValue(appModel().db.newSTValue(s));
+            argument.setValue(appModel().db.newSTValue(value));
             nextgen.events.STArgumentChanged.post(model, argument);
             if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(model);
          }
 
-         this.text = s;
+         this.text = value;
       }
 
       @Override
@@ -140,7 +157,7 @@ public class STModelEditorForm extends AbstractEditor {
 
       @Override
       public String getColumnName(int column) {
-         return column == 0 ? "Name" : "Value";
+         return column == 0 ? "Parameter" : "Value";
       }
 
       @Override
@@ -150,7 +167,7 @@ public class STModelEditorForm extends AbstractEditor {
 
       @Override
       public int findColumn(String columnName) {
-         return columnName.equals("Name") ? 0 : 1;
+         return columnName.equals("Parameter") ? 0 : 1;
       }
 
       @Override
@@ -171,7 +188,7 @@ public class STModelEditorForm extends AbstractEditor {
       @Override
       public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
          appModel().doInTransaction(transaction -> {
-            content.get(rowIndex).setValue(aValue.toString().trim());
+            content.get(rowIndex).setValue(aValue);
             fireTableCellUpdated(rowIndex, columnIndex);
          });
       }
@@ -189,41 +206,45 @@ public class STModelEditorForm extends AbstractEditor {
 
    private final class STValueElementEditor extends AbstractCellEditor implements javax.swing.table.TableCellEditor {
 
-      private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component;
+      private final JComboBox<String> enumComponent;
+      private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textComponent;
+
       private STValueElement element;
 
       STValueElementEditor() {
 
-         this.component = nextgen.utils.SwingUtil.newRSyntaxTextArea(1, 40);
-         this.component.addKeyListener(getEditorKeyListener());
+         this.enumComponent = new javax.swing.JComboBox<>();
 
-         org.fife.ui.rtextarea.RTextScrollPane scrollPane = new org.fife.ui.rtextarea.RTextScrollPane(component);
+         this.textComponent = nextgen.utils.SwingUtil.newRSyntaxTextArea(1, 40);
+         this.textComponent.addKeyListener(getEditorKeyListener());
+
+         org.fife.ui.rtextarea.RTextScrollPane scrollPane = new org.fife.ui.rtextarea.RTextScrollPane(textComponent);
          for (java.awt.event.MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
             scrollPane.removeMouseWheelListener(mouseWheelListener);
 
-         final JPopupMenu pop = component.getPopupMenu();
+         final JPopupMenu pop = textComponent.getPopupMenu();
          pop.addSeparator();
          pop.add(newAction("Save", actionEvent -> tryToSave()));
          pop.add(newAction("Append From Clipboard", actionEvent -> {
-            if (!component.isEditable()) return;
-            component.append(nextgen.utils.SwingUtil.fromClipboard().trim());
-            component.setCaretPosition(0);
+            if (!textComponent.isEditable()) return;
+            textComponent.append(nextgen.utils.SwingUtil.fromClipboard().trim());
+            textComponent.setCaretPosition(0);
             tryToSave();
          }));
          pop.add(newAction("Clear", actionEvent -> {
-            if (!component.isEditable()) return;
-            component.setText("");
-            component.setCaretPosition(0);
+            if (!textComponent.isEditable()) return;
+            textComponent.setText("");
+            textComponent.setCaretPosition(0);
             tryToSave();
          }));
          pop.add(newAction("Prepend From Clipboard", actionEvent -> {
-            if (!component.isEditable()) return;
-            component.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + component.getText());
-            component.setCaretPosition(0);
+            if (!textComponent.isEditable()) return;
+            textComponent.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + textComponent.getText());
+            textComponent.setCaretPosition(0);
             tryToSave();
          }));
          pop.addSeparator();
-         pop.add(newAction("To Clipboard", actionEvent -> nextgen.utils.SwingUtil.toClipboard(component.getText().trim())));
+         pop.add(newAction("To Clipboard", actionEvent -> nextgen.utils.SwingUtil.toClipboard(textComponent.getText().trim())));
       }
 
       private java.awt.event.KeyListener getEditorKeyListener() {
@@ -240,22 +261,35 @@ public class STModelEditorForm extends AbstractEditor {
       private void tryToSave() {
          if (element != null) {
             appModel().doInTransaction(transaction -> {
-               element.setValue(component.getText());
+               if (!element.stEnumValues.isEmpty()) {
+                  element.setValue(enumComponent.getSelectedItem());
+               } else {
+                  element.setValue(textComponent.getText());
+               }
             });
          }
       }
 
       @Override
       public Object getCellEditorValue() {
-         return component.getText();
+         if (!element.stEnumValues.isEmpty()) return enumComponent.getSelectedItem();
+         return textComponent.getText();
       }
 
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+
          this.element = (STValueElement) value;
-         this.component.setText(element.text);
-         this.component.setCaretPosition(0);
-         return component;
+
+         if (!element.stEnumValues.isEmpty()) {
+            enumComponent.setModel(new javax.swing.DefaultComboBoxModel<>(element.enumStrings));
+            enumComponent.setSelectedItem(element.text);
+            return enumComponent;
+         }
+
+         this.textComponent.setText(element.text);
+         this.textComponent.setCaretPosition(0);
+         return textComponent;
       }
    }
 

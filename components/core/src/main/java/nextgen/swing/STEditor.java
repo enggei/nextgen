@@ -17,8 +17,6 @@ import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
 public class STEditor extends AbstractEditor {
 
-   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STEditor.class);
-
    private final RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 60);
    private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
    private final STEditorInfoPanel infoPanel;
@@ -100,10 +98,7 @@ public class STEditor extends AbstractEditor {
 
    public void setSTTemplate(nextgen.st.model.STTemplate stTemplate) {
       this.stTemplate = stTemplate;
-      this.startText = stTemplate == null ?
-            this.startText = nextgen.st.STGenerator.toStg(stGroupModel).trim() :
-            stTemplate.getText().trim();
-
+      this.startText = stTemplate == null ? this.startText = nextgen.st.STGenerator.toStg(stGroupModel).trim() : stTemplate.getText().trim();
       reset(startText);
       this.txtEditor.requestFocusInWindow();
    }
@@ -115,10 +110,9 @@ public class STEditor extends AbstractEditor {
       this.txtEditor.setText(startText);
       this.txtEditor.setCaretPosition(0);
       this.txtEditor.setEditable(stTemplate != null);
-      this.commandPanel.setEditable(stTemplate != null);
-
       this.txtEditor.discardAllEdits();
       this.txtEditor.setBackground(uneditedColor);
+      this.commandPanel.setEditable(stTemplate != null);
       this.infoPanel.clear();
    }
 
@@ -168,6 +162,8 @@ public class STEditor extends AbstractEditor {
    }
 
    private void showPopup() {
+      if (stTemplate == null) return;
+
       SwingUtilities.invokeLater(() -> {
          try {
             final Rectangle rectangle = txtEditor.modelToView(txtEditor.getCaretPosition());
@@ -182,12 +178,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void commit() {
-
-      if (stTemplate == null) {
-         log.warn("issue: stTemplate is null");
-         return;
-      }
-
+      if (stTemplate == null) return;
       appModel().doLaterInTransaction(transaction -> {
          txtEditor.setBorder(defaultBorder);
 
@@ -210,6 +201,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void insertCapitalized() {
+      if (stTemplate == null) return;
       SwingUtilities.invokeLater(() -> {
          removeSelectedTextIfAny();
          final int caretPosition = txtEditor.getCaretPosition();
@@ -220,6 +212,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void insertList() {
+      if (stTemplate == null) return;
       final String input = SwingUtil.showInputDialog("name", txtEditor);
       if (input == null) return;
       final String name = input.contains(" ") ? input.split(" ")[0] : input;
@@ -237,6 +230,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void insertIf() {
+      if (stTemplate == null) return;
       final String input = SwingUtil.showInputDialog("condition", txtEditor);
       if (input == null) return;
       final String name = input.trim();
@@ -252,6 +246,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void insertIfElse() {
+      if (stTemplate == null) return;
       final String input = SwingUtil.showInputDialog("condition", txtEditor);
       if (input == null) return;
       final String name = input.trim();
@@ -267,6 +262,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void insertSingle() {
+      if (stTemplate == null) return;
       SwingUtilities.invokeLater(() -> {
          removeSelectedTextIfAny();
          final int caretPosition = txtEditor.getCaretPosition();
@@ -277,6 +273,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void replaceAndInsertSingle() {
+      if (stTemplate == null) return;
       final String selected = txtEditor.getSelectedText();
       if (selected == null || selected.length() < 1) return;
       final String propertyName = SwingUtil.showInputDialog("name", txtEditor);
@@ -296,6 +293,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void replace() {
+      if (stTemplate == null) return;
       final String selected = txtEditor.getSelectedText();
       if (selected == null || selected.length() < 1) return;
       final String replaceWith = SwingUtil.showInputDialog("value", txtEditor);
@@ -314,11 +312,13 @@ public class STEditor extends AbstractEditor {
    }
 
    private void format(JTextArea txtEditor) {
+      if (stTemplate == null) return;
       SwingUtil.format(txtEditor);
       txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
    }
 
    private void removeSelectedTextIfAny() {
+      if (stTemplate == null) return;
       if (txtEditor.getSelectedText() != null) {
          final int selectionStart = txtEditor.getSelectionStart();
          txtEditor.replaceRange("", selectionStart, txtEditor.getSelectionEnd());
@@ -328,6 +328,7 @@ public class STEditor extends AbstractEditor {
    }
 
    private void addJavaMethod() {
+      if (stTemplate == null) return;
       SwingUtilities.invokeLater(() -> {
          removeSelectedTextIfAny();
          final int caretPosition = txtEditor.getCaretPosition();

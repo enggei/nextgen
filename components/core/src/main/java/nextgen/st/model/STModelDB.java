@@ -7,8 +7,7 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
 
-import static nextgen.st.model.STValueType.PRIMITIVE;
-import static nextgen.st.model.STValueType.STMODEL;
+import static nextgen.st.model.STValueType.*;
 
 public class STModelDB extends STModelNeoFactory {
 
@@ -72,6 +71,13 @@ public class STModelDB extends STModelNeoFactory {
       return newSTValue()
             .setType(PRIMITIVE)
             .setValue(value);
+   }
+
+   public STValue newSTValue(STEnumValue value) {
+      if (value == null) return null;
+      return newSTValue()
+            .setType(ENUM)
+            .setValue(value.getName());
    }
 
    public void cleanup() {

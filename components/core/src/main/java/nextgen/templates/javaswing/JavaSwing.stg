@@ -55,7 +55,7 @@ App(packageName,name) ::= <<package ~packageName~;
 import nextgen.DomainFacade;
 import nextgen.swing.components.navigation.Navigator;
 import nextgen.swing.components.workspace.Workspace;
-import nextgen.swing.config.AppConfig;
+import nextgen.swing.AppConfig;
 import nextgen.swing.config.AppConfigJsonFactory;
 
 import javax.swing.*;

@@ -6,6 +6,7 @@ public class LayoutNode {
 
 	public LayoutNode(org.neo4j.graphdb.Node node) { 
 		this.node = node;
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", java.util.UUID.randomUUID().toString());
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
@@ -28,9 +29,9 @@ public class LayoutNode {
 	private static final String _uuid = "uuid";
 
 	public LayoutNode setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +59,9 @@ public class LayoutNode {
 	private static final String _x = "x";
 
 	public LayoutNode setX(Double value) { 
-		if (value == null) 
+		if (value == null) {
 			removeX(); 
-		else {
+		} else {
 		 	node.setProperty(_x, value);
 		}
 		return this;
@@ -88,9 +89,9 @@ public class LayoutNode {
 	private static final String _y = "y";
 
 	public LayoutNode setY(Double value) { 
-		if (value == null) 
+		if (value == null) {
 			removeY(); 
-		else {
+		} else {
 		 	node.setProperty(_y, value);
 		}
 		return this;
@@ -115,10 +116,6 @@ public class LayoutNode {
 		return this;
 	}
 
-	public java.util.stream.Stream<Layout> getIncomingNodesLayout() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("nodes")).spliterator(), false).map((relationship) -> new Layout(relationship.getOtherNode(node)));
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();
@@ -140,22 +137,5 @@ public class LayoutNode {
 		return out.toString().trim();
 	}
 
-	public io.vertx.core.json.JsonObject toJsonObject() {
-		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		if (node.hasProperty("uuid")) jsonObject.put("uuid", node.getProperty("uuid"));
-		if (node.hasProperty("x")) jsonObject.put("x", node.getProperty("x"));
-		if (node.hasProperty("y")) jsonObject.put("y", node.getProperty("y"));
-		return jsonObject;
-	}
-
-	public void delete() {
-
-		final String uuid = node.hasProperty("uuid") ? node.getProperty("uuid").toString() : null;
-
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.delete();
-
-	}
 
 }

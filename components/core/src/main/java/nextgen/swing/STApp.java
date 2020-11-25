@@ -1,7 +1,5 @@
 package nextgen.swing;
 
-import nextgen.swing.config.AppConfig;
-import nextgen.swing.config.AppConfigJsonFactory;
 import nextgen.utils.SwingUtil;
 
 import javax.swing.*;
@@ -42,7 +40,7 @@ public class STApp extends JFrame {
 
    public static AppModel loadConfig(String[] args) throws IOException {
 
-      final AppConfig appConfig = args.length == 0 ? AppConfigJsonFactory.newAppConfig() : AppConfigJsonFactory.newAppConfig(new File(args[0]));
+      final AppConfig appConfig = args.length == 0 ? new nextgen.swing.AppConfig() : new nextgen.swing.AppConfig(new File(args[0]));
       final String root = "/home/goe/projects/nextgen/components/core";
 
       AppModel

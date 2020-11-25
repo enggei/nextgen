@@ -4,12 +4,22 @@ import nextgen.st.model.STEnum;
 import nextgen.st.model.STGroupModel;
 import nextgen.st.model.STTemplate;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class STModelUtil {
+
+   public static java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
+      final List<STTemplate> templates = new java.util.ArrayList<>();
+      stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
+      return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+   }
+
+   public static void aggregate(nextgen.st.model.STTemplate parentTemplate, java.util.List<nextgen.st.model.STTemplate> templates) {
+      templates.add(parentTemplate);
+      parentTemplate.getChildren().forEach(childTemplate -> aggregate(childTemplate, templates));
+   }
 
    public static Set<nextgen.st.model.STModel> aggregateModels(nextgen.st.model.STProject stProject) {
 
@@ -50,47 +60,26 @@ public class STModelUtil {
       return set;
    }
 
-   public static java.util.stream.Stream<nextgen.st.model.STTemplate> aggregateTemplates(nextgen.st.model.STGroupModel stGroup) {
-      final List<STTemplate> templates = new java.util.ArrayList<>();
-      stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
-      return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
-   }
-
-   public static void aggregate(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STTemplate> templates) {
-      templates.add(stTemplate);
-      stTemplate.getChildren().forEach(stTemplate1 -> aggregate(stTemplate1, templates));
-   }
-
    public static STEnum findSTEnumByName(String name, STGroupModel stGroupModel) {
       return stGroupModel.getEnums().filter(stEnum -> stEnum.getName().equals(name)).findFirst().orElse(null);
    }
 
+   public static STEnum findSTEnumByArgumentType(nextgen.st.model.STParameter stParameter) {
+      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter));
+   }
+
+   public static boolean isEnum(nextgen.st.model.STParameter stParameter) {
+      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter)) != null;
+   }
+
    public static Set<STTemplate> findSTInterfacesByName(String name, STGroupModel stGroupModel) {
       final Set<STTemplate> set = new LinkedHashSet<>();
-      getAllSTTemplates(stGroupModel).forEach(stTemplate -> stTemplate.getImplements().filter(name::equals).findFirst().ifPresent(s -> set.add(stTemplate)));
+      aggregateTemplates(stGroupModel).forEach(stTemplate -> stTemplate.getImplements().filter(name::equals).findFirst().ifPresent(s -> set.add(stTemplate)));
       return set;
    }
 
    public static java.util.Optional<nextgen.st.model.STTemplate> findSTTemplateByName(nextgen.st.model.STGroupModel stGroupModel, String name) {
-      return getAllSTTemplates(stGroupModel).stream().filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
-   }
-
-   public static List<STTemplate> getAllSTTemplates(STGroupModel stGroupModel) {
-      final List<STTemplate> list = new ArrayList<>();
-      stGroupModel.getTemplates().forEach(stTemplate -> {
-         list.add(stTemplate);
-         list.addAll(getAllSTTemplates(stTemplate));
-      });
-      return list;
-   }
-
-   public static List<STTemplate> getAllSTTemplates(STTemplate stTemplate) {
-      final List<STTemplate> list = new ArrayList<>();
-      stTemplate.getChildren().forEach(stTemplate1 -> {
-         list.add(stTemplate1);
-         list.addAll(getAllSTTemplates(stTemplate1));
-      });
-      return list;
+      return aggregateTemplates(stGroupModel).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
    }
 
    public static String getSTModelValue(nextgen.st.model.STModel stModel, String parameterName, String defaultValue) {
@@ -121,6 +110,13 @@ public class STModelUtil {
       return getSTModelValue(stModel, "packageName", defaultValue);
    }
 
+   public static nextgen.st.model.STGroupModel getSTGroup(nextgen.st.model.STParameter stParameter) {
+      return stParameter.getIncomingParametersSTTemplate()
+            .findFirst()
+            .map(nextgen.utils.STModelUtil::getSTGroup)
+            .orElse(null);
+   }
+
    public static nextgen.st.model.STGroupModel getSTGroup(nextgen.st.model.STTemplate stTemplate) {
 
       final java.util.Optional<nextgen.st.model.STGroupModel> stGroupModel = stTemplate.getIncomingTemplatesSTGroupModel().findAny();
@@ -135,6 +131,29 @@ public class STModelUtil {
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
             .findFirst()
             .orElse(null);
+   }
+
+   public static java.util.stream.Stream<nextgen.st.model.STParameter> getSingleEnumsOrPrimitiveParameters(nextgen.st.model.STTemplate stTemplate) {
+      return stTemplate.getParameters()
+            .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getArgumentType() != null)
+            .filter(stParameter -> nextgen.utils.STModelUtil.isEnum(stParameter) || stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"));
+   }
+
+   public static nextgen.st.model.STArgument getArgument(nextgen.st.model.STParameter stParameter, nextgen.st.model.STModel model) {
+      return model.getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
+            .findFirst()
+            .orElse(null);
+   }
+
+   public static java.util.stream.Stream<nextgen.st.model.STValue> getSTModelValues(nextgen.st.model.STModel model) {
+      return model.getArguments()
+            .filter(stArgument -> stArgument.getValue() != null)
+            .map(nextgen.st.model.STArgument::getValue)
+            .filter(stValue -> stValue.getType() != null)
+            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+            .filter(stValue -> stValue.getStModel() != null);
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.st.model.STArgument> {
