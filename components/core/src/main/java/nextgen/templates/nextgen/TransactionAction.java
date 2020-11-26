@@ -5,11 +5,12 @@ public class TransactionAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _packageName;
 	private Object _name;
-	private Object _titleExpression;
 	private Object _title;
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private Object _titleExpression;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -24,15 +25,38 @@ public class TransactionAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TransactionAction");
+		st.add("packageName", _packageName);
 		st.add("name", _name);
-		st.add("titleExpression", _titleExpression);
 		st.add("title", _title);
-		for (Object o : _methods) st.add("methods", o);
+		st.add("titleExpression", _titleExpression);
 		for (Object o : _statements) st.add("statements", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public TransactionAction setPackageName(Object value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public Object getPackageName() {
+		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public TransactionAction removePackageName() {
+		this._packageName = null;
+		return this;
+	} 
 
 	public TransactionAction setName(Object value) {
 		this._name = value;
@@ -53,28 +77,6 @@ public class TransactionAction {
 
 	public TransactionAction removeName() {
 		this._name = null;
-		return this;
-	} 
-
-	public TransactionAction setTitleExpression(Object value) {
-		this._titleExpression = value;
-		return this;
-	}
-
-	public Object getTitleExpression() {
-		return this._titleExpression;
-	}
-
-	public Object getTitleExpression(Object defaultValue) {
-		return this._titleExpression == null ? defaultValue : this._titleExpression;
-	}
-
-	public boolean hasTitleExpression() {
-		return this._titleExpression != null;
-	}
-
-	public TransactionAction removeTitleExpression() {
-		this._titleExpression = null;
 		return this;
 	} 
 
@@ -100,33 +102,26 @@ public class TransactionAction {
 		return this;
 	} 
 
-	public TransactionAction addMethods(Object value) {
-		this._methods.add(value);
+	public TransactionAction setTitleExpression(Object value) {
+		this._titleExpression = value;
 		return this;
 	}
 
-	public TransactionAction setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getTitleExpression() {
+		return this._titleExpression;
 	}
 
-	public TransactionAction setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
 	}
 
-	public TransactionAction removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
 	}
 
-	public TransactionAction removeMethods(int index) {
-		this._methods.remove(index);
+	public TransactionAction removeTitleExpression() {
+		this._titleExpression = null;
 		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
 	} 
 
 	public TransactionAction addStatements(Object value) {
@@ -156,6 +151,35 @@ public class TransactionAction {
 
 	public java.util.List<Object> getStatements() {
 		return this._statements;
+	} 
+
+	public TransactionAction addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public TransactionAction setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TransactionAction setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public TransactionAction removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public TransactionAction removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public TransactionAction addStaticFields(Object _type, Object _name, Object _init) {
@@ -294,9 +318,9 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(name,staticFields,fields,titleExpression,title,methods,statements) ::= <<package nextgen.actions;\n" + 
+	static final String st = "TransactionAction(packageName,staticFields,name,statements,methods,title,titleExpression,fields) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
 				"\n" + 
-				"public class ~name~ extends TransactionAction {\n" + 
+				"public class ~name~ extends nextgen.actions.TransactionAction {\n" + 
 				"\n" + 
 				"   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
 				"   \n" + 

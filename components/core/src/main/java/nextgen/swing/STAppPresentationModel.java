@@ -81,7 +81,7 @@ public class STAppPresentationModel {
 
       if (parseResult.getErrors().isEmpty()) {
          final nextgen.st.STGenerator stGenerator = new nextgen.st.STGenerator(generatorSTGroup);
-         stGenerator.generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
+         stGenerator.generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage() + "." + stGroupModel.getName().toLowerCase().trim(), AppModel.getInstance().getOutputPath());
          if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
       } else {
          parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));

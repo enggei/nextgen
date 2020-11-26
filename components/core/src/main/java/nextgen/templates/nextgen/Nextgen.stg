@@ -1,7 +1,5 @@
 delimiters "~","~"
 
-ActionCall() ::= << >>
-
 AppEvents() ::= <<// deprecated  >>
 
 EventSubscriber(eventType,statements,eventName) ::= <<@org.greenrobot.eventbus.Subscribe()
@@ -2166,7 +2164,7 @@ public class ~name~ extends javax.swing.JPanel {
 	}
 }  >>
 
-STWorkspace(componentMethods,packageName,constructorParameters,name,fields,methods) ::= <<package ~packageName~;
+STWorkspace(constructorParameters,methods,fields,packageName,componentMethods,name) ::= <<package ~packageName~;
 
 import javax.swing.*;
 import java.awt.*;
@@ -2197,7 +2195,7 @@ public class ~name~ extends JTabbedPane {
 	
 	~componentMethods:{it|~it~};separator="\n\n"~
 
-	private nextgen.st.STAppPresentationModel appModel() {
+	private nextgen.swing.STAppPresentationModel appModel() {
 		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
 	}
 
@@ -2240,14 +2238,14 @@ public class ~name~ extends JTabbedPane {
 							pop.add(new AbstractAction("Close Others") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									appModel().getWorkspace().closeAllExcept(component);
+									closeAllExcept(component);
 								}
 							});
 
 							pop.add(new AbstractAction("Close All") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									appModel().getWorkspace().closeAll();
+									closeAll();
 								}
 							});
 
@@ -2324,9 +2322,9 @@ public void remove~name;format="capitalize"~() {
    }
 }  >>
 
-TransactionAction(name,staticFields,fields,titleExpression,title,methods,statements) ::= <<package nextgen.actions;
+TransactionAction(packageName,staticFields,name,statements,methods,title,titleExpression,fields) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
 
-public class ~name~ extends TransactionAction {
+public class ~name~ extends nextgen.actions.TransactionAction {
 
    ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
    

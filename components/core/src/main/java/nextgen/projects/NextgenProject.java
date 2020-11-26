@@ -127,8 +127,8 @@ public class NextgenProject {
             .newEntityWithUuid("STGroupAction")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"))
-            .addRelations(DomainPatterns.newOneToManyString("statements"))
-            .addRelations(DomainPatterns.newOneToManyString("methods"));
+            .addRelations(DomainPatterns.newStringField("statements"))
+            .addRelations(DomainPatterns.newStringField("methods"));
 
       final Entity stGroupModel = DomainPatterns
             .newEntityWithUuid("STGroupModel")

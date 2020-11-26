@@ -620,6 +620,34 @@ public class STModelNeoFactory {
 		return db.findNodes(STGroupActionLabel, "name", value).stream().map(this::newSTGroupAction);
 	}
 
+	public STGroupAction findSTGroupActionByStatements(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "statements", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByStatements(String value) {
+		final STGroupAction existing = findSTGroupActionByStatements(value);
+		return existing == null ? newSTGroupAction().setStatements(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByStatements(String value) {
+		return db.findNodes(STGroupActionLabel, "statements", value).stream().map(this::newSTGroupAction);
+	}
+
+	public STGroupAction findSTGroupActionByMethods(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "methods", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByMethods(String value) {
+		final STGroupAction existing = findSTGroupActionByMethods(value);
+		return existing == null ? newSTGroupAction().setMethods(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByMethods(String value) {
+		return db.findNodes(STGroupActionLabel, "methods", value).stream().map(this::newSTGroupAction);
+	}
+
 	private static final org.neo4j.graphdb.Label STModelLabel = org.neo4j.graphdb.Label.label("STModel");
 
 	public static boolean isSTModel(org.neo4j.graphdb.Node node) {

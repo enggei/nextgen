@@ -7,9 +7,9 @@ public class STWorkspace {
 
 	private Object _packageName;
 	private Object _name;
-	private java.util.List<Object> _componentMethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorParameters = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<Object> _componentMethods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	STWorkspace(org.stringtemplate.v4.STGroup stGroup) {
@@ -25,9 +25,9 @@ public class STWorkspace {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STWorkspace");
 		st.add("packageName", _packageName);
 		st.add("name", _name);
-		for (Object o : _componentMethods) st.add("componentMethods", o);
 		for (Object o : _constructorParameters) st.add("constructorParameters", o);
 		for (Object o : _methods) st.add("methods", o);
+		for (Object o : _componentMethods) st.add("componentMethods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,init,type}", map.get("name"), map.get("init"), map.get("type"));
 		return st.render().trim();
 	}
@@ -74,35 +74,6 @@ public class STWorkspace {
 	public STWorkspace removeName() {
 		this._name = null;
 		return this;
-	} 
-
-	public STWorkspace addComponentMethods(Object value) {
-		this._componentMethods.add(value);
-		return this;
-	}
-
-	public STWorkspace setComponentMethods(Object[] value) {
-		this._componentMethods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public STWorkspace setComponentMethods(java.util.Collection<Object> values) {
-		this._componentMethods.addAll(values);
-		return this;
-	}
-
-	public STWorkspace removeComponentMethods(Object value) {
-		this._componentMethods.remove(value);
-		return this;
-	}
-
-	public STWorkspace removeComponentMethods(int index) {
-		this._componentMethods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getComponentMethods() {
-		return this._componentMethods;
 	} 
 
 	public STWorkspace addConstructorParameters(Object value) {
@@ -161,6 +132,35 @@ public class STWorkspace {
 
 	public java.util.List<Object> getMethods() {
 		return this._methods;
+	} 
+
+	public STWorkspace addComponentMethods(Object value) {
+		this._componentMethods.add(value);
+		return this;
+	}
+
+	public STWorkspace setComponentMethods(Object[] value) {
+		this._componentMethods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STWorkspace setComponentMethods(java.util.Collection<Object> values) {
+		this._componentMethods.addAll(values);
+		return this;
+	}
+
+	public STWorkspace removeComponentMethods(Object value) {
+		this._componentMethods.remove(value);
+		return this;
+	}
+
+	public STWorkspace removeComponentMethods(int index) {
+		this._componentMethods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getComponentMethods() {
+		return this._componentMethods;
 	} 
 
 	public STWorkspace addFields(Object _name, Object _init, Object _type) {
@@ -244,7 +244,7 @@ public class STWorkspace {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STWorkspace(componentMethods,packageName,constructorParameters,name,fields,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "STWorkspace(constructorParameters,methods,fields,packageName,componentMethods,name) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
@@ -275,7 +275,7 @@ public class STWorkspace {
 				"	\n" + 
 				"	~componentMethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
-				"	private nextgen.st.STAppPresentationModel appModel() {\n" + 
+				"	private nextgen.swing.STAppPresentationModel appModel() {\n" + 
 				"		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -318,14 +318,14 @@ public class STWorkspace {
 				"							pop.add(new AbstractAction(\"Close Others\") {\n" + 
 				"								@Override\n" + 
 				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
-				"									appModel().getWorkspace().closeAllExcept(component);\n" + 
+				"									closeAllExcept(component);\n" + 
 				"								}\n" + 
 				"							});\n" + 
 				"\n" + 
 				"							pop.add(new AbstractAction(\"Close All\") {\n" + 
 				"								@Override\n" + 
 				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
-				"									appModel().getWorkspace().closeAll();\n" + 
+				"									closeAll();\n" + 
 				"								}\n" + 
 				"							});\n" + 
 				"\n" + 

@@ -587,13 +587,14 @@ public class STModelNavigator extends JPanel {
 			setLabel(getModel());
 			this.tooltip = "";
 
-			appModel().doInTransaction(transaction -> {
-				appModel().getGroupModels().forEach(stGroupModel -> {
-					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroupModel);
-					add(stGroupModelTreeNode);
-					stGroupModel.getTemplates().forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
-				});
-			});
+			appModel().doInTransaction(transaction -> appModel().getGroupModels()
+			      .stream()
+			      .sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()))
+			      .forEach(stGroupModel -> {
+			         final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroupModel);
+			         add(stGroupModelTreeNode);
+			         stGroupModel.getTemplates().forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
+			      }));
 		}
 
 		ModelsTreeNode thisNode() {
