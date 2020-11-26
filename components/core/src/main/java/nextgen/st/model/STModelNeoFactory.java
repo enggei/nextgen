@@ -572,6 +572,54 @@ public class STModelNeoFactory {
 		return db.findNodes(STEnumValueLabel, "lexical", value).stream().map(this::newSTEnumValue);
 	}
 
+	private static final org.neo4j.graphdb.Label STGroupActionLabel = org.neo4j.graphdb.Label.label("STGroupAction");
+
+	public static boolean isSTGroupAction(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STGroupActionLabel);
+	}
+
+	public STGroupAction newSTGroupAction() { 
+		STGroupAction newInstance = newSTGroupAction(db.createNode(STGroupActionLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STGroupAction newSTGroupAction(org.neo4j.graphdb.Node node) { 
+		return new STGroupAction(node);
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupAction() { 
+		return db.findNodes(STGroupActionLabel).stream().map(this::newSTGroupAction);
+	}
+
+	public STGroupAction findSTGroupActionByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByUuid(String value) {
+		final STGroupAction existing = findSTGroupActionByUuid(value);
+		return existing == null ? newSTGroupAction().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByUuid(String value) {
+		return db.findNodes(STGroupActionLabel, "uuid", value).stream().map(this::newSTGroupAction);
+	}
+
+	public STGroupAction findSTGroupActionByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "name", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByName(String value) {
+		final STGroupAction existing = findSTGroupActionByName(value);
+		return existing == null ? newSTGroupAction().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByName(String value) {
+		return db.findNodes(STGroupActionLabel, "name", value).stream().map(this::newSTGroupAction);
+	}
+
 	private static final org.neo4j.graphdb.Label STModelLabel = org.neo4j.graphdb.Label.label("STModel");
 
 	public static boolean isSTModel(org.neo4j.graphdb.Node node) {

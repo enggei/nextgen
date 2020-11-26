@@ -36,7 +36,7 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
 
       public ListElement(nextgen.st.model.STModel stModel) {
          this.stModel = stModel;
-         this.text = appModel().render(stModel);
+         this.text = appModel().render(stModel, 100);
       }
 
       @Override

@@ -34,6 +34,11 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onTemplateNavigatorSTActionTreeNodeClicked(nextgen.events.TemplateNavigatorSTGroupActionTreeNodeClicked event) {
+		getSTGroupActionEditor(event.action);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTFileTreeNodeClicked(nextgen.events.ModelNavigatorSTFileTreeNodeClicked event) {
 		getSTFileEditor(event.stFile);
 	}
@@ -100,6 +105,31 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	// components
+
+	public nextgen.swing.STGroupActionEditor getSTGroupActionEditor(nextgen.st.model.STGroupAction model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof nextgen.swing.STGroupActionEditor && (((nextgen.swing.STGroupActionEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STGroupActionEditor component = (nextgen.swing.STGroupActionEditor) tabComponentAt;
+				setSelectedComponent(component);
+				return component;
+			}
+		}
+
+		final nextgen.swing.STGroupActionEditor component = new nextgen.swing.STGroupActionEditor(model);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeSTGroupActionEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STGroupActionEditor && (((nextgen.swing.STGroupActionEditor) getComponentAt(i)).getUuid().equals(uuid))) {
+		      int componentIndex = i;
+		      SwingUtilities.invokeLater(() -> remove(componentIndex));
+		   }
+		}
+	}
 
 	public STModelCanvas getCanvas() {
 		return (STModelCanvas) find(component -> component instanceof STModelCanvas)

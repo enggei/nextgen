@@ -74,8 +74,12 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                   final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                   addValue(stValue);
                } else {
-                  select(owner, interfaces, value -> {
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value);
+
+                  final java.util.List<ListElement> selection = new java.util.ArrayList<>();
+                  interfaces.forEach(stTemplate1 -> selection.add(new ListElement(stTemplate1)));
+
+                  select(owner, selection, value -> {
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value.stTemplate);
                      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
                      addValue(stValue);
                   });
@@ -99,6 +103,22 @@ public class AddArgumentFromArgumentType extends TransactionAction {
                }
             }
          }
+      }
+   }
+
+   private static final class ListElement {
+
+      private final nextgen.st.model.STTemplate stTemplate;
+      private final String text;
+
+      public ListElement(nextgen.st.model.STTemplate stTemplate) {
+         this.stTemplate = stTemplate;
+         this.text = stTemplate.getName();
+      }
+
+      @Override
+      public String toString() {
+         return text;
       }
    }
 

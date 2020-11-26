@@ -76,10 +76,9 @@ public class STGenerator {
       });
    }
 
-   public void generateSTGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
+   public void generateSTGroup(STGroupModel stGroupModel, String packageDeclaration, String rootPath) {
 
       final File root = new File(rootPath);
-      final String packageDeclaration = packageName + "." + stGroupModel.getName().toLowerCase();
 
       final String domainClassName = capitalize(stGroupModel.getName() + "ST");
       final ST stDomain = generator.getInstanceOf("STDomain");
@@ -117,7 +116,7 @@ public class STGenerator {
 
       // create Patterns file if it does not exist:
       final String patternsClassName = capitalize(stGroupModel.getName() + "Patterns");
-      final File patternsFile = new File(new File(root.getAbsolutePath(), packageToPath(packageName)), patternsClassName + ".java");
+      final File patternsFile = new File(new File(root.getAbsolutePath(), packageToPath(packageDeclaration)), patternsClassName + ".java");
       System.out.println(patternsFile.getAbsolutePath());
       if (!patternsFile.exists()) {
 
@@ -127,14 +126,12 @@ public class STGenerator {
                .addExtend(domainClassName);
 
          writeJavaFile(JavaPatterns.newCompilationUnit()
-               .setPackageDeclaration(JavaPatterns.newPackageDeclaration(packageName))
+               .setPackageDeclaration(JavaPatterns.newPackageDeclaration(packageDeclaration))
                .addImportDeclaration(JavaPatterns.newImportDeclaration()
                      .setName(packageDeclaration)
                      .setIsAsterisk(true))
-               .addTypes(patternsClass), packageName, patternsClassName, root);
+               .addTypes(patternsClass), packageDeclaration, patternsClassName, root);
       }
-
-
    }
 
    public void generateNeoGroup(STGroupModel stGroupModel, String packageName, String rootPath) {

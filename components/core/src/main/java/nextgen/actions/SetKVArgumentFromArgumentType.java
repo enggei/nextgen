@@ -78,9 +78,13 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
                   final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(interfaces.iterator().next());
                   addValue(appModel().db.newSTValue(stTemplateModel));
                } else {
-                  select(owner, interfaces, value -> {
+
+               	final java.util.List<ListElement> selection = new java.util.ArrayList<>();
+      				interfaces.forEach(stTemplate1 -> selection.add(new ListElement(stTemplate1)));
+      				
+                  select(owner, selection, value -> {
                      removeExisting();
-                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value);
+                     final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value.stTemplate);
                      addValue(appModel().db.newSTValue(stTemplateModel));
                   });
                }
@@ -110,6 +114,22 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
       final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+   }
+
+   private static final class ListElement {
+
+      private final nextgen.st.model.STTemplate stTemplate;
+      private final String text;
+
+      public ListElement(nextgen.st.model.STTemplate stTemplate) {
+         this.stTemplate = stTemplate;
+         this.text = stTemplate.getName();
+      }
+
+      @Override
+      public String toString() {
+         return text;
+      }
    }
 
    private void removeExisting() {

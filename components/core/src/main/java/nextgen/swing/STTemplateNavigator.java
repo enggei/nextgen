@@ -85,7 +85,9 @@ public class STTemplateNavigator extends JPanel {
             if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
             appModel().doLaterInTransaction(transaction -> {
-					if (isSTGroupTreeNode(lastPathComponent)) 
+					if (isSTGroupActionTreeNode(lastPathComponent)) 
+						onSTGroupActionTreeNodeSelected((STGroupActionTreeNode) lastPathComponent);
+					else if (isSTGroupTreeNode(lastPathComponent)) 
 						onSTGroupTreeNodeSelected((STGroupTreeNode) lastPathComponent);
 					else if (isSTEnumTreeNode(lastPathComponent)) 
 						onSTEnumTreeNodeSelected((STEnumTreeNode) lastPathComponent);
@@ -104,6 +106,17 @@ public class STTemplateNavigator extends JPanel {
 
    private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
    }
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTAction(nextgen.events.NewSTAction event) {
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STGroupActionTreeNode(event.action)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTGroupActionDeleted(nextgen.events.STGroupActionDeleted event) {
+		findSTGroupActionTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
@@ -347,6 +360,69 @@ public class STTemplateNavigator extends JPanel {
 		}
 	}
 
+	// STGroupActionTreeNode
+	public class STGroupActionTreeNode extends BaseTreeNode<nextgen.st.model.STGroupAction> {
+
+		private String uuid;
+
+		STGroupActionTreeNode(nextgen.st.model.STGroupAction model) {
+			super(model, appModel().loadIcon("sq-red"));
+
+
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+		}
+
+		STGroupActionTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteAction(getModel(), tree, parent.getModel())));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isSTGroupActionTreeNode(Object treeNode) {
+		return treeNode instanceof STGroupActionTreeNode;
+	}
+
+	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode() {
+		return treeModel.find(STGroupActionTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode(java.util.function.Predicate<STGroupActionTreeNode> predicate) {
+		return treeModel.find(STGroupActionTreeNode.class, predicate);
+	}
+
+	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STGroupActionTreeNode> predicate) {
+		return treeModel.find(parent, STGroupActionTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<STGroupActionTreeNode> getSelectedSTGroupActionTreeNodes() {
+		return getSelectedNodes(STGroupActionTreeNode.class);
+	}
+
+	private void onSTGroupActionTreeNodeSelected(STGroupActionTreeNode selectedNode) {
+		nextgen.events.TemplateNavigatorSTGroupActionTreeNodeClicked.post(selectedNode.getModel());
+	}
+
 	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
@@ -425,6 +501,7 @@ public class STTemplateNavigator extends JPanel {
 			model.getEnums().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stEnum -> add(new STEnumTreeNode(stEnum)));
 			model.getTemplates().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stTemplate -> add(new STTemplateTreeNode(stTemplate)));
 			model.getInterfaces().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stInterface -> add(new STInterfaceTreeNode(stInterface)));
+			model.getActions().sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName())).forEach(stAction -> add(new STGroupActionTreeNode(stAction)));
 		}
 
 		STGroupTreeNode thisNode() {
@@ -443,10 +520,10 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.NewAction(getModel(), tree));
 				actions.add(new nextgen.actions.EditSTGroupTags(getModel(), tree));
 				actions.add(new nextgen.actions.ImportSTTemplate(getModel(), tree));
 				actions.add(new nextgen.actions.GenerateSTGroup(getModel()));
-				actions.add(new nextgen.actions.GenerateSTGroupAndNeo(getModel()));
 				actions.add(new nextgen.actions.NewSTTemplate(getModel(), tree));
 				actions.add(new nextgen.actions.NewEnum(getModel(), tree));
 				actions.add(new nextgen.actions.NewInterface(getModel(), tree));

@@ -123,6 +123,13 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newStringField("packageName"))
             .addRelations(DomainPatterns.newStringField("path"));
 
+      final Entity stGroupAction = DomainPatterns
+            .newEntityWithUuid("STGroupAction")
+            .setEqha("uuid")
+            .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newOneToManyString("statements"))
+            .addRelations(DomainPatterns.newOneToManyString("methods"));
+
       final Entity stGroupModel = DomainPatterns
             .newEntityWithUuid("STGroupModel")
             .setEqha("uuid")
@@ -133,7 +140,8 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newOneToMany("files", stGroupFile))
             .addRelations(DomainPatterns.newOneToMany("templates", stTemplate))
             .addRelations(DomainPatterns.newOneToMany("interfaces", stInterface))
-            .addRelations(DomainPatterns.newOneToMany("enums", stEnum));
+            .addRelations(DomainPatterns.newOneToMany("enums", stEnum))
+            .addRelations(DomainPatterns.newOneToMany("actions", stGroupAction));
 
       final Entity stArgumentKV = DomainPatterns
             .newEntityWithUuid("STArgumentKV")

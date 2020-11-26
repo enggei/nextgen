@@ -291,6 +291,35 @@ public class STGroupModel {
 		return this;
 	}
 
+	private static final org.neo4j.graphdb.RelationshipType _actions = org.neo4j.graphdb.RelationshipType.withName("actions");
+
+	public STGroupModel addActions(STGroupAction dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _actions).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _actions);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<STGroupAction> getActions() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _actions).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STGroupAction> getActionsSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _actions).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
+	}
+
+	public STGroupModel removeActions(STGroupAction dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _actions).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public STGroupModel removeAllActions() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _actions).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();
@@ -329,6 +358,10 @@ public class STGroupModel {
 		final io.vertx.core.json.JsonArray _enums = new io.vertx.core.json.JsonArray();
 		getEnums().forEach(element -> _enums.add(element.toJsonObject()));
 		if (!_enums.isEmpty()) jsonObject.put("enums", _enums);
+
+		final io.vertx.core.json.JsonArray _actions = new io.vertx.core.json.JsonArray();
+		getActions().forEach(element -> _actions.add(element.toJsonObject()));
+		if (!_actions.isEmpty()) jsonObject.put("actions", _actions);
 
 		return jsonObject;
 	}
