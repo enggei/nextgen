@@ -6,7 +6,6 @@ import nextgen.templates.MavenPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
-import nextgen.templates.java.Singleton;
 import nextgen.templates.javaeasyflows.WorkFlowFacade;
 import nextgen.templates.maven.MavenST;
 import nextgen.templates.maven.Pom;
@@ -30,31 +29,6 @@ public class NextgenProject {
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
    static final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
-
-   @org.junit.Test
-   public void generateWorkspace() {
-      final nextgen.templates.nextgen.STWorkspace stWorkspace = tmp.STWorkspaceGenerator.generate();
-      writeJavaFile(stWorkspace, stPackage, stWorkspace.getName(), mainJava);
-   }
-
-   @org.junit.Test
-   public void generateSTTemplateNavigator() {
-      final nextgen.templates.nextgen.TreeNavigator treeNavigator = tmp.STTemplateNavigatorGenerator.generate();
-      writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
-   }
-
-   @org.junit.Test
-   public void generateSTModelNavigator() {
-      final nextgen.templates.nextgen.TreeNavigator treeNavigator = tmp.STModelNavigatorGenerator.generate();
-      writeJavaFile(treeNavigator, stPackage, treeNavigator.getName(), mainJava);
-   }
-
-   @org.junit.Test
-   public void generateSwing() {
-      final Singleton appModel = tmp.AppModelGenerator.generate();
-      writeJavaFile(appModel, appModel.getPackageName(), appModel.getName(), mainJava);
-   }
-
    /**
     * generateSTModelDomain
     */
