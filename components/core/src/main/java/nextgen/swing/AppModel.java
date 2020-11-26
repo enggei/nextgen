@@ -23,7 +23,7 @@ public final class AppModel {
 	}
 
 	public static synchronized AppModel getInstance() {
-		if(INSTANCE == null) INSTANCE = new AppModel();
+		if (INSTANCE == null) INSTANCE = new AppModel();
 		return INSTANCE;
 	}
 

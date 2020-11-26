@@ -51,9 +51,25 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
                .findAny();
 
          if (stTemplate.isPresent()) {
-            removeExisting();
-            final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
-            addValue(appModel().db.newSTValue(stTemplateModel));
+
+            final java.util.List<nextgen.st.model.STModel> stModelList = stTemplate.get().getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
+            if (!stModelList.isEmpty()) {
+
+               final nextgen.swing.SelectOrAddNewModelPanel input = new nextgen.swing.SelectOrAddNewModelPanel(stModelList, stTemplate.get());
+               showDialog(owner, input, "Add", jDialog -> {
+                  removeExisting();
+                  final nextgen.st.model.STValue stValue = input.getSTValue();
+                  addValue(stValue);
+                  jDialog.dispose();
+               });
+
+            } else {
+               removeExisting();
+               final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
+               final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
+               addValue(stValue);
+            }
+
          } else {
             final java.util.Set<nextgen.st.model.STTemplate> interfaces = nextgen.utils.STModelUtil.findSTTemplatesByInterface(argumentType, stGroupModel);
             if (!interfaces.isEmpty()) {
@@ -66,7 +82,7 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
                      removeExisting();
                      final nextgen.st.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value);
                      addValue(appModel().db.newSTValue(stTemplateModel));
-                  });   
+                  });
                }
 
             } else {

@@ -38,7 +38,7 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    }
 
    protected void openFile(javax.swing.JComponent owner, java.util.function.Consumer<java.io.File> consumer) {
-      nextgen.utils.SwingUtil.showOpenFile(owner, appModel().getLastDir()).ifPresent(consumer::accept);
+      nextgen.utils.SwingUtil.showOpenFile(owner, appModel().getLastDir()).ifPresent(consumer);
    }
 
    protected javax.swing.JDialog newDialog(javax.swing.JComponent owner, String title) {

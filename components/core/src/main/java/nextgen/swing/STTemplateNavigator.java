@@ -107,32 +107,38 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
-		findSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.stGroupFile)).ifPresent(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
+		findSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.stGroupFile))
+				.ifPresent(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate)).ifPresent(treeModel::select);
+		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
+				.ifPresent(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
-		findSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
-		findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.ifPresent(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -586,8 +592,9 @@ public class STTemplateNavigator extends JPanel {
 					if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, tree));
 					actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), tree));
 					getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, tree)));
-					actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), parent.getModel(), tree));
+					actions.add(new nextgen.actions.RenameSTTemplate(getModel(), parent.getModel(), tree));
 				});
+				actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), tree));
 			});
 
 			return actions;
