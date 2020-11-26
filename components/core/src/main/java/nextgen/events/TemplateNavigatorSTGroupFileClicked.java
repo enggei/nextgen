@@ -5,7 +5,7 @@ public final class TemplateNavigatorSTGroupFileClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateNavigatorSTGroupFileClicked.class);
 
 	public static void post(nextgen.st.model.STGroupFile stGroupFile) {
-		log.info("post TemplateNavigatorSTGroupFileClicked");
+		//log.info("post TemplateNavigatorSTGroupFileClicked");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new TemplateNavigatorSTGroupFileClicked(stGroupFile));
 	}
 

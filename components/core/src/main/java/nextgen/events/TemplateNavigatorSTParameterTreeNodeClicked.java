@@ -5,7 +5,7 @@ public final class TemplateNavigatorSTParameterTreeNodeClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateNavigatorSTParameterTreeNodeClicked.class);
 
 	public static void post(nextgen.st.model.STParameter parameter, nextgen.st.model.STModel model) {
-		log.info("post TemplateNavigatorSTParameterTreeNodeClicked");
+		//log.info("post TemplateNavigatorSTParameterTreeNodeClicked");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new TemplateNavigatorSTParameterTreeNodeClicked(parameter, model));
 	}
 

@@ -5,7 +5,7 @@ public final class STTemplateInterfaceRemoved {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateInterfaceRemoved.class);
 
 	public static void post(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate stTemplate, String interfaceName) {
-		log.info("post STTemplateInterfaceRemoved");
+		//log.info("post STTemplateInterfaceRemoved");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateInterfaceRemoved(stGroup, stTemplate, interfaceName));
 	}
 

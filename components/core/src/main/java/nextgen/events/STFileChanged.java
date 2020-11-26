@@ -5,7 +5,7 @@ public final class STFileChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STFileChanged.class);
 
 	public static void post(nextgen.st.model.STFile stFile) {
-		log.info("post STFileChanged");
+		//log.info("post STFileChanged");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STFileChanged(stFile));
 	}
 

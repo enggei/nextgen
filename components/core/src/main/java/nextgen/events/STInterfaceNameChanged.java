@@ -5,7 +5,7 @@ public final class STInterfaceNameChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STInterfaceNameChanged.class);
 
 	public static void post(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STInterface stInterface) {
-		log.info("post STInterfaceNameChanged");
+		//log.info("post STInterfaceNameChanged");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STInterfaceNameChanged(stGroup, stInterface));
 	}
 

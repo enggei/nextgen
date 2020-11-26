@@ -5,7 +5,7 @@ public final class STTemplateInterfacesChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateInterfacesChanged.class);
 
 	public static void post(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate stTemplate) {
-		log.info("post STTemplateInterfacesChanged");
+		//log.info("post STTemplateInterfacesChanged");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateInterfacesChanged(stGroup, stTemplate));
 	}
 

@@ -5,7 +5,7 @@ public final class STFileDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STFileDeleted.class);
 
 	public static void post(String uuid) {
-		log.info("post STFileDeleted");
+		//log.info("post STFileDeleted");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STFileDeleted(uuid));
 	}
 

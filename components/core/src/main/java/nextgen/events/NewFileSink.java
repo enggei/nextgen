@@ -5,7 +5,7 @@ public final class NewFileSink {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewFileSink.class);
 
 	public static void post(nextgen.st.model.STModel stModel, nextgen.st.model.STFile stFile) {
-		log.info("post NewFileSink");
+		//log.info("post NewFileSink");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewFileSink(stModel, stFile));
 	}
 

@@ -5,7 +5,7 @@ public final class KVDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(KVDeleted.class);
 
 	public static void post(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, String uuid) {
-		log.info("post KVDeleted");
+		//log.info("post KVDeleted");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new KVDeleted(stModel, stArgument, uuid));
 	}
 
