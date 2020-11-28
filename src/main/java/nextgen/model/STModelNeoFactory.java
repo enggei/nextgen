@@ -186,32 +186,100 @@ public class STModelNeoFactory {
 		return db.findNodes(STGroupFileLabel, "uuid", value).stream().map(this::newSTGroupFile);
 	}
 
-	public STGroupFile findSTGroupFileByPackageName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STGroupFileLabel, "packageName", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTGroupFile(node);
+	private static final org.neo4j.graphdb.Label STValueLabel = org.neo4j.graphdb.Label.label("STValue");
+
+	public static boolean isSTValue(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STValueLabel);
 	}
 
-	public STGroupFile findOrCreateSTGroupFileByPackageName(String value) {
-		final STGroupFile existing = findSTGroupFileByPackageName(value);
-		return existing == null ? newSTGroupFile().setPackageName(value) : existing;
+	public STValue newSTValue() { 
+		STValue newInstance = newSTValue(db.createNode(STValueLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
 	}
 
-	public java.util.stream.Stream<STGroupFile> findAllSTGroupFileByPackageName(String value) {
-		return db.findNodes(STGroupFileLabel, "packageName", value).stream().map(this::newSTGroupFile);
+	public STValue newSTValue(org.neo4j.graphdb.Node node) { 
+		return new STValue(node);
 	}
 
-	public STGroupFile findSTGroupFileByPath(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STGroupFileLabel, "path", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTGroupFile(node);
+	public java.util.stream.Stream<STValue> findAllSTValue() { 
+		return db.findNodes(STValueLabel).stream().map(this::newSTValue);
 	}
 
-	public STGroupFile findOrCreateSTGroupFileByPath(String value) {
-		final STGroupFile existing = findSTGroupFileByPath(value);
-		return existing == null ? newSTGroupFile().setPath(value) : existing;
+	public STValue findSTValueByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTValue(node);
 	}
 
-	public java.util.stream.Stream<STGroupFile> findAllSTGroupFileByPath(String value) {
-		return db.findNodes(STGroupFileLabel, "path", value).stream().map(this::newSTGroupFile);
+	public STValue findOrCreateSTValueByUuid(String value) {
+		final STValue existing = findSTValueByUuid(value);
+		return existing == null ? newSTValue().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STValue> findAllSTValueByUuid(String value) {
+		return db.findNodes(STValueLabel, "uuid", value).stream().map(this::newSTValue);
+	}
+
+	public STValue findSTValueByValue(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "value", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTValue(node);
+	}
+
+	public STValue findOrCreateSTValueByValue(String value) {
+		final STValue existing = findSTValueByValue(value);
+		return existing == null ? newSTValue().setValue(value) : existing;
+	}
+
+	public java.util.stream.Stream<STValue> findAllSTValueByValue(String value) {
+		return db.findNodes(STValueLabel, "value", value).stream().map(this::newSTValue);
+	}
+
+	public STValue findSTValueByType(STValueType value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "type", value.name()).stream().findFirst().orElse(null);
+		return node == null ? null : newSTValue(node);
+	}
+
+	public STValue findOrCreateSTValueByType(STValueType value) {
+		final STValue existing = findSTValueByType(value);
+		return existing == null ? newSTValue().setType(value) : existing;
+	}
+
+	public java.util.stream.Stream<STValue> findAllSTValueByType(STValueType value) {
+		return db.findNodes(STValueLabel, "type", value.name()).stream().map(this::newSTValue);
+	}
+
+	private static final org.neo4j.graphdb.Label STModelLabel = org.neo4j.graphdb.Label.label("STModel");
+
+	public static boolean isSTModel(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STModelLabel);
+	}
+
+	public STModel newSTModel() { 
+		STModel newInstance = newSTModel(db.createNode(STModelLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STModel newSTModel(org.neo4j.graphdb.Node node) { 
+		return new STModel(node);
+	}
+
+	public java.util.stream.Stream<STModel> findAllSTModel() { 
+		return db.findNodes(STModelLabel).stream().map(this::newSTModel);
+	}
+
+	public STModel findSTModelByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STModelLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTModel(node);
+	}
+
+	public STModel findOrCreateSTModelByUuid(String value) {
+		final STModel existing = findSTModelByUuid(value);
+		return existing == null ? newSTModel().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STModel> findAllSTModelByUuid(String value) {
+		return db.findNodes(STModelLabel, "uuid", value).stream().map(this::newSTModel);
 	}
 
 	private static final org.neo4j.graphdb.Label STTemplateLabel = org.neo4j.graphdb.Label.label("STTemplate");
@@ -414,308 +482,6 @@ public class STModelNeoFactory {
 		return db.findNodes(STParameterKeyLabel, "argumentType", value).stream().map(this::newSTParameterKey);
 	}
 
-	private static final org.neo4j.graphdb.Label STInterfaceLabel = org.neo4j.graphdb.Label.label("STInterface");
-
-	public static boolean isSTInterface(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STInterfaceLabel);
-	}
-
-	public STInterface newSTInterface() { 
-		STInterface newInstance = newSTInterface(db.createNode(STInterfaceLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STInterface newSTInterface(org.neo4j.graphdb.Node node) { 
-		return new STInterface(node);
-	}
-
-	public java.util.stream.Stream<STInterface> findAllSTInterface() { 
-		return db.findNodes(STInterfaceLabel).stream().map(this::newSTInterface);
-	}
-
-	public STInterface findSTInterfaceByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTInterface(node);
-	}
-
-	public STInterface findOrCreateSTInterfaceByUuid(String value) {
-		final STInterface existing = findSTInterfaceByUuid(value);
-		return existing == null ? newSTInterface().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STInterface> findAllSTInterfaceByUuid(String value) {
-		return db.findNodes(STInterfaceLabel, "uuid", value).stream().map(this::newSTInterface);
-	}
-
-	public STInterface findSTInterfaceByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "name", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTInterface(node);
-	}
-
-	public STInterface findOrCreateSTInterfaceByName(String value) {
-		final STInterface existing = findSTInterfaceByName(value);
-		return existing == null ? newSTInterface().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STInterface> findAllSTInterfaceByName(String value) {
-		return db.findNodes(STInterfaceLabel, "name", value).stream().map(this::newSTInterface);
-	}
-
-	private static final org.neo4j.graphdb.Label STEnumLabel = org.neo4j.graphdb.Label.label("STEnum");
-
-	public static boolean isSTEnum(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STEnumLabel);
-	}
-
-	public STEnum newSTEnum() { 
-		STEnum newInstance = newSTEnum(db.createNode(STEnumLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STEnum newSTEnum(org.neo4j.graphdb.Node node) { 
-		return new STEnum(node);
-	}
-
-	public java.util.stream.Stream<STEnum> findAllSTEnum() { 
-		return db.findNodes(STEnumLabel).stream().map(this::newSTEnum);
-	}
-
-	public STEnum findSTEnumByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTEnum(node);
-	}
-
-	public STEnum findOrCreateSTEnumByUuid(String value) {
-		final STEnum existing = findSTEnumByUuid(value);
-		return existing == null ? newSTEnum().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STEnum> findAllSTEnumByUuid(String value) {
-		return db.findNodes(STEnumLabel, "uuid", value).stream().map(this::newSTEnum);
-	}
-
-	public STEnum findSTEnumByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "name", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTEnum(node);
-	}
-
-	public STEnum findOrCreateSTEnumByName(String value) {
-		final STEnum existing = findSTEnumByName(value);
-		return existing == null ? newSTEnum().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STEnum> findAllSTEnumByName(String value) {
-		return db.findNodes(STEnumLabel, "name", value).stream().map(this::newSTEnum);
-	}
-
-	private static final org.neo4j.graphdb.Label STEnumValueLabel = org.neo4j.graphdb.Label.label("STEnumValue");
-
-	public static boolean isSTEnumValue(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STEnumValueLabel);
-	}
-
-	public STEnumValue newSTEnumValue() { 
-		STEnumValue newInstance = newSTEnumValue(db.createNode(STEnumValueLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STEnumValue newSTEnumValue(org.neo4j.graphdb.Node node) { 
-		return new STEnumValue(node);
-	}
-
-	public java.util.stream.Stream<STEnumValue> findAllSTEnumValue() { 
-		return db.findNodes(STEnumValueLabel).stream().map(this::newSTEnumValue);
-	}
-
-	public STEnumValue findSTEnumValueByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTEnumValue(node);
-	}
-
-	public STEnumValue findOrCreateSTEnumValueByUuid(String value) {
-		final STEnumValue existing = findSTEnumValueByUuid(value);
-		return existing == null ? newSTEnumValue().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByUuid(String value) {
-		return db.findNodes(STEnumValueLabel, "uuid", value).stream().map(this::newSTEnumValue);
-	}
-
-	public STEnumValue findSTEnumValueByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "name", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTEnumValue(node);
-	}
-
-	public STEnumValue findOrCreateSTEnumValueByName(String value) {
-		final STEnumValue existing = findSTEnumValueByName(value);
-		return existing == null ? newSTEnumValue().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByName(String value) {
-		return db.findNodes(STEnumValueLabel, "name", value).stream().map(this::newSTEnumValue);
-	}
-
-	public STEnumValue findSTEnumValueByLexical(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "lexical", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTEnumValue(node);
-	}
-
-	public STEnumValue findOrCreateSTEnumValueByLexical(String value) {
-		final STEnumValue existing = findSTEnumValueByLexical(value);
-		return existing == null ? newSTEnumValue().setLexical(value) : existing;
-	}
-
-	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByLexical(String value) {
-		return db.findNodes(STEnumValueLabel, "lexical", value).stream().map(this::newSTEnumValue);
-	}
-
-	private static final org.neo4j.graphdb.Label STGroupActionLabel = org.neo4j.graphdb.Label.label("STGroupAction");
-
-	public static boolean isSTGroupAction(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STGroupActionLabel);
-	}
-
-	public STGroupAction newSTGroupAction() { 
-		STGroupAction newInstance = newSTGroupAction(db.createNode(STGroupActionLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STGroupAction newSTGroupAction(org.neo4j.graphdb.Node node) { 
-		return new STGroupAction(node);
-	}
-
-	public java.util.stream.Stream<STGroupAction> findAllSTGroupAction() { 
-		return db.findNodes(STGroupActionLabel).stream().map(this::newSTGroupAction);
-	}
-
-	public STGroupAction findSTGroupActionByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTGroupAction(node);
-	}
-
-	public STGroupAction findOrCreateSTGroupActionByUuid(String value) {
-		final STGroupAction existing = findSTGroupActionByUuid(value);
-		return existing == null ? newSTGroupAction().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByUuid(String value) {
-		return db.findNodes(STGroupActionLabel, "uuid", value).stream().map(this::newSTGroupAction);
-	}
-
-	public STGroupAction findSTGroupActionByName(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "name", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTGroupAction(node);
-	}
-
-	public STGroupAction findOrCreateSTGroupActionByName(String value) {
-		final STGroupAction existing = findSTGroupActionByName(value);
-		return existing == null ? newSTGroupAction().setName(value) : existing;
-	}
-
-	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByName(String value) {
-		return db.findNodes(STGroupActionLabel, "name", value).stream().map(this::newSTGroupAction);
-	}
-
-	private static final org.neo4j.graphdb.Label STValueLabel = org.neo4j.graphdb.Label.label("STValue");
-
-	public static boolean isSTValue(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STValueLabel);
-	}
-
-	public STValue newSTValue() { 
-		STValue newInstance = newSTValue(db.createNode(STValueLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STValue newSTValue(org.neo4j.graphdb.Node node) { 
-		return new STValue(node);
-	}
-
-	public java.util.stream.Stream<STValue> findAllSTValue() { 
-		return db.findNodes(STValueLabel).stream().map(this::newSTValue);
-	}
-
-	public STValue findSTValueByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTValue(node);
-	}
-
-	public STValue findOrCreateSTValueByUuid(String value) {
-		final STValue existing = findSTValueByUuid(value);
-		return existing == null ? newSTValue().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STValue> findAllSTValueByUuid(String value) {
-		return db.findNodes(STValueLabel, "uuid", value).stream().map(this::newSTValue);
-	}
-
-	public STValue findSTValueByValue(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "value", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTValue(node);
-	}
-
-	public STValue findOrCreateSTValueByValue(String value) {
-		final STValue existing = findSTValueByValue(value);
-		return existing == null ? newSTValue().setValue(value) : existing;
-	}
-
-	public java.util.stream.Stream<STValue> findAllSTValueByValue(String value) {
-		return db.findNodes(STValueLabel, "value", value).stream().map(this::newSTValue);
-	}
-
-	public STValue findSTValueByType(STValueType value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STValueLabel, "type", value.name()).stream().findFirst().orElse(null);
-		return node == null ? null : newSTValue(node);
-	}
-
-	public STValue findOrCreateSTValueByType(STValueType value) {
-		final STValue existing = findSTValueByType(value);
-		return existing == null ? newSTValue().setType(value) : existing;
-	}
-
-	public java.util.stream.Stream<STValue> findAllSTValueByType(STValueType value) {
-		return db.findNodes(STValueLabel, "type", value.name()).stream().map(this::newSTValue);
-	}
-
-	private static final org.neo4j.graphdb.Label STModelLabel = org.neo4j.graphdb.Label.label("STModel");
-
-	public static boolean isSTModel(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(STModelLabel);
-	}
-
-	public STModel newSTModel() { 
-		STModel newInstance = newSTModel(db.createNode(STModelLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public STModel newSTModel(org.neo4j.graphdb.Node node) { 
-		return new STModel(node);
-	}
-
-	public java.util.stream.Stream<STModel> findAllSTModel() { 
-		return db.findNodes(STModelLabel).stream().map(this::newSTModel);
-	}
-
-	public STModel findSTModelByUuid(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STModelLabel, "uuid", value).stream().findFirst().orElse(null);
-		return node == null ? null : newSTModel(node);
-	}
-
-	public STModel findOrCreateSTModelByUuid(String value) {
-		final STModel existing = findSTModelByUuid(value);
-		return existing == null ? newSTModel().setUuid(value) : existing;
-	}
-
-	public java.util.stream.Stream<STModel> findAllSTModelByUuid(String value) {
-		return db.findNodes(STModelLabel, "uuid", value).stream().map(this::newSTModel);
-	}
-
 	private static final org.neo4j.graphdb.Label STFileLabel = org.neo4j.graphdb.Label.label("STFile");
 
 	public static boolean isSTFile(org.neo4j.graphdb.Node node) {
@@ -816,6 +582,212 @@ public class STModelNeoFactory {
 
 	public java.util.stream.Stream<STArgumentKV> findAllSTArgumentKVByUuid(String value) {
 		return db.findNodes(STArgumentKVLabel, "uuid", value).stream().map(this::newSTArgumentKV);
+	}
+
+	private static final org.neo4j.graphdb.Label STEnumValueLabel = org.neo4j.graphdb.Label.label("STEnumValue");
+
+	public static boolean isSTEnumValue(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STEnumValueLabel);
+	}
+
+	public STEnumValue newSTEnumValue() { 
+		STEnumValue newInstance = newSTEnumValue(db.createNode(STEnumValueLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STEnumValue newSTEnumValue(org.neo4j.graphdb.Node node) { 
+		return new STEnumValue(node);
+	}
+
+	public java.util.stream.Stream<STEnumValue> findAllSTEnumValue() { 
+		return db.findNodes(STEnumValueLabel).stream().map(this::newSTEnumValue);
+	}
+
+	public STEnumValue findSTEnumValueByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTEnumValue(node);
+	}
+
+	public STEnumValue findOrCreateSTEnumValueByUuid(String value) {
+		final STEnumValue existing = findSTEnumValueByUuid(value);
+		return existing == null ? newSTEnumValue().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByUuid(String value) {
+		return db.findNodes(STEnumValueLabel, "uuid", value).stream().map(this::newSTEnumValue);
+	}
+
+	public STEnumValue findSTEnumValueByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "name", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTEnumValue(node);
+	}
+
+	public STEnumValue findOrCreateSTEnumValueByName(String value) {
+		final STEnumValue existing = findSTEnumValueByName(value);
+		return existing == null ? newSTEnumValue().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByName(String value) {
+		return db.findNodes(STEnumValueLabel, "name", value).stream().map(this::newSTEnumValue);
+	}
+
+	public STEnumValue findSTEnumValueByLexical(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumValueLabel, "lexical", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTEnumValue(node);
+	}
+
+	public STEnumValue findOrCreateSTEnumValueByLexical(String value) {
+		final STEnumValue existing = findSTEnumValueByLexical(value);
+		return existing == null ? newSTEnumValue().setLexical(value) : existing;
+	}
+
+	public java.util.stream.Stream<STEnumValue> findAllSTEnumValueByLexical(String value) {
+		return db.findNodes(STEnumValueLabel, "lexical", value).stream().map(this::newSTEnumValue);
+	}
+
+	private static final org.neo4j.graphdb.Label STInterfaceLabel = org.neo4j.graphdb.Label.label("STInterface");
+
+	public static boolean isSTInterface(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STInterfaceLabel);
+	}
+
+	public STInterface newSTInterface() { 
+		STInterface newInstance = newSTInterface(db.createNode(STInterfaceLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STInterface newSTInterface(org.neo4j.graphdb.Node node) { 
+		return new STInterface(node);
+	}
+
+	public java.util.stream.Stream<STInterface> findAllSTInterface() { 
+		return db.findNodes(STInterfaceLabel).stream().map(this::newSTInterface);
+	}
+
+	public STInterface findSTInterfaceByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTInterface(node);
+	}
+
+	public STInterface findOrCreateSTInterfaceByUuid(String value) {
+		final STInterface existing = findSTInterfaceByUuid(value);
+		return existing == null ? newSTInterface().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STInterface> findAllSTInterfaceByUuid(String value) {
+		return db.findNodes(STInterfaceLabel, "uuid", value).stream().map(this::newSTInterface);
+	}
+
+	public STInterface findSTInterfaceByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STInterfaceLabel, "name", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTInterface(node);
+	}
+
+	public STInterface findOrCreateSTInterfaceByName(String value) {
+		final STInterface existing = findSTInterfaceByName(value);
+		return existing == null ? newSTInterface().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STInterface> findAllSTInterfaceByName(String value) {
+		return db.findNodes(STInterfaceLabel, "name", value).stream().map(this::newSTInterface);
+	}
+
+	private static final org.neo4j.graphdb.Label STEnumLabel = org.neo4j.graphdb.Label.label("STEnum");
+
+	public static boolean isSTEnum(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STEnumLabel);
+	}
+
+	public STEnum newSTEnum() { 
+		STEnum newInstance = newSTEnum(db.createNode(STEnumLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STEnum newSTEnum(org.neo4j.graphdb.Node node) { 
+		return new STEnum(node);
+	}
+
+	public java.util.stream.Stream<STEnum> findAllSTEnum() { 
+		return db.findNodes(STEnumLabel).stream().map(this::newSTEnum);
+	}
+
+	public STEnum findSTEnumByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTEnum(node);
+	}
+
+	public STEnum findOrCreateSTEnumByUuid(String value) {
+		final STEnum existing = findSTEnumByUuid(value);
+		return existing == null ? newSTEnum().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STEnum> findAllSTEnumByUuid(String value) {
+		return db.findNodes(STEnumLabel, "uuid", value).stream().map(this::newSTEnum);
+	}
+
+	public STEnum findSTEnumByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STEnumLabel, "name", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTEnum(node);
+	}
+
+	public STEnum findOrCreateSTEnumByName(String value) {
+		final STEnum existing = findSTEnumByName(value);
+		return existing == null ? newSTEnum().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STEnum> findAllSTEnumByName(String value) {
+		return db.findNodes(STEnumLabel, "name", value).stream().map(this::newSTEnum);
+	}
+
+	private static final org.neo4j.graphdb.Label STGroupActionLabel = org.neo4j.graphdb.Label.label("STGroupAction");
+
+	public static boolean isSTGroupAction(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(STGroupActionLabel);
+	}
+
+	public STGroupAction newSTGroupAction() { 
+		STGroupAction newInstance = newSTGroupAction(db.createNode(STGroupActionLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public STGroupAction newSTGroupAction(org.neo4j.graphdb.Node node) { 
+		return new STGroupAction(node);
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupAction() { 
+		return db.findNodes(STGroupActionLabel).stream().map(this::newSTGroupAction);
+	}
+
+	public STGroupAction findSTGroupActionByUuid(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "uuid", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByUuid(String value) {
+		final STGroupAction existing = findSTGroupActionByUuid(value);
+		return existing == null ? newSTGroupAction().setUuid(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByUuid(String value) {
+		return db.findNodes(STGroupActionLabel, "uuid", value).stream().map(this::newSTGroupAction);
+	}
+
+	public STGroupAction findSTGroupActionByName(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "name", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByName(String value) {
+		final STGroupAction existing = findSTGroupActionByName(value);
+		return existing == null ? newSTGroupAction().setName(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByName(String value) {
+		return db.findNodes(STGroupActionLabel, "name", value).stream().map(this::newSTGroupAction);
 	}
 
 	private static final org.neo4j.graphdb.Label STProjectLabel = org.neo4j.graphdb.Label.label("STProject");

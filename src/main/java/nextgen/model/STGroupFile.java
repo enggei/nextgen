@@ -55,64 +55,60 @@ public class STGroupFile {
 		return this;
 	}
 
-	private static final String _packageName = "packageName";
-
-	public STGroupFile setPackageName(String value) { 
-		if (value == null) {
-			removePackageName(); 
-		} else {
-		 	node.setProperty(_packageName, value);
+	public STGroupFile setPackageName(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("packageName"));
 		return this;
 	}
 
-	public String getPackageName() { 
-		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
-		return null;
-	}
-
-	public String getPackageName(String defaultValue) { 
-		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
-		return defaultValue;
-	}
-
-	public boolean hasPackageName() { 
-		return node.hasProperty(_packageName);
+	public STValue getPackageName() { 
+		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STGroupFile removePackageName() { 
-		node.removeProperty(_packageName);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPackageNameRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
-	private static final String _path = "path";
+	public org.neo4j.graphdb.Relationship getPackageNameRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("packageName"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
 
-	public STGroupFile setPath(String value) { 
-		if (value == null) {
-			removePath(); 
-		} else {
-		 	node.setProperty(_path, value);
+	public STGroupFile setPath(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("path"));
 		return this;
 	}
 
-	public String getPath() { 
-		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
-		return null;
-	}
-
-	public String getPath(String defaultValue) { 
-		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
-		return defaultValue;
-	}
-
-	public boolean hasPath() { 
-		return node.hasProperty(_path);
+	public STValue getPath() { 
+		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STGroupFile removePath() { 
-		node.removeProperty(_path);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getPathRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getPathRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("path"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public java.util.stream.Stream<STGroupModel> getIncomingFilesSTGroupModel() { 
@@ -142,6 +138,12 @@ public class STGroupFile {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		final STValue _packageName = getPackageName();
+		if (_packageName != null) jsonObject.put("packageName", _packageName.toJsonObject());
+
+		final STValue _path = getPath();
+		if (_path != null) jsonObject.put("path", _path.toJsonObject());
+
 		return jsonObject;
 	}
 

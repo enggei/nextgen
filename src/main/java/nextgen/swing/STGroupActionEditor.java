@@ -63,8 +63,8 @@ public class STGroupActionEditor extends AbstractEditor {
    protected void tryToSave() {
       appModel().doInTransaction(transaction -> {
          model.setName(txtName.getText().trim());
-         model.setStatements(appModel().newSTValue(txtStatements.getText().trim()));
-         model.setMethods(appModel().newSTValue(txtMethods.getText().trim()));
+         model.setStatements(appModel().db.findOrCreateSTValueByValue(txtStatements.getText().trim()));
+         model.setMethods(appModel().db.findOrCreateSTValueByValue(txtMethods.getText().trim()));
          nextgen.events.STGroupActionChanged.post(model);
       });
    }

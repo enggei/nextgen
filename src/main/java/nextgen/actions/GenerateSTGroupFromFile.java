@@ -20,8 +20,8 @@ public class GenerateSTGroupFromFile extends nextgen.actions.TransactionAction {
 
       if (parseResult.getErrors().isEmpty()) {
       	stGroupFile.getIncomingFilesSTGroupModel().forEach(stGroupModel -> {
-      		final String packageName = stGroupFile.getPackageName();
-      		final String path = stGroupFile.getPath();
+      		final String packageName = stGroupFile.getPackageName().getValue();
+      		final String path = stGroupFile.getPath().getValue();
       		appModel().getSTGenerator().generateSTGroup(stGroupModel, packageName, path);
       	});
       } else {

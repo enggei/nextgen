@@ -68,8 +68,8 @@ public class STGenerator {
    public void generateSTGroup(STGroupModel stGroupModel) {
       stGroupModel.getFiles().forEach(stFile -> {
 
-         final String packageName = stFile.getPackageName();
-         final String path = stFile.getPath();
+         final String packageName = stFile.getPackageName().getValue();
+         final String path = stFile.getPath().getValue();
 
          generateSTGroup(stGroupModel, packageName, path);
       });

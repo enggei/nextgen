@@ -13,8 +13,8 @@ public class STGroupFileEditor extends AbstractEditor {
       this.stGroupFile = stGroupFile;
       this.uuid = stGroupFile.getUuid();
 
-      txtPackage = newTextField(stGroupFile.getPackageName(), 45);
-      txtPath = newTextField(stGroupFile.getPath(), 45);
+      txtPackage = newTextField(appModel().render(stGroupFile.getPackageName()), 45);
+      txtPath = newTextField(appModel().render(stGroupFile.getPath()), 45);
 
       final java.awt.event.KeyListener editorKeyListener = getEditorKeyListener();
       txtPackage.addKeyListener(editorKeyListener);
@@ -41,8 +41,8 @@ public class STGroupFileEditor extends AbstractEditor {
       final String packageName = txtPackage.getText().trim();
       final String path = txtPath.getText().trim();
 
-      stGroupFile.setPackageName(packageName);
-      stGroupFile.setPath(path);
+      stGroupFile.setPackageName(appModel().db.findOrCreateSTValueByValue(packageName));
+      stGroupFile.setPath(appModel().db.findOrCreateSTValueByValue(path));
 
       nextgen.events.STGroupFileChanged.post(stGroupFile);
    }

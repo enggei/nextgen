@@ -193,6 +193,14 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stEnumValue"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public java.util.stream.Stream<STGroupFile> getIncomingPackageNameSTGroupFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("packageName")).spliterator(), false).map((relationship) -> new STGroupFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STGroupFile> getIncomingPathSTGroupFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STGroupFile(relationship.getOtherNode(node)));
+	}
+
 	public java.util.stream.Stream<STGroupAction> getIncomingStatementsSTGroupAction() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("statements")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
 	}

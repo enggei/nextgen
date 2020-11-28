@@ -83,10 +83,17 @@ public class STModelDB extends STModelNeoFactory {
       doInTransaction(transaction -> {
 
          findAllSTGroupFile().forEach(stGroupFile -> {
-            final String path = stGroupFile.getPath("");
-            if(path.contains("/home/goe/projects/nextgen/components/core/src/main/java")) {
-               stGroupFile.setPath("/home/goe/projects/nextgen/src/main/java");
+
+            if (stGroupFile.getNode().hasProperty("path")) {
+               stGroupFile.setPath(findOrCreateSTValueByValue(stGroupFile.getNode().getProperty("path").toString()));
+               stGroupFile.getNode().removeProperty("path");
             }
+
+            if (stGroupFile.getNode().hasProperty("packageName")) {
+               stGroupFile.setPackageName(findOrCreateSTValueByValue(stGroupFile.getNode().getProperty("packageName").toString()));
+               stGroupFile.getNode().removeProperty("packageName");
+            }
+
          });
 
          findAllSTGroupAction().forEach(stGroupAction -> {

@@ -210,12 +210,12 @@ public class STTemplate {
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("children")).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STGroupModel> getIncomingTemplatesSTGroupModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("templates")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
-	}
-
 	public java.util.stream.Stream<STModel> getIncomingStTemplateSTModel() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stTemplate")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STGroupModel> getIncomingTemplatesSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("templates")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
 	}
 
 	@Override

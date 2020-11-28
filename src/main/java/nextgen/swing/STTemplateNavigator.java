@@ -792,7 +792,7 @@ public class STTemplateNavigator extends JPanel {
 			super(model, null);
 
 
-			setLabel(getModel().getPath());
+			setLabel(appModel().render(getModel().getPath()));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -804,7 +804,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(getModel().getPath());
+			setLabel(appModel().render(getModel().getPath()));
 			this.tooltip = "";
 			super.nodeChanged();
 		}

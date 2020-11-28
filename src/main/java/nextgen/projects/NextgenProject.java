@@ -92,8 +92,8 @@ public class NextgenProject {
       final Entity stGroupFile = DomainPatterns
             .newEntityWithUuid("STGroupFile")
             .setEqha("uuid")
-            .addRelations(DomainPatterns.newStringField("packageName"))
-            .addRelations(DomainPatterns.newStringField("path"));
+            .addRelations(DomainPatterns.newOneToOne("packageName", stValue))
+            .addRelations(DomainPatterns.newOneToOne("path", stValue));
 
       final Entity stGroupAction = DomainPatterns
             .newEntityWithUuid("STGroupAction")

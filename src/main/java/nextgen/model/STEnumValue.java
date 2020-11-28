@@ -115,12 +115,12 @@ public class STEnumValue {
 		return this;
 	}
 
-	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
-	}
-
 	public java.util.stream.Stream<STValue> getIncomingStEnumValueSTValue() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stEnumValue")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
 	}
 
 	@Override
