@@ -35,8 +35,8 @@ public class RunAction extends nextgen.actions.TransactionAction {
             .setPackageName(packageName)
             .setTitle(action.getName())
             .addFields("owner", "javax.swing.JComponent")
-            .addStatements(action.getStatements())
-            .addMethods(action.getMethods());
+            .addStatements(appModel().render(action.getStatements()))
+            .addMethods(appModel().render(action.getMethods()));
 
       final String current = transactionAction.toString();
 

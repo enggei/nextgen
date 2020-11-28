@@ -28,9 +28,9 @@ public class STGroupFile {
 	private static final String _uuid = "uuid";
 
 	public STGroupFile setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STGroupFile {
 	private static final String _packageName = "packageName";
 
 	public STGroupFile setPackageName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removePackageName(); 
-		else {
+		} else {
 		 	node.setProperty(_packageName, value);
 		}
 		return this;
@@ -88,9 +88,9 @@ public class STGroupFile {
 	private static final String _path = "path";
 
 	public STGroupFile setPath(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removePath(); 
-		else {
+		} else {
 		 	node.setProperty(_path, value);
 		}
 		return this;

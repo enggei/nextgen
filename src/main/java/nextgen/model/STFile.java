@@ -28,9 +28,9 @@ public class STFile {
 	private static final String _uuid = "uuid";
 
 	public STFile setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,7 +58,7 @@ public class STFile {
 	public STFile setName(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -86,7 +86,7 @@ public class STFile {
 	public STFile setType(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getTypeRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -114,7 +114,7 @@ public class STFile {
 	public STFile setPackageName(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -142,7 +142,7 @@ public class STFile {
 	public STFile setPath(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;

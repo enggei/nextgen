@@ -28,9 +28,9 @@ public class STGroupAction {
 	private static final String _uuid = "uuid";
 
 	public STGroupAction setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STGroupAction {
 	private static final String _name = "name";
 
 	public STGroupAction setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;
@@ -85,94 +85,60 @@ public class STGroupAction {
 		return this;
 	}
 
-	private static final String _crc = "crc";
-
-	public STGroupAction setCrc(String value) { 
-		if (value == null) 
-			removeCrc(); 
-		else {
-		 	node.setProperty(_crc, value);
+	public STGroupAction setStatements(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getStatementsRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("statements"));
 		return this;
 	}
 
-	public String getCrc() { 
-		if (node.hasProperty(_crc)) return (String) node.getProperty(_crc);
-		return null;
-	}
-
-	public String getCrc(String defaultValue) { 
-		if (node.hasProperty(_crc)) return (String) node.getProperty(_crc);
-		return defaultValue;
-	}
-
-	public boolean hasCrc() { 
-		return node.hasProperty(_crc);
-	}
-
-	public STGroupAction removeCrc() { 
-		node.removeProperty(_crc);
-		return this;
-	}
-
-	private static final String _statements = "statements";
-
-	public STGroupAction setStatements(String value) { 
-		if (value == null) 
-			removeStatements(); 
-		else {
-		 	node.setProperty(_statements, value);
-		}
-		return this;
-	}
-
-	public String getStatements() { 
-		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
-		return null;
-	}
-
-	public String getStatements(String defaultValue) { 
-		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
-		return defaultValue;
-	}
-
-	public boolean hasStatements() { 
-		return node.hasProperty(_statements);
+	public STValue getStatements() { 
+		final org.neo4j.graphdb.Relationship relationship = getStatementsRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STGroupAction removeStatements() { 
-		node.removeProperty(_statements);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getStatementsRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
 	}
 
-	private static final String _methods = "methods";
+	public org.neo4j.graphdb.Relationship getStatementsRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("statements"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
 
-	public STGroupAction setMethods(String value) { 
-		if (value == null) 
-			removeMethods(); 
-		else {
-		 	node.setProperty(_methods, value);
+	public STGroupAction setMethods(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getMethodsRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
 		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("methods"));
 		return this;
 	}
 
-	public String getMethods() { 
-		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
-		return null;
-	}
-
-	public String getMethods(String defaultValue) { 
-		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
-		return defaultValue;
-	}
-
-	public boolean hasMethods() { 
-		return node.hasProperty(_methods);
+	public STValue getMethods() { 
+		final org.neo4j.graphdb.Relationship relationship = getMethodsRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public STGroupAction removeMethods() { 
-		node.removeProperty(_methods);
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getMethodsRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
 		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getMethodsRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("methods"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public java.util.stream.Stream<STGroupModel> getIncomingActionsSTGroupModel() { 
@@ -202,6 +168,12 @@ public class STGroupAction {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		final STValue _statements = getStatements();
+		if (_statements != null) jsonObject.put("statements", _statements.toJsonObject());
+
+		final STValue _methods = getMethods();
+		if (_methods != null) jsonObject.put("methods", _methods.toJsonObject());
+
 		return jsonObject;
 	}
 

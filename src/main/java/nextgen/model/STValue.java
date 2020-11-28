@@ -28,9 +28,9 @@ public class STValue {
 	private static final String _uuid = "uuid";
 
 	public STValue setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STValue {
 	private static final String _value = "value";
 
 	public STValue setValue(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeValue(); 
-		else {
+		} else {
 		 	node.setProperty(_value, value);
 		}
 		return this;
@@ -116,7 +116,7 @@ public class STValue {
 	public STValue setStModel(STModel dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getStModelRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -141,10 +141,34 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stModel"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public java.util.stream.Stream<STFile> getIncomingNameSTFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("name")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingTypeSTFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("type")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingPackageNameSTFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("packageName")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STFile> getIncomingPathSTFile() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STArgument> getIncomingValueSTArgument() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STArgumentKV> getIncomingValueSTArgumentKV() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+	}
+
 	public STValue setStEnumValue(STEnumValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getStEnumValueRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -169,28 +193,12 @@ public class STValue {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stEnumValue"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingNameSTFile() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("name")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STGroupAction> getIncomingStatementsSTGroupAction() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("statements")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STFile> getIncomingTypeSTFile() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("type")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STFile> getIncomingPackageNameSTFile() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("packageName")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STFile> getIncomingPathSTFile() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("path")).spliterator(), false).map((relationship) -> new STFile(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STArgument> getIncomingValueSTArgument() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STArgumentKV> getIncomingValueSTArgumentKV() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("value")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STGroupAction> getIncomingMethodsSTGroupAction() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("methods")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
 	}
 
 	public java.util.stream.Stream<STProject> getIncomingValuesSTProject() { 

@@ -168,12 +168,12 @@ public class PrimitiveAccessors implements Accessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "primitiveAccessors(name,setStatements,removeStatements,className,type) ::= <<private static final String _~name~ = \"~name~\";\n" + 
+	static final String st = "primitiveAccessors(name,className,type,setStatements,removeStatements) ::= <<private static final String _~name~ = \"~name~\";\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
-				"	if (value == null) \n" + 
+				"	if (value == null) {\n" + 
 				"		remove~name;format=\"capitalize\"~(); \n" + 
-				"	else {\n" + 
+				"	} else {\n" + 
 				"	 	node.setProperty(_~name~, value);\n" + 
 				"	 	~setStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

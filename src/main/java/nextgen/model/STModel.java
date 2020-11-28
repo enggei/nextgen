@@ -28,9 +28,9 @@ public class STModel {
 	private static final String _uuid = "uuid";
 
 	public STModel setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,7 +58,7 @@ public class STModel {
 	public STModel setStTemplate(STTemplate dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getStTemplateRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -112,10 +112,6 @@ public class STModel {
 		return this;
 	}
 
-	public java.util.stream.Stream<STValue> getIncomingStModelSTValue() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
-	}
-
 	private static final org.neo4j.graphdb.RelationshipType _arguments = org.neo4j.graphdb.RelationshipType.withName("arguments");
 
 	public STModel addArguments(STArgument dst) { 
@@ -143,6 +139,10 @@ public class STModel {
 	public STModel removeAllArguments() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
+	}
+
+	public java.util.stream.Stream<STValue> getIncomingStModelSTValue() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stModel")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
 	}
 
 	public java.util.stream.Stream<STProject> getIncomingModelsSTProject() { 

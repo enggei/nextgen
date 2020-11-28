@@ -28,9 +28,9 @@ public class STProject {
 	private static final String _uuid = "uuid";
 
 	public STProject setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STProject {
 	private static final String _name = "name";
 
 	public STProject setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;

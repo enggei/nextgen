@@ -219,10 +219,10 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 	return this;
 }  >>
 
-referenceAccessors(className,name,type,setStatements,removeStatements) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
+referenceAccessors(removeStatements,setStatements,className,type,name) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ dst) { 
 	final org.neo4j.graphdb.Relationship relationship = get~name;format="capitalize"~Relation();
 	if (relationship != null)  { 
-		if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+		if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 		relationship.delete();
 	}
 	if (dst == null) return this;
@@ -384,12 +384,12 @@ public ~className;format="capitalize"~ removeAll~name;format="capitalize"~() {
 	return this;
 }  >>
 
-primitiveAccessors(name,setStatements,removeStatements,className,type) ::= <<private static final String _~name~ = "~name~";
+primitiveAccessors(name,className,type,setStatements,removeStatements) ::= <<private static final String _~name~ = "~name~";
 
 public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
-	if (value == null) 
+	if (value == null) {
 		remove~name;format="capitalize"~(); 
-	else {
+	} else {
 	 	node.setProperty(_~name~, value);
 	 	~setStatements:{it|~it~};separator="\n"~
 	}

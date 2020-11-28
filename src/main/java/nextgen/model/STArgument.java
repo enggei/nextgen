@@ -28,9 +28,9 @@ public class STArgument {
 	private static final String _uuid = "uuid";
 
 	public STArgument setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,7 +58,7 @@ public class STArgument {
 	public STArgument setStParameter(STParameter dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getStParameterRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
@@ -86,7 +86,7 @@ public class STArgument {
 	public STArgument setValue(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getValueRelation();
 		if (relationship != null)  { 
-			if (relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;

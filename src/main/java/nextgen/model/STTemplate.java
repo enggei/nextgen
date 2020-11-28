@@ -28,9 +28,9 @@ public class STTemplate {
 	private static final String _uuid = "uuid";
 
 	public STTemplate setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STTemplate {
 	private static final String _name = "name";
 
 	public STTemplate setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;
@@ -88,9 +88,9 @@ public class STTemplate {
 	private static final String _text = "text";
 
 	public STTemplate setText(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeText(); 
-		else {
+		} else {
 		 	node.setProperty(_text, value);
 		}
 		return this;

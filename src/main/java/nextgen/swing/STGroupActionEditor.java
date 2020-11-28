@@ -16,9 +16,9 @@ public class STGroupActionEditor extends AbstractEditor {
       this.model = model;
       this.uuid = model.getUuid();
 
-      txtName.setText(model.getName());
-      txtStatements.setText(model.getStatements(""));
-      txtMethods.setText(model.getMethods(""));
+      txtName.setText(model.getName(""));
+      txtStatements.setText(appModel().render(model.getStatements(),""));
+      txtMethods.setText(appModel().render(model.getMethods(),""));
 
       final java.awt.event.KeyListener editorKeyListener = getEditorKeyListener();
       txtName.addKeyListener(editorKeyListener);
@@ -63,8 +63,8 @@ public class STGroupActionEditor extends AbstractEditor {
    protected void tryToSave() {
       appModel().doInTransaction(transaction -> {
          model.setName(txtName.getText().trim());
-         model.setStatements(txtStatements.getText().trim());
-         model.setMethods(txtMethods.getText().trim());
+         model.setStatements(appModel().newSTValue(txtStatements.getText().trim()));
+         model.setMethods(appModel().newSTValue(txtMethods.getText().trim()));
          nextgen.events.STGroupActionChanged.post(model);
       });
    }

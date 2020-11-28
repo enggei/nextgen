@@ -28,9 +28,9 @@ public class STEnumValue {
 	private static final String _uuid = "uuid";
 
 	public STEnumValue setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STEnumValue {
 	private static final String _name = "name";
 
 	public STEnumValue setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;
@@ -88,9 +88,9 @@ public class STEnumValue {
 	private static final String _lexical = "lexical";
 
 	public STEnumValue setLexical(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeLexical(); 
-		else {
+		} else {
 		 	node.setProperty(_lexical, value);
 		}
 		return this;

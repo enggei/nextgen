@@ -83,6 +83,22 @@ public class STModelDB extends STModelNeoFactory {
    public void cleanup() {
       doInTransaction(transaction -> {
 
+         findAllSTGroupAction().forEach(stGroupAction -> {
+
+            if (stGroupAction.getNode().hasProperty("statements")) {
+               System.out.println(stGroupAction.getNode().getProperty("statements"));
+               stGroupAction.setStatements(newSTValue(stGroupAction.getNode().getProperty("statements").toString()));
+               stGroupAction.getNode().removeProperty("statements");
+            }
+
+            if (stGroupAction.getNode().hasProperty("methods")) {
+               System.out.println(stGroupAction.getNode().getProperty("methods"));
+               stGroupAction.setMethods(newSTValue(stGroupAction.getNode().getProperty("methods").toString()));
+               stGroupAction.getNode().removeProperty("methods");
+            }
+
+         });
+
          findAllSTParameter().forEach(stParameter -> {
             if (stParameter.getArgumentType() != null) return;
             System.out.println(stParameter.getUuid() + " " + stParameter.getName() + " adding Object argument type");
@@ -90,7 +106,7 @@ public class STModelDB extends STModelNeoFactory {
          });
 
          findAllSTParameterKey().forEach(stParameterKey -> {
-            if(stParameterKey.getArgumentType()!=null) return;
+            if (stParameterKey.getArgumentType() != null) return;
             System.out.println("ParameterKey " + stParameterKey.getUuid() + " " + stParameterKey.getName() + " adding Object argument type");
             stParameterKey.setArgumentType("Object");
          });

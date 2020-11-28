@@ -28,9 +28,9 @@ public class STParameter {
 	private static final String _uuid = "uuid";
 
 	public STParameter setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STParameter {
 	private static final String _name = "name";
 
 	public STParameter setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;
@@ -145,9 +145,9 @@ public class STParameter {
 	private static final String _argumentType = "argumentType";
 
 	public STParameter setArgumentType(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeArgumentType(); 
-		else {
+		} else {
 		 	node.setProperty(_argumentType, value);
 		}
 		return this;

@@ -28,9 +28,9 @@ public class STGroupModel {
 	private static final String _uuid = "uuid";
 
 	public STGroupModel setUuid(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeUuid(); 
-		else {
+		} else {
 		 	node.setProperty(_uuid, value);
 		}
 		return this;
@@ -58,9 +58,9 @@ public class STGroupModel {
 	private static final String _name = "name";
 
 	public STGroupModel setName(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeName(); 
-		else {
+		} else {
 		 	node.setProperty(_name, value);
 		}
 		return this;
@@ -88,9 +88,9 @@ public class STGroupModel {
 	private static final String _delimiter = "delimiter";
 
 	public STGroupModel setDelimiter(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeDelimiter(); 
-		else {
+		} else {
 		 	node.setProperty(_delimiter, value);
 		}
 		return this;
@@ -118,9 +118,9 @@ public class STGroupModel {
 	private static final String _icon = "icon";
 
 	public STGroupModel setIcon(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeIcon(); 
-		else {
+		} else {
 		 	node.setProperty(_icon, value);
 		}
 		return this;
@@ -148,9 +148,9 @@ public class STGroupModel {
 	private static final String _tags = "tags";
 
 	public STGroupModel setTags(String value) { 
-		if (value == null) 
+		if (value == null) {
 			removeTags(); 
-		else {
+		} else {
 		 	node.setProperty(_tags, value);
 		}
 		return this;

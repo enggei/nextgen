@@ -161,8 +161,14 @@ public class STAppPresentationModel {
       return s.substring(0, Math.min(s.length(), maxLength));
    }
 
+   public String render(STValue stValue, String defaultValue) {
+      final String render = stRenderer.render(stValue);
+      return render==null ? defaultValue : render;
+   }
+
    public String render(STValue stValue) {
-      return stRenderer.render(stValue);
+      final String render = stRenderer.render(stValue);
+      return render;
    }
 
    public String render(STValue stValue, int maxLength) {
