@@ -29,6 +29,4 @@ logs
 # Default local DBs
 db_template
 db_domain
-/db/
-
-components/core/target
+db
