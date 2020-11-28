@@ -1,4 +1,4 @@
-package nextgen.swing.layout;
+package nextgen.swing.canvas;
 
 public class CircleLayout<T> {
 
