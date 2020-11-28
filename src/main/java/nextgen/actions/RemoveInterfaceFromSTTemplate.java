@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class RemoveInterfaceFromSTTemplate extends TransactionAction {
+public class RemoveInterfaceFromSTTemplate extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddFileSink extends TransactionAction {
+public class AddFileSink extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STModel stModel;

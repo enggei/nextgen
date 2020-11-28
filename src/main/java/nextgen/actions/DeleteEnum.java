@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class DeleteEnum extends TransactionAction {
+public class DeleteEnum extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STEnum stEnum;

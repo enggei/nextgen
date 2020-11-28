@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class NewInterface extends TransactionAction {
+public class NewInterface extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

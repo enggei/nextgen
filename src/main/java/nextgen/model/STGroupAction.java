@@ -85,6 +85,36 @@ public class STGroupAction {
 		return this;
 	}
 
+	private static final String _crc = "crc";
+
+	public STGroupAction setCrc(String value) { 
+		if (value == null) 
+			removeCrc(); 
+		else {
+		 	node.setProperty(_crc, value);
+		}
+		return this;
+	}
+
+	public String getCrc() { 
+		if (node.hasProperty(_crc)) return (String) node.getProperty(_crc);
+		return null;
+	}
+
+	public String getCrc(String defaultValue) { 
+		if (node.hasProperty(_crc)) return (String) node.getProperty(_crc);
+		return defaultValue;
+	}
+
+	public boolean hasCrc() { 
+		return node.hasProperty(_crc);
+	}
+
+	public STGroupAction removeCrc() { 
+		node.removeProperty(_crc);
+		return this;
+	}
+
 	private static final String _statements = "statements";
 
 	public STGroupAction setStatements(String value) { 

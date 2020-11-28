@@ -620,6 +620,20 @@ public class STModelNeoFactory {
 		return db.findNodes(STGroupActionLabel, "name", value).stream().map(this::newSTGroupAction);
 	}
 
+	public STGroupAction findSTGroupActionByCrc(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "crc", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTGroupAction(node);
+	}
+
+	public STGroupAction findOrCreateSTGroupActionByCrc(String value) {
+		final STGroupAction existing = findSTGroupActionByCrc(value);
+		return existing == null ? newSTGroupAction().setCrc(value) : existing;
+	}
+
+	public java.util.stream.Stream<STGroupAction> findAllSTGroupActionByCrc(String value) {
+		return db.findNodes(STGroupActionLabel, "crc", value).stream().map(this::newSTGroupAction);
+	}
+
 	public STGroupAction findSTGroupActionByStatements(String value) {
 		final org.neo4j.graphdb.Node node = db.findNodes(STGroupActionLabel, "statements", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupAction(node);

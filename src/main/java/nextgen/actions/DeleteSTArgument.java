@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class DeleteSTArgument extends TransactionAction {
+public class DeleteSTArgument extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STArgument stArgument;

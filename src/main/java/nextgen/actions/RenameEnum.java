@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class RenameEnum extends TransactionAction {
+public class RenameEnum extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STEnum stEnum;

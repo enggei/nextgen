@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class RenameSTGroup extends TransactionAction {
+public class RenameSTGroup extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

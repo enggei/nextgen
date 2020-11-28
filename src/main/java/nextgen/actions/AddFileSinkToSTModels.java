@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddFileSinkToSTModels extends TransactionAction {
+public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STTemplate stTemplate;

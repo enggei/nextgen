@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class NewProject extends TransactionAction {
+public class NewProject extends nextgen.actions.TransactionAction {
 
 
    private final javax.swing.JComponent owner;

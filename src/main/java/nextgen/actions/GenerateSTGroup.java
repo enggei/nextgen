@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class GenerateSTGroup extends TransactionAction {
+public class GenerateSTGroup extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

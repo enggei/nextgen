@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddMultipleValuesToProject extends TransactionAction {
+public class AddMultipleValuesToProject extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STProject project;

@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetArgumentFromClipboard extends TransactionAction {
+public class SetArgumentFromClipboard extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STModel stModel;

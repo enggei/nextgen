@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class EditSTGroupTags extends TransactionAction {
+public class EditSTGroupTags extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

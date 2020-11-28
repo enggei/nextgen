@@ -19,7 +19,7 @@ import static nextgen.templates.JavaPatterns.*;
 
 public class NextgenProject {
 
-   static final File root = new File("/home/goe/projects/nextgen/components/core");
+   static final File root = new File("/home/goe/projects/nextgen");
    static final File mainJava = new File(root, "src/main/java");
 
    static final PackageDeclaration corePackage = newPackageDeclaration("nextgen");
@@ -28,7 +28,7 @@ public class NextgenProject {
    static final PackageDeclaration canvasPackage = newPackageDeclaration(stPackage, "canvas");
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
-   static final PackageDeclaration stModelPackage = newPackageDeclaration(stPackage, "model");
+   static final PackageDeclaration stModelPackage = newPackageDeclaration(corePackage, "model");
    /**
     * generateSTModelDomain
     */
@@ -101,6 +101,7 @@ public class NextgenProject {
             .newEntityWithUuid("STGroupAction")
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name"))
+            .addRelations(DomainPatterns.newStringField("crc"))
             .addRelations(DomainPatterns.newStringField("statements"))
             .addRelations(DomainPatterns.newStringField("methods"));
 

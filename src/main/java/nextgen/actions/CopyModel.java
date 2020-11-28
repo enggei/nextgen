@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class CopyModel extends TransactionAction {
+public class CopyModel extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STModel stModel;

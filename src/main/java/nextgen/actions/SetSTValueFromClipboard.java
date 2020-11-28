@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetSTValueFromClipboard extends TransactionAction {
+public class SetSTValueFromClipboard extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STValue stValue;

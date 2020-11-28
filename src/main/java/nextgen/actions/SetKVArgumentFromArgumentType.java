@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetKVArgumentFromArgumentType extends TransactionAction {
+public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STModel stModel;

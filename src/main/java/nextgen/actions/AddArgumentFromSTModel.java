@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddArgumentFromSTModel extends TransactionAction {
+public class AddArgumentFromSTModel extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STModel stModel;

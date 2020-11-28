@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class DeleteSTInterface extends TransactionAction {
+public class DeleteSTInterface extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STInterface stInterface;

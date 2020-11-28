@@ -2,6 +2,8 @@ package nextgen.actions;
 
 public class RunAction extends nextgen.actions.TransactionAction {
 
+   private static final java.util.Map<String, String> actions = new java.util.LinkedHashMap<>();
+   private static final java.util.Map<String, String> actionNames = new java.util.LinkedHashMap<>();
 
    private final nextgen.model.STGroupAction action;
    private final javax.swing.JComponent owner;
@@ -14,33 +16,42 @@ public class RunAction extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final String packageName = "tmp.actions";
-      final String currentClassName = action.getName() + "_" + System.currentTimeMillis();
-      final String className = packageName + "." + currentClassName;
-
       try {
-         final Class<?> workClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(className, asSource(packageName, currentClassName));
-         final nextgen.actions.TransactionAction transactionAction = (nextgen.actions.TransactionAction) workClass.getDeclaredConstructor(javax.swing.JComponent.class).newInstance(owner);
-         transactionAction.actionPerformed(actionEvent);
+         final nextgen.templates.nextgen.TransactionAction source = asSource();
+         final String className = source.getPackageName() + "." + source.getName().toString();
+         final Class<?> aClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(className, source.toString());
+         final nextgen.actions.TransactionAction action = (nextgen.actions.TransactionAction) aClass.getDeclaredConstructor(javax.swing.JComponent.class).newInstance(owner);
+         action.actionPerformed(actionEvent);
       } catch (Throwable e) {
          throw new RuntimeException(e);
       }
    }
 
-   private String asSource(String packageName, String currentClassName) {
+   private nextgen.templates.nextgen.TransactionAction asSource() {
+
+      final String packageName = "tmp.actions";
 
       final nextgen.templates.nextgen.TransactionAction transactionAction = nextgen.templates.nextgen.NextgenST.newTransactionAction()
             .setPackageName(packageName)
-            .setName(currentClassName)
             .setTitle(action.getName())
             .addFields("owner", "javax.swing.JComponent")
             .addStatements(action.getStatements())
             .addMethods(action.getMethods());
 
-   	final java.io.File file = new java.io.File(appModel().getOutputPath());
-      nextgen.st.STGenerator.writeJavaFile(transactionAction, packageName, currentClassName, file);
-      file.deleteOnExit();
+      final String current = transactionAction.toString();
 
-      return transactionAction.toString();
+      if (!actions.containsKey(action.getUuid()) || !actions.get(action.getUuid()).equals(current)) {
+         transactionAction.setName(action.getName() + "_" + System.currentTimeMillis());
+         actions.put(action.getUuid(), current);
+         actionNames.put(action.getUuid(), transactionAction.getName().toString());
+         
+         final java.io.File file = new java.io.File(appModel().getOutputPath());
+         nextgen.st.STGenerator.writeJavaFile(transactionAction, packageName, transactionAction.getName().toString(), file);
+         file.deleteOnExit();
+      } else {
+         transactionAction.setName(actionNames.get(action.getUuid()));
+      }
+
+      return transactionAction;
    }
 }

@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetSTValueFromInput extends TransactionAction {
+public class SetSTValueFromInput extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STValue stValue;

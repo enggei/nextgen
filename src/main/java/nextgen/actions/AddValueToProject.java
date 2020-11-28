@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddValueToProject extends TransactionAction {
+public class AddValueToProject extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STProject project;

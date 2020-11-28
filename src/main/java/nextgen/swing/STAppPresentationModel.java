@@ -265,7 +265,7 @@ public class STAppPresentationModel {
    }
 
    public String getOutputPath() {
-      return "./components/core/src/main/java";
+      return "./src/main/java";
    }
 
    public String getSourceOutputPackage() {

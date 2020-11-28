@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class RenameSTInterface extends TransactionAction {
+public class RenameSTInterface extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STInterface stInterface;

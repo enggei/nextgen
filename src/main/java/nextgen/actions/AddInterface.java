@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddInterface extends TransactionAction {
+public class AddInterface extends nextgen.actions.TransactionAction {
 
 
    private final java.util.Set<nextgen.model.STTemplate> children;

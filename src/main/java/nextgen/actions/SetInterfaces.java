@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetInterfaces extends TransactionAction {
+public class SetInterfaces extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;

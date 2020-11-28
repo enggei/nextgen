@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class AddChildToTemplate extends TransactionAction {
+public class AddChildToTemplate extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STTemplate stTemplate;

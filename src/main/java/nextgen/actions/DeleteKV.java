@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class DeleteKV extends TransactionAction {
+public class DeleteKV extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STArgumentKV argumentKV;

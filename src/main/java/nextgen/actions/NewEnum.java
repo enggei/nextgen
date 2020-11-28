@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class NewEnum extends TransactionAction {
+public class NewEnum extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;
@@ -14,12 +14,12 @@ public class NewEnum extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-input(owner, "New Enum", s ->
-		nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
-			final nextgen.model.STEnum stEnum = appModel().db.newSTEnum().setName(s);
-			stGroup.addEnums(stEnum);
-			nextgen.events.NewSTEnum.post(stGroup, stEnum);
-		}));
+      input(owner, "New Enum", s ->
+      		nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
+      			final nextgen.model.STEnum stEnum = appModel().db.newSTEnum().setName(s);
+      			stGroup.addEnums(stEnum);
+      			nextgen.events.NewSTEnum.post(stGroup, stEnum);
+      		}));
    }
 
 }

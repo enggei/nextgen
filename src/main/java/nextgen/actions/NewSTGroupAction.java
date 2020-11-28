@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class NewSTGroupAction extends TransactionAction {
+public class NewSTGroupAction extends nextgen.actions.TransactionAction {
 
 
    private final javax.swing.JComponent owner;

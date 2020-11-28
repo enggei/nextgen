@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class RenameSTTemplate extends TransactionAction {
+public class RenameSTTemplate extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STTemplate stTemplate;

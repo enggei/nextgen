@@ -538,10 +538,10 @@ public class STModelNavigator extends JPanel {
 
 				stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add New " + stNode.getName(), stNode, getModel())));
 
-				for (nextgen.model.STModel selected : selectedSTModels)
+				for (nextgen.model.STModel selected : selectedSTModels) 
 					actions.add(new nextgen.actions.AddModelToProject(getModel(), selected));
 
-				for (nextgen.model.STValue selected : selectedSTValues)
+				for (nextgen.model.STValue selected : selectedSTValues) 
 					actions.add(new nextgen.actions.AddValueToProject(getModel(), selected));
 				actions.add(new nextgen.actions.ChangeRootOnAllModels(getModel(), tree));
 				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), tree));

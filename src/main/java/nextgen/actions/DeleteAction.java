@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class DeleteAction extends TransactionAction {
+public class DeleteAction extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupAction stAction;

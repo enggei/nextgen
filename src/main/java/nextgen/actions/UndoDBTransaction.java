@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class UndoDBTransaction extends TransactionAction {
+public class UndoDBTransaction extends nextgen.actions.TransactionAction {
 
 
 

@@ -1,6 +1,6 @@
 package nextgen.actions;
 
-public class SetTemplateParameterTypes extends TransactionAction {
+public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction {
 
 
    private final nextgen.model.STGroupModel stGroup;
