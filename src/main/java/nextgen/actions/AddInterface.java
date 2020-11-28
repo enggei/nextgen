@@ -3,10 +3,10 @@ package nextgen.actions;
 public class AddInterface extends TransactionAction {
 
 
-   private final java.util.Set<nextgen.st.model.STTemplate> children;
+   private final java.util.Set<nextgen.model.STTemplate> children;
    private final javax.swing.JComponent owner;
 
-	public AddInterface(String name, java.util.Set<nextgen.st.model.STTemplate> children, javax.swing.JComponent owner) {
+	public AddInterface(String name, java.util.Set<nextgen.model.STTemplate> children, javax.swing.JComponent owner) {
       super(name);
       this.children = children;
       this.owner = owner;
@@ -22,7 +22,7 @@ public class AddInterface extends TransactionAction {
       showDialog(owner, contentPanel, "Add interface", jDialog -> {
          final String interfaceName = txtImplements.getText().trim();
          if (interfaceName.length()==0) return;
-         for (nextgen.st.model.STTemplate child : children) {
+         for (nextgen.model.STTemplate child : children) {
             final java.util.Optional<String> optional = child.getImplements().filter(s -> s.toLowerCase().equals(interfaceName.toLowerCase())).findAny();
             if(optional.isPresent()) continue;
             child.addImplements(interfaceName);

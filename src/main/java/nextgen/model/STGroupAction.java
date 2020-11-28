@@ -1,10 +1,10 @@
-package nextgen.st.model;
+package nextgen.model;
 
-public class STEnumValue {
+public class STGroupAction {
 
 	private final org.neo4j.graphdb.Node node;
 
-	public STEnumValue(org.neo4j.graphdb.Node node) { 
+	public STGroupAction(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 	}
 
@@ -16,7 +16,7 @@ public class STEnumValue {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STEnumValue other = (STEnumValue) o;
+		final STGroupAction other = (STGroupAction) o;
 		return node.equals(other.node);
 	}
 
@@ -27,7 +27,7 @@ public class STEnumValue {
 
 	private static final String _uuid = "uuid";
 
-	public STEnumValue setUuid(String value) { 
+	public STGroupAction setUuid(String value) { 
 		if (value == null) 
 			removeUuid(); 
 		else {
@@ -50,14 +50,14 @@ public class STEnumValue {
 		return node.hasProperty(_uuid);
 	}
 
-	public STEnumValue removeUuid() { 
+	public STGroupAction removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
 
 	private static final String _name = "name";
 
-	public STEnumValue setName(String value) { 
+	public STGroupAction setName(String value) { 
 		if (value == null) 
 			removeName(); 
 		else {
@@ -80,47 +80,73 @@ public class STEnumValue {
 		return node.hasProperty(_name);
 	}
 
-	public STEnumValue removeName() { 
+	public STGroupAction removeName() { 
 		node.removeProperty(_name);
 		return this;
 	}
 
-	private static final String _lexical = "lexical";
+	private static final String _statements = "statements";
 
-	public STEnumValue setLexical(String value) { 
+	public STGroupAction setStatements(String value) { 
 		if (value == null) 
-			removeLexical(); 
+			removeStatements(); 
 		else {
-		 	node.setProperty(_lexical, value);
+		 	node.setProperty(_statements, value);
 		}
 		return this;
 	}
 
-	public String getLexical() { 
-		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
+	public String getStatements() { 
+		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
 		return null;
 	}
 
-	public String getLexical(String defaultValue) { 
-		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
+	public String getStatements(String defaultValue) { 
+		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
 		return defaultValue;
 	}
 
-	public boolean hasLexical() { 
-		return node.hasProperty(_lexical);
+	public boolean hasStatements() { 
+		return node.hasProperty(_statements);
 	}
 
-	public STEnumValue removeLexical() { 
-		node.removeProperty(_lexical);
+	public STGroupAction removeStatements() { 
+		node.removeProperty(_statements);
 		return this;
 	}
 
-	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
+	private static final String _methods = "methods";
+
+	public STGroupAction setMethods(String value) { 
+		if (value == null) 
+			removeMethods(); 
+		else {
+		 	node.setProperty(_methods, value);
+		}
+		return this;
 	}
 
-	public java.util.stream.Stream<STValue> getIncomingStEnumValueSTValue() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stEnumValue")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
+	public String getMethods() { 
+		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
+		return null;
+	}
+
+	public String getMethods(String defaultValue) { 
+		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
+		return defaultValue;
+	}
+
+	public boolean hasMethods() { 
+		return node.hasProperty(_methods);
+	}
+
+	public STGroupAction removeMethods() { 
+		node.removeProperty(_methods);
+		return this;
+	}
+
+	public java.util.stream.Stream<STGroupModel> getIncomingActionsSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("actions")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       add(jScrollPane, java.awt.BorderLayout.CENTER);
    }
 
-   protected abstract java.util.stream.Stream<nextgen.st.model.STModel> getSTModels();
+   protected abstract java.util.stream.Stream<nextgen.model.STModel> getSTModels();
 
    private java.awt.event.MouseListener getSearchFieldMouseListener(javax.swing.JTextField txtSearch) {
       return new java.awt.event.MouseAdapter() {
@@ -81,14 +81,14 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
             });
          }
 
-         private void addSTValues(nextgen.st.model.STModel stModel, java.util.List<STValueElement> stValues) {
+         private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
 
             stModel.getArguments()
                   .filter(stArgument -> stArgument.getValue() != null)
-                  .map(nextgen.st.model.STArgument::getValue)
+                  .map(nextgen.model.STArgument::getValue)
                   .filter(stValue -> stValue.getType() != null)
-                  .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-                  .filter(nextgen.st.model.STValue::hasValue)
+                  .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+                  .filter(nextgen.model.STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                   .map(STValueElement::new)
                   .forEach(stValues::add);
@@ -96,10 +96,10 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
             stModel.getArguments()
                   .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
                         .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                        .map(nextgen.st.model.STArgumentKV::getValue)
+                        .map(nextgen.model.STArgumentKV::getValue)
                         .filter(stValue -> stValue.getType() != null)
-                        .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-                        .filter(nextgen.st.model.STValue::hasValue)
+                        .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+                        .filter(nextgen.model.STValue::hasValue)
                         .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                         .map(STValueElement::new)
                         .collect(java.util.stream.Collectors.toList())));
@@ -107,17 +107,17 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
             stModel.getArguments()
                   .forEach(stArgument -> stArgument.getKeyValues()
                         .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                        .map(nextgen.st.model.STArgumentKV::getValue)
+                        .map(nextgen.model.STArgumentKV::getValue)
                         .filter(stValue -> stValue.getType() != null)
-                        .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                        .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                         .filter(stValue -> stValue.getStModel() != null)
                         .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
             stModel.getArguments()
                   .filter(stArgument -> stArgument.getValue() != null)
-                  .map(nextgen.st.model.STArgument::getValue)
+                  .map(nextgen.model.STArgument::getValue)
                   .filter(stValue -> stValue.getType() != null)
-                  .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                  .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                   .filter(stValue -> stValue.getStModel() != null)
                   .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
          }
@@ -152,10 +152,10 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
    protected final class STValueElement {
 
-      private final nextgen.st.model.STValue stValue;
+      private final nextgen.model.STValue stValue;
       private String text;
 
-      protected STValueElement(nextgen.st.model.STValue stValue) {
+      protected STValueElement(nextgen.model.STValue stValue) {
          this.stValue = stValue;
          this.text = appModel().render(stValue);
       }

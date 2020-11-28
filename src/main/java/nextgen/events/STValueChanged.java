@@ -4,14 +4,14 @@ public final class STValueChanged {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STValueChanged.class);
 
-	public static void post(nextgen.st.model.STValue value) {
+	public static void post(nextgen.model.STValue value) {
 		//log.info("post STValueChanged");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STValueChanged(value));
 	}
 
-	public final nextgen.st.model.STValue value;
+	public final nextgen.model.STValue value;
 
-	public STValueChanged(nextgen.st.model.STValue value) {
+	public STValueChanged(nextgen.model.STValue value) {
 		this.value = value;
 	}
 }

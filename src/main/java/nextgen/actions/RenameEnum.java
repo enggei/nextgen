@@ -3,11 +3,11 @@ package nextgen.actions;
 public class RenameEnum extends TransactionAction {
 
 
-   private final nextgen.st.model.STEnum stEnum;
-   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.model.STEnum stEnum;
+   private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public RenameEnum(nextgen.st.model.STEnum stEnum, nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public RenameEnum(nextgen.model.STEnum stEnum, nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Rename");
 		this.stEnum = stEnum;
 		this.stGroup = stGroup;

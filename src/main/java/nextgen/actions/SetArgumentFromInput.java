@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetArgumentFromInput extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STParameter stParameter;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STParameter stParameter;
    private final javax.swing.JComponent owner;
 
-	public SetArgumentFromInput(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, javax.swing.JComponent owner) {
+	public SetArgumentFromInput(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, javax.swing.JComponent owner) {
 		super("Set from Input");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
@@ -23,13 +23,13 @@ public class SetArgumentFromInput extends TransactionAction {
                .ifPresent(stArgument -> {
                   final String uuid = stArgument.getUuid();
                   stModel.removeArguments(stArgument);
-                  stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
+                  stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
                   stArgument.delete();
                   nextgen.events.STArgumentDeleted.post(stModel, uuid);
                });
          
-         final nextgen.st.model.STValue stValue = appModel().db.newSTValue(inputValue);
-         final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+         final nextgen.model.STValue stValue = appModel().db.newSTValue(inputValue);
+         final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
          stModel.addArguments(stArgument);
          nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
          if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);

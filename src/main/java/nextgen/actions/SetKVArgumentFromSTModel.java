@@ -3,12 +3,12 @@ package nextgen.actions;
 public class SetKVArgumentFromSTModel extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STArgument stArgument;
-   private final nextgen.st.model.STParameterKey stParameterKey;
-   private final nextgen.st.model.STModel value;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STArgument stArgument;
+   private final nextgen.model.STParameterKey stParameterKey;
+   private final nextgen.model.STModel value;
 
-	public SetKVArgumentFromSTModel(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey, nextgen.st.model.STModel value) {
+	public SetKVArgumentFromSTModel(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STModel value) {
 		super("Set " + stParameterKey.getName() + " from STModel");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
@@ -28,8 +28,8 @@ public class SetKVArgumentFromSTModel extends TransactionAction {
                nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
             });
 
-      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
-      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
+      final nextgen.model.STValue stValue = appModel().db.newSTValue(value);
+      final nextgen.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
       stArgument.addKeyValues(stArgumentKV);
 
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);

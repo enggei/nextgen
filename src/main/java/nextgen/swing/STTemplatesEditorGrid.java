@@ -3,9 +3,9 @@ package nextgen.swing;
 public class STTemplatesEditorGrid extends SearchReplaceEditor {
 
    private final String uuid;
-   private final nextgen.st.model.STTemplate model;
+   private final nextgen.model.STTemplate model;
 
-   public STTemplatesEditorGrid(nextgen.st.model.STTemplate model) {
+   public STTemplatesEditorGrid(nextgen.model.STTemplate model) {
       super();
 
       this.model = model;
@@ -13,7 +13,7 @@ public class STTemplatesEditorGrid extends SearchReplaceEditor {
    }
 
    @Override
-   protected java.util.stream.Stream<nextgen.st.model.STModel> getSTModels() {
+   protected java.util.stream.Stream<nextgen.model.STModel> getSTModels() {
       return model.getIncomingStTemplateSTModel();
    }
 
@@ -21,7 +21,7 @@ public class STTemplatesEditorGrid extends SearchReplaceEditor {
       return uuid;
    }
 
-   public nextgen.st.model.STTemplate getModel() {
+   public nextgen.model.STTemplate getModel() {
       return model;
    }
 }

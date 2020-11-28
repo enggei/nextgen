@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetArgumentFromSTModelUuid extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STParameter stParameter;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STParameter stParameter;
    private final String uuid;
 
-	public SetArgumentFromSTModelUuid(String name, nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, String uuid) {
+	public SetArgumentFromSTModelUuid(String name, nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, String uuid) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;
@@ -22,13 +22,13 @@ public class SetArgumentFromSTModelUuid extends TransactionAction {
             .ifPresent(stArgument -> {
                final String uuid = stArgument.getUuid();
                stModel.removeArguments(stArgument);
-               stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
+               stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
                stArgument.delete();
                nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
-      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+      final nextgen.model.STValue stValue = appModel().db.newSTValue(appModel().db.cloneSTModel(uuid));
+      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }

@@ -3,9 +3,9 @@ package nextgen.actions;
 public class GenerateAllProjectModels extends TransactionAction {
 
 
-   private final nextgen.st.model.STProject project;
+   private final nextgen.model.STProject project;
 
-	public GenerateAllProjectModels(nextgen.st.model.STProject project) {
+	public GenerateAllProjectModels(nextgen.model.STProject project) {
 		super("Generate all");
 		this.project = project;
 	}

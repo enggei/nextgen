@@ -1,10 +1,10 @@
-package nextgen.st.model;
+package nextgen.model;
 
-public class STEnum {
+public class STParameterKey {
 
 	private final org.neo4j.graphdb.Node node;
 
-	public STEnum(org.neo4j.graphdb.Node node) { 
+	public STParameterKey(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 	}
 
@@ -16,7 +16,7 @@ public class STEnum {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STEnum other = (STEnum) o;
+		final STParameterKey other = (STParameterKey) o;
 		return node.equals(other.node);
 	}
 
@@ -27,7 +27,7 @@ public class STEnum {
 
 	private static final String _uuid = "uuid";
 
-	public STEnum setUuid(String value) { 
+	public STParameterKey setUuid(String value) { 
 		if (value == null) 
 			removeUuid(); 
 		else {
@@ -50,14 +50,14 @@ public class STEnum {
 		return node.hasProperty(_uuid);
 	}
 
-	public STEnum removeUuid() { 
+	public STParameterKey removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
 
 	private static final String _name = "name";
 
-	public STEnum setName(String value) { 
+	public STParameterKey setName(String value) { 
 		if (value == null) 
 			removeName(); 
 		else {
@@ -80,42 +80,47 @@ public class STEnum {
 		return node.hasProperty(_name);
 	}
 
-	public STEnum removeName() { 
+	public STParameterKey removeName() { 
 		node.removeProperty(_name);
 		return this;
 	}
 
-	private static final org.neo4j.graphdb.RelationshipType _values = org.neo4j.graphdb.RelationshipType.withName("values");
+	private static final String _argumentType = "argumentType";
 
-	public STEnum addValues(STEnumValue dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _values);
-		relationship.setProperty("_t", System.nanoTime());
+	public STParameterKey setArgumentType(String value) { 
+		if (value == null) 
+			removeArgumentType(); 
+		else {
+		 	node.setProperty(_argumentType, value);
+		}
 		return this;
 	}
 
-	public java.util.stream.Stream<STEnumValue> getValues() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).map((relationship) -> new STEnumValue(relationship.getOtherNode(node)));
+	public String getArgumentType() { 
+		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+		return null;
 	}
 
-	public java.util.stream.Stream<STEnumValue> getValuesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STEnumValue(relationship.getOtherNode(node)));
+	public String getArgumentType(String defaultValue) { 
+		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+		return defaultValue;
 	}
 
-	public STEnum removeValues(STEnumValue dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+	public boolean hasArgumentType() { 
+		return node.hasProperty(_argumentType);
+	}
+
+	public STParameterKey removeArgumentType() { 
+		node.removeProperty(_argumentType);
 		return this;
 	}
 
-	public STEnum removeAllValues() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _values).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
+	public java.util.stream.Stream<STParameter> getIncomingKeysSTParameter() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("keys")).spliterator(), false).map((relationship) -> new STParameter(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<STGroupModel> getIncomingEnumsSTGroupModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("enums")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STArgumentKV> getIncomingStParameterKeySTArgumentKV() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stParameterKey")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
 	}
 
 	@Override
@@ -141,10 +146,6 @@ public class STEnum {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		final io.vertx.core.json.JsonArray _values = new io.vertx.core.json.JsonArray();
-		getValues().forEach(element -> _values.add(element.toJsonObject()));
-		if (!_values.isEmpty()) jsonObject.put("values", _values);
-
 		return jsonObject;
 	}
 

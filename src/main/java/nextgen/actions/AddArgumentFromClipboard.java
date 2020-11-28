@@ -3,10 +3,10 @@ package nextgen.actions;
 public class AddArgumentFromClipboard extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STParameter stParameter;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STParameter stParameter;
 
-	public AddArgumentFromClipboard(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter) {
+	public AddArgumentFromClipboard(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
 		super("Add from Clipboard");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
@@ -14,8 +14,8 @@ public class AddArgumentFromClipboard extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+      final nextgen.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
+      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }

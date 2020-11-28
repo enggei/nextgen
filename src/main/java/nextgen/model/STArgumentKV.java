@@ -1,4 +1,4 @@
-package nextgen.st.model;
+package nextgen.model;
 
 public class STArgumentKV {
 

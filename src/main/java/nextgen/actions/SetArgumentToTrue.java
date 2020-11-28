@@ -3,10 +3,10 @@ package nextgen.actions;
 public class SetArgumentToTrue extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STParameter stParameter;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STParameter stParameter;
 
-	public SetArgumentToTrue(nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter) {
+	public SetArgumentToTrue(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
 		super("Set to true");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
@@ -20,13 +20,13 @@ public class SetArgumentToTrue extends TransactionAction {
             .ifPresent(stArgument -> {
                final String uuid = stArgument.getUuid();
                stModel.removeArguments(stArgument);
-               stArgument.getKeyValues().forEach(nextgen.st.model.STArgumentKV::delete);
+               stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
                stArgument.delete();
                nextgen.events.STArgumentDeleted.post(stModel, uuid);
             });
 
-      final nextgen.st.model.STValue stValue = appModel().db.newSTValue("true");
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+      final nextgen.model.STValue stValue = appModel().db.newSTValue("true");
+      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }

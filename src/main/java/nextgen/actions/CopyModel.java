@@ -3,9 +3,9 @@ package nextgen.actions;
 public class CopyModel extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
+   private final nextgen.model.STModel stModel;
 
-	public CopyModel(nextgen.st.model.STModel stModel) {
+	public CopyModel(nextgen.model.STModel stModel) {
 		super("Copy Model");
 		this.stModel = stModel;
 	}

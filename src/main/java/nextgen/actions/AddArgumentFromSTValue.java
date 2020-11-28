@@ -3,11 +3,11 @@ package nextgen.actions;
 public class AddArgumentFromSTValue extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STParameter stParameter;
-   private final nextgen.st.model.STValue stValue;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STParameter stParameter;
+   private final nextgen.model.STValue stValue;
 
-	public AddArgumentFromSTValue(String name, nextgen.st.model.STModel stModel, nextgen.st.model.STParameter stParameter, nextgen.st.model.STValue stValue) {
+	public AddArgumentFromSTValue(String name, nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STValue stValue) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;
@@ -16,7 +16,7 @@ public class AddArgumentFromSTValue extends TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.st.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
+      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
    }

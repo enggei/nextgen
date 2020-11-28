@@ -3,11 +3,11 @@ package nextgen.actions;
 public class SetKVArgumentFromClipboard extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
-   private final nextgen.st.model.STArgument stArgument;
-   private final nextgen.st.model.STParameterKey stParameterKey;
+   private final nextgen.model.STModel stModel;
+   private final nextgen.model.STArgument stArgument;
+   private final nextgen.model.STParameterKey stParameterKey;
 
-	public SetKVArgumentFromClipboard(nextgen.st.model.STModel stModel, nextgen.st.model.STArgument stArgument, nextgen.st.model.STParameterKey stParameterKey) {
+	public SetKVArgumentFromClipboard(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey) {
 		super("Set " + stParameterKey.getName() + " from Clipboard");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
@@ -26,8 +26,8 @@ public class SetKVArgumentFromClipboard extends TransactionAction {
                nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
             });
 
-      final nextgen.st.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-      final nextgen.st.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
+      final nextgen.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
+      final nextgen.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
       stArgument.addKeyValues(stArgumentKV);
 
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);

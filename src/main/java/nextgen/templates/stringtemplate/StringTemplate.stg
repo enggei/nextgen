@@ -4,8 +4,8 @@ DomainVisitorRunner(packageName,imports,name,rootNode,initStatements,entityVisit
 
 import nextgen.domains.meta.DomainEntity;
 import nextgen.st.STRenderer;
-import nextgen.st.model.STGroupModel;
-import nextgen.st.model.STModelDB;
+import nextgen.model.STGroupModel;
+import nextgen.model.STModelDB;
 import org.neo4j.graphdb.*;
 
 import java.util.*;
@@ -61,7 +61,7 @@ public class ~name~ implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
+		final nextgen.model.STModelDB db = new nextgen.model.STModelDB("~dbDir~", "~templatesDir~");
 		final new nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
 		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label("DomainEntity"), "uuid", "~entityUuid~")));
 		new Thread(new ~name~(db, renderer, domainEntity)).start();
@@ -94,7 +94,7 @@ VisitRelationMethod(name,properties,statements,dst) ::= <<void visit~name;format
 
 NeoDomain(package,name,entities,finders) ::= <<package ~package~;
 
-import nextgen.st.model.*;
+import nextgen.model.*;
 import org.neo4j.graphdb.Node;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -136,7 +136,7 @@ public class ~name;format="capitalize"~ {
 
 NeoEntity(package,name,stGroupModel,stTemplate,singleAccessors,listAccessors,kvAccessors) ::= <<package ~package~;
 
-import nextgen.st.model.*;
+import nextgen.model.*;
 import nextgen.st.domain.*;
 
 import java.util.ArrayList;
@@ -402,10 +402,10 @@ ScriptRunner(packageName,imports,name,script,dbDir,templatesDir) ::= <<package ~
 public class ~name~ implements Runnable {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
-	private final nextgen.st.model.STModelDB db;
+	private final nextgen.model.STModelDB db;
 	private final nextgen.st.STRenderer renderer;
 
-	public ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {
+	public ~name~(nextgen.model.STModelDB db, nextgen.st.STRenderer renderer) {
 		this.db = db;
 		this.renderer = renderer;
 	}
@@ -418,7 +418,7 @@ public class ~name~ implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("~dbDir~", "~templatesDir~");
+		final nextgen.model.STModelDB db = new nextgen.model.STModelDB("~dbDir~", "~templatesDir~");
 		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());
 		new Thread(new ~name~(db, renderer)).start();
 	}

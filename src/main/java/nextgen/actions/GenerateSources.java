@@ -3,10 +3,10 @@ package nextgen.actions;
 public class GenerateSources extends TransactionAction {
 
 
-   private final nextgen.st.model.STTemplate stTemplate;
-   private final java.util.List<nextgen.st.model.STModel> stModels;
+   private final nextgen.model.STTemplate stTemplate;
+   private final java.util.List<nextgen.model.STModel> stModels;
 
-	public GenerateSources(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels) {
+	public GenerateSources(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModels) {
 		super("As builder code");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;
@@ -30,7 +30,7 @@ public class GenerateSources extends TransactionAction {
             .setExpression(listVariable));
 
       java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
-      for (nextgen.st.model.STModel stModel : stModels) {
+      for (nextgen.model.STModel stModel : stModels) {
          final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.JavaPatterns
                .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
@@ -39,7 +39,7 @@ public class GenerateSources extends TransactionAction {
       }
 
       variableCount = new java.util.concurrent.atomic.AtomicInteger();
-      for (nextgen.st.model.STModel stModel : stModels) {
+      for (nextgen.model.STModel stModel : stModels) {
          final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
                .setExpression(nextgen.templates.JavaPatterns.newMethodCallExpression()

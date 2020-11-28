@@ -192,10 +192,10 @@ public class ScriptRunner {
 				"public class ~name~ implements Runnable {\n" + 
 				"\n" + 
 				"	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
-				"	private final nextgen.st.model.STModelDB db;\n" + 
+				"	private final nextgen.model.STModelDB db;\n" +
 				"	private final nextgen.st.STRenderer renderer;\n" + 
 				"\n" + 
-				"	public ~name~(nextgen.st.model.STModelDB db, nextgen.st.STRenderer renderer) {\n" + 
+				"	public ~name~(nextgen.model.STModelDB db, nextgen.st.STRenderer renderer) {\n" +
 				"		this.db = db;\n" + 
 				"		this.renderer = renderer;\n" + 
 				"	}\n" + 
@@ -208,7 +208,7 @@ public class ScriptRunner {
 				"	}\n" + 
 				"	\n" + 
 				"	public static void main(String[] args) {\n" + 
-				"		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" + 
+				"		final nextgen.model.STModelDB db = new nextgen.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" +
 				"		final nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());\n" + 
 				"		new Thread(new ~name~(db, renderer)).start();\n" + 
 				"	}\n" + 

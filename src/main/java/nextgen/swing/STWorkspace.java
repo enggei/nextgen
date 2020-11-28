@@ -48,7 +48,7 @@ public class STWorkspace extends JTabbedPane {
 		getSTProjectEditorGrid(event.stProject);
 	}
 
-	public java.util.stream.Stream<nextgen.st.model.STTemplate> getSelectedSTTemplates() {
+	public java.util.stream.Stream<nextgen.model.STTemplate> getSelectedSTTemplates() {
 		return getTemplateNavigator().getSelectedSTTemplates();
 	}
 
@@ -106,7 +106,7 @@ public class STWorkspace extends JTabbedPane {
 
 	// components
 
-	public nextgen.swing.STGroupActionEditor getSTGroupActionEditor(nextgen.st.model.STGroupAction model) {
+	public nextgen.swing.STGroupActionEditor getSTGroupActionEditor(nextgen.model.STGroupAction model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STGroupActionEditor && (((nextgen.swing.STGroupActionEditor) tabComponentAt).getModel().equals(model))) {
@@ -150,7 +150,7 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	public nextgen.swing.STModelEditor getModelEditor(nextgen.st.model.STModel model) {
+	public nextgen.swing.STModelEditor getModelEditor(nextgen.model.STModel model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STModelEditor && (((nextgen.swing.STModelEditor) tabComponentAt).getModel().equals(model))) {
@@ -175,7 +175,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STEditor getSTEditor(nextgen.st.model.STGroupModel model) {
+	public STEditor getSTEditor(nextgen.model.STGroupModel model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof STEditor && (((STEditor) tabComponentAt).getModel().equals(model))) {
@@ -200,7 +200,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public nextgen.swing.STFileEditor getSTFileEditor(nextgen.st.model.STFile model) {
+	public nextgen.swing.STFileEditor getSTFileEditor(nextgen.model.STFile model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STFileEditor && (((nextgen.swing.STFileEditor) tabComponentAt).getModel().equals(model))) {
@@ -244,7 +244,7 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	public nextgen.swing.STGroupFileEditor getSTGroupFileEditor(nextgen.st.model.STGroupFile model) {
+	public nextgen.swing.STGroupFileEditor getSTGroupFileEditor(nextgen.model.STGroupFile model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STGroupFileEditor && (((nextgen.swing.STGroupFileEditor) tabComponentAt).getModel().equals(model))) {
@@ -288,7 +288,7 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	public nextgen.swing.STProjectEditorGrid getSTProjectEditorGrid(nextgen.st.model.STProject model) {
+	public nextgen.swing.STProjectEditorGrid getSTProjectEditorGrid(nextgen.model.STProject model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) tabComponentAt).getModel().equals(model))) {
@@ -313,7 +313,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public nextgen.swing.STTemplatesEditorGrid getSTTemplatesEditorGrid(nextgen.st.model.STTemplate model) {
+	public nextgen.swing.STTemplatesEditorGrid getSTTemplatesEditorGrid(nextgen.model.STTemplate model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) tabComponentAt).getModel().equals(model))) {
@@ -338,7 +338,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public nextgen.swing.STParameterEditorGrid getSTParameterEditorGrid(nextgen.st.model.STParameter model) {
+	public nextgen.swing.STParameterEditorGrid getSTParameterEditorGrid(nextgen.model.STParameter model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof nextgen.swing.STParameterEditorGrid && (((nextgen.swing.STParameterEditorGrid) tabComponentAt).getModel().equals(model))) {

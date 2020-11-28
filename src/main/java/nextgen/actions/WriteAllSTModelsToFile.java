@@ -3,16 +3,16 @@ package nextgen.actions;
 public class WriteAllSTModelsToFile extends TransactionAction {
 
 
-   private final java.util.List<nextgen.st.model.STModel> stModels;
+   private final java.util.List<nextgen.model.STModel> stModels;
 
-	public WriteAllSTModelsToFile(java.util.List<nextgen.st.model.STModel> stModels) {
+	public WriteAllSTModelsToFile(java.util.List<nextgen.model.STModel> stModels) {
 		super("Generate All");
 		this.stModels = stModels;
 	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      for (nextgen.st.model.STModel stModel : stModels) {
+      for (nextgen.model.STModel stModel : stModels) {
          stModel.getFiles().forEach(stFile -> {
             final String content = appModel().render(stModel);
             final String packageDeclaration = stFile.getPackageName().getValue();

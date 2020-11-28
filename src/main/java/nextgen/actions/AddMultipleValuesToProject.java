@@ -3,10 +3,10 @@ package nextgen.actions;
 public class AddMultipleValuesToProject extends TransactionAction {
 
 
-   private final nextgen.st.model.STProject project;
+   private final nextgen.model.STProject project;
    private final javax.swing.JComponent owner;
 
-	public AddMultipleValuesToProject(nextgen.st.model.STProject project, javax.swing.JComponent owner) {
+	public AddMultipleValuesToProject(nextgen.model.STProject project, javax.swing.JComponent owner) {
 		super("Add Multiple Values");
 		this.project = project;
 		this.owner = owner;
@@ -30,7 +30,7 @@ public class AddMultipleValuesToProject extends TransactionAction {
          for (javax.swing.JTextField field : fields) {
             final String value = field.getText().trim();
             if(value.length()==0) continue;
-            final nextgen.st.model.STValue stValue = appModel().newSTValue(value);
+            final nextgen.model.STValue stValue = appModel().newSTValue(value);
             project.addValues(stValue);
             nextgen.events.NewSTProjectSTValue.post(stValue, project);   
          }

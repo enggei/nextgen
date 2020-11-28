@@ -3,10 +3,10 @@ package nextgen.actions;
 public class ImportSTTemplate extends TransactionAction {
 
 
-   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public ImportSTTemplate(nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public ImportSTTemplate(nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Import from stg-file");
 		this.stGroup = stGroup;
 		this.owner = owner;
@@ -19,7 +19,7 @@ public class ImportSTTemplate extends TransactionAction {
       	appModel().doLaterInTransaction(t -> {
       		final String fileName = file.getName();
       		final String name = fileName.substring(0, fileName.indexOf("."));
-      		final nextgen.st.model.STTemplate stTemplate = appModel().db.newSTTemplate()
+      		final nextgen.model.STTemplate stTemplate = appModel().db.newSTTemplate()
                   .setName(name)
                   .setText(nextgen.utils.FileUtil.readIntact(file));
             stGroup.addTemplates(stTemplate);

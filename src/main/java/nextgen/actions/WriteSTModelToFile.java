@@ -3,9 +3,9 @@ package nextgen.actions;
 public class WriteSTModelToFile extends TransactionAction {
 
 
-   private final nextgen.st.model.STModel stModel;
+   private final nextgen.model.STModel stModel;
 
-	public WriteSTModelToFile(nextgen.st.model.STModel stModel) {
+	public WriteSTModelToFile(nextgen.model.STModel stModel) {
 		super("Generate");
 		this.stModel = stModel;
 	}

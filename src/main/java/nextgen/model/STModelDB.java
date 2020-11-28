@@ -1,4 +1,4 @@
-package nextgen.st.model;
+package nextgen.model;
 
 import nextgen.utils.Neo4JUtil;
 import org.neo4j.graphdb.Relationship;
@@ -7,7 +7,7 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.util.*;
 
-import static nextgen.st.model.STValueType.*;
+import static nextgen.model.STValueType.*;
 
 public class STModelDB extends STModelNeoFactory {
 
@@ -155,8 +155,8 @@ public class STModelDB extends STModelNeoFactory {
                                        .findAny()
                                        .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stArgumentKV.getValue()))));
 
-                           final nextgen.st.model.STArgument newArgument = newSTArgument().setStParameter(stParameter);
-                           for (nextgen.st.model.STArgumentKV kv : kvs) newArgument.addKeyValues(kv);
+                           final nextgen.model.STArgument newArgument = newSTArgument().setStParameter(stParameter);
+                           for (nextgen.model.STArgumentKV kv : kvs) newArgument.addKeyValues(kv);
                            clone.addArguments(newArgument);
                            break;
                      }

@@ -1,10 +1,10 @@
 package nextgen.st;
 
-import nextgen.st.model.STEnum;
-import nextgen.st.model.STGroupModel;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.STFile;
-import nextgen.st.model.STValue;
+import nextgen.model.STEnum;
+import nextgen.model.STGroupModel;
+import nextgen.model.STTemplate;
+import nextgen.model.STFile;
+import nextgen.model.STValue;
 import nextgen.templates.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.Modifiers;

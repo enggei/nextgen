@@ -1,9 +1,9 @@
 package nextgen.st;
 
-import nextgen.st.model.STParameter;
-import nextgen.st.model.STParameterKey;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.*;
+import nextgen.model.STParameter;
+import nextgen.model.STParameterKey;
+import nextgen.model.STTemplate;
+import nextgen.model.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -85,7 +85,7 @@ public class STVisitor {
    }
 
    public final void visitKVList(STModel stModel, STParameter stParameter, STArgument stArgument) {
-      final java.util.Map<nextgen.st.model.STParameterKey, nextgen.st.model.STArgumentKV> kvMap = getStParameterKeySTArgumentKVMap(stParameter, stArgument);
+      final java.util.Map<nextgen.model.STParameterKey, nextgen.model.STArgumentKV> kvMap = getStParameterKeySTArgumentKVMap(stParameter, stArgument);
 
       kvMap.forEach((stParameterKey, stArgumentKV) -> {
 

@@ -1,10 +1,10 @@
-package nextgen.st.model;
+package nextgen.model;
 
-public class STGroupFile {
+public class STEnumValue {
 
 	private final org.neo4j.graphdb.Node node;
 
-	public STGroupFile(org.neo4j.graphdb.Node node) { 
+	public STEnumValue(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 	}
 
@@ -16,7 +16,7 @@ public class STGroupFile {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STGroupFile other = (STGroupFile) o;
+		final STEnumValue other = (STEnumValue) o;
 		return node.equals(other.node);
 	}
 
@@ -27,7 +27,7 @@ public class STGroupFile {
 
 	private static final String _uuid = "uuid";
 
-	public STGroupFile setUuid(String value) { 
+	public STEnumValue setUuid(String value) { 
 		if (value == null) 
 			removeUuid(); 
 		else {
@@ -50,73 +50,77 @@ public class STGroupFile {
 		return node.hasProperty(_uuid);
 	}
 
-	public STGroupFile removeUuid() { 
+	public STEnumValue removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
 
-	private static final String _packageName = "packageName";
+	private static final String _name = "name";
 
-	public STGroupFile setPackageName(String value) { 
+	public STEnumValue setName(String value) { 
 		if (value == null) 
-			removePackageName(); 
+			removeName(); 
 		else {
-		 	node.setProperty(_packageName, value);
+		 	node.setProperty(_name, value);
 		}
 		return this;
 	}
 
-	public String getPackageName() { 
-		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
+	public String getName() { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
 		return null;
 	}
 
-	public String getPackageName(String defaultValue) { 
-		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
+	public String getName(String defaultValue) { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
 		return defaultValue;
 	}
 
-	public boolean hasPackageName() { 
-		return node.hasProperty(_packageName);
+	public boolean hasName() { 
+		return node.hasProperty(_name);
 	}
 
-	public STGroupFile removePackageName() { 
-		node.removeProperty(_packageName);
+	public STEnumValue removeName() { 
+		node.removeProperty(_name);
 		return this;
 	}
 
-	private static final String _path = "path";
+	private static final String _lexical = "lexical";
 
-	public STGroupFile setPath(String value) { 
+	public STEnumValue setLexical(String value) { 
 		if (value == null) 
-			removePath(); 
+			removeLexical(); 
 		else {
-		 	node.setProperty(_path, value);
+		 	node.setProperty(_lexical, value);
 		}
 		return this;
 	}
 
-	public String getPath() { 
-		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
+	public String getLexical() { 
+		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
 		return null;
 	}
 
-	public String getPath(String defaultValue) { 
-		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
+	public String getLexical(String defaultValue) { 
+		if (node.hasProperty(_lexical)) return (String) node.getProperty(_lexical);
 		return defaultValue;
 	}
 
-	public boolean hasPath() { 
-		return node.hasProperty(_path);
+	public boolean hasLexical() { 
+		return node.hasProperty(_lexical);
 	}
 
-	public STGroupFile removePath() { 
-		node.removeProperty(_path);
+	public STEnumValue removeLexical() { 
+		node.removeProperty(_lexical);
 		return this;
 	}
 
-	public java.util.stream.Stream<STGroupModel> getIncomingFilesSTGroupModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STValue> getIncomingStEnumValueSTValue() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stEnumValue")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
 	}
 
 	@Override

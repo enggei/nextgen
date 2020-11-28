@@ -161,7 +161,7 @@ public class STParser {
             break;
 
          case Prop:
-            stParameters.peek().setType(nextgen.st.model.STParameterType.KVLIST);
+            stParameters.peek().setType(nextgen.model.STParameterType.KVLIST);
 
             final nextgen.st.parser.ParsedSTParameterKey parameterKey = new nextgen.st.parser.ParsedSTParameterKey()
                   .setName(astNode.getChildren().get(1).getAst().toString())
@@ -231,35 +231,35 @@ public class STParser {
             break;
 
          case Subtemplate:
-            if (!stParameters.isEmpty()) stParameters.peek().setType(nextgen.st.model.STParameterType.LIST);
+            if (!stParameters.isEmpty()) stParameters.peek().setType(nextgen.model.STParameterType.LIST);
             for (AstNode child : astNode.getChildren())
                addParameters(stParameterMap, child, stParameters);
             break;
       }
    }
 
-   public static void mergeTemplate(nextgen.st.parser.ParsedSTTemplate parsed, nextgen.st.model.STTemplate model) {
+   public static void mergeTemplate(nextgen.st.parser.ParsedSTTemplate parsed, nextgen.model.STTemplate model) {
 
       model.setText(parsed.getText());
 
-      final List<nextgen.st.model.STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
+      final List<nextgen.model.STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
       final java.util.List<nextgen.st.parser.ParsedSTParameter> parsedParameters = parsed.getParameters();
 
       final Map<String, Object> newParameters = new LinkedHashMap<>();
       for (nextgen.st.parser.ParsedSTParameter parsedParameter : parsedParameters) {
 
          boolean foundExisting = false;
-         for (nextgen.st.model.STParameter existingParameter : existingParameters) {
+         for (nextgen.model.STParameter existingParameter : existingParameters) {
             if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
                newParameters.put(existingParameter.getName(), existingParameter);
 
-               if (existingParameter.getType().equals(nextgen.st.model.STParameterType.KVLIST)) {
+               if (existingParameter.getType().equals(nextgen.model.STParameterType.KVLIST)) {
 
-                  final List<nextgen.st.model.STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
+                  final List<nextgen.model.STParameterKey> existingKeys = existingParameter.getKeys().collect(Collectors.toList());
                   final List<nextgen.st.parser.ParsedSTParameterKey> parsedKeys = parsedParameter.getKeys();
 
                   for (int i = existingKeys.size() - 1; i >= 0; i--) {
-                     nextgen.st.model.STParameterKey existingKey = existingKeys.get(i);
+                     nextgen.model.STParameterKey existingKey = existingKeys.get(i);
                      boolean foundExistingKey = false;
                      for (nextgen.st.parser.ParsedSTParameterKey parsedKey : parsedKeys) {
                         if (parsedKey.getName().equals(existingKey.getName())) {
@@ -274,7 +274,7 @@ public class STParser {
                   for (nextgen.st.parser.ParsedSTParameterKey parsedKey : parsedKeys) {
 
                      boolean foundExistingKey = false;
-                     for (nextgen.st.model.STParameterKey existingKey : existingKeys) {
+                     for (nextgen.model.STParameterKey existingKey : existingKeys) {
                         if (existingKey.getName().equals(parsedKey.getName())) {
                            foundExistingKey = true;
                            break;
@@ -301,11 +301,11 @@ public class STParser {
       model.removeAllParameters();
       newParameters.values().forEach(o -> {
 
-         if (o instanceof nextgen.st.model.STParameter) {
-            model.addParameters((nextgen.st.model.STParameter) o);
+         if (o instanceof nextgen.model.STParameter) {
+            model.addParameters((nextgen.model.STParameter) o);
          } else if (o instanceof nextgen.st.parser.ParsedSTParameter) {
             final nextgen.st.parser.ParsedSTParameter parsedSTParameter = (nextgen.st.parser.ParsedSTParameter) o;
-            final nextgen.st.model.STParameter stParameter = appModel().db.newSTParameter()
+            final nextgen.model.STParameter stParameter = appModel().db.newSTParameter()
                   .setName(parsedSTParameter.getName())
                   .setArgumentType(parsedSTParameter.getArgumentType())
                   .setType(parsedSTParameter.getType());
@@ -322,7 +322,7 @@ public class STParser {
    private static nextgen.st.parser.ParsedSTParameter newSTParameter(String name) {
       return new nextgen.st.parser.ParsedSTParameter()
             .setName(name)
-            .setType(nextgen.st.model.STParameterType.SINGLE)
+            .setType(nextgen.model.STParameterType.SINGLE)
             .setArgumentType((name != null && (name.startsWith("is") || name.startsWith("use"))) ? "Boolean" : ((name != null && name.toLowerCase().equals("name")) ? "String" : "Object"));
    }
 

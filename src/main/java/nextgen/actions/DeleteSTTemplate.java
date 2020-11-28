@@ -3,10 +3,10 @@ package nextgen.actions;
 public class DeleteSTTemplate extends TransactionAction {
 
 
-   private final nextgen.st.model.STTemplate stTemplate;
+   private final nextgen.model.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
 
-	public DeleteSTTemplate(nextgen.st.model.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public DeleteSTTemplate(nextgen.model.STTemplate stTemplate, javax.swing.JComponent owner) {
 		super("Delete");
 		this.stTemplate = stTemplate;
 		this.owner = owner;

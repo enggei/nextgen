@@ -1,10 +1,10 @@
-package nextgen.st.model;
+package nextgen.model;
 
-public class STGroupAction {
+public class STInterface {
 
 	private final org.neo4j.graphdb.Node node;
 
-	public STGroupAction(org.neo4j.graphdb.Node node) { 
+	public STInterface(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 	}
 
@@ -16,7 +16,7 @@ public class STGroupAction {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STGroupAction other = (STGroupAction) o;
+		final STInterface other = (STInterface) o;
 		return node.equals(other.node);
 	}
 
@@ -27,7 +27,7 @@ public class STGroupAction {
 
 	private static final String _uuid = "uuid";
 
-	public STGroupAction setUuid(String value) { 
+	public STInterface setUuid(String value) { 
 		if (value == null) 
 			removeUuid(); 
 		else {
@@ -50,14 +50,14 @@ public class STGroupAction {
 		return node.hasProperty(_uuid);
 	}
 
-	public STGroupAction removeUuid() { 
+	public STInterface removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
 
 	private static final String _name = "name";
 
-	public STGroupAction setName(String value) { 
+	public STInterface setName(String value) { 
 		if (value == null) 
 			removeName(); 
 		else {
@@ -80,73 +80,13 @@ public class STGroupAction {
 		return node.hasProperty(_name);
 	}
 
-	public STGroupAction removeName() { 
+	public STInterface removeName() { 
 		node.removeProperty(_name);
 		return this;
 	}
 
-	private static final String _statements = "statements";
-
-	public STGroupAction setStatements(String value) { 
-		if (value == null) 
-			removeStatements(); 
-		else {
-		 	node.setProperty(_statements, value);
-		}
-		return this;
-	}
-
-	public String getStatements() { 
-		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
-		return null;
-	}
-
-	public String getStatements(String defaultValue) { 
-		if (node.hasProperty(_statements)) return (String) node.getProperty(_statements);
-		return defaultValue;
-	}
-
-	public boolean hasStatements() { 
-		return node.hasProperty(_statements);
-	}
-
-	public STGroupAction removeStatements() { 
-		node.removeProperty(_statements);
-		return this;
-	}
-
-	private static final String _methods = "methods";
-
-	public STGroupAction setMethods(String value) { 
-		if (value == null) 
-			removeMethods(); 
-		else {
-		 	node.setProperty(_methods, value);
-		}
-		return this;
-	}
-
-	public String getMethods() { 
-		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
-		return null;
-	}
-
-	public String getMethods(String defaultValue) { 
-		if (node.hasProperty(_methods)) return (String) node.getProperty(_methods);
-		return defaultValue;
-	}
-
-	public boolean hasMethods() { 
-		return node.hasProperty(_methods);
-	}
-
-	public STGroupAction removeMethods() { 
-		node.removeProperty(_methods);
-		return this;
-	}
-
-	public java.util.stream.Stream<STGroupModel> getIncomingActionsSTGroupModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("actions")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STGroupModel> getIncomingInterfacesSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("interfaces")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
 	}
 
 	@Override

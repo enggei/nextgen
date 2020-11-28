@@ -3,10 +3,10 @@ package nextgen.actions;
 public class RenameSTGroup extends TransactionAction {
 
 
-   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public RenameSTGroup(nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public RenameSTGroup(nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Rename");
 		this.stGroup = stGroup;
 		this.owner = owner;

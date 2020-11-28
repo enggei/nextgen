@@ -2,11 +2,11 @@ package nextgen.swing;
 
 public class SelectOrAddNewModelPanel extends AbstractEditor {
 
-   private final nextgen.st.model.STTemplate stTemplate;
+   private final nextgen.model.STTemplate stTemplate;
    private final javax.swing.JRadioButton radFromTemplate;
    private final javax.swing.JList<ListElement> lstModels;
 
-   public SelectOrAddNewModelPanel(java.util.List<nextgen.st.model.STModel> stModelList, nextgen.st.model.STTemplate stTemplate) {
+   public SelectOrAddNewModelPanel(java.util.List<nextgen.model.STModel> stModelList, nextgen.model.STTemplate stTemplate) {
       setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
       this.stTemplate = stTemplate;
@@ -21,7 +21,7 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
       add(new javax.swing.JScrollPane(lstModels), java.awt.BorderLayout.CENTER);
    }
 
-   public nextgen.st.model.STValue getSTValue() {
+   public nextgen.model.STValue getSTValue() {
       if (radFromTemplate.isSelected()) {
          return appModel().db.newSTValue(appModel().db.newSTModel().setStTemplate(stTemplate));
       } else {
@@ -31,10 +31,10 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
 
    private final class ListElement {
 
-      private final nextgen.st.model.STModel stModel;
+      private final nextgen.model.STModel stModel;
       private final String text;
 
-      public ListElement(nextgen.st.model.STModel stModel) {
+      public ListElement(nextgen.model.STModel stModel) {
          this.stModel = stModel;
          this.text = appModel().render(stModel, 100);
       }
@@ -49,7 +49,7 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
 
       private final java.util.List<ListElement> content = new java.util.ArrayList<>();
 
-      public ListModel(java.util.List<nextgen.st.model.STModel> stModelList) {
+      public ListModel(java.util.List<nextgen.model.STModel> stModelList) {
          stModelList.forEach(stModel -> content.add(new nextgen.swing.SelectOrAddNewModelPanel.ListElement(stModel)));
       }
 

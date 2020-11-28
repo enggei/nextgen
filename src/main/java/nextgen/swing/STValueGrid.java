@@ -1,7 +1,7 @@
 package nextgen.swing;
 
-import nextgen.st.model.STValue;
-import nextgen.st.model.STValueType;
+import nextgen.model.STValue;
+import nextgen.model.STValueType;
 
 import javax.swing.*;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ public class STValueGrid extends SearchReplaceEditor {
     }
 
     @Override
-    protected java.util.stream.Stream<nextgen.st.model.STModel> getSTModels() {
+    protected java.util.stream.Stream<nextgen.model.STModel> getSTModels() {
         return java.util.stream.Stream.empty(); // ignored - overrides getSearchAction
     }
 

@@ -1,12 +1,12 @@
 package nextgen.st;
 
-import nextgen.st.model.STGroupModel;
-import nextgen.st.model.STParameterKey;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.STArgument;
-import nextgen.st.model.STArgumentKV;
-import nextgen.st.model.STModel;
-import nextgen.st.model.STValue;
+import nextgen.model.STGroupModel;
+import nextgen.model.STParameterKey;
+import nextgen.model.STTemplate;
+import nextgen.model.STArgument;
+import nextgen.model.STArgumentKV;
+import nextgen.model.STModel;
+import nextgen.model.STValue;
 import nextgen.templates.java.MethodCallExpression;
 import nextgen.utils.StringUtil;
 import org.stringtemplate.v4.ST;
@@ -170,7 +170,7 @@ public class STRenderer {
             final String s = value.getValue();
             return s == null || s.trim().length() == 0 ? null : s.trim();
          case ENUM:
-            final nextgen.st.model.STEnumValue enumValue = value.getStEnumValue();
+            final nextgen.model.STEnumValue enumValue = value.getStEnumValue();
             if (enumValue == null) return null;
 
             final String lexical = enumValue.getLexical();
@@ -197,7 +197,7 @@ public class STRenderer {
             final String s = value.getValue();
             return s == null || s.trim().length() == 0 ? null : (s.equals("true") || s.equals("false") ? s : ("\"" + asJavaString(s.trim()) + "\""));
          case ENUM:
-            final nextgen.st.model.STEnumValue enumValue = value.getStEnumValue();
+            final nextgen.model.STEnumValue enumValue = value.getStEnumValue();
             if (enumValue == null) return null;
             return enumValue.getIncomingValuesSTEnum()
                   .findFirst()
@@ -218,7 +218,7 @@ public class STRenderer {
          if (found != null) return mapper;
       }
 
-      final nextgen.st.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+      final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
       final nextgen.st.STRenderer.STMapper mapper = new nextgen.st.STRenderer.STMapper(stGroup);
       mappers.add(mapper);
       return mapper;

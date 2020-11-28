@@ -26,14 +26,14 @@ public class STEditor extends AbstractEditor {
    private final Color errorColor = Color.decode("#e66101");
    private final Border defaultBorder = txtEditor.getBorder();
 
-   private final nextgen.st.model.STGroupModel stGroupModel;
+   private final nextgen.model.STGroupModel stGroupModel;
    private final String delimiter;
 
-   private nextgen.st.model.STTemplate stTemplate;
+   private nextgen.model.STTemplate stTemplate;
    private String startText;
    private final String uuid;
 
-   public STEditor(nextgen.st.model.STGroupModel stGroupModel) {
+   public STEditor(nextgen.model.STGroupModel stGroupModel) {
 
       this.stGroupModel = stGroupModel;
       this.uuid = stGroupModel.getUuid();
@@ -74,7 +74,7 @@ public class STEditor extends AbstractEditor {
       setPreferredSize(new Dimension(800, 600));
    }
 
-   public nextgen.st.model.STGroupModel getModel() {
+   public nextgen.model.STGroupModel getModel() {
       return stGroupModel;
    }
 
@@ -83,7 +83,7 @@ public class STEditor extends AbstractEditor {
       reset(nextgen.st.STGenerator.toStg(stGroupModel).trim());
    }
 
-   public void setSTEnum(nextgen.st.model.STEnum stEnum) {
+   public void setSTEnum(nextgen.model.STEnum stEnum) {
       stTemplate = null;
       final StringBuilder text = new StringBuilder();
       text.append(stEnum.getName());
@@ -91,12 +91,12 @@ public class STEditor extends AbstractEditor {
       reset(text.toString());
    }
 
-   public void setSTInterface(nextgen.st.model.STInterface stInterface) {
+   public void setSTInterface(nextgen.model.STInterface stInterface) {
       stTemplate = null;
       reset(stInterface.getName());
    }
 
-   public void setSTTemplate(nextgen.st.model.STTemplate stTemplate) {
+   public void setSTTemplate(nextgen.model.STTemplate stTemplate) {
       this.stTemplate = stTemplate;
       this.startText = stTemplate == null ? this.startText = nextgen.st.STGenerator.toStg(stGroupModel).trim() : stTemplate.getText().trim();
       reset(startText);
@@ -121,7 +121,7 @@ public class STEditor extends AbstractEditor {
       appModel().generateSTGroup(stGroupModel, false);
    }
 
-   public Optional<nextgen.st.model.STTemplate> getSTTemplate() {
+   public Optional<nextgen.model.STTemplate> getSTTemplate() {
       return Optional.ofNullable(stTemplate);
    }
 

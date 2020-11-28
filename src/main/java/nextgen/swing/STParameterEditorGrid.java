@@ -3,9 +3,9 @@ package nextgen.swing;
 public class STParameterEditorGrid extends SearchReplaceEditor {
 
    private final String uuid;
-   private final nextgen.st.model.STParameter model;
+   private final nextgen.model.STParameter model;
 
-   public STParameterEditorGrid(nextgen.st.model.STParameter model) {
+   public STParameterEditorGrid(nextgen.model.STParameter model) {
       super();
 
       this.model = model;
@@ -13,7 +13,7 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
    }
 
    @Override
-   protected java.util.stream.Stream<nextgen.st.model.STModel> getSTModels() {
+   protected java.util.stream.Stream<nextgen.model.STModel> getSTModels() {
       return java.util.stream.Stream.empty(); // ignored - overrides getSearchAction
    }
 
@@ -24,10 +24,10 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
 
          final java.util.List<nextgen.swing.SearchReplaceEditor.STValueElement> stValues = model.getIncomingStParameterSTArgument()
                .filter(stArgument -> stArgument.getValue() != null)
-               .map(nextgen.st.model.STArgument::getValue)
+               .map(nextgen.model.STArgument::getValue)
                .filter(stValue -> stValue.getType() != null)
-               .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-               .filter(nextgen.st.model.STValue::hasValue)
+               .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+               .filter(nextgen.model.STValue::hasValue)
                .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                .map(nextgen.swing.SearchReplaceEditor.STValueElement::new)
                .collect(java.util.stream.Collectors.toList());
@@ -35,10 +35,10 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
          model.getIncomingStParameterSTArgument()
                .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
                      .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                     .map(nextgen.st.model.STArgumentKV::getValue)
+                     .map(nextgen.model.STArgumentKV::getValue)
                      .filter(stValue -> stValue.getType() != null)
-                     .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-                     .filter(nextgen.st.model.STValue::hasValue)
+                     .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+                     .filter(nextgen.model.STValue::hasValue)
                      .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                      .map(STValueElement::new)
                      .collect(java.util.stream.Collectors.toList())));
@@ -46,17 +46,17 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
          model.getIncomingStParameterSTArgument()
                .forEach(stArgument -> stArgument.getKeyValues()
                      .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                     .map(nextgen.st.model.STArgumentKV::getValue)
+                     .map(nextgen.model.STArgumentKV::getValue)
                      .filter(stValue -> stValue.getType() != null)
-                     .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                     .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                      .filter(stValue -> stValue.getStModel() != null)
                      .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
          model.getIncomingStParameterSTArgument()
                .filter(stArgument -> stArgument.getValue() != null)
-               .map(nextgen.st.model.STArgument::getValue)
+               .map(nextgen.model.STArgument::getValue)
                .filter(stValue -> stValue.getType() != null)
-               .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+               .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                .filter(stValue -> stValue.getStModel() != null)
                .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
 
@@ -64,13 +64,13 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
       });
    }
 
-   private void addSTValues(nextgen.st.model.STModel stModel, java.util.List<STValueElement> stValues) {
+   private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
       stValues.addAll(stModel.getArguments()
             .filter(stArgument -> stArgument.getValue() != null)
-            .map(nextgen.st.model.STArgument::getValue)
+            .map(nextgen.model.STArgument::getValue)
             .filter(stValue -> stValue.getType() != null)
-            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-            .filter(nextgen.st.model.STValue::hasValue)
+            .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+            .filter(nextgen.model.STValue::hasValue)
             .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
             .map(STValueElement::new)
             .collect(java.util.stream.Collectors.toList()));
@@ -78,10 +78,10 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
       stModel.getArguments()
             .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
                   .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                  .map(nextgen.st.model.STArgumentKV::getValue)
+                  .map(nextgen.model.STArgumentKV::getValue)
                   .filter(stValue -> stValue.getType() != null)
-                  .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE))
-                  .filter(nextgen.st.model.STValue::hasValue)
+                  .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
+                  .filter(nextgen.model.STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                   .map(STValueElement::new)
                   .collect(java.util.stream.Collectors.toList())));
@@ -89,17 +89,17 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
       stModel.getArguments()
             .forEach(stArgument -> stArgument.getKeyValues()
                   .filter(stArgumentKV -> stArgumentKV.getValue() != null)
-                  .map(nextgen.st.model.STArgumentKV::getValue)
+                  .map(nextgen.model.STArgumentKV::getValue)
                   .filter(stValue -> stValue.getType() != null)
-                  .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+                  .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                   .filter(stValue -> stValue.getStModel() != null)
                   .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
       stModel.getArguments()
             .filter(stArgument -> stArgument.getValue() != null)
-            .map(nextgen.st.model.STArgument::getValue)
+            .map(nextgen.model.STArgument::getValue)
             .filter(stValue -> stValue.getType() != null)
-            .filter(stValue -> stValue.getType().equals(nextgen.st.model.STValueType.STMODEL))
+            .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
             .filter(stValue -> stValue.getStModel() != null)
             .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
@@ -108,7 +108,7 @@ public class STParameterEditorGrid extends SearchReplaceEditor {
       return uuid;
    }
 
-   public nextgen.st.model.STParameter getModel() {
+   public nextgen.model.STParameter getModel() {
       return model;
    }
 }

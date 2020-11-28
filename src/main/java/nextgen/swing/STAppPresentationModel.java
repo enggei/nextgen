@@ -1,6 +1,6 @@
 package nextgen.swing;
 
-import nextgen.st.model.*;
+import nextgen.model.*;
 import nextgen.utils.NeoChronicle;
 import nextgen.utils.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -232,27 +232,27 @@ public class STAppPresentationModel {
       return db.findAllSTValue();
    }
 
-   public nextgen.st.model.STGroupModel findSTGroup(nextgen.st.model.STTemplate model) {
+   public nextgen.model.STGroupModel findSTGroup(nextgen.model.STTemplate model) {
       return stRenderer.findSTGroupModel(model);
    }
 
-   public java.util.stream.Stream<nextgen.st.model.STProject> getProjects() {
-      return db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.st.model.STProject::getName));
+   public java.util.stream.Stream<nextgen.model.STProject> getProjects() {
+      return db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName));
    }
 
-   public nextgen.st.model.STValue newSTValue(String value) {
+   public nextgen.model.STValue newSTValue(String value) {
       return db.newSTValue(value);
    }
 
-   public java.util.Optional<nextgen.st.model.STGroupModel> findSTGroup(String name) {
+   public java.util.Optional<nextgen.model.STGroupModel> findSTGroup(String name) {
       return Optional.ofNullable(db.findSTGroupModelByName(name));
    }
 
-   public java.util.stream.Stream<nextgen.st.model.STGroupModel> getSTGroups() {
+   public java.util.stream.Stream<nextgen.model.STGroupModel> getSTGroups() {
       return db.findAllSTGroupModel().sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
    }
 
-   public boolean isBoolean(nextgen.st.model.STParameter model) {
+   public boolean isBoolean(nextgen.model.STParameter model) {
       return model.getName().startsWith("is") || model.getName().startsWith("has");
    }
 
@@ -260,7 +260,7 @@ public class STAppPresentationModel {
       return new String[0];
    }
 
-   public nextgen.st.model.STTemplate getSTTemplate(nextgen.st.model.STModel stModel) {
+   public nextgen.model.STTemplate getSTTemplate(nextgen.model.STModel stModel) {
       return stModel.getStTemplate();
    }
 
@@ -272,7 +272,7 @@ public class STAppPresentationModel {
       return "tmp";
    }
 
-   public nextgen.st.model.STEnumValue newSTEnumValue() {
+   public nextgen.model.STEnumValue newSTEnumValue() {
       return db.newSTEnumValue();
    }
 

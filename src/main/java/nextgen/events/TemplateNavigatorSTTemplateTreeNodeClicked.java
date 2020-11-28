@@ -4,16 +4,16 @@ public final class TemplateNavigatorSTTemplateTreeNodeClicked {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateNavigatorSTTemplateTreeNodeClicked.class);
 
-	public static void post(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate parentTemplate, nextgen.st.model.STTemplate stTemplate) {
+	public static void post(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate parentTemplate, nextgen.model.STTemplate stTemplate) {
 		//log.info("post TemplateNavigatorSTTemplateTreeNodeClicked");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new TemplateNavigatorSTTemplateTreeNodeClicked(stGroup, parentTemplate, stTemplate));
 	}
 
-	public final nextgen.st.model.STGroupModel stGroup;
-	public final nextgen.st.model.STTemplate parentTemplate;
-	public final nextgen.st.model.STTemplate stTemplate;
+	public final nextgen.model.STGroupModel stGroup;
+	public final nextgen.model.STTemplate parentTemplate;
+	public final nextgen.model.STTemplate stTemplate;
 
-	public TemplateNavigatorSTTemplateTreeNodeClicked(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STTemplate parentTemplate, nextgen.st.model.STTemplate stTemplate) {
+	public TemplateNavigatorSTTemplateTreeNodeClicked(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate parentTemplate, nextgen.model.STTemplate stTemplate) {
 		this.stGroup = stGroup;
 		this.parentTemplate = parentTemplate;
 		this.stTemplate = stTemplate;

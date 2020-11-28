@@ -13,7 +13,7 @@ public class ImportData {
                }
             });
 
-      final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB("/home/goe/projects/nextgen/db");
+      final nextgen.model.STModelDB db = new nextgen.model.STModelDB("/home/goe/projects/nextgen/db");
 
       db.doInTransaction(transaction -> db.findAllSTGroupModel().forEach(stGroupModel -> {
          stGroupModel.getEnums().forEach(ImportData::delete);
@@ -25,7 +25,7 @@ public class ImportData {
       db.doInTransaction(transaction -> {
          stGroups.forEach(stGroupJS -> {
 
-            final nextgen.st.model.STGroupModel groupModel = db.newSTGroupModel();
+            final nextgen.model.STGroupModel groupModel = db.newSTGroupModel();
             groupModel.setUuid(stGroupJS.getString("uuid"));
             groupModel.setName(stGroupJS.getString("name"));
             groupModel.setDelimiter(stGroupJS.getString("delimiter"));
@@ -40,7 +40,7 @@ public class ImportData {
                   .map(o -> (io.vertx.core.json.JsonObject) o)
                   .forEach(stInterfaceJS -> {
 
-                     final nextgen.st.model.STInterface stInterface = db.newSTInterface();
+                     final nextgen.model.STInterface stInterface = db.newSTInterface();
                      stInterface.setUuid(stInterfaceJS.getString("uuid"));
                      stInterface.setName(stInterfaceJS.getString("name"));
                      groupModel.addInterfaces(stInterface);
@@ -52,7 +52,7 @@ public class ImportData {
                   .map(o -> (io.vertx.core.json.JsonObject) o)
                   .forEach(stEnumJS -> {
 
-                     final nextgen.st.model.STEnum stEnum = db.newSTEnum();
+                     final nextgen.model.STEnum stEnum = db.newSTEnum();
                      stEnum.setUuid(stEnumJS.getString("uuid"));
                      stEnum.setName(stEnumJS.getString("name"));
                      groupModel.addEnums(stEnum);
@@ -62,7 +62,7 @@ public class ImportData {
                            .map(o -> (io.vertx.core.json.JsonObject) o)
                            .forEach(stEnumValueJS -> {
 
-                              final nextgen.st.model.STEnumValue stEnumValue = db.newSTEnumValue();
+                              final nextgen.model.STEnumValue stEnumValue = db.newSTEnumValue();
                               stEnumValue.setUuid(stEnumValueJS.getString("uuid"));
                               stEnumValue.setName(stEnumValueJS.getString("name"));
                               stEnumValue.setLexical(stEnumValueJS.getString("lexical"));
@@ -82,7 +82,7 @@ public class ImportData {
          db.findAllSTModel()
                .forEach(stModel -> {
                   final String stTemplateUuid = stModel.getNode().getProperty("stTemplate").toString();
-                  final nextgen.st.model.STTemplate stTemplate = db.findSTTemplateByUuid(stTemplateUuid);
+                  final nextgen.model.STTemplate stTemplate = db.findSTTemplateByUuid(stTemplateUuid);
                   if (stTemplate == null) {
                      System.out.println(stTemplateUuid);
                      stModel.delete();
@@ -93,7 +93,7 @@ public class ImportData {
          db.findAllSTArgument()
                .forEach(stArgument -> {
                   final String stParameterUuid = stArgument.getNode().getProperty("stParameter").toString();
-                  final nextgen.st.model.STParameter stParameter = db.findSTParameterByUuid(stParameterUuid);
+                  final nextgen.model.STParameter stParameter = db.findSTParameterByUuid(stParameterUuid);
                   if (stParameter == null) {
                      System.out.println("\t" + stParameterUuid);
                      stArgument.delete();
@@ -104,7 +104,7 @@ public class ImportData {
          db.findAllSTArgumentKV()
                .forEach(stArgumentKV -> {
                   final String stParameterKeyUuid = stArgumentKV.getNode().getProperty("stParameterKey").toString();
-                  final nextgen.st.model.STParameterKey stParameterKey = db.findSTParameterKeyByUuid(stParameterKeyUuid);
+                  final nextgen.model.STParameterKey stParameterKey = db.findSTParameterKeyByUuid(stParameterKeyUuid);
 
                   if (stParameterKey == null) {
                      System.out.println("\t\t" + stParameterKeyUuid);
@@ -115,14 +115,14 @@ public class ImportData {
       });
    }
 
-   private static void print(String delim, nextgen.st.model.STTemplate stTemplate) {
+   private static void print(String delim, nextgen.model.STTemplate stTemplate) {
 //      System.out.println(delim + stTemplate.getName());
 //      stTemplate.getChildren().forEach(child -> print(delim + "\t", child));
    }
 
-   public static nextgen.st.model.STTemplate addStTemplate(nextgen.st.model.STModelDB db, io.vertx.core.json.JsonObject stTemplateJS) {
+   public static nextgen.model.STTemplate addStTemplate(nextgen.model.STModelDB db, io.vertx.core.json.JsonObject stTemplateJS) {
 
-      final nextgen.st.model.STTemplate stTemplate = db.newSTTemplate()
+      final nextgen.model.STTemplate stTemplate = db.newSTTemplate()
             .setUuid(stTemplateJS.getString("uuid"))
             .setName(stTemplateJS.getString("name"))
             .setText(stTemplateJS.getString("text"));
@@ -132,10 +132,10 @@ public class ImportData {
             .map(o -> (io.vertx.core.json.JsonObject) o)
             .forEach(stParameterJS -> {
 
-               final nextgen.st.model.STParameter stParameter = db.newSTParameter()
+               final nextgen.model.STParameter stParameter = db.newSTParameter()
                      .setUuid(stParameterJS.getString("uuid"))
                      .setName(stParameterJS.getString("name"))
-                     .setType(nextgen.st.model.STParameterType.valueOf(stParameterJS.getString("type")))
+                     .setType(nextgen.model.STParameterType.valueOf(stParameterJS.getString("type")))
                      .setArgumentType(stParameterJS.getString("argumentType"));
                stTemplate.addParameters(stParameter);
 
@@ -144,7 +144,7 @@ public class ImportData {
                      .map(o -> (io.vertx.core.json.JsonObject) o)
                      .forEach(parameterKeysJS -> {
 
-                        final nextgen.st.model.STParameterKey stParameterKey = db.newSTParameterKey()
+                        final nextgen.model.STParameterKey stParameterKey = db.newSTParameterKey()
                               .setUuid(parameterKeysJS.getString("uuid"))
                               .setName(parameterKeysJS.getString("name"))
                               .setArgumentType(parameterKeysJS.getString("argumentType"));
@@ -166,24 +166,24 @@ public class ImportData {
       return stTemplate;
    }
 
-   public static void delete(nextgen.st.model.STTemplate stTemplate) {
+   public static void delete(nextgen.model.STTemplate stTemplate) {
 
       stTemplate.getChildren().forEach(ImportData::delete);
 
       stTemplate.getParameters().forEach(stParameter -> {
-         stParameter.getKeys().forEach(nextgen.st.model.STParameterKey::delete);
+         stParameter.getKeys().forEach(nextgen.model.STParameterKey::delete);
          stParameter.delete();
       });
 
       stTemplate.delete();
    }
 
-   private static void delete(nextgen.st.model.STEnum stEnum) {
-      stEnum.getValues().forEach(nextgen.st.model.STEnumValue::delete);
+   private static void delete(nextgen.model.STEnum stEnum) {
+      stEnum.getValues().forEach(nextgen.model.STEnumValue::delete);
       stEnum.delete();
    }
 
-   private static void delete(nextgen.st.model.STInterface stInterface) {
+   private static void delete(nextgen.model.STInterface stInterface) {
       stInterface.delete();
    }
 }

@@ -3,10 +3,10 @@ package nextgen.actions;
 public class AddValueToProject extends TransactionAction {
 
 
-   private final nextgen.st.model.STProject project;
-   private final nextgen.st.model.STValue stValue;
+   private final nextgen.model.STProject project;
+   private final nextgen.model.STValue stValue;
 
-	public AddValueToProject(nextgen.st.model.STProject project, nextgen.st.model.STValue stValue) {
+	public AddValueToProject(nextgen.model.STProject project, nextgen.model.STValue stValue) {
 		super("Add to Project");
 		this.project = project;
 		this.stValue = stValue;

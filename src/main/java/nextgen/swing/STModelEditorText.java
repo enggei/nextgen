@@ -8,7 +8,7 @@ public class STModelEditorText extends AbstractEditor {
    private final org.fife.ui.rtextarea.RTextScrollPane editorComponent = new org.fife.ui.rtextarea.RTextScrollPane(txtEditor);
    private final javax.swing.Action toClipboardAction = newAction("Copy to Clipboard", actionEvent -> toClipboard());
 
-   private nextgen.st.model.STModel stModel;
+   private nextgen.model.STModel stModel;
 
    public STModelEditorText() {
 
@@ -23,7 +23,7 @@ public class STModelEditorText extends AbstractEditor {
       add(editorComponent, java.awt.BorderLayout.CENTER);
    }
 
-   public void setStModel(nextgen.st.model.STModel stModel) {
+   public void setStModel(nextgen.model.STModel stModel) {
       this.stModel = stModel;
       txtEditor.setText(appModel().render(stModel));
       txtEditor.setCaretPosition(0);

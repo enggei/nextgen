@@ -1,10 +1,10 @@
-package nextgen.st.model;
+package nextgen.model;
 
-public class STParameterKey {
+public class STGroupFile {
 
 	private final org.neo4j.graphdb.Node node;
 
-	public STParameterKey(org.neo4j.graphdb.Node node) { 
+	public STGroupFile(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 	}
 
@@ -16,7 +16,7 @@ public class STParameterKey {
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		final STParameterKey other = (STParameterKey) o;
+		final STGroupFile other = (STGroupFile) o;
 		return node.equals(other.node);
 	}
 
@@ -27,7 +27,7 @@ public class STParameterKey {
 
 	private static final String _uuid = "uuid";
 
-	public STParameterKey setUuid(String value) { 
+	public STGroupFile setUuid(String value) { 
 		if (value == null) 
 			removeUuid(); 
 		else {
@@ -50,77 +50,73 @@ public class STParameterKey {
 		return node.hasProperty(_uuid);
 	}
 
-	public STParameterKey removeUuid() { 
+	public STGroupFile removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
 
-	private static final String _name = "name";
+	private static final String _packageName = "packageName";
 
-	public STParameterKey setName(String value) { 
+	public STGroupFile setPackageName(String value) { 
 		if (value == null) 
-			removeName(); 
+			removePackageName(); 
 		else {
-		 	node.setProperty(_name, value);
+		 	node.setProperty(_packageName, value);
 		}
 		return this;
 	}
 
-	public String getName() { 
-		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+	public String getPackageName() { 
+		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
 		return null;
 	}
 
-	public String getName(String defaultValue) { 
-		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+	public String getPackageName(String defaultValue) { 
+		if (node.hasProperty(_packageName)) return (String) node.getProperty(_packageName);
 		return defaultValue;
 	}
 
-	public boolean hasName() { 
-		return node.hasProperty(_name);
+	public boolean hasPackageName() { 
+		return node.hasProperty(_packageName);
 	}
 
-	public STParameterKey removeName() { 
-		node.removeProperty(_name);
+	public STGroupFile removePackageName() { 
+		node.removeProperty(_packageName);
 		return this;
 	}
 
-	private static final String _argumentType = "argumentType";
+	private static final String _path = "path";
 
-	public STParameterKey setArgumentType(String value) { 
+	public STGroupFile setPath(String value) { 
 		if (value == null) 
-			removeArgumentType(); 
+			removePath(); 
 		else {
-		 	node.setProperty(_argumentType, value);
+		 	node.setProperty(_path, value);
 		}
 		return this;
 	}
 
-	public String getArgumentType() { 
-		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+	public String getPath() { 
+		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
 		return null;
 	}
 
-	public String getArgumentType(String defaultValue) { 
-		if (node.hasProperty(_argumentType)) return (String) node.getProperty(_argumentType);
+	public String getPath(String defaultValue) { 
+		if (node.hasProperty(_path)) return (String) node.getProperty(_path);
 		return defaultValue;
 	}
 
-	public boolean hasArgumentType() { 
-		return node.hasProperty(_argumentType);
+	public boolean hasPath() { 
+		return node.hasProperty(_path);
 	}
 
-	public STParameterKey removeArgumentType() { 
-		node.removeProperty(_argumentType);
+	public STGroupFile removePath() { 
+		node.removeProperty(_path);
 		return this;
 	}
 
-	public java.util.stream.Stream<STParameter> getIncomingKeysSTParameter() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("keys")).spliterator(), false).map((relationship) -> new STParameter(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STArgumentKV> getIncomingStParameterKeySTArgumentKV() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stParameterKey")).spliterator(), false).map((relationship) -> new STArgumentKV(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<STGroupModel> getIncomingFilesSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
 	}
 
 	@Override

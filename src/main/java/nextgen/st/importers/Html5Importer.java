@@ -1,17 +1,5 @@
 package nextgen.st.importers;
 
-import nextgen.utils.FileUtil;
-import nextgen.st.STGenerator;
-import nextgen.st.STParser;
-import nextgen.st.model.STGroupModel;
-import nextgen.st.model.STTemplate;
-import nextgen.st.model.STModelDB;
-
-import java.io.File;
-import java.io.IOException;
-
-import static nextgen.st.STParser.readJsonObject;
-
 public class Html5Importer extends BaseImporter {
 
 //    public static void main(String[] args) throws IOException {

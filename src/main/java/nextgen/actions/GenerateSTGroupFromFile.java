@@ -3,11 +3,11 @@ package nextgen.actions;
 public class GenerateSTGroupFromFile extends TransactionAction {
 
 
-   private final nextgen.st.model.STGroupModel stGroup;
-   private final nextgen.st.model.STGroupFile stGroupFile;
+   private final nextgen.model.STGroupModel stGroup;
+   private final nextgen.model.STGroupFile stGroupFile;
    private final javax.swing.JComponent owner;
 
-	public GenerateSTGroupFromFile(nextgen.st.model.STGroupModel stGroup, nextgen.st.model.STGroupFile stGroupFile, javax.swing.JComponent owner) {
+	public GenerateSTGroupFromFile(nextgen.model.STGroupModel stGroup, nextgen.model.STGroupFile stGroupFile, javax.swing.JComponent owner) {
 		super("Generate");
 		this.stGroup = stGroup;
 		this.stGroupFile = stGroupFile;

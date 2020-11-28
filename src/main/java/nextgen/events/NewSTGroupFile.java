@@ -4,15 +4,15 @@ public final class NewSTGroupFile {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTGroupFile.class);
 
-	public static void post(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
+	public static void post(nextgen.model.STGroupModel stGroupModel, nextgen.model.STGroupFile stGroupFile) {
 		//log.info("post NewSTGroupFile");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTGroupFile(stGroupModel, stGroupFile));
 	}
 
-	public final nextgen.st.model.STGroupModel stGroupModel;
-	public final nextgen.st.model.STGroupFile stGroupFile;
+	public final nextgen.model.STGroupModel stGroupModel;
+	public final nextgen.model.STGroupFile stGroupFile;
 
-	public NewSTGroupFile(nextgen.st.model.STGroupModel stGroupModel, nextgen.st.model.STGroupFile stGroupFile) {
+	public NewSTGroupFile(nextgen.model.STGroupModel stGroupModel, nextgen.model.STGroupFile stGroupFile) {
 		this.stGroupModel = stGroupModel;
 		this.stGroupFile = stGroupFile;
 	}

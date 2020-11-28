@@ -3,10 +3,10 @@ package nextgen.actions;
 public class DeleteSTGroupFile extends TransactionAction {
 
 
-   private final nextgen.st.model.STGroupFile stgroupFile;
+   private final nextgen.model.STGroupFile stgroupFile;
    private final javax.swing.JComponent owner;
 
-	public DeleteSTGroupFile(nextgen.st.model.STGroupFile stgroupFile, javax.swing.JComponent owner) {
+	public DeleteSTGroupFile(nextgen.model.STGroupFile stgroupFile, javax.swing.JComponent owner) {
 		super("Delete");
 		this.stgroupFile = stgroupFile;
 		this.owner = owner;

@@ -4,14 +4,14 @@ import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
 public class STGroupActionEditor extends AbstractEditor {
 
-   private final nextgen.st.model.STGroupAction model;
+   private final nextgen.model.STGroupAction model;
    private final String uuid;
 
    private final javax.swing.JTextField txtName = newTextField(30);
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtStatements = newRSyntaxTextArea(20, 80);
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtMethods = newRSyntaxTextArea(20, 80);
 
-   public STGroupActionEditor(nextgen.st.model.STGroupAction model) {
+   public STGroupActionEditor(nextgen.model.STGroupAction model) {
 
       this.model = model;
       this.uuid = model.getUuid();
@@ -51,7 +51,7 @@ public class STGroupActionEditor extends AbstractEditor {
       pop.add(newAction("Copy to Clipboard", actionEvent -> toClipboard(textArea)));
    }
 
-   public nextgen.st.model.STGroupAction getModel() {
+   public nextgen.model.STGroupAction getModel() {
       return model;
    }
 

@@ -3,9 +3,9 @@ package nextgen.actions;
 public class STValueToClipboard extends TransactionAction {
 
 
-   private final nextgen.st.model.STValue stValue;
+   private final nextgen.model.STValue stValue;
 
-	public STValueToClipboard(nextgen.st.model.STValue stValue) {
+	public STValueToClipboard(nextgen.model.STValue stValue) {
 		super("To Clipboard");
 		this.stValue = stValue;
 	}

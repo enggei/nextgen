@@ -1,6 +1,5 @@
 package nextgen.swing;
 
-import static nextgen.utils.SwingUtil.confirm;
 import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
 
 public class STValueEditor extends AbstractEditor {
@@ -14,7 +13,7 @@ public class STValueEditor extends AbstractEditor {
    private final javax.swing.Action selectLineAction = newAction("Select Line", actionEvent -> selectLine());
    private final javax.swing.Action toClipboardAction = newAction("Copy to Clipboard", actionEvent -> toClipboard());
 
-   private nextgen.st.model.STValue stValue;
+   private nextgen.model.STValue stValue;
    private String uuid;
 
    public STValueEditor() {
@@ -40,12 +39,12 @@ public class STValueEditor extends AbstractEditor {
       setSTValue(event.stValue);
    }
 
-   public void setSTValue(nextgen.st.model.STValue stValue) {
+   public void setSTValue(nextgen.model.STValue stValue) {
       this.stValue = stValue;
       this.uuid = stValue.getUuid();
       txtEditor.setText(appModel().render(stValue));
       txtEditor.setCaretPosition(0);
-      txtEditor.setEditable(stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE));
+      txtEditor.setEditable(stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE));
    }
 
    private void replaceWithClipboard() {
@@ -89,7 +88,7 @@ public class STValueEditor extends AbstractEditor {
    protected void tryToSave() {
       if (stValue == null) return;
       appModel().doInTransaction(transaction -> {
-         if (!stValue.getType().equals(nextgen.st.model.STValueType.PRIMITIVE)) return;
+         if (!stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE)) return;
          stValue.setValue(txtEditor.getText().trim());
          nextgen.events.STValueChanged.post(stValue);
       });

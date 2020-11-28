@@ -3,11 +3,11 @@ package nextgen.actions;
 public class RenameSTInterface extends TransactionAction {
 
 
-   private final nextgen.st.model.STInterface stInterface;
-   private final nextgen.st.model.STGroupModel stGroup;
+   private final nextgen.model.STInterface stInterface;
+   private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 
-	public RenameSTInterface(nextgen.st.model.STInterface stInterface, nextgen.st.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public RenameSTInterface(nextgen.model.STInterface stInterface, nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
 		super("Rename");
 		this.stInterface = stInterface;
 		this.stGroup = stGroup;

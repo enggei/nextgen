@@ -1,6 +1,6 @@
 package nextgen.st;
 
-import nextgen.st.model.STGroupModel;
+import nextgen.model.STGroupModel;
 import nextgen.templates.stringtemplate.KVAccessors;
 import nextgen.templates.stringtemplate.NeoDomain;
 import nextgen.templates.stringtemplate.NeoEntity;
@@ -29,7 +29,7 @@ public class STNeoGenerator {
       STGenerator.writeJavaFile(factory, packageDeclaration, factory.getName().toString(), root);
    }
 
-   public void visitSTTemplate(NeoDomain factory, String groupModelUuid, nextgen.st.model.STTemplate stTemplate, String packageDeclaration, File root) {
+   public void visitSTTemplate(NeoDomain factory, String groupModelUuid, nextgen.model.STTemplate stTemplate, String packageDeclaration, File root) {
 
       final String className = StringUtil.capitalize(stTemplate.getName()) + "Model";
 

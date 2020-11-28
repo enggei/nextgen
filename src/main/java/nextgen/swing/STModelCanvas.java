@@ -1335,10 +1335,10 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
-	final class STProjectNode extends BaseCanvasNode<nextgen.st.model.STProject> {
+	final class STProjectNode extends BaseCanvasNode<nextgen.model.STProject> {
 
 
-		public STProjectNode(nextgen.st.model.STProject model) {
+		public STProjectNode(nextgen.model.STProject model) {
 			super(model, model.getUuid(), model.getName());
 		}
 		@Override
@@ -1349,11 +1349,11 @@ public class STModelCanvas extends PCanvas implements PInputEventListener {
 
 	}
 
-	private void addSTProjectNode(nextgen.st.model.STProject model) {
+	private void addSTProjectNode(nextgen.model.STProject model) {
 		addNode(model.getUuid(), newSTProjectNode(model));
 	}
 
-	public java.util.function.Supplier<STProjectNode> newSTProjectNode(nextgen.st.model.STProject model) {
+	public java.util.function.Supplier<STProjectNode> newSTProjectNode(nextgen.model.STProject model) {
 		return () -> new STProjectNode(model);
 	}
 

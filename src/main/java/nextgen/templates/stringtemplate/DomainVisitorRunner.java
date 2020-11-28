@@ -323,8 +323,8 @@ public class DomainVisitorRunner {
 				"\n" + 
 				"import nextgen.domains.meta.DomainEntity;\n" + 
 				"import nextgen.st.STRenderer;\n" + 
-				"import nextgen.st.model.STGroupModel;\n" +
-				"import nextgen.st.model.STModelDB;\n" + 
+				"import nextgen.model.STGroupModel;\n" +
+				"import nextgen.model.STModelDB;\n" +
 				"import org.neo4j.graphdb.*;\n" + 
 				"\n" + 
 				"import java.util.*;\n" + 
@@ -380,7 +380,7 @@ public class DomainVisitorRunner {
 				"	}\n" + 
 				"\n" + 
 				"	public static void main(String[] args) {\n" + 
-				"		final nextgen.st.model.STModelDB db = new nextgen.st.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" + 
+				"		final nextgen.model.STModelDB db = new nextgen.model.STModelDB(\"~dbDir~\", \"~templatesDir~\");\n" +
 				"		final new nextgen.st.STRenderer renderer = new nextgen.st.STRenderer(db.getGroupModels());\n" + 
 				"		final DomainEntity domainEntity = db.getInTransaction(transaction -> new DomainEntity(db.getDatabaseService().findNode(org.neo4j.graphdb.Label.label(\"DomainEntity\"), \"uuid\", \"~entityUuid~\")));\n" + 
 				"		new Thread(new ~name~(db, renderer, domainEntity)).start();\n" + 

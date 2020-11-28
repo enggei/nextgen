@@ -158,7 +158,7 @@ public class NeoDomain {
 
 	static final String st = "NeoDomain(package,name,entities,finders) ::= <<package ~package~;\n" + 
 				"\n" + 
-				"import nextgen.st.model.*;\n" + 
+				"import nextgen.model.*;\n" +
 				"import org.neo4j.graphdb.Node;\n" + 
 				"import java.util.Optional;\n" + 
 				"import java.util.stream.Stream;\n" + 

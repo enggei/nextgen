@@ -3,10 +3,10 @@ package nextgen.actions;
 public class EditEnum extends TransactionAction {
 
 
-   private final nextgen.st.model.STEnum stEnum;
+   private final nextgen.model.STEnum stEnum;
    private final javax.swing.JComponent owner;
 
-	public EditEnum(nextgen.st.model.STEnum stEnum, javax.swing.JComponent owner) {
+	public EditEnum(nextgen.model.STEnum stEnum, javax.swing.JComponent owner) {
 		super("Edit");
 		this.stEnum = stEnum;
 		this.owner = owner;
@@ -21,8 +21,8 @@ public class EditEnum extends TransactionAction {
       contentPanel.add(newLabel("Lexical"));
 
       // existing values:
-      final java.util.Map<nextgen.st.model.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();
-      final java.util.Map<nextgen.st.model.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();
+      final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();
+      final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();
       stEnum.getValues().forEach(stEnumValue -> {
       	txtEnumValuesName.put(stEnumValue, newTextField(stEnumValue.getName(), 10));
       	txtEnumLexical.put(stEnumValue, newTextField(stEnumValue.getLexical(), 10));
@@ -41,7 +41,7 @@ public class EditEnum extends TransactionAction {
       }
 
       showDialog(owner, contentPanel, "Edit Enum", jDialog -> {
-      	for (nextgen.st.model.STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
+      	for (nextgen.model.STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
       		final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
       		final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
 

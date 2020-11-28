@@ -3,11 +3,11 @@ package nextgen.actions;
 public class AddFileSinkToSTModels extends TransactionAction {
 
 
-   private final nextgen.st.model.STTemplate stTemplate;
-   private final java.util.List<nextgen.st.model.STModel> stModels;
+   private final nextgen.model.STTemplate stTemplate;
+   private final java.util.List<nextgen.model.STModel> stModels;
    private final javax.swing.JComponent owner;
 
-	public AddFileSinkToSTModels(nextgen.st.model.STTemplate stTemplate, java.util.List<nextgen.st.model.STModel> stModels, javax.swing.JComponent owner) {
+	public AddFileSinkToSTModels(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModels, javax.swing.JComponent owner) {
 		super("Add File Sink");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;
@@ -25,9 +25,9 @@ public class AddFileSinkToSTModels extends TransactionAction {
             .distinct()
             .toArray(String[]::new);
 
-      final java.util.Map<String, nextgen.st.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
+      final java.util.Map<String, nextgen.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
       final java.util.List<String> nameOptions = stTemplate.getParameters()
-            .filter(stParameter -> stParameter.getType().equals(nextgen.st.model.STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getType().equals(nextgen.model.STParameterType.SINGLE))
             .map(stParameter -> {
                parameterMap.put(stParameter.getName(), stParameter);
                return stParameter.getName();
@@ -50,17 +50,17 @@ public class AddFileSinkToSTModels extends TransactionAction {
       }
 
       showDialog(owner, inputPanel, "New FileSink", jDialog -> {
-         final nextgen.st.model.STParameter stParameter = parameterMap.get(fieldMap.get("name").getText().trim());
+         final nextgen.model.STParameter stParameter = parameterMap.get(fieldMap.get("name").getText().trim());
          final String type = fieldMap.get("type").getText().trim();
          final String path = fieldMap.get("path").getText().trim();
          final String packageName = fieldMap.get("package").getText().trim();
 
-         for (nextgen.st.model.STModel stModel : stModels) {
+         for (nextgen.model.STModel stModel : stModels) {
             stModel.getArguments()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
                   .ifPresent(stArgument -> {
-                     final nextgen.st.model.STFile stFile = appModel().db.newSTFile()
+                     final nextgen.model.STFile stFile = appModel().db.newSTFile()
                            .setName(appModel().newSTValue(appModel().render(stArgument)))
                            .setType(appModel().db.findOrCreateSTValueByValue(type))
                            .setPath(appModel().newSTValue(path))

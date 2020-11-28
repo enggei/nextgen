@@ -1,7 +1,7 @@
 package nextgen.swing;
 
-import nextgen.st.model.STModel;
-import nextgen.st.model.STTemplate;
+import nextgen.model.STModel;
+import nextgen.model.STTemplate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class STModelEditorForm extends AbstractEditor {
       add(jScrollPane, BorderLayout.CENTER);
    }
 
-   public void setModel(nextgen.st.model.STModel model) {
+   public void setModel(nextgen.model.STModel model) {
       SwingUtilities.invokeLater(() -> {
          resultsModel.clear();
          appModel().doInTransaction(transaction -> {
@@ -58,23 +58,23 @@ public class STModelEditorForm extends AbstractEditor {
    final class STValueElement {
 
       private final String name;
-      private final nextgen.st.model.STModel model;
-      private final nextgen.st.model.STParameter stParameter;
-      private final java.util.List<nextgen.st.model.STEnumValue> stEnumValues;
+      private final nextgen.model.STModel model;
+      private final nextgen.model.STParameter stParameter;
+      private final java.util.List<nextgen.model.STEnumValue> stEnumValues;
 
       public String[] enumStrings;
 
-      private nextgen.st.model.STArgument argument;
+      private nextgen.model.STArgument argument;
       private String text;
 
-      public STValueElement(nextgen.st.model.STModel model, nextgen.st.model.STTemplate stTemplate, nextgen.st.model.STParameter stParameter, nextgen.st.model.STArgument argument) {
+      public STValueElement(nextgen.model.STModel model, nextgen.model.STTemplate stTemplate, nextgen.model.STParameter stParameter, nextgen.model.STArgument argument) {
          this.model = model;
          this.stParameter = stParameter;
          this.argument = argument;
          this.name = stTemplate.getName() + "." + stParameter.getName();
          this.text = argument == null ? "" : appModel().render(argument);
 
-         final nextgen.st.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByArgumentType(stParameter);
+         final nextgen.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByArgumentType(stParameter);
          this.stEnumValues = (stEnum == null) ? java.util.Collections.emptyList() : stEnum.getValuesSorted().collect(java.util.stream.Collectors.toList());
          if (!this.stEnumValues.isEmpty()) {
             enumStrings = new String[stEnumValues.size()];
@@ -93,7 +93,7 @@ public class STModelEditorForm extends AbstractEditor {
                   .ifPresent(stEnumValue -> {
 
                      if (argument == null) {
-                        final nextgen.st.model.STValue stValue = appModel().db.newSTValue(stEnumValue);
+                        final nextgen.model.STValue stValue = appModel().db.newSTValue(stEnumValue);
                         argument = appModel().db.newSTArgument(stParameter, stValue);
                         model.addArguments(argument);
                         nextgen.events.NewSTArgument.post(argument, model, stParameter, stValue);
@@ -114,7 +114,7 @@ public class STModelEditorForm extends AbstractEditor {
          if (argument == null) {
             if (value.length() == 0) return;
 
-            final nextgen.st.model.STValue stValue = appModel().db.newSTValue(value);
+            final nextgen.model.STValue stValue = appModel().db.newSTValue(value);
             argument = appModel().db.newSTArgument(stParameter, stValue);
             model.addArguments(argument);
             nextgen.events.NewSTArgument.post(argument, model, stParameter, stValue);

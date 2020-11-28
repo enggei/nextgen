@@ -3,10 +3,10 @@ package nextgen.actions;
 public class DeleteKV extends TransactionAction {
 
 
-   private final nextgen.st.model.STArgumentKV argumentKV;
+   private final nextgen.model.STArgumentKV argumentKV;
    private final javax.swing.JComponent owner;
 
-	public DeleteKV(nextgen.st.model.STArgumentKV argumentKV, javax.swing.JComponent owner) {
+	public DeleteKV(nextgen.model.STArgumentKV argumentKV, javax.swing.JComponent owner) {
 		super("Remove");
 		this.argumentKV = argumentKV;
 		this.owner = owner;

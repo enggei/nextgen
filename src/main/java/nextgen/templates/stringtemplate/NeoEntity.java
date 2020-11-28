@@ -225,7 +225,7 @@ public class NeoEntity {
 
 	static final String st = "NeoEntity(package,name,stGroupModel,stTemplate,singleAccessors,listAccessors,kvAccessors) ::= <<package ~package~;\n" + 
 				"\n" + 
-				"import nextgen.st.model.*;\n" + 
+				"import nextgen.model.*;\n" +
 				"import nextgen.st.domain.*;\n" + 
 				"\n" + 
 				"import java.util.ArrayList;\n" + 

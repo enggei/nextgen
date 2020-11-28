@@ -7,10 +7,10 @@ public class STFileEditor extends AbstractEditor {
    final javax.swing.JTextField txtType;
    final javax.swing.JTextField txtPath;
 
-   private final nextgen.st.model.STFile stFile;
+   private final nextgen.model.STFile stFile;
    private String uuid;
 
-   public STFileEditor(nextgen.st.model.STFile stFile) {
+   public STFileEditor(nextgen.model.STFile stFile) {
 
       txtName = newTextField(appModel().render(stFile.getName()), 45);
       txtPackage = newTextField(appModel().render(stFile.getPackageName()), 45);
@@ -44,7 +44,7 @@ public class STFileEditor extends AbstractEditor {
       add(inputPanel, java.awt.BorderLayout.NORTH);
    }
 
-   public nextgen.st.model.STFile getModel() {
+   public nextgen.model.STFile getModel() {
       return stFile;
    }
 

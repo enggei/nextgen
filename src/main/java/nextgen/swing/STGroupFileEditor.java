@@ -5,10 +5,10 @@ public class STGroupFileEditor extends AbstractEditor {
    final javax.swing.JTextField txtPackage;
    final javax.swing.JTextField txtPath;
 
-   private final nextgen.st.model.STGroupFile stGroupFile;
+   private final nextgen.model.STGroupFile stGroupFile;
    private String uuid;
 
-   public STGroupFileEditor(nextgen.st.model.STGroupFile stGroupFile) {
+   public STGroupFileEditor(nextgen.model.STGroupFile stGroupFile) {
 
       this.stGroupFile = stGroupFile;
       this.uuid = stGroupFile.getUuid();
@@ -32,7 +32,7 @@ public class STGroupFileEditor extends AbstractEditor {
       add(inputPanel, java.awt.BorderLayout.NORTH);
    }
 
-   public nextgen.st.model.STGroupFile getModel() {
+   public nextgen.model.STGroupFile getModel() {
       return stGroupFile;
    }
 

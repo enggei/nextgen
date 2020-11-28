@@ -1,6 +1,6 @@
 package nextgen.swing;
 
-import nextgen.st.model.STModel;
+import nextgen.model.STModel;
 
 import java.awt.*;
 
