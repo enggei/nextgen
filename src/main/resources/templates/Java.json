@@ -1,0 +1,2070 @@
+{
+  "uuid" : "89b7313f-0489-485e-956d-a043fba603ff",
+  "name" : "Java",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "3ddedc27-98a5-4138-8caf-8922321237d5",
+    "name" : "Entities",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "0f82b0f4-c6de-4e4c-be6d-aca80a1e4124",
+      "name" : "Pojo",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\t\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "f84f1434-4f3b-4d39-8298-976fdc09668d",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "23c8758c-db3f-4045-a4d7-ce7aadb43ebe",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "65d3dbef-f610-4312-a685-4a607e53d2e6",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "3fa720d8-f241-445c-9ca3-67c348690f1b",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "238bb4fb-333a-4715-aa64-22389ec9b485",
+          "name" : "name",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "78f731dc-5624-4d7e-ae55-5213857ea065",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "3f4b8adf-1795-4fc3-8877-c87544618d3d",
+        "name" : "fieldDeclarations",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b7e39149-0446-4c28-9d97-718411a70373",
+        "name" : "accessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "01f7aa4a-bd0e-42bc-acb4-9a02caab6796",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "String"
+      } ],
+      "children" : [ {
+        "uuid" : "acce5fc9-50a0-4be5-81d9-cc4422abacbb",
+        "name" : "primitiveAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~ = value;\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "347d900b-29f2-474f-bc20-59e102eaf5f6",
+          "name" : "type",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "02d83a4f-f8e2-4793-9cc0-7dfb13da5313",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "83c68db8-170e-4647-9a8b-680d69ed67ef",
+          "name" : "className",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "47c3509c-ee7c-48fd-837e-3ff8d793e1ce",
+        "name" : "referenceAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\tthis._~name~ = null;\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "0ad34144-5f07-45e1-a69c-b9f1f04ac789",
+          "name" : "type",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "617ddad3-4db4-4304-ac4b-fd7b3d7eda9b",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "ff0098c7-7062-4e0c-a868-35875289bd96",
+          "name" : "className",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "e81a642f-d6da-4db8-a157-a01969768fd8",
+        "name" : "listAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "0ba437c6-7f75-4f09-b372-f7821623298d",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c3a3b49a-edcf-41fc-8325-5e85ef6c72a6",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "35d4952f-12c1-4359-a551-688930859628",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    }, {
+      "uuid" : "66fc0a0a-a8c9-43ae-b79e-118651540701",
+      "name" : "PojoFactory",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t~eom()~\t\n};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "b5ae15f6-3d89-4bc9-b39f-9195fef86d66",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "402fbb08-3a63-4b12-a352-22973894c102",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "929fe569-01e4-4210-8944-d66bb7b2683f",
+        "name" : "entities",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "3b29b747-b53c-48f4-8217-ccb442b5a291",
+      "name" : "Enum",
+      "text" : "package ~package~;\n\npublic enum ~name~ {\n\n\t~enumValues:{it|~it~};separator=\",\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "31acfb1b-f4e1-41cf-8d54-8ec9855c22c6",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "831ed4a3-93c5-4b2c-b5ac-a1d9fd26a2e4",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "a1921fb2-c307-4050-8db4-a297a7083940",
+        "name" : "enumValues",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "6621b766-efbd-48bb-974e-6db2e2758de5",
+        "name" : "EnumValue",
+        "text" : "~name~~if(lexical)~() {\n\t@Override\n\tpublic String toString() { return \"~lexical~\"; }\n}~endif~",
+        "parameters" : [ {
+          "uuid" : "e607b6a0-e354-4347-805a-795c52d0cd09",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "e15effc3-6ca9-4b93-af93-da16cd283a19",
+          "name" : "lexical",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
+      } ]
+    }, {
+      "uuid" : "a8289fe2-14b3-4683-9490-5ef389a3f5e4",
+      "name" : "Bean",
+      "text" : "package ~package~;\n\npublic class ~name~ implements java.beans.PropertyChangeListener {\n\n\tprivate final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\t~fieldDeclarations:{it|~it~};separator=\"\\n\"~\n\n\tprivate final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);\n\t\n\tpublic ~name~() {\n\t}\n\t\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\t\n~if(lexical)~\n\n\t@Override\n\tpublic String toString() {\n\t\treturn \"\" + ~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~;\n\t}\n~endif~\n\n~if(eqha)~\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn _~eqha~.equals(that._~eqha~);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(_~eqha~);\n\t}\n~endif~\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent evt) {\n\t\tthis.pcs.firePropertyChange(\"~name~\", this, evt);\n\t}\n\t\n\tpublic void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.addPropertyChangeListener(listener);\n\t}\n\n\tpublic void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {\n\t\tthis.pcs.removePropertyChangeListener(listener);\n\t}\n\n\t~beanListener~\n} ",
+      "parameters" : [ {
+        "uuid" : "cb61bc25-1333-40db-9cd8-ea46acf2540c",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "1de63c49-2aa9-4a90-a6ab-aa57e716081b",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "c4c50500-f363-474c-8d68-9a3c5d4a3b77",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "e9b231ee-c080-442e-a48e-630b6dc9fa0d",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "d8045312-76d9-40ef-aa0f-3140a3979583",
+          "name" : "name",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "dc85e5d7-e4fa-47c5-b039-1390b019da34",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "35affb34-7da0-42a0-9a93-f3cc14d389b7",
+        "name" : "fieldDeclarations",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c905959a-79f4-4ed3-bc09-2b4c043e11c9",
+        "name" : "accessors",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "94471edb-4d3a-42c8-901d-c9663426946b",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "97ec333d-9f09-491c-b06d-c29933adc836",
+        "name" : "eqha",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "cbc1133b-656d-4485-a0f5-ebc1ff1cec3a",
+        "name" : "beanListener",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "7790bf52-39dc-41c3-a76d-2fc88b3b0ec4",
+        "name" : "boundedPrimitiveAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "149f3322-b54e-48ba-a77d-c28bc9be2462",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5b519488-e577-4d9c-a3cf-00a7391ae6e4",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "754af788-a559-497f-babe-aca95eea93d2",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "fdd1d906-65a3-489d-938e-be7650b01f72",
+        "name" : "boundedReferenceAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis._~name~ = value;\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tif (oldValue != null) oldValue.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "f5cdb8a5-0624-4dcf-86cc-9f9d9590bb0b",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "7fbb5baa-5e87-4534-bf6a-9985dd650fe5",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5324f9e7-0968-4811-9bb3-1f9ff0ae817d",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "02816d56-747f-481e-84bd-cc96b5b5b6ce",
+        "name" : "boundedListAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "218fbbb4-77bf-4790-b6c6-dc7d7584f8a0",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "66b9ed05-ca93-431d-a05e-193c16b238c1",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "8a7bee5e-6c88-4cc2-91e8-f281bf2d7aee",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "a3e11d70-a806-40a4-989d-ef41c01d047b",
+        "name" : "boundedListReferenceAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tif (value != null) value.addPropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tif (value != null) value.removePropertyChangeListener(this);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "4d430506-8c99-47cd-baa0-fa15b6a1d0be",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6a984339-0c4f-4f79-871c-d3fc3eca769b",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "97e6b9d0-458a-41f0-991b-4b9de85c8714",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "9a273a3f-d7b3-4717-aaf0-84b487fc4de3",
+        "name" : "boundedExternalReferenceAccessors",
+        "text" : "public ~type~ get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = value;\n\tthis.pcs.firePropertyChange(\"set.~name~\", oldValue, value);\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~() {\n\t~type~ oldValue = this._~name~;\n\tthis._~name~ = null;\n\tthis.pcs.firePropertyChange(\"remove.~name~\", oldValue, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "e22060d9-fe6b-46ef-a304-2ff46c73c494",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5606a26a-cd29-48d7-8af7-3574b1be901b",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "278ebcfa-814d-4b0f-8886-3186b05fb5d6",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "6bcf8fc6-52fc-457b-8f7e-61815dfe04a6",
+        "name" : "boundedExternalListAccessors",
+        "text" : "public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n\treturn this._~name~;\n}\n\npublic ~className~ add~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.add(value);\n\tthis.pcs.firePropertyChange(\"add.~name~\", null, value);\n\treturn this;\n}\n\npublic ~className~ remove~name;format=\"capitalize\"~(~type~ value) {\n\tthis._~name~.remove(value);\n\tthis.pcs.firePropertyChange(\"remove.~name~\", value, null);\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "c4e304e6-a957-4b8a-b61d-7fefa5ee3f12",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "270feb4d-7953-4b7b-a94c-149b8bd1d91e",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "b13fdc5d-06f1-4365-a19e-0b5f3a6c994e",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "e7c271a8-1c2d-473a-a0e5-b76c9b00f050",
+        "name" : "BeanListener",
+        "text" : "public static class ~name;format=\"capitalize\"~ChangeListener implements java.beans.PropertyChangeListener {\n\n\t@Override\n\tpublic void propertyChange(java.beans.PropertyChangeEvent propertyChangeEvent) {\n\t\tswitch (propertyChangeEvent.getPropertyName()) {\n\t\t\t\n\t\t\tcase \"~name;format=\"capitalize\"~\":\n\t\t\t\ton~name;format=\"capitalize\"~Change((~name;format=\"capitalize\"~) propertyChangeEvent.getOldValue(), (java.beans.PropertyChangeEvent) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\t\t\n~singleProperties:{it|\n\t\t\tcase \"set.~it.name~\":\n\t\t\t\tonSet~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\tcase \"remove.~it.name~\":\n\t\t\t\tonRemove~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n};separator=\"\\n\"~\n\n~listProperties:{it|\n\t\t\tcase \"add.~it.name~\":\n\t\t\t\tonAdd~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n\t\t\tcase \"remove.~it.name~\":\n\t\t\t\tonRemove~it.name;format=\"capitalize\"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());\n\t\t\t\tbreak;\n};separator=\"\\n\"~\n\n\t\t}\n\t}\n\n\tprotected void on~name;format=\"capitalize\"~Change(~name;format=\"capitalize\"~ instance, java.beans.PropertyChangeEvent event) {\n\t\tlog.info(\"on~name;format=\"capitalize\"~Change \" + instance + \" \" + event);\n\t}\n\t\n~singleProperties:{it|\n\tprotected void onSet~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onSet~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n\t\n\tprotected void onRemove~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onRemove~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n};separator=\"\\n\\n\"~\n\n~listProperties:{it|\n\tprotected void onAdd~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onAdd~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n\t\n\tprotected void onRemove~it.name;format=\"capitalize\"~(~it.type~ oldValue, ~it.type~ newValue) {\n\t\tlog.info(\"onRemove~it.name;format=\"capitalize\"~ \" + oldValue + \" \" + newValue);\n\t~eom()~\n};separator=\"\\n\\n\"~\n} ",
+        "parameters" : [ {
+          "uuid" : "2876aea6-4f9f-421e-8df9-d0c622b67afd",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "8914fb27-1543-42b8-b0dc-adba6f1d5d37",
+          "name" : "singleProperties",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "602c6bbd-4b67-4aa8-ba81-e3492b4e7a9d",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "f18a1414-53ad-49c2-9e89-928259b6fd02",
+            "name" : "type",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "ae456de6-5a12-4f78-b3fd-8c1b1d961249",
+          "name" : "listProperties",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "778f7ed4-15af-45d4-92f3-45339fa8e15a",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "a83c1d62-1645-4692-9a83-fa4fa5560c9c",
+            "name" : "type",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      } ]
+    }, {
+      "uuid" : "cce99ce1-81ea-4b41-a407-5f273c03b8dc",
+      "name" : "Runnable",
+      "text" : "package ~if(packageName)~~packageName~~else~tmp~endif~;\n\npublic class ~name~ implements Runnable {\n\n\t~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n\t\n\tpublic ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\t\n\t\t~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n\t}\n\t\n\t@Override\n\tpublic void run() {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "4f5743a6-1ab7-4f4d-b670-1dbf70034495",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "d8e0fe55-a025-43c7-bcb3-fac63112ea14",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "4f5c7164-2a64-4843-862c-03868c7f3830",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "56d2a460-f22d-4c71-ad1a-95fcd37cace3",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "6d72b70c-797f-4842-a0a1-f146974d3d92",
+          "name" : "name",
+          "argumentType" : "String"
+        } ]
+      }, {
+        "uuid" : "646e28b0-35d2-4092-842e-19ea7e8356f2",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "5a8f5512-0d01-4955-b284-9d969a36eb79",
+      "name" : "ValueObject",
+      "text" : "package ~package~;\n\npublic class ~name~ {\n\n\tprivate final java.util.UUID uuid;\n\t~fields:{it|public ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name~() {\n\t\tthis.uuid = java.util.UUID.randomUUID();\n\t}\n\n\tpublic ~name~(java.util.UUID uuid) {\n\t\tthis.uuid = uuid;\n\t}\n\n\tpublic java.util.UUID getUuid() {\n\t\treturn this.uuid;\n\t}\t\n\t\n\t@Override\n\tpublic String toString() {\n\t\treturn ~if(lexical)~~lexical:{it|_~it~};separator=\" + \\\" \\\" + \"~~else~this.uuid.toString()~endif~;\n\t}\n\n\t@Override\n\tpublic boolean equals(Object o) {\n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\t~name~ that = (~name~) o;\n\t\treturn uuid.equals(that.uuid);\n\t}\n\n\t@Override\n\tpublic int hashCode() {\n\t\treturn java.util.Objects.hash(uuid);\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "2f8768f0-5cb5-4538-8f3c-410aba0229e0",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d8b4a2b5-7714-4c7e-bd8f-a52276d0dfac",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "d7c39e84-f290-4716-9d3f-a0aa2b1c7076",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "fd6e279c-d950-4959-904d-b146ff98eef9",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "45518a06-8a6c-45ee-ba4f-89765f221d33",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c0dbcea4-48b9-4d67-80da-9bcba9d3f83e",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "6533f039-fe34-4304-84be-c728856aca5e",
+        "name" : "lexical",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "2109f5b2-21e6-410b-b6df-a7c6948d73b2",
+      "name" : "Singleton",
+      "text" : "package ~packageName~;\n\npublic final class ~name~ {\n\n\tprivate static ~name~ INSTANCE;\n\t~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tprivate ~name~() {\t\t  \n\t}\n\n\tpublic static synchronized ~name~ getInstance() {\n\t\tif(INSTANCE == null) INSTANCE = new ~name~();\n\t\treturn INSTANCE;\n\t}\n\n~fields:{it|\n\tpublic ~it.type~ get~it.name;format=\"capitalize\"~() {\n\t\treturn _~it.name~;\n\t~eom()~\n\n\tpublic ~name~ set~it.name;format=\"capitalize\"~(~it.type~ value) {\n\t\tthis._~it.name~ = value;\n\t\treturn this;\n\t~eom()~\n};separator=\"\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "28d512cf-3a7e-4e7b-99f5-f1604e6b7c42",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "d37b64c5-866c-4506-ac9e-4e661b4d33d8",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "07f49eef-f106-480f-af7c-f27a88116713",
+        "name" : "fields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "52980d59-109a-455a-b43b-c0f70c8d3645",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "efbd4e91-aa39-4c63-9543-5d9760e08ae3",
+          "name" : "name",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "70ffcbb2-55df-4a59-9e6b-eb83e04d723c",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "efe1e787-0f67-457e-92f4-b89e71b1bece",
+        "name" : "methods",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "98bc23df-822a-437b-ba27-15f621ddc970",
+    "name" : "Grammar",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "0aa99e63-e7af-40b9-8e42-0172283b9866",
+      "name" : "CompilationUnit",
+      "text" : "~packageDeclaration~\r\n\r\n~importDeclaration:{it|~it~};separator=\"\\n\"~\r\n\r\n~types:{it|~it~};separator=\"\\n\\n\"~",
+      "parameters" : [ {
+        "uuid" : "af17c15c-3a9e-4055-8ac6-bd7c8f2f1cf4",
+        "name" : "packageDeclaration",
+        "argumentType" : "Object",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "38707fe9-606e-4d87-a544-2157c22b950c",
+        "name" : "types",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      }, {
+        "uuid" : "1a8770e7-f06a-4d66-a62a-bb5ff40420dd",
+        "name" : "importDeclaration",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      } ],
+      "children" : [ {
+        "uuid" : "d457274c-1678-4d87-ae9c-f7afd091403d",
+        "name" : "ClassOrInterfaceDeclaration",
+        "text" : "~comments:{it|~it~};separator=\"\\n\"~~if(comments)~\r\n~endif~~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=\", \"~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=\", \"~~endif~ {\r\n\t\r\n\t~fields:{it|~it~};separator=\"\\n\"~\r\n\t~if(fields)~\r\n\t\r\n\t~endif~\r\n\t~members:{it|~it~};separator=\"\\n\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "4b49319e-0d61-4bbb-8279-b2e19478c37b",
+          "name" : "comments",
+          "type" : "LIST"
+        }, {
+          "uuid" : "01ff7728-dec1-45c6-90ff-9be07e221b36",
+          "name" : "annotations",
+          "type" : "LIST"
+        }, {
+          "uuid" : "b4e726d0-9ed1-4e8d-9355-3f10671adaff",
+          "name" : "modifiers",
+          "type" : "LIST"
+        }, {
+          "uuid" : "9645cec8-52f5-434c-a945-4d112b2dc5e1",
+          "name" : "isInterface",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "4efa148a-fc40-4bae-b4c9-385feabfcb8a",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "943460c7-a331-44c2-9d8a-3e9daa48e2a6",
+          "name" : "typeParameters",
+          "type" : "LIST"
+        }, {
+          "uuid" : "d0e04766-2d8f-4287-9f98-c058b9f2c078",
+          "name" : "extend",
+          "type" : "LIST"
+        }, {
+          "uuid" : "f5ef5a07-a267-4a23-8367-38a5ded719d9",
+          "name" : "implementedTypes",
+          "type" : "LIST"
+        }, {
+          "uuid" : "3154df32-bc04-4686-a2f1-ee585f4c66b3",
+          "name" : "fields",
+          "type" : "LIST"
+        }, {
+          "uuid" : "29bf6d68-d21d-42a9-9255-0cdc84506683",
+          "name" : "members",
+          "type" : "LIST"
+        } ],
+        "children" : [ {
+          "uuid" : "c509ba7b-3a9e-4f9b-bb1d-2bc32d6dfe73",
+          "name" : "FieldDeclaration",
+          "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~;",
+          "parameters" : [ {
+            "uuid" : "82d5b931-8f57-4487-a17b-10bdb67d2857",
+            "name" : "variables",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "a0b5c7fd-ea0b-41fd-9587-ddf366f35f38",
+            "name" : "annotations",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "58fb3c6f-17e3-4f7a-97ab-d12da9ae443b",
+            "name" : "modifiers",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          } ]
+        }, {
+          "uuid" : "d39aeecc-3b83-4331-84d1-f4489a467d43",
+          "name" : "ConstructorDeclaration",
+          "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=\" \"~ ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~",
+          "parameters" : [ {
+            "uuid" : "e14de1de-6aec-47e9-a279-3917337983cf",
+            "name" : "name",
+            "argumentType" : "Object",
+            "type" : "SINGLE"
+          }, {
+            "uuid" : "54b09c61-6268-48c3-91d1-f752a69b02bb",
+            "name" : "blockStmt",
+            "argumentType" : "Object",
+            "type" : "SINGLE"
+          }, {
+            "uuid" : "e5fbffcb-4b6b-4b5a-a1ae-b49d3bf510b0",
+            "name" : "modifiers",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "2810fa61-19d7-4cec-b785-1698f49b2e14",
+            "name" : "annotations",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "3bfb8095-169c-4666-986c-38a8a595b7c3",
+            "name" : "thrownExceptions",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "4c51fa70-eaae-4c5f-a387-ac8dd7c64684",
+            "name" : "typeParameters",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "2afce3c0-ecc9-4158-917f-e76fbbe23aa3",
+            "name" : "parameters",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          } ]
+        } ]
+      }, {
+        "uuid" : "30c1c674-5a9e-43a4-8133-02e6db9a54d0",
+        "name" : "EnumDeclaration",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~enum ~name~~if(extend)~ extends ~extend:{it|~it~};separator=\", \"~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=\",\"~~endif~ {\r\n\r\n\t~entries:{it|~it~};separator=\",\\n\"~~if(members)~;~endif~\r\n\r\n\t~members:{it|~it~};separator=\"\\n\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "b4c44b78-24af-4b6b-ae87-93b3fb6698b4",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "49d3a8b7-d737-4502-9b6c-d47c76428359",
+          "name" : "members",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "8ef8b912-5ada-46df-98c2-a3da35ce5994",
+          "name" : "annotations",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "2d51d489-77e2-4140-93f7-3f169e0396d4",
+          "name" : "implementedTypes",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "6dc093ad-b074-4766-afd4-e60315acd076",
+          "name" : "entries",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "9e6020e2-030a-4a72-a261-09ee1add542d",
+          "name" : "extend",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "2bd3b726-660b-40f4-a887-8711b509215f",
+          "name" : "modifiers",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "children" : [ {
+          "uuid" : "1ee03f72-6a0d-4213-a61d-c0d57cbdc8c9",
+          "name" : "EnumConstant",
+          "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=\",\"~)~endif~~if(methods)~ {\r\n\t~methods:{it|~it~};separator=\"\\n\"~\r\n}~endif~",
+          "parameters" : [ {
+            "uuid" : "4158dcca-e920-4bb4-bdc5-e26a20c4d39f",
+            "name" : "methods",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "8237e370-ddc0-48cd-b973-76bea79c408a",
+            "name" : "arguments",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          }, {
+            "uuid" : "16231c3a-4911-432e-9d80-5201dec4a97a",
+            "name" : "name",
+            "argumentType" : "Object",
+            "type" : "SINGLE"
+          }, {
+            "uuid" : "4b68244e-6b44-462d-b215-7efe1d5f0103",
+            "name" : "annotations",
+            "argumentType" : "Object",
+            "type" : "LIST"
+          } ]
+        } ]
+      }, {
+        "uuid" : "67f15118-8ccb-44eb-9675-661dcf13effb",
+        "name" : "ImportDeclaration",
+        "text" : "import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~;",
+        "parameters" : [ {
+          "uuid" : "58e960bd-1932-426f-b4e6-027f9981ba72",
+          "name" : "isStatic",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "dbbc3c12-d043-4cd9-bc2f-fb79f213b0ac",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "10062fa0-8951-4136-8bad-9d88d8f3b193",
+          "name" : "isAsterisk",
+          "type" : "SINGLE"
+        } ]
+      } ]
+    }, {
+      "uuid" : "2d6fd956-c0ef-4713-9e0b-5817ddf3d47d",
+      "name" : "Declarations",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "b33d32fe-8e0f-4bc9-80b4-44ac0a06116f",
+        "name" : "AnnotationDeclaration",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\r\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~@interface ~name~ {\r\n\t~members:{it|~it~};separator=\"\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "16006c09-6acc-4d28-9bc3-6790a6a20f67",
+          "name" : "members",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "5058cdf1-b2ea-45ea-befe-6f14177d4032",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "dfdd45d4-9ddd-4677-8ed5-6424c074963e",
+          "name" : "modifiers",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "0ce24335-5d2a-4482-8053-4f2f49ec8791",
+          "name" : "annotations",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "bbd0a657-afa6-4c93-a4e4-2c91614d18cc",
+        "name" : "AnnotationMemberDeclaration",
+        "text" : "~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~;",
+        "parameters" : [ {
+          "uuid" : "3fad22b6-bf1c-4e39-8093-dba2415e412f",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "c479b83e-d860-47b0-997b-873774c05db6",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "117e1185-eef3-426f-95e8-f2ea53ded071",
+          "name" : "defaultValue",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "1ad88e0d-36bb-4301-abad-f293422fa22f",
+        "name" : "FinalFieldDeclaration",
+        "text" : "final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "4671b603-bc4e-4293-b408-56700d209efc",
+        "name" : "MethodDeclaration",
+        "text" : "~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=\", \"~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=\", \"~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~ ",
+        "parameters" : [ {
+          "uuid" : "4360326b-93de-4a1a-9267-459fb0e40b4b",
+          "name" : "annotations",
+          "type" : "LIST"
+        }, {
+          "uuid" : "41eed75d-68e7-4bfd-807e-30beb9d25f37",
+          "name" : "modifiers",
+          "type" : "LIST"
+        }, {
+          "uuid" : "fa739514-3b52-44b7-b486-a7418e87a285",
+          "name" : "type",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "43f5af7f-d9ff-45ef-a852-4e8aa6c16121",
+          "name" : "typeParameters",
+          "type" : "LIST"
+        }, {
+          "uuid" : "94cdb5db-11b0-4149-87b6-3d14381426dc",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "70a1ace5-eee5-4e2b-becb-502c65c6033e",
+          "name" : "parameters",
+          "type" : "LIST"
+        }, {
+          "uuid" : "9ba79bd6-f33b-42ac-966c-9254fe1afa6f",
+          "name" : "thrownExceptions",
+          "type" : "LIST"
+        }, {
+          "uuid" : "cb3ce6a0-3e4f-4f36-931e-2b0f34356e84",
+          "name" : "isInterfaceDeclaration",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "33a2653f-edf9-4b1a-9e30-58225f01089c",
+          "name" : "blockStmt",
+          "type" : "SINGLE"
+        } ],
+        "children" : [ {
+          "uuid" : "ee586ab8-43ac-4513-8af4-97ecf26bb9fd",
+          "name" : "Parameter",
+          "text" : "~annotations:{it|~it~};separator=\" \"~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~",
+          "parameters" : [ {
+            "uuid" : "a02e39f1-7fa7-42b2-b6ce-5f48addcc4fe",
+            "name" : "annotations",
+            "type" : "LIST"
+          }, {
+            "uuid" : "afd51813-a858-48e2-8657-e61ac47905c2",
+            "name" : "modifiers",
+            "type" : "LIST"
+          }, {
+            "uuid" : "6c0db836-8899-4153-93bc-44a24743c265",
+            "name" : "type",
+            "type" : "SINGLE"
+          }, {
+            "uuid" : "30777cfc-e073-411f-919d-c0872f078128",
+            "name" : "isVarargs",
+            "type" : "SINGLE"
+          }, {
+            "uuid" : "63785dfa-56e5-4cde-8e7d-64aefd72a212",
+            "name" : "name",
+            "type" : "SINGLE"
+          } ]
+        } ]
+      }, {
+        "uuid" : "0cb5d5eb-6737-4e50-8ea3-8366653fee69",
+        "name" : "ModuleDeclaration",
+        "text" : "module ~name~ {\r\n    ~requiresDirective:{it|requires ~it~};separator=\"\\n\"~\r\n    ~exportsDirective:{it|exports ~it~};separator=\"\\n\"~\r\n    ~providesDirective:{it|provides ~it~};separator=\"\\n\"~\r\n    ~usesDirective:{it|uses ~it~};separator=\"\\n\"~\r\n    ~opens:{it|opens ~it~};separator=\"\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "b511dc48-09f8-40ef-aca2-695b5901dfd4",
+          "name" : "providesDirective",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "1512e05f-9e68-4c6e-ab99-32831cf3fdee",
+          "name" : "usesDirective",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "5c2d5643-28a0-4321-ab3e-415a36dfb893",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9013234b-15c7-4668-bf10-15ef90672382",
+          "name" : "requiresDirective",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "be3029a8-87a8-4394-ad40-a4df793d37d6",
+          "name" : "exportsDirective",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "623757c0-fc82-46b2-b880-4e4bc235bcf7",
+          "name" : "opens",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "38be3d09-40df-4b68-9f56-1e514606130d",
+        "name" : "PackageDeclaration",
+        "text" : "package ~name~; ",
+        "parameters" : [ {
+          "uuid" : "3c489417-b330-47e2-802c-38c51b411d64",
+          "name" : "name",
+          "argumentType" : "String",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "46746f85-2b12-4815-a188-ffb11aa2d000",
+        "name" : "PrivateFieldDeclaration",
+        "text" : "private ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "5f5ca58d-e1c8-444d-8bd6-df332c14d4e4",
+        "name" : "PrivateFinalFieldDeclaration",
+        "text" : "private final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "75c8baaa-3756-4ceb-9526-3a91114e58b7",
+        "name" : "PublicFinalFieldDeclaration",
+        "text" : "public final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "475b3cf0-2567-4f59-89a5-a6dd9ee2f014",
+        "name" : "StaticFinalFieldDeclaration",
+        "text" : "static final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "9d75a92b-3e43-4ec6-a525-08688c14c351",
+        "name" : "StaticPrivateFinalFieldDeclaration",
+        "text" : "static final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "bfc185e8-bddd-482c-ba00-e80f03bc04ee",
+        "name" : "staticPublicFinalFieldDeclaration",
+        "text" : "static public final ~VariableDeclaration(initializer,name,type)~;",
+        "parameters" : [ {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "e7c89c7b-2b1d-4e60-bf5b-298a96fcdaa5",
+        "name" : "VariableDeclaration",
+        "text" : "~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~",
+        "parameters" : [ {
+          "uuid" : "fa457d01-d3c3-4362-8fe1-be66599eccb7",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9c2a8374-896c-4ef8-ab7d-0270e82ec690",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f9ef8ce1-12b6-4f99-9ffe-279bdbb3e074",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      } ]
+    }, {
+      "uuid" : "723eafcb-176c-4f89-976a-6032fdf069d0",
+      "name" : "Expressions",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "4a00cf58-f978-4a46-8528-f8c74a057fa9",
+        "name" : "ArrayAccessExpression",
+        "text" : "~name~[~index~]",
+        "parameters" : [ {
+          "uuid" : "814191c5-ca40-4ef1-ab63-259fd36b14c2",
+          "name" : "index",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "7d1103ff-2b74-4518-91a0-85f11f3dd634",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "5f885af0-d0e2-41eb-9f81-b1b81ec61d8d",
+        "name" : "ArrayCreationExpression",
+        "text" : "new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~",
+        "parameters" : [ {
+          "uuid" : "6d1c5619-af90-4586-b8dd-196f1b4cd75d",
+          "name" : "initializer",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f3725177-8b1b-4ffc-b7b7-15fcb6533947",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "c709cb6f-e853-4159-8ffa-df057e00d0a3",
+          "name" : "levels",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "2a28a1ea-19af-43c7-9048-b30e815782ba",
+        "name" : "ArrayInitializerExpression",
+        "text" : "{\r\n\t~values:{it|~it~};separator=\",\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "ded71434-a4a0-44c5-acfe-2b0dc21f8380",
+          "name" : "values",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "9db85c55-6138-41a3-8bc1-f5fff078fbac",
+        "name" : "AssignExpression",
+        "text" : "~target~ ~operator~ ~value~",
+        "parameters" : [ {
+          "uuid" : "c5c7c972-43c8-400e-8a89-764f2701877f",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "907ac36e-2187-49b4-a3ff-3f8a07f9f85d",
+          "name" : "target",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "2f07b80d-2de7-4675-8887-6e601bef977c",
+          "name" : "operator",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "dc2103ed-3fee-44e6-86d5-d91ce74fa613",
+        "name" : "AssignThisVariableExpression",
+        "text" : "~ThisVariableExpression(value)~ = ~value~",
+        "parameters" : [ {
+          "uuid" : "5da961e9-4983-4af6-9e0d-9da751b89bcb",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "c049574f-2959-40ad-a30f-c0e950de3c76",
+        "name" : "UnaryExpression",
+        "text" : "~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~",
+        "parameters" : [ {
+          "uuid" : "5cb43b91-ac9c-49f1-9861-96983b74c9ac",
+          "name" : "isPrefix",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "35d28491-6d70-434f-b165-2408bc3043ae",
+          "name" : "operator",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "92d041e9-4ea8-41b8-a1c9-4b1861cdc438",
+          "name" : "expression",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "dc44d0da-01ad-4f5a-91b9-1de361b522b3",
+          "name" : "isPostfix",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "5ceb1d92-4dca-42fe-9a22-3c4c90d1b123",
+        "name" : "ThisVariableExpression",
+        "text" : "this.~value~",
+        "parameters" : [ {
+          "uuid" : "aff47b0d-469b-4b9c-8b50-5c5e54a48872",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "38e3bbaf-3713-4abf-b9ce-c7c1468344de",
+        "name" : "SuperExpression",
+        "text" : "super~if(typeName)~.~endif~~typeName~",
+        "parameters" : [ {
+          "uuid" : "df648975-2889-4118-9fb5-520a65cbc252",
+          "name" : "typeName",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "1f4e4f22-cfd8-41fc-bb17-b7285def7fc0",
+        "name" : "StringLiteralExpression",
+        "text" : "\"~value~\"",
+        "parameters" : [ {
+          "uuid" : "dc8e8d48-209c-4d18-9ed3-859e7069a964",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "4b5767f7-6d47-472f-9604-413c06995d92",
+        "name" : "ObjectCreationExpression",
+        "text" : "new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~endif~(~arguments:{it|~it~};separator=\", \"~)~if(anonymousClassBodies)~ {\r\n\r\n\t~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\r\n\r\n}~elseif(emptyClassBody)~ {\r\n}~endif~",
+        "parameters" : [ {
+          "uuid" : "17e1fdf4-bf5b-4dfb-a75f-e23de9730118",
+          "name" : "scope",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "18a71cbe-f82c-4aa9-af7b-542cf333382c",
+          "name" : "type",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "b7e7be89-ba53-4c4b-8b79-82ebe5b0d504",
+          "name" : "typeArguments",
+          "type" : "LIST"
+        }, {
+          "uuid" : "ce7b2791-8e35-43f1-b8e4-84aabd50d5d1",
+          "name" : "arguments",
+          "type" : "LIST"
+        }, {
+          "uuid" : "3b248904-958a-46fa-8570-aca4b159994e",
+          "name" : "anonymousClassBodies",
+          "type" : "LIST"
+        }, {
+          "uuid" : "ac7f8942-d1a7-469b-a34a-41aadc48ef31",
+          "name" : "emptyClassBody",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "cd871a18-9f82-4e2b-9745-bc7c3839f950",
+        "name" : "NormalAnnotationExpression",
+        "text" : "@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~",
+        "parameters" : [ {
+          "uuid" : "7508775e-8e7f-44d8-a421-071d19776e1a",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9e9ae462-e670-4980-b242-6dd57f22f122",
+          "name" : "memberValues",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "3aea32ab-ec7c-4a8b-9be7-6db65066651c",
+        "name" : "NullLiteralExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "b0fd722b-b5be-434f-bd09-f428f337f212",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "f7c8bf30-7680-46dc-9c52-34866b5d440d",
+        "name" : "VariableDeclarationExpression",
+        "text" : "~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=\", \"~",
+        "parameters" : [ {
+          "uuid" : "211d88ec-c312-44fe-bcc7-48e8fa1e538d",
+          "name" : "variables",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "ff2f246d-085e-41b3-8c97-c6c1c958fd8a",
+          "name" : "modifiers",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "da0e02b6-9fe8-4121-9e7d-baa5689226d4",
+        "name" : "SingleMemberAnnotationExpression",
+        "text" : "@~name~~if(members)~(~members:{it|~it~};separator=\", \"~)~endif~",
+        "parameters" : [ {
+          "uuid" : "c80bddef-fcc0-4f4d-8551-3b4ca56e3435",
+          "name" : "members",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "79060157-967d-49e8-95ee-387115772567",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "4da7576c-69d6-49c3-ac0a-28276008b110",
+        "name" : "MethodReferenceExpression",
+        "text" : "~scope~::~identifier~",
+        "parameters" : [ {
+          "uuid" : "43ea0f71-22d9-4b23-bd9b-c3804a85d6ed",
+          "name" : "identifier",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "96ac9350-b1aa-4f97-891f-136c27712a35",
+          "name" : "scope",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "3b717596-8e8a-4cb7-a9d0-8d83b801a391",
+        "name" : "MethodCallExpression",
+        "text" : "~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~)",
+        "parameters" : [ {
+          "uuid" : "e2722ed7-4ba5-439d-a56b-9258a45a3b0d",
+          "name" : "scope",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "feb92039-f732-464c-a634-fa9e8df17559",
+          "name" : "arguments",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "7b2a6e24-ead4-44b8-9f4c-49d578fffb33",
+          "name" : "typeArguments",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "5ada569e-5162-4221-abe8-38950eab8431",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "b5ede38e-ec89-46f9-a872-500093228e42",
+        "name" : "MarkerAnnotationExpression",
+        "text" : "@~name~",
+        "parameters" : [ {
+          "uuid" : "39dbcca8-849d-4ba3-9ca6-0c0aaa792f52",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "faaa9451-182c-4ea5-adc3-deccfc4be779",
+        "name" : "LambdaExpression",
+        "text" : "(~parameters:{it|~it~};separator=\", \"~) -> ~body~",
+        "parameters" : [ {
+          "uuid" : "f528df34-06fb-4ddb-9f4d-7f00507b4054",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "4644c015-3638-479e-9fd4-7001dcbf597a",
+          "name" : "parameters",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "6f654f56-0b69-408d-b064-a1065f26d2ce",
+        "name" : "IntegerLiteralExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "318c89dc-834f-478a-92a3-2b5357eb745d",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "c7a09c33-f538-4813-8119-147ceed369a9",
+        "name" : "InstanceOfExpression",
+        "text" : "~expression~ instanceof ~type~",
+        "parameters" : [ {
+          "uuid" : "0ca5ae63-69e4-4140-8f32-599dca28ec44",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "8c90f13a-65db-4003-855e-758b646be893",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "9ad8ac74-6528-452b-9751-804e524eedfe",
+        "name" : "FieldAccessExpression",
+        "text" : "~if(scope)~~scope~.~endif~~name~",
+        "parameters" : [ {
+          "uuid" : "7e7ae41e-15f6-420a-aa41-851871926b53",
+          "name" : "scope",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "959983fd-b8d9-43dd-bf6c-d6d63b906cd4",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "04c31639-ec3f-4fae-a055-3692448be802",
+        "name" : "EnclosedExpression",
+        "text" : "(~expression~)",
+        "parameters" : [ {
+          "uuid" : "ec5ac109-9018-4b2d-bf50-cb82d2efeba5",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "39693644-aaed-4149-ace2-ec9e3dfe47c6",
+        "name" : "DoubleLiteralExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "dfbe7c01-11f5-4c29-99fd-4231a17ccb87",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "e9ac7b74-c9a4-47ac-84ea-6bc1c87e5268",
+        "name" : "ConditionalExpression",
+        "text" : "~condition~ ? ~thenExpression~ : ~elseExpression~",
+        "parameters" : [ {
+          "uuid" : "4fd0c0cb-8d68-4053-9ee8-2fb7418b7491",
+          "name" : "thenExpression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "5304bbed-3b0d-4e37-abc1-8ff2137b168a",
+          "name" : "elseExpression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "ee757142-9c28-4897-af08-3084a268bd86",
+          "name" : "condition",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "5f7743f9-4f02-457f-b655-da7d0ada027a",
+        "name" : "CharLiteralExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "fb885eb5-9405-45db-9a21-87ceeca75a03",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "d0341008-740e-46a6-8fdc-10da253c2508",
+        "name" : "CastExpression",
+        "text" : "(~type~) ~expression~",
+        "parameters" : [ {
+          "uuid" : "07853d7e-6210-49f4-817d-70fba4acd074",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "323b7354-ecfd-4250-9d8f-c1d7aa3402dc",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "1e0d86e9-f341-4b56-88cd-540772b23168",
+        "name" : "BooleanLiteralExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "b24adbae-468f-4366-b2e0-4cd3d9cf1f96",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "983b5d5f-4b67-4c15-a681-5bafde3ac374",
+        "name" : "BinaryExpression",
+        "text" : "~left~ ~operator~ ~right~",
+        "parameters" : [ {
+          "uuid" : "bb26b253-0757-452a-91ca-4501975e1bf6",
+          "name" : "left",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "f5efd85e-1b57-4b28-81ac-2d151abedfe1",
+          "name" : "operator",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "af5ccbb9-4f19-41ae-adee-abe4888f0940",
+          "name" : "right",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "16745752-8449-469b-bbc4-f377a8ede0a3",
+        "name" : "LongExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "ed2391f9-39b3-4bd9-abe6-cdbda18d77d4",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "0ad77aa5-b4d6-414e-b86a-0f075bd0c6f8",
+        "name" : "NameExpression",
+        "text" : "~value~",
+        "parameters" : [ {
+          "uuid" : "08b6f88f-8b39-4d66-86fe-55c9f9dc1743",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "f1789fa7-e36e-4dab-b7ab-47c1425e0b16",
+        "name" : "ThisExpression",
+        "text" : "this~if(typeName)~.~endif~~typeName~",
+        "parameters" : [ {
+          "uuid" : "37447cf8-b3ab-4be0-8d7e-c899274ffa6e",
+          "name" : "typeName",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      }, {
+        "uuid" : "160af200-e4eb-477d-a87f-b406a414dd65",
+        "name" : "ClassExpression",
+        "text" : "~type~.class",
+        "parameters" : [ {
+          "uuid" : "317aa580-3072-4db4-b448-735b28157f0d",
+          "name" : "type",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Expression" ]
+      } ]
+    }, {
+      "uuid" : "8d648fed-a90c-497a-a6c1-01c3c951d1fa",
+      "name" : "Statements",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "57de2a08-41e3-492c-8368-5eec88990652",
+        "name" : "ExpressionStmt",
+        "text" : "~if(comment)~//~comment~\n~endif~~expression~; ",
+        "parameters" : [ {
+          "uuid" : "19a2405e-c098-486f-bc1b-79a302dca301",
+          "name" : "comment",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0d97c576-aa94-4b6a-8f33-81ddbb47afc1",
+          "name" : "expression",
+          "type" : "SINGLE",
+          "argumentType" : "Expression"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "797a5a5a-d2ed-4a96-984a-76c9f8ec4262",
+        "name" : "ContinueStmt",
+        "text" : "continue~if(label)~ ~label~~endif~;",
+        "parameters" : [ {
+          "uuid" : "504408c4-2281-42d6-910c-cce2bc3354f6",
+          "name" : "label",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "d9fa491e-74fc-4b2b-9f29-97d1a28621a7",
+        "name" : "SwitchEntryStmt",
+        "text" : "~if(labels)~~labels:{it|case ~it~ :};separator=\"\\n\"~~else~default :~endif~\r\n\t~statements:{it|~it~};separator=\"\\n\"~",
+        "parameters" : [ {
+          "uuid" : "6e7d836f-ce3d-4728-8fd5-67277d4f9c71",
+          "name" : "labels",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "f25415da-bb84-4a5d-85ad-92ecd5b7ed45",
+          "name" : "statements",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "8ac23afe-088b-428d-9511-bf5517297b50",
+        "name" : "SwitchStmt",
+        "text" : "switch(~selector~) {\r\n\t~entries:{it|~it~};separator=\"\\n\"~\r\n}",
+        "parameters" : [ {
+          "uuid" : "6a61d9cf-9a36-4617-a556-f34ca6fb62d2",
+          "name" : "selector",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "45f9cabe-b203-4ff1-8f1b-6897d367e840",
+          "name" : "entries",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "06fdd2f7-5f8f-45ef-8e19-6778a32d71bc",
+        "name" : "SynchronizedStmt",
+        "text" : "synchronized ( ~expression~ ) ~body~",
+        "parameters" : [ {
+          "uuid" : "e7606ae3-abb5-4480-91d0-60d3cef26086",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "4be4de96-8068-4028-9a56-2fd37f94718b",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "70be02be-f566-4f83-883e-47e67bd22e27",
+        "name" : "WhileStmt",
+        "text" : "while (~condition~) ~body~",
+        "parameters" : [ {
+          "uuid" : "3f416773-db5b-469f-a721-caea94ae820d",
+          "name" : "condition",
+          "argumentType" : "Expression",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "b4760c15-bbb2-4a4c-855e-9e913df669c6",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "cb071756-48eb-41ad-9566-2e8dc6cae4f1",
+        "name" : "LabeledStmt",
+        "text" : "~label~ : \r\n\t~statement~",
+        "parameters" : [ {
+          "uuid" : "85a5a64b-1f01-4949-8e47-96dd16c77ee2",
+          "name" : "statement",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "160e23c1-f02d-46ee-9c07-807d727b5160",
+          "name" : "label",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "8005d178-19b3-4749-8c69-40a6cc5f96a2",
+        "name" : "ForEachStmt",
+        "text" : "for (~variable~ : ~iterable~) ~body~",
+        "parameters" : [ {
+          "uuid" : "f44c2e00-1545-4c4c-85f9-9dbbc7490a57",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "c0272610-4e5a-476d-9cc3-75f9a1aee740",
+          "name" : "variable",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "85781a03-3d17-4451-8b56-3fc9e781574b",
+          "name" : "iterable",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "5c27cba8-bf0d-4e56-9ee0-5ccd25e637a7",
+        "name" : "AssertStmt",
+        "text" : "assert ~expression~~if(message)~ : ~message~~endif~;",
+        "parameters" : [ {
+          "uuid" : "e70b51f1-3ae9-4fc8-a99e-d86d70373ebe",
+          "name" : "message",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "08df6852-f5a3-46d1-a9e7-40a45a39a067",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "4ec25d5d-b26f-4896-be9c-2a97ee1e5dba",
+        "name" : "BlockStmt",
+        "text" : "~if(isStatic)~ static~endif~ { ~if(statements)~\r\n\t~statements:{it|~it~};separator=\"\\n\"~\r\n~endif~\r\n}",
+        "parameters" : [ {
+          "uuid" : "54ac7726-eed5-4451-85d3-c5cf5721177c",
+          "name" : "isStatic",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "5f398ca4-a981-44a7-be6a-bb2d4290937d",
+          "name" : "statements",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "64dee618-e8f3-4f42-b789-5b553d9c59f6",
+        "name" : "BreakStmt",
+        "text" : "break~if(label)~ ~label~~endif~;",
+        "parameters" : [ {
+          "uuid" : "da83e447-ffbf-4d5b-8959-eb18317ecfa6",
+          "name" : "label",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "ce64c7c0-9799-42c0-bd29-adba171e1561",
+        "name" : "EmptyStmt",
+        "text" : ";",
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "24b56c9b-2efe-4099-8529-bc75c8474211",
+        "name" : "ThrowStmt",
+        "text" : "throw ~expression~;",
+        "parameters" : [ {
+          "uuid" : "7571994d-f9e6-4908-82e2-8716b23eaba9",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "eed6cac0-8360-4191-8063-254431970d31",
+        "name" : "ReturnStmt",
+        "text" : "return~if(expression)~ ~expression~~endif~;",
+        "parameters" : [ {
+          "uuid" : "7b5c852c-449e-4ec3-a64f-1178588ffc16",
+          "name" : "expression",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "56288e29-fab8-4d53-85be-7bf3da503c5b",
+        "name" : "IfStmt",
+        "text" : "if (~condition~) ~then~~if(elseStmt)~ \r\nelse ~elseStmt~~endif~",
+        "parameters" : [ {
+          "uuid" : "2b8e543b-2aa7-4d49-85bd-204bb0b617b4",
+          "name" : "condition",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "db97f706-01ef-4fdd-a212-dec010aa01c9",
+          "name" : "then",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "07a32a8e-29b7-48f9-837c-e2f9d2a07458",
+          "name" : "elseStmt",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "fef30544-81fa-42ea-8613-e2525ef0f2ea",
+        "name" : "ForStmt",
+        "text" : "for (~initialization:{it|~it~};separator=\", \"~; ~compare~; ~update:{it|~it~};separator=\", \"~) ~body~",
+        "parameters" : [ {
+          "uuid" : "cebb8ab1-4bc9-4045-80a3-c4c84319eaf4",
+          "name" : "update",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "2923676e-c3a4-4dfb-85a1-581ffe0dec39",
+          "name" : "initialization",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "6bbe4849-f68a-4558-b291-187b9fb8d8c9",
+          "name" : "compare",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "7977fb8b-f342-4a08-9408-4af563d6fa38",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "30412603-f34e-4195-b2e4-f93e7b6c3df3",
+        "name" : "DoStmt",
+        "text" : "do ~body~ while (~condition~);",
+        "parameters" : [ {
+          "uuid" : "b156232a-8e6b-4e4c-a5af-cc2232b4746c",
+          "name" : "condition",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9e9f2777-178f-4046-809e-fc50e370a8fe",
+          "name" : "body",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "fe48ed36-f2d0-4cc6-ab85-76a224930a61",
+        "name" : "ExplicitConstructorInvocationStmt",
+        "text" : "~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~);",
+        "parameters" : [ {
+          "uuid" : "becf2a29-f43a-4b21-810d-99c345beaec1",
+          "name" : "isThis",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "ade779e2-69c3-454c-9131-6fb89e5095e9",
+          "name" : "arguments",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "926a43bf-b116-4dab-ace2-03c7d45b8888",
+        "name" : "TryStmt",
+        "text" : "try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~",
+        "parameters" : [ {
+          "uuid" : "43516459-b270-4959-a9ee-ad6968a6d47e",
+          "name" : "tryBlock",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "c177c345-caf6-4a00-af42-f920a2b60119",
+          "name" : "finalClause",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "568947bc-8fbb-44d7-b3cf-4ad0be9923e6",
+          "name" : "catchClauses",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        }, {
+          "uuid" : "cbea1e07-7124-4e56-8078-10b20b3cf926",
+          "name" : "resources",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ],
+        "implements" : [ "Statement" ]
+      }, {
+        "uuid" : "8d9b7ed2-8689-406f-b27b-ab5830a9d9b1",
+        "name" : "CatchClause",
+        "text" : "catch (~parameter~) ~body~",
+        "parameters" : [ {
+          "uuid" : "d9e009a6-f494-4c3f-b0d1-ea014b2527e7",
+          "name" : "parameter",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "8524a1d5-27c6-4a9c-a82a-b66301b6cc34",
+          "name" : "body",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "Statement" ]
+      } ]
+    }, {
+      "uuid" : "28f2148c-b735-45f4-9fa1-5581e4cc5755",
+      "name" : "Types",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "3cdda1e2-9337-4cd0-9de3-f74aa76412cd",
+        "name" : "TypeParameter",
+        "text" : "~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=\" & \"~~endif~",
+        "parameters" : [ {
+          "uuid" : "dd657d04-9a26-403e-8207-19dad6530983",
+          "name" : "name",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "c3aaaae1-3889-49cc-a60b-9bda6f850ff3",
+          "name" : "typeBounds",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "c9f0fd8f-3788-4019-8506-e5bd47c62a83",
+        "name" : "ClassOrInterfaceType",
+        "text" : "~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~",
+        "parameters" : [ {
+          "uuid" : "8a7e497c-60ab-4db3-be47-29daa569743c",
+          "name" : "scope",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "fb32e0f9-3f7e-417f-86b4-6e06ed130009",
+          "name" : "names",
+          "type" : "LIST"
+        }, {
+          "uuid" : "dc31f633-bb1f-46bf-a5db-72c199df8a1d",
+          "name" : "typeArguments",
+          "type" : "LIST"
+        }, {
+          "uuid" : "ec41acea-581f-47f3-8849-f3c402d981c9",
+          "name" : "isTyped",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "040e81a9-0821-4eaf-8ce6-518dbc5b0040",
+          "name" : "isArrayType",
+          "type" : "SINGLE"
+        } ]
+      } ]
+    }, {
+      "uuid" : "e0bfdbdb-b30a-46be-ae1a-0a9f55f011ce",
+      "name" : "ArrayCreationLevel",
+      "text" : "[~dimension~]",
+      "parameters" : [ {
+        "uuid" : "73cc28a9-bf1b-47c6-8d8d-0c2fcf820982",
+        "name" : "dimension",
+        "argumentType" : "Object",
+        "type" : "SINGLE"
+      } ]
+    }, {
+      "uuid" : "20ade8fb-7f03-4269-89ae-b1fb5b09cef0",
+      "name" : "QualifierName",
+      "text" : "~value:{it|~it~};separator=\".\"~",
+      "parameters" : [ {
+        "uuid" : "d0472445-c25c-432a-8c23-4dd860b37436",
+        "name" : "value",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      } ]
+    }, {
+      "uuid" : "4177150a-3849-49e6-9c8e-9ecc03922528",
+      "name" : "JavaPackageInfo",
+      "text" : "~packageName~\r\n\r\ninterfaces:\r\n\t~interfaces:{it|~it.name~};separator=\"\\n\"~\r\n\r\nclasses:\r\n\t~classes:{it|~it.name~};separator=\"\\n\"~",
+      "parameters" : [ {
+        "uuid" : "678af3c7-497c-460e-875f-805048f8df93",
+        "name" : "packageName",
+        "argumentType" : "Object",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "6fd4a88d-3d2e-4b51-8f07-28ccbb7c4527",
+        "name" : "interfaces",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      }, {
+        "uuid" : "ebea310b-9890-4562-a16f-4c292af0ddae",
+        "name" : "classes",
+        "argumentType" : "Object",
+        "type" : "LIST"
+      } ]
+    }, {
+      "uuid" : "3a05a8f3-a98b-470e-85e4-9a586a0ddf85",
+      "name" : "MemberValuePair",
+      "text" : "~name~ = ~value~",
+      "parameters" : [ {
+        "uuid" : "06e6f4ea-acaf-444a-9c17-92e525102266",
+        "name" : "name",
+        "argumentType" : "Object",
+        "type" : "SINGLE"
+      }, {
+        "uuid" : "75b17dc3-e9fe-4b2b-8fee-0eb000910be4",
+        "name" : "value",
+        "argumentType" : "Object",
+        "type" : "SINGLE"
+      } ]
+    } ]
+  }, {
+    "uuid" : "dc0b3a68-210c-4c7a-b1d8-51a4b43cfd2f",
+    "name" : "JavaPatterns",
+    "text" : "public static class JavaPatterns extends nextgen.templates.java.JavaST {\n\n\t// declarations\n\tpublic static PackageDeclaration newPackageDeclaration(String packageName) {\n\t\treturn newPackageDeclaration()\n\t\t\t\t.setName(packageName);\n\t}\n\n\tpublic static PackageDeclaration newPackageDeclaration(PackageDeclaration parent, String packageName) {\n\t\treturn newPackageDeclaration()\n\t\t\t\t.setName(parent.getName() + \".\" + packageName);\n\t}\n\n\tpublic static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.PUBLIC);\n\t}\n\n\tpublic static MethodDeclaration newPublicMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration(classOrInterfaceType, name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.PUBLIC);\n\t}\n\n\tpublic static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newPublicMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.STATIC);\n\t}\n\n\tpublic static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newPublicStaticMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newPublicMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static MethodDeclaration newPublicFinalMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n\t\treturn newPublicMethodDeclaration(classOrInterfaceType, name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.PROTECTED);\n\t}\n\n\tpublic static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newProtectedMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.STATIC);\n\t}\n\n\tpublic static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.PRIVATE);\n\t}\n\n\tpublic static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newPrivateMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.STATIC);\n\t}\n\n\tpublic static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.STATIC);\n\t}\n\n\tpublic static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newStaticMethodDeclaration(name, blockStmt)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration()\n\t\t\t\t.setName(name)\n\t\t\t\t.setBlockStmt(blockStmt);\n\t}\n\n\tpublic static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration()\n\t\t\t\t.setType(classOrInterfaceType)\n\t\t\t\t.setName(name)\n\t\t\t\t.setBlockStmt(blockStmt);\n\t}\n\n\tpublic static MethodDeclaration newOverriddenMethodDeclaration(String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration()\n\t\t\t\t.addAnnotations(newSingleMemberAnnotationExpression().setName(\"Override\"))\n\t\t\t\t.setName(name)\n\t\t\t\t.setBlockStmt(blockStmt);\n\t}\n\n\tpublic static MethodDeclaration newOverridenMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {\n\t\treturn newMethodDeclaration()\n\t\t\t\t.addAnnotations(newSingleMemberAnnotationExpression().setName(\"Override\"))\n\t\t\t\t.setType(classOrInterfaceType)\n\t\t\t\t.setName(name)\n\t\t\t\t.setBlockStmt(blockStmt);\n\t}\n\n\tpublic static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {\n\t\treturn newVariableDeclaration()\n\t\t\t\t.setType(classOrInterfaceType)\n\t\t\t\t.setName(name)\n\t\t\t\t.setInitializer(initializer);\n\t}\n\n\tpublic static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.PRIVATE);\n\t}\n\n\tpublic static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.PROTECTED);\n\t}\n\n\tpublic static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.PUBLIC);\n\t}\n\n\tpublic static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newPrivateFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newProtectedFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newPublicFieldDeclaration(variableDeclaration)\n\t\t\t\t.addModifiers(Modifiers.FINAL);\n\t}\n\n\tpublic static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {\n\t\treturn newFieldDeclaration()\n\t\t\t\t.addVariables(variableDeclaration);\n\t}\n\n\tpublic static ClassOrInterfaceType newClassOrInterfaceType(Object scope, String name) {\n\t\treturn newClassOrInterfaceType()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.addNames(name);\n\t}\n\n\tpublic static Parameter newParameter(ClassOrInterfaceType type, String name) {\n\t\treturn newParameter()\n\t\t\t\t.setType(type)\n\t\t\t\t.setName(name);\n\t}\n\n\t// statements\n\tpublic static Statement newExpressionStmt(Expression expression) {\n\t\treturn newExpressionStmt()\n\t\t\t\t.setExpression(expression);\n\t}\n\n\tpublic static Statement newReturnStatement(Expression expression) {\n\t\treturn newReturnStmt()\n\t\t\t\t.setExpression(expression);\n\t}\n\n\tpublic static SwitchStmt newSwitchStmt(Object selector) {\n\t\treturn newSwitchStmt()\n\t\t\t\t.setSelector(selector);\n\t}\n\n\tpublic static SwitchEntryStmt newSwitchEntryStmt(Object label, BlockStmt blockStmt) {\n\t\treturn newSwitchEntryStmt()\n\t\t\t\t.addLabels(label)\n\t\t\t\t.addStatements(blockStmt);\n\t}\n\n\tpublic static BlockStmt newBlockStmt(String ... statements) {\n\t\treturn newBlockStmt()\n\t\t\t\t.setStatements(statements);\n\t}\n\n\t// expressions\n\tpublic static ObjectCreationExpression newObjectCreationExpression(ClassOrInterfaceType classOrInterfaceType) {\n\t\treturn newObjectCreationExpression()\n\t\t\t\t.setType(classOrInterfaceType);\n\t}\n\n\tpublic static LambdaExpression newLambdaExpression(Expression expression) {\n\t\treturn newLambdaExpression()\n\t\t\t\t.setBody(expression);\n\t}\n\n\tpublic static LambdaExpression newLambdaExpression(String expression) {\n\t\treturn newLambdaExpression()\n\t\t\t\t.setBody(expression);\n\t}\n\n\tpublic static LambdaExpression newLambdaExpression(Statement... statements) {\n\t\treturn newLambdaExpression()\n\t\t\t\t.setBody(newBlockStmt()\n\t\t\t\t\t.setStatements(statements));\n\t}\n\n\tpublic static FieldAccessExpression newFieldAccessExpression(ClassOrInterfaceType scope, String name) {\n\t\treturn newFieldAccessExpression()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.setName(name);\n\t}\n\n\tpublic static FieldAccessExpression newFieldAccessExpression(Expression scope, String name) {\n\t\treturn newFieldAccessExpression()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.setName(name);\n\t}\n\n\tpublic static FieldAccessExpression newFieldAccessExpression(String scope, String name) {\n\t\treturn newFieldAccessExpression()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.setName(name);\n\t}\n\n\tpublic static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {\n\t\treturn newVariableDeclarationExpression()\n\t\t\t\t.addModifiers(Modifiers.FINAL)\n\t\t\t\t.addVariables(variableDeclaration);\n\t}\n\n\tpublic static MethodCallExpression newMethodCallExpression(Expression scope, String name, Object... arguments) {\n\t\treturn newMethodCallExpression()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.setName(name)\n\t\t\t\t.setArguments(arguments);\n\t}\n\n\tpublic static MethodCallExpression newMethodCallExpression(VariableDeclaration scope, String name, Object... arguments) {\n\t\treturn newMethodCallExpression()\n\t\t\t\t.setScope(scope.getName())\n\t\t\t\t.setName(name)\n\t\t\t\t.setArguments(arguments);\n\t}\n\n\tpublic static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {\n\t\treturn newMethodCallExpression()\n\t\t\t\t.setScope(scope)\n\t\t\t\t.setName(name)\n\t\t\t\t.setArguments(arguments);\n\t}\n\n\tpublic static MethodCallExpression newMethodCallExpression(String name, Object... arguments) {\n\t\treturn newMethodCallExpression()\n\t\t\t\t.setName(name)\n\t\t\t\t.setArguments(arguments);\n\t}\n\n\tpublic static Expression newExpression(String expression) {\n\t\treturn newNameExpression().setValue(expression);\n\t}\n\n\t// formatting\n\tpublic static Object asString(Object value) {\n\t\treturn \"\\\"\" + value + \"\\\"\";\n\t}\n}\n\npublic static class NamedEntity {\n\n\tprivate final String name;\n\tprivate final PackageDeclaration packageDeclaration;\n\tprivate String variableName;\n\n\tNamedEntity(String name, PackageDeclaration packageDeclaration) {\n\t\tthis.name = name;\n\t\tthis.packageDeclaration = packageDeclaration;\n\t}\n\n\tNamedEntity(String name, PackageDeclaration packageDeclaration, String variableName) {\n\t\tthis(name, packageDeclaration);\n\t\tthis.variableName = variableName;\n\t}\n\n\tString name() {\n\t\treturn name;\n\t}\n\n\tString variableName() {\n\t\treturn variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;\n\t}\n\n\tMethodCallExpression staticMethodCall(String name, Object... arguments) {\n\t\treturn newMethodCallExpression(asClassOrInterfaceType(), name, arguments);\n\t}\n\n\tMethodCallExpression methodCall(String name, Object... arguments) {\n\t\treturn newMethodCallExpression(newExpression(variableName()), name, arguments);\n\t}\n\n\tParameter asParameter(Object... typeArguments) {\n\t\treturn newParameter(asClassOrInterfaceType(typeArguments), variableName());\n\t}\n\n\tParameter asParameter(NamedEntity typeArguments) {\n\t\treturn newParameter(asClassOrInterfaceType(typeArguments.asClassOrInterfaceType()), variableName());\n\t}\n\n\tStatement asFinalVariableDeclaration(Object initializer) {\n\t\treturn newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));\n\t}\n\n\tClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {\n\t\treturn newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)\n\t\t\t\t.setTypeArguments(typeArguments);\n\t}\n\n\tClassOrInterfaceType asClassOrInterfaceType(NamedEntity typeArgument) {\n\t\treturn asClassOrInterfaceType(typeArgument.asClassOrInterfaceType());\n\t}\n\n\tObjectCreationExpression asObjectCreationExpression(Object... arguments) {\n\t\treturn newObjectCreationExpression(asClassOrInterfaceType())\n\t\t\t\t.setArguments(arguments);\n\t}\n\n\tFieldAccessExpression asFieldAccessExpression(String fieldName) {\n\t\treturn newFieldAccessExpression(asClassOrInterfaceType(), fieldName);\n\t}\n} ",
+    "parameters" : [ ]
+  }, {
+    "uuid" : "90f9bca0-cf79-4838-9634-de891595ccdb",
+    "name" : "JavaLibrary",
+    "text" : "~name~\n\n~packages:{it|~it~};separator=\"\\n\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "6362bf5e-9fe1-47eb-9ae9-5798b8cd423e",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "aadecc17-0e20-487e-949d-c198e962b62b",
+      "name" : "packages",
+      "type" : "LIST",
+      "argumentType" : "JavaPackage"
+    } ],
+    "children" : [ {
+      "uuid" : "6c2bbf37-2208-4993-bbc6-a27a2fabf40d",
+      "name" : "JavaPackage",
+      "text" : "~name~\n~types:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "ab87578e-09ce-4932-9bb7-ffc8a8969bd7",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "67a88a07-4aa9-43fd-b95c-05d73df15596",
+        "name" : "types",
+        "type" : "LIST",
+        "argumentType" : "JavaType"
+      } ],
+      "children" : [ {
+        "uuid" : "fe17e06e-067c-4b32-9fb8-06cbe277c5a9",
+        "name" : "JavaType",
+        "text" : "~packageName~.~name~ ",
+        "parameters" : [ {
+          "uuid" : "5d63812b-3e50-4050-a13c-1008355309b4",
+          "name" : "packageName",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "690d69ba-e944-49c9-a006-41ceeb529852",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        } ]
+      } ]
+    } ]
+  }, {
+    "uuid" : "9fcde15e-9d31-4830-9617-2a29b70ba0f1",
+    "name" : "Utils",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "695a6427-6d43-4efb-b4ad-8fe7058c99d1",
+      "name" : "PasswordUtils",
+      "text" : "package ~packageName~;\n\nimport javax.crypto.SecretKeyFactory;\nimport javax.crypto.spec.PBEKeySpec;\nimport java.security.NoSuchAlgorithmException;\nimport java.security.SecureRandom;\nimport java.security.spec.InvalidKeySpecException;\nimport java.util.Arrays;\nimport java.util.Base64;\nimport java.util.Random;\n\npublic class ~name~ {\n\n    private static final Random RANDOM = new SecureRandom();\n    private static final String ALPHABET = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\";\n    private static final int ITERATIONS = 10000;\n    private static final int KEY_LENGTH = 256;\n\n    public static String getSalt(int length) {\n        StringBuilder returnValue = new StringBuilder(length);\n        for (int i = 0; i < length; i++)\n            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));\n        return new String(returnValue);\n    }\n\n    public static byte[] hash(char[] password, byte[] salt) {\n        final PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);\n        Arrays.fill(password, Character.MIN_VALUE);\n        try {\n            SecretKeyFactory skf = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\");\n            return skf.generateSecret(spec).getEncoded();\n        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {\n            throw new AssertionError(\"Error while hashing a password: \" + e.getMessage(), e);\n        } finally {\n            spec.clearPassword();\n        }\n    }\n\n    public static String generateSecurePassword(String password, String salt) {\n        String returnValue;\n        byte[] securePassword = hash(password.toCharArray(), salt.getBytes());\n        returnValue = Base64.getEncoder().encodeToString(securePassword);\n        return returnValue;\n    }\n\n    public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {\n        final String newSecurePassword = generateSecurePassword(providedPassword, salt);\n        return newSecurePassword.equalsIgnoreCase(securedPassword);\n    }\n} ",
+      "parameters" : [ {
+        "uuid" : "3e74d4c9-a849-49f5-b83e-952e121c884c",
+        "name" : "packageName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2cb3803b-7ecb-447e-9288-79dc8ffd0d20",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Java.stg",
+  "enums" : [ {
+    "uuid" : "8bbeb79f-ca45-492b-b51b-53f13e702c42",
+    "name" : "CoreTypes",
+    "values" : [ {
+      "uuid" : "1d88fd16-609a-4911-b29f-dd8dd97ccd75",
+      "name" : "FileType",
+      "lexical" : "java.io.File"
+    }, {
+      "uuid" : "44b619f7-558e-4060-9b5f-6eedd23c7cf0",
+      "name" : "StringType",
+      "lexical" : "java.lang.String"
+    }, {
+      "uuid" : "ee7f48cc-976a-4cdd-89e9-006d5a6cd5dd",
+      "name" : "LongType",
+      "lexical" : "java.lang.Long"
+    }, {
+      "uuid" : "cb66658d-2f94-4267-99bb-c34f68307f7f",
+      "name" : "AtomicLongType",
+      "lexical" : "java.util.concurrent.atomic.AtomicLong"
+    }, {
+      "uuid" : "9ea7863a-5aca-4202-8b84-f644f8f7f649",
+      "name" : "ThreadType",
+      "lexical" : "java.util.Thread"
+    } ]
+  }, {
+    "uuid" : "f6ed4328-3cec-4cf3-b846-ba55bd03d89c",
+    "name" : "Modifiers",
+    "values" : [ {
+      "uuid" : "da112044-e40a-455f-b947-4b5a90cfa27c",
+      "name" : "PUBLIC",
+      "lexical" : "public"
+    }, {
+      "uuid" : "d351e39a-a4a5-49c8-a12b-d80e6fd08a02",
+      "name" : "PROTECTED",
+      "lexical" : "protected"
+    }, {
+      "uuid" : "530bb674-3989-45ee-92f3-fd1d120f948c",
+      "name" : "PRIVATE",
+      "lexical" : "private"
+    }, {
+      "uuid" : "9ae5122c-2e6f-475f-ab18-335dbff84d09",
+      "name" : "FINAL",
+      "lexical" : "final"
+    }, {
+      "uuid" : "5d659653-148c-430f-af7c-4670ebd64dfd",
+      "name" : "STATIC",
+      "lexical" : "static"
+    } ]
+  } ],
+  "interfaces" : [ {
+    "uuid" : "ae723f96-c87d-4156-bee9-9ada295b912f",
+    "name" : "Expression"
+  }, {
+    "uuid" : "49ff2457-f2d9-4b42-b4ce-6d0c91bb85db",
+    "name" : "Statement"
+  } ],
+  "icon" : "language-java",
+  "tags" : "java"
+}

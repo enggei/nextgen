@@ -1,0 +1,70 @@
+{
+  "uuid" : "7e830403-d16f-4d4f-8f46-ee64dca31b4c",
+  "name" : "MaterialDesignLight",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "87384458-6a7e-491d-aea1-f7e2b3bb24f0",
+    "name" : "Page",
+    "text" : "<!doctype html>\n<html lang=\"en\">\n<head>\n\t<meta charset=\"utf-8\">\n\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n\t<meta name=\"description\" content=\"~description~\">\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0\">\n\t<title>~title~</title>\n\t<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en\">\n\t<link rel=\"stylesheet\" href=\"https://code.getmdl.io/1.3.0/material.grey-pink.min.css\" />\n\t<link rel=\"stylesheet\" href=\"styles.css\" />\n\t<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">\n</head>\n\n<body>\n\t~body~\n\t<script src=\"https://code.getmdl.io/1.3.0/material.min.js\"></script>\n</body>\n\n</html> ",
+    "parameters" : [ {
+      "uuid" : "716875d5-34b5-4bf9-ad6b-ad49e7947859",
+      "name" : "description",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "c878d95c-669b-4dab-a58a-66442f981d4a",
+      "name" : "title",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "29b51731-c6dd-4b81-b5f9-0a34dbb4ea95",
+      "name" : "body",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "4e91c14c-2e3d-4599-8874-1e46d9a0a465",
+    "name" : "Element",
+    "text" : "<~name~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+    "parameters" : [ {
+      "uuid" : "d60c4962-f5a5-4e5d-9d91-96bb2521e515",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "32652465-64a8-4c69-9752-dce91fe348a2",
+      "name" : "children",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "24a35404-6f1d-46b5-9a13-d8f26b1b0cbb",
+    "name" : "MiniFooter",
+    "text" : "<footer class=\"mdl-mini-footer\">\n\t<div class=\"mdl-mini-footer__left-section\">\n\t\t<div class=\"mdl-logo\">\n\t\t\t~heading~\n\t\t</div>\n\t\t<ul class=\"mdl-mini-footer__link-list\">\n\t\t\t~linkList:{it|<li><a href=\"~it.href~\">~it.name~</a></li>};separator=\"\\n\"~\n\t\t</ul>\n\t</div>\n\t<div class=\"mdl-mini-footer__right-section\">\n\t\t~buttons:{it|<button class=\"mdl-mini-footer__social-btn\"></button>};separator=\"\\n\"~\n\t</div>\n</footer> ",
+    "parameters" : [ {
+      "uuid" : "607d9ca8-395b-4a7a-a01a-aa4320461ed2",
+      "name" : "heading",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "9e899b00-acaa-4b1b-963a-188e8c3e73a0",
+      "name" : "linkList",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "cf0b5ddd-87b2-4ba1-a126-cde41de110e3",
+        "name" : "href",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f3d6f1c6-b7ad-468b-8db3-d2ced9da8caf",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "1ff7af8d-3c57-42ec-9d5f-03c9d2ef0edd",
+      "name" : "buttons",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

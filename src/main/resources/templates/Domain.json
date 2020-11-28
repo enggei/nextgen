@@ -1,0 +1,215 @@
+{
+  "uuid" : "edb06bcb-5928-4e70-9b42-c5b6a54f5431",
+  "name" : "Domain",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "27fe2ba6-f50a-4f07-bc4b-12872efe17ad",
+    "name" : "Domain",
+    "text" : "Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~\nEntities:\n~entities:{it|~it~};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "21f95d9b-5310-43e9-9865-9be1fc951308",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "3079031a-0bc3-4e73-85c1-6c0bd30cfdd1",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "0f8739ef-5188-4140-8a51-72aff4d37ea9",
+      "name" : "observable",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "525f7437-e801-4a26-96ae-ebae456054e0",
+      "name" : "entities",
+      "type" : "LIST",
+      "argumentType" : "Entity"
+    } ],
+    "children" : [ {
+      "uuid" : "c4c6caaf-84a5-4975-8782-311476c8742c",
+      "name" : "Entity",
+      "text" : "Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(eqha)~~eqha~~endif~\n~relations:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "df812852-1a4b-4e82-b4e1-31196c9b948f",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "b786761b-cdbb-4ea2-a0de-487a429da4f4",
+        "name" : "isEnum",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      }, {
+        "uuid" : "ed6201f0-575e-4cff-8393-6deb1e2b8283",
+        "name" : "enumValues",
+        "type" : "LIST",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "8d1973e1-de07-439e-9b06-fc185c9afe36",
+        "name" : "eqha",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b082416f-6627-4868-8709-6e1d5ffaddbe",
+        "name" : "relations",
+        "type" : "LIST",
+        "argumentType" : "Relation"
+      } ]
+    }, {
+      "uuid" : "6b160e63-6f7a-46c1-b128-db8e15f2d184",
+      "name" : "Relation",
+      "text" : "~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~ ",
+      "parameters" : [ {
+        "uuid" : "6e9a1856-7da1-4ef9-b422-f3b990eef6d6",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "be034db9-ef54-4d8d-b4f0-281ca65d0a23",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "RelationType"
+      }, {
+        "uuid" : "ed35b23a-3a4c-4a3c-b315-9ef52a90f736",
+        "name" : "dst",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "bdc441f7-1a34-4fc5-baa3-66ac94e19b2e",
+        "name" : "lexical",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      }, {
+        "uuid" : "3293f726-fb4b-4194-b7c5-f5bea01a09c2",
+        "name" : "self",
+        "type" : "SINGLE",
+        "argumentType" : "Boolean"
+      }, {
+        "uuid" : "3fd4a769-5a45-448a-82a4-b84711b69a07",
+        "name" : "eqha",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "57f00696-63ff-490f-a373-a5d758728253",
+    "name" : "MetaDomain",
+    "text" : "~name~\n\n~entities:{it|~it~};separator=\"\\n\"~\n\n~relations:{it|~it~};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "c88ef9a0-4edc-4989-b78f-21514eec85f6",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "1d3b5d47-2e7c-486f-8cab-392a9c642a41",
+      "name" : "entities",
+      "type" : "LIST",
+      "argumentType" : "MetaEntity"
+    }, {
+      "uuid" : "4c1da5f7-d4cf-4e6a-9dd7-3befda2d74c1",
+      "name" : "relations",
+      "type" : "LIST",
+      "argumentType" : "MetaRelation"
+    } ],
+    "children" : [ {
+      "uuid" : "b7b0daa3-a069-4ccf-a7b1-b07226a3b4c9",
+      "name" : "MetaEntity",
+      "text" : "~name~\n\t~properties:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "ba083dca-26c8-408d-a6a7-fd86b32750b5",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "40ea8d2a-cef5-4496-abc1-ee3cd0749e86",
+        "name" : "properties",
+        "type" : "LIST",
+        "argumentType" : "MetaProperty"
+      } ]
+    }, {
+      "uuid" : "64955d8a-138e-4bf9-8dc8-4f1b85ff6063",
+      "name" : "MetaRelation",
+      "text" : "~name~\n\t(~src:{it|~it~};separator=\", \"~) -> ~type~ -> (~dst:{it|~it~};separator=\", \"~)\n\t~properties:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "8a56436d-6e89-44ce-be7f-9d7d93ea5142",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "e3b595fe-477c-4409-8681-71877631152d",
+        "name" : "src",
+        "type" : "LIST",
+        "argumentType" : "MetaEntity"
+      }, {
+        "uuid" : "e6799361-9a0f-486f-8b76-1736cb7cb359",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "RelationType"
+      }, {
+        "uuid" : "9a8c241e-76d2-451e-ac13-68797f399139",
+        "name" : "dst",
+        "type" : "LIST",
+        "argumentType" : "MetaEntity"
+      }, {
+        "uuid" : "5433c27c-42ec-4380-abb2-2d630539ab99",
+        "name" : "properties",
+        "type" : "LIST",
+        "argumentType" : "MetaProperty"
+      } ]
+    }, {
+      "uuid" : "f7a8bc60-5ac1-43d7-8234-9071185481db",
+      "name" : "MetaProperty",
+      "text" : "~name~ ~type~ ",
+      "parameters" : [ {
+        "uuid" : "023a2627-1396-4f0d-8bdf-487863036b42",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "36c801f0-f033-46c5-af03-afdae2cd9f75",
+        "name" : "type",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  } ],
+  "enums" : [ {
+    "uuid" : "85f93ad0-6b67-41ac-9211-4f5c88ea666c",
+    "name" : "RelationType",
+    "values" : [ {
+      "uuid" : "2eb9f61f-041b-4c0b-bada-fa3ab72b91f3",
+      "name" : "ENUM",
+      "lexical" : null
+    }, {
+      "uuid" : "15737a27-d002-4108-897e-108ca39c904e",
+      "name" : "EXT_REF",
+      "lexical" : null
+    }, {
+      "uuid" : "d14b6758-eee7-44c3-b69e-999858b6df52",
+      "name" : "EXT_LIST",
+      "lexical" : null
+    }, {
+      "uuid" : "f522ca77-a02a-4363-a727-256b043b3cbe",
+      "name" : "PRIM_REF",
+      "lexical" : null
+    }, {
+      "uuid" : "a9778b1f-b0c2-49b2-bcfa-1ada88e41309",
+      "name" : "PRIM_LIST",
+      "lexical" : null
+    }, {
+      "uuid" : "dd9245ba-4396-45bb-89d9-29f6bd294872",
+      "name" : "REF",
+      "lexical" : null
+    }, {
+      "uuid" : "55bfc61a-0e2d-4ceb-92b9-397077c8fa48",
+      "name" : "LIST",
+      "lexical" : null
+    }, {
+      "uuid" : "0cbbe9b6-ff7f-4ce2-9c52-ed5c37ce0375",
+      "name" : "ENUM_LIST",
+      "lexical" : null
+    } ]
+  } ]
+}

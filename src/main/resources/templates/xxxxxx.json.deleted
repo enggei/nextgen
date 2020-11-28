@@ -1,0 +1,10 @@
+{
+  "uuid" : "9cff1338-1985-4930-8a11-64525773b06a",
+  "name" : "xxxxxx",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "d07d4d67-cb62-4672-a5b5-6a7b48db36f0",
+    "name" : "aaaa",
+    "text" : ""
+  } ]
+}

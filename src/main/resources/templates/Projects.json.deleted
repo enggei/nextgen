@@ -1,0 +1,96 @@
+{
+  "uuid" : "1777fa8d-23b5-4669-be7b-1d521c6ce8e0",
+  "name" : "Projects",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "3a28789f-018e-47c1-8216-ed2f307d0615",
+    "name" : "JavaMavenProject",
+    "text" : "~name~\n~root~\n~mainSrc~\n~testSrc~\n\n~pom~ ",
+    "parameters" : [ {
+      "uuid" : "9686e194-1c3e-43f7-bb2e-1a0c846f8e2c",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e0840645-c0a4-4283-be21-2cb7a17a14c8",
+      "name" : "root",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "fea5bf08-cc14-403b-9c3c-e95ee6392c97",
+      "name" : "mainSrc",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5398ebe9-829f-4fbc-bf5c-765aa00bcc4c",
+      "name" : "testSrc",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5db827a5-0033-449c-8513-01150f62adb8",
+      "name" : "pom",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "0218639c-e7e7-4425-b823-defb94b9bfb6",
+    "name" : "JavaProject",
+    "text" : "~packageName~\n\n~name~\n~outputRoot~\n\n~packages:{it|~it~};separator=\"\\n\"~ ",
+    "parameters" : [ {
+      "uuid" : "593bb7ff-7563-4d13-8778-62459604bcc8",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "8c539aee-c7ee-457e-8082-f79784d16a27",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "2ecb3cee-43eb-4065-bf6c-5f37e26ac1d7",
+      "name" : "outputRoot",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "647042bc-80d8-4b91-bfa5-edcfc360297d",
+      "name" : "packages",
+      "type" : "LIST",
+      "argumentType" : "JavaProjectPackage"
+    } ],
+    "children" : [ {
+      "uuid" : "93302770-50f9-4bd0-8d6a-991c0d5af00e",
+      "name" : "JavaProjectPackage",
+      "text" : "~fullPath~\n~name~\n\n~types:{it|~it.entity~ ~it.type~};separator=\"\\n\"~\n\n~children:{it|~it~};separator=\"\\n\"~ ",
+      "parameters" : [ {
+        "uuid" : "c536219b-ce3c-44b8-9f1e-1fc1e0e98a34",
+        "name" : "fullPath",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "1efeee00-e9f4-4587-9a12-5aac1d8ce903",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "49546a1e-4d9b-45af-a57d-96ebcf99caec",
+        "name" : "types",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "dda754c4-8bfa-4324-8f1d-fca443650919",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "63428f86-88d9-4470-8ec6-de1da5852523",
+          "name" : "entity",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "8400cd10-6905-44bd-bf9a-562d2e392e5b",
+        "name" : "children",
+        "type" : "LIST",
+        "argumentType" : "JavaProjectPackage"
+      } ]
+    } ]
+  } ]
+}

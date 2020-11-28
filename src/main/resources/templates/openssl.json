@@ -1,0 +1,11 @@
+{
+  "uuid" : "168becea-f35a-48a0-925c-9ec495ebf034",
+  "name" : "openssl",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "113b1450-4682-48b5-a36b-25bbf27497c4",
+    "name" : "certificate",
+    "text" : "#!/bin/bash\nopenssl genrsa -out private.pem 2048\nopenssl pkcs8 -topk8 -inform PEM -in private.pem -out private_key.pem -nocrypt\nopenssl rsa -in private.pem -outform PEM -pubout -out public_key.pem ",
+    "parameters" : [ ]
+  } ]
+}

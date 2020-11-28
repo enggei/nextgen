@@ -1,0 +1,538 @@
+{
+  "uuid" : "68548572-6e3a-48dd-a96e-2d23030ba650",
+  "name" : "Vertx",
+  "delimiter" : "~",
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/Vertx.stg",
+  "templates" : [ {
+    "uuid" : "58f87deb-08cb-4f64-bb55-d28f76acb9c7",
+    "name" : "Entities",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "4a756317-c8b7-44c4-a677-68c57d064ab6",
+      "name" : "JsonWrapper",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tprivate final io.vertx.core.json.JsonObject jsonObject;\n\t~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n\n\tpublic ~name;format=\"capitalize\"~() { \n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject();\n\t\tjsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(io.vertx.core.json.JsonObject jsonObject) { \n\t\tthis.jsonObject = jsonObject;\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(java.io.File file) throws java.io.IOException {\n\t\tthis(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));\n\t}\n\n\tpublic ~name;format=\"capitalize\"~(java.io.InputStream inputStream) throws java.io.IOException {\n\t\tif (inputStream == null) throw new java.io.IOException(\"inputStream is null\");\n\t\tjava.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n\t\tint read;\n\t\tbyte[] data = new byte[2048];\n\t\twhile ((read = inputStream.read(data, 0, data.length)) != -1)\n\t\t\tbuffer.write(data, 0, read);\n\t\tinputStream.close();\n\t\tfinal byte[] content = buffer.toByteArray();\n\t\tbuffer.close();\n\n\t\tthis.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));\n\t\tjava.lang.String uuidString = jsonObject.getString(\"uuid\");\n\t\tif (uuidString == null) jsonObject.put(\"uuid\", java.util.UUID.randomUUID().toString());\n\t}\n\n\tpublic io.vertx.core.json.JsonObject getJsonObject() { \n\t\treturn this.jsonObject;\n\t}\n\n\t@Deprecated\n\tpublic String uuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic String getUuid() {\n\t\treturn this.jsonObject.getString(\"uuid\");\n\t}\n\n\tpublic ~name;format=\"capitalize\"~ removeUuid() {\n\t\tthis.jsonObject.remove(\"uuid\");\n\t\treturn this;\n\t}\n\n\t@Override\n\tpublic boolean equals(java.lang.Object o) { \n\t\tif (this == o) return true;\n\t\tif (o == null || getClass() != o.getClass()) return false;\n\t\tfinal ~name;format=\"capitalize\"~ other = (~name;format=\"capitalize\"~) o;\n\t\treturn jsonObject.getString(\"uuid\").equals(other.getJsonObject().getString(\"uuid\"));\n\t}\n\n\t@Override\n\tpublic int hashCode() { \n\t\treturn java.util.Objects.hash(jsonObject.getString(\"uuid\"));\n\t}\n\n\t~accessors:{it|~it~};separator=\"\\n\\n\"~\n\n\t~neoNodeMapper~\n\n\t@Override\n\tpublic java.lang.String toString() { \n\t\treturn ~if(lexical)~jsonObject.getString(\"~lexical~\")~else~jsonObject.encode()~endif~;\n\t}\n} ",
+      "parameters" : [ {
+        "uuid" : "4d639a81-c7d5-4a31-aeb7-dc34b6e37a3d",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "cf2cc501-9e14-4e59-bec9-ef952a1d4da6",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "a9ef4ef0-acf7-4c48-bedf-26d2cd61115f",
+        "name" : "externalFields",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "b56fa0c7-a7b9-4356-93a7-25d613fc3aff",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "bdb93ebe-322c-44c6-baa6-2d6f4cfe463f",
+          "name" : "name",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "0a68c542-044e-4b17-ae24-8f70484e3b15",
+          "name" : "initializer",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "733aec27-d21b-4751-82ab-02207cf0feae",
+        "name" : "accessors",
+        "type" : "LIST",
+        "argumentType" : "EntityAccessor"
+      }, {
+        "uuid" : "9884634b-6558-45f7-8c41-756730c2261b",
+        "name" : "neoNodeMapper",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "4eec6de0-1ca1-4d42-9bcb-2d4e3ddb5210",
+        "name" : "lexical",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ],
+      "children" : [ {
+        "uuid" : "f9d01bcc-c94a-4a4f-adaf-e0cf9715b3ea",
+        "name" : "primitiveAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value);\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\");\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.get~type;format=\"capitalize\"~(\"~name~\", defaultValue);\n} ",
+        "parameters" : [ {
+          "uuid" : "4d6a3810-7799-4600-b42f-6aec6f8c77df",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "e51f43a5-beb1-46dd-b574-bc8944b42f3a",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "71dee823-dc69-41ad-a058-8b1122e5da93",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "23f3083f-6cd5-47ab-8c39-bce21da141ab",
+        "name" : "listReferenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n\tio.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n\tif (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n\tjsonArray.add(value.getJsonObject());\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray()).stream().map((o) -> new ~type~((io.vertx.core.json.JsonObject) o));\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n\tfinal io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray());\n\tfor (int i = 0; i < jsonArray.size(); i++)  { \n\t\tfinal io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);\n\t\tif (value.getJsonObject().getString(\"uuid\").equals(o.getString(\"uuid\")))  { \n\t\t\tjsonArray.remove(i);\n\t\t\treturn this;\n\t\t}\n\t}\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n\tjsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n\treturn this;\n}",
+        "parameters" : [ {
+          "uuid" : "80b97977-d278-4905-bfd1-19a065b4979c",
+          "name" : "className",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "db61ef5a-03ab-4d36-9f88-80a3097a4373",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "9695d63e-90d4-42b1-98e1-13071b09e877",
+          "name" : "type",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "f6ed57f1-6238-4590-82e1-27aff0ecf302",
+        "name" : "referenceAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tjsonObject.put(\"~name~\", value.getJsonObject());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonObject(\"~name~\") == null ? null : new ~type~(jsonObject.getJsonObject(\"~name~\"));\n}",
+        "parameters" : [ {
+          "uuid" : "5a5b52f3-5f4c-48c7-a5b3-2ed08eeb1444",
+          "name" : "className",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "d9c8fdc9-1589-406c-a6e7-473c8514e859",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "a0e59457-2f46-449b-8102-88371e0bf625",
+          "name" : "type",
+          "type" : "SINGLE"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "41c43c9b-5829-4dcf-8e64-c9130cd1ddae",
+        "name" : "listPrimitiveAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n\tio.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n\tif (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n\tjsonArray.add(value);\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray()).stream().map((o) -> (~type~)o);\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n\tfinal io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray());\n\tfor (int i = 0; i < jsonArray.size(); i++)  { \n\t\tfinal ~type~ o = jsonArray.get~type~(i);\n\t\tif (value.equals(o))  { \n\t\t\tjsonArray.remove(i);\n\t\t\treturn this;\n\t\t}\n\t}\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n\tjsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "ad223fc1-12e5-47b8-ac94-40a00e31cfb5",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "fe8a0752-dcb3-483e-88c0-1a0dbccd2cea",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "eb79aa9f-3397-4315-9195-0223d64bbf00",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "5247ccdf-3c9d-4e65-bcd0-02d040a8806e",
+        "name" : "externalAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tthis._~name~ = value;\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn this._~name~;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn this._~name~ == null ? defaultValue : this._~name~;\n}",
+        "parameters" : [ {
+          "uuid" : "b3464feb-12d8-49d7-aa6a-edf2f4eace7c",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "95d152f6-0fd6-4369-a496-1cc41fbcaeb6",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "a19997d0-9341-4dbe-a2d5-179ae3d8aea1",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "d725755e-d593-4b9f-90d9-74a8b46aa511",
+        "name" : "enumAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n\tif (value == null) return this;\n\tjsonObject.put(\"~name~\", value.name());\n\treturn this;\n}\n\npublic ~type~ get~name;format=\"capitalize\"~() { \n\treturn get~name;format=\"capitalize\"~(null);\n}\n\npublic ~type~ get~name;format=\"capitalize\"~(~type~ defaultValue) { \n\treturn jsonObject.getString(\"~name~\") == null ? defaultValue : ~type~.valueOf(jsonObject.getString(\"~name~\"));\n}",
+        "parameters" : [ {
+          "uuid" : "bf8e80a6-4e9c-4adb-905e-907438a551f8",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "64d50e61-f4f7-4eac-81fc-5951d41fcd7b",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c72f8db9-5d7a-4638-a959-3fc5fb072d3b",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      }, {
+        "uuid" : "4f8d77ad-c484-4afb-a70c-9d6f3bf5c220",
+        "name" : "listEnumAccessors",
+        "text" : "public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n\tio.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n\tif (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n\tjsonArray.add(value.name());\n\treturn this;\n}\n\npublic java.util.stream.Stream<~type~> get~name;format=\"capitalize\"~() { \n\treturn jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray()).stream().map((o) -> ~type~.valueOf(o.toString()));\n}\n\npublic ~className;format=\"capitalize\"~ remove~name;format=\"capitalize\"~(~type~ value) { \n\tfinal io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\", new io.vertx.core.json.JsonArray());\n\tjsonArray.remove(value.name());\n\treturn this;\n}\n\npublic ~className;format=\"capitalize\"~ clear~name;format=\"capitalize\"~() { \n\tjsonObject.put(\"~name~\", new io.vertx.core.json.JsonArray());\n\treturn this;\n} ",
+        "parameters" : [ {
+          "uuid" : "b1bb02bf-43dd-4c39-a5dd-4074ce33f957",
+          "name" : "className",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "fa98a611-44a6-4e17-a0bc-e677a03ac81f",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0e11c6c9-f97b-496c-9cb9-130ce3e659ff",
+          "name" : "type",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ],
+        "implements" : [ "EntityAccessor" ]
+      } ]
+    }, {
+      "uuid" : "cefddd6f-722b-42df-8a8e-ced8c58ae2e0",
+      "name" : "JsonFactory",
+      "text" : "package ~package~;\n\npublic class ~name;format=\"capitalize\"~ {\n\n\tpublic static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {\n\t\tif (!file.exists() || !file.isFile()) throw new IllegalArgumentException(\"could not read \" + file.getAbsolutePath());\n\t\treturn new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));\n\t}\n\n\tpublic static io.vertx.core.json.JsonObject load(java.io.InputStream inputStream) throws java.io.IOException {\n\t\tif (inputStream == null) throw new java.io.IOException(\"inputStream is null\");\n\t\tjava.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n\t\tint read;\n\t\tbyte[] data = new byte[2048];\n\t\twhile ((read = inputStream.read(data, 0, data.length)) != -1)\n\t\t\tbuffer.write(data, 0, read);\n\t\tinputStream.close();\n\t\tfinal byte[] content = buffer.toByteArray();\n\t\tbuffer.close();\n\t\treturn new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));\n\t}\n\t\n\tpublic static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {\n\n\t\tif (!file.getParentFile().exists() && !file.getParentFile().mkdirs())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getParentFile().getAbsolutePath());\n\n\t\tif (!file.exists() && !file.createNewFile())\n\t\t\tthrow new IllegalStateException(\"could not create \" + file.getAbsolutePath());\n\n\t\tjava.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());\n\t}\n\n~entities:{it|\n\tpublic static ~it~ new~it~() { \n\t\treturn new ~it~();\n\t\\}\n\n\tpublic static ~it~ new~it~NoUuid() { \n\t\treturn new ~it~().removeUuid();\n\t\\}\n\n\tpublic static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { \n\t\treturn new ~it~(jsonObject);\n\t\\}\n\n\tpublic static ~it~ new~it~(java.io.File file) throws java.io.IOException { \n\t\treturn new ~it~(load(file));\n\t\\}\n\n\tpublic static ~it~ merge(~it~ lhs, ~it~ rhs) {\n\t\treturn new~it~(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));\n\t\\}\n};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "bdf5d171-51ff-49cd-af42-e8c9e5556247",
+        "name" : "package",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ae766e9d-fb87-4128-84d8-dfac019c18ac",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "fcd999dd-425d-4e8c-b284-60eccd7bb408",
+        "name" : "entities",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "57405911-04a7-483b-97ac-497ecb3361da",
+    "name" : "DomainVerticle",
+    "text" : "package ~packageName~;\n\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Promise;\nimport io.vertx.core.eventbus.Message;\nimport io.vertx.core.json.JsonObject;\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprivate static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\n\tprivate org.neo4j.graphdb.GraphDatabaseService db;\n\n\t@Override\n\tpublic void start(Promise<Void> promise) throws Exception {\n\t\tnew Thread(() -> {\n\n\t\t\tdb = new org.neo4j.graphdb.factory.GraphDatabaseFactory()\n\t\t\t\t.newEmbeddedDatabaseBuilder(new java.io.File(config().getString(\"db.path\")))\n\t\t\t\t.setConfig(org.neo4j.graphdb.factory.GraphDatabaseSettings.allow_upgrade, \"true\")\n\t\t\t\t.newGraphDatabase();\n\t\t\n\t\t\tlog.info(\"db started\");\n\t\t}).start();\n\t\t\n\t\t~messages:{it|vertx.eventBus().consumer(\"~it.address~\", this::~it.handler~);};separator=\"\\n\"~\n\t}\n\n\t~messages:{it|~it.implementation~};separator=\"\\n\\n\"~\n\n\tprivate static void debug(String method, Message<JsonObject> message) {\n\t\tlog.info(method + \" : \" + message.body().encode());\n\t}\n\n\tprivate void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) {\n\t\ttry (org.neo4j.graphdb.Transaction tx = db.beginTx())  {\n\t\t\taction.accept(tx);\n\t\t\ttx.success();\n\t\t} catch (java.lang.Throwable t)  {\n\t\t\tonException.accept(t);\n\t\t}\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "3592475a-74e7-4374-ab0f-4d2f034e37f3",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "00bfc0d1-d956-417d-b2fc-03b17b5e929c",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "ae287fcd-2430-4288-9239-8ea8fa5634e1",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "60841455-429e-4da4-ab0c-64abe99531fe",
+      "name" : "messages",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "846dd7f4-a24b-439b-9404-7dad6fdebef3",
+        "name" : "address",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "a95c6eb5-8f26-4d4e-a94f-dcd9650fcf6f",
+        "name" : "handler",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "851ebe27-1a30-43e2-893e-40924dff53c7",
+        "name" : "implementation",
+        "argumentType" : "DomainAction"
+      } ]
+    } ],
+    "children" : [ {
+      "uuid" : "9f95ad7e-12e6-4d2a-bc20-1539d7428678",
+      "name" : "DomainAction",
+      "text" : "private void ~name~(Message<JsonObject> message) {\n\tdebug(\"~name~\", message);\n~if(params)~\n\tfinal JsonObject body = message.body();\n\t~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n~endif~\n\t\n\tdoInTransaction(transaction -> {\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t}, throwable -> {\n\t\tmessage.fail(500, throwable.getMessage());\n\t});\n} ",
+      "parameters" : [ {
+        "uuid" : "3fd0eb95-3fdc-4cf0-9b11-59eafe4b9b8b",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e5731597-b0b9-424e-8fd4-72d3582a8e82",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "3c4370d1-3e31-4e35-ad0c-14389bdd6daa",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "a66726f1-31a8-4f2e-9bed-029410c95fa1",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "b4ac6941-407e-4e85-a47a-0b9c186eda11",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "d128bcda-0d12-4d30-ab1b-6534a3c38e4e",
+    "name" : "WebVerticle",
+    "text" : "package ~packageName~;\n\nimport io.netty.handler.codec.http.HttpResponseStatus;\nimport io.vertx.core.AbstractVerticle;\nimport io.vertx.core.Future;\nimport io.vertx.core.MultiMap;\nimport io.vertx.core.http.HttpHeaders;\nimport io.vertx.core.http.HttpServerOptions;\nimport io.vertx.core.json.JsonArray;\nimport io.vertx.core.json.JsonObject;\nimport io.vertx.core.net.PemKeyCertOptions;\nimport io.vertx.ext.auth.jwt.JWTAuth;\nimport io.vertx.ext.auth.jwt.JWTAuthOptions;\nimport io.vertx.ext.jwt.JWTOptions;\nimport io.vertx.ext.web.Router;\nimport io.vertx.ext.web.RoutingContext;\nimport io.vertx.ext.web.handler.BodyHandler;\nimport io.vertx.ext.web.handler.JWTAuthHandler;\nimport io.vertx.ext.web.handler.SessionHandler;\nimport io.vertx.ext.web.handler.StaticHandler;\nimport io.vertx.ext.web.sstore.LocalSessionStore;\n\nimport java.util.Map;\n\nimport static io.netty.handler.codec.http.HttpResponseStatus.*;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n\n\tprivate static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n\tprivate static final String JSON_CONTENT_TYPE = \"application/json; charset=utf-8\";\n\tprivate static final String HTML_CONTENT_TYPE = \"text/html; charset=utf-8\";\n\t~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n\n\t@Override\n\tpublic void start(Future<Void> startFuture) throws Exception {\n\t\tlog.info(\"starting ~name;format=\"capitalize\"~\");\n\n\t\t~startStatements:{it|~it~};separator=\"\\n\"~\n\n\t\tfinal JWTAuth auth = JWTAuth.create(vertx, new JWTAuthOptions()\n\t\t\t\t.addPubSecKey(new io.vertx.ext.auth.PubSecKeyOptions()\n\t\t\t\t\t\t.setAlgorithm(config().getString(\"jwt.algorithm\"))\n\t\t\t\t\t\t.setPublicKey(readPem(config().getString(\"jwt.publicKey\")))\n\t\t\t\t\t\t.setSecretKey(readPem(config().getString(\"jwt.secretKey\")))\n\t\t\t\t));\n\n\t\tfinal Router router = Router.router(vertx);\n\t\trouter.route().handler(BodyHandler.create());\n\t\trouter.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n\t\trouter.post(\"/login\").handler(routingContext -> login(routingContext, auth));\n\t\trouter.route(\"/secure/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n\t\t~routes:{it|router.~it.action~(\"/~it.url~\").handler(this::~it.handler~);};separator=\"\\n\"~\n\n\t\tfinal HttpServerOptions serverOptions = new HttpServerOptions();\n\n\t\tif (config().getBoolean(\"ssl\", false)) {\n\t\t\tserverOptions\n\t\t\t\t\t.setSsl(true)\n\t\t\t\t\t.setPemKeyCertOptions(\n\t\t\t\t\t\t\tnew PemKeyCertOptions().\n\t\t\t\t\t\t\t\t\tsetKeyPath(config().getString(\"ssl.keyPath\")).\n\t\t\t\t\t\t\t\t\tsetCertPath(config().getString(\"ssl.certPath\")));\n\t\t}\n\n\t\tfinal StaticHandler staticHandler = StaticHandler.create();\n\t\tstaticHandler.setWebRoot(config().getString(\"web.root\"));\n\t\tstaticHandler.setCachingEnabled(config().getBoolean(\"web.cachingEnabled\"));\n\t\tstaticHandler.setEnableRangeSupport(config().getBoolean(\"web.enableRangeSupport\"));\n\t\trouter.route(\"/*\").handler(staticHandler);\n\n\t\tvertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config().getInteger(\"web.port\"));\n\n\t\tlog.info(\"server running on \" + (config().getBoolean(\"ssl\",false) ? \"https\" : \"http\") + \"://\" + config().getString(\"web.host\") + \":\" + config().getInteger(\"web.port\"));\n\n\t\tstartFuture.succeeded();\n\t}\n\n\tprivate void login(RoutingContext routingContext, JWTAuth auth) {\n\t\tdebug(\"login\", routingContext);\n\n\t\tvertx.eventBus().request(\"login\", routingContext.getBodyAsJson(), reply -> {\n\n\t\t\tif (reply.succeeded()) {\n\t\t\t\tfinal JsonObject replyBody = (JsonObject) reply.result().body();\n\n\t\t\t\tif (replyBody.getBoolean(\"login.success\", false)) {\n\n\t\t\t\t\tfinal String token = auth.generateToken(\n\t\t\t\t\t\t\tnew io.vertx.core.json.JsonObject().put(\"sub\", replyBody.getString(\"username\")),\n\t\t\t\t\t\t\tnew JWTOptions()\n\t\t\t\t\t\t\t\t\t.setAlgorithm(config().getString(\"jwt.algorithm\"))\n\t\t\t\t\t\t\t\t\t.setExpiresInMinutes(config().getInteger(\"jwt.expiresInMinutes\"))\n\t\t\t\t\t\t\t\t\t.setSubject(replyBody.getString(\"username\")));\n\n\t\t\t\t\tfinal JsonObject session = new io.vertx.core.json.JsonObject()\n\t\t\t\t\t\t\t.put(\"username\", replyBody.getString(\"username\"))\n\t\t\t\t\t\t\t.put(\"token\", token);\n\n\t\t\t\t\tsendResponse(routingContext, OK, session);\n\n\t\t\t\t} else {\n\n\t\t\t\t\tsendResponse(routingContext, OK, replyBody);\t\n\t\t\t\t}\n\n\t\t\t} else {\n\n\t\t\t\tsendErrors(routingContext, INTERNAL_SERVER_ERROR,\t\"Server Error\");\n\t\t\t}\n\t\t});\n\t}\n\n\t~handlers:{it|~it~};separator=\"\\n\\n\"~\n\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n\tprivate static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {\n\t\tfinal JsonArray errorsArray = new JsonArray();\n\t\tfor (String error : errors)\n\t\t\terrorsArray.add(error.trim());\n\n\t\tfinal String encode = new JsonObject().put(\"errors\", errorsArray).encode();\n\t\tlog.info(routingContext.request().absoluteURI() + \" \" + encode);\n\t\troutingContext.response()\n\t\t\t\t\t.setStatusCode(httpResponseStatus.code())\n\t\t\t\t\t.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n\t\t\t\t\t.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n\t\t\t\t\t.end(encode);\n\t}\n\n\tprivate static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {\n\t\tfinal String encode = response.encode();\n\t\tlog.info(routingContext.request().absoluteURI() + \" \" + encode);\n\t\troutingContext.response()\n\t\t\t\t.setStatusCode(httpResponseStatus.code())\n\t\t\t\t.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n\t\t\t\t.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n\t\t\t\t.end(encode);\n\t}\n\n\tprivate static void sendHtmlResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String html) {\n\t\tlog.info(routingContext.request().absoluteURI() + \" \" + html);\n\t\troutingContext.response()\n\t\t\t\t.setStatusCode(httpResponseStatus.code())\n\t\t\t\t.putHeader(HttpHeaders.CONTENT_LENGTH, html.length() + \"\")\n\t\t\t\t.putHeader(HttpHeaders.CONTENT_TYPE, HTML_CONTENT_TYPE)\n\t\t\t\t.end(html);\n\t}\n\n\tprivate static void debug(String method, RoutingContext routingContext) {\n\t\tfinal String uri = method + \" \" + routingContext.request().method().name() + \" \" + routingContext.request().uri();\n\t\tboolean isAuthenticated = routingContext.user() != null;\n\t\tlog.info(uri + \" \" + (isAuthenticated ? \"(authenticated)\" : \"(NOT authenticated)\"));\n\t\tfinal MultiMap headers = routingContext.request().headers();\n\t\tfor (Map.Entry<String, String> header : headers)\n\t\t\t\tlog.info(\"\\t\" + header.getKey() + \"=\" + header.getValue());\n\t\tlog.info(\"body \" + routingContext.getBody().toString());\n\t}\n\n\tprivate String readPem(String path) throws java.io.IOException {\n\t\tfinal java.io.File file = new java.io.File(path);\n\t\tfinal java.io.BufferedInputStream inputStream = new java.io.BufferedInputStream(new java.io.FileInputStream(file));\n\t\tjava.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n\t\tint read;\n\t\tbyte[] data = new byte[2048];\n\t\twhile ((read = inputStream.read(data, 0, data.length)) != -1)\n\t\t\tbuffer.write(data, 0, read);\n\t\tinputStream.close();\n\t\tfinal byte[] content = buffer.toByteArray();\n\t\tbuffer.close();\n\t\tfinal String s = new String(content);\n\t\tfinal int startIndex = s.indexOf(\"KEY-----\") + 8;\n\t\tfinal int endIndex = s.indexOf(\"-----END\");\n\t\treturn s.substring(startIndex, endIndex).trim();\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "f220e70d-6a40-42e4-b5c8-4338329e7b3f",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "10e7a768-cc87-4a54-8976-168a96843e36",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f730c1db-3ddb-4078-93e6-2a04ea474d2b",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "String"
+    }, {
+      "uuid" : "cfc514c6-0695-407f-b502-87c9809e503a",
+      "name" : "fields",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "4f63670f-1ccc-4097-9f22-3321f1a06ce9",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3eb3198f-a7de-4a4c-834c-de5fc420024d",
+        "name" : "name",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "897ecbef-20c6-46eb-98cf-b051106a9dcc",
+        "name" : "init",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "a357b773-345e-4f43-a369-b8511d9fc439",
+      "name" : "startStatements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "6ece534f-7413-4118-912d-18088acbbc3c",
+      "name" : "routes",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "7755f1d4-5737-4812-8996-9107d36b1424",
+        "name" : "action",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "02b6da77-586b-45da-915e-92a951ef64c1",
+        "name" : "url",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "e03faa80-b92b-4f5b-aad6-3501206aadd5",
+        "name" : "handler",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "cf6f226a-25a4-4c3e-af7c-7258007a6f07",
+      "name" : "handlers",
+      "type" : "LIST",
+      "argumentType" : "RouteHandler"
+    }, {
+      "uuid" : "1bdfc29d-3e79-415a-ac96-7bb074e2f64c",
+      "name" : "methods",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ],
+    "children" : [ {
+      "uuid" : "6b7bd0cc-b106-4da6-8dcf-1076b9dd4ea1",
+      "name" : "SendEventBusAction",
+      "text" : "getFromDomainDB(vertx, routingContext, \"~actionName~\", new JsonObject()~if(params)~.~params:{it|put(\"~it.name~\", routingContext.request().getParam(\"~it.name~\"))}~~endif~); ",
+      "parameters" : [ {
+        "uuid" : "0ad76b95-14e9-4edd-8184-331d59576162",
+        "name" : "actionName",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "03830475-653f-4daa-9348-02b0bbf58342",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "e38ba308-9540-4e20-a59d-9d7be0a55d34",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      } ]
+    }, {
+      "uuid" : "4cdbdd18-0766-4344-b2d8-89e89c8d5612",
+      "name" : "RouteHandler",
+      "text" : "private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n\tdebug(\"~name~\", routingContext);\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "e649b7e7-2141-4832-a65f-4e762c5894a9",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "349ba544-a38b-4d65-bf3e-badcd3ab1c7b",
+        "name" : "params",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "5b3b4f84-8a09-488a-a747-3240a970d7dd",
+          "name" : "type",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "679c364c-6be9-4da1-91e7-58430c1ba516",
+          "name" : "name",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "0271e395-252b-48de-934d-ced7d7b5a01b",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "7492d89e-268b-47c2-a51d-ad96d73b12c7",
+    "name" : "Server",
+    "text" : "package ~packageName~;\n\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ {\n\n\tprotected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n\n\tpublic ~name~(String configPath) throws java.io.IOException {\n\t\tlog.info(\"Starting server\");\n\n\t\tfinal io.vertx.core.json.JsonObject serverDeployment = configPath == null\n\t\t\t\t? new io.vertx.core.json.JsonObject(read(getClass().getResourceAsStream(\"/config.json\")))\n\t\t\t\t: new io.vertx.core.json.JsonObject(read(new java.io.FileInputStream(configPath)));\n\n\t\tfinal io.vertx.core.DeploymentOptions deploymentOptions = new io.vertx.core.DeploymentOptions().setConfig(serverDeployment);\n\t\tlog.info(\"serverDeploymentOptions \" + serverDeployment.encode());\n\n\t\tfinal io.vertx.core.Vertx vertx = io.vertx.core.Vertx.vertx();\n\n\n\t\tserverDeployment.getJsonArray(\"verticles\")\n\t\t\t\t.stream()\n\t\t\t\t.map(o -> (io.vertx.core.json.JsonObject)o)\n\t\t\t\t.forEach(verticleSettings -> {\n\t\t\t\t\tlog.info(\"verticle settings \" + verticleSettings.encodePrettily());\n\t\t\t\t\tvertx.deployVerticle(verticleSettings.getString(\"className\"), deploymentOptions, result -> {\n\t\t\t\t\t\tif (result.failed())\n\t\t\t\t\t\t\tlog.error(\"deployment failed \" + result.cause().getMessage(), result.cause());\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\tlog.info(\"deployment success\");\n\t\t\t\t\t});\n\t\t\t\t});\n\t}\n\n\tpublic static io.vertx.core.buffer.Buffer read(java.io.InputStream inputStream) throws java.io.IOException {\n\t\tjava.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n\t\tint read;\n\t\tbyte[] data = new byte[2048];\n\t\twhile ((read = inputStream.read(data, 0, data.length)) != -1)\n\t\t\tbuffer.write(data, 0, read);\n\t\tinputStream.close();\n\t\tfinal byte[] content = buffer.toByteArray();\n\t\tbuffer.close();\n\t\treturn io.vertx.core.buffer.Buffer.buffer(content);\n\t}\n\n\tpublic static void main(java.lang.String[] args) throws java.io.IOException {\n\t\tSystem.setProperty(\"io.netty.tryReflectionSetAccessible\", \"true\");\n\t\tnew ~name~(args.length == 1 ? args[0] : null);\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "aea6a157-38c3-438d-a033-44aeb9e1845a",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "8954c972-3b28-4f2b-a879-c2b22fa93138",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "23ba7d77-dd16-4aee-b9e5-0337b6138ae6",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "d569a732-8730-4d83-b57b-993ec73901ae",
+    "name" : "ServerConfig",
+    "text" : "{\n\t\"name\" : \"~name~\",\n\t\"web.host\" : \"~webHost~\",\n\t\"web.port\" : ~webPort~,\n\t\"web.root\" : \"~webRoot~\",\n\t\"web.cachingEnabled\" : ~webCachingEnabled~,\n\t\"web.enableRangeSupport\" : ~webEnableRangeSupport~,\n\t\"verticles\" : [ \n\t\t~verticles:{it|{\n\t\"name\" : \"~it.name~\",\n\t\"className\" : \"~it.className~\"\n~eom()~};separator=\",\\n\"~\n\t],\n\t\"jwt.algorithm\" : \"~jwtAlgorithm~\",\n\t\"jwt.publicKey\" : \"~jwtPublicKey~\",\n\t\"jwt.secretKey\" : \"~jwtSecretKey~\",\n\t\"jwt.expiresInMinutes\" : \"~jwtExpiresInMinutes~\",\n\t\"ssl\" : ~if(isSSL)~true~else~false~endif~,\n\t\"ssl.keyPath\" : \"~sslKeyPath~\",\n\t\"ssl.certPath\" : \"~sslCertPath~\",\n\t\"db.path\" : \"~dbPath~\"\n} ",
+    "parameters" : [ {
+      "uuid" : "f5ad83ff-593e-4588-8f2d-eec13bc22fb4",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "8364ab21-8d2d-4592-aea4-6493dd49459a",
+      "name" : "webHost",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "772d7d05-c9d9-44ba-af84-c02f39eb946d",
+      "name" : "webPort",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "59622097-cbfc-40e3-a1b1-25fcd30cf1be",
+      "name" : "webRoot",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "b9ea09c8-a3a9-4d4d-b9ef-1f52c7c27c3c",
+      "name" : "webCachingEnabled",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "fa280522-b299-4e9c-bb76-f582463eec8d",
+      "name" : "webEnableRangeSupport",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "fbb08ccb-9430-4513-8d25-0ba8e4355ee9",
+      "name" : "verticles",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "f5bb1fc6-a2f4-4eda-adcc-8a1c03cefba8",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "61d28c58-324d-406c-8d7c-dd56922795eb",
+        "name" : "className",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "31d4882f-6af3-4a3c-886d-f8e8a2706203",
+      "name" : "jwtAlgorithm",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "55f20ffd-3d44-4ff7-94a7-cf5dff61a4ec",
+      "name" : "jwtPublicKey",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "1c3b6c79-5c82-4829-985a-8952159530bf",
+      "name" : "jwtSecretKey",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "58cd6524-63b2-4e4c-8010-f3c76586f126",
+      "name" : "jwtExpiresInMinutes",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "0054c01e-11dd-4098-8295-0dc15cd3ee97",
+      "name" : "isSSL",
+      "type" : "SINGLE",
+      "argumentType" : "Boolean"
+    }, {
+      "uuid" : "50a05fe9-f627-4b64-be00-b057f139ee82",
+      "name" : "sslKeyPath",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3b3ad102-7dff-41d5-b34e-131b2304226f",
+      "name" : "sslCertPath",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "0495a737-2086-4863-b34f-1e501daafc42",
+      "name" : "dbPath",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ],
+  "enums" : [ {
+    "uuid" : "6e2148bc-d595-4695-bbdc-4cc674fe3edc",
+    "name" : "VertxTypes",
+    "values" : [ {
+      "uuid" : "d06918c3-0b26-4f1e-a1a6-333d5c9d69ef",
+      "name" : "JsonArrayType",
+      "lexical" : "io.vertx.core.json.JsonArray"
+    }, {
+      "uuid" : "9fa45041-3a12-4a5f-a774-6763dcae16d7",
+      "name" : "JsonObjectType",
+      "lexical" : "io.vertx.core.json.JsonObject"
+    } ]
+  } ],
+  "tags" : "java",
+  "interfaces" : [ {
+    "uuid" : "afc77325-04cc-42a0-9aa1-634d78b647ef",
+    "name" : "EntityAccessor"
+  } ]
+}
