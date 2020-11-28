@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<neo4j.version>3.4.0</neo4j.version>
 		<slf4j.version>1.7.2</slf4j.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<piccolo2d.version>3.0</piccolo2d.version>
 		<jgoodies.version>1.9.0</jgoodies.version>		
 	</properties>

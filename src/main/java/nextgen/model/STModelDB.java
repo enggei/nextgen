@@ -1,6 +1,5 @@
 package nextgen.model;
 
-import nextgen.utils.Neo4JUtil;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
@@ -83,6 +82,13 @@ public class STModelDB extends STModelNeoFactory {
    public void cleanup() {
       doInTransaction(transaction -> {
 
+         findAllSTGroupFile().forEach(stGroupFile -> {
+            final String path = stGroupFile.getPath("");
+            if(path.contains("/home/goe/projects/nextgen/components/core/src/main/java")) {
+               stGroupFile.setPath("/home/goe/projects/nextgen/src/main/java");
+            }
+         });
+
          findAllSTGroupAction().forEach(stGroupAction -> {
 
             if (stGroupAction.getNode().hasProperty("statements")) {
@@ -120,7 +126,7 @@ public class STModelDB extends STModelNeoFactory {
       findAllSTFile().forEach(stFile -> {
          if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
          log.info("deleting unnused stFile-" + stFile.getUuid());
-         log.info(Neo4JUtil.toString(stFile.getNode()));
+         log.info(toString(stFile.getNode()));
          stFile.getNode().getRelationships().forEach(Relationship::delete);
          stFile.getNode().delete();
       });
@@ -137,7 +143,7 @@ public class STModelDB extends STModelNeoFactory {
                if (node.getRelationships().iterator().hasNext()) return;
                if (isSTProject(node)) return;
                log.info("deleting unnused node");
-               log.info(Neo4JUtil.toString(node));
+               log.info(toString(node));
                node.delete();
             });
    }

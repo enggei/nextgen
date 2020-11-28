@@ -205,5 +205,27 @@ public class NeoFactory {
 				"\n" + 
 				"		node.delete();\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	public static String toString(org.neo4j.graphdb.Node node) {\n" + 
+				"		final StringBuilder out = new StringBuilder();\n" + 
+				"		out.append(\"Node : \").append(node.getId()).append(\" \");\n" + 
+				"		node.getLabels().forEach(label -> out.append(label.name()).append(\" \"));\n" + 
+				"		out.append(\"(\");\n" + 
+				"		node.getPropertyKeys().forEach(s -> out.append(\" \").append(s).append(\":\").append(node.getProperty(s)));\n" + 
+				"		out.append(\")\");\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(relationship -> relationship.getPropertyKeys().forEach(s -> out.append(\"\\n\\t\\t -> \").append(s).append(\":\").append(relationship.getProperty(s))));\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(relationship -> relationship.getPropertyKeys().forEach(s -> out.append(\"\\n\\t\\t <- \").append(s).append(\":\").append(relationship.getProperty(s))));\n" + 
+				"		return out.toString().trim();\n" + 
+				"	}\n" + 
+				"		\n" + 
+				"	public static String toString(org.neo4j.graphdb.Relationship relationship) {\n" + 
+				"		final StringBuilder out = new StringBuilder();\n" + 
+				"		out.append(\"Relationship : \").append(relationship.getType()).append(\" \");\n" + 
+				"		out.append(\"(\");\n" + 
+				"		relationship.getPropertyKeys().forEach(s -> out.append(\" \").append(s).append(\":\").append(relationship.getProperty(s)));\n" + 
+				"		out.append(\")\");\n" + 
+				"		out.append(\" \").append(toString(relationship.getStartNode())).append(\" -> \").append(toString(relationship.getEndNode()));\n" + 
+				"		return out.toString().trim();\n" + 
+				"	}\n" + 
 				"} >>";
 }  
