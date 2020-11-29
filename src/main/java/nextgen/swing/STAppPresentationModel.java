@@ -1,11 +1,7 @@
 package nextgen.swing;
 
 import nextgen.model.*;
-import nextgen.utils.NeoChronicle;
-import nextgen.utils.SwingUtil;
-import org.neo4j.graphdb.*;
 
-import javax.lang.model.SourceVersion;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -15,17 +11,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static nextgen.st.STGenerator.toSTGroup;
-import static nextgen.utils.STModelUtil.findSTTemplateByName;
-
 public class STAppPresentationModel {
 
-   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
+   public final STModelDB db;
 
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
-   public final STModelDB db;
-   private final NeoChronicle chronicle;
+   private final nextgen.utils.NeoChronicle chronicle;
    private final STGroupModel generatorSTGroup;
 
    private String lastDir;
@@ -33,12 +25,12 @@ public class STAppPresentationModel {
 
    public STAppPresentationModel() {
       this.db = new STModelDB(AppModel.getInstance().getDbDir());
-      this.chronicle = new NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
+      this.chronicle = new nextgen.utils.NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
       this.stRenderer = new nextgen.st.STRenderer();
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
-   public Action newTransactionAction(String name, Consumer<Transaction> consumer) {
+   public Action newTransactionAction(String name, Consumer<org.neo4j.graphdb.Transaction> consumer) {
       return new AbstractAction(name) {
          @Override
          public void actionPerformed(ActionEvent e) {
@@ -64,52 +56,12 @@ public class STAppPresentationModel {
    }
 
    public ImageIcon loadIcon(String iconName, String dimension) {
-
       if (iconName == null) return null;
-
       if (cache.containsKey(iconName)) return cache.get(iconName);
-
-      URL resource = getClass()
-            .getClassLoader()
-            .getResource("icons/" + iconName + dimension + ".png");
+      final URL resource = getClass().getClassLoader().getResource("icons/" + iconName + dimension + ".png");
       if (resource == null) return null;
-
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);
-   }
-
-   public void reconcileValues() {
-      final Set<Node> delete = new LinkedHashSet<>();
-
-      db.doInTransaction(transaction ->
-            db.findAllSTValue()
-                  .filter(stValue -> !delete.contains(stValue.getNode()))
-                  .filter(nextgen.utils.STModelUtil::isValidPrimitive)
-                  .forEach(stValue -> db
-                        .findAllSTValueByValue(stValue.getValue())
-                        .filter(duplicate -> !duplicate.getUuid().equals(stValue.getUuid()))
-                        .filter(duplicate -> !delete.contains(duplicate.getNode()))
-                        .filter(nextgen.utils.STModelUtil::isValidPrimitive)
-                        .forEach(duplicate -> {
-
-                           log.info("\t duplicate " + duplicate.getValue());
-
-                           final Node duplicateNode = duplicate.getNode();
-                           duplicateNode.getRelationships(Direction.INCOMING)
-                                 .forEach(relationship -> {
-                                    final Node src = relationship.getOtherNode(duplicateNode);
-                                    final Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
-                                    relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-                                 });
-
-                           delete.add(duplicateNode);
-                        })));
-
-      db.doInTransaction(transaction -> {
-         for (Node node : delete) {
-            node.getRelationships().forEach(Relationship::delete);
-         }
-      });
    }
 
    public String render(STModel stModel) {
@@ -164,6 +116,15 @@ public class STAppPresentationModel {
       return defaultValue.get();
    }
 
+   public String getLabel(STModel stModel) {
+      return getLabel(stModel, () -> "[" + stModel.getStTemplate().getName() + "]");
+   }
+
+   public String getLabel(STModel stModel, Supplier<String> defaultValue) {
+      final nextgen.model.STParameter labelParameter = stModel.getStTemplate().getLabelParameter();
+      return tryToFindArgument(stModel, labelParameter == null ? "name" : labelParameter.getName(), defaultValue);
+   }
+
    public String tryToFindArgument(STModel stModel, String parameterName, Supplier<String> defaultValue) {
       final Optional<STParameter> parameter = stModel.getStTemplate()
             .getParameters()
@@ -198,5 +159,47 @@ public class STAppPresentationModel {
 
    public nextgen.model.STGroupModel getGeneratorSTGroup() {
       return generatorSTGroup;
+   }
+
+   public void reconcileDuplicateModels() {
+
+      SwingUtilities.invokeLater(() -> {
+
+         final java.util.Set<nextgen.model.STModel> delete = new java.util.LinkedHashSet<>();
+
+         doInTransaction(transaction -> db.findAllSTTemplate().forEach(stTemplate -> {
+
+            final java.util.Map<String, nextgen.model.STModel> modelMap = new java.util.LinkedHashMap<>();
+            stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> {
+               final String render = render(stModel);
+               if (modelMap.containsKey(render)) {
+                  System.out.println("\nfound duplicate:");
+                  System.out.println(render);
+
+                  final nextgen.model.STModel keep = modelMap.get(render);
+
+                  stModel.getIncomingStModelSTValue()
+                        .forEach(stValue -> stValue.setStModel(keep));
+
+                  stModel.getIncomingModelsSTProject()
+                        .forEach(stProject -> {
+                           stProject.removeModels(stModel);
+                           stProject.addModels(keep);
+                        });
+
+                  delete.add(stModel);
+               } else
+                  modelMap.put(render, stModel);
+            });
+         }));
+
+         doInTransaction(transaction -> {
+            for (nextgen.model.STModel stModel : delete) {
+               final String uuid = stModel.getUuid();
+               stModel.delete();
+               nextgen.events.STModelDeleted.post(uuid);
+            }
+         });
+      });
    }
 }

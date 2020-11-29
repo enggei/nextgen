@@ -177,6 +177,34 @@ public class STTemplate {
 		return this;
 	}
 
+	public STTemplate setLabelParameter(STParameter dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getLabelParameterRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("labelParameter"));
+		return this;
+	}
+
+	public STParameter getLabelParameter() { 
+		final org.neo4j.graphdb.Relationship relationship = getLabelParameterRelation();
+		return relationship == null ? null : new STParameter(relationship.getOtherNode(node));
+	}
+
+	public STTemplate removeLabelParameter() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getLabelParameterRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getLabelParameterRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("labelParameter"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _children = org.neo4j.graphdb.RelationshipType.withName("children");
 
 	public STTemplate addChildren(STTemplate dst) { 
@@ -241,6 +269,9 @@ public class STTemplate {
 
 	public io.vertx.core.json.JsonObject toJsonObject() {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
+		final STParameter _labelParameter = getLabelParameter();
+		if (_labelParameter != null) jsonObject.put("labelParameter", _labelParameter.toJsonObject());
+
 		final io.vertx.core.json.JsonArray _parameters = new io.vertx.core.json.JsonArray();
 		getParameters().forEach(element -> _parameters.add(element.toJsonObject()));
 		if (!_parameters.isEmpty()) jsonObject.put("parameters", _parameters);

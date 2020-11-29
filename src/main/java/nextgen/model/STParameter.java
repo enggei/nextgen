@@ -176,6 +176,10 @@ public class STParameter {
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("parameters")).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
 	}
 
+	public java.util.stream.Stream<STTemplate> getIncomingLabelParameterSTTemplate() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("labelParameter")).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
 	public java.util.stream.Stream<STArgument> getIncomingStParameterSTArgument() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stParameter")).spliterator(), false).map((relationship) -> new STArgument(relationship.getOtherNode(node)));
 	}

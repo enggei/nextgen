@@ -110,13 +110,11 @@ public class STGenerator {
 
       writeToFile(toStg(stGroupModel), packageDeclaration, stGroupModel.getName(), "stg", root);
       writeJavaFile(stDomain.render(), packageDeclaration, domainClassName, root);
-      writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath()
-            .replaceAll("src/main", "src/test")));
+      writeJavaFile(stDomainTests.render(), packageDeclaration, testsClassName, new File(root.getAbsolutePath().replaceAll("src/main", "src/test")));
 
       // create Patterns file if it does not exist:
       final String patternsClassName = capitalize(stGroupModel.getName() + "Patterns");
       final File patternsFile = new File(new File(root.getAbsolutePath(), packageToPath(packageDeclaration)), patternsClassName + ".java");
-      System.out.println(patternsFile.getAbsolutePath());
       if (!patternsFile.exists()) {
 
          final ClassOrInterfaceDeclaration patternsClass = JavaPatterns.newClassOrInterfaceDeclaration()

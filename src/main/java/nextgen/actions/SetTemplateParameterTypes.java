@@ -17,56 +17,68 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();
+      final java.util.Map<String, javax.swing.JRadioButton> labelParameterMap = new java.util.TreeMap<>();
+      final javax.swing.ButtonGroup labelParameterGroup = new javax.swing.ButtonGroup();
+
       stTemplate.getParameters().forEach(stParameter -> {
 
-      	switch (stParameter.getType()) {
+         switch (stParameter.getType()) {
 
-      		case SINGLE:
-      		case LIST:
-      			final String key = stParameter.getName();
-      			txtParameterMap.put(key, newTextField(stParameter.getArgumentType("Object"), 15));
-      			break;
+            case SINGLE:
+               final javax.swing.JRadioButton radioButton = new javax.swing.JRadioButton("Set as Label");
+               labelParameterMap.put(stParameter.getName(), radioButton);
+               labelParameterGroup.add(radioButton);
+               radioButton.setSelected(stTemplate.getLabelParameter() != null && stTemplate.getLabelParameter().equals(stParameter));
 
-      		case KVLIST:
-      			stParameter.getKeys().forEach(stParameterKey -> {
-      				final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
-      				txtParameterMap.put(kvListKey, newTextField(stParameterKey.getArgumentType("Object"), 15));
-      			});
-      			break;
-      	}
+            case LIST:
+               txtParameterMap.put(stParameter.getName(), newTextField(stParameter.getArgumentType("Object"), 15));
+               break;
+
+            case KVLIST:
+               stParameter.getKeys().forEach(stParameterKey -> {
+                  final String kvListKey = stParameter.getName() + "." + stParameterKey.getName();
+                  txtParameterMap.put(kvListKey, newTextField(stParameterKey.getArgumentType("Object"), 15));
+               });
+               break;
+         }
       });
 
-      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(txtParameterMap.size(), 2));
+      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(txtParameterMap.size(), 3));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
       txtParameterMap.forEach((key, value) -> {
-      	contentPanel.add(newLabel(key));
-      	contentPanel.add(value);
+         contentPanel.add(newLabel(key));
+         contentPanel.add(value);
+         final javax.swing.JRadioButton jRadioButton = labelParameterMap.get(key);
+         contentPanel.add(jRadioButton == null ? newLabel("") : jRadioButton);
       });
 
       showDialog(owner, contentPanel, "Parameter Types", jDialog -> {
-      	stTemplate.getParameters().forEach(stParameter -> {
+         stTemplate.getParameters().forEach(stParameter -> {
 
-      		switch (stParameter.getType()) {
+            switch (stParameter.getType()) {
 
-      			case SINGLE:
-      			case LIST:
-      				final javax.swing.JTextField txtTypes = txtParameterMap.get(stParameter.getName());
-      				final String types = txtTypes.getText().trim();
-      				stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
-      				break;
+               case SINGLE:
+               case LIST:
+                  final javax.swing.JTextField txtTypes = txtParameterMap.get(stParameter.getName());
+                  final String types = txtTypes.getText().trim();
+                  stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
 
-      			case KVLIST:
-      				stParameter.getKeys().forEach(stParameterKey -> {
-      					final javax.swing.JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
-      					final String kvTypes = txtKVTypes.getText().trim();
-      					stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
-      				});
-      				break;
-      		}
-      	});
+                  final javax.swing.JRadioButton jRadioButton = labelParameterMap.get(stParameter.getName());
+                  if (jRadioButton != null && jRadioButton.isSelected()) stTemplate.setLabelParameter(stParameter);
+                  break;
 
-      	nextgen.events.STTemplateParameterTypesChanged.post(stGroup, stTemplate);
-      	javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
+               case KVLIST:
+                  stParameter.getKeys().forEach(stParameterKey -> {
+                     final javax.swing.JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
+                     final String kvTypes = txtKVTypes.getText().trim();
+                     stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
+                  });
+                  break;
+            }
+         });
+
+         nextgen.events.STTemplateParameterTypesChanged.post(stGroup, stTemplate);
+         javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
 

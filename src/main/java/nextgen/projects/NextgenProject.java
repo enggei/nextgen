@@ -70,6 +70,7 @@ public class NextgenProject {
             .addRelations(DomainPatterns.newStringField("text"))
             .addRelations(DomainPatterns.newOneToManyString("implements"))
             .addRelations(DomainPatterns.newOneToMany("parameters", stParameter))
+            .addRelations(DomainPatterns.newOneToOne("labelParameter", stParameter))
             .addRelations(DomainPatterns.newOneToManySelf("children"));
 
       final Entity stValue = DomainPatterns

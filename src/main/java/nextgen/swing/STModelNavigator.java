@@ -445,6 +445,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.ReconcileDuplicateModels());
 				actions.add(new nextgen.actions.NewProject(tree));
 				actions.add(new nextgen.actions.UndoDBTransaction());
 			});
@@ -796,7 +797,7 @@ public class STModelNavigator extends JPanel {
 
 			this.stTemplate = stTemplate;
 
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
+			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -813,7 +814,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
+			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -1048,7 +1049,7 @@ public class STModelNavigator extends JPanel {
 			this.stArgumentUuid = stArgument.getUuid();
 			this.stTemplate = model.getStTemplate();
 
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
+			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -1063,7 +1064,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stTemplate.getName() + "]"));
+			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -1417,7 +1418,7 @@ public class STModelNavigator extends JPanel {
 			this.stArgumentUuid = stArgument.getUuid();
 			this.stTemplate = model.getStTemplate();
 
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stParameterKey.getName() + "]"));
+			setLabel(appModel().getLabel(getModel(),  () -> "[" + stParameterKey.getName() + "]"));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -1432,7 +1433,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().tryToFindArgument(getModel(), "name", () -> "[" + stParameterKey.getName() + "]"));
+			setLabel(appModel().getLabel(getModel(),  () -> "[" + stParameterKey.getName() + "]"));
 			this.tooltip = "";
 			super.nodeChanged();
 		}

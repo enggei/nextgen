@@ -161,7 +161,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 
 		final nextgen.swing.STModelEditor component = new nextgen.swing.STModelEditor(model);
-		addPane(appModel().tryToFindArgument(model, "name", () -> model.getStTemplate().getName() + "Model"), component);
+		addPane(appModel().getLabel(model), component);
 		setSelectedComponent(component);
 		return component;
 	}
