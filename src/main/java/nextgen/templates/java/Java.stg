@@ -1,0 +1,1024 @@
+delimiters "~","~"
+
+Entities() ::= << >>
+
+Pojo(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;
+
+public class ~name~ {
+
+	private final java.util.UUID uuid;
+	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+	~fieldDeclarations:{it|~it~};separator="\n"~
+	
+	public ~name~() {
+		this.uuid = java.util.UUID.randomUUID();
+	}
+
+	public ~name~(java.util.UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public java.util.UUID getUuid() {
+		return this.uuid;
+	}	
+	
+	~accessors:{it|~it~};separator="\n\n"~
+~if(lexical)~
+
+	@Override
+	public String toString() {
+		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
+	}
+~endif~
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+}  >>
+
+primitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	this._~name~ = value;
+	return this;
+}  >>
+
+referenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	this._~name~ = value;
+	return this;
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
+	this._~name~ = null;
+	return this;
+} >>
+
+listAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	return this;
+}  >>
+
+PojoFactory(package,name,entities) ::= <<package ~package~;
+
+public class ~name;format="capitalize"~ {
+
+~entities:{it|
+	public static ~it~ new~it~() { 
+		return new ~it~();
+	~eom()~	
+};separator="\n"~
+}  >>
+
+Enum(package,name,enumValues) ::= <<package ~package~;
+
+public enum ~name~ {
+
+	~enumValues:{it|~it~};separator=",\n"~
+}  >>
+
+EnumValue(name,lexical) ::= <<~name~~if(lexical)~() {
+	@Override
+	public String toString() { return "~lexical~"; }
+}~endif~ >>
+
+Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha,beanListener) ::= <<package ~package~;
+
+public class ~name~ implements java.beans.PropertyChangeListener {
+
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+	~fieldDeclarations:{it|~it~};separator="\n"~
+
+	private final java.beans.PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this);
+	
+	public ~name~() {
+	}
+	
+	~accessors:{it|~it~};separator="\n\n"~
+	
+~if(lexical)~
+
+	@Override
+	public String toString() {
+		return "" + ~lexical:{it|_~it~};separator=" + \" \" + "~;
+	}
+~endif~
+
+~if(eqha)~
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return _~eqha~.equals(that._~eqha~);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(_~eqha~);
+	}
+~endif~
+
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent evt) {
+		this.pcs.firePropertyChange("~name~", this, evt);
+	}
+	
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		this.pcs.removePropertyChangeListener(listener);
+	}
+
+	~beanListener~
+}  >>
+
+boundedPrimitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
+	this._~name~ = value;
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
+	return this;
+}  >>
+
+boundedReferenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
+	if (oldValue != null) oldValue.removePropertyChangeListener(this);
+	this._~name~ = value;
+	if (value != null) value.addPropertyChangeListener(this);
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
+	return this;
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
+	~type~ oldValue = this._~name~;
+	this._~name~ = null;
+	if (oldValue != null) oldValue.removePropertyChangeListener(this);
+	this.pcs.firePropertyChange("remove.~name~", oldValue, null);
+	return this;
+}  >>
+
+boundedListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	this.pcs.firePropertyChange("add.~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
+	return this;
+}  >>
+
+boundedListReferenceAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	if (value != null) value.addPropertyChangeListener(this);
+	this.pcs.firePropertyChange("add.~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	if (value != null) value.removePropertyChangeListener(this);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
+	return this;
+}  >>
+
+boundedExternalReferenceAccessors(type,name,className) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) {
+	~type~ oldValue = this._~name~;
+	this._~name~ = value;
+	this.pcs.firePropertyChange("set.~name~", oldValue, value);
+	return this;
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
+	~type~ oldValue = this._~name~;
+	this._~name~ = null;
+	this.pcs.firePropertyChange("remove.~name~", oldValue, null);
+	return this;
+}  >>
+
+boundedExternalListAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format="capitalize"~() {
+	return this._~name~;
+}
+
+public ~className~ add~name;format="capitalize"~(~type~ value) {
+	this._~name~.add(value);
+	this.pcs.firePropertyChange("add.~name~", null, value);
+	return this;
+}
+
+public ~className~ remove~name;format="capitalize"~(~type~ value) {
+	this._~name~.remove(value);
+	this.pcs.firePropertyChange("remove.~name~", value, null);
+	return this;
+}  >>
+
+BeanListener(name,singleProperties,listProperties) ::= <<public static class ~name;format="capitalize"~ChangeListener implements java.beans.PropertyChangeListener {
+
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent propertyChangeEvent) {
+		switch (propertyChangeEvent.getPropertyName()) {
+			
+			case "~name;format="capitalize"~":
+				on~name;format="capitalize"~Change((~name;format="capitalize"~) propertyChangeEvent.getOldValue(), (java.beans.PropertyChangeEvent) propertyChangeEvent.getNewValue());
+				break;
+				
+~singleProperties:{it|
+			case "set.~it.name~":
+				onSet~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+			case "remove.~it.name~":
+				onRemove~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+};separator="\n"~
+
+~listProperties:{it|
+			case "add.~it.name~":
+				onAdd~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+			case "remove.~it.name~":
+				onRemove~it.name;format="capitalize"~((~it.type~) propertyChangeEvent.getOldValue(), (~it.type~) propertyChangeEvent.getNewValue());
+				break;
+};separator="\n"~
+
+		}
+	}
+
+	protected void on~name;format="capitalize"~Change(~name;format="capitalize"~ instance, java.beans.PropertyChangeEvent event) {
+		log.info("on~name;format="capitalize"~Change " + instance + " " + event);
+	}
+	
+~singleProperties:{it|
+	protected void onSet~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onSet~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+	
+	protected void onRemove~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onRemove~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+};separator="\n\n"~
+
+~listProperties:{it|
+	protected void onAdd~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onAdd~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+	
+	protected void onRemove~it.name;format="capitalize"~(~it.type~ oldValue, ~it.type~ newValue) {
+		log.info("onRemove~it.name;format="capitalize"~ " + oldValue + " " + newValue);
+	~eom()~
+};separator="\n\n"~
+}  >>
+
+Runnable(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;
+
+public class ~name~ implements Runnable {
+
+	~fields:{it|private final ~it.type~ ~it.name~;};separator="\n"~
+	
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {	
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+	
+	@Override
+	public void run() {
+		~statements:{it|~it~};separator="\n"~
+	}
+}  >>
+
+ValueObject(package,name,fields,lexical) ::= <<package ~package~;
+
+public class ~name~ {
+
+	private final java.util.UUID uuid;
+	~fields:{it|public ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+
+	public ~name~() {
+		this.uuid = java.util.UUID.randomUUID();
+	}
+
+	public ~name~(java.util.UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public java.util.UUID getUuid() {
+		return this.uuid;
+	}	
+	
+	@Override
+	public String toString() {
+		return ~if(lexical)~~lexical:{it|_~it~};separator=" + \" \" + "~~else~this.uuid.toString()~endif~;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+}  >>
+
+Singleton(packageName,name,fields,methods) ::= <<package ~packageName~;
+
+public final class ~name~ {
+
+	private static ~name~ INSTANCE;
+	~fields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+
+	private ~name~() {		  
+	}
+
+	public static synchronized ~name~ getInstance() {
+		if(INSTANCE == null) INSTANCE = new ~name~();
+		return INSTANCE;
+	}
+
+~fields:{it|
+	public ~it.type~ get~it.name;format="capitalize"~() {
+		return _~it.name~;
+	~eom()~
+
+	public ~name~ set~it.name;format="capitalize"~(~it.type~ value) {
+		this._~it.name~ = value;
+		return this;
+	~eom()~
+};separator="\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+Grammar() ::= << >>
+
+CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~
+
+~importDeclaration:{it|~it~};separator="\n"~
+
+~types:{it|~it~};separator="\n\n"~ >>
+
+ClassOrInterfaceDeclaration(comments,annotations,modifiers,isInterface,name,typeParameters,extend,implementedTypes,fields,members) ::= <<~comments:{it|~it~};separator="\n"~~if(comments)~
+~endif~~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=", "~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=", "~~endif~ {
+	
+	~fields:{it|~it~};separator="\n"~
+	~if(fields)~
+	
+	~endif~
+	~members:{it|~it~};separator="\n\n"~
+} >>
+
+FieldDeclaration(variables,annotations,modifiers) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~; >>
+
+ConstructorDeclaration(name,blockStmt,modifiers,annotations,thrownExceptions,typeParameters,parameters) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(typeParameters)~~typeParameters:{it|<~it~>};separator=" "~ ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~ ~endif~~if(blockStmt)~~blockStmt~~else~ { }~endif~ >>
+
+EnumDeclaration(name,members,annotations,implementedTypes,entries,extend,modifiers) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~enum ~name~~if(extend)~ extends ~extend:{it|~it~};separator=", "~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=","~~endif~ {
+
+	~entries:{it|~it~};separator=",\n"~~if(members)~;~endif~
+
+	~members:{it|~it~};separator="\n\n"~
+} >>
+
+EnumConstant(methods,arguments,name,annotations) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~name~~if(arguments)~(~arguments:{it|~it~};separator=","~)~endif~~if(methods)~ {
+	~methods:{it|~it~};separator="\n"~
+}~endif~ >>
+
+ImportDeclaration(isStatic,name,isAsterisk) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~; >>
+
+Declarations() ::= << >>
+
+AnnotationDeclaration(members,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~@interface ~name~ {
+	~members:{it|~it~};separator="\n"~
+} >>
+
+AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~; >>
+
+FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~; >>
+
+MethodDeclaration(annotations,modifiers,type,typeParameters,name,parameters,thrownExceptions,isInterfaceDeclaration,blockStmt) ::= <<~annotations:{it|~it~};separator="\n"~~if(annotations)~
+~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~if(typeParameters)~<~typeParameters:{it|~it~};separator=", "~>~endif~~type~ ~else~void ~endif~~name~(~parameters:{it|~it~};separator=", "~)~if(thrownExceptions)~ throws ~thrownExceptions:{it|~it~};separator=", "~~endif~~if(isInterfaceDeclaration)~;~else~~if(blockStmt)~~blockStmt~~else~ { }~endif~~endif~  >>
+
+Parameter(annotations,modifiers,type,isVarargs,name) ::= <<~annotations:{it|~it~};separator=" "~~if(annotations)~ ~endif~~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~if(type)~~type~ ~endif~~if(isVarargs)~... ~endif~~name~ >>
+
+ModuleDeclaration(providesDirective,usesDirective,name,requiresDirective,exportsDirective,opens) ::= <<module ~name~ {
+    ~requiresDirective:{it|requires ~it~};separator="\n"~
+    ~exportsDirective:{it|exports ~it~};separator="\n"~
+    ~providesDirective:{it|provides ~it~};separator="\n"~
+    ~usesDirective:{it|uses ~it~};separator="\n"~
+    ~opens:{it|opens ~it~};separator="\n"~
+} >>
+
+PackageDeclaration(name) ::= <<package ~name~;  >>
+
+PrivateFieldDeclaration(initializer,name,type) ::= <<private ~VariableDeclaration(initializer,name,type)~; >>
+
+PrivateFinalFieldDeclaration(initializer,name,type) ::= <<private final ~VariableDeclaration(initializer,name,type)~; >>
+
+PublicFinalFieldDeclaration(initializer,name,type) ::= <<public final ~VariableDeclaration(initializer,name,type)~; >>
+
+StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>
+
+StaticPrivateFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>
+
+staticPublicFinalFieldDeclaration(initializer,name,type) ::= <<static public final ~VariableDeclaration(initializer,name,type)~; >>
+
+VariableDeclaration(name,initializer,type) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~ >>
+
+Expressions() ::= << >>
+
+ArrayAccessExpression(index,name) ::= <<~name~[~index~] >>
+
+ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~ >>
+
+ArrayInitializerExpression(values) ::= <<{
+	~values:{it|~it~};separator=",\n"~
+} >>
+
+AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~ >>
+
+AssignThisVariableExpression(value) ::= <<~ThisVariableExpression(value)~ = ~value~ >>
+
+UnaryExpression(isPrefix,operator,expression,isPostfix) ::= <<~if(isPrefix)~~operator~~endif~~expression~~if(isPostfix)~~operator~~endif~ >>
+
+ThisVariableExpression(value) ::= <<this.~value~ >>
+
+SuperExpression(typeName) ::= <<super~if(typeName)~.~endif~~typeName~ >>
+
+StringLiteralExpression(value) ::= <<"~value~" >>
+
+ObjectCreationExpression(scope,type,typeArguments,arguments,anonymousClassBodies,emptyClassBody) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~endif~(~arguments:{it|~it~};separator=", "~)~if(anonymousClassBodies)~ {
+
+	~anonymousClassBodies:{it|~it~};separator="\n"~
+
+}~elseif(emptyClassBody)~ {
+}~endif~ >>
+
+NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=", "~)~endif~ >>
+
+NullLiteralExpression(value) ::= <<~value~ >>
+
+VariableDeclarationExpression(variables,modifiers) ::= <<~modifiers:{it|~it~};separator=" "~~if(modifiers)~ ~endif~~variables:{it|~it~};separator=", "~ >>
+
+SingleMemberAnnotationExpression(members,name) ::= <<@~name~~if(members)~(~members:{it|~it~};separator=", "~)~endif~ >>
+
+MethodReferenceExpression(identifier,scope) ::= <<~scope~::~identifier~ >>
+
+MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=","~>~endif~~name~(~arguments:{it|~it~};separator=", "~) >>
+
+MarkerAnnotationExpression(name) ::= <<@~name~ >>
+
+LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=", "~) -> ~body~ >>
+
+IntegerLiteralExpression(value) ::= <<~value~ >>
+
+InstanceOfExpression(type,expression) ::= <<~expression~ instanceof ~type~ >>
+
+FieldAccessExpression(scope,name) ::= <<~if(scope)~~scope~.~endif~~name~ >>
+
+EnclosedExpression(expression) ::= <<(~expression~) >>
+
+DoubleLiteralExpression(value) ::= <<~value~ >>
+
+ConditionalExpression(thenExpression,elseExpression,condition) ::= <<~condition~ ? ~thenExpression~ : ~elseExpression~ >>
+
+CharLiteralExpression(value) ::= <<~value~ >>
+
+CastExpression(expression,type) ::= <<(~type~) ~expression~ >>
+
+BooleanLiteralExpression(value) ::= <<~value~ >>
+
+BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~ >>
+
+LongExpression(value) ::= <<~value~ >>
+
+NameExpression(value) ::= <<~value~ >>
+
+ThisExpression(typeName) ::= <<this~if(typeName)~.~endif~~typeName~ >>
+
+ClassExpression(type) ::= <<~type~.class >>
+
+Statements() ::= << >>
+
+ExpressionStmt(comment,expression) ::= <<~if(comment)~//~comment~
+~endif~~expression~;  >>
+
+ContinueStmt(label) ::= <<continue~if(label)~ ~label~~endif~; >>
+
+SwitchEntryStmt(labels,statements) ::= <<~if(labels)~~labels:{it|case ~it~ :};separator="\n"~~else~default :~endif~
+	~statements:{it|~it~};separator="\n"~ >>
+
+SwitchStmt(selector,entries) ::= <<switch(~selector~) {
+	~entries:{it|~it~};separator="\n"~
+} >>
+
+SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~ >>
+
+WhileStmt(condition,body) ::= <<while (~condition~) ~body~ >>
+
+LabeledStmt(statement,label) ::= <<~label~ : 
+	~statement~ >>
+
+ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~ >>
+
+AssertStmt(message,expression) ::= <<assert ~expression~~if(message)~ : ~message~~endif~; >>
+
+BlockStmt(isStatic,statements) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~
+	~statements:{it|~it~};separator="\n"~
+~endif~
+} >>
+
+BreakStmt(label) ::= <<break~if(label)~ ~label~~endif~; >>
+
+EmptyStmt() ::= <<; >>
+
+ThrowStmt(expression) ::= <<throw ~expression~; >>
+
+ReturnStmt(expression) ::= <<return~if(expression)~ ~expression~~endif~; >>
+
+IfStmt(condition,then,elseStmt) ::= <<if (~condition~) ~then~~if(elseStmt)~ 
+else ~elseStmt~~endif~ >>
+
+ForStmt(update,initialization,compare,body) ::= <<for (~initialization:{it|~it~};separator=", "~; ~compare~; ~update:{it|~it~};separator=", "~) ~body~ >>
+
+DoStmt(condition,body) ::= <<do ~body~ while (~condition~); >>
+
+ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=", "~); >>
+
+TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=";"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~ >>
+
+CatchClause(parameter,body) ::= <<catch (~parameter~) ~body~ >>
+
+Types() ::= << >>
+
+TypeParameter(name,typeBounds) ::= <<~name~~if(typeBounds)~ extends ~typeBounds:{it|~it~};separator=" & "~~endif~ >>
+
+ClassOrInterfaceType(scope,names,typeArguments,isTyped,isArrayType) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=" | "~~if(typeArguments)~<~typeArguments:{it|~it~};separator=", "~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~ >>
+
+ArrayCreationLevel(dimension) ::= <<[~dimension~] >>
+
+QualifierName(value) ::= <<~value:{it|~it~};separator="."~ >>
+
+JavaPackageInfo(packageName,interfaces,classes) ::= <<~packageName~
+
+interfaces:
+	~interfaces:{it|~it.name~};separator="\n"~
+
+classes:
+	~classes:{it|~it.name~};separator="\n"~ >>
+
+MemberValuePair(name,value) ::= <<~name~ = ~value~ >>
+
+JavaLibrary(name,packages) ::= <<~name~
+
+~packages:{it|~it~};separator="\n\n"~  >>
+
+JavaPackage(name,types) ::= <<~name~
+~types:{it|~it~};separator="\n"~  >>
+
+JavaType(packageName,name) ::= <<~packageName~.~name~  >>
+
+JavaPatterns() ::= <<public static class JavaPatterns extends nextgen.templates.java.JavaST {
+
+	// declarations
+	public static PackageDeclaration newPackageDeclaration(String packageName) {
+		return newPackageDeclaration()
+				.setName(packageName);
+	}
+
+	public static PackageDeclaration newPackageDeclaration(PackageDeclaration parent, String packageName) {
+		return newPackageDeclaration()
+				.setName(parent.getName() + "." + packageName);
+	}
+
+	public static MethodDeclaration newPublicMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.PUBLIC);
+	}
+
+	public static MethodDeclaration newPublicMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(classOrInterfaceType, name, blockStmt)
+				.addModifiers(Modifiers.PUBLIC);
+	}
+
+	public static MethodDeclaration newPublicStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newPublicMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.STATIC);
+	}
+
+	public static MethodDeclaration newPublicStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newPublicStaticMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static MethodDeclaration newPublicFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newPublicMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static MethodDeclaration newPublicFinalMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newPublicMethodDeclaration(classOrInterfaceType, name, blockStmt)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static MethodDeclaration newProtectedMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.PROTECTED);
+	}
+
+	public static MethodDeclaration newProtectedStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newProtectedMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.STATIC);
+	}
+
+	public static MethodDeclaration newPrivateMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.PRIVATE);
+	}
+
+	public static MethodDeclaration newPrivateStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newPrivateMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.STATIC);
+	}
+
+	public static MethodDeclaration newStaticMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.STATIC);
+	}
+
+	public static MethodDeclaration newStaticFinalMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newStaticMethodDeclaration(name, blockStmt)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static MethodDeclaration newMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
+	public static MethodDeclaration newMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.setType(classOrInterfaceType)
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
+	public static MethodDeclaration newOverriddenMethodDeclaration(String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
+	public static MethodDeclaration newOverridenMethodDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, BlockStmt blockStmt) {
+		return newMethodDeclaration()
+				.addAnnotations(newSingleMemberAnnotationExpression().setName("Override"))
+				.setType(classOrInterfaceType)
+				.setName(name)
+				.setBlockStmt(blockStmt);
+	}
+
+	public static VariableDeclaration newVariableDeclaration(ClassOrInterfaceType classOrInterfaceType, String name, Object initializer) {
+		return newVariableDeclaration()
+				.setType(classOrInterfaceType)
+				.setName(name)
+				.setInitializer(initializer);
+	}
+
+	public static FieldDeclaration newPrivateFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.PRIVATE);
+	}
+
+	public static FieldDeclaration newProtectedFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.PROTECTED);
+	}
+
+	public static FieldDeclaration newPublicFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.PUBLIC);
+	}
+
+	public static FieldDeclaration newFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static FieldDeclaration newPrivateFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newPrivateFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static FieldDeclaration newProtectedFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newProtectedFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static FieldDeclaration newPublicFinalFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newPublicFieldDeclaration(variableDeclaration)
+				.addModifiers(Modifiers.FINAL);
+	}
+
+	public static FieldDeclaration newFieldDeclaration(VariableDeclaration variableDeclaration) {
+		return newFieldDeclaration()
+				.addVariables(variableDeclaration);
+	}
+
+	public static ClassOrInterfaceType newClassOrInterfaceType(Object scope, String name) {
+		return newClassOrInterfaceType()
+				.setScope(scope)
+				.addNames(name);
+	}
+
+	public static Parameter newParameter(ClassOrInterfaceType type, String name) {
+		return newParameter()
+				.setType(type)
+				.setName(name);
+	}
+
+	// statements
+	public static Statement newExpressionStmt(Expression expression) {
+		return newExpressionStmt()
+				.setExpression(expression);
+	}
+
+	public static Statement newReturnStatement(Expression expression) {
+		return newReturnStmt()
+				.setExpression(expression);
+	}
+
+	public static SwitchStmt newSwitchStmt(Object selector) {
+		return newSwitchStmt()
+				.setSelector(selector);
+	}
+
+	public static SwitchEntryStmt newSwitchEntryStmt(Object label, BlockStmt blockStmt) {
+		return newSwitchEntryStmt()
+				.addLabels(label)
+				.addStatements(blockStmt);
+	}
+
+	public static BlockStmt newBlockStmt(String ... statements) {
+		return newBlockStmt()
+				.setStatements(statements);
+	}
+
+	// expressions
+	public static ObjectCreationExpression newObjectCreationExpression(ClassOrInterfaceType classOrInterfaceType) {
+		return newObjectCreationExpression()
+				.setType(classOrInterfaceType);
+	}
+
+	public static LambdaExpression newLambdaExpression(Expression expression) {
+		return newLambdaExpression()
+				.setBody(expression);
+	}
+
+	public static LambdaExpression newLambdaExpression(String expression) {
+		return newLambdaExpression()
+				.setBody(expression);
+	}
+
+	public static LambdaExpression newLambdaExpression(Statement... statements) {
+		return newLambdaExpression()
+				.setBody(newBlockStmt()
+					.setStatements(statements));
+	}
+
+	public static FieldAccessExpression newFieldAccessExpression(ClassOrInterfaceType scope, String name) {
+		return newFieldAccessExpression()
+				.setScope(scope)
+				.setName(name);
+	}
+
+	public static FieldAccessExpression newFieldAccessExpression(Expression scope, String name) {
+		return newFieldAccessExpression()
+				.setScope(scope)
+				.setName(name);
+	}
+
+	public static FieldAccessExpression newFieldAccessExpression(String scope, String name) {
+		return newFieldAccessExpression()
+				.setScope(scope)
+				.setName(name);
+	}
+
+	public static VariableDeclarationExpression newFinalVariableDeclarationExpression(VariableDeclaration variableDeclaration) {
+		return newVariableDeclarationExpression()
+				.addModifiers(Modifiers.FINAL)
+				.addVariables(variableDeclaration);
+	}
+
+	public static MethodCallExpression newMethodCallExpression(Expression scope, String name, Object... arguments) {
+		return newMethodCallExpression()
+				.setScope(scope)
+				.setName(name)
+				.setArguments(arguments);
+	}
+
+	public static MethodCallExpression newMethodCallExpression(VariableDeclaration scope, String name, Object... arguments) {
+		return newMethodCallExpression()
+				.setScope(scope.getName())
+				.setName(name)
+				.setArguments(arguments);
+	}
+
+	public static MethodCallExpression newMethodCallExpression(ClassOrInterfaceType scope, String name, Object... arguments) {
+		return newMethodCallExpression()
+				.setScope(scope)
+				.setName(name)
+				.setArguments(arguments);
+	}
+
+	public static MethodCallExpression newMethodCallExpression(String name, Object... arguments) {
+		return newMethodCallExpression()
+				.setName(name)
+				.setArguments(arguments);
+	}
+
+	public static Expression newExpression(String expression) {
+		return newNameExpression().setValue(expression);
+	}
+
+	// formatting
+	public static Object asString(Object value) {
+		return "\"" + value + "\"";
+	}
+}
+
+public static class NamedEntity {
+
+	private final String name;
+	private final PackageDeclaration packageDeclaration;
+	private String variableName;
+
+	NamedEntity(String name, PackageDeclaration packageDeclaration) {
+		this.name = name;
+		this.packageDeclaration = packageDeclaration;
+	}
+
+	NamedEntity(String name, PackageDeclaration packageDeclaration, String variableName) {
+		this(name, packageDeclaration);
+		this.variableName = variableName;
+	}
+
+	String name() {
+		return name;
+	}
+
+	String variableName() {
+		return variableName == null ? Character.toLowerCase(name.charAt(0)) + name.substring(1) : variableName;
+	}
+
+	MethodCallExpression staticMethodCall(String name, Object... arguments) {
+		return newMethodCallExpression(asClassOrInterfaceType(), name, arguments);
+	}
+
+	MethodCallExpression methodCall(String name, Object... arguments) {
+		return newMethodCallExpression(newExpression(variableName()), name, arguments);
+	}
+
+	Parameter asParameter(Object... typeArguments) {
+		return newParameter(asClassOrInterfaceType(typeArguments), variableName());
+	}
+
+	Parameter asParameter(NamedEntity typeArguments) {
+		return newParameter(asClassOrInterfaceType(typeArguments.asClassOrInterfaceType()), variableName());
+	}
+
+	Statement asFinalVariableDeclaration(Object initializer) {
+		return newExpressionStmt(newFinalVariableDeclarationExpression(newVariableDeclaration(asClassOrInterfaceType(), variableName(), initializer)));
+	}
+
+	ClassOrInterfaceType asClassOrInterfaceType(Object... typeArguments) {
+		return newClassOrInterfaceType(packageDeclaration == null ? null : packageDeclaration.getName(), name)
+				.setTypeArguments(typeArguments);
+	}
+
+	ClassOrInterfaceType asClassOrInterfaceType(NamedEntity typeArgument) {
+		return asClassOrInterfaceType(typeArgument.asClassOrInterfaceType());
+	}
+
+	ObjectCreationExpression asObjectCreationExpression(Object... arguments) {
+		return newObjectCreationExpression(asClassOrInterfaceType())
+				.setArguments(arguments);
+	}
+
+	FieldAccessExpression asFieldAccessExpression(String fieldName) {
+		return newFieldAccessExpression(asClassOrInterfaceType(), fieldName);
+	}
+}  >>
+
+Utils() ::= << >>
+
+PasswordUtils(packageName,name) ::= <<package ~packageName~;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Random;
+
+public class ~name~ {
+
+    private static final Random RANDOM = new SecureRandom();
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final int ITERATIONS = 10000;
+    private static final int KEY_LENGTH = 256;
+
+    public static String getSalt(int length) {
+        StringBuilder returnValue = new StringBuilder(length);
+        for (int i = 0; i < length; i++)
+            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        return new String(returnValue);
+    }
+
+    public static byte[] hash(char[] password, byte[] salt) {
+        final PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
+        Arrays.fill(password, Character.MIN_VALUE);
+        try {
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            return skf.generateSecret(spec).getEncoded();
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new AssertionError("Error while hashing a password: " + e.getMessage(), e);
+        } finally {
+            spec.clearPassword();
+        }
+    }
+
+    public static String generateSecurePassword(String password, String salt) {
+        String returnValue;
+        byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
+        returnValue = Base64.getEncoder().encodeToString(securePassword);
+        return returnValue;
+    }
+
+    public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {
+        final String newSecurePassword = generateSecurePassword(providedPassword, salt);
+        return newSecurePassword.equalsIgnoreCase(securedPassword);
+    }
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

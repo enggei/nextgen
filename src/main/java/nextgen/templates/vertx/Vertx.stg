@@ -1,0 +1,549 @@
+delimiters "~","~"
+
+DomainVerticle(packageName,imports,name,actions,domainFactory,dbPath,address) ::= <<package ~packageName~;
+
+import ~packageName~.messages.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name;format="capitalize"~ extends AbstractVerticle {
+
+	private static final Logger log = LoggerFactory.getLogger(~name;format="capitalize"~.class);
+
+	public enum Action {
+		~actions:{it|~it.name~};separator=",\n"~
+	}
+
+	public enum ErrorCodes {
+		NO_ACTION_HEADER,
+		UNKNOWN_ACTION,
+		DB_ERROR
+	}
+
+	private ~domainFactory~ db;
+
+	@Override
+	public void start(Promise<Void> promise) throws Exception {
+		new Thread(() -> {
+			db = new ~domainFactory~(config().getString("~dbPath~"));
+			log.info("db started");
+		}).start();
+		
+		vertx.eventBus().consumer(config().getString("~address~", "~address~"), this::onMessage);
+	}
+
+	public void onMessage(Message<JsonObject> message) {
+
+		if (!message.headers().contains("action")) {
+			log.error("No action header specified for message with headers {} and body {}", message.headers(), message.body().encodePrettily());
+			message.fail(ErrorCodes.NO_ACTION_HEADER.ordinal(), "No action header specified");
+			return;
+		}
+
+		final Action action = getAction(message);
+
+		if (action == null) {
+			message.fail(ErrorCodes.UNKNOWN_ACTION.ordinal(), "Unknown action");
+			return;
+		}
+
+		switch (action) {
+~actions:{it|
+			case ~it.name~: {
+				~it.name~(message);
+				break;
+			\}};separator="\n"~
+		}
+	}
+
+	~actions:{it|~it.declaration~};separator="\n\n"~
+
+	private Action getAction(Message<JsonObject> message) {
+		final String action = message.headers().get("action");
+		try {
+			return Action.valueOf(action);
+		} catch (Throwable e) {
+			log.error("Unknown action " + action);
+			return null;
+		}
+	}
+}  >>
+
+DomainAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {
+	log.info("~name~ " + message.body().encodePrettily());
+~if(params)~
+	final JsonObject body = message.body();
+	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
+~endif~
+	
+	db.doInTransaction(transaction -> {
+		~statements:{it|~it~};separator="\n"~
+	}, throwable -> {
+		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());
+	});
+}  >>
+
+Entities() ::= << >>
+
+JsonWrapper(package,name,externalFields,accessors,neoNodeMapper,lexical) ::= <<package ~package~;
+
+public class ~name;format="capitalize"~ {
+
+	private final io.vertx.core.json.JsonObject jsonObject;
+	~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator="\n"~
+
+	public ~name;format="capitalize"~() { 
+		this.jsonObject = new io.vertx.core.json.JsonObject();
+		jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
+	public ~name;format="capitalize"~(io.vertx.core.json.JsonObject jsonObject) { 
+		this.jsonObject = jsonObject;
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
+	public ~name;format="capitalize"~(java.io.File file) throws java.io.IOException {
+		this(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
+	}
+
+	public ~name;format="capitalize"~(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+
+		this.jsonObject = new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+		java.lang.String uuidString = jsonObject.getString("uuid");
+		if (uuidString == null) jsonObject.put("uuid", java.util.UUID.randomUUID().toString());
+	}
+
+	public io.vertx.core.json.JsonObject getJsonObject() { 
+		return this.jsonObject;
+	}
+
+	@Deprecated
+	public String uuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
+	public String getUuid() {
+		return this.jsonObject.getString("uuid");
+	}
+
+	public ~name;format="capitalize"~ removeUuid() {
+		this.jsonObject.remove("uuid");
+		return this;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object o) { 
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final ~name;format="capitalize"~ other = (~name;format="capitalize"~) o;
+		return jsonObject.getString("uuid").equals(other.getJsonObject().getString("uuid"));
+	}
+
+	@Override
+	public int hashCode() { 
+		return java.util.Objects.hash(jsonObject.getString("uuid"));
+	}
+
+	~accessors:{it|~it~};separator="\n\n"~
+
+	~neoNodeMapper~
+
+	@Override
+	public java.lang.String toString() { 
+		return ~if(lexical)~jsonObject.getString("~lexical~")~else~jsonObject.encode()~endif~;
+	}
+}  >>
+
+primitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	jsonObject.put("~name~", value);
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return jsonObject.get~type;format="capitalize"~("~name~");
+}
+
+public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
+	return jsonObject.get~type;format="capitalize"~("~name~", defaultValue);
+}  >>
+
+listReferenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value.getJsonObject());
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> new ~type~((io.vertx.core.json.JsonObject) o));
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	for (int i = 0; i < jsonArray.size(); i++)  { 
+		final io.vertx.core.json.JsonObject o = jsonArray.getJsonObject(i);
+		if (value.getJsonObject().getString("uuid").equals(o.getString("uuid")))  { 
+			jsonArray.remove(i);
+			return this;
+		}
+	}
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+} >>
+
+referenceAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	jsonObject.put("~name~", value.getJsonObject());
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return jsonObject.getJsonObject("~name~") == null ? null : new ~type~(jsonObject.getJsonObject("~name~"));
+} >>
+
+listPrimitiveAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value);
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> (~type~)o);
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	for (int i = 0; i < jsonArray.size(); i++)  { 
+		final ~type~ o = jsonArray.get~type~(i);
+		if (value.equals(o))  { 
+			jsonArray.remove(i);
+			return this;
+		}
+	}
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+}  >>
+
+externalAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	this._~name~ = value;
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return this._~name~;
+}
+
+public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
+	return this._~name~ == null ? defaultValue : this._~name~;
+} >>
+
+enumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ set~name;format="capitalize"~(~type~ value) { 
+	if (value == null) return this;
+	jsonObject.put("~name~", value.name());
+	return this;
+}
+
+public ~type~ get~name;format="capitalize"~() { 
+	return get~name;format="capitalize"~(null);
+}
+
+public ~type~ get~name;format="capitalize"~(~type~ defaultValue) { 
+	return jsonObject.getString("~name~") == null ? defaultValue : ~type~.valueOf(jsonObject.getString("~name~"));
+} >>
+
+listEnumAccessors(className,name,type) ::= <<public ~className;format="capitalize"~ add~name;format="capitalize"~(~type~ value) { 
+	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~");
+	if (jsonArray == null) jsonObject.put("~name~", jsonArray = new io.vertx.core.json.JsonArray());
+	jsonArray.add(value.name());
+	return this;
+}
+
+public java.util.stream.Stream<~type~> get~name;format="capitalize"~() { 
+	return jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray()).stream().map((o) -> ~type~.valueOf(o.toString()));
+}
+
+public ~className;format="capitalize"~ remove~name;format="capitalize"~(~type~ value) { 
+	final io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray("~name~", new io.vertx.core.json.JsonArray());
+	jsonArray.remove(value.name());
+	return this;
+}
+
+public ~className;format="capitalize"~ clear~name;format="capitalize"~() { 
+	jsonObject.put("~name~", new io.vertx.core.json.JsonArray());
+	return this;
+}  >>
+
+JsonFactory(package,name,entities) ::= <<package ~package~;
+
+public class ~name;format="capitalize"~ {
+
+	public static io.vertx.core.json.JsonObject load(java.io.File file) throws java.io.IOException {
+		if (!file.exists() || !file.isFile()) throw new IllegalArgumentException("could not read " + file.getAbsolutePath());
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath())));
+	}
+
+	public static io.vertx.core.json.JsonObject load(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+		return new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(content));
+	}
+	
+	public static void save(io.vertx.core.json.JsonObject jsonObject, java.io.File file) throws java.io.IOException {
+
+		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
+			throw new IllegalStateException("could not create " + file.getParentFile().getAbsolutePath());
+
+		if (!file.exists() && !file.createNewFile())
+			throw new IllegalStateException("could not create " + file.getAbsolutePath());
+
+		java.nio.file.Files.write(file.toPath(), jsonObject.toBuffer().getBytes());
+	}
+
+~entities:{it|
+	public static ~it~ new~it~() { 
+		return new ~it~();
+	\}
+
+	public static ~it~ new~it~NoUuid() { 
+		return new ~it~().removeUuid();
+	\}
+
+	public static ~it~ new~it~(io.vertx.core.json.JsonObject jsonObject) { 
+		return new ~it~(jsonObject);
+	\}
+
+	public static ~it~ new~it~(java.io.File file) throws java.io.IOException { 
+		return new ~it~(load(file));
+	\}
+
+	public static ~it~ merge(~it~ lhs, ~it~ rhs) {
+		return new~it~(lhs.getJsonObject().mergeIn(rhs.getJsonObject()));
+	\}
+};separator="\n"~
+}  >>
+
+Server(packageName,imports,name,startStatements) ::= <<package ~packageName~;
+
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Vertx;
+
+import java.io.IOException;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name~ {
+
+	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+	public ~name~(String configPath) throws IOException {
+		log.info("Starting server");
+
+		final io.vertx.core.json.JsonObject serverDeployment = configPath == null
+				? new io.vertx.core.json.JsonObject(read(getClass().getResourceAsStream("/config.json")))
+				: new io.vertx.core.json.JsonObject(read(new java.io.FileInputStream(configPath)));
+
+		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment);
+		log.info("serverDeploymentOptions " + serverDeployment.encode());
+		
+		final Vertx vertx = Vertx.vertx();
+
+		~startStatements:{it|~it~};separator="\n"~
+		
+		serverDeployment.getJsonArray("verticles")
+				.stream()
+				.map(o -> (io.vertx.core.json.JsonObject)o)
+				.forEach(verticleSettings -> {
+					log.info("verticle settings " + verticleSettings.encodePrettily());
+					vertx.deployVerticle(verticleSettings.getString("className"), deploymentOptions, result -> {
+						if (result.failed())
+							log.error("deployment failed " + result.cause().getMessage(), result.cause());
+						else
+							log.info("deployment success");
+					});
+				});
+	}
+
+	public static io.vertx.core.buffer.Buffer read(java.io.InputStream inputStream) throws java.io.IOException {
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+		return io.vertx.core.buffer.Buffer.buffer(content);
+	}
+
+	public static void main(java.lang.String[] args) throws IOException {
+		System.setProperty("io.netty.tryReflectionSetAccessible", "true");
+		new ~name~(args.length == 1 ? args[0] : null);
+	}
+}  >>
+
+WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,methods) ::= <<package ~packageName~;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.PemKeyCertOptions;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTAuthOptions;
+import io.vertx.ext.jwt.JWTOptions;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.JWTAuthHandler;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
+
+~imports:{it|~it~};separator="\n"~
+
+public class ~name;format="capitalize"~ extends AbstractVerticle {
+
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format="capitalize"~.class);
+	private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+
+	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+	@Override
+	public void start(Future<Void> startFuture) throws Exception {
+		log.info("starting ~name;format="capitalize"~");
+
+		~startStatements:{it|~it~};separator="\n"~
+
+		final Router router = Router.router(vertx);
+		router.route().handler(BodyHandler.create());
+		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+		~routes:{it|router.~it.action~("/~it.url~").handler(~it.handler~);};separator="\n"~
+
+		final HttpServerOptions serverOptions = new HttpServerOptions();
+
+		ssl.ifPresent(sslDeploymentSettings ->
+				serverOptions
+						.setSsl(true)
+						.setPemKeyCertOptions(
+								new PemKeyCertOptions().
+										setKeyPath(sslDeploymentSettings.getKey()).
+										setCertPath(sslDeploymentSettings.getCert())));
+
+		final StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setWebRoot(deploymentOptions.getWebRoot());
+		staticHandler.setCachingEnabled(false);
+		staticHandler.setEnableRangeSupport(true);
+		router.route("/*").handler(staticHandler);
+
+		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());
+
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpHost() + ":" + deploymentOptions.getPort());
+		log.info("server running on " + (ssl.isPresent() ? "https" : "http") + "://" + deploymentOptions.getTcpName() + ":" + deploymentOptions.getPort());
+
+		startFuture.succeeded();
+	}
+
+	~handlers:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
+
+	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {
+		vertx.eventBus().request("domain.db", params, new DeliveryOptions().addHeader("action", action), reply -> {
+			if (reply.succeeded()) {
+				JsonObject body = (JsonObject) reply.result().body();
+				log.info(body.encode());
+				sendResponse(routingContext, OK, body);
+			} else {
+				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	"Server Error");
+			}
+		});
+	}
+
+	private static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {
+		final JsonArray errorsArray = new JsonArray();
+		for (String error : errors)
+				errorsArray.add(error.trim());
+
+		final String encode = new JsonObject().put("errors", errorsArray).encode();
+		log.info(routingContext.request().absoluteURI() + " " + encode);
+		routingContext.response()
+					.setStatusCode(httpResponseStatus.code())
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
+
+	private static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {
+		final String encode = response.encode();
+		log.info(routingContext.request().absoluteURI() + " " + encode);
+		routingContext.response()
+					.setStatusCode(httpResponseStatus.code())
+					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + "")
+					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)
+					.end(encode);
+	}
+
+	private static void debug(String method, RoutingContext routingContext) {
+		final String uri = method + " " + routingContext.request().method().name() + " " + routingContext.request().uri();
+		boolean isAuthenticated = routingContext.user() != null;
+		log.info(uri + " " + (isAuthenticated ? "(authenticated)" : "(NOT authenticated)"));
+		final MultiMap headers = routingContext.request().headers();
+		for (Map.Entry<String, String> header : headers)
+				log.info("\t" + header.getKey() + "=" + header.getValue());
+		log.info("body " + routingContext.getBody().toString());
+	}
+}  >>
+
+SendEventBusAction(actionName,params) ::= <<getFromDomainDB(vertx, routingContext, "~actionName~", new JsonObject()~if(params)~.~params:{it|put("~it.name~", routingContext.request().getParam("~it.name~"))}~~endif~);  >>
+
+RouteHandler(name,params,statements) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+	debug("~name~", routingContext);
+	~statements:{it|~it~};separator="\n"~
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"
