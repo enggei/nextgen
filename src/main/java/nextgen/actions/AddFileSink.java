@@ -15,10 +15,10 @@ public class AddFileSink extends nextgen.actions.TransactionAction {
       final String name = nextgen.utils.STModelUtil.getSTModelName(stModel, "");
       final String packageName = nextgen.utils.STModelUtil.getSTModelPackage(stModel, "");
       final nextgen.model.STFile stFile = appModel().db.newSTFile()
-                  .setName(appModel().newSTValue(name))
+                  .setName(appModel().db.newSTValue(name))
                   .setType(appModel().db.findOrCreateSTValueByValue("java"))
-                  .setPath(appModel().newSTValue(""))
-                  .setPackageName(appModel().newSTValue(packageName));
+                  .setPath(appModel().db.newSTValue(""))
+                  .setPackageName(appModel().db.newSTValue(packageName));
       stModel.addFiles(stFile);
       nextgen.events.NewFileSink.post(stModel, stFile);
    }

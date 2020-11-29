@@ -118,7 +118,7 @@ public class STEditor extends AbstractEditor {
 
    private void generate() {
       commit();
-      appModel().generateSTGroup(stGroupModel, false);
+      new nextgen.actions.GenerateSTGroup(txtEditor, stGroupModel).actionPerformed(null);
    }
 
    public Optional<nextgen.model.STTemplate> getSTTemplate() {

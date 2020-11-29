@@ -245,13 +245,13 @@ public class STParser {
       final List<nextgen.model.STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
       final java.util.List<nextgen.st.parser.ParsedSTParameter> parsedParameters = parsed.getParameters();
 
-      final Map<String, Object> newParameters = new LinkedHashMap<>();
+      final java.util.List<Object> newParameters = new java.util.ArrayList<>();
       for (nextgen.st.parser.ParsedSTParameter parsedParameter : parsedParameters) {
 
          boolean foundExisting = false;
          for (nextgen.model.STParameter existingParameter : existingParameters) {
             if (parsedParameter.getName().equals(existingParameter.getName()) && parsedParameter.getType().equals(existingParameter.getType())) {
-               newParameters.put(existingParameter.getName(), existingParameter);
+               newParameters.add(existingParameter);
 
                if (existingParameter.getType().equals(nextgen.model.STParameterType.KVLIST)) {
 
@@ -293,18 +293,20 @@ public class STParser {
             }
          }
 
-         if (!foundExisting) {
-            newParameters.put(parsedParameter.getName(), parsedParameter);
-         }
+         if (!foundExisting)
+            newParameters.add(parsedParameter);
       }
 
       model.removeAllParameters();
-      newParameters.values().forEach(o -> {
+
+      newParameters.forEach(o -> {
 
          if (o instanceof nextgen.model.STParameter) {
             model.addParameters((nextgen.model.STParameter) o);
+
          } else if (o instanceof nextgen.st.parser.ParsedSTParameter) {
             final nextgen.st.parser.ParsedSTParameter parsedSTParameter = (nextgen.st.parser.ParsedSTParameter) o;
+
             final nextgen.model.STParameter stParameter = appModel().db.newSTParameter()
                   .setName(parsedSTParameter.getName())
                   .setArgumentType(parsedSTParameter.getArgumentType())

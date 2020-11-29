@@ -21,7 +21,7 @@ public class STValueGrid extends SearchReplaceEditor {
     protected Action getSearchAction(JTextField txtSearch) {
         return appModel().newTransactionAction("Search", transaction -> {
             reset();
-            resultsModel.setResult(appModel().findAllSTValue()
+            resultsModel.setResult(appModel().db.findAllSTValue()
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
                   .filter(STValue::hasValue)

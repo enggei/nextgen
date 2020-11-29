@@ -182,7 +182,7 @@ public class STModelNavigator extends JPanel {
 	public void onNewSTProjectSTModel(nextgen.events.NewSTProjectSTModel event) {
 		findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.project))
 				.ifPresent(stProjectTreeNode -> {
-					final nextgen.model.STGroupModel stGroup = appModel().findSTGroup(event.template);
+					final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(event.template);
 					final java.util.Optional<STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
 					if (groupModelTreeNode.isPresent()) {
 						final java.util.Optional<STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
@@ -422,7 +422,9 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			appModel().doInTransaction(transaction -> {
-				appModel().getProjects().forEach(stProject -> add(new STProjectTreeNode(stProject)));
+				appModel().db.findAllSTProject()
+						.sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName))
+						.forEach(stProject -> add(new STProjectTreeNode(stProject)));
 				add(new ModelsTreeNode("Models"));
 			});
 		}
@@ -490,7 +492,7 @@ public class STModelNavigator extends JPanel {
 			model.getModelsSorted().forEach(stModel -> {
 
 				final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
-				final nextgen.model.STGroupModel stGroup = appModel().findSTGroup(stTemplate);
+				final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
 					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
@@ -588,9 +590,8 @@ public class STModelNavigator extends JPanel {
 			setLabel(getModel());
 			this.tooltip = "";
 
-			appModel().doInTransaction(transaction -> appModel().getGroupModels()
-			      .stream()
-			      .sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()))
+			appModel().doInTransaction(transaction -> appModel().db.findAllSTGroupModel()
+					.sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()))
 			      .forEach(stGroupModel -> {
 			         final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroupModel);
 			         add(stGroupModelTreeNode);
@@ -986,7 +987,7 @@ public class STModelNavigator extends JPanel {
 						actions.add(new nextgen.actions.SetArgumentFromArgumentType(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new nextgen.actions.SetArgumentFromClipboard(stModel, getModel()));
-						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
+						if (nextgen.utils.STModelUtil.isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
 						if (stModelUuid != null) actions.add(new nextgen.actions.AddArgumentFromSTModelUuid("Add " + stModelUuid, stModel, getModel(), stModelUuid));

@@ -16,7 +16,7 @@ public class ChangeRootOnAllModels extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "New Path", s -> {
 
-         final nextgen.model.STValue newPath = appModel().newSTValue(s.trim());
+         final nextgen.model.STValue newPath = appModel().db.newSTValue(s.trim());
          nextgen.utils.STModelUtil.aggregateModels(stProject)
                .forEach(stModel -> stModel.getFiles()
                      .forEach(stFile -> {

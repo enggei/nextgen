@@ -61,10 +61,10 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
                   .findFirst()
                   .ifPresent(stArgument -> {
                      final nextgen.model.STFile stFile = appModel().db.newSTFile()
-                           .setName(appModel().newSTValue(appModel().render(stArgument)))
+                           .setName(appModel().db.newSTValue(appModel().render(stArgument)))
                            .setType(appModel().db.findOrCreateSTValueByValue(type))
-                           .setPath(appModel().newSTValue(path))
-                           .setPackageName(appModel().newSTValue(packageName));
+                           .setPath(appModel().db.newSTValue(path))
+                           .setPackageName(appModel().db.newSTValue(packageName));
                      stModel.addFiles(stFile);
                      nextgen.events.NewFileSink.post(stModel, stFile);
                   });

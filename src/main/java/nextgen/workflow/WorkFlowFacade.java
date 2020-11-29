@@ -128,7 +128,7 @@ public class WorkFlowFacade extends WorkFlowNeoFactory {
 	}
 
 	private nextgen.templates.javaeasyflows.Work toCode(Work work) {
-		final nextgen.templates.javaeasyflows.Work w = nextgen.templates.JavaEasyFlowsPatterns.newWork();
+		final nextgen.templates.javaeasyflows.Work w = nextgen.templates.javaeasyflows.JavaEasyFlowsPatterns.newWork();
 		w.setName(work.getName());
 		w.setPackageName(work.getPackage());
 		work.getInputs().forEach(workInput -> w.addInputs(workInput.getType(), workInput.getName()));

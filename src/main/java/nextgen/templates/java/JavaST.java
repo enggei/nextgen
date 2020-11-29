@@ -105,7 +105,6 @@ public class JavaST {
 	.append(JavaLibrary.st + "\n")
 	.append(JavaPackage.st + "\n")
 	.append(JavaType.st + "\n")
-	.append(JavaPatterns.st + "\n")
 	.append(PasswordUtils.st + "\n")
 	.toString()  ;
 
@@ -543,9 +542,7 @@ public class JavaST {
 		return new JavaType(stGroup);
 	}  
 
-	public static JavaPatterns newJavaPatterns() {
-		return new JavaPatterns(stGroup);
-	}  
+
 
 	public static PasswordUtils newPasswordUtils() {
 		return new PasswordUtils(stGroup);

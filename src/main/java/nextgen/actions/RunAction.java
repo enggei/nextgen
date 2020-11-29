@@ -29,7 +29,7 @@ public class RunAction extends nextgen.actions.TransactionAction {
 
    private nextgen.templates.nextgen.TransactionAction asSource() {
 
-      final String packageName = "tmp.actions";
+      final String packageName = appModel().getSourceOutputPackage();
 
       final nextgen.templates.nextgen.TransactionAction transactionAction = nextgen.templates.nextgen.NextgenST.newTransactionAction()
             .setPackageName(packageName)
@@ -45,7 +45,7 @@ public class RunAction extends nextgen.actions.TransactionAction {
          actions.put(action.getUuid(), current);
          actionNames.put(action.getUuid(), transactionAction.getName().toString());
          
-         final java.io.File file = new java.io.File(appModel().getOutputPath());
+         final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
          nextgen.st.STGenerator.writeJavaFile(transactionAction, packageName, transactionAction.getName().toString(), file);
          file.deleteOnExit();
       } else {

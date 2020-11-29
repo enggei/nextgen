@@ -54,7 +54,7 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       		final String newEnumLexical = newTxtEnumLexical.get(i).getText().trim();
       		if (newEnumValue.length() == 0) continue;
 
-      		stEnum.addValues(appModel().newSTEnumValue()
+      		stEnum.addValues(appModel().db.newSTEnumValue()
       				.setName(newEnumValue)
       				.setLexical(newEnumLexical.length() == 0 ? null : newEnumLexical));
       	}

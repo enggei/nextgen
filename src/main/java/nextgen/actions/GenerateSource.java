@@ -15,7 +15,7 @@ public class GenerateSource extends nextgen.actions.TransactionAction {
       final java.util.Set<String> imports = new java.util.LinkedHashSet<>();
 
       final String packageName = appModel().getSourceOutputPackage();
-      final String templateName = appModel().getSTTemplate(stModel).getName();
+      final String templateName = stModel.getStTemplate().getName();
       final String className = nextgen.utils.STModelUtil.getSTModelName(stModel, templateName) + "Generator";
 
       final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.java.JavaPatterns.newBlockStmt()
@@ -40,7 +40,7 @@ public class GenerateSource extends nextgen.actions.TransactionAction {
 
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
 
-      nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(appModel().getOutputPath()));
+      nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
 
 }

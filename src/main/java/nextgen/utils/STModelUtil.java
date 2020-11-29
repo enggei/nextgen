@@ -1,12 +1,8 @@
 package nextgen.utils;
 
-import nextgen.model.STEnum;
-import nextgen.model.STGroupModel;
-import nextgen.model.STTemplate;
+import nextgen.model.*;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class STModelUtil {
 
@@ -82,6 +78,26 @@ public class STModelUtil {
       return aggregateTemplates(stGroupModel).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
    }
 
+   public static Optional<String> isValidTemplateName(javax.swing.JComponent parent, STGroupModel stGroupModel, String name) {
+
+      if (findSTTemplateByName(stGroupModel, name).isPresent()) {
+         SwingUtil.showMessage(name + " already in use in this group", parent);
+         return Optional.empty();
+      }
+
+      if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
+         SwingUtil.showMessage(name + " is a reserved name", parent);
+         return Optional.empty();
+      }
+
+      if (!javax.lang.model.SourceVersion.isIdentifier(name)) {
+         SwingUtil.showMessage(name + " is a reserved java keyword", parent);
+         return Optional.empty();
+      }
+
+      return Optional.of(name);
+   }
+
    public static String getSTModelValue(nextgen.model.STModel stModel, String parameterName, String defaultValue) {
 
       final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
@@ -104,6 +120,16 @@ public class STModelUtil {
       return getSTModelValue(stModel, "name", defaultValue);
    }
 
+   public static boolean isBoolean(nextgen.model.STParameter model) {
+      return model.getName().startsWith("is") || model.getName().startsWith("has");
+   }
+
+   public static boolean isValidPrimitive(nextgen.model.STValue stValue) {
+      return stValue.getType() != null &&
+            stValue.getValue() != null &&
+            stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE);
+   }
+
    public static String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
       final String found = getSTModelValue(stModel, "package", null);
       if (found != null) return found;
@@ -124,6 +150,10 @@ public class STModelUtil {
 
       final java.util.Optional<nextgen.model.STTemplate> parent = stTemplate.getIncomingChildrenSTTemplate().findAny();
       return parent.map(nextgen.utils.STModelUtil::getSTGroup).orElse(null);
+   }
+
+   public static nextgen.model.STGroupModel getSTGroup(nextgen.model.STModel stModel) {
+      return getSTGroup(stModel.getStTemplate());
    }
 
    public static nextgen.model.STArgument findSTArgument(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel) {

@@ -47,45 +47,12 @@ public class STAppPresentationModel {
       };
    }
 
-   public static Optional<String> isValidTemplateName(JComponent parent, STGroupModel stGroupModel, String name) {
-
-      if (findSTTemplateByName(stGroupModel, name).isPresent()) {
-         SwingUtil.showMessage(name + " already in use in this group", parent);
-         return Optional.empty();
-      }
-
-      if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
-         SwingUtil.showMessage(name + " is a reserved name", parent);
-         return Optional.empty();
-      }
-
-      if (!SourceVersion.isIdentifier(name)) {
-         SwingUtil.showMessage(name + " is a reserved java keyword", parent);
-         return Optional.empty();
-      }
-
-      return Optional.of(name);
-   }
-
    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       db.doInTransaction(consumer);
    }
 
    public void doLaterInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       SwingUtilities.invokeLater(() -> doInTransaction(consumer));
-   }
-
-   public void generateSTGroup(STGroupModel stGroupModel, boolean generateNeo) {
-
-      final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(toSTGroup(stGroupModel));
-
-      if (parseResult.getErrors().isEmpty()) {
-         final nextgen.st.STGenerator stGenerator = new nextgen.st.STGenerator(generatorSTGroup);
-         stGenerator.generateSTGroup(stGroupModel, AppModel.getInstance().getOutputPackage() + "." + stGroupModel.getName().toLowerCase().trim(), AppModel.getInstance().getOutputPath());
-         if (generateNeo) stGenerator.generateNeoGroup(stGroupModel, AppModel.getInstance().getOutputPackage(), AppModel.getInstance().getOutputPath());
-      } else {
-         parseResult.getErrors().forEach(stgError -> log.error("\t" + stgError.getType() + " " + stgError.getCharPosition() + " at line " + stgError.getLine()));
-      }
    }
 
    public String getLastDir() {
@@ -117,12 +84,12 @@ public class STAppPresentationModel {
       db.doInTransaction(transaction ->
             db.findAllSTValue()
                   .filter(stValue -> !delete.contains(stValue.getNode()))
-                  .filter(this::isValidPrimitive)
+                  .filter(nextgen.utils.STModelUtil::isValidPrimitive)
                   .forEach(stValue -> db
                         .findAllSTValueByValue(stValue.getValue())
                         .filter(duplicate -> !duplicate.getUuid().equals(stValue.getUuid()))
                         .filter(duplicate -> !delete.contains(duplicate.getNode()))
-                        .filter(this::isValidPrimitive)
+                        .filter(nextgen.utils.STModelUtil::isValidPrimitive)
                         .forEach(duplicate -> {
 
                            log.info("\t duplicate " + duplicate.getValue());
@@ -145,30 +112,22 @@ public class STAppPresentationModel {
       });
    }
 
-   public boolean isValidPrimitive(STValue stValue) {
-      return stValue.getType() != null &&
-            stValue.getValue() != null &&
-            stValue.getType().equals(STValueType.PRIMITIVE);
-   }
-
-
    public String render(STModel stModel) {
       return stRenderer.render(stModel);
    }
 
    public String render(STModel stModel, int maxLength) {
-      String s = render(stModel);
+      final String s = render(stModel);
       return s.substring(0, Math.min(s.length(), maxLength));
    }
 
    public String render(STValue stValue, String defaultValue) {
-      final String render = stRenderer.render(stValue);
-      return render==null ? defaultValue : render;
+      final String render = render(stValue);
+      return render == null ? defaultValue : render;
    }
 
    public String render(STValue stValue) {
-      final String render = stRenderer.render(stValue);
-      return render;
+      return stRenderer.render(stValue);
    }
 
    public String render(STValue stValue, int maxLength) {
@@ -225,64 +184,19 @@ public class STAppPresentationModel {
       return defaultValue.get();
    }
 
-
    public void undoLast() {
       chronicle.rollbackLast();
-   }
-
-   public Collection<STGroupModel> getGroupModels() {
-      return db.findAllSTGroupModel().collect(java.util.stream.Collectors.toList());
-   }
-
-   public Stream<STValue> findAllSTValue() {
-      return db.findAllSTValue();
-   }
-
-   public nextgen.model.STGroupModel findSTGroup(nextgen.model.STTemplate model) {
-      return stRenderer.findSTGroupModel(model);
-   }
-
-   public java.util.stream.Stream<nextgen.model.STProject> getProjects() {
-      return db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName));
-   }
-
-   public nextgen.model.STValue newSTValue(String value) {
-      return db.newSTValue(value);
-   }
-
-   public java.util.Optional<nextgen.model.STGroupModel> findSTGroup(String name) {
-      return Optional.ofNullable(db.findSTGroupModelByName(name));
-   }
-
-   public java.util.stream.Stream<nextgen.model.STGroupModel> getSTGroups() {
-      return db.findAllSTGroupModel().sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
-   }
-
-   public boolean isBoolean(nextgen.model.STParameter model) {
-      return model.getName().startsWith("is") || model.getName().startsWith("has");
    }
 
    public String[] getSelectedValues() {
       return new String[0];
    }
 
-   public nextgen.model.STTemplate getSTTemplate(nextgen.model.STModel stModel) {
-      return stModel.getStTemplate();
-   }
-
-   public String getOutputPath() {
-      return "./src/main/java";
-   }
-
    public String getSourceOutputPackage() {
       return "tmp";
    }
 
-   public nextgen.model.STEnumValue newSTEnumValue() {
-      return db.newSTEnumValue();
-   }
-
-   public nextgen.st.STGenerator getSTGenerator() {
-      return new nextgen.st.STGenerator(generatorSTGroup);
+   public nextgen.model.STGroupModel getGeneratorSTGroup() {
+      return generatorSTGroup;
    }
 }

@@ -69,7 +69,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
 
-      nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(appModel().getOutputPath()));
+      nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
 
 }

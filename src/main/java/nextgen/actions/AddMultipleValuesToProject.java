@@ -30,7 +30,7 @@ public class AddMultipleValuesToProject extends nextgen.actions.TransactionActio
          for (javax.swing.JTextField field : fields) {
             final String value = field.getText().trim();
             if(value.length()==0) continue;
-            final nextgen.model.STValue stValue = appModel().newSTValue(value);
+            final nextgen.model.STValue stValue = appModel().db.newSTValue(value);
             project.addValues(stValue);
             nextgen.events.NewSTProjectSTValue.post(stValue, project);   
          }

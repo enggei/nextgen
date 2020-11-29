@@ -1,7 +1,7 @@
 package nextgen.projects;
 
 import nextgen.templates.domain.DomainPatterns;
-import nextgen.templates.JavaEasyFlowsPatterns;
+import nextgen.templates.javaeasyflows.JavaEasyFlowsPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;

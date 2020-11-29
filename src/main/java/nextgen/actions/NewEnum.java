@@ -15,7 +15,7 @@ public class NewEnum extends nextgen.actions.TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       input(owner, "New Enum", s ->
-      		nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
+      		nextgen.utils.STModelUtil.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
       			final nextgen.model.STEnum stEnum = appModel().db.newSTEnum().setName(s);
       			stGroup.addEnums(stEnum);
       			nextgen.events.NewSTEnum.post(stGroup, stEnum);

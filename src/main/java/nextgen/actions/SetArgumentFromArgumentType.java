@@ -43,7 +43,7 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
 
       } else {
 
-      	final nextgen.model.STGroupModel stGroupModel = appModel().findSTGroup(stModel.getStTemplate());
+      	final nextgen.model.STGroupModel stGroupModel = nextgen.utils.STModelUtil.getSTGroup(stModel.getStTemplate());
       	final java.util.Optional<nextgen.model.STTemplate> stTemplate = nextgen.utils.STModelUtil
       			.aggregateTemplates(stGroupModel)
       			.filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))

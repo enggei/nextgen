@@ -16,7 +16,7 @@ public class RenameEnum extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      input(owner, "Name", stEnum.getName(), s -> nextgen.swing.STAppPresentationModel.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
+      input(owner, "Name", stEnum.getName(), s -> nextgen.utils.STModelUtil.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
       	stEnum.setName(name);
       	nextgen.events.STEnumNameChanged.post(stGroup, stEnum);
       }));

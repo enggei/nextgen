@@ -224,10 +224,6 @@ public class STRenderer {
       return mapper;
    }
 
-   public STGroupModel findSTGroupModel(STTemplate stTemplate) {
-      return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
-   }
-
    public STGroupModel findSTGroupModelByTemplate(STTemplate stTemplate) {
       return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
    }

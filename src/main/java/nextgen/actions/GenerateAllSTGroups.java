@@ -3,14 +3,16 @@ package nextgen.actions;
 public class GenerateAllSTGroups extends nextgen.actions.TransactionAction {
 
 
+   private final javax.swing.JComponent owner;
 
-	public GenerateAllSTGroups() {
+	public GenerateAllSTGroups(javax.swing.JComponent owner) {
 		super("Generate all");
+		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      appModel().getSTGroups().forEach(stGroupModel -> appModel().generateSTGroup(stGroupModel, false));
+      appModel().db.findAllSTGroupModel().forEach(stGroupModel -> new GenerateSTGroup(owner, stGroupModel).actionPerformed(actionEvent, transaction));
    }
 
 }
