@@ -401,15 +401,15 @@ public class STGenerator {
       writeToFile(content, packageDeclaration, name, "java", root);
    }
 
-   public static void writeKotlinFile(Object content, nextgen.templates.kotlin.PackageDeclaration packageDeclaration, String name, File root) {
-      writeKotlinFile(content, packageDeclaration.getName(), name, root);
-   }
-
-   public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
-      if (name == null || name.length() == 0)
-         throw new IllegalArgumentException("WriteKotlinFile.name cannot be empty");
-      writeToFile(content, packageDeclaration, name, "kt", root);
-   }
+//   public static void writeKotlinFile(Object content, nextgen.templates.kotlin.PackageDeclaration packageDeclaration, String name, File root) {
+//      writeKotlinFile(content, packageDeclaration.getName(), name, root);
+//   }
+//
+//   public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
+//      if (name == null || name.length() == 0)
+//         throw new IllegalArgumentException("WriteKotlinFile.name cannot be empty");
+//      writeToFile(content, packageDeclaration, name, "kt", root);
+//   }
 
    public static void writeJsFile(Object content, String packageDeclaration, String name, File root) {
       writeToFile(content, packageDeclaration, name, "js", root);

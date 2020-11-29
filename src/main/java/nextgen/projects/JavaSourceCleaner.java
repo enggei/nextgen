@@ -3,12 +3,10 @@ package nextgen.projects;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import nextgen.templates.JavaPatterns;
-import nextgen.templates.MavenPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.MethodCallExpression;
 import nextgen.utils.StringUtil;
@@ -63,7 +61,7 @@ public class JavaSourceCleaner extends JFrame {
    }
 
    private void asDependency(RSyntaxTextArea textArea) {
-      SwingUtil.toClipboard(MavenPatterns.parseToDependencyBuilder(textArea.getText().trim())
+      SwingUtil.toClipboard(nextgen.templates.MavenPatterns.parseToDependencyBuilder(textArea.getText().trim())
             .toString());
    }
 

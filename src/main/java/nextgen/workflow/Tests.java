@@ -19,6 +19,7 @@ import static nextgen.templates.DomainPatterns.*;
 
 public class Tests {
 
+   @Test
    public void testWorkflow() {
 
       final WorkFlowFacade db = new WorkFlowFacade("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/workflow/db");
@@ -47,6 +48,7 @@ public class Tests {
       });
    }
 
+   @Test
    public void testAllFlows() {
 
       final WorkFlowFacade db = new WorkFlowFacade("/home/goe/projects/nextgen/components/core/src/main/java/nextgen/workflow/db");
