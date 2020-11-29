@@ -1,19 +1,15 @@
-package nextgen.templates;
+package nextgen.templates.domain;
 
 import nextgen.st.STGenerator;
-import nextgen.templates.domain.*;
-import nextgen.templates.greenrobot.Event;
 import nextgen.templates.java.Enum;
 import nextgen.templates.java.*;
 import nextgen.templates.javaneo4jembedded.*;
 import nextgen.templates.vertx.*;
-import nextgen.utils.StringUtil;
 
 import java.io.File;
 import java.util.*;
 
-import static nextgen.templates.JavaPatterns.newClassOrInterfaceType;
-import static nextgen.templates.JavaPatterns.newImportDeclaration;
+import static nextgen.templates.java.JavaPatterns.newClassOrInterfaceType;
 import static nextgen.templates.domain.RelationType.*;
 import static nextgen.templates.java.JavaST.*;
 

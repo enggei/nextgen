@@ -19,50 +19,50 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
       final String packageName = appModel().getSourceOutputPackage();
       final String className = "GenerateAll_" + stTemplate.getName();
       final String type = nextgen.utils.StringUtil.capitalize(stTemplate.getName());
-      final nextgen.templates.java.ClassOrInterfaceType returnType = nextgen.templates.JavaPatterns.newClassOrInterfaceType("java.util", "List")
+      final nextgen.templates.java.ClassOrInterfaceType returnType = nextgen.templates.java.JavaPatterns.newClassOrInterfaceType("java.util", "List")
             .addTypeArguments(type);
 
-      final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.JavaPatterns.newBlockStmt();
-      final nextgen.templates.java.VariableDeclarationExpression listVariable = nextgen.templates.JavaPatterns
+      final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.java.JavaPatterns.newBlockStmt();
+      final nextgen.templates.java.VariableDeclarationExpression listVariable = nextgen.templates.java.JavaPatterns
             .newFinalVariableDeclarationExpression(returnType, "list", "new java.util.ArrayList<>()");
 
-      blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
+      blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
             .setExpression(listVariable));
 
       java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.model.STModel stModel : stModels) {
          final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
-         final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.JavaPatterns
+         final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.java.JavaPatterns
                .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
-         blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
+         blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
                .setExpression(variableDeclarationExpression));
       }
 
       variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.model.STModel stModel : stModels) {
          final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
-         blockStmt.addStatements(nextgen.templates.JavaPatterns.newExpressionStmt()
-               .setExpression(nextgen.templates.JavaPatterns.newMethodCallExpression()
+         blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
+               .setExpression(nextgen.templates.java.JavaPatterns.newMethodCallExpression()
                      .setScope("list")
                      .setName("add")
                      .addArguments(stModelName)));
       }
 
-      blockStmt.addStatements(nextgen.templates.JavaPatterns.newReturnStmt().setExpression("list"));
+      blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newReturnStmt().setExpression("list"));
 
-      final nextgen.templates.java.ClassOrInterfaceDeclaration classOrInterfaceDeclaration = nextgen.templates.JavaPatterns.newClassOrInterfaceDeclaration()
+      final nextgen.templates.java.ClassOrInterfaceDeclaration classOrInterfaceDeclaration = nextgen.templates.java.JavaPatterns.newClassOrInterfaceDeclaration()
             .setName(className)
             .addModifiers(nextgen.templates.java.Modifiers.PUBLIC)
-            .addMembers(nextgen.templates.JavaPatterns.newMethodDeclaration()
+            .addMembers(nextgen.templates.java.JavaPatterns.newMethodDeclaration()
                   .addModifiers(nextgen.templates.java.Modifiers.PUBLIC)
                   .addModifiers(nextgen.templates.java.Modifiers.STATIC)
                   .setName("generate")
                   .setType(returnType)
                   .setBlockStmt(blockStmt));
 
-      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration)
+      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration)
             .setImportDeclaration(imports.stream()
-                  .map(s -> nextgen.templates.JavaPatterns.newImportDeclaration()
+                  .map(s -> nextgen.templates.java.JavaPatterns.newImportDeclaration()
                         .setName(s)
                         .setIsAsterisk(true))
                   .collect(java.util.stream.Collectors.toList()));

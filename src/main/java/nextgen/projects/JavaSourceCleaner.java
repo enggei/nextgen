@@ -6,7 +6,7 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import nextgen.templates.JavaPatterns;
+import nextgen.templates.java.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.MethodCallExpression;
 import nextgen.utils.StringUtil;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static nextgen.templates.java.JavaST.newMethodCallExpression;
 
@@ -61,7 +60,7 @@ public class JavaSourceCleaner extends JFrame {
    }
 
    private void asDependency(RSyntaxTextArea textArea) {
-      SwingUtil.toClipboard(nextgen.templates.MavenPatterns.parseToDependencyBuilder(textArea.getText().trim())
+      SwingUtil.toClipboard(nextgen.templates.maven.MavenPatterns.parseToDependencyBuilder(textArea.getText().trim())
             .toString());
    }
 

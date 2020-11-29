@@ -5,9 +5,9 @@ public class Entity {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
 	private Boolean _isEnum;
 	private Object _eqha;
+	private String _name;
 	private java.util.List<String> _enumValues = new java.util.ArrayList<>();
 	private java.util.List<Relation> _relations = new java.util.ArrayList<>();
 
@@ -22,35 +22,13 @@ public class Entity {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Entity");
-		st.add("name", _name);
 		st.add("isEnum", _isEnum);
 		st.add("eqha", _eqha);
+		st.add("name", _name);
 		for (Object o : _enumValues) st.add("enumValues", o);
 		for (Object o : _relations) st.add("relations", o);
 		return st.render().trim();
 	}
-
-	public Entity setName(String value) {
-		this._name = value;
-		return this;
-	}
-
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public Entity removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public Entity setIsEnum(Boolean value) {
 		this._isEnum = value;
@@ -93,6 +71,28 @@ public class Entity {
 
 	public Entity removeEqha() {
 		this._eqha = null;
+		return this;
+	} 
+
+	public Entity setName(String value) {
+		this._name = value;
+		return this;
+	}
+
+	public String getName() {
+		return this._name;
+	}
+
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public Entity removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -168,6 +168,6 @@ public class Entity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Entity(name,isEnum,enumValues,eqha,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(eqha)~~eqha~~endif~\n" + 
+	static final String st = "Entity(isEnum,enumValues,eqha,relations,name) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=\",\"~~endif~ ~if(eqha)~~eqha~~endif~\n" + 
 				"~relations:{it|~it~};separator=\"\\n\"~ >>";
 }  

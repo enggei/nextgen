@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static nextgen.templates.JavaPatterns.newMethodCallExpression;
+import static nextgen.templates.java.JavaPatterns.newMethodCallExpression;
 
 public class STRenderer {
 

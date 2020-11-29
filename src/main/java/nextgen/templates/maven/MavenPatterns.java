@@ -1,4 +1,4 @@
-package nextgen.templates;
+package nextgen.templates.maven;
 
 import nextgen.utils.FileUtil;
 import nextgen.templates.maven.*;
@@ -153,7 +153,7 @@ public class MavenPatterns extends MavenST {
    }
 
    public static StringBuilder asBuilder(Dependency dependency) {
-      final StringBuilder out = new StringBuilder(".addDependencies(nextgen.templates.MavenPatterns.newDependency()");
+      final StringBuilder out = new StringBuilder(".addDependencies(nextgen.templates.maven.MavenPatterns.newDependency()");
       if (dependency.getGroupId() != null) out.append(".setGroupId(\"").append(dependency.getGroupId()).append("\")");
       if (dependency.getArtifactId() != null)
          out.append(".setArtifactId(\"").append(dependency.getArtifactId()).append("\")");

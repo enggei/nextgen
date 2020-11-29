@@ -1,7 +1,7 @@
 package nextgen.projects;
 //
 //import nextgen.templates.maven.*;
-//import nextgen.templates.MavenPatterns;
+//import nextgen.templates.maven.MavenPatterns;
 //
 //import nextgen.templates.npm.*;
 //import nextgen.templates.NpmPatterns;
@@ -22,10 +22,10 @@ package nextgen.projects;
 //	final File staticWeb = new File(mainResources, "static");
 //	final File mainJS = new File(staticWeb, "main.js");
 //
-//	private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.JavaPatterns.newPackageDeclaration("com.demo");
+//	private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration("com.demo");
 //	private final JavaType ServerType = new JavaType(corePackage, "Server");
 //
-//	private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage.getName() + "." + "web");
+//	private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage.getName() + "." + "web");
 //
 //	final String mainClass = "Hello";
 //

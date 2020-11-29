@@ -324,7 +324,7 @@ public void ~name~() {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
+ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.java.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
 ~childPackages:{it|~it~};separator="\n"~  >>
 
 eom() ::= "}"

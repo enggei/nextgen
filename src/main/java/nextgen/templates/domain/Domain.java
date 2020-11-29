@@ -5,9 +5,9 @@ public class Domain {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
-	private String _packageName;
 	private Object _observable;
+	private String _packageName;
+	private String _name;
 	private java.util.List<Entity> _entities = new java.util.ArrayList<>();
 
 	Domain(org.stringtemplate.v4.STGroup stGroup) {
@@ -21,32 +21,32 @@ public class Domain {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Domain");
-		st.add("name", _name);
-		st.add("packageName", _packageName);
 		st.add("observable", _observable);
+		st.add("packageName", _packageName);
+		st.add("name", _name);
 		for (Object o : _entities) st.add("entities", o);
 		return st.render().trim();
 	}
 
-	public Domain setName(String value) {
-		this._name = value;
+	public Domain setObservable(Object value) {
+		this._observable = value;
 		return this;
 	}
 
-	public String getName() {
-		return this._name;
+	public Object getObservable() {
+		return this._observable;
 	}
 
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
+	public Object getObservable(Object defaultValue) {
+		return this._observable == null ? defaultValue : this._observable;
 	}
 
-	public boolean hasName() {
-		return this._name != null;
+	public boolean hasObservable() {
+		return this._observable != null;
 	}
 
-	public Domain removeName() {
-		this._name = null;
+	public Domain removeObservable() {
+		this._observable = null;
 		return this;
 	} 
 
@@ -72,25 +72,25 @@ public class Domain {
 		return this;
 	} 
 
-	public Domain setObservable(Object value) {
-		this._observable = value;
+	public Domain setName(String value) {
+		this._name = value;
 		return this;
 	}
 
-	public Object getObservable() {
-		return this._observable;
+	public String getName() {
+		return this._name;
 	}
 
-	public Object getObservable(Object defaultValue) {
-		return this._observable == null ? defaultValue : this._observable;
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasObservable() {
-		return this._observable != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public Domain removeObservable() {
-		this._observable = null;
+	public Domain removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -137,7 +137,7 @@ public class Domain {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Domain(name,packageName,observable,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~\n" + 
+	static final String st = "Domain(entities,observable,packageName,name) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~\n" + 
 				"Entities:\n" + 
-				"~entities:{it|~it~};separator=\"\\n\"~ >>";
+				"	~entities:{it|~it~};separator=\"\\n\"~ >>";
 }  

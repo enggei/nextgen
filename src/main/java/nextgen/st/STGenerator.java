@@ -5,7 +5,7 @@ import nextgen.model.STGroupModel;
 import nextgen.model.STTemplate;
 import nextgen.model.STFile;
 import nextgen.model.STValue;
-import nextgen.templates.JavaPatterns;
+import nextgen.templates.java.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.Modifiers;
 import nextgen.utils.FileUtil;

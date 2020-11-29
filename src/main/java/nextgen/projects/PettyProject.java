@@ -6,7 +6,7 @@ package nextgen.projects;
 //import static nextgen.utils.StringUtil.*;
 //
 //import nextgen.templates.*;
-//import nextgen.templates.JavaPatterns;
+//import nextgen.templates.java.JavaPatterns;
 //import nextgen.templates.vertx.*;
 //
 //import nextgen.templates.maven.*;
@@ -38,30 +38,30 @@ package nextgen.projects;
 //   final File mainWebapp = new File(root, "src/main/webapp");
 //   final File targetStaticResources = new File(root, "target/classes/static");
 //
-//   private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.JavaPatterns.newPackageDeclaration("com.petty");
-//   private final nextgen.templates.java.PackageDeclaration exportPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
+//   private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration("com.petty");
+//   private final nextgen.templates.java.PackageDeclaration exportPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage
 //         .getName() + "." + "export");
-//   private final nextgen.templates.java.PackageDeclaration exportDomain = nextgen.templates.JavaPatterns.newPackageDeclaration(exportPackage
+//   private final nextgen.templates.java.PackageDeclaration exportDomain = nextgen.templates.java.JavaPatterns.newPackageDeclaration(exportPackage
 //         .getName() + "." + "domain");
-//   private final nextgen.templates.java.PackageDeclaration reportPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
+//   private final nextgen.templates.java.PackageDeclaration reportPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage
 //         .getName() + "." + "reports");
-//   private final nextgen.templates.java.PackageDeclaration reportDomain = nextgen.templates.JavaPatterns.newPackageDeclaration(reportPackage
+//   private final nextgen.templates.java.PackageDeclaration reportDomain = nextgen.templates.java.JavaPatterns.newPackageDeclaration(reportPackage
 //         .getName() + "." + "domain");
-//   private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
+//   private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage
 //         .getName() + "." + "web");
-//   private final nextgen.templates.java.PackageDeclaration webDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(webPackage
+//   private final nextgen.templates.java.PackageDeclaration webDomainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(webPackage
 //         .getName() + "." + "domain");
-//   private final nextgen.templates.java.PackageDeclaration webApiPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(webPackage
+//   private final nextgen.templates.java.PackageDeclaration webApiPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(webPackage
 //         .getName() + "." + "api");
-//   private final nextgen.templates.java.PackageDeclaration domainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
+//   private final nextgen.templates.java.PackageDeclaration domainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage
 //         .getName() + "." + "domain");
-//   private final nextgen.templates.java.PackageDeclaration scanPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage
+//   private final nextgen.templates.java.PackageDeclaration scanPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage
 //         .getName() + "." + "scan");
-//   private final nextgen.templates.java.PackageDeclaration rmScanPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(scanPackage
+//   private final nextgen.templates.java.PackageDeclaration rmScanPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(scanPackage
 //         .getName() + "." + "rm");
-//   private final nextgen.templates.java.PackageDeclaration rmScanDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(rmScanPackage
+//   private final nextgen.templates.java.PackageDeclaration rmScanDomainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(rmScanPackage
 //         .getName() + "." + "domain");
-//   private final nextgen.templates.java.PackageDeclaration scanDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(scanPackage
+//   private final nextgen.templates.java.PackageDeclaration scanDomainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(scanPackage
 //         .getName() + "." + "domain");
 //
 //   final String version = "1.5";

@@ -1,13 +1,13 @@
 delimiters "~","~"
 
-Domain(name,packageName,observable,entities) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~
+Domain(entities,observable,packageName,name) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~
 Entities:
-~entities:{it|~it~};separator="\n"~  >>
+	~entities:{it|~it~};separator="\n"~  >>
 
-Entity(name,isEnum,enumValues,eqha,relations) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~ ~if(eqha)~~eqha~~endif~
+Relation(lexical,self,eqha,name,type,dst) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~  >>
+
+Entity(isEnum,enumValues,eqha,relations,name) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~ ~if(eqha)~~eqha~~endif~
 ~relations:{it|~it~};separator="\n"~  >>
-
-Relation(name,type,dst,lexical,self,eqha) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~  >>
 
 eom() ::= "}"
 

@@ -137,6 +137,6 @@ public class ProjectPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" + 
+	static final String st = "ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.java.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" +
 				"~childPackages:{it|~it~};separator=\"\\n\"~ >>";
 }  

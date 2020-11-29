@@ -1,21 +1,18 @@
 package nextgen.projects;
 
-import nextgen.templates.DomainPatterns;
+import nextgen.templates.domain.DomainPatterns;
 import nextgen.templates.JavaEasyFlowsPatterns;
-import nextgen.templates.MavenPatterns;
 import nextgen.templates.domain.Domain;
 import nextgen.templates.domain.Entity;
 import nextgen.templates.java.PackageDeclaration;
 import nextgen.templates.javaeasyflows.WorkFlowFacade;
-import nextgen.templates.maven.MavenST;
-import nextgen.templates.maven.Pom;
 import nextgen.templates.javaneo4jembedded.*;
 
 import java.io.File;
 
 import static nextgen.st.STGenerator.writeJavaFile;
-import static nextgen.templates.DomainPatterns.*;
-import static nextgen.templates.JavaPatterns.*;
+import static nextgen.templates.domain.DomainPatterns.*;
+import static nextgen.templates.java.JavaPatterns.*;
 
 public class NextgenProject {
 

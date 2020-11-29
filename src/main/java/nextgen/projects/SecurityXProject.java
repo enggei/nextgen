@@ -20,11 +20,11 @@ package nextgen.projects;
 //import java.util.LinkedHashMap;
 //import java.util.Map;
 //
-//import static nextgen.templates.DomainPatterns.newList;
-//import static nextgen.templates.DomainPatterns.writeJsonWrapper;
-//import static nextgen.templates.DomainPatterns.*;
+//import static nextgen.templates.domain.DomainPatterns.newList;
+//import static nextgen.templates.domain.DomainPatterns.writeJsonWrapper;
+//import static nextgen.templates.domain.DomainPatterns.*;
 //import static nextgen.templates.MaterialUIPatterns.*;
-//import static nextgen.templates.MavenPatterns.*;
+//import static nextgen.templates.maven.MavenPatterns.*;
 //import static nextgen.templates.MobXPatterns.getName;
 //import static nextgen.templates.VertxPatterns.*;
 //import static nextgen.templates.WebappPatterns.*;
@@ -43,14 +43,14 @@ package nextgen.projects;
 //   final File webRoot = new File("web");
 //   final File mainWebapp = new File(root, "src/main/webapp");
 //
-//   private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.JavaPatterns.newPackageDeclaration("com.securityx");
-//   private final nextgen.templates.java.PackageDeclaration domainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "domain");
-//   private final nextgen.templates.java.PackageDeclaration mevadataPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "mevadata");
-//   private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "web");
-//   private final nextgen.templates.java.PackageDeclaration webDomainPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(webPackage, "domain");
-//   private final nextgen.templates.java.PackageDeclaration webApiPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(webPackage, "api");
-//   private final nextgen.templates.java.PackageDeclaration webMessagesPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(webPackage, "messages");
-//   private final nextgen.templates.java.PackageDeclaration utilsPackage = nextgen.templates.JavaPatterns.newPackageDeclaration(corePackage, "utils");
+//   private final nextgen.templates.java.PackageDeclaration corePackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration("com.securityx");
+//   private final nextgen.templates.java.PackageDeclaration domainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage, "domain");
+//   private final nextgen.templates.java.PackageDeclaration mevadataPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage, "mevadata");
+//   private final nextgen.templates.java.PackageDeclaration webPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage, "web");
+//   private final nextgen.templates.java.PackageDeclaration webDomainPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(webPackage, "domain");
+//   private final nextgen.templates.java.PackageDeclaration webApiPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(webPackage, "api");
+//   private final nextgen.templates.java.PackageDeclaration webMessagesPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(webPackage, "messages");
+//   private final nextgen.templates.java.PackageDeclaration utilsPackage = nextgen.templates.java.JavaPatterns.newPackageDeclaration(corePackage, "utils");
 //
 //   final String version = "1.0.0";
 //   final String appName = "S E C U R I T Y - X";

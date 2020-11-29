@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static nextgen.templates.DomainPatterns.*;
+import static nextgen.templates.domain.DomainPatterns.*;
 
 public class Tests {
 

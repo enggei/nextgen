@@ -1,6 +1,6 @@
 package nextgen.projects;
 
-//import nextgen.templates.MavenPatterns;
+//import nextgen.templates.maven.MavenPatterns;
 //import nextgen.templates.java.PackageDeclaration;
 //import nextgen.templates.maven.DependencyGroup;
 //import nextgen.templates.maven.DependencyScope;
@@ -10,11 +10,11 @@ package nextgen.projects;
 //
 //import java.io.File;
 //
-//import static nextgen.templates.DomainPatterns.*;
+//import static nextgen.templates.domain.DomainPatterns.*;
 //import static nextgen.templates.GitPatterns.write;
-//import static nextgen.templates.JavaPatterns.newPackageDeclaration;
-//import static nextgen.templates.MavenPatterns.*;
-//import static nextgen.templates.MavenPatterns.newPomProperties;
+//import static nextgen.templates.java.JavaPatterns.newPackageDeclaration;
+//import static nextgen.templates.maven.MavenPatterns.*;
+//import static nextgen.templates.maven.MavenPatterns.newPomProperties;
 //import static nextgen.templates.git.GitST.newGitignore;
 //
 //public class SmartPilotProject {
