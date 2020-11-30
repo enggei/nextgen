@@ -5,9 +5,9 @@ public class Plugin {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _groupId;
-	private Object _artifactId;
 	private Object _version;
+	private Object _artifactId;
+	private Object _groupId;
 	private java.util.List<Object> _executions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _configuration = new java.util.ArrayList<>();
 
@@ -22,33 +22,33 @@ public class Plugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("plugin");
-		st.add("groupId", _groupId);
-		st.add("artifactId", _artifactId);
 		st.add("version", _version);
+		st.add("artifactId", _artifactId);
+		st.add("groupId", _groupId);
 		for (Object o : _executions) st.add("executions", o);
-		for (java.util.Map<String, Object> map : _configuration) st.addAggr("configuration.{name,value}", map.get("name"), map.get("value"));
+		for (java.util.Map<String, Object> map : _configuration) st.addAggr("configuration.{value,name}", map.get("value"), map.get("name"));
 		return st.render().trim();
 	}
 
-	public Plugin setGroupId(Object value) {
-		this._groupId = value;
+	public Plugin setVersion(Object value) {
+		this._version = value;
 		return this;
 	}
 
-	public Object getGroupId() {
-		return this._groupId;
+	public Object getVersion() {
+		return this._version;
 	}
 
-	public Object getGroupId(Object defaultValue) {
-		return this._groupId == null ? defaultValue : this._groupId;
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
 	}
 
-	public boolean hasGroupId() {
-		return this._groupId != null;
+	public boolean hasVersion() {
+		return this._version != null;
 	}
 
-	public Plugin removeGroupId() {
-		this._groupId = null;
+	public Plugin removeVersion() {
+		this._version = null;
 		return this;
 	} 
 
@@ -74,25 +74,25 @@ public class Plugin {
 		return this;
 	} 
 
-	public Plugin setVersion(Object value) {
-		this._version = value;
+	public Plugin setGroupId(Object value) {
+		this._groupId = value;
 		return this;
 	}
 
-	public Object getVersion() {
-		return this._version;
+	public Object getGroupId() {
+		return this._groupId;
 	}
 
-	public Object getVersion(Object defaultValue) {
-		return this._version == null ? defaultValue : this._version;
+	public Object getGroupId(Object defaultValue) {
+		return this._groupId == null ? defaultValue : this._groupId;
 	}
 
-	public boolean hasVersion() {
-		return this._version != null;
+	public boolean hasGroupId() {
+		return this._groupId != null;
 	}
 
-	public Plugin removeVersion() {
-		this._version = null;
+	public Plugin removeGroupId() {
+		this._groupId = null;
 		return this;
 	} 
 
@@ -125,10 +125,10 @@ public class Plugin {
 		return this._executions;
 	} 
 
-	public Plugin addConfiguration(Object _name, Object _value) {
+	public Plugin addConfiguration(Object _value, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
 		map.put("value", _value);
+		map.put("name", _name);
 		this._configuration.add(map);
 		return this;
 	}
@@ -138,44 +138,44 @@ public class Plugin {
 	}
 
 	public Plugin addConfiguration(Plugin_Configuration value) {
-		return addConfiguration(value._name, value._value);
+		return addConfiguration(value._value, value._name);
 	}
 
 	public java.util.stream.Stream<Plugin_Configuration> streamConfiguration() {
 		return this._configuration.stream().map(Plugin_Configuration::new);
 	}
 
-	public java.util.List<Object> getConfiguration_Name() {
-		return streamConfiguration().map(Plugin_Configuration::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getConfiguration_Value() {
 		return streamConfiguration().map(Plugin_Configuration::getValue).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getConfiguration_Name() {
+		return streamConfiguration().map(Plugin_Configuration::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Plugin_Configuration {
 
-		Object _name;
 		Object _value;
+		Object _name;
 
-		public Plugin_Configuration(Object _name, Object _value) {
-			this._name = _name;
+		public Plugin_Configuration(Object _value, Object _name) {
 			this._value = _value;
+			this._name = _name;
 		}
 
 		private Plugin_Configuration(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
 			this._value = (Object) map.get("value");
-		}
-
-		public Object getName() {
-			return this._name;
+			this._name = (Object) map.get("name");
 		}
 
 		public Object getValue() {
 			return this._value;
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 	}  
@@ -193,7 +193,7 @@ public class Plugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>\n" + 
+	static final String st = "plugin(executions,configuration,version,artifactId,groupId) ::= <<<plugin>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<artifactId>~artifactId~</artifactId>\n" + 
 				"	<version>~version~</version>\n" + 

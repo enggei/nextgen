@@ -2,21 +2,21 @@ package nextgen.templates.maven;
 
 public enum DependencyScope {
 
-	Provided() {
+	System() {
 		@Override
-		public String toString() { return "provided"; }
-	},
-	Runtime() {
-		@Override
-		public String toString() { return "runtime"; }
+		public String toString() { return "system"; }
 	},
 	Test() {
 		@Override
 		public String toString() { return "test"; }
 	},
-	System() {
+	Runtime() {
 		@Override
-		public String toString() { return "system"; }
+		public String toString() { return "runtime"; }
+	},
+	Provided() {
+		@Override
+		public String toString() { return "provided"; }
 	},
 	Import() {
 		@Override

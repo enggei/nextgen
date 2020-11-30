@@ -5,9 +5,9 @@ public class ProjectPackage {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _name;
-	private ProjectPackage _parentPackage;
 	private String _packageName;
+	private ProjectPackage _parentPackage;
+	private String _name;
 	private java.util.List<Object> _childPackages = new java.util.ArrayList<>();
 
 	ProjectPackage(org.stringtemplate.v4.STGroup stGroup) {
@@ -21,32 +21,32 @@ public class ProjectPackage {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ProjectPackage");
-		st.add("name", _name);
-		st.add("parentPackage", _parentPackage);
 		st.add("packageName", _packageName);
+		st.add("parentPackage", _parentPackage);
+		st.add("name", _name);
 		for (Object o : _childPackages) st.add("childPackages", o);
 		return st.render().trim();
 	}
 
-	public ProjectPackage setName(String value) {
-		this._name = value;
+	public ProjectPackage setPackageName(String value) {
+		this._packageName = value;
 		return this;
 	}
 
-	public String getName() {
-		return this._name;
+	public String getPackageName() {
+		return this._packageName;
 	}
 
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
+	public String getPackageName(String defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
-	public boolean hasName() {
-		return this._name != null;
+	public boolean hasPackageName() {
+		return this._packageName != null;
 	}
 
-	public ProjectPackage removeName() {
-		this._name = null;
+	public ProjectPackage removePackageName() {
+		this._packageName = null;
 		return this;
 	} 
 
@@ -72,25 +72,25 @@ public class ProjectPackage {
 		return this;
 	} 
 
-	public ProjectPackage setPackageName(String value) {
-		this._packageName = value;
+	public ProjectPackage setName(String value) {
+		this._name = value;
 		return this;
 	}
 
-	public String getPackageName() {
-		return this._packageName;
+	public String getName() {
+		return this._name;
 	}
 
-	public String getPackageName(String defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasPackageName() {
-		return this._packageName != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public ProjectPackage removePackageName() {
-		this._packageName = null;
+	public ProjectPackage removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -137,6 +137,6 @@ public class ProjectPackage {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.java.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" +
+	static final String st = "ProjectPackage(childPackages,packageName,parentPackage,name) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~\"~packageName~\");\n" + 
 				"~childPackages:{it|~it~};separator=\"\\n\"~ >>";
 }  

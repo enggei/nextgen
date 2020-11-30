@@ -5,9 +5,9 @@ public class Repository {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _id;
 	private Object _name;
 	private Object _url;
+	private Object _id;
 
 	Repository(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,33 +20,11 @@ public class Repository {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("repository");
-		st.add("id", _id);
 		st.add("name", _name);
 		st.add("url", _url);
+		st.add("id", _id);
 		return st.render().trim();
 	}
-
-	public Repository setId(Object value) {
-		this._id = value;
-		return this;
-	}
-
-	public Object getId() {
-		return this._id;
-	}
-
-	public Object getId(Object defaultValue) {
-		return this._id == null ? defaultValue : this._id;
-	}
-
-	public boolean hasId() {
-		return this._id != null;
-	}
-
-	public Repository removeId() {
-		this._id = null;
-		return this;
-	} 
 
 	public Repository setName(Object value) {
 		this._name = value;
@@ -92,6 +70,28 @@ public class Repository {
 		return this;
 	} 
 
+	public Repository setId(Object value) {
+		this._id = value;
+		return this;
+	}
+
+	public Object getId() {
+		return this._id;
+	}
+
+	public Object getId(Object defaultValue) {
+		return this._id == null ? defaultValue : this._id;
+	}
+
+	public boolean hasId() {
+		return this._id != null;
+	}
+
+	public Repository removeId() {
+		this._id = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,7 +107,7 @@ public class Repository {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "repository(id,name,url) ::= <<<repository>\n" + 
+	static final String st = "repository(name,url,id) ::= <<<repository>\n" + 
 				"	<id>~id~</id>\n" + 
 				"	<name>~name~</name>\n" + 
 				"	<url>~url~</url>\n" + 

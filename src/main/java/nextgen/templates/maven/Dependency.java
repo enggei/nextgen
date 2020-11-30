@@ -5,13 +5,13 @@ public class Dependency {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _groupId;
-	private Object _artifactId;
-	private Object _version;
-	private DependencyScope _scope;
 	private Object _systemPath;
-	private Object _classifier;
+	private DependencyScope _scope;
 	private Object _type;
+	private Object _classifier;
+	private Object _groupId;
+	private Object _version;
+	private Object _artifactId;
 
 	Dependency(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -24,79 +24,35 @@ public class Dependency {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependency");
-		st.add("groupId", _groupId);
-		st.add("artifactId", _artifactId);
-		st.add("version", _version);
-		st.add("scope", _scope);
 		st.add("systemPath", _systemPath);
-		st.add("classifier", _classifier);
+		st.add("scope", _scope);
 		st.add("type", _type);
+		st.add("classifier", _classifier);
+		st.add("groupId", _groupId);
+		st.add("version", _version);
+		st.add("artifactId", _artifactId);
 		return st.render().trim();
 	}
 
-	public Dependency setGroupId(Object value) {
-		this._groupId = value;
+	public Dependency setSystemPath(Object value) {
+		this._systemPath = value;
 		return this;
 	}
 
-	public Object getGroupId() {
-		return this._groupId;
+	public Object getSystemPath() {
+		return this._systemPath;
 	}
 
-	public Object getGroupId(Object defaultValue) {
-		return this._groupId == null ? defaultValue : this._groupId;
+	public Object getSystemPath(Object defaultValue) {
+		return this._systemPath == null ? defaultValue : this._systemPath;
 	}
 
-	public boolean hasGroupId() {
-		return this._groupId != null;
+	public boolean hasSystemPath() {
+		return this._systemPath != null;
 	}
 
-	public Dependency removeGroupId() {
-		this._groupId = null;
-		return this;
-	} 
-
-	public Dependency setArtifactId(Object value) {
-		this._artifactId = value;
-		return this;
-	}
-
-	public Object getArtifactId() {
-		return this._artifactId;
-	}
-
-	public Object getArtifactId(Object defaultValue) {
-		return this._artifactId == null ? defaultValue : this._artifactId;
-	}
-
-	public boolean hasArtifactId() {
-		return this._artifactId != null;
-	}
-
-	public Dependency removeArtifactId() {
-		this._artifactId = null;
-		return this;
-	} 
-
-	public Dependency setVersion(Object value) {
-		this._version = value;
-		return this;
-	}
-
-	public Object getVersion() {
-		return this._version;
-	}
-
-	public Object getVersion(Object defaultValue) {
-		return this._version == null ? defaultValue : this._version;
-	}
-
-	public boolean hasVersion() {
-		return this._version != null;
-	}
-
-	public Dependency removeVersion() {
-		this._version = null;
+	public Dependency removeSystemPath() {
+		this._systemPath = null;
 		return this;
 	} 
 
@@ -122,25 +78,25 @@ public class Dependency {
 		return this;
 	} 
 
-	public Dependency setSystemPath(Object value) {
-		this._systemPath = value;
+	public Dependency setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public Object getSystemPath() {
-		return this._systemPath;
+	public Object getType() {
+		return this._type;
 	}
 
-	public Object getSystemPath(Object defaultValue) {
-		return this._systemPath == null ? defaultValue : this._systemPath;
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasSystemPath() {
-		return this._systemPath != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public Dependency removeSystemPath() {
-		this._systemPath = null;
+	public Dependency removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -166,25 +122,69 @@ public class Dependency {
 		return this;
 	} 
 
-	public Dependency setType(Object value) {
-		this._type = value;
+	public Dependency setGroupId(Object value) {
+		this._groupId = value;
 		return this;
 	}
 
-	public Object getType() {
-		return this._type;
+	public Object getGroupId() {
+		return this._groupId;
 	}
 
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
+	public Object getGroupId(Object defaultValue) {
+		return this._groupId == null ? defaultValue : this._groupId;
 	}
 
-	public boolean hasType() {
-		return this._type != null;
+	public boolean hasGroupId() {
+		return this._groupId != null;
 	}
 
-	public Dependency removeType() {
-		this._type = null;
+	public Dependency removeGroupId() {
+		this._groupId = null;
+		return this;
+	} 
+
+	public Dependency setVersion(Object value) {
+		this._version = value;
+		return this;
+	}
+
+	public Object getVersion() {
+		return this._version;
+	}
+
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
+	}
+
+	public boolean hasVersion() {
+		return this._version != null;
+	}
+
+	public Dependency removeVersion() {
+		this._version = null;
+		return this;
+	} 
+
+	public Dependency setArtifactId(Object value) {
+		this._artifactId = value;
+		return this;
+	}
+
+	public Object getArtifactId() {
+		return this._artifactId;
+	}
+
+	public Object getArtifactId(Object defaultValue) {
+		return this._artifactId == null ? defaultValue : this._artifactId;
+	}
+
+	public boolean hasArtifactId() {
+		return this._artifactId != null;
+	}
+
+	public Dependency removeArtifactId() {
+		this._artifactId = null;
 		return this;
 	} 
 
@@ -203,7 +203,7 @@ public class Dependency {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>\n" + 
+	static final String st = "dependency(systemPath,scope,type,classifier,groupId,version,artifactId) ::= <<<dependency>\n" + 
 				"	<groupId>~groupId~</groupId>\n" + 
 				"	<artifactId>~artifactId~</artifactId>~if(version)~\n" + 
 				"	<version>~version~</version>~endif~~if(scope)~\n" + 

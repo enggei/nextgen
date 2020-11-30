@@ -5,12 +5,12 @@ public class Antlr4 {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _goal;
 	private Object _version;
 	private Object _sourceDirectory;
 	private Object _outputDirectory;
 	private Object _visitor;
 	private Object _listener;
-	private Object _goal;
 	private java.util.List<Object> _grammars = new java.util.ArrayList<>();
 	private java.util.List<Object> _includes = new java.util.ArrayList<>();
 	private java.util.List<Object> _arguments = new java.util.ArrayList<>();
@@ -26,17 +26,39 @@ public class Antlr4 {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("antlr4");
+		st.add("goal", _goal);
 		st.add("version", _version);
 		st.add("sourceDirectory", _sourceDirectory);
 		st.add("outputDirectory", _outputDirectory);
 		st.add("visitor", _visitor);
 		st.add("listener", _listener);
-		st.add("goal", _goal);
 		for (Object o : _grammars) st.add("grammars", o);
 		for (Object o : _includes) st.add("includes", o);
 		for (Object o : _arguments) st.add("arguments", o);
 		return st.render().trim();
 	}
+
+	public Antlr4 setGoal(Object value) {
+		this._goal = value;
+		return this;
+	}
+
+	public Object getGoal() {
+		return this._goal;
+	}
+
+	public Object getGoal(Object defaultValue) {
+		return this._goal == null ? defaultValue : this._goal;
+	}
+
+	public boolean hasGoal() {
+		return this._goal != null;
+	}
+
+	public Antlr4 removeGoal() {
+		this._goal = null;
+		return this;
+	} 
 
 	public Antlr4 setVersion(Object value) {
 		this._version = value;
@@ -148,28 +170,6 @@ public class Antlr4 {
 		return this;
 	} 
 
-	public Antlr4 setGoal(Object value) {
-		this._goal = value;
-		return this;
-	}
-
-	public Object getGoal() {
-		return this._goal;
-	}
-
-	public Object getGoal(Object defaultValue) {
-		return this._goal == null ? defaultValue : this._goal;
-	}
-
-	public boolean hasGoal() {
-		return this._goal != null;
-	}
-
-	public Antlr4 removeGoal() {
-		this._goal = null;
-		return this;
-	} 
-
 	public Antlr4 addGrammars(Object value) {
 		this._grammars.add(value);
 		return this;
@@ -271,7 +271,7 @@ public class Antlr4 {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "antlr4(version,sourceDirectory,grammars,includes,arguments,outputDirectory,visitor,listener,goal) ::= <<<plugin>\n" + 
+	static final String st = "antlr4(goal,version,sourceDirectory,grammars,includes,arguments,outputDirectory,visitor,listener) ::= <<<plugin>\n" + 
 				"	<groupId>org.antlr</groupId>\n" + 
 				"	<artifactId>antlr4-maven-plugin</artifactId>\n" + 
 				"	<version>~if(version)~~version~~else~4.8-1~endif~</version>\n" + 

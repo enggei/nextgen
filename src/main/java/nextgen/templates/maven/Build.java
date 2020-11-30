@@ -20,7 +20,7 @@ public class Build {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("build");
 		for (Object o : _plugin) st.add("plugin", o);
-		for (java.util.Map<String, Object> map : _testResources) st.addAggr("testResources.{name,value}", map.get("name"), map.get("value"));
+		for (java.util.Map<String, Object> map : _testResources) st.addAggr("testResources.{value,name}", map.get("value"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -54,10 +54,10 @@ public class Build {
 		return this._plugin;
 	} 
 
-	public Build addTestResources(Object _name, Object _value) {
+	public Build addTestResources(Object _value, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
 		map.put("value", _value);
+		map.put("name", _name);
 		this._testResources.add(map);
 		return this;
 	}
@@ -67,44 +67,44 @@ public class Build {
 	}
 
 	public Build addTestResources(Build_TestResources value) {
-		return addTestResources(value._name, value._value);
+		return addTestResources(value._value, value._name);
 	}
 
 	public java.util.stream.Stream<Build_TestResources> streamTestResources() {
 		return this._testResources.stream().map(Build_TestResources::new);
 	}
 
-	public java.util.List<Object> getTestResources_Name() {
-		return streamTestResources().map(Build_TestResources::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getTestResources_Value() {
 		return streamTestResources().map(Build_TestResources::getValue).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getTestResources_Name() {
+		return streamTestResources().map(Build_TestResources::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Build_TestResources {
 
-		Object _name;
 		Object _value;
+		Object _name;
 
-		public Build_TestResources(Object _name, Object _value) {
-			this._name = _name;
+		public Build_TestResources(Object _value, Object _name) {
 			this._value = _value;
+			this._name = _name;
 		}
 
 		private Build_TestResources(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
 			this._value = (Object) map.get("value");
-		}
-
-		public Object getName() {
-			return this._name;
+			this._name = (Object) map.get("name");
 		}
 
 		public Object getValue() {
 			return this._value;
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 	}  

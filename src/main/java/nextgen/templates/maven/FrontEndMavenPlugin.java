@@ -5,9 +5,9 @@ public class FrontEndMavenPlugin {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _nodeVersion;
 	private Object _pluginVersion;
 	private Object _installDirectory;
-	private Object _nodeVersion;
 
 	FrontEndMavenPlugin(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class FrontEndMavenPlugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("frontEndMavenPlugin");
+		st.add("nodeVersion", _nodeVersion);
 		st.add("pluginVersion", _pluginVersion);
 		st.add("installDirectory", _installDirectory);
-		st.add("nodeVersion", _nodeVersion);
 		return st.render().trim();
 	}
+
+	public FrontEndMavenPlugin setNodeVersion(Object value) {
+		this._nodeVersion = value;
+		return this;
+	}
+
+	public Object getNodeVersion() {
+		return this._nodeVersion;
+	}
+
+	public Object getNodeVersion(Object defaultValue) {
+		return this._nodeVersion == null ? defaultValue : this._nodeVersion;
+	}
+
+	public boolean hasNodeVersion() {
+		return this._nodeVersion != null;
+	}
+
+	public FrontEndMavenPlugin removeNodeVersion() {
+		this._nodeVersion = null;
+		return this;
+	} 
 
 	public FrontEndMavenPlugin setPluginVersion(Object value) {
 		this._pluginVersion = value;
@@ -70,28 +92,6 @@ public class FrontEndMavenPlugin {
 		return this;
 	} 
 
-	public FrontEndMavenPlugin setNodeVersion(Object value) {
-		this._nodeVersion = value;
-		return this;
-	}
-
-	public Object getNodeVersion() {
-		return this._nodeVersion;
-	}
-
-	public Object getNodeVersion(Object defaultValue) {
-		return this._nodeVersion == null ? defaultValue : this._nodeVersion;
-	}
-
-	public boolean hasNodeVersion() {
-		return this._nodeVersion != null;
-	}
-
-	public FrontEndMavenPlugin removeNodeVersion() {
-		this._nodeVersion = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,7 +107,7 @@ public class FrontEndMavenPlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!-- https://github.com/eirslett/frontend-maven-plugin -->\n" + 
+	static final String st = "frontEndMavenPlugin(nodeVersion,pluginVersion,installDirectory) ::= <<<!-- https://github.com/eirslett/frontend-maven-plugin -->\n" + 
 				"<plugin>\n" + 
 				"    <groupId>com.github.eirslett</groupId>\n" + 
 				"    <artifactId>frontend-maven-plugin</artifactId>\n" + 

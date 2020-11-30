@@ -5,9 +5,9 @@ public class DependencyGroup {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _version;
 	private Object _name;
 	private Object _groupId;
-	private Object _version;
 	private java.util.List<Object> _artifacts = new java.util.ArrayList<>();
 
 	DependencyGroup(org.stringtemplate.v4.STGroup stGroup) {
@@ -21,12 +21,34 @@ public class DependencyGroup {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("dependencyGroup");
+		st.add("version", _version);
 		st.add("name", _name);
 		st.add("groupId", _groupId);
-		st.add("version", _version);
 		for (Object o : _artifacts) st.add("artifacts", o);
 		return st.render().trim();
 	}
+
+	public DependencyGroup setVersion(Object value) {
+		this._version = value;
+		return this;
+	}
+
+	public Object getVersion() {
+		return this._version;
+	}
+
+	public Object getVersion(Object defaultValue) {
+		return this._version == null ? defaultValue : this._version;
+	}
+
+	public boolean hasVersion() {
+		return this._version != null;
+	}
+
+	public DependencyGroup removeVersion() {
+		this._version = null;
+		return this;
+	} 
 
 	public DependencyGroup setName(Object value) {
 		this._name = value;
@@ -69,28 +91,6 @@ public class DependencyGroup {
 
 	public DependencyGroup removeGroupId() {
 		this._groupId = null;
-		return this;
-	} 
-
-	public DependencyGroup setVersion(Object value) {
-		this._version = value;
-		return this;
-	}
-
-	public Object getVersion() {
-		return this._version;
-	}
-
-	public Object getVersion(Object defaultValue) {
-		return this._version == null ? defaultValue : this._version;
-	}
-
-	public boolean hasVersion() {
-		return this._version != null;
-	}
-
-	public DependencyGroup removeVersion() {
-		this._version = null;
 		return this;
 	} 
 
@@ -137,7 +137,7 @@ public class DependencyGroup {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "dependencyGroup(name,groupId,version,artifacts) ::= <<~name~\n" + 
+	static final String st = "dependencyGroup(version,artifacts,name,groupId) ::= <<~name~\n" + 
 				"~groupId~\n" + 
 				"~version~\n" + 
 				"~artifacts:{it|~it~};separator=\"\\n\"~ >>";

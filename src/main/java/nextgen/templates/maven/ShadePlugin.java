@@ -5,8 +5,8 @@ public class ShadePlugin {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
 	private Object _className;
+	private Object _packageName;
 
 	ShadePlugin(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class ShadePlugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("shadePlugin");
-		st.add("packageName", _packageName);
 		st.add("className", _className);
+		st.add("packageName", _packageName);
 		return st.render().trim();
 	}
-
-	public ShadePlugin setPackageName(Object value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public Object getPackageName() {
-		return this._packageName;
-	}
-
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public ShadePlugin removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
 
 	public ShadePlugin setClassName(Object value) {
 		this._className = value;
@@ -68,6 +46,28 @@ public class ShadePlugin {
 		return this;
 	} 
 
+	public ShadePlugin setPackageName(Object value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public Object getPackageName() {
+		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public ShadePlugin removePackageName() {
+		this._packageName = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,7 +83,7 @@ public class ShadePlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "shadePlugin(packageName,className) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n" + 
+	static final String st = "shadePlugin(className,packageName) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->\n" + 
 				"<plugin>\n" + 
 				"	<groupId>org.apache.maven.plugins</groupId>\n" + 
 				"	<artifactId>maven-shade-plugin</artifactId>\n" + 

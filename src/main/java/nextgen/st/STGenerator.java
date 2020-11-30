@@ -201,28 +201,29 @@ public class STGenerator {
          switch (stParameter.getType()) {
             case SINGLE:
 
-               stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), capitalize(stParameter.getArgumentType("Object")));
+               final String singleArgumentType = capitalize(stParameter.getArgumentType("Object"));
+               stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), singleArgumentType);
                final ST singleAccessors = generator.getInstanceOf("entitySingleAccessors");
                singleAccessors.add("entity", className);
                singleAccessors.add("name", stParameter.getName());
-               singleAccessors.add("type", stParameter.getArgumentType("Object"));
+               singleAccessors.add("type", singleArgumentType);
                stEntity.add("singleAccessors", singleAccessors);
                break;
 
             case LIST:
 
-               stEntity.addAggr("listFields.{name,type}", stParameter.getName(), capitalize(stParameter.getArgumentType("Object")));
+               final String listArgumentType = capitalize(stParameter.getArgumentType("Object"));
+               stEntity.addAggr("listFields.{name,type}", stParameter.getName(), listArgumentType);
                final ST listAccessors = generator.getInstanceOf("entityListAccessors");
                listAccessors.add("entity", className);
                listAccessors.add("name", stParameter.getName());
-               listAccessors.add("type", stParameter.getArgumentType("Object"));
+               listAccessors.add("type", listArgumentType);
                stEntity.add("listAccessors", listAccessors);
                break;
 
             case KVLIST:
 
-               final ST aggrSpec = new ST("~name~.{~keys:{it|~it~};separator=\",\"~}", '~', '~')
-                     .add("name", stParameter.getName());
+               final ST aggrSpec = new ST("~name~.{~keys:{it|~it~};separator=\",\"~}", '~', '~').add("name", stParameter.getName());
                final ST aggrValues = new ST("~values:{it|map.get(\"~it~\")};separator=\", \"~", '~', '~');
 
                final ST kvListAccessors = generator.getInstanceOf("entityKVListAccessors");

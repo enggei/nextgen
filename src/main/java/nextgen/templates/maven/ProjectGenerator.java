@@ -5,8 +5,8 @@ public class ProjectGenerator {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
 	private Object _description;
+	private Object _name;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	ProjectGenerator(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class ProjectGenerator {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ProjectGenerator");
-		st.add("name", _name);
 		st.add("description", _description);
+		st.add("name", _name);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
-
-	public ProjectGenerator setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public ProjectGenerator removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public ProjectGenerator setDescription(Object value) {
 		this._description = value;
@@ -67,6 +45,28 @@ public class ProjectGenerator {
 
 	public ProjectGenerator removeDescription() {
 		this._description = null;
+		return this;
+	} 
+
+	public ProjectGenerator setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public ProjectGenerator removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -113,7 +113,7 @@ public class ProjectGenerator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ProjectGenerator(name,description,statements) ::= <</**\n" + 
+	static final String st = "ProjectGenerator(statements,description,name) ::= <</**\n" + 
 				" * ~name~\n" + 
 				" * ~description~\n" + 
 				" */\n" + 

@@ -6,16 +6,16 @@ public class Project {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private String _packageName;
-	private String _name;
 	private String _root;
-	private java.util.List<Object> _templates = new java.util.ArrayList<>();
-	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<ProjectPackage> _packageDeclarations = new java.util.ArrayList<>();
+	private String _name;
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
-	private java.util.List<Object> _generators = new java.util.ArrayList<>();
+	private java.util.List<ProjectPackage> _packageDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<Object> _generators = new java.util.ArrayList<>();
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
+	private java.util.List<Object> _templates = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _files = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Project(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -29,16 +29,16 @@ public class Project {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Project");
 		st.add("packageName", _packageName);
-		st.add("name", _name);
 		st.add("root", _root);
-		for (Object o : _templates) st.add("templates", o);
-		for (Object o : _imports) st.add("imports", o);
-		for (Object o : _packageDeclarations) st.add("packageDeclarations", o);
+		st.add("name", _name);
 		for (Object o : _entities) st.add("entities", o);
-		for (Object o : _generators) st.add("generators", o);
+		for (Object o : _packageDeclarations) st.add("packageDeclarations", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _files) st.addAggr("files.{name,parent,path}", map.get("name"), map.get("parent"), map.get("path"));
+		for (Object o : _generators) st.add("generators", o);
+		for (Object o : _imports) st.add("imports", o);
+		for (Object o : _templates) st.add("templates", o);
+		for (java.util.Map<String, Object> map : _files) st.addAggr("files.{name,path,parent}", map.get("name"), map.get("path"), map.get("parent"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,init,name}", map.get("type"), map.get("init"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -64,28 +64,6 @@ public class Project {
 		return this;
 	} 
 
-	public Project setName(String value) {
-		this._name = value;
-		return this;
-	}
-
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public Project removeName() {
-		this._name = null;
-		return this;
-	} 
-
 	public Project setRoot(String value) {
 		this._root = value;
 		return this;
@@ -108,91 +86,26 @@ public class Project {
 		return this;
 	} 
 
-	public Project addTemplates(Object value) {
-		this._templates.add(value);
+	public Project setName(String value) {
+		this._name = value;
 		return this;
 	}
 
-	public Project setTemplates(Object[] value) {
-		this._templates.addAll(java.util.Arrays.asList(value));
-		return this;
+	public String getName() {
+		return this._name;
 	}
 
-	public Project setTemplates(java.util.Collection<Object> values) {
-		this._templates.addAll(values);
-		return this;
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public Project removeTemplates(Object value) {
-		this._templates.remove(value);
-		return this;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public Project removeTemplates(int index) {
-		this._templates.remove(index);
+	public Project removeName() {
+		this._name = null;
 		return this;
-	}
-
-	public java.util.List<Object> getTemplates() {
-		return this._templates;
-	} 
-
-	public Project addImports(Object value) {
-		this._imports.add(value);
-		return this;
-	}
-
-	public Project setImports(Object[] value) {
-		this._imports.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Project setImports(java.util.Collection<Object> values) {
-		this._imports.addAll(values);
-		return this;
-	}
-
-	public Project removeImports(Object value) {
-		this._imports.remove(value);
-		return this;
-	}
-
-	public Project removeImports(int index) {
-		this._imports.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getImports() {
-		return this._imports;
-	} 
-
-	public Project addPackageDeclarations(ProjectPackage value) {
-		this._packageDeclarations.add(value);
-		return this;
-	}
-
-	public Project setPackageDeclarations(ProjectPackage[] value) {
-		this._packageDeclarations.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Project setPackageDeclarations(java.util.Collection<ProjectPackage> values) {
-		this._packageDeclarations.addAll(values);
-		return this;
-	}
-
-	public Project removePackageDeclarations(ProjectPackage value) {
-		this._packageDeclarations.remove(value);
-		return this;
-	}
-
-	public Project removePackageDeclarations(int index) {
-		this._packageDeclarations.remove(index);
-		return this;
-	}
-
-	public java.util.List<ProjectPackage> getPackageDeclarations() {
-		return this._packageDeclarations;
 	} 
 
 	public Project addEntities(Object value) {
@@ -224,33 +137,33 @@ public class Project {
 		return this._entities;
 	} 
 
-	public Project addGenerators(Object value) {
-		this._generators.add(value);
+	public Project addPackageDeclarations(ProjectPackage value) {
+		this._packageDeclarations.add(value);
 		return this;
 	}
 
-	public Project setGenerators(Object[] value) {
-		this._generators.addAll(java.util.Arrays.asList(value));
+	public Project setPackageDeclarations(ProjectPackage[] value) {
+		this._packageDeclarations.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public Project setGenerators(java.util.Collection<Object> values) {
-		this._generators.addAll(values);
+	public Project setPackageDeclarations(java.util.Collection<ProjectPackage> values) {
+		this._packageDeclarations.addAll(values);
 		return this;
 	}
 
-	public Project removeGenerators(Object value) {
-		this._generators.remove(value);
+	public Project removePackageDeclarations(ProjectPackage value) {
+		this._packageDeclarations.remove(value);
 		return this;
 	}
 
-	public Project removeGenerators(int index) {
-		this._generators.remove(index);
+	public Project removePackageDeclarations(int index) {
+		this._packageDeclarations.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getGenerators() {
-		return this._generators;
+	public java.util.List<ProjectPackage> getPackageDeclarations() {
+		return this._packageDeclarations;
 	} 
 
 	public Project addMethods(Object value) {
@@ -282,79 +195,98 @@ public class Project {
 		return this._methods;
 	} 
 
-	public Project addFields(Object _type, Object _name, Object _init) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
-		map.put("init", _init);
-		this._fields.add(map);
+	public Project addGenerators(Object value) {
+		this._generators.add(value);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
+	public Project setGenerators(Object[] value) {
+		this._generators.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
-	public Project addFields(Project_Fields value) {
-		return addFields(value._type, value._name, value._init);
+	public Project setGenerators(java.util.Collection<Object> values) {
+		this._generators.addAll(values);
+		return this;
 	}
 
-	public java.util.stream.Stream<Project_Fields> streamFields() {
-		return this._fields.stream().map(Project_Fields::new);
+	public Project removeGenerators(Object value) {
+		this._generators.remove(value);
+		return this;
 	}
 
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(Project_Fields::getType).collect(java.util.stream.Collectors.toList());
+	public Project removeGenerators(int index) {
+		this._generators.remove(index);
+		return this;
 	}
 
+	public java.util.List<Object> getGenerators() {
+		return this._generators;
+	} 
 
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(Project_Fields::getName).collect(java.util.stream.Collectors.toList());
+	public Project addImports(Object value) {
+		this._imports.add(value);
+		return this;
 	}
 
-
-	public java.util.List<Object> getFields_Init() {
-		return streamFields().map(Project_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	public Project setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
+	public Project setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
 
-	public static final class Project_Fields {
+	public Project removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
 
-		Object _type;
-		Object _name;
-		Object _init;
+	public Project removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
 
-		public Project_Fields(Object _type, Object _name, Object _init) {
-			this._type = _type;
-			this._name = _name;
-			this._init = _init;
-		}
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
 
-		private Project_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
-			this._init = (Object) map.get("init");
-		}
+	public Project addTemplates(Object value) {
+		this._templates.add(value);
+		return this;
+	}
 
-		public Object getType() {
-			return this._type;
-		}
+	public Project setTemplates(Object[] value) {
+		this._templates.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
 
-		public Object getName() {
-			return this._name;
-		}
+	public Project setTemplates(java.util.Collection<Object> values) {
+		this._templates.addAll(values);
+		return this;
+	}
 
-		public Object getInit() {
-			return this._init;
-		}
+	public Project removeTemplates(Object value) {
+		this._templates.remove(value);
+		return this;
+	}
 
-	}  
+	public Project removeTemplates(int index) {
+		this._templates.remove(index);
+		return this;
+	}
 
-	public Project addFiles(Object _name, Object _parent, Object _path) {
+	public java.util.List<Object> getTemplates() {
+		return this._templates;
+	} 
+
+	public Project addFiles(Object _name, Object _path, Object _parent) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
-		map.put("parent", _parent);
 		map.put("path", _path);
+		map.put("parent", _parent);
 		this._files.add(map);
 		return this;
 	}
@@ -364,7 +296,7 @@ public class Project {
 	}
 
 	public Project addFiles(Project_Files value) {
-		return addFiles(value._name, value._parent, value._path);
+		return addFiles(value._name, value._path, value._parent);
 	}
 
 	public java.util.stream.Stream<Project_Files> streamFiles() {
@@ -376,44 +308,112 @@ public class Project {
 	}
 
 
-	public java.util.List<Object> getFiles_Parent() {
-		return streamFiles().map(Project_Files::getParent).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getFiles_Path() {
+		return streamFiles().map(Project_Files::getPath).collect(java.util.stream.Collectors.toList());
 	}
 
 
-	public java.util.List<Object> getFiles_Path() {
-		return streamFiles().map(Project_Files::getPath).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getFiles_Parent() {
+		return streamFiles().map(Project_Files::getParent).collect(java.util.stream.Collectors.toList());
 	}
 
 
 	public static final class Project_Files {
 
 		Object _name;
-		Object _parent;
 		Object _path;
+		Object _parent;
 
-		public Project_Files(Object _name, Object _parent, Object _path) {
+		public Project_Files(Object _name, Object _path, Object _parent) {
 			this._name = _name;
-			this._parent = _parent;
 			this._path = _path;
+			this._parent = _parent;
 		}
 
 		private Project_Files(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
-			this._parent = (Object) map.get("parent");
 			this._path = (Object) map.get("path");
+			this._parent = (Object) map.get("parent");
 		}
 
 		public Object getName() {
 			return this._name;
 		}
 
+		public Object getPath() {
+			return this._path;
+		}
+
 		public Object getParent() {
 			return this._parent;
 		}
 
-		public Object getPath() {
-			return this._path;
+	}  
+
+	public Project addFields(Object _type, Object _init, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("init", _init);
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public Project addFields(Project_Fields value) {
+		return addFields(value._type, value._init, value._name);
+	}
+
+	public java.util.stream.Stream<Project_Fields> streamFields() {
+		return this._fields.stream().map(Project_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Project_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Init() {
+		return streamFields().map(Project_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(Project_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Project_Fields {
+
+		Object _type;
+		Object _init;
+		Object _name;
+
+		public Project_Fields(Object _type, Object _init, Object _name) {
+			this._type = _type;
+			this._init = _init;
+			this._name = _name;
+		}
+
+		private Project_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._init = (Object) map.get("init");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 	}  
@@ -431,7 +431,7 @@ public class Project {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Project(packageName,templates,imports,name,root,fields,files,packageDeclarations,entities,generators,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "Project(packageName,files,entities,packageDeclarations,methods,generators,imports,templates,root,name,fields) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import nextgen.st.STGenerator;\n" + 
 				"import static nextgen.utils.StringUtil.*;\n" + 

@@ -5,8 +5,8 @@ public class CopyPlugin {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _outputDirectory;
 	private Object _directory;
+	private Object _outputDirectory;
 	private java.util.List<Object> _include = new java.util.ArrayList<>();
 
 	CopyPlugin(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class CopyPlugin {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("copyPlugin");
-		st.add("outputDirectory", _outputDirectory);
 		st.add("directory", _directory);
+		st.add("outputDirectory", _outputDirectory);
 		for (Object o : _include) st.add("include", o);
 		return st.render().trim();
 	}
-
-	public CopyPlugin setOutputDirectory(Object value) {
-		this._outputDirectory = value;
-		return this;
-	}
-
-	public Object getOutputDirectory() {
-		return this._outputDirectory;
-	}
-
-	public Object getOutputDirectory(Object defaultValue) {
-		return this._outputDirectory == null ? defaultValue : this._outputDirectory;
-	}
-
-	public boolean hasOutputDirectory() {
-		return this._outputDirectory != null;
-	}
-
-	public CopyPlugin removeOutputDirectory() {
-		this._outputDirectory = null;
-		return this;
-	} 
 
 	public CopyPlugin setDirectory(Object value) {
 		this._directory = value;
@@ -67,6 +45,28 @@ public class CopyPlugin {
 
 	public CopyPlugin removeDirectory() {
 		this._directory = null;
+		return this;
+	} 
+
+	public CopyPlugin setOutputDirectory(Object value) {
+		this._outputDirectory = value;
+		return this;
+	}
+
+	public Object getOutputDirectory() {
+		return this._outputDirectory;
+	}
+
+	public Object getOutputDirectory(Object defaultValue) {
+		return this._outputDirectory == null ? defaultValue : this._outputDirectory;
+	}
+
+	public boolean hasOutputDirectory() {
+		return this._outputDirectory != null;
+	}
+
+	public CopyPlugin removeOutputDirectory() {
+		this._outputDirectory = null;
 		return this;
 	} 
 
@@ -113,7 +113,7 @@ public class CopyPlugin {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n" + 
+	static final String st = "copyPlugin(include,directory,outputDirectory) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->\n" + 
 				"<plugin>\n" + 
 				"	<artifactId>maven-resources-plugin</artifactId>\n" + 
 				"	<version>3.2.0</version>\n" + 
