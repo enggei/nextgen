@@ -68,18 +68,18 @@ public class STAppPresentationModel {
       return stRenderer.render(stModel);
    }
 
+   public String render(STValue stValue) {
+      return stRenderer.render(stValue);
+   }
+
    public String render(STModel stModel, int maxLength) {
       final String s = render(stModel);
-      return s.substring(0, Math.min(s.length(), maxLength));
+      return  s.substring(0, Math.min(s.length(), maxLength));
    }
 
    public String render(STValue stValue, String defaultValue) {
       final String render = render(stValue);
       return render == null ? defaultValue : render;
-   }
-
-   public String render(STValue stValue) {
-      return stRenderer.render(stValue);
    }
 
    public String render(STValue stValue, int maxLength) {

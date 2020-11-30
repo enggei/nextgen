@@ -1,18 +1,11 @@
 package nextgen.st;
 
-import nextgen.model.STGroupModel;
-import nextgen.model.STParameterKey;
-import nextgen.model.STTemplate;
-import nextgen.model.STArgument;
-import nextgen.model.STArgumentKV;
-import nextgen.model.STModel;
-import nextgen.model.STValue;
+import nextgen.model.*;
 import nextgen.templates.java.MethodCallExpression;
 import nextgen.utils.StringUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,17 +13,16 @@ import static nextgen.templates.java.JavaPatterns.newMethodCallExpression;
 
 public class STRenderer {
 
-   private final Set<STMapper> mappers = new LinkedHashSet<>();
+   private static final java.util.Map<nextgen.model.STGroupModel, STCache> cacheMap = new java.util.LinkedHashMap<>();
 
    public String render(STModel stModel) {
 
       if (stModel == null) return null;
 
-      final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
+      final STTemplate stTemplate = stModel.getStTemplate();
       if (stTemplate == null) return null;
 
-      final ST st = stMapper.newInstanceOf(stTemplate);
+      final ST st = newInstanceOf(stTemplate);
       if (st == null) return null;
 
       stTemplate.getParameters()
@@ -63,41 +55,54 @@ public class STRenderer {
                                  break;
                            }
                         }));
+
       return st.render().trim();
    }
 
-   public void renderNeoCode(STModel stModel, Collection<String> neoFacades, Collection<String> modelStatements) {
-
-      if (stModel == null) return;
-
-      final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
-      if (stTemplate == null) return;
-
-      final STGroupModel groupModel = stMapper.groupModel;
-      final String facadeType = "nextgen.templates." + groupModel.getName()
-            .toLowerCase() + ".neo." + StringUtil.capitalize(groupModel) + "Neo";
-      final String facadeName = groupModel.getName().toLowerCase() + "Neo";
-
-      neoFacades.add("final " + facadeType + " " + facadeName + " = new " + facadeType + "(db);");
-
-      modelStatements.add(facadeName + ".find" + StringUtil.capitalize(stTemplate.getName()) + "Model(" + StringUtil.dq(stModel.getUuid()) + ");");
+   public Object render(STArgument stArgument, STParameterKey stParameterKey) {
+      final STArgumentKV found = stArgument.getKeyValues()
+            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
+            .findFirst()
+            .orElse(null);
+      return found == null ? null : render(found.getValue());
    }
 
-   public MethodCallExpression renderGeneratorCode(STModel stModel, Set<String> imports) {
+   public String render(STValue value) {
+      if (value == null) return null;
+
+      if (!value.hasType()) {
+         System.out.println("\tIllegal STValue " + value.toString());
+         String s = value.getValue();
+         return s == null ? render(value.getStModel()) : (s.trim().length() == 0 ? null : s.trim());
+      }
+
+      switch (value.getType()) {
+         case STMODEL:
+            return render(value.getStModel());
+         case PRIMITIVE:
+            final String s = value.getValue();
+            return s == null || s.trim().length() == 0 ? null : s.trim();
+         case ENUM:
+            final nextgen.model.STEnumValue enumValue = value.getStEnumValue();
+            if (enumValue == null) return null;
+            final String lexical = enumValue.getLexical();
+            return lexical == null || lexical.length() == 0 ? enumValue.getName() : lexical;
+      }
+      return null;
+   }
+
+   public MethodCallExpression renderGeneratorCode(STModel stModel) {
 
       if (stModel == null) return null;
 
-      final STMapper stMapper = findSTMapper(stModel.getStTemplate());
-      final STTemplate stTemplate = stMapper.find(stModel.getStTemplate());
+      final STTemplate stTemplate = stModel.getStTemplate();
       if (stTemplate == null) return null;
 
-      final AtomicReference<MethodCallExpression> expression = new AtomicReference<>(newMethodCallExpression()
-            .setScope(StringUtil.capitalize(stMapper.groupModel.getName()) + "ST")
-            .setName("new" + StringUtil.capitalize(stTemplate.getName())));
+      final nextgen.model.STGroupModel groupModel = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
 
-      final STGroupModel groupModel = stMapper.groupModel;
-      imports.add("nextgen.templates." + groupModel.getName().toLowerCase());
+      final AtomicReference<MethodCallExpression> expression = new AtomicReference<>(newMethodCallExpression()
+            .setScope(StringUtil.capitalize(groupModel.getName()) + "ST")
+            .setName("new" + StringUtil.capitalize(stTemplate.getName())));
 
       stTemplate.getParameters()
             .forEach(stParameter ->
@@ -108,7 +113,7 @@ public class STRenderer {
                            switch (stParameter.getType()) {
 
                               case SINGLE:
-                                 Object singleValue = renderGeneratorCode(stArgument.getValue(), imports);
+                                 Object singleValue = renderGeneratorCode(stArgument.getValue());
                                  if (singleValue == null) break;
 
                                  expression.set(newMethodCallExpression()
@@ -118,7 +123,7 @@ public class STRenderer {
                                  break;
 
                               case LIST:
-                                 Object listValue = renderGeneratorCode(stArgument.getValue(), imports);
+                                 Object listValue = renderGeneratorCode(stArgument.getValue());
                                  if (listValue == null) break;
 
                                  expression.set(newMethodCallExpression()
@@ -135,7 +140,7 @@ public class STRenderer {
 
                                  stParameter.getKeys()
                                        .forEach(stParameterKey -> {
-                                          Object value = renderGeneratorCode(stArgument, stParameterKey, imports);
+                                          Object value = renderGeneratorCode(stArgument, stParameterKey);
                                           methodCallExpression.addArguments(value == null ? "null" : value);
                                        });
 
@@ -147,55 +152,23 @@ public class STRenderer {
       return expression.get();
    }
 
-   public Object render(STArgument stArgument, STParameterKey stParameterKey) {
+   private Object renderGeneratorCode(STArgument stArgument, STParameterKey stParameterKey) {
       final STArgumentKV found = stArgument.getKeyValues()
             .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
             .findFirst()
             .orElse(null);
-      return found == null ? null : render(found.getValue());
+      return found == null ? null : renderGeneratorCode(found.getValue());
    }
 
-   public String render(STValue value) {
-      if (value == null) return null;
-
-      if (!value.hasType()) {
-         String s = value.getValue();
-         return s == null ? render(value.getStModel()) : (s.trim().length() == 0 ? null : s.trim());
-      }
-
-      switch (value.getType()) {
-         case STMODEL:
-            return render(value.getStModel());
-         case PRIMITIVE:
-            final String s = value.getValue();
-            return s == null || s.trim().length() == 0 ? null : s.trim();
-         case ENUM:
-            final nextgen.model.STEnumValue enumValue = value.getStEnumValue();
-            if (enumValue == null) return null;
-
-            final String lexical = enumValue.getLexical();
-            return lexical == null || lexical.length() == 0 ? enumValue.getName() : lexical;
-      }
-      return null;
-   }
-
-   public Object renderGeneratorCode(STArgument stArgument, STParameterKey stParameterKey, Set<String> imports) {
-      final STArgumentKV found = stArgument.getKeyValues()
-            .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
-            .findFirst()
-            .orElse(null);
-      return found == null ? null : renderGeneratorCode(found.getValue(), imports);
-   }
-
-   public Object renderGeneratorCode(STValue value, Set<String> imports) {
+   private Object renderGeneratorCode(STValue value) {
       if (value == null || value.getType() == null) return null;
 
       switch (value.getType()) {
          case STMODEL:
-            return renderGeneratorCode(value.getStModel(), imports);
+            return renderGeneratorCode(value.getStModel());
          case PRIMITIVE:
             final String s = value.getValue();
-            return s == null || s.trim().length() == 0 ? null : (s.equals("true") || s.equals("false") ? s : ("\"" + asJavaString(s.trim()) + "\""));
+            return s == null || s.trim().length() == 0 ? null : (s.equals("true") || s.equals("false") ? s : ("\"" + StringUtil.escape(s.trim()).replaceAll("\n", "\\\\n\" + \n\t\t\t\"") + "\""));
          case ENUM:
             final nextgen.model.STEnumValue enumValue = value.getStEnumValue();
             if (enumValue == null) return null;
@@ -208,59 +181,46 @@ public class STRenderer {
       return null;
    }
 
-   private String asJavaString(String s) {
-      return StringUtil.escape(s).replaceAll("\n", "\\\\n\" + \n\t\t\t\"");
-   }
+   private org.stringtemplate.v4.ST newInstanceOf(nextgen.model.STTemplate stTemplate) {
 
-   private STMapper findSTMapper(STTemplate stTemplate) {
-      for (STMapper mapper : mappers) {
-         final STTemplate found = mapper.find(stTemplate);
-         if (found != null) return mapper;
+      final nextgen.model.STGroupModel stGroupModel = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+
+      final STCache cache = cacheMap.get(stGroupModel);
+      if (cache != null && cache.isValid())
+         return cache.getInstanceOf(stTemplate);
+
+      if (cache == null) {
+         final nextgen.st.STRenderer.STCache stCache = new nextgen.st.STRenderer.STCache(stGroupModel);
+         cacheMap.put(stGroupModel, stCache);
+         return stCache.getInstanceOf(stTemplate);
       }
 
-      final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
-      final nextgen.st.STRenderer.STMapper mapper = new nextgen.st.STRenderer.STMapper(stGroup);
-      mappers.add(mapper);
-      return mapper;
+      return cache.refresh(stGroupModel).getInstanceOf(stTemplate);
    }
 
-   public STGroupModel findSTGroupModelByTemplate(STTemplate stTemplate) {
-      return Objects.requireNonNull(findSTMapper(stTemplate)).groupModel;
-   }
+   private static final class STCache {
 
-   private static final class STMapper {
-
-      private final STGroupModel groupModel;
-      private long lastUpdated = System.currentTimeMillis();
       private STGroup stGroup;
+      private long lastUpdated;
 
-      public STMapper(STGroupModel groupModel) {
-         this.groupModel = groupModel;
+      private STCache(nextgen.model.STGroupModel stGroupModel) {
+         this.stGroup = STGenerator.toSTGroup(stGroupModel);
+         this.lastUpdated = System.currentTimeMillis();
       }
 
-      public STTemplate find(STTemplate stTemplate) {
-         return find(stTemplate, groupModel.getTemplates().iterator());
-      }
-
-      private STTemplate find(STTemplate stTemplate, Iterator<STTemplate> iterator) {
-         while (iterator.hasNext()) {
-            final STTemplate next = iterator.next();
-            if (next.equals(stTemplate)) return next;
-            final STTemplate found = find(stTemplate, next.getChildren().iterator());
-            if (found != null) return found;
-         }
-         return null;
-      }
-
-      public ST newInstanceOf(STTemplate stTemplate) {
-
-         // simple timer-based cache
-         if (stGroup == null || (System.currentTimeMillis() - lastUpdated > 2000L)) {
-            stGroup = STGenerator.toSTGroup(groupModel);
-            lastUpdated = System.currentTimeMillis();
-         }
-
+      private org.stringtemplate.v4.ST getInstanceOf(nextgen.model.STTemplate stTemplate) {
+         this.lastUpdated = System.currentTimeMillis();
          return stGroup.getInstanceOf(stTemplate.getName());
+      }
+
+      public boolean isValid() {
+         return (System.currentTimeMillis() - lastUpdated < 2000L);
+      }
+
+      public nextgen.st.STRenderer.STCache refresh(nextgen.model.STGroupModel stGroupModel) {
+         this.stGroup = STGenerator.toSTGroup(stGroupModel);
+         this.lastUpdated = System.currentTimeMillis();
+         return this;
       }
    }
 }

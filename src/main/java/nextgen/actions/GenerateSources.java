@@ -14,8 +14,6 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final java.util.Set<String> imports = new java.util.LinkedHashSet<>();
-
       final String packageName = appModel().getSourceOutputPackage();
       final String className = "GenerateAll_" + stTemplate.getName();
       final String type = nextgen.utils.StringUtil.capitalize(stTemplate.getName());
@@ -33,7 +31,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
       for (nextgen.model.STModel stModel : stModels) {
          final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.java.JavaPatterns
-               .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel, imports));
+               .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel));
          blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
                .setExpression(variableDeclarationExpression));
       }
@@ -60,15 +58,8 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
                   .setType(returnType)
                   .setBlockStmt(blockStmt));
 
-      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration)
-            .setImportDeclaration(imports.stream()
-                  .map(s -> nextgen.templates.java.JavaPatterns.newImportDeclaration()
-                        .setName(s)
-                        .setIsAsterisk(true))
-                  .collect(java.util.stream.Collectors.toList()));
-
+      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration);
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
-
       nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
 

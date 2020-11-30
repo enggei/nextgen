@@ -131,13 +131,6 @@ public class STGenerator {
       }
    }
 
-   public void generateNeoGroup(STGroupModel stGroupModel, String packageName, String rootPath) {
-      final File root = new File(rootPath);
-      final String packageDeclaration = packageName + "." + stGroupModel.getName().toLowerCase();
-      final STNeoGenerator neoGenerator = new STNeoGenerator();
-      neoGenerator.generateSTGroup(stGroupModel, packageDeclaration + ".neo", root.getAbsolutePath());
-   }
-
    public ST generateSTEnum(String packageDeclaration, STEnum stEnum) {
 
       final ST stEnumDeclaration = generator.getInstanceOf("STEnum");
@@ -208,7 +201,7 @@ public class STGenerator {
          switch (stParameter.getType()) {
             case SINGLE:
 
-               stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), stParameter.getArgumentType("Object"));
+               stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), capitalize(stParameter.getArgumentType("Object")));
                final ST singleAccessors = generator.getInstanceOf("entitySingleAccessors");
                singleAccessors.add("entity", className);
                singleAccessors.add("name", stParameter.getName());
@@ -218,7 +211,7 @@ public class STGenerator {
 
             case LIST:
 
-               stEntity.addAggr("listFields.{name,type}", stParameter.getName(), stParameter.getArgumentType("Object"));
+               stEntity.addAggr("listFields.{name,type}", stParameter.getName(), capitalize(stParameter.getArgumentType("Object")));
                final ST listAccessors = generator.getInstanceOf("entityListAccessors");
                listAccessors.add("entity", className);
                listAccessors.add("name", stParameter.getName());
@@ -236,13 +229,12 @@ public class STGenerator {
                kvListAccessors.add("entity", className);
                kvListAccessors.add("name", stParameter.getName());
                stParameter.getKeys().forEach(stParameterKey -> {
-                  kvListAccessors.addAggr("keys.{name,type}", stParameterKey.getName(), stParameterKey.getArgumentType("Object"));
+                  kvListAccessors.addAggr("keys.{name,type}", stParameterKey.getName(), capitalize(stParameterKey.getArgumentType("Object")));
                   aggrSpec.add("keys", stParameterKey.getName());
                   aggrValues.add("values", stParameterKey.getName());
                });
 
-               stEntity.addAggr("kvListFields.{name, aggrSpec, aggrValues}", stParameter.getName(), aggrSpec.render(), aggrValues
-                     .render());
+               stEntity.addAggr("kvListFields.{name, aggrSpec, aggrValues}", stParameter.getName(), aggrSpec.render(), aggrValues.render());
                stEntity.add("kvListAccessors", kvListAccessors);
                break;
          }

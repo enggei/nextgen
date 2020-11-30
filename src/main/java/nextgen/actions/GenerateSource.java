@@ -12,14 +12,12 @@ public class GenerateSource extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final java.util.Set<String> imports = new java.util.LinkedHashSet<>();
-
       final String packageName = appModel().getSourceOutputPackage();
       final String templateName = stModel.getStTemplate().getName();
       final String className = nextgen.utils.STModelUtil.getSTModelName(stModel, templateName) + "Generator";
 
       final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.java.JavaPatterns.newBlockStmt()
-            .addStatements(nextgen.templates.java.JavaPatterns.newReturnStmt().setExpression(appModel().stRenderer.renderGeneratorCode(stModel, imports)));
+            .addStatements(nextgen.templates.java.JavaPatterns.newReturnStmt().setExpression(appModel().stRenderer.renderGeneratorCode(stModel)));
 
       final nextgen.templates.java.ClassOrInterfaceDeclaration classOrInterfaceDeclaration = nextgen.templates.java.JavaPatterns.newClassOrInterfaceDeclaration()
             .setName(className)
@@ -31,15 +29,8 @@ public class GenerateSource extends nextgen.actions.TransactionAction {
                   .setType(templateName)
                   .setBlockStmt(blockStmt));
 
-      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration)
-            .setImportDeclaration(imports.stream()
-                  .map(s -> nextgen.templates.java.JavaPatterns.newImportDeclaration()
-                        .setName(s)
-                        .setIsAsterisk(true))
-                  .collect(java.util.stream.Collectors.toList()));
-
+      final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration);
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
-
       nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
 

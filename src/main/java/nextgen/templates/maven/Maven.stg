@@ -10,7 +10,82 @@ MavenPatterns() ::= << >>
 
 Plugins() ::= << >>
 
-frontEndMavenPlugin(pluginVersion,installDirectory,nodeVersion) ::= <<<!-- https://github.com/eirslett/frontend-maven-plugin -->
+plugin(executions,configuration,version,artifactId,groupId) ::= <<<plugin>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>
+	<version>~version~</version>
+	<configuration>
+		~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
+	</configuration>
+	<executions>
+		~executions:{it|~it~};separator="\n"~
+	</executions>
+</plugin> >>
+
+copyPlugin(include,directory,outputDirectory) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->
+<plugin>
+	<artifactId>maven-resources-plugin</artifactId>
+	<version>3.2.0</version>
+	<executions>
+		<execution>
+			<id>copy-resources</id>
+			<phase>validate</phase>
+			<goals>
+				<goal>copy-resources</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>~outputDirectory~</outputDirectory>
+				<resources>			 
+					<resource>
+						<directory>~directory~</directory>
+						<includes>
+							~include:{it|<include>~it~</include>};separator="\n"~
+						</includes>
+					</resource>
+				</resources>				  
+			</configuration>				
+		</execution>
+	</executions>
+</plugin>  >>
+
+shadePlugin(className,packageName) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-shade-plugin</artifactId>
+	<version>2.4.3</version>
+	<executions>
+		<execution>
+			<phase>package</phase>
+			<goals>
+				<goal>shade</goal>
+			</goals>
+			<configuration>
+				<filters>
+					<filter>
+						<artifact>*:*</artifact>
+						<excludes>
+							<exclude>META-INF/*.SF</exclude>
+							<exclude>META-INF/*.DSA</exclude>
+							<exclude>META-INF/*.RSA</exclude>
+						</excludes>
+					</filter>
+				</filters>
+				<transformers>
+					<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+					<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+						<manifestEntries>
+							<Main-Class>~packageName~.~className~</Main-Class>
+						</manifestEntries>
+					</transformer>
+				</transformers>
+				<artifactSet/>
+				<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>  >>
+
+frontEndMavenPlugin(nodeVersion,pluginVersion,installDirectory) ::= <<<!-- https://github.com/eirslett/frontend-maven-plugin -->
 <plugin>
     <groupId>com.github.eirslett</groupId>
     <artifactId>frontend-maven-plugin</artifactId>
@@ -48,82 +123,7 @@ npmScript() ::= <<#!/bin/sh
 PATH="$PWD/target/node/":$PATH
 node "target/node/node_modules/npm/bin/npm-cli.js" "$@"  >>
 
-shadePlugin(packageName,className) ::= <<<!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->
-<plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-shade-plugin</artifactId>
-	<version>2.4.3</version>
-	<executions>
-		<execution>
-			<phase>package</phase>
-			<goals>
-				<goal>shade</goal>
-			</goals>
-			<configuration>
-				<filters>
-					<filter>
-						<artifact>*:*</artifact>
-						<excludes>
-							<exclude>META-INF/*.SF</exclude>
-							<exclude>META-INF/*.DSA</exclude>
-							<exclude>META-INF/*.RSA</exclude>
-						</excludes>
-					</filter>
-				</filters>
-				<transformers>
-					<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-					<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-						<manifestEntries>
-							<Main-Class>~packageName~.~className~</Main-Class>
-						</manifestEntries>
-					</transformer>
-				</transformers>
-				<artifactSet/>
-				<outputFile>target/${project.artifactId}-${project.version}-fat.jar</outputFile>
-			</configuration>
-		</execution>
-	</executions>
-</plugin>  >>
-
-plugin(groupId,artifactId,version,configuration,executions) ::= <<<plugin>
-	<groupId>~groupId~</groupId>
-	<artifactId>~artifactId~</artifactId>
-	<version>~version~</version>
-	<configuration>
-		~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator="\n"~
-	</configuration>
-	<executions>
-		~executions:{it|~it~};separator="\n"~
-	</executions>
-</plugin> >>
-
-copyPlugin(outputDirectory,directory,include) ::= <<<!-- https://maven.apache.org/plugins/maven-resources-plugin/ -->
-<plugin>
-	<artifactId>maven-resources-plugin</artifactId>
-	<version>3.2.0</version>
-	<executions>
-		<execution>
-			<id>copy-resources</id>
-			<phase>validate</phase>
-			<goals>
-				<goal>copy-resources</goal>
-			</goals>
-			<configuration>
-				<outputDirectory>~outputDirectory~</outputDirectory>
-				<resources>			 
-					<resource>
-						<directory>~directory~</directory>
-						<includes>
-							~include:{it|<include>~it~</include>};separator="\n"~
-						</includes>
-					</resource>
-				</resources>				  
-			</configuration>				
-		</execution>
-	</executions>
-</plugin>  >>
-
-antlr4(version,sourceDirectory,grammars,includes,arguments,outputDirectory,visitor,listener,goal) ::= <<<plugin>
+antlr4(goal,version,sourceDirectory,grammars,includes,arguments,outputDirectory,visitor,listener) ::= <<<plugin>
 	<groupId>org.antlr</groupId>
 	<artifactId>antlr4-maven-plugin</artifactId>
 	<version>~if(version)~~version~~else~4.8-1~endif~</version>
@@ -166,7 +166,7 @@ antlr4Simple() ::= <<<plugin>
 	</executions>
 </plugin>  >>
 
-pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,dependencyManagement,dependencies,distributionManagement,repositories) ::= <<<?xml version="1.0" encoding="UTF-8"?>
+pom(repositories,distributionManagement,dependencies,dependencyManagement,build,properties,modules,packaging,version,artifactId,groupId,name,parent) ::= <<<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 ~if(parent)~
 
@@ -220,6 +220,41 @@ pom(parent,name,groupId,artifactId,version,packaging,modules,properties,build,de
 ~endif~
 </project>  >>
 
+dependencyGroup(version,artifacts,name,groupId) ::= <<~name~
+~groupId~
+~version~
+~artifacts:{it|~it~};separator="\n"~  >>
+
+dependency(systemPath,scope,type,classifier,groupId,version,artifactId) ::= <<<dependency>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>~if(version)~
+	<version>~version~</version>~endif~~if(scope)~
+	<scope>~scope~</scope>~endif~~if(systemPath)~
+	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
+	<classifier>~classifier~</classifier>~endif~~if(type)~
+	<type>~type~</type>~endif~
+	
+</dependency>  >>
+
+repository(name,url,id) ::= <<<repository>
+	<id>~id~</id>
+	<name>~name~</name>
+	<url>~url~</url>
+</repository> >>
+
+execution() ::= <<<execution>
+    <phase>package</phase>
+    <goals>
+        <goal>shade</goal>
+    </goals>
+</execution>  >>
+
+parent(version,artifactId,groupId) ::= <<<parent>
+	<artifactId>~artifactId~</artifactId>
+	<groupId>~groupId~</groupId>
+	<version>~version~</version>
+</parent>  >>
+
 build(testResources,plugin) ::= <<<build>
 ~if(testResources)~
 	<testResources>
@@ -233,54 +268,19 @@ build(testResources,plugin) ::= <<<build>
 	</plugins>
 </build>  >>
 
-parent(artifactId,groupId,version) ::= <<<parent>
-	<artifactId>~artifactId~</artifactId>
-	<groupId>~groupId~</groupId>
-	<version>~version~</version>
-</parent>  >>
-
 Properties(name,value) ::= <<<~name~>~value~</~name~>  >>
+
+ProjectBuildSourceEncoding(value) ::= <<<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding>  >>
 
 MavenCompilerSource(value) ::= <<<maven.compiler.source>~value~</maven.compiler.source>  >>
 
-ProjectBuildSourceEncoding(value) ::= <<<project.build.sourceEncoding>~if(value)~~value~~else~UTF-8~endif~</project.build.sourceEncoding>  >>
+propertyReference(name) ::= <<${~name~} >>
 
 MavenCompilerTarget(value) ::= <<<maven.compiler.target>~value~</maven.compiler.target>  >>
 
 ProjectReportingOutputEncoding(value) ::= <<<project.reporting.outputEncoding>~if(value)~~value~~else~UTF-8~endif~</project.reporting.outputEncoding>  >>
 
-propertyReference(name) ::= <<${~name~} >>
-
-dependency(groupId,artifactId,version,scope,systemPath,classifier,type) ::= <<<dependency>
-	<groupId>~groupId~</groupId>
-	<artifactId>~artifactId~</artifactId>~if(version)~
-	<version>~version~</version>~endif~~if(scope)~
-	<scope>~scope~</scope>~endif~~if(systemPath)~
-	<systemPath>~systemPath~</systemPath>~endif~~if(classifier)~
-	<classifier>~classifier~</classifier>~endif~~if(type)~
-	<type>~type~</type>~endif~
-	
-</dependency>  >>
-
-repository(id,name,url) ::= <<<repository>
-	<id>~id~</id>
-	<name>~name~</name>
-	<url>~url~</url>
-</repository> >>
-
-execution() ::= <<<execution>
-    <phase>package</phase>
-    <goals>
-        <goal>shade</goal>
-    </goals>
-</execution>  >>
-
-dependencyGroup(name,groupId,version,artifacts) ::= <<~name~
-~groupId~
-~version~
-~artifacts:{it|~it~};separator="\n"~  >>
-
-Project(packageName,templates,imports,name,root,fields,files,packageDeclarations,entities,generators,methods) ::= <<package ~packageName~;
+Project(packageName,files,entities,packageDeclarations,methods,generators,imports,templates,root,name,fields) ::= <<package ~packageName~;
 
 import nextgen.st.STGenerator;
 import static nextgen.utils.StringUtil.*;
@@ -315,7 +315,7 @@ public class ~name~ {
 	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-ProjectGenerator(name,description,statements) ::= <</**
+ProjectGenerator(statements,description,name) ::= <</**
  * ~name~
  * ~description~
  */
@@ -324,7 +324,7 @@ public void ~name~() {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-ProjectPackage(name,parentPackage,packageName,childPackages) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.java.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
+ProjectPackage(childPackages,packageName,parentPackage,name) ::= <<protected final nextgen.templates.java.PackageDeclaration ~name~ = nextgen.templates.JavaPatterns.newPackageDeclaration(~if(parentPackage)~~parentPackage~, ~endif~"~packageName~");
 ~childPackages:{it|~it~};separator="\n"~  >>
 
 eom() ::= "}"
