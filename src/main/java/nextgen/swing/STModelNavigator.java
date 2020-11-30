@@ -892,6 +892,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.WriteSTFile(getModel()));
 				actions.add(new nextgen.actions.DeleteSTFile(getModel(), tree));
 			});
 
