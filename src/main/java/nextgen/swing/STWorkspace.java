@@ -131,10 +131,10 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STModelCanvas getCanvas() {
-		return (STModelCanvas) find(component -> component instanceof STModelCanvas)
+	public STCanvas getCanvas() {
+		return (STCanvas) find(component -> component instanceof STCanvas)
 				.orElseGet(() -> {
-					final STModelCanvas component = new STModelCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600));
+					final STCanvas component = new STCanvas(UIManager.getColor("Panel.background"), new Dimension(800, 600));
 					addPane("Canvas", component);
 					return component;
 				});
@@ -143,7 +143,7 @@ public class STWorkspace extends JTabbedPane {
 	public void removeCanvas() {
 	   for (int i = 0; i < getTabCount(); i++) {
 	      final Component tabComponentAt = getComponentAt(i);
-	      if (tabComponentAt instanceof STModelCanvas) {
+	      if (tabComponentAt instanceof STCanvas) {
 	      	int componentIndex = i;
 				SwingUtilities.invokeLater(() -> remove(componentIndex));
 			}

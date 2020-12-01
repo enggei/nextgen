@@ -44,7 +44,7 @@ public class STGenerator {
       return asST(newTemplateGroup(), stTemplate);
    }
 
-   public static ST asST(nextgen.st.parser.ParsedSTTemplate stTemplate) {
+   public static ST asST(nextgen.model.parser.ParsedSTTemplate stTemplate) {
       return asST(newTemplateGroup(), stTemplate);
    }
 
@@ -294,7 +294,7 @@ public class STGenerator {
       return stTemplate;
    }
 
-   public static ST asST(STGroup templateGroup, nextgen.st.parser.ParsedSTTemplate stModel) {
+   public static ST asST(STGroup templateGroup, nextgen.model.parser.ParsedSTTemplate stModel) {
       final ST stTemplate = templateGroup.getInstanceOf("STTemplate");
       stTemplate.add("name", stModel.getName());
       stTemplate.add("content", stModel.getText());

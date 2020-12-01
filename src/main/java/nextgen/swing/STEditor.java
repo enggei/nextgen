@@ -183,7 +183,7 @@ public class STEditor extends AbstractEditor {
          txtEditor.setBorder(defaultBorder);
 
          final String text = txtEditor.getText().trim();
-         final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parseTemplate(text);
+         final nextgen.model.parser.ParseResult parseResult = nextgen.st.STParser.parseTemplate(text);
          if (parseResult.getErrors().isEmpty()) {
             nextgen.st.STParser.mergeTemplate(parseResult.getParsed().getTemplates().stream().findFirst().get(), stTemplate);
             startText = text.trim();
@@ -410,7 +410,7 @@ public class STEditor extends AbstractEditor {
          });
       }
 
-      public void showParseErrors(java.util.List<nextgen.st.parser.ParserError> errors) {
+      public void showParseErrors(java.util.List<nextgen.model.parser.ParserError> errors) {
 
          final StringBuilder info = new StringBuilder("Parsing errors:");
 

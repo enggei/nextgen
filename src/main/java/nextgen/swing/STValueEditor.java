@@ -90,7 +90,13 @@ public class STValueEditor extends AbstractEditor {
       appModel().doInTransaction(transaction -> {
          if (!stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE)) return;
          stValue.setValue(txtEditor.getText().trim());
+
          nextgen.events.STValueChanged.post(stValue);
+
+         stValue.getIncomingValueSTArgument().findFirst().ifPresent(stArgument -> stArgument.getIncomingArgumentsSTModel().findAny().ifPresent(stModel -> {
+            final nextgen.model.STParameter stParameter = stArgument.getStParameter();
+            if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
+         }));
       });
    }
 

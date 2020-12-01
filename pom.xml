@@ -21,7 +21,9 @@
 		<slf4j.version>1.7.2</slf4j.version>
 		<junit.version>4.13.1</junit.version>
 		<piccolo2d.version>3.0</piccolo2d.version>
-		<jgoodies.version>1.9.0</jgoodies.version>		
+		<jgoodies.version>1.9.0</jgoodies.version>
+		<easyFlow.version>0.2</easyFlow.version>
+		<greenrobot.version>3.2.0</greenrobot.version>		
 	</properties>
 
 	<build>
@@ -44,7 +46,7 @@
 		<dependency>
 			<groupId>org.greenrobot</groupId>
 			<artifactId>eventbus</artifactId>
-			<version>3.2.0</version>
+			<version>${greenrobot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.neo4j</groupId>
@@ -79,7 +81,7 @@
 		<dependency>
 			<groupId>org.jeasy</groupId>
 			<artifactId>easy-flows</artifactId>
-			<version>0.2</version>
+			<version>${easyFlow.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

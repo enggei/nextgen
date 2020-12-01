@@ -1,4 +1,4 @@
-package nextgen.st.parser;
+package nextgen.model.parser;
 
 public enum ParserErrorType {
 

@@ -9,7 +9,7 @@ public class Html5Importer extends BaseImporter {
 //    public Html5Importer() throws IOException {
 //
 //        final File oldSTGFile = new File("/home/goe/projects/nextgen/components/core/src/main/java/com/generator/generators/html5/Html5Group.stg");
-//        final nextgen.st.parser.ParseResult parseResult = STParser.parse(oldSTGFile);
+//        final nextgen.model.parser.ParseResult parseResult = STParser.parse(oldSTGFile);
 //
 //        parseResult.getErrors().forEach(System.out::println);
 //        if (!parseResult.getErrors().isEmpty()) return;
@@ -20,7 +20,7 @@ public class Html5Importer extends BaseImporter {
 //                ? new STGroupModel(stGroupFile)
 //                : new STGroupModel().setName(groupName).setDelimiter("~");
 //
-//        final nextgen.st.parser.ParsedSTGroupModel parsed = parseResult.getParsed();
+//        final nextgen.model.parser.ParsedSTGroupModel parsed = parseResult.getParsed();
 //        parsed.getTemplates().forEach(oldTemplate -> {
 //            System.out.println(oldTemplate.getName());
 //

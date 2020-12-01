@@ -14,7 +14,7 @@ public class GenerateSTGroup extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(nextgen.st.STGenerator.toSTGroup(stGroup));
+      final nextgen.model.parser.ParseResult parseResult = nextgen.st.STParser.parse(nextgen.st.STGenerator.toSTGroup(stGroup));
 
       if (parseResult.getErrors().isEmpty()) {
          final nextgen.st.STGenerator stGenerator = new nextgen.st.STGenerator(appModel().getGeneratorSTGroup());

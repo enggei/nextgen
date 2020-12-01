@@ -214,6 +214,12 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorSTGroupTreeNodeClicked(nextgen.events.ModelNavigatorSTGroupTreeNodeClicked event) {
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+				.ifPresent(treeModel::select);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroupFile(nextgen.events.NewSTGroupFile event) {
 		findSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.stGroupModel))
 				.ifPresent(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
@@ -680,6 +686,7 @@ public class STTemplateNavigator extends JPanel {
 				});
 				actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), workspace));
 				actions.add(new nextgen.actions.GetSTTemplateUUID(getModel()));
+				actions.add(new nextgen.actions.CopyTemplate(getModel()));
 			});
 
 			return actions;

@@ -15,7 +15,7 @@ public class GenerateSTGroupFromFile extends nextgen.actions.TransactionAction {
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
       stGroupFile.getIncomingFilesSTGroupModel().findFirst().ifPresent(stGroupModel -> {
-      	final nextgen.st.parser.ParseResult parseResult = nextgen.st.STParser.parse(nextgen.st.STGenerator.toSTGroup(stGroupModel));
+      	final nextgen.model.parser.ParseResult parseResult = nextgen.st.STParser.parse(nextgen.st.STGenerator.toSTGroup(stGroupModel));
 
       	if (parseResult.getErrors().isEmpty()) {
       		final String packageName = stGroupFile.getPackageName().getValue();
