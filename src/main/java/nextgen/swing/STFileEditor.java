@@ -24,7 +24,7 @@ public class STFileEditor extends AbstractEditor {
       txtName.addKeyListener(editorKeyListener);
       txtPackage.addKeyListener(editorKeyListener);
       txtType.addKeyListener(editorKeyListener);
-      txtPackage.addKeyListener(editorKeyListener);
+      txtPath.addKeyListener(editorKeyListener);
 
       final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(4, 2));
       inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));

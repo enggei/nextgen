@@ -1335,6 +1335,10 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	private nextgen.swing.STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+
 	final class STProjectNode extends BaseCanvasNode<nextgen.model.STProject> {
 
 
@@ -1346,10 +1350,17 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 			super.onNodeRightClick(event, pop);
 		}
 
+		@Override
+		protected void onNodeLeftClick(PInputEvent event) {
+			super.onNodeLeftClick(event);
+			nextgen.events.CanvasSTProjectNodeClicked.post(getModel());
+		}
+
+
 
 	}
 
-	private void addSTProjectNode(nextgen.model.STProject model) {
+	public void addSTProjectNode(nextgen.model.STProject model) {
 		addNode(model.getUuid(), newSTProjectNode(model));
 	}
 
@@ -1372,6 +1383,52 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 	public Optional<STProjectNode> isInstanceOfSTProjectNode(BaseCanvasNode<?> canvasNode) {
 		return Optional.ofNullable((canvasNode instanceof STProjectNode) ? (STProjectNode) canvasNode : null);
+	}
+
+	final class STModelNode extends BaseCanvasNode<nextgen.model.STModel> {
+
+
+		public STModelNode(nextgen.model.STModel model) {
+			super(model, model.getUuid(), appModel().render(model));
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+		@Override
+		protected void onNodeLeftClick(PInputEvent event) {
+			super.onNodeLeftClick(event);
+			appModel().doInTransaction(transaction -> nextgen.events.CanvasSTModelNodeClicked.post(getModel()));
+		}
+
+
+
+	}
+
+	public void addSTModelNode(nextgen.model.STModel model) {
+		addNode(model.getUuid(), newSTModelNode(model));
+	}
+
+	public java.util.function.Supplier<STModelNode> newSTModelNode(nextgen.model.STModel model) {
+		return () -> new STModelNode(model);
+	}
+
+	public Stream<STModelNode> getAllSTModelNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+					.map(baseCanvasNode -> (STModelNode) baseCanvasNode);
+	}
+
+	public void forEachSTModelNode(java.util.function.Consumer<STModelNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STModelNode)
+				.map(baseCanvasNode -> (STModelNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STModelNode> isInstanceOfSTModelNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STModelNode) ? (STModelNode) canvasNode : null);
 	}
 
 }

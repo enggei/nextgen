@@ -5,10 +5,10 @@ public class ConditionalFlow {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
 	private Object _execute;
-	private Object _then;
+	private Object _name;
 	private Object _otherwise;
+	private Object _then;
 
 	ConditionalFlow(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,34 +21,12 @@ public class ConditionalFlow {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ConditionalFlow");
-		st.add("name", _name);
 		st.add("execute", _execute);
-		st.add("then", _then);
+		st.add("name", _name);
 		st.add("otherwise", _otherwise);
+		st.add("then", _then);
 		return st.render().trim();
 	}
-
-	public ConditionalFlow setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public ConditionalFlow removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public ConditionalFlow setExecute(Object value) {
 		this._execute = value;
@@ -72,25 +50,25 @@ public class ConditionalFlow {
 		return this;
 	} 
 
-	public ConditionalFlow setThen(Object value) {
-		this._then = value;
+	public ConditionalFlow setName(Object value) {
+		this._name = value;
 		return this;
 	}
 
-	public Object getThen() {
-		return this._then;
+	public Object getName() {
+		return this._name;
 	}
 
-	public Object getThen(Object defaultValue) {
-		return this._then == null ? defaultValue : this._then;
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
 	}
 
-	public boolean hasThen() {
-		return this._then != null;
+	public boolean hasName() {
+		return this._name != null;
 	}
 
-	public ConditionalFlow removeThen() {
-		this._then = null;
+	public ConditionalFlow removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -116,6 +94,28 @@ public class ConditionalFlow {
 		return this;
 	} 
 
+	public ConditionalFlow setThen(Object value) {
+		this._then = value;
+		return this;
+	}
+
+	public Object getThen() {
+		return this._then;
+	}
+
+	public Object getThen(Object defaultValue) {
+		return this._then == null ? defaultValue : this._then;
+	}
+
+	public boolean hasThen() {
+		return this._then != null;
+	}
+
+	public ConditionalFlow removeThen() {
+		this._then = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -131,7 +131,7 @@ public class ConditionalFlow {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ConditionalFlow(name,execute,then,otherwise) ::= <<ConditionalFlow.Builder.aNewConditionalFlow()\n" + 
+	static final String st = "ConditionalFlow(execute,name,otherwise,then) ::= <<ConditionalFlow.Builder.aNewConditionalFlow()\n" + 
 				"		.named(\"~name~\")\n" + 
 				"		.execute(~execute~)\n" + 
 				"		.when(WorkReportPredicate.COMPLETED)\n" + 

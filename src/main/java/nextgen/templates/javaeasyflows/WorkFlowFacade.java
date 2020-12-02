@@ -166,23 +166,23 @@ public class WorkFlowFacade {
 				"		return f.build();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkInstance newWorkInstance(nextgen.workflow.Work work) {\n" + 
+				"	public WorkInstance newWorkInstance(nextgen.model.workflow.Work work) {\n" + 
 				"		return newWorkInstance().setType(WorkType.WORK).setWork(work);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkInstance newWorkInstance(nextgen.workflow.SequentialFlow work) {\n" + 
+				"	public WorkInstance newWorkInstance(nextgen.model.workflow.SequentialFlow work) {\n" + 
 				"		return newWorkInstance().setType(WorkType.SEQUENTIAL).setSequential(work);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkInstance newWorkInstance(nextgen.workflow.ParallelFlow work) {\n" + 
+				"	public WorkInstance newWorkInstance(nextgen.model.workflow.ParallelFlow work) {\n" + 
 				"		return newWorkInstance().setType(WorkType.PARALLEL).setParallel(work);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkInstance newWorkInstance(nextgen.workflow.ConditionalFlow work) {\n" + 
+				"	public WorkInstance newWorkInstance(nextgen.model.workflow.ConditionalFlow work) {\n" + 
 				"		return newWorkInstance().setType(WorkType.CONDITIONAL).setConditional(work);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public WorkInstance newWorkInstance(nextgen.workflow.RepeatFlow work) {\n" + 
+				"	public WorkInstance newWorkInstance(nextgen.model.workflow.RepeatFlow work) {\n" + 
 				"		return newWorkInstance().setType(WorkType.REPEAT).setRepeat(work);\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -213,7 +213,7 @@ public class WorkFlowFacade {
 				"	}\n" + 
 				"\n" + 
 				"	private nextgen.templates.javaeasyflows.Work toCode(Work work) {\n" + 
-				"		final nextgen.templates.javaeasyflows.Work w = nextgen.templates.JavaEasyFlowsPatterns.newWork();\n" + 
+				"		final nextgen.templates.javaeasyflows.Work w = nextgen.templates.javaeasyflows.JavaEasyFlowsPatterns.newWork();\n" + 
 				"		w.setName(work.getName());\n" + 
 				"		w.setPackageName(work.getPackage());\n" + 
 				"		work.getInputs().forEach(workInput -> w.addInputs(workInput.getType(), workInput.getName()));\n" + 

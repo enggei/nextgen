@@ -26,7 +26,7 @@ public class Work {
 		st.add("name", _name);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _statements) st.add("statements", o);
-		for (java.util.Map<String, Object> map : _inputs) st.addAggr("inputs.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _inputs) st.addAggr("inputs.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -132,10 +132,10 @@ public class Work {
 		return this._statements;
 	} 
 
-	public Work addInputs(Object _type, Object _name) {
+	public Work addInputs(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		this._inputs.add(map);
 		return this;
 	}
@@ -145,44 +145,44 @@ public class Work {
 	}
 
 	public Work addInputs(Work_Inputs value) {
-		return addInputs(value._type, value._name);
+		return addInputs(value._name, value._type);
 	}
 
 	public java.util.stream.Stream<Work_Inputs> streamInputs() {
 		return this._inputs.stream().map(Work_Inputs::new);
 	}
 
-	public java.util.List<Object> getInputs_Type() {
-		return streamInputs().map(Work_Inputs::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getInputs_Name() {
 		return streamInputs().map(Work_Inputs::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getInputs_Type() {
+		return streamInputs().map(Work_Inputs::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Work_Inputs {
 
-		Object _type;
 		Object _name;
+		Object _type;
 
-		public Work_Inputs(Object _type, Object _name) {
-			this._type = _type;
+		public Work_Inputs(Object _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
 		private Work_Inputs(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -200,7 +200,7 @@ public class Work {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Work(packageName,imports,name,inputs,statements) ::= <<package ~packageName~;\n" + 
+	static final String st = "Work(imports,packageName,inputs,name,statements) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.jeasy.flows.work.*;\n" + 
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 

@@ -269,6 +269,11 @@ public class STModelNavigator extends JPanel {
 		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
 	}
 
+	@org.greenrobot.eventbus.Subscribe()
+	public void onCanvasSTModelNodeClicked(nextgen.events.CanvasSTModelNodeClicked event) {
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.stModel)).ifPresent(treeModel::select);
+	}
+
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
 
 		protected String label;
@@ -550,6 +555,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), workspace));
 				actions.add(new nextgen.actions.AddMultipleValuesToProject(getModel(), workspace));
 				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));
+				actions.add(new nextgen.actions.ShowSTProjectInCanvas(getModel()));
 			});
 
 			return actions;
@@ -830,6 +836,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.GenerateSource(getModel()));
 				actions.add(new nextgen.actions.DeleteSTModel(getModel(), workspace));
+				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));
 			});
 
 			return actions;
@@ -1078,6 +1085,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.GenerateSource(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, workspace));
+				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));
 			});
 
 			return actions;
@@ -1445,6 +1453,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteKV(parent.getModel(), workspace)));
+				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));
 			});
 
 			return actions;

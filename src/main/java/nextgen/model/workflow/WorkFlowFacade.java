@@ -1,54 +1,4 @@
-delimiters "~","~"
-
-ConditionalFlow(execute,name,otherwise,then) ::= <<ConditionalFlow.Builder.aNewConditionalFlow()
-		.named("~name~")
-		.execute(~execute~)
-		.when(WorkReportPredicate.COMPLETED)
-		.then(~then~)
-		.otherwise(~otherwise~)
-		.build()  >>
-
-ParallelFlow(name,execute) ::= <<ParallelFlow.Builder.aNewParallelFlow(executorService)
-		.named("~name~")
-		.execute(~execute:{it|~it~};separator=", "~)
-		.build()  >>
-
-RepeatFlow(name,repeat,times,until) ::= <<RepeatFlow.Builder.aNewRepeatFlow()
-		.named("~name~")
-		.repeat(~repeat~)~if(times)~
-		.times(~times~)~endif~~if(until)~
-		.until(~until~)~endif~
-		.build()  >>
-
-SequentialFlow(name,execute,then) ::= <<SequentialFlow.Builder.aNewSequentialFlow()
-		.named("~name~")
-		.execute(~execute~)~then:{it|
-		.then(~it~)}~
-		.build()  >>
-
-Work(imports,packageName,inputs,name,statements) ::= <<package ~packageName~;
-
-import org.jeasy.flows.work.*;
-~imports:{it|~it~};separator="\n"~
-
-public class ~name~ implements Work {
-
-	@Override
-	public String getName() {
-		return "~name~";
-	}
-
-	@Override
-	public WorkReport call(WorkContext context) {
-		~inputs:{it|final ~it.type~ ~it.name~ = (~it.type~) context.get("~it.name~");};separator="\n"~
-
-		~statements:{it|~it~};separator="\n"~
-		
-		return new DefaultWorkReport(WorkStatus.COMPLETED, context);
-	}
-}  >>
-
-WorkFlowFacade(packageName,name) ::= <<package ~packageName~;
+package nextgen.model.workflow;
 
 import net.openhft.compiler.CompilerUtils;
 import org.jeasy.flows.work.WorkReportPredicate;
@@ -58,16 +8,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ~name~ extends WorkFlowNeoFactory {
+public class WorkFlowFacade extends WorkFlowNeoFactory {
 
-	public ~name~(String dir) {
+	public WorkFlowFacade(String dir) {
 		super(dir);
 	}
 
 	public WorkFlowFacade(org.neo4j.graphdb.GraphDatabaseService db) {
 		super(db);
 	}
-	
+
 	public org.jeasy.flows.work.Work newInstance(Work work) {
 		return newInstance(toCode(work));
 	}
@@ -209,8 +159,4 @@ public class ~name~ extends WorkFlowNeoFactory {
             .build()
             .run(workflow, workContext);
    }
-}  >>
-
-eom() ::= "}"
-
-gt() ::= ">"
+}

@@ -215,8 +215,13 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTGroupTreeNodeClicked(nextgen.events.ModelNavigatorSTGroupTreeNodeClicked event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-				.ifPresent(treeModel::select);
+		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).ifPresent(treeModel::select);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onCanvasSTModelNodeClicked(nextgen.events.CanvasSTModelNodeClicked event) {
+		final nextgen.model.STTemplate stTemplate = event.stModel.getStTemplate();
+		findSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(stTemplate)).ifPresent(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()

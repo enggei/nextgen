@@ -69,27 +69,37 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTGroupTreeNodeClicked(nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked event) {
-		getSTEditor(event.stGroup).clear();
+		getSTTemplateEditor(event.stGroup).clear();
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTTemplateTreeNodeClicked(nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked event) {
-		getSTEditor(event.stGroup).setSTTemplate(event.stTemplate);
+		getSTTemplateEditor(event.stGroup).setSTTemplate(event.stTemplate);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTEnumTreeNodeClicked(nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked event) {
-		getSTEditor(event.stGroup).setSTEnum(event.stEnum);
+		getSTTemplateEditor(event.stGroup).setSTEnum(event.stEnum);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTInterfaceTreeNodeClicked(nextgen.events.TemplateNavigatorSTInterfaceTreeNodeClicked event) {
-		getSTEditor(event.stGroup).setSTInterface(event.stInterface);
+		getSTTemplateEditor(event.stGroup).setSTInterface(event.stInterface);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
 		removeModelEditor(event.uuid);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onShowSTModelInCanvas(nextgen.events.ShowSTModelInCanvas event) {
+		getCanvas().addSTModelNode(event.stModel);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onShowSTProjectInCanvas(nextgen.events.ShowSTProjectInCanvas event) {
+		getCanvas().addSTProjectNode(event.stProject);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -175,25 +185,25 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STEditor getSTEditor(nextgen.model.STGroupModel model) {
+	public STTemplateEditor getSTTemplateEditor(nextgen.model.STGroupModel model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof STEditor && (((STEditor) tabComponentAt).getModel().equals(model))) {
-				final STEditor component = (STEditor) tabComponentAt;
+			if (tabComponentAt instanceof STTemplateEditor && (((STTemplateEditor) tabComponentAt).getModel().equals(model))) {
+				final STTemplateEditor component = (STTemplateEditor) tabComponentAt;
 				setSelectedComponent(component);
 				return component;
 			}
 		}
 
-		final STEditor component = new STEditor(model);
+		final STTemplateEditor component = new STTemplateEditor(model);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;
 	}
 
-	public void removeSTEditor(String uuid) {
+	public void removeSTTemplateEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof STEditor && (((STEditor) getComponentAt(i)).getUuid().equals(uuid))) {
+		   if (getComponentAt(i) instanceof STTemplateEditor && (((STTemplateEditor) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }
