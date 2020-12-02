@@ -30,3 +30,4 @@ logs
 db_template
 db_domain
 db
+/target/
