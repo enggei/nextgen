@@ -52,8 +52,6 @@ public class STTemplateEditor extends AbstractEditor {
       pop.add(newAction("Save", actionEvent -> commit()));
       pop.add(newAction("Generate", actionEvent -> generate()));
       pop.add(newAction("Debug Template", actionEvent -> debug()));
-      pop.addSeparator();
-      pop.add(newAction("Add Java method", actionEvent -> addJavaMethod()));
 
       this.txtEditor.setTabSize(3);
       this.txtEditor.setCodeFoldingEnabled(true);
@@ -198,6 +196,7 @@ public class STTemplateEditor extends AbstractEditor {
    }
 
    private void debug() {
+      if (stTemplate == null) return;
       SwingUtilities.invokeLater(() -> nextgen.st.STParser.asST(txtEditor.getText().trim()).inspect());
    }
 
@@ -326,18 +325,6 @@ public class STTemplateEditor extends AbstractEditor {
          txtEditor.setCaretPosition(selectionStart);
          txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
       }
-   }
-
-   private void addJavaMethod() {
-      if (stTemplate == null) return;
-      SwingUtilities.invokeLater(() -> {
-         removeSelectedTextIfAny();
-         final int caretPosition = txtEditor.getCaretPosition();
-         final String str = "\tpublic void " + stGroupModel.getDelimiter() + "name;format=\"capitalize\"" + stGroupModel.getDelimiter() + "() {\n\t}";
-         txtEditor.insert(str, caretPosition);
-         txtEditor.setCaretPosition(caretPosition + str.length() - 1);
-         txtEditor.setBackground(startText.trim().equals(txtEditor.getText().trim()) ? uneditedColor : editedColor);
-      });
    }
 
    private class STEditorCommandPanel extends JPanel {

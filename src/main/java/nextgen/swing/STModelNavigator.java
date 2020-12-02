@@ -495,7 +495,7 @@ public class STModelNavigator extends JPanel {
 
 			final Map<nextgen.model.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
 			final Map<nextgen.model.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
-			model.getModelsSorted().forEach(stModel -> {
+			model.getModels().sorted((m1, m2) -> appModel().getLabel(m1, () -> m1.getStTemplate().getName()).compareToIgnoreCase(appModel().getLabel(m2, () -> m2.getStTemplate().getName()))).forEach(stModel -> {
 
 				final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
 				final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
@@ -599,11 +599,11 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(transaction -> appModel().db.findAllSTGroupModel()
 					.sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()))
-			      .forEach(stGroupModel -> {
-			         final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroupModel);
-			         add(stGroupModelTreeNode);
-			         stGroupModel.getTemplates().forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
-			      }));
+					.forEach(stGroupModel -> {
+						final nextgen.swing.STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new nextgen.swing.STModelNavigator.STGroupModelTreeNode(stGroupModel);
+						add(stGroupModelTreeNode);
+						stGroupModel.getTemplates().sorted((t1,t2) -> t1.getName().compareToIgnoreCase(t2.getName())).forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
+					}));
 		}
 
 		ModelsTreeNode thisNode() {
