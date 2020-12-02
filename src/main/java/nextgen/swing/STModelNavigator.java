@@ -551,7 +551,7 @@ public class STModelNavigator extends JPanel {
 
 				for (nextgen.model.STValue selected : selectedSTValues) 
 					actions.add(new nextgen.actions.AddValueToProject(getModel(), selected));
-				actions.add(new nextgen.actions.ChangeRootOnAllModels(getModel(), workspace));
+				actions.add(new nextgen.actions.SetSTProjectRoot(getModel(), workspace));
 				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), workspace));
 				actions.add(new nextgen.actions.AddMultipleValuesToProject(getModel(), workspace));
 				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));

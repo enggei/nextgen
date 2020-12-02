@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 public class STWorkspace extends JTabbedPane {
 
+	private final java.util.Map<java.awt.Component, nextgen.swing.STWorkspace.ButtonTabComponent> tabComponents = new java.util.LinkedHashMap<>();
 	private STTemplateNavigator templateNavigator;
 	private STModelNavigator modelNavigator;
 
@@ -107,6 +108,15 @@ public class STWorkspace extends JTabbedPane {
 		final nextgen.swing.STValueEditor stValueEditor = getSTValueEditor();
 		stValueEditor.setSTValue(event.stValue);
 		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelChanged(nextgen.events.STModelChanged event) {
+		find(tabComponentAt -> tabComponentAt instanceof nextgen.swing.STModelEditor && (((nextgen.swing.STModelEditor) tabComponentAt).getModel().equals(event.model)))
+		      .ifPresent(component -> {
+		         final nextgen.swing.STWorkspace.ButtonTabComponent buttonTabComponent = tabComponents.get(component);
+		         if (buttonTabComponent != null) buttonTabComponent.setTitle(appModel().getLabel(event.model));
+		      });
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -386,16 +396,20 @@ public class STWorkspace extends JTabbedPane {
 
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
-		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
+		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);
+      tabComponents.put(component, tabComponent);
+      setTabComponentAt(indexOfComponent(component), tabComponent);
 	}
 
 	class ButtonTabComponent extends JPanel {
+
+		private final javax.swing.JLabel label;
 
 		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			setOpaque(false);
 
-			final JLabel label = new JLabel(title);
+			this.label = new JLabel(title);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 
@@ -409,7 +423,7 @@ public class STWorkspace extends JTabbedPane {
 							pop.add(new AbstractAction("Close") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									pane.remove(component);
+									close(component);
 								}
 							});
 
@@ -435,6 +449,14 @@ public class STWorkspace extends JTabbedPane {
 				}
 			});
 		}
+
+		void setTitle(String title) {
+			SwingUtilities.invokeLater(() -> label.setText(title));
+		}
+	}
+
+	private void close(JComponent component) {
+		SwingUtilities.invokeLater(() -> remove(component));
 	}
 
 	private void closeAllExcept(JComponent component) {
