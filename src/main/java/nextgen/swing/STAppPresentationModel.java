@@ -17,7 +17,7 @@ public class STAppPresentationModel {
 
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
-   private final nextgen.utils.NeoChronicle chronicle;
+   public final nextgen.utils.NeoChronicle chronicle;
    private final STGroupModel generatorSTGroup;
 
    private String lastDir;
@@ -143,14 +143,6 @@ public class STAppPresentationModel {
          }
       }
       return defaultValue.get();
-   }
-
-   public void undoLast() {
-      chronicle.rollbackLast();
-   }
-
-   public String[] getSelectedValues() {
-      return new String[0];
    }
 
    public String getSourceOutputPackage() {
