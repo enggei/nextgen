@@ -1,10 +1,6 @@
 package nextgen.actions;
 
 public class RunAction extends nextgen.actions.TransactionAction {
-
-   private static final java.util.Map<String, String> actions = new java.util.LinkedHashMap<>();
-   private static final java.util.Map<String, String> actionNames = new java.util.LinkedHashMap<>();
-
    private final nextgen.model.STGroupAction action;
    private final javax.swing.JComponent owner;
 
@@ -29,30 +25,27 @@ public class RunAction extends nextgen.actions.TransactionAction {
 
    private nextgen.templates.nextgen.TransactionAction asSource() {
 
-      final String packageName = appModel().getSourceOutputPackage();
+      final java.util.concurrent.atomic.AtomicReference<nextgen.templates.nextgen.TransactionAction> reference = new java.util.concurrent.atomic.AtomicReference<>();
 
-      final nextgen.templates.nextgen.TransactionAction transactionAction = nextgen.templates.nextgen.NextgenST.newTransactionAction()
-            .setPackageName(packageName)
-            .setTitle(action.getName())
-            .addFields("owner", "javax.swing.JComponent")
-            .setImports(appModel().render(action.getImports()).split("\n"))
-            .addStatements(appModel().render(action.getStatements()))
-            .addMethods(appModel().render(action.getMethods()));
+      action.getIncomingActionsSTGroupModel().findAny().ifPresent(stGroupModel -> {
+         final String packageName = appModel().getSourceOutputPackage() + "." + stGroupModel.getName().toLowerCase();
 
-      final String current = transactionAction.toString();
+         final nextgen.templates.nextgen.TransactionAction transactionAction = nextgen.templates.nextgen.NextgenST.newTransactionAction()
+               .setPackageName(packageName)
+               .setName(action.getName())
+               .setTitle(action.getName())
+               .addFields("owner", "javax.swing.JComponent")
+               .setImports(appModel().render(action.getImports()).split("\n"))
+               .addStatements(appModel().render(action.getStatements()))
+               .addMethods(appModel().render(action.getMethods()));
 
-      if (!actions.containsKey(action.getUuid()) || !actions.get(action.getUuid()).equals(current)) {
-         transactionAction.setName(action.getName() + "_" + System.currentTimeMillis());
-         actions.put(action.getUuid(), current);
-         actionNames.put(action.getUuid(), transactionAction.getName().toString());
-         
          final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
          nextgen.st.STGenerator.writeJavaFile(transactionAction, packageName, transactionAction.getName().toString(), file);
-         file.deleteOnExit();
-      } else {
-         transactionAction.setName(actionNames.get(action.getUuid()));
-      }
 
-      return transactionAction;
+         transactionAction.setName(action.getName() + "_" + System.currentTimeMillis());
+         reference.set(transactionAction);
+      });
+
+      return reference.get();
    }
 }
