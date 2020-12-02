@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class ChangeRootOnAllModels extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STProject stProject;
    private final javax.swing.JComponent owner;
 

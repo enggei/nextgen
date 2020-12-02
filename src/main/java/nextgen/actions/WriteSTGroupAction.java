@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class WriteSTGroupAction extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STGroupAction action;
 
 	public WriteSTGroupAction(nextgen.model.STGroupAction action) {

@@ -725,6 +725,13 @@ public class SwingUtil {
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {
 
+      try {
+         org.fife.ui.rsyntaxtextarea.Theme theme = org.fife.ui.rsyntaxtextarea.Theme.load(rSyntaxTextArea.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+         theme.apply(rSyntaxTextArea);
+      } catch (java.io.IOException e) {
+         System.err.println("Could not load theme " + e.getMessage());
+      }
+
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
       rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
@@ -740,6 +747,9 @@ public class SwingUtil {
             }
          }
       });
+
+
+
 
       return rSyntaxTextArea;
    }

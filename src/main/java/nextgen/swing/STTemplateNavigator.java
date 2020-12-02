@@ -540,7 +540,6 @@ public class STTemplateNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				actions.add(new nextgen.actions.NewAction(getModel(), workspace));
-				actions.add(new nextgen.actions.EditSTGroupTags(getModel(), workspace));
 				actions.add(new nextgen.actions.ImportSTTemplate(getModel(), workspace));
 				actions.add(new nextgen.actions.GenerateSTGroup(workspace, getModel()));
 				actions.add(new nextgen.actions.NewSTTemplate(getModel(), workspace));

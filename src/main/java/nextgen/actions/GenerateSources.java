@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class GenerateSources extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STTemplate stTemplate;
    private final java.util.List<nextgen.model.STModel> stModels;
 

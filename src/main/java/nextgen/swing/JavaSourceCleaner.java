@@ -44,7 +44,6 @@ public class JavaSourceCleaner extends JFrame {
          System.out.println(output);
          SwingUtil.toClipboard(output);
       }));
-      pop.add(newAction("As Dependency", actionEvent -> asDependency(rSyntaxTextArea)));
       pop.add(newAction("As Imports", actionEvent -> asImports(rSyntaxTextArea)));
       pop.add(newAction("As Fields", actionEvent -> asFields(rSyntaxTextArea)));
       pop.add(newAction("As ClassMembers", actionEvent -> asClassMembers(rSyntaxTextArea)));
@@ -59,10 +58,6 @@ public class JavaSourceCleaner extends JFrame {
       });
    }
 
-   private void asDependency(RSyntaxTextArea textArea) {
-      SwingUtil.toClipboard(nextgen.templates.maven.MavenPatterns.parseToDependencyBuilder(textArea.getText().trim())
-            .toString());
-   }
 
    private void asImports(RSyntaxTextArea textArea) {
 

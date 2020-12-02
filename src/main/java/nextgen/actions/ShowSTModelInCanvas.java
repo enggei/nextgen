@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class ShowSTModelInCanvas extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STModel stModel;
 
 	public ShowSTModelInCanvas(nextgen.model.STModel stModel) {

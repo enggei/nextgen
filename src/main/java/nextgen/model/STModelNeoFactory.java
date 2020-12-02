@@ -138,18 +138,18 @@ public class STModelNeoFactory {
 		return db.findNodes(STGroupModelLabel, "icon", value).stream().map(this::newSTGroupModel);
 	}
 
-	public STGroupModel findSTGroupModelByTags(String value) {
-		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "tags", value).stream().findFirst().orElse(null);
+	public STGroupModel findSTGroupModelByLanguage(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STGroupModelLabel, "language", value).stream().findFirst().orElse(null);
 		return node == null ? null : newSTGroupModel(node);
 	}
 
-	public STGroupModel findOrCreateSTGroupModelByTags(String value) {
-		final STGroupModel existing = findSTGroupModelByTags(value);
-		return existing == null ? newSTGroupModel().setTags(value) : existing;
+	public STGroupModel findOrCreateSTGroupModelByLanguage(String value) {
+		final STGroupModel existing = findSTGroupModelByLanguage(value);
+		return existing == null ? newSTGroupModel().setLanguage(value) : existing;
 	}
 
-	public java.util.stream.Stream<STGroupModel> findAllSTGroupModelByTags(String value) {
-		return db.findNodes(STGroupModelLabel, "tags", value).stream().map(this::newSTGroupModel);
+	public java.util.stream.Stream<STGroupModel> findAllSTGroupModelByLanguage(String value) {
+		return db.findNodes(STGroupModelLabel, "language", value).stream().map(this::newSTGroupModel);
 	}
 
 	private static final org.neo4j.graphdb.Label STGroupFileLabel = org.neo4j.graphdb.Label.label("STGroupFile");

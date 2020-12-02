@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class WriteSTModelToFile extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STModel stModel;
 
 	public WriteSTModelToFile(nextgen.model.STModel stModel) {

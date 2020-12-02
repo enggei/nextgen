@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class RenameSTInterface extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STInterface stInterface;
    private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;

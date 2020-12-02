@@ -145,33 +145,33 @@ public class STGroupModel {
 		return this;
 	}
 
-	private static final String _tags = "tags";
+	private static final String _language = "language";
 
-	public STGroupModel setTags(String value) { 
+	public STGroupModel setLanguage(String value) { 
 		if (value == null) {
-			removeTags(); 
+			removeLanguage(); 
 		} else {
-		 	node.setProperty(_tags, value);
+		 	node.setProperty(_language, value);
 		}
 		return this;
 	}
 
-	public String getTags() { 
-		if (node.hasProperty(_tags)) return (String) node.getProperty(_tags);
+	public String getLanguage() { 
+		if (node.hasProperty(_language)) return (String) node.getProperty(_language);
 		return null;
 	}
 
-	public String getTags(String defaultValue) { 
-		if (node.hasProperty(_tags)) return (String) node.getProperty(_tags);
+	public String getLanguage(String defaultValue) { 
+		if (node.hasProperty(_language)) return (String) node.getProperty(_language);
 		return defaultValue;
 	}
 
-	public boolean hasTags() { 
-		return node.hasProperty(_tags);
+	public boolean hasLanguage() { 
+		return node.hasProperty(_language);
 	}
 
-	public STGroupModel removeTags() { 
-		node.removeProperty(_tags);
+	public STGroupModel removeLanguage() { 
+		node.removeProperty(_language);
 		return this;
 	}
 

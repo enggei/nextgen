@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class WriteAllSTModelsToFile extends nextgen.actions.TransactionAction {
+
    private final java.util.List<nextgen.model.STModel> stModels;
 
 	public WriteAllSTModelsToFile(java.util.List<nextgen.model.STModel> stModels) {

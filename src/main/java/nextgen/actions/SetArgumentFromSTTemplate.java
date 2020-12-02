@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class SetArgumentFromSTTemplate extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STModel stModel;
    private final nextgen.model.STParameter stParameter;
    private final nextgen.model.STTemplate stTemplate;

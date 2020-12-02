@@ -1,6 +1,7 @@
 package nextgen.actions;
 
 public class RunAction extends nextgen.actions.TransactionAction {
+
    private final nextgen.model.STGroupAction action;
    private final javax.swing.JComponent owner;
 
