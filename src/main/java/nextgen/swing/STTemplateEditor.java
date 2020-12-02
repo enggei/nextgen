@@ -58,6 +58,7 @@ public class STTemplateEditor extends AbstractEditor {
       this.txtEditor.setTabSize(3);
       this.txtEditor.setCodeFoldingEnabled(true);
       this.txtEditor.addKeyListener(new STTemplateEditorKeyListener());
+      this.txtEditor.setSyntaxEditingStyle(stGroupModel.getLanguage("text/plain"));
 
       this.startText = nextgen.st.STGenerator.toStg(stGroupModel).trim();
 

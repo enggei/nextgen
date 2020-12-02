@@ -74,7 +74,7 @@ public class STAppPresentationModel {
 
    public String render(STModel stModel, int maxLength) {
       final String s = render(stModel);
-      return  s.substring(0, Math.min(s.length(), maxLength));
+      return s.substring(0, Math.min(s.length(), maxLength));
    }
 
    public String render(STValue stValue, String defaultValue) {
@@ -201,5 +201,56 @@ public class STAppPresentationModel {
             }
          });
       });
+   }
+
+   public java.util.Collection<String> getLanguageTypes() {
+      return Arrays.asList("text/plain",
+            "text/actionscript",
+            "text/asm",
+            "text/bbcode",
+            "text/c",
+            "text/clojure",
+            "text/cpp",
+            "text/cs",
+            "text/css",
+            "text/csv",
+            "text/d",
+            "text/dockerfile",
+            "text/dart",
+            "text/delphi",
+            "text/dtd",
+            "text/fortran",
+            "text/groovy",
+            "text/hosts",
+            "text/htaccess",
+            "text/html",
+            "text/ini",
+            "text/java",
+            "text/javascript",
+            "text/json",
+            "text/jshintrc",
+            "text/jsp",
+            "text/latex",
+            "text/less",
+            "text/lisp",
+            "text/lua",
+            "text/makefile",
+            "text/mxml",
+            "text/nsis",
+            "text/perl",
+            "text/php",
+            "text/properties",
+            "text/python",
+            "text/ruby",
+            "text/sas",
+            "text/scala",
+            "text/sql",
+            "text/tcl",
+            "text/typescript",
+            "text/unix",
+            "text/vb",
+            "text/bat",
+            "text/xml",
+            "text/yaml");
    }
 }

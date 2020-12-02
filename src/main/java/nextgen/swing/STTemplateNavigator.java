@@ -548,6 +548,7 @@ public class STTemplateNavigator extends JPanel {
 				actions.add(new nextgen.actions.RenameSTGroup(getModel(), workspace));
 				actions.add(new nextgen.actions.DeleteSTGroup(getModel(), workspace));
 				actions.add(new nextgen.actions.AddFileSinkToGroup(getModel()));
+				actions.add(new nextgen.actions.SetSTGroupLanguage(workspace, getModel()));
 			});
 
 			return actions;
