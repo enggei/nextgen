@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class DeleteSTGroupFile extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupFile stgroupFile;
    private final javax.swing.JComponent owner;
 

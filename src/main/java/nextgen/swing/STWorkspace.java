@@ -45,7 +45,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTProjectTreeNodeClicked(nextgen.events.ModelNavigatorSTProjectTreeNodeClicked event) {
-		getSTProjectEditorGrid(event.stProject);
+		getSTProjectEditor(event.stProject);
 	}
 
 	public java.util.stream.Stream<nextgen.model.STTemplate> getSelectedSTTemplates() {
@@ -54,12 +54,12 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTTemplateTreeNodeClicked(nextgen.events.ModelNavigatorSTTemplateTreeNodeClicked event) {
-		getSTTemplatesEditorGrid(event.stTemplate);
+		getSTTemplatesEditor(event.stTemplate);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTParameterTreeNodeClicked(nextgen.events.ModelNavigatorSTParameterTreeNodeClicked event) {
-		getSTParameterEditorGrid(event.stParameter);
+		getSTParameterEditor(event.stParameter);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -269,10 +269,10 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STValueGrid getValueGrid() {
-		return (STValueGrid) find(component -> component instanceof STValueGrid)
+	public STValuesEditor getValueGrid() {
+		return (STValuesEditor) find(component -> component instanceof STValuesEditor)
 				.orElseGet(() -> {
-					final STValueGrid component = new STValueGrid();
+					final STValuesEditor component = new STValuesEditor();
 					addPane("ValueGrid", component);
 					return component;
 				});
@@ -281,82 +281,82 @@ public class STWorkspace extends JTabbedPane {
 	public void removeValueGrid() {
 	   for (int i = 0; i < getTabCount(); i++) {
 	      final Component tabComponentAt = getComponentAt(i);
-	      if (tabComponentAt instanceof STValueGrid) {
+	      if (tabComponentAt instanceof STValuesEditor) {
 	      	int componentIndex = i;
 				SwingUtilities.invokeLater(() -> remove(componentIndex));
 			}
 	   }
 	}
 
-	public nextgen.swing.STProjectEditorGrid getSTProjectEditorGrid(nextgen.model.STProject model) {
+	public nextgen.swing.STProjectEditor getSTProjectEditor(nextgen.model.STProject model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) tabComponentAt).getModel().equals(model))) {
-				final nextgen.swing.STProjectEditorGrid component = (nextgen.swing.STProjectEditorGrid) tabComponentAt;
+			if (tabComponentAt instanceof nextgen.swing.STProjectEditor && (((nextgen.swing.STProjectEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STProjectEditor component = (nextgen.swing.STProjectEditor) tabComponentAt;
 				setSelectedComponent(component);
 				return component;
 			}
 		}
 
-		final nextgen.swing.STProjectEditorGrid component = new nextgen.swing.STProjectEditorGrid(model);
+		final nextgen.swing.STProjectEditor component = new nextgen.swing.STProjectEditor(model);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;
 	}
 
-	public void removeSTProjectEditorGrid(String uuid) {
+	public void removeSTProjectEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof nextgen.swing.STProjectEditorGrid && (((nextgen.swing.STProjectEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STProjectEditor && (((nextgen.swing.STProjectEditor) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }
 		}
 	}
 
-	public nextgen.swing.STTemplatesEditorGrid getSTTemplatesEditorGrid(nextgen.model.STTemplate model) {
+	public nextgen.swing.STTemplatesEditor getSTTemplatesEditor(nextgen.model.STTemplate model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) tabComponentAt).getModel().equals(model))) {
-				final nextgen.swing.STTemplatesEditorGrid component = (nextgen.swing.STTemplatesEditorGrid) tabComponentAt;
+			if (tabComponentAt instanceof nextgen.swing.STTemplatesEditor && (((nextgen.swing.STTemplatesEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STTemplatesEditor component = (nextgen.swing.STTemplatesEditor) tabComponentAt;
 				setSelectedComponent(component);
 				return component;
 			}
 		}
 
-		final nextgen.swing.STTemplatesEditorGrid component = new nextgen.swing.STTemplatesEditorGrid(model);
+		final nextgen.swing.STTemplatesEditor component = new nextgen.swing.STTemplatesEditor(model);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;
 	}
 
-	public void removeSTTemplatesEditorGrid(String uuid) {
+	public void removeSTTemplatesEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof nextgen.swing.STTemplatesEditorGrid && (((nextgen.swing.STTemplatesEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STTemplatesEditor && (((nextgen.swing.STTemplatesEditor) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }
 		}
 	}
 
-	public nextgen.swing.STParameterEditorGrid getSTParameterEditorGrid(nextgen.model.STParameter model) {
+	public nextgen.swing.STParameterEditor getSTParameterEditor(nextgen.model.STParameter model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof nextgen.swing.STParameterEditorGrid && (((nextgen.swing.STParameterEditorGrid) tabComponentAt).getModel().equals(model))) {
-				final nextgen.swing.STParameterEditorGrid component = (nextgen.swing.STParameterEditorGrid) tabComponentAt;
+			if (tabComponentAt instanceof nextgen.swing.STParameterEditor && (((nextgen.swing.STParameterEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.STParameterEditor component = (nextgen.swing.STParameterEditor) tabComponentAt;
 				setSelectedComponent(component);
 				return component;
 			}
 		}
 
-		final nextgen.swing.STParameterEditorGrid component = new nextgen.swing.STParameterEditorGrid(model);
+		final nextgen.swing.STParameterEditor component = new nextgen.swing.STParameterEditor(model);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;
 	}
 
-	public void removeSTParameterEditorGrid(String uuid) {
+	public void removeSTParameterEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof nextgen.swing.STParameterEditorGrid && (((nextgen.swing.STParameterEditorGrid) getComponentAt(i)).getUuid().equals(uuid))) {
+		   if (getComponentAt(i) instanceof nextgen.swing.STParameterEditor && (((nextgen.swing.STParameterEditor) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }

@@ -1512,6 +1512,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteKV(parent.getModel(), workspace)));
+				actions.add(new nextgen.actions.STValueToClipboard(getModel()));
 			});
 
 			return actions;

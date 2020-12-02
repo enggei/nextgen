@@ -113,6 +113,34 @@ public class STGroupAction {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("statements"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public STGroupAction setImports(STValue dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getImportsRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("imports"));
+		return this;
+	}
+
+	public STValue getImports() { 
+		final org.neo4j.graphdb.Relationship relationship = getImportsRelation();
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
+	}
+
+	public STGroupAction removeImports() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getImportsRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getImportsRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("imports"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
 	public STGroupAction setMethods(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getMethodsRelation();
 		if (relationship != null)  { 
@@ -170,6 +198,9 @@ public class STGroupAction {
 		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
 		final STValue _statements = getStatements();
 		if (_statements != null) jsonObject.put("statements", _statements.toJsonObject());
+
+		final STValue _imports = getImports();
+		if (_imports != null) jsonObject.put("imports", _imports.toJsonObject());
 
 		final STValue _methods = getMethods();
 		if (_methods != null) jsonObject.put("methods", _methods.toJsonObject());

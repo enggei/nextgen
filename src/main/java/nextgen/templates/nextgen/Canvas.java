@@ -293,7 +293,7 @@ public class Canvas {
 		return this._actions;
 	} 
 
-	public Canvas addFields(Object _type, Object _name) {
+	public Canvas addFields(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
 		map.put("name", _name);
@@ -318,7 +318,7 @@ public class Canvas {
 	}
 
 
-	public java.util.List<Object> getFields_Name() {
+	public java.util.List<String> getFields_Name() {
 		return streamFields().map(Canvas_Fields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
@@ -326,29 +326,29 @@ public class Canvas {
 	public static final class Canvas_Fields {
 
 		Object _type;
-		Object _name;
+		String _name;
 
-		public Canvas_Fields(Object _type, Object _name) {
+		public Canvas_Fields(Object _type, String _name) {
 			this._type = _type;
 			this._name = _name;
 		}
 
 		private Canvas_Fields(java.util.Map<String, Object> map) {
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 
 	}  
 
-	public Canvas addFinalFields(Object _init, Object _type, Object _name) {
+	public Canvas addFinalFields(Object _init, Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("init", _init);
 		map.put("type", _type);
@@ -379,7 +379,7 @@ public class Canvas {
 	}
 
 
-	public java.util.List<Object> getFinalFields_Name() {
+	public java.util.List<String> getFinalFields_Name() {
 		return streamFinalFields().map(Canvas_FinalFields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
@@ -388,9 +388,9 @@ public class Canvas {
 
 		Object _init;
 		Object _type;
-		Object _name;
+		String _name;
 
-		public Canvas_FinalFields(Object _init, Object _type, Object _name) {
+		public Canvas_FinalFields(Object _init, Object _type, String _name) {
 			this._init = _init;
 			this._type = _type;
 			this._name = _name;
@@ -399,7 +399,7 @@ public class Canvas {
 		private Canvas_FinalFields(java.util.Map<String, Object> map) {
 			this._init = (Object) map.get("init");
 			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
+			this._name = (String) map.get("name");
 		}
 
 		public Object getInit() {
@@ -410,7 +410,7 @@ public class Canvas {
 			return this._type;
 		}
 
-		public Object getName() {
+		public String getName() {
 			return this._name;
 		}
 

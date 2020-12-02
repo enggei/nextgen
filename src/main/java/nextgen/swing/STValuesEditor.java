@@ -6,9 +6,9 @@ import nextgen.model.STValueType;
 import javax.swing.*;
 import java.util.stream.Collectors;
 
-public class STValueGrid extends SearchReplaceEditor {
+public class STValuesEditor extends SearchReplaceEditor {
 
-    public STValueGrid() {
+    public STValuesEditor() {
         super();
     }
 

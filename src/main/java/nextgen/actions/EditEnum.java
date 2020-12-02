@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class EditEnum extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STEnum stEnum;
    private final javax.swing.JComponent owner;
 

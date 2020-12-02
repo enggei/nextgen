@@ -9,10 +9,11 @@ public class TransactionAction {
 	private Object _name;
 	private Object _title;
 	private Object _titleExpression;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
 
 	TransactionAction(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -29,10 +30,11 @@ public class TransactionAction {
 		st.add("name", _name);
 		st.add("title", _title);
 		st.add("titleExpression", _titleExpression);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _statements) st.add("statements", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
+		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
 		return st.render().trim();
 	}
 
@@ -124,6 +126,35 @@ public class TransactionAction {
 		return this;
 	} 
 
+	public TransactionAction addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public TransactionAction setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TransactionAction setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public TransactionAction removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public TransactionAction removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
+
 	public TransactionAction addStatements(Object value) {
 		this._statements.add(value);
 		return this;
@@ -181,6 +212,61 @@ public class TransactionAction {
 	public java.util.List<Object> getMethods() {
 		return this._methods;
 	} 
+
+	public TransactionAction addFields(Object _name, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("type", _type);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public TransactionAction addFields(TransactionAction_Fields value) {
+		return addFields(value._name, value._type);
+	}
+
+	public java.util.stream.Stream<TransactionAction_Fields> streamFields() {
+		return this._fields.stream().map(TransactionAction_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(TransactionAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class TransactionAction_Fields {
+
+		Object _name;
+		Object _type;
+
+		public TransactionAction_Fields(Object _name, Object _type) {
+			this._name = _name;
+			this._type = _type;
+		}
+
+		private TransactionAction_Fields(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+	}  
 
 	public TransactionAction addStaticFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -250,61 +336,6 @@ public class TransactionAction {
 
 	}  
 
-	public TransactionAction addFields(Object _name, Object _type) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("type", _type);
-		this._fields.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
-	}
-
-	public TransactionAction addFields(TransactionAction_Fields value) {
-		return addFields(value._name, value._type);
-	}
-
-	public java.util.stream.Stream<TransactionAction_Fields> streamFields() {
-		return this._fields.stream().map(TransactionAction_Fields::new);
-	}
-
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(TransactionAction_Fields::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class TransactionAction_Fields {
-
-		Object _name;
-		Object _type;
-
-		public TransactionAction_Fields(Object _name, Object _type) {
-			this._name = _name;
-			this._type = _type;
-		}
-
-		private TransactionAction_Fields(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._type = (Object) map.get("type");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-	}  
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -318,8 +349,11 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(packageName,staticFields,name,statements,methods,title,titleExpression,fields) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
+	static final String st = "TransactionAction(packageName,fields,imports,name,staticFields,title,titleExpression,statements,methods) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
+				"~if(imports)~\n" + 
+				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
+				"~endif~\n" + 
 				"public class ~name~ extends nextgen.actions.TransactionAction {\n" + 
 				"\n" + 
 				"   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 

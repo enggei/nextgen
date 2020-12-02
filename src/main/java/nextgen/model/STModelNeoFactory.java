@@ -838,6 +838,20 @@ public class STModelNeoFactory {
 		return db.findNodes(STProjectLabel, "name", value).stream().map(this::newSTProject);
 	}
 
+	public STProject findSTProjectByRoot(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(STProjectLabel, "root", value).stream().findFirst().orElse(null);
+		return node == null ? null : newSTProject(node);
+	}
+
+	public STProject findOrCreateSTProjectByRoot(String value) {
+		final STProject existing = findSTProjectByRoot(value);
+		return existing == null ? newSTProject().setRoot(value) : existing;
+	}
+
+	public java.util.stream.Stream<STProject> findAllSTProjectByRoot(String value) {
+		return db.findNodes(STProjectLabel, "root", value).stream().map(this::newSTProject);
+	}
+
 	// ONLY delete this node and its relations
 	public void delete(org.neo4j.graphdb.Node node) {
 

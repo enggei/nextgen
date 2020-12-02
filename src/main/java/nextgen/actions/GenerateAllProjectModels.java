@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class GenerateAllProjectModels extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STProject project;
 
 	public GenerateAllProjectModels(nextgen.model.STProject project) {

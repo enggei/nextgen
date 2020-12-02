@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class DeleteAction extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupAction stAction;
    private final javax.swing.JComponent owner;
    private final nextgen.model.STGroupModel stGroup;

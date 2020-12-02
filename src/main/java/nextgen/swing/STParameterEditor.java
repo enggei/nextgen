@@ -1,11 +1,11 @@
 package nextgen.swing;
 
-public class STParameterEditorGrid extends SearchReplaceEditor {
+public class STParameterEditor extends SearchReplaceEditor {
 
    private final String uuid;
    private final nextgen.model.STParameter model;
 
-   public STParameterEditorGrid(nextgen.model.STParameter model) {
+   public STParameterEditor(nextgen.model.STParameter model) {
       super();
 
       this.model = model;

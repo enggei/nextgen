@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class GenerateSource extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STModel stModel;
 
 	public GenerateSource(nextgen.model.STModel stModel) {

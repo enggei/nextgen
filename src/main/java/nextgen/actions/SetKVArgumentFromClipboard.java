@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STModel stModel;
    private final nextgen.model.STArgument stArgument;
    private final nextgen.model.STParameterKey stParameterKey;

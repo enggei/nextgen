@@ -85,6 +85,36 @@ public class STProject {
 		return this;
 	}
 
+	private static final String _root = "root";
+
+	public STProject setRoot(String value) { 
+		if (value == null) {
+			removeRoot(); 
+		} else {
+		 	node.setProperty(_root, value);
+		}
+		return this;
+	}
+
+	public String getRoot() { 
+		if (node.hasProperty(_root)) return (String) node.getProperty(_root);
+		return null;
+	}
+
+	public String getRoot(String defaultValue) { 
+		if (node.hasProperty(_root)) return (String) node.getProperty(_root);
+		return defaultValue;
+	}
+
+	public boolean hasRoot() { 
+		return node.hasProperty(_root);
+	}
+
+	public STProject removeRoot() { 
+		node.removeProperty(_root);
+		return this;
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _models = org.neo4j.graphdb.RelationshipType.withName("models");
 
 	public STProject addModels(STModel dst) { 

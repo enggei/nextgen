@@ -1335,5 +1335,43 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	final class STProjectNode extends BaseCanvasNode<nextgen.model.STProject> {
+
+
+		public STProjectNode(nextgen.model.STProject model) {
+			super(model, model.getUuid(), model.getName());
+		}
+		@Override
+		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			super.onNodeRightClick(event, pop);
+		}
+
+
+	}
+
+	private void addSTProjectNode(nextgen.model.STProject model) {
+		addNode(model.getUuid(), newSTProjectNode(model));
+	}
+
+	public java.util.function.Supplier<STProjectNode> newSTProjectNode(nextgen.model.STProject model) {
+		return () -> new STProjectNode(model);
+	}
+
+	public Stream<STProjectNode> getAllSTProjectNode() {
+		return getAllNodes()
+					.filter(baseCanvasNode -> baseCanvasNode instanceof STProjectNode)
+					.map(baseCanvasNode -> (STProjectNode) baseCanvasNode);
+	}
+
+	public void forEachSTProjectNode(java.util.function.Consumer<STProjectNode> consumer) {
+		getAllNodes()
+				.filter(baseCanvasNode -> baseCanvasNode instanceof STProjectNode)
+				.map(baseCanvasNode -> (STProjectNode) baseCanvasNode)
+				.forEach(consumer);
+	}
+
+	public Optional<STProjectNode> isInstanceOfSTProjectNode(BaseCanvasNode<?> canvasNode) {
+		return Optional.ofNullable((canvasNode instanceof STProjectNode) ? (STProjectNode) canvasNode : null);
+	}
 
 }

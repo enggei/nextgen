@@ -2322,8 +2322,11 @@ public void remove~name;format="capitalize"~() {
    }
 }  >>
 
-TransactionAction(packageName,staticFields,name,statements,methods,title,titleExpression,fields) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
+TransactionAction(packageName,fields,imports,name,staticFields,title,titleExpression,statements,methods) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
+~if(imports)~
+~imports:{it|import ~it~;};separator="\n"~
 
+~endif~
 public class ~name~ extends nextgen.actions.TransactionAction {
 
    ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~

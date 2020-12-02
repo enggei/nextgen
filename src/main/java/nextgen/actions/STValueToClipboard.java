@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class STValueToClipboard extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STValue stValue;
 
 	public STValueToClipboard(nextgen.model.STValue stValue) {

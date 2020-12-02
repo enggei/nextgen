@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class EditSTGroupTags extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupModel stGroup;
    private final javax.swing.JComponent owner;
 

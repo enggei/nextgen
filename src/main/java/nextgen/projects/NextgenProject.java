@@ -21,11 +21,11 @@ public class NextgenProject {
 
    static final PackageDeclaration corePackage = newPackageDeclaration("nextgen");
    static final PackageDeclaration stPackage = newPackageDeclaration(corePackage, "st");
-   static final PackageDeclaration parsePackage = newPackageDeclaration(stPackage, "parser");
    static final PackageDeclaration canvasPackage = newPackageDeclaration(stPackage, "canvas");
    static final PackageDeclaration canvasLayoutPackage = newPackageDeclaration(canvasPackage, "layout");
    static final PackageDeclaration workflowPackage = newPackageDeclaration(corePackage, "workflow");
    static final PackageDeclaration stModelPackage = newPackageDeclaration(corePackage, "model");
+   static final PackageDeclaration parsePackage = newPackageDeclaration(stModelPackage, "parser");
 
    @org.junit.Test
    public void generateDomain() {
@@ -98,6 +98,7 @@ public class NextgenProject {
             .setEqha("uuid")
             .addRelations(DomainPatterns.newStringField("name", true))
             .addRelations(DomainPatterns.newOneToOne("statements", stValue))
+            .addRelations(DomainPatterns.newOneToOne("imports", stValue))
             .addRelations(DomainPatterns.newOneToOne("methods", stValue));
 
       final Entity stGroupModel = DomainPatterns

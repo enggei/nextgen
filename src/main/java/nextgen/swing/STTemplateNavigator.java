@@ -405,6 +405,7 @@ public class STTemplateNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteAction(getModel(), workspace, parent.getModel())));
 				actions.add(new nextgen.actions.RunAction(getModel(), workspace));
+				actions.add(new nextgen.actions.WriteSTGroupAction(getModel()));
 			});
 
 			return actions;

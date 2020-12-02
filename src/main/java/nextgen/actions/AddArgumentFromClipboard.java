@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class AddArgumentFromClipboard extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STModel stModel;
    private final nextgen.model.STParameter stParameter;
 

@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class NewSTModelAction extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STTemplate stTemplate;
 
 	public NewSTModelAction(nextgen.model.STTemplate stTemplate) {

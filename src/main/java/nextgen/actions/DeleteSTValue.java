@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class DeleteSTValue extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STValue stValue;
    private final javax.swing.JComponent owner;
 

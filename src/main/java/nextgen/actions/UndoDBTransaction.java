@@ -2,8 +2,6 @@ package nextgen.actions;
 
 public class UndoDBTransaction extends nextgen.actions.TransactionAction {
 
-
-
 	public UndoDBTransaction() {
 		super("Undo");
 	}

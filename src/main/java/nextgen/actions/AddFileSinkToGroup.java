@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class AddFileSinkToGroup extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupModel stGroup;
 
 	public AddFileSinkToGroup(nextgen.model.STGroupModel stGroup) {

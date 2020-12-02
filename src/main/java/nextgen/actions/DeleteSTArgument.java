@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class DeleteSTArgument extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STArgument stArgument;
    private final javax.swing.JComponent owner;
 

@@ -205,6 +205,10 @@ public class STValue {
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("statements")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
 	}
 
+	public java.util.stream.Stream<STGroupAction> getIncomingImportsSTGroupAction() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("imports")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
+	}
+
 	public java.util.stream.Stream<STGroupAction> getIncomingMethodsSTGroupAction() { 
 		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("methods")).spliterator(), false).map((relationship) -> new STGroupAction(relationship.getOtherNode(node)));
 	}

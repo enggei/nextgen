@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class GetSTTemplateUUID extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STTemplate stTemplate;
 
 	public GetSTTemplateUUID(nextgen.model.STTemplate stTemplate) {

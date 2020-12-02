@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class GenerateSTGroupFromFile extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupFile stGroupFile;
    private final javax.swing.JComponent owner;
 

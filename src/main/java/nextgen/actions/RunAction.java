@@ -35,6 +35,7 @@ public class RunAction extends nextgen.actions.TransactionAction {
             .setPackageName(packageName)
             .setTitle(action.getName())
             .addFields("owner", "javax.swing.JComponent")
+            .setImports(appModel().render(action.getImports()).split("\n"))
             .addStatements(appModel().render(action.getStatements()))
             .addMethods(appModel().render(action.getMethods()));
 

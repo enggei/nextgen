@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class CopyTemplate extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STTemplate stTemplate;
 
 	public CopyTemplate(nextgen.model.STTemplate stTemplate) {

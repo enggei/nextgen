@@ -1,8 +1,6 @@
 package nextgen.actions;
 
 public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction {
-
-
    private final nextgen.model.STGroupModel stGroup;
    private final nextgen.model.STTemplate stTemplate;
    private final javax.swing.JComponent owner;
