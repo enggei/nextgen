@@ -17,6 +17,10 @@ public class STGroupActionEditor extends AbstractEditor {
       this.model = model;
       this.uuid = model.getUuid();
 
+      txtStatements.setSyntaxEditingStyle("text/java");
+      txtMethods.setSyntaxEditingStyle("text/java");
+      txtImports.setSyntaxEditingStyle("text/java");
+
       txtName.setText(model.getName(""));
       txtStatements.setText(appModel().render(model.getStatements(),""));
       txtMethods.setText(appModel().render(model.getMethods(),""));
@@ -32,9 +36,12 @@ public class STGroupActionEditor extends AbstractEditor {
       namePanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       namePanel.add(txtName, java.awt.BorderLayout.NORTH);
 
-      addPopupActions(txtStatements);
-      addPopupActions(txtMethods);
-      addPopupActions(txtImports);
+      addPopupActions(txtStatements).
+            add(newAction("Save", actionEvent -> tryToSave()));;
+      addPopupActions(txtMethods).
+            add(newAction("Save", actionEvent -> tryToSave()));;
+      addPopupActions(txtImports).
+            add(newAction("Save", actionEvent -> tryToSave()));;
 
       final javax.swing.JTabbedPane tabbedPane = new javax.swing.JTabbedPane();
       tabbedPane.add("Name", namePanel);
@@ -42,18 +49,6 @@ public class STGroupActionEditor extends AbstractEditor {
       tabbedPane.add("Methods", new org.fife.ui.rtextarea.RTextScrollPane(txtMethods));
       tabbedPane.add("Imports", new org.fife.ui.rtextarea.RTextScrollPane(txtImports));
       add(tabbedPane, java.awt.BorderLayout.CENTER);
-   }
-
-   public void addPopupActions(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      final javax.swing.JPopupMenu pop = textArea.getPopupMenu();
-      pop.addSeparator();
-      pop.add(newAction("Save", actionEvent -> tryToSave()));
-      pop.add(newAction("Replace with Clipboard", actionEvent -> replaceWithClipboard(textArea)));
-      pop.add(newAction("Append from Clipboard", actionEvent -> appendFromClipboard(textArea)));
-      pop.add(newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard(textArea)));
-      pop.addSeparator();
-      pop.add(newAction("Select Line", actionEvent -> selectLine(textArea)));
-      pop.add(newAction("Copy to Clipboard", actionEvent -> toClipboard(textArea)));
    }
 
    public nextgen.model.STGroupAction getModel() {
@@ -73,39 +68,5 @@ public class STGroupActionEditor extends AbstractEditor {
          model.setImports(appModel().db.findOrCreateSTValueByValue(txtImports.getText().trim()));
          nextgen.events.STGroupActionChanged.post(model);
       });
-   }
-
-   private void replaceWithClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      textArea.setText(nextgen.utils.SwingUtil.fromClipboard().trim());
-      textArea.setCaretPosition(0);
-      tryToSave();
-   }
-
-   private void prependFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      textArea.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + textArea.getText());
-      textArea.setCaretPosition(0);
-      tryToSave();
-   }
-
-   private void appendFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      textArea.append(nextgen.utils.SwingUtil.fromClipboard().trim());
-      textArea.setCaretPosition(0);
-      tryToSave();
-   }
-
-   private void selectLine(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      final int startOffsetOfCurrentLine = textArea.getLineStartOffsetOfCurrentLine();
-      final int endOffsetOfCurrentLine = textArea.getLineEndOffsetOfCurrentLine();
-      try {
-         final String line = textArea.getText(startOffsetOfCurrentLine, endOffsetOfCurrentLine - startOffsetOfCurrentLine).trim();
-         System.out.println(line);
-         nextgen.utils.SwingUtil.toClipboard(line);
-      } catch (javax.swing.text.BadLocationException ignored) {
-
-      }
-   }
-
-   private void toClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
-      nextgen.utils.SwingUtil.toClipboard(textArea.getText().trim());
    }
 }

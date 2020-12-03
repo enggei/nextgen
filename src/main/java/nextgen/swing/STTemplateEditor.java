@@ -154,26 +154,8 @@ public class STTemplateEditor extends AbstractEditor {
             commit();
          } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_G) {
             generate();
-         } else if (keyEvent.getModifiers() == KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-            showPopup();
          }
       }
-   }
-
-   private void showPopup() {
-      if (stTemplate == null) return;
-
-      SwingUtilities.invokeLater(() -> {
-         try {
-            final Rectangle rectangle = txtEditor.modelToView(txtEditor.getCaretPosition());
-            Point p = rectangle.getLocation();
-            p.y += rectangle.height;
-            final JPopupMenu popupMenu = txtEditor.getPopupMenu();
-            popupMenu.show(txtEditor, p.x, p.y);
-         } catch (BadLocationException ignore) {
-
-         }
-      });
    }
 
    private void commit() {

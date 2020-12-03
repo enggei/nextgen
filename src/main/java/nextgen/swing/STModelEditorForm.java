@@ -222,29 +222,8 @@ public class STModelEditorForm extends AbstractEditor {
          for (java.awt.event.MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
             scrollPane.removeMouseWheelListener(mouseWheelListener);
 
-         final JPopupMenu pop = textComponent.getPopupMenu();
-         pop.addSeparator();
-         pop.add(newAction("Save", actionEvent -> tryToSave()));
-         pop.add(newAction("Append From Clipboard", actionEvent -> {
-            if (!textComponent.isEditable()) return;
-            textComponent.append(nextgen.utils.SwingUtil.fromClipboard().trim());
-            textComponent.setCaretPosition(0);
-            tryToSave();
-         }));
-         pop.add(newAction("Clear", actionEvent -> {
-            if (!textComponent.isEditable()) return;
-            textComponent.setText("");
-            textComponent.setCaretPosition(0);
-            tryToSave();
-         }));
-         pop.add(newAction("Prepend From Clipboard", actionEvent -> {
-            if (!textComponent.isEditable()) return;
-            textComponent.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + textComponent.getText());
-            textComponent.setCaretPosition(0);
-            tryToSave();
-         }));
-         pop.addSeparator();
-         pop.add(newAction("To Clipboard", actionEvent -> nextgen.utils.SwingUtil.toClipboard(textComponent.getText().trim())));
+         addPopupActions(textComponent).
+               add(newAction("Save", actionEvent -> tryToSave()));;
       }
 
       private java.awt.event.KeyListener getEditorKeyListener() {

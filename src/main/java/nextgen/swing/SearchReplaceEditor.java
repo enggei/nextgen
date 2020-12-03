@@ -240,23 +240,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          for (java.awt.event.MouseWheelListener mouseWheelListener : scrollPane.getMouseWheelListeners())
             scrollPane.removeMouseWheelListener(mouseWheelListener);
 
-         final javax.swing.JPopupMenu pop = component.getPopupMenu();
-         pop.addSeparator();
-         pop.add(newAction("Save", actionEvent -> tryToSave()));
-         pop.add(newAction("Append From Clipboard", actionEvent -> {
-            if (!component.isEditable()) return;
-            component.append(nextgen.utils.SwingUtil.fromClipboard().trim());
-            component.setCaretPosition(0);
-            tryToSave();
-         }));
-         pop.add(newAction("Prepend From Clipboard", actionEvent -> {
-            if (!component.isEditable()) return;
-            component.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + component.getText());
-            component.setCaretPosition(0);
-            tryToSave();
-         }));
-         pop.addSeparator();
-         pop.add(newAction("To Clipboard", actionEvent -> nextgen.utils.SwingUtil.toClipboard(component.getText().trim())));
+         addPopupActions(component).
+               add(newAction("Save", actionEvent -> tryToSave()));
       }
 
       private java.awt.event.KeyListener getEditorKeyListener() {

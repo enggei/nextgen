@@ -67,4 +67,53 @@ public class AbstractEditor extends javax.swing.JPanel {
 
    protected void tryToSave() {
    }
+
+   protected javax.swing.JPopupMenu addPopupActions(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      final javax.swing.JPopupMenu pop = textArea.getPopupMenu();
+      pop.addSeparator();
+      pop.add(newAction("Replace with Clipboard", actionEvent -> replaceWithClipboard(textArea)));
+      pop.add(newAction("Append from Clipboard", actionEvent -> appendFromClipboard(textArea)));
+      pop.add(newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard(textArea)));
+      pop.addSeparator();
+      pop.add(newAction("Select Line", actionEvent -> selectLine(textArea)));
+      pop.add(newAction("Copy to Clipboard", actionEvent -> toClipboard(textArea)));
+      return pop;
+   }
+
+   protected void replaceWithClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      if (!textArea.isEditable()) return;
+      textArea.setText(nextgen.utils.SwingUtil.fromClipboard().trim());
+      textArea.setCaretPosition(0);
+      tryToSave();
+   }
+
+   protected void prependFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      if (!textArea.isEditable()) return;
+      textArea.setText(nextgen.utils.SwingUtil.fromClipboard().trim() + textArea.getText());
+      textArea.setCaretPosition(0);
+      tryToSave();
+   }
+
+   protected void appendFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      if (!textArea.isEditable()) return;
+      textArea.append(nextgen.utils.SwingUtil.fromClipboard().trim());
+      textArea.setCaretPosition(0);
+      tryToSave();
+   }
+
+   protected void selectLine(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      final int startOffsetOfCurrentLine = textArea.getLineStartOffsetOfCurrentLine();
+      final int endOffsetOfCurrentLine = textArea.getLineEndOffsetOfCurrentLine();
+      try {
+         final String line = textArea.getText(startOffsetOfCurrentLine, endOffsetOfCurrentLine - startOffsetOfCurrentLine).trim();
+         System.out.println(line);
+         nextgen.utils.SwingUtil.toClipboard(line);
+      } catch (javax.swing.text.BadLocationException ignored) {
+
+      }
+   }
+
+   protected void toClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      nextgen.utils.SwingUtil.toClipboard(textArea.getText().trim());
+   }
 }

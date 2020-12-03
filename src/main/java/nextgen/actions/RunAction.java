@@ -30,13 +30,14 @@ public class RunAction extends nextgen.actions.TransactionAction {
 
       action.getIncomingActionsSTGroupModel().findAny().ifPresent(stGroupModel -> {
          final String packageName = appModel().getSourceOutputPackage() + "." + stGroupModel.getName().toLowerCase();
+         final String imports = appModel().render(action.getImports());
 
          final nextgen.templates.nextgen.TransactionAction transactionAction = nextgen.templates.nextgen.NextgenST.newTransactionAction()
                .setPackageName(packageName)
                .setName(action.getName())
                .setTitle(action.getName())
                .addFields("owner", "javax.swing.JComponent")
-               .setImports(appModel().render(action.getImports()).split("\n"))
+               .setImports(imports == null ? new Object[0] : imports.split("\n"))
                .addStatements(appModel().render(action.getStatements()))
                .addMethods(appModel().render(action.getMethods()));
 
