@@ -1,5 +1,7 @@
 package nextgen.actions;
 
+import static nextgen.utils.SwingUtil.printStackTrace;
+
 public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected TransactionAction(String name) {
@@ -81,6 +83,14 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       final javax.swing.JDialog dialog = newDialog(owner, title);
       dialog.add(component, java.awt.BorderLayout.CENTER);
       nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
+   }
+
+   protected void showTextResult(String title, String text, java.awt.Component parentComponent) {
+      nextgen.utils.SwingUtil.showTextResult(title, text, parentComponent);
+   }
+
+   protected void showError(javax.swing.JComponent owner, Throwable throwable) {
+      showError(owner, printStackTrace(throwable));
    }
 
    protected void showError(javax.swing.JComponent owner, String errors) {
