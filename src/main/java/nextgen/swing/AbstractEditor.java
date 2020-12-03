@@ -76,7 +76,7 @@ public class AbstractEditor extends javax.swing.JPanel {
       pop.add(newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard(textArea)));
       pop.addSeparator();
       pop.add(newAction("Select Line", actionEvent -> selectLine(textArea)));
-      pop.add(newAction("Copy to Clipboard", actionEvent -> toClipboard(textArea)));
+      pop.add(newAction("To ClipboardClipboard", actionEvent -> toClipboard(textArea)));
       return pop;
    }
 

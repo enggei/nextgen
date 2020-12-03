@@ -66,25 +66,25 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private final class STTemplateNavigatorMouseListener extends MouseAdapter {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-         if (SwingUtilities.isRightMouseButton(e)) {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (SwingUtilities.isRightMouseButton(e)) {
 
-            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-            if (selectionPath == null) return;
-            final Object lastPathComponent = selectionPath.getLastPathComponent();
-            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selectionPath == null) return;
+				final Object lastPathComponent = selectionPath.getLastPathComponent();
+				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-            showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+				showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
 
-         } else {
+			} else {
 
-            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-            if (selectionPath == null) return;
-            final Object lastPathComponent = selectionPath.getLastPathComponent();
-            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selectionPath == null) return;
+				final Object lastPathComponent = selectionPath.getLastPathComponent();
+				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-            appModel().doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 					if (isSTGroupActionTreeNode(lastPathComponent)) 
 						onSTGroupActionTreeNodeSelected((STGroupActionTreeNode) lastPathComponent);
 					else if (isSTGroupTreeNode(lastPathComponent)) 
@@ -99,13 +99,13 @@ public class STTemplateNavigator extends JPanel {
 						onSTGroupFileTreeNodeSelected((STGroupFileTreeNode) lastPathComponent);
 					else 
 						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);
-            });
-         }
-      }
-   }
+				});
+			}
+		}
+	}
 
-   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
-   }
+	private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
+	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTAction(nextgen.events.NewSTAction event) {
@@ -426,8 +426,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STGroupActionTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupActionTreeNode> findAllSTGroupActionTreeNode() {
+		return treeModel.findAll(STGroupActionTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode(java.util.function.Predicate<STGroupActionTreeNode> predicate) {
 		return treeModel.find(STGroupActionTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STGroupActionTreeNode> findAllSTGroupActionTreeNode(java.util.function.Predicate<STGroupActionTreeNode> predicate) {
+		return treeModel.findAll(STGroupActionTreeNode.class, predicate);
 	}
 
 	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STGroupActionTreeNode> predicate) {
@@ -488,8 +496,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(RootNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<RootNode> findAllRootNode() {
+		return treeModel.findAll(RootNode.class, treeNode -> true);
+	}
+
 	private Optional<RootNode> findRootNode(java.util.function.Predicate<RootNode> predicate) {
 		return treeModel.find(RootNode.class, predicate);
+	}
+
+	private java.util.Collection<RootNode> findAllRootNode(java.util.function.Predicate<RootNode> predicate) {
+		return treeModel.findAll(RootNode.class, predicate);
 	}
 
 	private Optional<RootNode> findRootNode(BaseTreeNode<?> parent, java.util.function.Predicate<RootNode> predicate) {
@@ -564,8 +580,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STGroupTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupTreeNode> findAllSTGroupTreeNode() {
+		return treeModel.findAll(STGroupTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STGroupTreeNode> findSTGroupTreeNode(java.util.function.Predicate<STGroupTreeNode> predicate) {
 		return treeModel.find(STGroupTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STGroupTreeNode> findAllSTGroupTreeNode(java.util.function.Predicate<STGroupTreeNode> predicate) {
+		return treeModel.findAll(STGroupTreeNode.class, predicate);
 	}
 
 	private Optional<STGroupTreeNode> findSTGroupTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STGroupTreeNode> predicate) {
@@ -629,8 +653,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STEnumTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STEnumTreeNode> findAllSTEnumTreeNode() {
+		return treeModel.findAll(STEnumTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STEnumTreeNode> findSTEnumTreeNode(java.util.function.Predicate<STEnumTreeNode> predicate) {
 		return treeModel.find(STEnumTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STEnumTreeNode> findAllSTEnumTreeNode(java.util.function.Predicate<STEnumTreeNode> predicate) {
+		return treeModel.findAll(STEnumTreeNode.class, predicate);
 	}
 
 	private Optional<STEnumTreeNode> findSTEnumTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STEnumTreeNode> predicate) {
@@ -714,8 +746,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STTemplateTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STTemplateTreeNode> findAllSTTemplateTreeNode() {
+		return treeModel.findAll(STTemplateTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STTemplateTreeNode> findSTTemplateTreeNode(java.util.function.Predicate<STTemplateTreeNode> predicate) {
 		return treeModel.find(STTemplateTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STTemplateTreeNode> findAllSTTemplateTreeNode(java.util.function.Predicate<STTemplateTreeNode> predicate) {
+		return treeModel.findAll(STTemplateTreeNode.class, predicate);
 	}
 
 	private Optional<STTemplateTreeNode> findSTTemplateTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STTemplateTreeNode> predicate) {
@@ -781,8 +821,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STInterfaceTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STInterfaceTreeNode> findAllSTInterfaceTreeNode() {
+		return treeModel.findAll(STInterfaceTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STInterfaceTreeNode> findSTInterfaceTreeNode(java.util.function.Predicate<STInterfaceTreeNode> predicate) {
 		return treeModel.find(STInterfaceTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STInterfaceTreeNode> findAllSTInterfaceTreeNode(java.util.function.Predicate<STInterfaceTreeNode> predicate) {
+		return treeModel.findAll(STInterfaceTreeNode.class, predicate);
 	}
 
 	private Optional<STInterfaceTreeNode> findSTInterfaceTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STInterfaceTreeNode> predicate) {
@@ -844,8 +892,16 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.find(STGroupFileTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupFileTreeNode> findAllSTGroupFileTreeNode() {
+		return treeModel.findAll(STGroupFileTreeNode.class, treeNode -> true);
+	}
+
 	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode(java.util.function.Predicate<STGroupFileTreeNode> predicate) {
 		return treeModel.find(STGroupFileTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<STGroupFileTreeNode> findAllSTGroupFileTreeNode(java.util.function.Predicate<STGroupFileTreeNode> predicate) {
+		return treeModel.findAll(STGroupFileTreeNode.class, predicate);
 	}
 
 	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<STGroupFileTreeNode> predicate) {
@@ -957,6 +1013,35 @@ public class STTemplateNavigator extends JPanel {
 		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {
 			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>> java.util.Collection<T> findAll(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			final Collection<T> children = new java.util.ArrayList<>();
+			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) 
+				children.add((T) root);
+			children.addAll(findAll((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode)));
+			return children;
+		}
+
+		protected <T extends BaseTreeNode<?>> java.util.Collection<T> findAll(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return findAll(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>> java.util.Collection<T> findAll(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
+			final Collection<T> children = new java.util.ArrayList<>();
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					children.add((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					children.addAll(findAll(childAt, predicate));
+				}
+			}
+			return children;
 		}
 
 		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {

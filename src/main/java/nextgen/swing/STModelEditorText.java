@@ -6,7 +6,7 @@ public class STModelEditorText extends AbstractEditor {
 
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
    private final org.fife.ui.rtextarea.RTextScrollPane editorComponent = new org.fife.ui.rtextarea.RTextScrollPane(txtEditor);
-   private final javax.swing.Action toClipboardAction = newAction("Copy to Clipboard", actionEvent -> toClipboard());
+   private final javax.swing.Action toClipboardAction = newAction("To ClipboardClipboard", actionEvent -> toClipboard());
 
    private nextgen.model.STModel stModel;
 
