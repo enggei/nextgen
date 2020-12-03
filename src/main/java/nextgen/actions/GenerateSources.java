@@ -58,6 +58,11 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
                   .setBlockStmt(blockStmt));
 
       final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration);
+
+      compilationUnit.addImportDeclaration(nextgen.templates.java.JavaPatterns
+            .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(nextgen.utils.STModelUtil.getSTGroup(stTemplate).getName()))
+            .setIsAsterisk(true));
+
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
       nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
