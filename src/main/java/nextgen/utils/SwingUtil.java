@@ -30,7 +30,10 @@ import java.util.regex.Pattern;
 import static javax.swing.JOptionPane.*;
 
 public class SwingUtil {
+
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SwingUtil.class);
+
+   private static final java.util.List<Object> clipboard = new java.util.ArrayList<>();
 
    public static Font getDefaultFont() {
       return new Font("Hack", Font.PLAIN, 20);
@@ -38,6 +41,10 @@ public class SwingUtil {
 
    public static JTextField newTextField() {
       return new JTextField();
+   }
+
+   public static void selectFromClipboard(Component owner, Consumer<Object> consumer) {
+      showSelectDialog("Clipboard", owner, clipboard, consumer);
    }
 
    public static String fromClipboard() {
@@ -54,12 +61,27 @@ public class SwingUtil {
       return "";
    }
 
+   public static void toClipboard(Object content) {
+      addToClipboard(content);
+   }
+
    public static void toClipboard(String content) {
+
+      addToClipboard(content);
+
       StringSelection stringSelection = new StringSelection(content);
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       clipboard.setContents(stringSelection, (clipboard1, contents) -> {
          // don't care ?
       });
+
+
+   }
+
+   private static void addToClipboard(Object content) {
+      clipboard.add(content);
+      while (clipboard.size() > 7)
+         clipboard.remove(clipboard.size() - 1);
    }
 
    public static void showPanel(final JComponent component) {
@@ -459,6 +481,15 @@ public class SwingUtil {
          values[index++] = enumValue;
       final JComboBox<T> comboBox = new JComboBox<>(values);
       if (selected != null) comboBox.setSelectedItem(selected);
+
+      comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {
+         @Override
+         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            final String toString = value == null ? "[null]" : value.toString();
+            return super.getListCellRendererComponent(list, toString.length() > 50 ? toString.substring(0, 50) : toString, index, isSelected, cellHasFocus);
+         }
+      });
+
       return comboBox;
    }
 
@@ -747,8 +778,6 @@ public class SwingUtil {
             }
          }
       });
-
-
 
 
       return rSyntaxTextArea;

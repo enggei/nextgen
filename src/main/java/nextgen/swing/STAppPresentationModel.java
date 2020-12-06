@@ -245,4 +245,27 @@ public class STAppPresentationModel {
             "text/xml",
             "text/yaml");
    }
+
+   public org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupAction stGroupAction) {
+      return createCompletionProvider(stGroupAction.getIncomingActionsSTGroupModel().findFirst().get());
+   }
+
+   private org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupModel stGroupModel) {
+
+      org.fife.ui.autocomplete.DefaultCompletionProvider provider = new org.fife.ui.autocomplete.DefaultCompletionProvider();
+
+      // Add completions for all Java keywords. A BasicCompletion is just a straightforward word completion.
+      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "abstract"));
+
+      // Add a couple of "shorthand" completions. These completions don't require the input text to be the same thing as the replacement text.
+      provider.addCompletion(new org.fife.ui.autocomplete.ShorthandCompletion(provider, "sysout","System.out.println();", "System.out.println("));
+
+      org.fife.ui.rsyntaxtextarea.CodeTemplateManager ctm = org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.getCodeTemplateManager();
+      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("fb", "for (int i=0; i<", "; i++) {\n\t\n}\n"));
+      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("nt", "final nextgen.model.STTemplate stTemplate = appModel().db.findSTTemplateByUuid(\"", "\");"));
+      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("nm", "final nextgen.model.STModel stModel = appModel().db.newSTModel().setStTemplate(stTemplate);", ""));
+
+
+      return provider;
+   }
 }

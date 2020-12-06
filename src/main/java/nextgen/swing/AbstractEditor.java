@@ -74,6 +74,7 @@ public class AbstractEditor extends javax.swing.JPanel {
       pop.add(newAction("Replace with Clipboard", actionEvent -> replaceWithClipboard(textArea)));
       pop.add(newAction("Append from Clipboard", actionEvent -> appendFromClipboard(textArea)));
       pop.add(newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard(textArea)));
+      pop.add(newAction("Select from Clipboard", actionEvent -> selectFromClipboard(textArea)));
       pop.addSeparator();
       pop.add(newAction("Select Line", actionEvent -> selectLine(textArea)));
       pop.add(newAction("To Clipboard", actionEvent -> toClipboard(textArea)));
@@ -85,6 +86,18 @@ public class AbstractEditor extends javax.swing.JPanel {
       textArea.setText(nextgen.utils.SwingUtil.fromClipboard().trim());
       textArea.setCaretPosition(0);
       tryToSave();
+   }
+
+   protected void selectFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      if (!textArea.isEditable()) return;
+
+      appModel().doLaterInTransaction(transaction -> {
+         nextgen.utils.SwingUtil.selectFromClipboard(textArea, o -> {
+            textArea.setText(o.toString().trim());
+            textArea.setCaretPosition(0);
+            tryToSave();
+         });
+      });
    }
 
    protected void prependFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {

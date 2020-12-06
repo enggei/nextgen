@@ -34,6 +34,7 @@ public class STApp extends JFrame {
       //UIManager.put("Tree.font", font);
       UIManager.put("TextField.font", font);
       UIManager.put("TextArea.font", font);
+      org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.setTemplatesEnabled(true);
 
       SwingUtil.show(new STApp());
    }

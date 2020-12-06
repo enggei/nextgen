@@ -32,6 +32,12 @@ public class STGroupActionEditor extends AbstractEditor {
       txtMethods.addKeyListener(editorKeyListener);
       txtImports.addKeyListener(editorKeyListener);
 
+      org.fife.ui.autocomplete.CompletionProvider provider = appModel().createCompletionProvider(model);
+      org.fife.ui.autocomplete.AutoCompletion ac = new org.fife.ui.autocomplete.AutoCompletion(provider);
+      javax.swing.KeyStroke key = javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK);
+      ac.setTriggerKey(key);
+      ac.install(txtStatements);
+
       final javax.swing.JPanel namePanel = new javax.swing.JPanel(new java.awt.BorderLayout());
       namePanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       namePanel.add(txtName, java.awt.BorderLayout.NORTH);
