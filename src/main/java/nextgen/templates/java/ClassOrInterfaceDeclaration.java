@@ -7,8 +7,8 @@ public class ClassOrInterfaceDeclaration {
 
 	private Object _isInterface;
 	private Object _name;
-	private java.util.List<Object> _comments = new java.util.ArrayList<>();
 	private java.util.List<Object> _annotations = new java.util.ArrayList<>();
+	private java.util.List<Object> _comments = new java.util.ArrayList<>();
 	private java.util.List<Object> _modifiers = new java.util.ArrayList<>();
 	private java.util.List<Object> _typeParameters = new java.util.ArrayList<>();
 	private java.util.List<Object> _extend = new java.util.ArrayList<>();
@@ -29,8 +29,8 @@ public class ClassOrInterfaceDeclaration {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassOrInterfaceDeclaration");
 		st.add("isInterface", _isInterface);
 		st.add("name", _name);
-		for (Object o : _comments) st.add("comments", o);
 		for (Object o : _annotations) st.add("annotations", o);
+		for (Object o : _comments) st.add("comments", o);
 		for (Object o : _modifiers) st.add("modifiers", o);
 		for (Object o : _typeParameters) st.add("typeParameters", o);
 		for (Object o : _extend) st.add("extend", o);
@@ -84,35 +84,6 @@ public class ClassOrInterfaceDeclaration {
 		return this;
 	} 
 
-	public ClassOrInterfaceDeclaration addComments(Object value) {
-		this._comments.add(value);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration setComments(Object[] value) {
-		this._comments.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration setComments(java.util.Collection<Object> values) {
-		this._comments.addAll(values);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration removeComments(Object value) {
-		this._comments.remove(value);
-		return this;
-	}
-
-	public ClassOrInterfaceDeclaration removeComments(int index) {
-		this._comments.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getComments() {
-		return this._comments;
-	} 
-
 	public ClassOrInterfaceDeclaration addAnnotations(Object value) {
 		this._annotations.add(value);
 		return this;
@@ -140,6 +111,35 @@ public class ClassOrInterfaceDeclaration {
 
 	public java.util.List<Object> getAnnotations() {
 		return this._annotations;
+	} 
+
+	public ClassOrInterfaceDeclaration addComments(Object value) {
+		this._comments.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setComments(Object[] value) {
+		this._comments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration setComments(java.util.Collection<Object> values) {
+		this._comments.addAll(values);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration removeComments(Object value) {
+		this._comments.remove(value);
+		return this;
+	}
+
+	public ClassOrInterfaceDeclaration removeComments(int index) {
+		this._comments.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getComments() {
+		return this._comments;
 	} 
 
 	public ClassOrInterfaceDeclaration addModifiers(Object value) {
@@ -330,7 +330,7 @@ public class ClassOrInterfaceDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassOrInterfaceDeclaration(comments,annotations,modifiers,isInterface,name,typeParameters,extend,implementedTypes,fields,members) ::= <<~comments:{it|~it~};separator=\"\\n\"~~if(comments)~\n" + 
+	static final String st = "ClassOrInterfaceDeclaration(annotations,comments,isInterface,modifiers,name,typeParameters,extend,implementedTypes,fields,members) ::= <<~comments:{it|~it~};separator=\"\\n\"~~if(comments)~\n" + 
 				"~endif~~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~~if(isInterface)~interface ~else~class ~endif~~name~~if(typeParameters)~<~typeParameters:{it|~it~};separator=\", \"~>~endif~~if(extend)~ extends ~extend:{it|~it~};separator=\", \"~~endif~~if(implementedTypes)~ implements ~implementedTypes:{it|~it~};separator=\", \"~~endif~ {\n" + 
 				"	\n" + 

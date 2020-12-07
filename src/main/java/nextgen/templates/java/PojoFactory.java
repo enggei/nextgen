@@ -5,8 +5,8 @@ public class PojoFactory {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
 	private Object _name;
+	private Object _package;
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
 
 	PojoFactory(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class PojoFactory {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("PojoFactory");
-		st.add("package", _package);
 		st.add("name", _name);
+		st.add("package", _package);
 		for (Object o : _entities) st.add("entities", o);
 		return st.render().trim();
 	}
-
-	public PojoFactory setPackage(Object value) {
-		this._package = value;
-		return this;
-	}
-
-	public Object getPackage() {
-		return this._package;
-	}
-
-	public Object getPackage(Object defaultValue) {
-		return this._package == null ? defaultValue : this._package;
-	}
-
-	public boolean hasPackage() {
-		return this._package != null;
-	}
-
-	public PojoFactory removePackage() {
-		this._package = null;
-		return this;
-	} 
 
 	public PojoFactory setName(Object value) {
 		this._name = value;
@@ -67,6 +45,28 @@ public class PojoFactory {
 
 	public PojoFactory removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public PojoFactory setPackage(Object value) {
+		this._package = value;
+		return this;
+	}
+
+	public Object getPackage() {
+		return this._package;
+	}
+
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
+	}
+
+	public boolean hasPackage() {
+		return this._package != null;
+	}
+
+	public PojoFactory removePackage() {
+		this._package = null;
 		return this;
 	} 
 
@@ -113,7 +113,7 @@ public class PojoFactory {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "PojoFactory(package,name,entities) ::= <<package ~package~;\n" + 
+	static final String st = "PojoFactory(name,entities,package) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 

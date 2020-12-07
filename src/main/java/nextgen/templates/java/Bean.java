@@ -7,11 +7,11 @@ public class Bean {
 
 	private String _package;
 	private String _name;
-	private Object _eqha;
 	private Object _beanListener;
+	private Object _eqha;
+	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
-	private java.util.List<String> _lexical = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Bean(org.stringtemplate.v4.STGroup stGroup) {
@@ -27,12 +27,12 @@ public class Bean {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Bean");
 		st.add("package", _package);
 		st.add("name", _name);
-		st.add("eqha", _eqha);
 		st.add("beanListener", _beanListener);
+		st.add("eqha", _eqha);
+		for (Object o : _lexical) st.add("lexical", o);
 		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
 		for (Object o : _accessors) st.add("accessors", o);
-		for (Object o : _lexical) st.add("lexical", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,initializer,type}", map.get("name"), map.get("initializer"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -80,6 +80,28 @@ public class Bean {
 		return this;
 	} 
 
+	public Bean setBeanListener(Object value) {
+		this._beanListener = value;
+		return this;
+	}
+
+	public Object getBeanListener() {
+		return this._beanListener;
+	}
+
+	public Object getBeanListener(Object defaultValue) {
+		return this._beanListener == null ? defaultValue : this._beanListener;
+	}
+
+	public boolean hasBeanListener() {
+		return this._beanListener != null;
+	}
+
+	public Bean removeBeanListener() {
+		this._beanListener = null;
+		return this;
+	} 
+
 	public Bean setEqha(Object value) {
 		this._eqha = value;
 		return this;
@@ -102,26 +124,33 @@ public class Bean {
 		return this;
 	} 
 
-	public Bean setBeanListener(Object value) {
-		this._beanListener = value;
+	public Bean addLexical(String value) {
+		this._lexical.add(value);
 		return this;
 	}
 
-	public Object getBeanListener() {
-		return this._beanListener;
-	}
-
-	public Object getBeanListener(Object defaultValue) {
-		return this._beanListener == null ? defaultValue : this._beanListener;
-	}
-
-	public boolean hasBeanListener() {
-		return this._beanListener != null;
-	}
-
-	public Bean removeBeanListener() {
-		this._beanListener = null;
+	public Bean setLexical(String[] value) {
+		this._lexical.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public Bean setLexical(java.util.Collection<String> values) {
+		this._lexical.addAll(values);
+		return this;
+	}
+
+	public Bean removeLexical(String value) {
+		this._lexical.remove(value);
+		return this;
+	}
+
+	public Bean removeLexical(int index) {
+		this._lexical.remove(index);
+		return this;
+	}
+
+	public java.util.List<String> getLexical() {
+		return this._lexical;
 	} 
 
 	public Bean addFieldDeclarations(Object value) {
@@ -182,40 +211,11 @@ public class Bean {
 		return this._accessors;
 	} 
 
-	public Bean addLexical(String value) {
-		this._lexical.add(value);
-		return this;
-	}
-
-	public Bean setLexical(String[] value) {
-		this._lexical.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Bean setLexical(java.util.Collection<String> values) {
-		this._lexical.addAll(values);
-		return this;
-	}
-
-	public Bean removeLexical(String value) {
-		this._lexical.remove(value);
-		return this;
-	}
-
-	public Bean removeLexical(int index) {
-		this._lexical.remove(index);
-		return this;
-	}
-
-	public java.util.List<String> getLexical() {
-		return this._lexical;
-	} 
-
-	public Bean addFields(Object _type, String _name, Object _initializer) {
+	public Bean addFields(String _name, Object _initializer, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
 		map.put("initializer", _initializer);
+		map.put("type", _type);
 		this._fields.add(map);
 		return this;
 	}
@@ -225,17 +225,12 @@ public class Bean {
 	}
 
 	public Bean addFields(Bean_Fields value) {
-		return addFields(value._type, value._name, value._initializer);
+		return addFields(value._name, value._initializer, value._type);
 	}
 
 	public java.util.stream.Stream<Bean_Fields> streamFields() {
 		return this._fields.stream().map(Bean_Fields::new);
 	}
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(Bean_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
 
 	public java.util.List<String> getFields_Name() {
 		return streamFields().map(Bean_Fields::getName).collect(java.util.stream.Collectors.toList());
@@ -247,26 +242,27 @@ public class Bean {
 	}
 
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Bean_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Bean_Fields {
 
-		Object _type;
 		String _name;
 		Object _initializer;
+		Object _type;
 
-		public Bean_Fields(Object _type, String _name, Object _initializer) {
-			this._type = _type;
+		public Bean_Fields(String _name, Object _initializer, Object _type) {
 			this._name = _name;
 			this._initializer = _initializer;
+			this._type = _type;
 		}
 
 		private Bean_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (String) map.get("name");
 			this._initializer = (Object) map.get("initializer");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public String getName() {
@@ -275,6 +271,10 @@ public class Bean {
 
 		public Object getInitializer() {
 			return this._initializer;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -292,7 +292,7 @@ public class Bean {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Bean(package,name,fields,fieldDeclarations,accessors,lexical,eqha,beanListener) ::= <<package ~package~;\n" + 
+	static final String st = "Bean(fields,package,name,beanListener,lexical,eqha,fieldDeclarations,accessors) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ implements java.beans.PropertyChangeListener {\n" + 
 				"\n" + 

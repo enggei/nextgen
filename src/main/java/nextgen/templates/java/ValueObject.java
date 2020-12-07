@@ -24,7 +24,7 @@ public class ValueObject {
 		st.add("package", _package);
 		st.add("name", _name);
 		for (Object o : _lexical) st.add("lexical", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type,initializer}", map.get("name"), map.get("type"), map.get("initializer"));
 		return st.render().trim();
 	}
 
@@ -101,10 +101,10 @@ public class ValueObject {
 		return this._lexical;
 	} 
 
-	public ValueObject addFields(Object _type, Object _name, Object _initializer) {
+	public ValueObject addFields(Object _name, Object _type, Object _initializer) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		map.put("initializer", _initializer);
 		this._fields.add(map);
 		return this;
@@ -115,20 +115,20 @@ public class ValueObject {
 	}
 
 	public ValueObject addFields(ValueObject_Fields value) {
-		return addFields(value._type, value._name, value._initializer);
+		return addFields(value._name, value._type, value._initializer);
 	}
 
 	public java.util.stream.Stream<ValueObject_Fields> streamFields() {
 		return this._fields.stream().map(ValueObject_Fields::new);
 	}
 
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(ValueObject_Fields::getType).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(ValueObject_Fields::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(ValueObject_Fields::getName).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(ValueObject_Fields::getType).collect(java.util.stream.Collectors.toList());
 	}
 
 
@@ -139,28 +139,28 @@ public class ValueObject {
 
 	public static final class ValueObject_Fields {
 
-		Object _type;
 		Object _name;
+		Object _type;
 		Object _initializer;
 
-		public ValueObject_Fields(Object _type, Object _name, Object _initializer) {
-			this._type = _type;
+		public ValueObject_Fields(Object _name, Object _type, Object _initializer) {
 			this._name = _name;
+			this._type = _type;
 			this._initializer = _initializer;
 		}
 
 		private ValueObject_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
 			this._initializer = (Object) map.get("initializer");
-		}
-
-		public Object getType() {
-			return this._type;
 		}
 
 		public Object getName() {
 			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 		public Object getInitializer() {
@@ -182,7 +182,7 @@ public class ValueObject {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ValueObject(package,name,fields,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "ValueObject(package,fields,name,lexical) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 

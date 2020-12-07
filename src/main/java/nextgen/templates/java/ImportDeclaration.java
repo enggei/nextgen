@@ -5,9 +5,9 @@ public class ImportDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _isStatic;
-	private Object _name;
 	private Object _isAsterisk;
+	private Object _name;
+	private Object _isStatic;
 
 	ImportDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,31 +20,31 @@ public class ImportDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ImportDeclaration");
-		st.add("isStatic", _isStatic);
-		st.add("name", _name);
 		st.add("isAsterisk", _isAsterisk);
+		st.add("name", _name);
+		st.add("isStatic", _isStatic);
 		return st.render().trim();
 	}
 
-	public ImportDeclaration setIsStatic(Object value) {
-		this._isStatic = value;
+	public ImportDeclaration setIsAsterisk(Object value) {
+		this._isAsterisk = value;
 		return this;
 	}
 
-	public Object getIsStatic() {
-		return this._isStatic;
+	public Object getIsAsterisk() {
+		return this._isAsterisk;
 	}
 
-	public Object getIsStatic(Object defaultValue) {
-		return this._isStatic == null ? defaultValue : this._isStatic;
+	public Object getIsAsterisk(Object defaultValue) {
+		return this._isAsterisk == null ? defaultValue : this._isAsterisk;
 	}
 
-	public boolean hasIsStatic() {
-		return this._isStatic != null;
+	public boolean hasIsAsterisk() {
+		return this._isAsterisk != null;
 	}
 
-	public ImportDeclaration removeIsStatic() {
-		this._isStatic = null;
+	public ImportDeclaration removeIsAsterisk() {
+		this._isAsterisk = null;
 		return this;
 	} 
 
@@ -70,25 +70,25 @@ public class ImportDeclaration {
 		return this;
 	} 
 
-	public ImportDeclaration setIsAsterisk(Object value) {
-		this._isAsterisk = value;
+	public ImportDeclaration setIsStatic(Object value) {
+		this._isStatic = value;
 		return this;
 	}
 
-	public Object getIsAsterisk() {
-		return this._isAsterisk;
+	public Object getIsStatic() {
+		return this._isStatic;
 	}
 
-	public Object getIsAsterisk(Object defaultValue) {
-		return this._isAsterisk == null ? defaultValue : this._isAsterisk;
+	public Object getIsStatic(Object defaultValue) {
+		return this._isStatic == null ? defaultValue : this._isStatic;
 	}
 
-	public boolean hasIsAsterisk() {
-		return this._isAsterisk != null;
+	public boolean hasIsStatic() {
+		return this._isStatic != null;
 	}
 
-	public ImportDeclaration removeIsAsterisk() {
-		this._isAsterisk = null;
+	public ImportDeclaration removeIsStatic() {
+		this._isStatic = null;
 		return this;
 	} 
 
@@ -107,5 +107,5 @@ public class ImportDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ImportDeclaration(isStatic,name,isAsterisk) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~; >>";
+	static final String st = "ImportDeclaration(isAsterisk,name,isStatic) ::= <<import ~if(isStatic)~static ~endif~~name~~if(isAsterisk)~.*~endif~; >>";
 }  

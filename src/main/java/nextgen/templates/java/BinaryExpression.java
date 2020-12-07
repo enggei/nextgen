@@ -5,8 +5,8 @@ public class BinaryExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _left;
 	private Object _operator;
+	private Object _left;
 	private Object _right;
 
 	BinaryExpression(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class BinaryExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("BinaryExpression");
-		st.add("left", _left);
 		st.add("operator", _operator);
+		st.add("left", _left);
 		st.add("right", _right);
 		return st.render().trim();
 	}
-
-	public BinaryExpression setLeft(Object value) {
-		this._left = value;
-		return this;
-	}
-
-	public Object getLeft() {
-		return this._left;
-	}
-
-	public Object getLeft(Object defaultValue) {
-		return this._left == null ? defaultValue : this._left;
-	}
-
-	public boolean hasLeft() {
-		return this._left != null;
-	}
-
-	public BinaryExpression removeLeft() {
-		this._left = null;
-		return this;
-	} 
 
 	public BinaryExpression setOperator(Object value) {
 		this._operator = value;
@@ -67,6 +45,28 @@ public class BinaryExpression implements Expression {
 
 	public BinaryExpression removeOperator() {
 		this._operator = null;
+		return this;
+	} 
+
+	public BinaryExpression setLeft(Object value) {
+		this._left = value;
+		return this;
+	}
+
+	public Object getLeft() {
+		return this._left;
+	}
+
+	public Object getLeft(Object defaultValue) {
+		return this._left == null ? defaultValue : this._left;
+	}
+
+	public boolean hasLeft() {
+		return this._left != null;
+	}
+
+	public BinaryExpression removeLeft() {
+		this._left = null;
 		return this;
 	} 
 
@@ -107,5 +107,5 @@ public class BinaryExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BinaryExpression(left,operator,right) ::= <<~left~ ~operator~ ~right~ >>";
+	static final String st = "BinaryExpression(operator,left,right) ::= <<~left~ ~operator~ ~right~ >>";
 }  

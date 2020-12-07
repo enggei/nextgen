@@ -5,8 +5,8 @@ public class WhileStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Expression _condition;
 	private Object _body;
+	private Expression _condition;
 
 	WhileStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class WhileStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WhileStmt");
-		st.add("condition", _condition);
 		st.add("body", _body);
+		st.add("condition", _condition);
 		return st.render().trim();
 	}
-
-	public WhileStmt setCondition(Expression value) {
-		this._condition = value;
-		return this;
-	}
-
-	public Expression getCondition() {
-		return this._condition;
-	}
-
-	public Expression getCondition(Expression defaultValue) {
-		return this._condition == null ? defaultValue : this._condition;
-	}
-
-	public boolean hasCondition() {
-		return this._condition != null;
-	}
-
-	public WhileStmt removeCondition() {
-		this._condition = null;
-		return this;
-	} 
 
 	public WhileStmt setBody(Object value) {
 		this._body = value;
@@ -68,6 +46,28 @@ public class WhileStmt implements Statement {
 		return this;
 	} 
 
+	public WhileStmt setCondition(Expression value) {
+		this._condition = value;
+		return this;
+	}
+
+	public Expression getCondition() {
+		return this._condition;
+	}
+
+	public Expression getCondition(Expression defaultValue) {
+		return this._condition == null ? defaultValue : this._condition;
+	}
+
+	public boolean hasCondition() {
+		return this._condition != null;
+	}
+
+	public WhileStmt removeCondition() {
+		this._condition = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,5 +83,5 @@ public class WhileStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WhileStmt(condition,body) ::= <<while (~condition~) ~body~ >>";
+	static final String st = "WhileStmt(body,condition) ::= <<while (~condition~) ~body~ >>";
 }  

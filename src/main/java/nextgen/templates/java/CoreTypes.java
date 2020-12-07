@@ -2,24 +2,24 @@ package nextgen.templates.java;
 
 public enum CoreTypes {
 
-	FileType() {
+	AtomicLongType() {
 		@Override
-		public String toString() { return "java.io.File"; }
-	},
-	StringType() {
-		@Override
-		public String toString() { return "java.lang.String"; }
+		public String toString() { return "java.util.concurrent.atomic.AtomicLong"; }
 	},
 	LongType() {
 		@Override
 		public String toString() { return "java.lang.Long"; }
 	},
-	AtomicLongType() {
-		@Override
-		public String toString() { return "java.util.concurrent.atomic.AtomicLong"; }
-	},
 	ThreadType() {
 		@Override
 		public String toString() { return "java.util.Thread"; }
+	},
+	StringType() {
+		@Override
+		public String toString() { return "java.lang.String"; }
+	},
+	FileType() {
+		@Override
+		public String toString() { return "java.io.File"; }
 	}
 }  

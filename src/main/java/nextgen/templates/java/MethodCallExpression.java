@@ -5,10 +5,10 @@ public class MethodCallExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _scope;
 	private Object _name;
-	private java.util.List<Object> _arguments = new java.util.ArrayList<>();
+	private Object _scope;
 	private java.util.List<Object> _typeArguments = new java.util.ArrayList<>();
+	private java.util.List<Object> _arguments = new java.util.ArrayList<>();
 
 	MethodCallExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,34 +21,12 @@ public class MethodCallExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("MethodCallExpression");
-		st.add("scope", _scope);
 		st.add("name", _name);
-		for (Object o : _arguments) st.add("arguments", o);
+		st.add("scope", _scope);
 		for (Object o : _typeArguments) st.add("typeArguments", o);
+		for (Object o : _arguments) st.add("arguments", o);
 		return st.render().trim();
 	}
-
-	public MethodCallExpression setScope(Object value) {
-		this._scope = value;
-		return this;
-	}
-
-	public Object getScope() {
-		return this._scope;
-	}
-
-	public Object getScope(Object defaultValue) {
-		return this._scope == null ? defaultValue : this._scope;
-	}
-
-	public boolean hasScope() {
-		return this._scope != null;
-	}
-
-	public MethodCallExpression removeScope() {
-		this._scope = null;
-		return this;
-	} 
 
 	public MethodCallExpression setName(Object value) {
 		this._name = value;
@@ -72,33 +50,26 @@ public class MethodCallExpression implements Expression {
 		return this;
 	} 
 
-	public MethodCallExpression addArguments(Object value) {
-		this._arguments.add(value);
+	public MethodCallExpression setScope(Object value) {
+		this._scope = value;
 		return this;
 	}
 
-	public MethodCallExpression setArguments(Object[] value) {
-		this._arguments.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getScope() {
+		return this._scope;
 	}
 
-	public MethodCallExpression setArguments(java.util.Collection<Object> values) {
-		this._arguments.addAll(values);
-		return this;
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
 	}
 
-	public MethodCallExpression removeArguments(Object value) {
-		this._arguments.remove(value);
-		return this;
+	public boolean hasScope() {
+		return this._scope != null;
 	}
 
-	public MethodCallExpression removeArguments(int index) {
-		this._arguments.remove(index);
+	public MethodCallExpression removeScope() {
+		this._scope = null;
 		return this;
-	}
-
-	public java.util.List<Object> getArguments() {
-		return this._arguments;
 	} 
 
 	public MethodCallExpression addTypeArguments(Object value) {
@@ -130,6 +101,35 @@ public class MethodCallExpression implements Expression {
 		return this._typeArguments;
 	} 
 
+	public MethodCallExpression addArguments(Object value) {
+		this._arguments.add(value);
+		return this;
+	}
+
+	public MethodCallExpression setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public MethodCallExpression setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
+		return this;
+	}
+
+	public MethodCallExpression removeArguments(Object value) {
+		this._arguments.remove(value);
+		return this;
+	}
+
+	public MethodCallExpression removeArguments(int index) {
+		this._arguments.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getArguments() {
+		return this._arguments;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -144,5 +144,5 @@ public class MethodCallExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "MethodCallExpression(scope,arguments,typeArguments,name) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~) >>";
+	static final String st = "MethodCallExpression(typeArguments,name,scope,arguments) ::= <<~if(scope)~~scope~.~endif~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\",\"~>~endif~~name~(~arguments:{it|~it~};separator=\", \"~) >>";
 }  

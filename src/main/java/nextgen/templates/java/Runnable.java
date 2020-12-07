@@ -5,8 +5,9 @@ public class Runnable {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _packageName;
 	private String _name;
+	private String _packageName;
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
@@ -21,12 +22,35 @@ public class Runnable {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Runnable");
-		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("packageName", _packageName);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
+
+	public Runnable setName(String value) {
+		this._name = value;
+		return this;
+	}
+
+	public String getName() {
+		return this._name;
+	}
+
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public Runnable removeName() {
+		this._name = null;
+		return this;
+	} 
 
 	public Runnable setPackageName(String value) {
 		this._packageName = value;
@@ -50,26 +74,33 @@ public class Runnable {
 		return this;
 	} 
 
-	public Runnable setName(String value) {
-		this._name = value;
+	public Runnable addMethods(Object value) {
+		this._methods.add(value);
 		return this;
 	}
 
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public Runnable removeName() {
-		this._name = null;
+	public Runnable setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
 		return this;
+	}
+
+	public Runnable setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public Runnable removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public Runnable removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public Runnable addStatements(Object value) {
@@ -169,7 +200,7 @@ public class Runnable {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Runnable(packageName,name,fields,statements) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;\n" + 
+	static final String st = "Runnable(methods,statements,fields,name,packageName) ::= <<package ~if(packageName)~~packageName~~else~tmp~endif~;\n" + 
 				"\n" + 
 				"public class ~name~ implements Runnable {\n" + 
 				"\n" + 
@@ -183,5 +214,7 @@ public class Runnable {
 				"	public void run() {\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

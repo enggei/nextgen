@@ -5,10 +5,10 @@ public class TryStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _tryBlock;
 	private Object _finalClause;
-	private java.util.List<Object> _catchClauses = new java.util.ArrayList<>();
+	private Object _tryBlock;
 	private java.util.List<Object> _resources = new java.util.ArrayList<>();
+	private java.util.List<Object> _catchClauses = new java.util.ArrayList<>();
 
 	TryStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,34 +21,12 @@ public class TryStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TryStmt");
-		st.add("tryBlock", _tryBlock);
 		st.add("finalClause", _finalClause);
-		for (Object o : _catchClauses) st.add("catchClauses", o);
+		st.add("tryBlock", _tryBlock);
 		for (Object o : _resources) st.add("resources", o);
+		for (Object o : _catchClauses) st.add("catchClauses", o);
 		return st.render().trim();
 	}
-
-	public TryStmt setTryBlock(Object value) {
-		this._tryBlock = value;
-		return this;
-	}
-
-	public Object getTryBlock() {
-		return this._tryBlock;
-	}
-
-	public Object getTryBlock(Object defaultValue) {
-		return this._tryBlock == null ? defaultValue : this._tryBlock;
-	}
-
-	public boolean hasTryBlock() {
-		return this._tryBlock != null;
-	}
-
-	public TryStmt removeTryBlock() {
-		this._tryBlock = null;
-		return this;
-	} 
 
 	public TryStmt setFinalClause(Object value) {
 		this._finalClause = value;
@@ -72,33 +50,26 @@ public class TryStmt implements Statement {
 		return this;
 	} 
 
-	public TryStmt addCatchClauses(Object value) {
-		this._catchClauses.add(value);
+	public TryStmt setTryBlock(Object value) {
+		this._tryBlock = value;
 		return this;
 	}
 
-	public TryStmt setCatchClauses(Object[] value) {
-		this._catchClauses.addAll(java.util.Arrays.asList(value));
-		return this;
+	public Object getTryBlock() {
+		return this._tryBlock;
 	}
 
-	public TryStmt setCatchClauses(java.util.Collection<Object> values) {
-		this._catchClauses.addAll(values);
-		return this;
+	public Object getTryBlock(Object defaultValue) {
+		return this._tryBlock == null ? defaultValue : this._tryBlock;
 	}
 
-	public TryStmt removeCatchClauses(Object value) {
-		this._catchClauses.remove(value);
-		return this;
+	public boolean hasTryBlock() {
+		return this._tryBlock != null;
 	}
 
-	public TryStmt removeCatchClauses(int index) {
-		this._catchClauses.remove(index);
+	public TryStmt removeTryBlock() {
+		this._tryBlock = null;
 		return this;
-	}
-
-	public java.util.List<Object> getCatchClauses() {
-		return this._catchClauses;
 	} 
 
 	public TryStmt addResources(Object value) {
@@ -130,6 +101,35 @@ public class TryStmt implements Statement {
 		return this._resources;
 	} 
 
+	public TryStmt addCatchClauses(Object value) {
+		this._catchClauses.add(value);
+		return this;
+	}
+
+	public TryStmt setCatchClauses(Object[] value) {
+		this._catchClauses.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TryStmt setCatchClauses(java.util.Collection<Object> values) {
+		this._catchClauses.addAll(values);
+		return this;
+	}
+
+	public TryStmt removeCatchClauses(Object value) {
+		this._catchClauses.remove(value);
+		return this;
+	}
+
+	public TryStmt removeCatchClauses(int index) {
+		this._catchClauses.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getCatchClauses() {
+		return this._catchClauses;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -144,5 +144,5 @@ public class TryStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TryStmt(tryBlock,finalClause,catchClauses,resources) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~ >>";
+	static final String st = "TryStmt(resources,catchClauses,finalClause,tryBlock) ::= <<try~if(resources)~ (~resources:{it|~it~};separator=\";\"~)~endif~ ~tryBlock~ ~catchClauses:{it|~it~}~~if(finalClause)~ finally ~finalClause~~endif~ >>";
 }  

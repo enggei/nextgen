@@ -151,7 +151,7 @@ public class AnnotationDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationDeclaration(members,name,modifiers,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
+	static final String st = "AnnotationDeclaration(members,modifiers,name,annotations) ::= <<~annotations:{it|~it~};separator=\"\\n\"~~if(annotations)~\n" + 
 				"~endif~~modifiers:{it|~it~};separator=\" \"~~if(modifiers)~ ~endif~@interface ~name~ {\n" + 
 				"	~members:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";

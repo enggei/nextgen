@@ -89,7 +89,7 @@ public class BlockStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "BlockStmt(isStatic,statements) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~\n" + 
+	static final String st = "BlockStmt(statements,isStatic) ::= <<~if(isStatic)~ static~endif~ { ~if(statements)~\n" + 
 				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"~endif~\n" + 
 				"} >>";

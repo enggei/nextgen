@@ -5,8 +5,8 @@ public class ArrayAccessExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _index;
 	private Object _name;
+	private Object _index;
 
 	ArrayAccessExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class ArrayAccessExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ArrayAccessExpression");
-		st.add("index", _index);
 		st.add("name", _name);
+		st.add("index", _index);
 		return st.render().trim();
 	}
-
-	public ArrayAccessExpression setIndex(Object value) {
-		this._index = value;
-		return this;
-	}
-
-	public Object getIndex() {
-		return this._index;
-	}
-
-	public Object getIndex(Object defaultValue) {
-		return this._index == null ? defaultValue : this._index;
-	}
-
-	public boolean hasIndex() {
-		return this._index != null;
-	}
-
-	public ArrayAccessExpression removeIndex() {
-		this._index = null;
-		return this;
-	} 
 
 	public ArrayAccessExpression setName(Object value) {
 		this._name = value;
@@ -68,6 +46,28 @@ public class ArrayAccessExpression implements Expression {
 		return this;
 	} 
 
+	public ArrayAccessExpression setIndex(Object value) {
+		this._index = value;
+		return this;
+	}
+
+	public Object getIndex() {
+		return this._index;
+	}
+
+	public Object getIndex(Object defaultValue) {
+		return this._index == null ? defaultValue : this._index;
+	}
+
+	public boolean hasIndex() {
+		return this._index != null;
+	}
+
+	public ArrayAccessExpression removeIndex() {
+		this._index = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,5 +83,5 @@ public class ArrayAccessExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayAccessExpression(index,name) ::= <<~name~[~index~] >>";
+	static final String st = "ArrayAccessExpression(name,index) ::= <<~name~[~index~] >>";
 }  

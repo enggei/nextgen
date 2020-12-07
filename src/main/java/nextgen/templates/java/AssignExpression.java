@@ -5,9 +5,9 @@ public class AssignExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _operator;
 	private Object _value;
 	private Object _target;
-	private Object _operator;
 
 	AssignExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class AssignExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AssignExpression");
+		st.add("operator", _operator);
 		st.add("value", _value);
 		st.add("target", _target);
-		st.add("operator", _operator);
 		return st.render().trim();
 	}
+
+	public AssignExpression setOperator(Object value) {
+		this._operator = value;
+		return this;
+	}
+
+	public Object getOperator() {
+		return this._operator;
+	}
+
+	public Object getOperator(Object defaultValue) {
+		return this._operator == null ? defaultValue : this._operator;
+	}
+
+	public boolean hasOperator() {
+		return this._operator != null;
+	}
+
+	public AssignExpression removeOperator() {
+		this._operator = null;
+		return this;
+	} 
 
 	public AssignExpression setValue(Object value) {
 		this._value = value;
@@ -70,28 +92,6 @@ public class AssignExpression implements Expression {
 		return this;
 	} 
 
-	public AssignExpression setOperator(Object value) {
-		this._operator = value;
-		return this;
-	}
-
-	public Object getOperator() {
-		return this._operator;
-	}
-
-	public Object getOperator(Object defaultValue) {
-		return this._operator == null ? defaultValue : this._operator;
-	}
-
-	public boolean hasOperator() {
-		return this._operator != null;
-	}
-
-	public AssignExpression removeOperator() {
-		this._operator = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,5 +107,5 @@ public class AssignExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AssignExpression(value,target,operator) ::= <<~target~ ~operator~ ~value~ >>";
+	static final String st = "AssignExpression(operator,value,target) ::= <<~target~ ~operator~ ~value~ >>";
 }  

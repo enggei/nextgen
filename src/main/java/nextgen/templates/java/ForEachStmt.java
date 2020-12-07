@@ -5,9 +5,9 @@ public class ForEachStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _body;
 	private Object _variable;
 	private Object _iterable;
+	private Object _body;
 
 	ForEachStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,33 +20,11 @@ public class ForEachStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ForEachStmt");
-		st.add("body", _body);
 		st.add("variable", _variable);
 		st.add("iterable", _iterable);
+		st.add("body", _body);
 		return st.render().trim();
 	}
-
-	public ForEachStmt setBody(Object value) {
-		this._body = value;
-		return this;
-	}
-
-	public Object getBody() {
-		return this._body;
-	}
-
-	public Object getBody(Object defaultValue) {
-		return this._body == null ? defaultValue : this._body;
-	}
-
-	public boolean hasBody() {
-		return this._body != null;
-	}
-
-	public ForEachStmt removeBody() {
-		this._body = null;
-		return this;
-	} 
 
 	public ForEachStmt setVariable(Object value) {
 		this._variable = value;
@@ -92,6 +70,28 @@ public class ForEachStmt implements Statement {
 		return this;
 	} 
 
+	public ForEachStmt setBody(Object value) {
+		this._body = value;
+		return this;
+	}
+
+	public Object getBody() {
+		return this._body;
+	}
+
+	public Object getBody(Object defaultValue) {
+		return this._body == null ? defaultValue : this._body;
+	}
+
+	public boolean hasBody() {
+		return this._body != null;
+	}
+
+	public ForEachStmt removeBody() {
+		this._body = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,5 +107,5 @@ public class ForEachStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ForEachStmt(body,variable,iterable) ::= <<for (~variable~ : ~iterable~) ~body~ >>";
+	static final String st = "ForEachStmt(variable,iterable,body) ::= <<for (~variable~ : ~iterable~) ~body~ >>";
 }  

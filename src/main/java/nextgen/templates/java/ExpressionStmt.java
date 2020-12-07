@@ -5,8 +5,8 @@ public class ExpressionStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _comment;
 	private Expression _expression;
+	private Object _comment;
 
 	ExpressionStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class ExpressionStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ExpressionStmt");
-		st.add("comment", _comment);
 		st.add("expression", _expression);
+		st.add("comment", _comment);
 		return st.render().trim();
 	}
-
-	public ExpressionStmt setComment(Object value) {
-		this._comment = value;
-		return this;
-	}
-
-	public Object getComment() {
-		return this._comment;
-	}
-
-	public Object getComment(Object defaultValue) {
-		return this._comment == null ? defaultValue : this._comment;
-	}
-
-	public boolean hasComment() {
-		return this._comment != null;
-	}
-
-	public ExpressionStmt removeComment() {
-		this._comment = null;
-		return this;
-	} 
 
 	public ExpressionStmt setExpression(Expression value) {
 		this._expression = value;
@@ -68,6 +46,28 @@ public class ExpressionStmt implements Statement {
 		return this;
 	} 
 
+	public ExpressionStmt setComment(Object value) {
+		this._comment = value;
+		return this;
+	}
+
+	public Object getComment() {
+		return this._comment;
+	}
+
+	public Object getComment(Object defaultValue) {
+		return this._comment == null ? defaultValue : this._comment;
+	}
+
+	public boolean hasComment() {
+		return this._comment != null;
+	}
+
+	public ExpressionStmt removeComment() {
+		this._comment = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,6 +83,6 @@ public class ExpressionStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExpressionStmt(comment,expression) ::= <<~if(comment)~//~comment~\n" + 
+	static final String st = "ExpressionStmt(expression,comment) ::= <<~if(comment)~//~comment~\n" + 
 				"~endif~~expression~; >>";
 }  

@@ -6,11 +6,11 @@ public class ModuleDeclaration {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private java.util.List<Object> _providesDirective = new java.util.ArrayList<>();
 	private java.util.List<Object> _usesDirective = new java.util.ArrayList<>();
-	private java.util.List<Object> _requiresDirective = new java.util.ArrayList<>();
-	private java.util.List<Object> _exportsDirective = new java.util.ArrayList<>();
+	private java.util.List<Object> _providesDirective = new java.util.ArrayList<>();
 	private java.util.List<Object> _opens = new java.util.ArrayList<>();
+	private java.util.List<Object> _exportsDirective = new java.util.ArrayList<>();
+	private java.util.List<Object> _requiresDirective = new java.util.ArrayList<>();
 
 	ModuleDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -24,11 +24,11 @@ public class ModuleDeclaration {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ModuleDeclaration");
 		st.add("name", _name);
-		for (Object o : _providesDirective) st.add("providesDirective", o);
 		for (Object o : _usesDirective) st.add("usesDirective", o);
-		for (Object o : _requiresDirective) st.add("requiresDirective", o);
-		for (Object o : _exportsDirective) st.add("exportsDirective", o);
+		for (Object o : _providesDirective) st.add("providesDirective", o);
 		for (Object o : _opens) st.add("opens", o);
+		for (Object o : _exportsDirective) st.add("exportsDirective", o);
+		for (Object o : _requiresDirective) st.add("requiresDirective", o);
 		return st.render().trim();
 	}
 
@@ -52,35 +52,6 @@ public class ModuleDeclaration {
 	public ModuleDeclaration removeName() {
 		this._name = null;
 		return this;
-	} 
-
-	public ModuleDeclaration addProvidesDirective(Object value) {
-		this._providesDirective.add(value);
-		return this;
-	}
-
-	public ModuleDeclaration setProvidesDirective(Object[] value) {
-		this._providesDirective.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ModuleDeclaration setProvidesDirective(java.util.Collection<Object> values) {
-		this._providesDirective.addAll(values);
-		return this;
-	}
-
-	public ModuleDeclaration removeProvidesDirective(Object value) {
-		this._providesDirective.remove(value);
-		return this;
-	}
-
-	public ModuleDeclaration removeProvidesDirective(int index) {
-		this._providesDirective.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getProvidesDirective() {
-		return this._providesDirective;
 	} 
 
 	public ModuleDeclaration addUsesDirective(Object value) {
@@ -112,62 +83,33 @@ public class ModuleDeclaration {
 		return this._usesDirective;
 	} 
 
-	public ModuleDeclaration addRequiresDirective(Object value) {
-		this._requiresDirective.add(value);
+	public ModuleDeclaration addProvidesDirective(Object value) {
+		this._providesDirective.add(value);
 		return this;
 	}
 
-	public ModuleDeclaration setRequiresDirective(Object[] value) {
-		this._requiresDirective.addAll(java.util.Arrays.asList(value));
+	public ModuleDeclaration setProvidesDirective(Object[] value) {
+		this._providesDirective.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public ModuleDeclaration setRequiresDirective(java.util.Collection<Object> values) {
-		this._requiresDirective.addAll(values);
+	public ModuleDeclaration setProvidesDirective(java.util.Collection<Object> values) {
+		this._providesDirective.addAll(values);
 		return this;
 	}
 
-	public ModuleDeclaration removeRequiresDirective(Object value) {
-		this._requiresDirective.remove(value);
+	public ModuleDeclaration removeProvidesDirective(Object value) {
+		this._providesDirective.remove(value);
 		return this;
 	}
 
-	public ModuleDeclaration removeRequiresDirective(int index) {
-		this._requiresDirective.remove(index);
+	public ModuleDeclaration removeProvidesDirective(int index) {
+		this._providesDirective.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getRequiresDirective() {
-		return this._requiresDirective;
-	} 
-
-	public ModuleDeclaration addExportsDirective(Object value) {
-		this._exportsDirective.add(value);
-		return this;
-	}
-
-	public ModuleDeclaration setExportsDirective(Object[] value) {
-		this._exportsDirective.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ModuleDeclaration setExportsDirective(java.util.Collection<Object> values) {
-		this._exportsDirective.addAll(values);
-		return this;
-	}
-
-	public ModuleDeclaration removeExportsDirective(Object value) {
-		this._exportsDirective.remove(value);
-		return this;
-	}
-
-	public ModuleDeclaration removeExportsDirective(int index) {
-		this._exportsDirective.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getExportsDirective() {
-		return this._exportsDirective;
+	public java.util.List<Object> getProvidesDirective() {
+		return this._providesDirective;
 	} 
 
 	public ModuleDeclaration addOpens(Object value) {
@@ -199,6 +141,64 @@ public class ModuleDeclaration {
 		return this._opens;
 	} 
 
+	public ModuleDeclaration addExportsDirective(Object value) {
+		this._exportsDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setExportsDirective(Object[] value) {
+		this._exportsDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setExportsDirective(java.util.Collection<Object> values) {
+		this._exportsDirective.addAll(values);
+		return this;
+	}
+
+	public ModuleDeclaration removeExportsDirective(Object value) {
+		this._exportsDirective.remove(value);
+		return this;
+	}
+
+	public ModuleDeclaration removeExportsDirective(int index) {
+		this._exportsDirective.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getExportsDirective() {
+		return this._exportsDirective;
+	} 
+
+	public ModuleDeclaration addRequiresDirective(Object value) {
+		this._requiresDirective.add(value);
+		return this;
+	}
+
+	public ModuleDeclaration setRequiresDirective(Object[] value) {
+		this._requiresDirective.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ModuleDeclaration setRequiresDirective(java.util.Collection<Object> values) {
+		this._requiresDirective.addAll(values);
+		return this;
+	}
+
+	public ModuleDeclaration removeRequiresDirective(Object value) {
+		this._requiresDirective.remove(value);
+		return this;
+	}
+
+	public ModuleDeclaration removeRequiresDirective(int index) {
+		this._requiresDirective.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRequiresDirective() {
+		return this._requiresDirective;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -213,7 +213,7 @@ public class ModuleDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ModuleDeclaration(providesDirective,usesDirective,name,requiresDirective,exportsDirective,opens) ::= <<module ~name~ {\n" + 
+	static final String st = "ModuleDeclaration(usesDirective,providesDirective,opens,exportsDirective,requiresDirective,name) ::= <<module ~name~ {\n" + 
 				"    ~requiresDirective:{it|requires ~it~};separator=\"\\n\"~\n" + 
 				"    ~exportsDirective:{it|exports ~it~};separator=\"\\n\"~\n" + 
 				"    ~providesDirective:{it|provides ~it~};separator=\"\\n\"~\n" + 

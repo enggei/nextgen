@@ -1,21 +1,17 @@
 package nextgen.model.workflow;
 
-import nextgen.templates.domain.Domain;
-import nextgen.templates.domain.Entity;
 import org.jeasy.flows.engine.WorkFlowEngine;
 import org.jeasy.flows.engine.WorkFlowEngineBuilder;
 import org.jeasy.flows.work.WorkContext;
 import org.jeasy.flows.work.WorkReport;
 import org.jeasy.flows.workflow.SequentialFlow;
 import org.jeasy.flows.workflow.WorkFlow;
-import org.junit.*;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static nextgen.templates.domain.DomainPatterns.*;
 
 public class Tests {
 
@@ -27,13 +23,11 @@ public class Tests {
       db.doInTransaction(transaction -> {
 
          final File mainJava = new File(new File("/home/goe/projects/nextgen2"), "src/main/java");
-         final Domain domain = stDomain("STDomain");
          final String packageName = "nextgen.st.domain";
 
          final WorkContext workContext = new WorkContext();
          workContext.put("mainJava", mainJava);
          workContext.put("packageName", packageName);
-         workContext.put("domain", domain);
 
          db.findAllWork().findFirst().ifPresent(work -> {
             final WorkFlow workflow = SequentialFlow.Builder.aNewSequentialFlow()
@@ -100,69 +94,5 @@ public class Tests {
             .setPackage("test")
             .addStatements(db.newWorkStatement()
                   .setStatement("System.out.println(\"Work " + workNo.get() + "\");"));
-   }
-
-   public Domain stDomain(String name) {
-
-      // ST
-      final Entity stParameterType = newEnum("STParameterType", "SINGLE,LIST,KVLIST");
-
-      final Entity stParameterKey = newEntity("STParameterKey")
-            .addRelations(newStringField("name"))
-            .addRelations(newStringField("argumentType"));
-
-      final Entity stParameter = newEntity("STParameter")
-            .addRelations(newStringField("name", true))
-            .addRelations(newEnumField("type", stParameterType))
-            .addRelations(newOneToMany("keys", stParameterKey))
-            .addRelations(newStringField("argumentType"));
-
-      final Entity stTemplate = newEntity("STTemplate")
-            .addRelations(newStringField("name", true))
-            .addRelations(newStringField("text"))
-            .addRelations(newOneToManyString("implements"))
-            .addRelations(newOneToMany("parameters", stParameter))
-            .addRelations(newOneToManySelf("children"));
-
-      final Entity stInterface = newEntity("STInterface")
-            .addRelations(newStringField("name"));
-
-      final Entity stEnumValue = newEntity("STEnumValue")
-            .addRelations(newStringField("name", true))
-            .addRelations(newStringField("lexical"));
-
-      final Entity stEnum = newEntity("STEnum")
-            .addRelations(newStringField("name", true))
-            .addRelations(newOneToMany("values", stEnumValue));
-
-      final Entity stGroupModel = newEntity("STGroupModel")
-            .addRelations(newStringField("name", true))
-            .addRelations(newStringField("delimiter"))
-            .addRelations(newStringField("icon"))
-            .addRelations(newStringField("tags"))
-            .addRelations(newOneToMany("templates", stTemplate))
-            .addRelations(newOneToMany("interfaces", stInterface))
-            .addRelations(newOneToMany("enums", stEnum));
-
-      final Entity stDirectory = newEntity("STGDirectory")
-            .addRelations(newStringField("path"))
-            .addRelations(newOneToMany("groups", stGroupModel));
-
-      // ST Parsing
-      final Entity stgErrorType = newEnum("STGErrorType", "COMPILE,RUNTIME,IO,INTERNAL");
-
-      final Entity stgError = newEntity("STGError")
-            .addRelations(newEnumField("type", stgErrorType))
-            .addRelations(newStringField("message"))
-            .addRelations(newIntegerField("line"))
-            .addRelations(newIntegerField("charPosition"));
-
-      final Entity stgParseResult = newEntity("STGParseResult")
-            .addRelations(newOneToOne("parsed", stGroupModel))
-            .addRelations(newOneToMany("errors", stgError));
-
-      return newDomain(name)
-            .addEntities(stgParseResult)
-            .addEntities(stDirectory);
    }
 }

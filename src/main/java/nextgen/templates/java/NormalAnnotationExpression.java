@@ -89,5 +89,5 @@ public class NormalAnnotationExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NormalAnnotationExpression(name,memberValues) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~ >>";
+	static final String st = "NormalAnnotationExpression(memberValues,name) ::= <<@~name~~if(memberValues)~(~memberValues:{it|~it~};separator=\", \"~)~endif~ >>";
 }  

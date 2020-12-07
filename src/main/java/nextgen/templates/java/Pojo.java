@@ -7,9 +7,9 @@ public class Pojo {
 
 	private String _package;
 	private String _name;
-	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<String> _lexical = new java.util.ArrayList<>();
+	private java.util.List<Object> _fieldDeclarations = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	Pojo(org.stringtemplate.v4.STGroup stGroup) {
@@ -25,10 +25,10 @@ public class Pojo {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("Pojo");
 		st.add("package", _package);
 		st.add("name", _name);
-		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
 		for (Object o : _accessors) st.add("accessors", o);
 		for (Object o : _lexical) st.add("lexical", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
+		for (Object o : _fieldDeclarations) st.add("fieldDeclarations", o);
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,initializer,type}", map.get("name"), map.get("initializer"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -74,35 +74,6 @@ public class Pojo {
 	public Pojo removeName() {
 		this._name = null;
 		return this;
-	} 
-
-	public Pojo addFieldDeclarations(Object value) {
-		this._fieldDeclarations.add(value);
-		return this;
-	}
-
-	public Pojo setFieldDeclarations(Object[] value) {
-		this._fieldDeclarations.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Pojo setFieldDeclarations(java.util.Collection<Object> values) {
-		this._fieldDeclarations.addAll(values);
-		return this;
-	}
-
-	public Pojo removeFieldDeclarations(Object value) {
-		this._fieldDeclarations.remove(value);
-		return this;
-	}
-
-	public Pojo removeFieldDeclarations(int index) {
-		this._fieldDeclarations.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getFieldDeclarations() {
-		return this._fieldDeclarations;
 	} 
 
 	public Pojo addAccessors(Object value) {
@@ -163,11 +134,40 @@ public class Pojo {
 		return this._lexical;
 	} 
 
-	public Pojo addFields(Object _type, String _name, Object _initializer) {
+	public Pojo addFieldDeclarations(Object value) {
+		this._fieldDeclarations.add(value);
+		return this;
+	}
+
+	public Pojo setFieldDeclarations(Object[] value) {
+		this._fieldDeclarations.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Pojo setFieldDeclarations(java.util.Collection<Object> values) {
+		this._fieldDeclarations.addAll(values);
+		return this;
+	}
+
+	public Pojo removeFieldDeclarations(Object value) {
+		this._fieldDeclarations.remove(value);
+		return this;
+	}
+
+	public Pojo removeFieldDeclarations(int index) {
+		this._fieldDeclarations.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getFieldDeclarations() {
+		return this._fieldDeclarations;
+	} 
+
+	public Pojo addFields(String _name, Object _initializer, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
 		map.put("initializer", _initializer);
+		map.put("type", _type);
 		this._fields.add(map);
 		return this;
 	}
@@ -177,17 +177,12 @@ public class Pojo {
 	}
 
 	public Pojo addFields(Pojo_Fields value) {
-		return addFields(value._type, value._name, value._initializer);
+		return addFields(value._name, value._initializer, value._type);
 	}
 
 	public java.util.stream.Stream<Pojo_Fields> streamFields() {
 		return this._fields.stream().map(Pojo_Fields::new);
 	}
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(Pojo_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
 
 	public java.util.List<String> getFields_Name() {
 		return streamFields().map(Pojo_Fields::getName).collect(java.util.stream.Collectors.toList());
@@ -199,26 +194,27 @@ public class Pojo {
 	}
 
 
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(Pojo_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class Pojo_Fields {
 
-		Object _type;
 		String _name;
 		Object _initializer;
+		Object _type;
 
-		public Pojo_Fields(Object _type, String _name, Object _initializer) {
-			this._type = _type;
+		public Pojo_Fields(String _name, Object _initializer, Object _type) {
 			this._name = _name;
 			this._initializer = _initializer;
+			this._type = _type;
 		}
 
 		private Pojo_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (String) map.get("name");
 			this._initializer = (Object) map.get("initializer");
-		}
-
-		public Object getType() {
-			return this._type;
+			this._type = (Object) map.get("type");
 		}
 
 		public String getName() {
@@ -227,6 +223,10 @@ public class Pojo {
 
 		public Object getInitializer() {
 			return this._initializer;
+		}
+
+		public Object getType() {
+			return this._type;
 		}
 
 	}  
@@ -244,7 +244,7 @@ public class Pojo {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Pojo(package,name,fields,fieldDeclarations,accessors,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "Pojo(accessors,lexical,fieldDeclarations,fields,package,name) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name~ {\n" + 
 				"\n" + 

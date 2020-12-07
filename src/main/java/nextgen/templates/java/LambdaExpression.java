@@ -89,5 +89,5 @@ public class LambdaExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LambdaExpression(body,parameters) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~ >>";
+	static final String st = "LambdaExpression(parameters,body) ::= <<(~parameters:{it|~it~};separator=\", \"~) -> ~body~ >>";
 }  

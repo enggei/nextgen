@@ -5,9 +5,9 @@ public class FinalFieldDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _type;
 	private Object _initializer;
 	private Object _name;
-	private Object _type;
 
 	FinalFieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class FinalFieldDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FinalFieldDeclaration");
+		st.add("type", _type);
 		st.add("initializer", _initializer);
 		st.add("name", _name);
-		st.add("type", _type);
 		return st.render().trim();
 	}
+
+	public FinalFieldDeclaration setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public FinalFieldDeclaration removeType() {
+		this._type = null;
+		return this;
+	} 
 
 	public FinalFieldDeclaration setInitializer(Object value) {
 		this._initializer = value;
@@ -70,28 +92,6 @@ public class FinalFieldDeclaration {
 		return this;
 	} 
 
-	public FinalFieldDeclaration setType(Object value) {
-		this._type = value;
-		return this;
-	}
-
-	public Object getType() {
-		return this._type;
-	}
-
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
-	}
-
-	public boolean hasType() {
-		return this._type != null;
-	}
-
-	public FinalFieldDeclaration removeType() {
-		this._type = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,5 +107,5 @@ public class FinalFieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FinalFieldDeclaration(initializer,name,type) ::= <<final ~VariableDeclaration(initializer,name,type)~; >>";
+	static final String st = "FinalFieldDeclaration(type,initializer,name) ::= <<final ~VariableDeclaration(initializer,name,type)~; >>";
 }  

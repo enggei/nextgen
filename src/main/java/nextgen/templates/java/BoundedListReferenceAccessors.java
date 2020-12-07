@@ -5,9 +5,9 @@ public class BoundedListReferenceAccessors {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _type;
-	private Object _name;
 	private Object _className;
+	private Object _name;
+	private Object _type;
 
 	BoundedListReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,31 +20,31 @@ public class BoundedListReferenceAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("boundedListReferenceAccessors");
-		st.add("type", _type);
-		st.add("name", _name);
 		st.add("className", _className);
+		st.add("name", _name);
+		st.add("type", _type);
 		return st.render().trim();
 	}
 
-	public BoundedListReferenceAccessors setType(Object value) {
-		this._type = value;
+	public BoundedListReferenceAccessors setClassName(Object value) {
+		this._className = value;
 		return this;
 	}
 
-	public Object getType() {
-		return this._type;
+	public Object getClassName() {
+		return this._className;
 	}
 
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
 	}
 
-	public boolean hasType() {
-		return this._type != null;
+	public boolean hasClassName() {
+		return this._className != null;
 	}
 
-	public BoundedListReferenceAccessors removeType() {
-		this._type = null;
+	public BoundedListReferenceAccessors removeClassName() {
+		this._className = null;
 		return this;
 	} 
 
@@ -70,25 +70,25 @@ public class BoundedListReferenceAccessors {
 		return this;
 	} 
 
-	public BoundedListReferenceAccessors setClassName(Object value) {
-		this._className = value;
+	public BoundedListReferenceAccessors setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public Object getClassName() {
-		return this._className;
+	public Object getType() {
+		return this._type;
 	}
 
-	public Object getClassName(Object defaultValue) {
-		return this._className == null ? defaultValue : this._className;
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasClassName() {
-		return this._className != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public BoundedListReferenceAccessors removeClassName() {
-		this._className = null;
+	public BoundedListReferenceAccessors removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -107,7 +107,7 @@ public class BoundedListReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "boundedListReferenceAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n" + 
+	static final String st = "boundedListReferenceAccessors(className,name,type) ::= <<public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}\n" + 
 				"\n" + 

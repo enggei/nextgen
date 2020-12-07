@@ -5,8 +5,8 @@ public class AnnotationMemberDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _name;
 	private Object _type;
+	private Object _name;
 	private Object _defaultValue;
 
 	AnnotationMemberDeclaration(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class AnnotationMemberDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("AnnotationMemberDeclaration");
-		st.add("name", _name);
 		st.add("type", _type);
+		st.add("name", _name);
 		st.add("defaultValue", _defaultValue);
 		return st.render().trim();
 	}
-
-	public AnnotationMemberDeclaration setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public AnnotationMemberDeclaration removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public AnnotationMemberDeclaration setType(Object value) {
 		this._type = value;
@@ -67,6 +45,28 @@ public class AnnotationMemberDeclaration {
 
 	public AnnotationMemberDeclaration removeType() {
 		this._type = null;
+		return this;
+	} 
+
+	public AnnotationMemberDeclaration setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public AnnotationMemberDeclaration removeName() {
+		this._name = null;
 		return this;
 	} 
 
@@ -107,5 +107,5 @@ public class AnnotationMemberDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "AnnotationMemberDeclaration(name,type,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~; >>";
+	static final String st = "AnnotationMemberDeclaration(type,name,defaultValue) ::= <<~type~ ~name~()~if(defaultValue)~ default ~defaultValue~~endif~; >>";
 }  

@@ -5,9 +5,9 @@ public class ListAccessors {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _className;
 	private Object _type;
 	private Object _name;
-	private Object _className;
 
 	ListAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class ListAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listAccessors");
+		st.add("className", _className);
 		st.add("type", _type);
 		st.add("name", _name);
-		st.add("className", _className);
 		return st.render().trim();
 	}
+
+	public ListAccessors setClassName(Object value) {
+		this._className = value;
+		return this;
+	}
+
+	public Object getClassName() {
+		return this._className;
+	}
+
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
+	}
+
+	public boolean hasClassName() {
+		return this._className != null;
+	}
+
+	public ListAccessors removeClassName() {
+		this._className = null;
+		return this;
+	} 
 
 	public ListAccessors setType(Object value) {
 		this._type = value;
@@ -70,28 +92,6 @@ public class ListAccessors {
 		return this;
 	} 
 
-	public ListAccessors setClassName(Object value) {
-		this._className = value;
-		return this;
-	}
-
-	public Object getClassName() {
-		return this._className;
-	}
-
-	public Object getClassName(Object defaultValue) {
-		return this._className == null ? defaultValue : this._className;
-	}
-
-	public boolean hasClassName() {
-		return this._className != null;
-	}
-
-	public ListAccessors removeClassName() {
-		this._className = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,7 +107,7 @@ public class ListAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listAccessors(type,name,className) ::= <<public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n" + 
+	static final String st = "listAccessors(className,type,name) ::= <<public java.util.List<~type~> get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}\n" + 
 				"\n" + 

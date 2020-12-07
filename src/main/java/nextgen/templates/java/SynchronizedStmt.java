@@ -5,8 +5,8 @@ public class SynchronizedStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _expression;
 	private Object _body;
+	private Object _expression;
 
 	SynchronizedStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class SynchronizedStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("SynchronizedStmt");
-		st.add("expression", _expression);
 		st.add("body", _body);
+		st.add("expression", _expression);
 		return st.render().trim();
 	}
-
-	public SynchronizedStmt setExpression(Object value) {
-		this._expression = value;
-		return this;
-	}
-
-	public Object getExpression() {
-		return this._expression;
-	}
-
-	public Object getExpression(Object defaultValue) {
-		return this._expression == null ? defaultValue : this._expression;
-	}
-
-	public boolean hasExpression() {
-		return this._expression != null;
-	}
-
-	public SynchronizedStmt removeExpression() {
-		this._expression = null;
-		return this;
-	} 
 
 	public SynchronizedStmt setBody(Object value) {
 		this._body = value;
@@ -68,6 +46,28 @@ public class SynchronizedStmt implements Statement {
 		return this;
 	} 
 
+	public SynchronizedStmt setExpression(Object value) {
+		this._expression = value;
+		return this;
+	}
+
+	public Object getExpression() {
+		return this._expression;
+	}
+
+	public Object getExpression(Object defaultValue) {
+		return this._expression == null ? defaultValue : this._expression;
+	}
+
+	public boolean hasExpression() {
+		return this._expression != null;
+	}
+
+	public SynchronizedStmt removeExpression() {
+		this._expression = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,5 +83,5 @@ public class SynchronizedStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SynchronizedStmt(expression,body) ::= <<synchronized ( ~expression~ ) ~body~ >>";
+	static final String st = "SynchronizedStmt(body,expression) ::= <<synchronized ( ~expression~ ) ~body~ >>";
 }  

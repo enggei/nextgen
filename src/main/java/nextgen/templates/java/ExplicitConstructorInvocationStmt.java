@@ -89,5 +89,5 @@ public class ExplicitConstructorInvocationStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ExplicitConstructorInvocationStmt(isThis,arguments) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~); >>";
+	static final String st = "ExplicitConstructorInvocationStmt(arguments,isThis) ::= <<~if(isThis)~this~else~super~endif~(~arguments:{it|~it~};separator=\", \"~); >>";
 }  

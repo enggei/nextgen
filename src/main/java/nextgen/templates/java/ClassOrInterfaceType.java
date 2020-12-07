@@ -5,11 +5,11 @@ public class ClassOrInterfaceType {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _scope;
-	private Object _isTyped;
 	private Object _isArrayType;
-	private java.util.List<Object> _names = new java.util.ArrayList<>();
+	private Object _isTyped;
+	private Object _scope;
 	private java.util.List<Object> _typeArguments = new java.util.ArrayList<>();
+	private java.util.List<Object> _names = new java.util.ArrayList<>();
 
 	ClassOrInterfaceType(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -22,33 +22,33 @@ public class ClassOrInterfaceType {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ClassOrInterfaceType");
-		st.add("scope", _scope);
-		st.add("isTyped", _isTyped);
 		st.add("isArrayType", _isArrayType);
-		for (Object o : _names) st.add("names", o);
+		st.add("isTyped", _isTyped);
+		st.add("scope", _scope);
 		for (Object o : _typeArguments) st.add("typeArguments", o);
+		for (Object o : _names) st.add("names", o);
 		return st.render().trim();
 	}
 
-	public ClassOrInterfaceType setScope(Object value) {
-		this._scope = value;
+	public ClassOrInterfaceType setIsArrayType(Object value) {
+		this._isArrayType = value;
 		return this;
 	}
 
-	public Object getScope() {
-		return this._scope;
+	public Object getIsArrayType() {
+		return this._isArrayType;
 	}
 
-	public Object getScope(Object defaultValue) {
-		return this._scope == null ? defaultValue : this._scope;
+	public Object getIsArrayType(Object defaultValue) {
+		return this._isArrayType == null ? defaultValue : this._isArrayType;
 	}
 
-	public boolean hasScope() {
-		return this._scope != null;
+	public boolean hasIsArrayType() {
+		return this._isArrayType != null;
 	}
 
-	public ClassOrInterfaceType removeScope() {
-		this._scope = null;
+	public ClassOrInterfaceType removeIsArrayType() {
+		this._isArrayType = null;
 		return this;
 	} 
 
@@ -74,55 +74,26 @@ public class ClassOrInterfaceType {
 		return this;
 	} 
 
-	public ClassOrInterfaceType setIsArrayType(Object value) {
-		this._isArrayType = value;
+	public ClassOrInterfaceType setScope(Object value) {
+		this._scope = value;
 		return this;
 	}
 
-	public Object getIsArrayType() {
-		return this._isArrayType;
+	public Object getScope() {
+		return this._scope;
 	}
 
-	public Object getIsArrayType(Object defaultValue) {
-		return this._isArrayType == null ? defaultValue : this._isArrayType;
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
 	}
 
-	public boolean hasIsArrayType() {
-		return this._isArrayType != null;
+	public boolean hasScope() {
+		return this._scope != null;
 	}
 
-	public ClassOrInterfaceType removeIsArrayType() {
-		this._isArrayType = null;
+	public ClassOrInterfaceType removeScope() {
+		this._scope = null;
 		return this;
-	} 
-
-	public ClassOrInterfaceType addNames(Object value) {
-		this._names.add(value);
-		return this;
-	}
-
-	public ClassOrInterfaceType setNames(Object[] value) {
-		this._names.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ClassOrInterfaceType setNames(java.util.Collection<Object> values) {
-		this._names.addAll(values);
-		return this;
-	}
-
-	public ClassOrInterfaceType removeNames(Object value) {
-		this._names.remove(value);
-		return this;
-	}
-
-	public ClassOrInterfaceType removeNames(int index) {
-		this._names.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getNames() {
-		return this._names;
 	} 
 
 	public ClassOrInterfaceType addTypeArguments(Object value) {
@@ -154,6 +125,35 @@ public class ClassOrInterfaceType {
 		return this._typeArguments;
 	} 
 
+	public ClassOrInterfaceType addNames(Object value) {
+		this._names.add(value);
+		return this;
+	}
+
+	public ClassOrInterfaceType setNames(Object[] value) {
+		this._names.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ClassOrInterfaceType setNames(java.util.Collection<Object> values) {
+		this._names.addAll(values);
+		return this;
+	}
+
+	public ClassOrInterfaceType removeNames(Object value) {
+		this._names.remove(value);
+		return this;
+	}
+
+	public ClassOrInterfaceType removeNames(int index) {
+		this._names.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getNames() {
+		return this._names;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -168,5 +168,5 @@ public class ClassOrInterfaceType {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ClassOrInterfaceType(scope,names,typeArguments,isTyped,isArrayType) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~ >>";
+	static final String st = "ClassOrInterfaceType(isArrayType,typeArguments,isTyped,scope,names) ::= <<~if(scope)~~scope~.~endif~~names:{it|~it~};separator=\" | \"~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~else~~if(isTyped)~<>~endif~~endif~~if(isArrayType)~[]~endif~ >>";
 }  

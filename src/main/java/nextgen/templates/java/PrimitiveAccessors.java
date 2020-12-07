@@ -5,9 +5,9 @@ public class PrimitiveAccessors {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _className;
 	private Object _type;
 	private Object _name;
-	private Object _className;
 
 	PrimitiveAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class PrimitiveAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("primitiveAccessors");
+		st.add("className", _className);
 		st.add("type", _type);
 		st.add("name", _name);
-		st.add("className", _className);
 		return st.render().trim();
 	}
+
+	public PrimitiveAccessors setClassName(Object value) {
+		this._className = value;
+		return this;
+	}
+
+	public Object getClassName() {
+		return this._className;
+	}
+
+	public Object getClassName(Object defaultValue) {
+		return this._className == null ? defaultValue : this._className;
+	}
+
+	public boolean hasClassName() {
+		return this._className != null;
+	}
+
+	public PrimitiveAccessors removeClassName() {
+		this._className = null;
+		return this;
+	} 
 
 	public PrimitiveAccessors setType(Object value) {
 		this._type = value;
@@ -70,28 +92,6 @@ public class PrimitiveAccessors {
 		return this;
 	} 
 
-	public PrimitiveAccessors setClassName(Object value) {
-		this._className = value;
-		return this;
-	}
-
-	public Object getClassName() {
-		return this._className;
-	}
-
-	public Object getClassName(Object defaultValue) {
-		return this._className == null ? defaultValue : this._className;
-	}
-
-	public boolean hasClassName() {
-		return this._className != null;
-	}
-
-	public PrimitiveAccessors removeClassName() {
-		this._className = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,7 +107,7 @@ public class PrimitiveAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "primitiveAccessors(type,name,className) ::= <<public ~type~ get~name;format=\"capitalize\"~() {\n" + 
+	static final String st = "primitiveAccessors(className,type,name) ::= <<public ~type~ get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}\n" + 
 				"\n" + 

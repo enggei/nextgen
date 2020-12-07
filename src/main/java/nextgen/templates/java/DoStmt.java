@@ -5,8 +5,8 @@ public class DoStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _condition;
 	private Object _body;
+	private Object _condition;
 
 	DoStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class DoStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DoStmt");
-		st.add("condition", _condition);
 		st.add("body", _body);
+		st.add("condition", _condition);
 		return st.render().trim();
 	}
-
-	public DoStmt setCondition(Object value) {
-		this._condition = value;
-		return this;
-	}
-
-	public Object getCondition() {
-		return this._condition;
-	}
-
-	public Object getCondition(Object defaultValue) {
-		return this._condition == null ? defaultValue : this._condition;
-	}
-
-	public boolean hasCondition() {
-		return this._condition != null;
-	}
-
-	public DoStmt removeCondition() {
-		this._condition = null;
-		return this;
-	} 
 
 	public DoStmt setBody(Object value) {
 		this._body = value;
@@ -68,6 +46,28 @@ public class DoStmt implements Statement {
 		return this;
 	} 
 
+	public DoStmt setCondition(Object value) {
+		this._condition = value;
+		return this;
+	}
+
+	public Object getCondition() {
+		return this._condition;
+	}
+
+	public Object getCondition(Object defaultValue) {
+		return this._condition == null ? defaultValue : this._condition;
+	}
+
+	public boolean hasCondition() {
+		return this._condition != null;
+	}
+
+	public DoStmt removeCondition() {
+		this._condition = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,5 +83,5 @@ public class DoStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DoStmt(condition,body) ::= <<do ~body~ while (~condition~); >>";
+	static final String st = "DoStmt(body,condition) ::= <<do ~body~ while (~condition~); >>";
 }  

@@ -6,8 +6,8 @@ public class CompilationUnit {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _packageDeclaration;
-	private java.util.List<Object> _types = new java.util.ArrayList<>();
 	private java.util.List<Object> _importDeclaration = new java.util.ArrayList<>();
+	private java.util.List<Object> _types = new java.util.ArrayList<>();
 
 	CompilationUnit(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class CompilationUnit {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("CompilationUnit");
 		st.add("packageDeclaration", _packageDeclaration);
-		for (Object o : _types) st.add("types", o);
 		for (Object o : _importDeclaration) st.add("importDeclaration", o);
+		for (Object o : _types) st.add("types", o);
 		return st.render().trim();
 	}
 
@@ -46,35 +46,6 @@ public class CompilationUnit {
 	public CompilationUnit removePackageDeclaration() {
 		this._packageDeclaration = null;
 		return this;
-	} 
-
-	public CompilationUnit addTypes(Object value) {
-		this._types.add(value);
-		return this;
-	}
-
-	public CompilationUnit setTypes(Object[] value) {
-		this._types.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public CompilationUnit setTypes(java.util.Collection<Object> values) {
-		this._types.addAll(values);
-		return this;
-	}
-
-	public CompilationUnit removeTypes(Object value) {
-		this._types.remove(value);
-		return this;
-	}
-
-	public CompilationUnit removeTypes(int index) {
-		this._types.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getTypes() {
-		return this._types;
 	} 
 
 	public CompilationUnit addImportDeclaration(Object value) {
@@ -106,6 +77,35 @@ public class CompilationUnit {
 		return this._importDeclaration;
 	} 
 
+	public CompilationUnit addTypes(Object value) {
+		this._types.add(value);
+		return this;
+	}
+
+	public CompilationUnit setTypes(Object[] value) {
+		this._types.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public CompilationUnit setTypes(java.util.Collection<Object> values) {
+		this._types.addAll(values);
+		return this;
+	}
+
+	public CompilationUnit removeTypes(Object value) {
+		this._types.remove(value);
+		return this;
+	}
+
+	public CompilationUnit removeTypes(int index) {
+		this._types.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getTypes() {
+		return this._types;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -120,7 +120,7 @@ public class CompilationUnit {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "CompilationUnit(packageDeclaration,types,importDeclaration) ::= <<~packageDeclaration~\n" + 
+	static final String st = "CompilationUnit(importDeclaration,packageDeclaration,types) ::= <<~packageDeclaration~\n" + 
 				"\n" + 
 				"~importDeclaration:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 

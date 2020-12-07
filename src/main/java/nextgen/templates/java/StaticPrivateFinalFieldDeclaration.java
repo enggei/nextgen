@@ -5,9 +5,9 @@ public class StaticPrivateFinalFieldDeclaration {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _initializer;
-	private Object _name;
 	private Object _type;
+	private Object _name;
+	private Object _initializer;
 
 	StaticPrivateFinalFieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,31 +20,31 @@ public class StaticPrivateFinalFieldDeclaration {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("StaticPrivateFinalFieldDeclaration");
-		st.add("initializer", _initializer);
-		st.add("name", _name);
 		st.add("type", _type);
+		st.add("name", _name);
+		st.add("initializer", _initializer);
 		return st.render().trim();
 	}
 
-	public StaticPrivateFinalFieldDeclaration setInitializer(Object value) {
-		this._initializer = value;
+	public StaticPrivateFinalFieldDeclaration setType(Object value) {
+		this._type = value;
 		return this;
 	}
 
-	public Object getInitializer() {
-		return this._initializer;
+	public Object getType() {
+		return this._type;
 	}
 
-	public Object getInitializer(Object defaultValue) {
-		return this._initializer == null ? defaultValue : this._initializer;
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
 	}
 
-	public boolean hasInitializer() {
-		return this._initializer != null;
+	public boolean hasType() {
+		return this._type != null;
 	}
 
-	public StaticPrivateFinalFieldDeclaration removeInitializer() {
-		this._initializer = null;
+	public StaticPrivateFinalFieldDeclaration removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -70,25 +70,25 @@ public class StaticPrivateFinalFieldDeclaration {
 		return this;
 	} 
 
-	public StaticPrivateFinalFieldDeclaration setType(Object value) {
-		this._type = value;
+	public StaticPrivateFinalFieldDeclaration setInitializer(Object value) {
+		this._initializer = value;
 		return this;
 	}
 
-	public Object getType() {
-		return this._type;
+	public Object getInitializer() {
+		return this._initializer;
 	}
 
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
+	public Object getInitializer(Object defaultValue) {
+		return this._initializer == null ? defaultValue : this._initializer;
 	}
 
-	public boolean hasType() {
-		return this._type != null;
+	public boolean hasInitializer() {
+		return this._initializer != null;
 	}
 
-	public StaticPrivateFinalFieldDeclaration removeType() {
-		this._type = null;
+	public StaticPrivateFinalFieldDeclaration removeInitializer() {
+		this._initializer = null;
 		return this;
 	} 
 
@@ -107,5 +107,5 @@ public class StaticPrivateFinalFieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "StaticPrivateFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>";
+	static final String st = "StaticPrivateFinalFieldDeclaration(type,name,initializer) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>";
 }  

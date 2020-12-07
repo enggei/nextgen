@@ -542,8 +542,6 @@ public class JavaST {
 		return new JavaType(stGroup);
 	}  
 
-
-
 	public static PasswordUtils newPasswordUtils() {
 		return new PasswordUtils(stGroup);
 	}  

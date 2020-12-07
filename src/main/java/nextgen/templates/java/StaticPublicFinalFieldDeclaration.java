@@ -6,8 +6,8 @@ public class StaticPublicFinalFieldDeclaration {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _initializer;
-	private Object _name;
 	private Object _type;
+	private Object _name;
 
 	StaticPublicFinalFieldDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class StaticPublicFinalFieldDeclaration {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("staticPublicFinalFieldDeclaration");
 		st.add("initializer", _initializer);
-		st.add("name", _name);
 		st.add("type", _type);
+		st.add("name", _name);
 		return st.render().trim();
 	}
 
@@ -48,28 +48,6 @@ public class StaticPublicFinalFieldDeclaration {
 		return this;
 	} 
 
-	public StaticPublicFinalFieldDeclaration setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public StaticPublicFinalFieldDeclaration removeName() {
-		this._name = null;
-		return this;
-	} 
-
 	public StaticPublicFinalFieldDeclaration setType(Object value) {
 		this._type = value;
 		return this;
@@ -92,6 +70,28 @@ public class StaticPublicFinalFieldDeclaration {
 		return this;
 	} 
 
+	public StaticPublicFinalFieldDeclaration setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public StaticPublicFinalFieldDeclaration removeName() {
+		this._name = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,5 +107,5 @@ public class StaticPublicFinalFieldDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "staticPublicFinalFieldDeclaration(initializer,name,type) ::= <<static public final ~VariableDeclaration(initializer,name,type)~; >>";
+	static final String st = "staticPublicFinalFieldDeclaration(initializer,type,name) ::= <<static public final ~VariableDeclaration(initializer,name,type)~; >>";
 }  

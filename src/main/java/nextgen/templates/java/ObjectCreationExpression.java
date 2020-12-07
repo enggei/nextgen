@@ -5,12 +5,12 @@ public class ObjectCreationExpression implements Expression {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _scope;
-	private Object _type;
 	private Object _emptyClassBody;
+	private Object _type;
+	private Object _scope;
 	private java.util.List<Object> _typeArguments = new java.util.ArrayList<>();
-	private java.util.List<Object> _arguments = new java.util.ArrayList<>();
 	private java.util.List<Object> _anonymousClassBodies = new java.util.ArrayList<>();
+	private java.util.List<Object> _arguments = new java.util.ArrayList<>();
 
 	ObjectCreationExpression(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -23,34 +23,34 @@ public class ObjectCreationExpression implements Expression {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("ObjectCreationExpression");
-		st.add("scope", _scope);
-		st.add("type", _type);
 		st.add("emptyClassBody", _emptyClassBody);
+		st.add("type", _type);
+		st.add("scope", _scope);
 		for (Object o : _typeArguments) st.add("typeArguments", o);
-		for (Object o : _arguments) st.add("arguments", o);
 		for (Object o : _anonymousClassBodies) st.add("anonymousClassBodies", o);
+		for (Object o : _arguments) st.add("arguments", o);
 		return st.render().trim();
 	}
 
-	public ObjectCreationExpression setScope(Object value) {
-		this._scope = value;
+	public ObjectCreationExpression setEmptyClassBody(Object value) {
+		this._emptyClassBody = value;
 		return this;
 	}
 
-	public Object getScope() {
-		return this._scope;
+	public Object getEmptyClassBody() {
+		return this._emptyClassBody;
 	}
 
-	public Object getScope(Object defaultValue) {
-		return this._scope == null ? defaultValue : this._scope;
+	public Object getEmptyClassBody(Object defaultValue) {
+		return this._emptyClassBody == null ? defaultValue : this._emptyClassBody;
 	}
 
-	public boolean hasScope() {
-		return this._scope != null;
+	public boolean hasEmptyClassBody() {
+		return this._emptyClassBody != null;
 	}
 
-	public ObjectCreationExpression removeScope() {
-		this._scope = null;
+	public ObjectCreationExpression removeEmptyClassBody() {
+		this._emptyClassBody = null;
 		return this;
 	} 
 
@@ -76,25 +76,25 @@ public class ObjectCreationExpression implements Expression {
 		return this;
 	} 
 
-	public ObjectCreationExpression setEmptyClassBody(Object value) {
-		this._emptyClassBody = value;
+	public ObjectCreationExpression setScope(Object value) {
+		this._scope = value;
 		return this;
 	}
 
-	public Object getEmptyClassBody() {
-		return this._emptyClassBody;
+	public Object getScope() {
+		return this._scope;
 	}
 
-	public Object getEmptyClassBody(Object defaultValue) {
-		return this._emptyClassBody == null ? defaultValue : this._emptyClassBody;
+	public Object getScope(Object defaultValue) {
+		return this._scope == null ? defaultValue : this._scope;
 	}
 
-	public boolean hasEmptyClassBody() {
-		return this._emptyClassBody != null;
+	public boolean hasScope() {
+		return this._scope != null;
 	}
 
-	public ObjectCreationExpression removeEmptyClassBody() {
-		this._emptyClassBody = null;
+	public ObjectCreationExpression removeScope() {
+		this._scope = null;
 		return this;
 	} 
 
@@ -127,35 +127,6 @@ public class ObjectCreationExpression implements Expression {
 		return this._typeArguments;
 	} 
 
-	public ObjectCreationExpression addArguments(Object value) {
-		this._arguments.add(value);
-		return this;
-	}
-
-	public ObjectCreationExpression setArguments(Object[] value) {
-		this._arguments.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public ObjectCreationExpression setArguments(java.util.Collection<Object> values) {
-		this._arguments.addAll(values);
-		return this;
-	}
-
-	public ObjectCreationExpression removeArguments(Object value) {
-		this._arguments.remove(value);
-		return this;
-	}
-
-	public ObjectCreationExpression removeArguments(int index) {
-		this._arguments.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getArguments() {
-		return this._arguments;
-	} 
-
 	public ObjectCreationExpression addAnonymousClassBodies(Object value) {
 		this._anonymousClassBodies.add(value);
 		return this;
@@ -185,6 +156,35 @@ public class ObjectCreationExpression implements Expression {
 		return this._anonymousClassBodies;
 	} 
 
+	public ObjectCreationExpression addArguments(Object value) {
+		this._arguments.add(value);
+		return this;
+	}
+
+	public ObjectCreationExpression setArguments(Object[] value) {
+		this._arguments.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ObjectCreationExpression setArguments(java.util.Collection<Object> values) {
+		this._arguments.addAll(values);
+		return this;
+	}
+
+	public ObjectCreationExpression removeArguments(Object value) {
+		this._arguments.remove(value);
+		return this;
+	}
+
+	public ObjectCreationExpression removeArguments(int index) {
+		this._arguments.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getArguments() {
+		return this._arguments;
+	} 
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -199,7 +199,7 @@ public class ObjectCreationExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ObjectCreationExpression(scope,type,typeArguments,arguments,anonymousClassBodies,emptyClassBody) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~endif~(~arguments:{it|~it~};separator=\", \"~)~if(anonymousClassBodies)~ {\n" + 
+	static final String st = "ObjectCreationExpression(emptyClassBody,typeArguments,type,anonymousClassBodies,arguments,scope) ::= <<new ~if(scope)~~scope~.~endif~~type~~if(typeArguments)~<~typeArguments:{it|~it~};separator=\", \"~>~endif~(~arguments:{it|~it~};separator=\", \"~)~if(anonymousClassBodies)~ {\n" + 
 				"\n" + 
 				"	~anonymousClassBodies:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 

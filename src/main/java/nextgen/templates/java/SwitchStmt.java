@@ -89,7 +89,7 @@ public class SwitchStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "SwitchStmt(selector,entries) ::= <<switch(~selector~) {\n" + 
+	static final String st = "SwitchStmt(entries,selector) ::= <<switch(~selector~) {\n" + 
 				"	~entries:{it|~it~};separator=\"\\n\"~\n" + 
 				"} >>";
 }  

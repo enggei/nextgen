@@ -5,8 +5,8 @@ public class ReferenceAccessors {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _type;
 	private Object _name;
+	private Object _type;
 	private Object _className;
 
 	ReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
@@ -20,33 +20,11 @@ public class ReferenceAccessors {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
-		st.add("type", _type);
 		st.add("name", _name);
+		st.add("type", _type);
 		st.add("className", _className);
 		return st.render().trim();
 	}
-
-	public ReferenceAccessors setType(Object value) {
-		this._type = value;
-		return this;
-	}
-
-	public Object getType() {
-		return this._type;
-	}
-
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
-	}
-
-	public boolean hasType() {
-		return this._type != null;
-	}
-
-	public ReferenceAccessors removeType() {
-		this._type = null;
-		return this;
-	} 
 
 	public ReferenceAccessors setName(Object value) {
 		this._name = value;
@@ -67,6 +45,28 @@ public class ReferenceAccessors {
 
 	public ReferenceAccessors removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public ReferenceAccessors setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public ReferenceAccessors removeType() {
+		this._type = null;
 		return this;
 	} 
 
@@ -107,7 +107,7 @@ public class ReferenceAccessors {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "referenceAccessors(type,name,className) ::= <<public ~type~ get~name;format=\"capitalize\"~() {\n" + 
+	static final String st = "referenceAccessors(name,type,className) ::= <<public ~type~ get~name;format=\"capitalize\"~() {\n" + 
 				"	return this._~name~;\n" + 
 				"}\n" + 
 				"\n" + 

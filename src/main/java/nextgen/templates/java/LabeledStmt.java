@@ -5,8 +5,8 @@ public class LabeledStmt implements Statement {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _statement;
 	private Object _label;
+	private Object _statement;
 
 	LabeledStmt(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -19,32 +19,10 @@ public class LabeledStmt implements Statement {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("LabeledStmt");
-		st.add("statement", _statement);
 		st.add("label", _label);
+		st.add("statement", _statement);
 		return st.render().trim();
 	}
-
-	public LabeledStmt setStatement(Object value) {
-		this._statement = value;
-		return this;
-	}
-
-	public Object getStatement() {
-		return this._statement;
-	}
-
-	public Object getStatement(Object defaultValue) {
-		return this._statement == null ? defaultValue : this._statement;
-	}
-
-	public boolean hasStatement() {
-		return this._statement != null;
-	}
-
-	public LabeledStmt removeStatement() {
-		this._statement = null;
-		return this;
-	} 
 
 	public LabeledStmt setLabel(Object value) {
 		this._label = value;
@@ -68,6 +46,28 @@ public class LabeledStmt implements Statement {
 		return this;
 	} 
 
+	public LabeledStmt setStatement(Object value) {
+		this._statement = value;
+		return this;
+	}
+
+	public Object getStatement() {
+		return this._statement;
+	}
+
+	public Object getStatement(Object defaultValue) {
+		return this._statement == null ? defaultValue : this._statement;
+	}
+
+	public boolean hasStatement() {
+		return this._statement != null;
+	}
+
+	public LabeledStmt removeStatement() {
+		this._statement = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -83,6 +83,6 @@ public class LabeledStmt implements Statement {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "LabeledStmt(statement,label) ::= <<~label~ : \n" + 
+	static final String st = "LabeledStmt(label,statement) ::= <<~label~ : \n" + 
 				"	~statement~ >>";
 }  

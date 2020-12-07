@@ -2,13 +2,9 @@ package nextgen.templates.java;
 
 public enum Modifiers {
 
-	PUBLIC() {
+	STATIC() {
 		@Override
-		public String toString() { return "public"; }
-	},
-	PROTECTED() {
-		@Override
-		public String toString() { return "protected"; }
+		public String toString() { return "static"; }
 	},
 	PRIVATE() {
 		@Override
@@ -18,8 +14,12 @@ public enum Modifiers {
 		@Override
 		public String toString() { return "final"; }
 	},
-	STATIC() {
+	PUBLIC() {
 		@Override
-		public String toString() { return "static"; }
+		public String toString() { return "public"; }
+	},
+	PROTECTED() {
+		@Override
+		public String toString() { return "protected"; }
 	}
 }  

@@ -6,8 +6,8 @@ public class VariableDeclaration {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private Object _initializer;
 	private Object _type;
+	private Object _initializer;
 
 	VariableDeclaration(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class VariableDeclaration {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("VariableDeclaration");
 		st.add("name", _name);
-		st.add("initializer", _initializer);
 		st.add("type", _type);
+		st.add("initializer", _initializer);
 		return st.render().trim();
 	}
 
@@ -48,28 +48,6 @@ public class VariableDeclaration {
 		return this;
 	} 
 
-	public VariableDeclaration setInitializer(Object value) {
-		this._initializer = value;
-		return this;
-	}
-
-	public Object getInitializer() {
-		return this._initializer;
-	}
-
-	public Object getInitializer(Object defaultValue) {
-		return this._initializer == null ? defaultValue : this._initializer;
-	}
-
-	public boolean hasInitializer() {
-		return this._initializer != null;
-	}
-
-	public VariableDeclaration removeInitializer() {
-		this._initializer = null;
-		return this;
-	} 
-
 	public VariableDeclaration setType(Object value) {
 		this._type = value;
 		return this;
@@ -92,6 +70,28 @@ public class VariableDeclaration {
 		return this;
 	} 
 
+	public VariableDeclaration setInitializer(Object value) {
+		this._initializer = value;
+		return this;
+	}
+
+	public Object getInitializer() {
+		return this._initializer;
+	}
+
+	public Object getInitializer(Object defaultValue) {
+		return this._initializer == null ? defaultValue : this._initializer;
+	}
+
+	public boolean hasInitializer() {
+		return this._initializer != null;
+	}
+
+	public VariableDeclaration removeInitializer() {
+		this._initializer = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,5 +107,5 @@ public class VariableDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "VariableDeclaration(name,initializer,type) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~ >>";
+	static final String st = "VariableDeclaration(name,type,initializer) ::= <<~if(type)~~type~ ~endif~~name~~if(initializer)~ = ~initializer~~endif~ >>";
 }  

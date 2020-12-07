@@ -113,5 +113,5 @@ public class ArrayCreationExpression implements Expression {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "ArrayCreationExpression(initializer,type,levels) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~ >>";
+	static final String st = "ArrayCreationExpression(levels,initializer,type) ::= <<new ~type~~levels:{it|~it~}~~if(initializer)~ ~initializer~~endif~ >>";
 }  
