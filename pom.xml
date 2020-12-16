@@ -113,6 +113,11 @@
 			<groupId>org.abego.treelayout</groupId>
 			<artifactId>org.abego.treelayout.core</artifactId>
 			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.dpaukov</groupId>
+			<artifactId>combinatoricslib3</artifactId>
+			<version>3.3.0</version>
 		</dependency>  
 	</dependencies>
 

@@ -1,13 +1,13 @@
 package nextgen.actions;
 
-public class AddKVArgument extends nextgen.actions.TransactionAction {
+public class AddKVArguments extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STParameter stParameter;
    private final nextgen.model.STModel stModel;
    private final javax.swing.JComponent owner;
 
-	public AddKVArgument(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel, javax.swing.JComponent owner) {
-		super("Add");
+	public AddKVArguments(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel, javax.swing.JComponent owner) {
+		super("Add...");
 		this.stParameter = stParameter;
 		this.stModel = stModel;
 		this.owner = owner;

@@ -23,6 +23,19 @@ public class JavaST {
 	.append(Runnable.st + "\n")
 	.append(Singleton.st + "\n")
 	.append(ValueObject.st + "\n")
+	.append(BiConsumer.st + "\n")
+	.append(BiFunction.st + "\n")
+	.append(BiPredicate.st + "\n")
+	.append(Consumer.st + "\n")
+	.append(Function.st + "\n")
+	.append(FunctionsFactory.st + "\n")
+	.append(FunctionsFactoryMethod.st + "\n")
+	.append(TypeFactoryMethod.st + "\n")
+	.append(Lambda.st + "\n")
+	.append(Predicate.st + "\n")
+	.append(Supplier.st + "\n")
+	.append(Symbol.st + "\n")
+	.append(Type.st + "\n")
 	.append(ArrayCreationLevel.st + "\n")
 	.append(CompilationUnit.st + "\n")
 	.append(ClassOrInterfaceDeclaration.st + "\n")
@@ -102,9 +115,16 @@ public class JavaST {
 	.append(WhileStmt.st + "\n")
 	.append(ClassOrInterfaceType.st + "\n")
 	.append(TypeParameter.st + "\n")
+	.append(JavaCompiler.st + "\n")
+	.append(JCMethod.st + "\n")
 	.append(JavaLibrary.st + "\n")
 	.append(JavaPackage.st + "\n")
 	.append(JavaType.st + "\n")
+	.append(Stream.st + "\n")
+	.append(AllMatch.st + "\n")
+	.append(AnyMatch.st + "\n")
+	.append(Concat.st + "\n")
+	.append(Distinct.st + "\n")
 	.append(PasswordUtils.st + "\n")
 	.toString()  ;
 
@@ -212,6 +232,58 @@ public class JavaST {
 
 	public static ValueObject newValueObject() {
 		return new ValueObject(stGroup);
+	}  
+
+	public static BiConsumer newBiConsumer() {
+		return new BiConsumer(stGroup);
+	}  
+
+	public static BiFunction newBiFunction() {
+		return new BiFunction(stGroup);
+	}  
+
+	public static BiPredicate newBiPredicate() {
+		return new BiPredicate(stGroup);
+	}  
+
+	public static Consumer newConsumer() {
+		return new Consumer(stGroup);
+	}  
+
+	public static Function newFunction() {
+		return new Function(stGroup);
+	}  
+
+	public static FunctionsFactory newFunctionsFactory() {
+		return new FunctionsFactory(stGroup);
+	}  
+
+	public static FunctionsFactoryMethod newFunctionsFactoryMethod() {
+		return new FunctionsFactoryMethod(stGroup);
+	}  
+
+	public static TypeFactoryMethod newTypeFactoryMethod() {
+		return new TypeFactoryMethod(stGroup);
+	}  
+
+	public static Lambda newLambda() {
+		return new Lambda(stGroup);
+	}  
+
+	public static Predicate newPredicate() {
+		return new Predicate(stGroup);
+	}  
+
+	public static Supplier newSupplier() {
+		return new Supplier(stGroup);
+	}  
+
+	public static Symbol newSymbol() {
+		return new Symbol(stGroup);
+	}  
+
+	public static Type newType() {
+		return new Type(stGroup);
 	}  
 
 	public static ArrayCreationLevel newArrayCreationLevel() {
@@ -530,6 +602,14 @@ public class JavaST {
 		return new TypeParameter(stGroup);
 	}  
 
+	public static JavaCompiler newJavaCompiler() {
+		return new JavaCompiler(stGroup);
+	}  
+
+	public static JCMethod newJCMethod() {
+		return new JCMethod(stGroup);
+	}  
+
 	public static JavaLibrary newJavaLibrary() {
 		return new JavaLibrary(stGroup);
 	}  
@@ -540,6 +620,26 @@ public class JavaST {
 
 	public static JavaType newJavaType() {
 		return new JavaType(stGroup);
+	}  
+
+	public static Stream newStream() {
+		return new Stream(stGroup);
+	}  
+
+	public static AllMatch newAllMatch() {
+		return new AllMatch(stGroup);
+	}  
+
+	public static AnyMatch newAnyMatch() {
+		return new AnyMatch(stGroup);
+	}  
+
+	public static Concat newConcat() {
+		return new Concat(stGroup);
+	}  
+
+	public static Distinct newDistinct() {
+		return new Distinct(stGroup);
 	}  
 
 	public static PasswordUtils newPasswordUtils() {

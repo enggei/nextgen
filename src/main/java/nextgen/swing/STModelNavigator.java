@@ -882,6 +882,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new nextgen.actions.CopyInto(getModel(), stModel)));
 				actions.add(new nextgen.actions.RunInTerminal(getModel(), workspace));
 				actions.add(new nextgen.actions.STModelToClipboard(getModel()));
 				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
@@ -1077,7 +1078,8 @@ public class STModelNavigator extends JPanel {
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), workspace));
 						break;
 					case KVLIST:
-						actions.add(new nextgen.actions.AddKVArgument(stModel, getModel(), workspace));
+						actions.add(new nextgen.actions.AddKVArgument(getModel(), stModel, workspace));
+						actions.add(new nextgen.actions.AddKVArguments(getModel(), stModel, workspace));
 						break;
 				}
 			});

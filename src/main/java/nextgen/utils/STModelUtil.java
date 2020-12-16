@@ -186,6 +186,16 @@ public class STModelUtil {
             .filter(stValue -> stValue.getStModel() != null);
    }
 
+   public static java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
+
+      final java.util.List<nextgen.model.STProject> collect = stModel.getIncomingModelsSTProject().collect(java.util.stream.Collectors.toList());
+      for (nextgen.model.STProject stProject : collect) {
+         System.out.println(getSTModelName(stModel, "[STModel]") + " " + stProject.getName());
+      }
+
+      return Optional.ofNullable(collect.size()==0 ? null : collect.get(0));
+   }
+
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 
       private final nextgen.model.STParameter stParameter;

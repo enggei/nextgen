@@ -402,6 +402,168 @@ public ~className;format="capitalize"~ remove~name;format="capitalize"~() {
 	return this;
 } >>
 
+Functions() ::= << >>
+
+Interfaces() ::= << >>
+
+Lambda(input,expression) ::= <<(~input:{it|~it~};separator=", "~) -> ~expression~  >>
+
+Symbol(name,packageName) ::= <<package ~packageName~;
+
+public interface ~name~ {
+	
+}  >>
+
+Type(fields,name,lexical,packageName) ::= <<package ~packageName~;
+
+public class ~name~ {
+
+	public static Builder builder() { return new Builder(); }
+
+	public static class Builder implements java.util.function.Supplier<~name~> {
+	
+		~fields:{it|private ~it.type~ _~it.name~;};separator="\n"~
+
+		private Builder() { }
+		
+~fields:{it|
+		public Builder ~it.name~(~it.type~ _~it.name~) {
+			this._~it.name~ = _~it.name~;
+			return this;
+		~eom()~
+};separator="\n\n"~
+		@Override
+		public ~name~ get() {
+			return new ~name~(~fields:{it|_~it.name~};separator=", "~);
+		}
+	}
+
+	private final java.util.UUID uuid;
+	~fields:{it|private final ~it.type~ _~it.name~;};separator="\n"~
+	
+	public ~name~(~fields:{it|~it.type~ _~it.name~};separator=", "~) {
+		this.uuid = java.util.UUID.randomUUID();
+		~fields:{it|this._~it.name~ = _~it.name~;};separator="\n"~
+	}
+
+	public final java.util.UUID uuid() {
+		return this.uuid;
+	}	
+	
+	~fields:{it|public final ~it.type~ ~it.name~() {
+		return _~it.name~;
+	~eom()~
+	};separator="\n"~
+	
+~if(lexical)~
+
+	@Override
+	public String toString() {
+		return ~lexical:{it|_~it~};separator=" + \" \" + "~;
+	}
+~endif~
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+}  >>
+
+FunctionsFactory(packageName,name,types,extending,methods) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ {
+
+	~types:{it|~it~};separator="\n\n"~
+	
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+TypeFactoryMethod(type,name) ::= <<public static ~type~.Builder ~name~() {
+	return ~type~.builder();	
+}  >>
+
+FunctionsFactoryMethod(arguments,name,type) ::= <<public static ~type~ ~name~(~arguments:{it|~it.type~ ~it.name~};separator=", "~) {
+	return new ~type~(~arguments:{it|~it.name~};separator=", "~);	
+}  >>
+
+BiPredicate(U,packageName,T,expression,extending,name) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.BiPredicate<~T~, ~U~> {
+	
+	@Override
+	public boolean test(~T~ t, ~U~ u) {
+		~expression~
+	}
+}  >>
+
+BiFunction(name,extending,T,R,expression,packageName,U) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.BiFunction<~T~, ~U~, ~R~> {
+	
+	@Override
+	public ~R~ apply(~T~ t, ~U~ u) {
+		~expression~
+	}
+}  >>
+
+BiConsumer(expression,U,name,packageName,T,extending) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.BiConsumer<~T~, ~U~> {
+	
+	@Override
+	public void accept(~T~ t, ~U~ u) {
+		~expression~
+	}
+}  >>
+
+Consumer(T,extending,expression,name,packageName) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.Consumer<~T~> {
+	
+	@Override
+	public void accept(~T~ t) {
+		~expression~
+	}
+}  >>
+
+Supplier(expression,name,T,packageName,extending) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.Supplier<~T~> {
+	
+	@Override
+	public ~T~ get() {
+		~expression~
+	}
+}  >>
+
+Predicate(extending,name,packageName,T,expression) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.Predicate<~T~> {
+	
+	@Override
+	public boolean test(~T~ t) {
+		~expression~
+	}
+}  >>
+
+Function(name,O,packageName,expression,extending,I) ::= <<package ~packageName~;
+
+public final class ~name~~if(extending)~ extends ~extending~~endif~ implements java.util.function.Function<~I~, ~O~> {
+	
+	@Override
+	public ~O~ apply(~I~ input) {
+		~expression~
+	}
+}  >>
+
 Grammar() ::= << >>
 
 ArrayCreationLevel(dimension) ::= <<[~dimension~] >>
@@ -626,6 +788,82 @@ PublicFinalFieldDeclaration(initializer,name,type) ::= <<public final ~VariableD
 
 StaticFinalFieldDeclaration(initializer,name,type) ::= <<static final ~VariableDeclaration(initializer,name,type)~; >>
 
+JavaCompiler(packageName,name,methods) ::= <<package ~packageName~;
+
+class ~name~ {
+
+   private static final java.io.PrintStream log = System.out;
+
+   public static void main(String[] args) throws java.io.IOException {
+
+      final String newClass = "NEWCLASS";
+      final java.nio.file.Path copypath = copy("/home/goe/projects/compiler/src/main/java", ".java", "CLASS", newClass);
+
+      assert copypath != null;
+      final Class<?> aClass = compile(newClass, java.nio.file.Files.readString(copypath));
+
+      assert aClass != null;
+      final Object anObject = instanceOf(aClass, 0, null);
+
+      assert anObject != null;
+      apply(anObject, 0, null);
+   }
+
+	~methods:{it|~it~};separator="\n\n"~
+
+   private static Class<?> compile(String name, String source) {
+      log.println(java.util.Arrays.toString(new String[]{"compile", name, source}));
+      try {
+         return net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(name, source);
+      } catch (Throwable e) {
+         error(e);
+         return null;
+      }
+   }
+
+   private static Object instanceOf(Class<?> aClass, int constructor, Object[] args) {
+      assert aClass != null;
+      log.println(java.util.Arrays.toString(new String[]{"instantiate", aClass.toString(), Integer.toString(constructor), java.util.Arrays.toString(args)}));
+
+      final java.lang.reflect.Constructor<?>[] declaredConstructors = aClass.getDeclaredConstructors();
+      final java.lang.reflect.Constructor<?> declaredConstructor = declaredConstructors[constructor];
+      try {
+         if (args == null) return declaredConstructor.newInstance();
+         else return declaredConstructor.newInstance(args);
+      } catch (Throwable e) {
+         error(e);
+         return null;
+      }
+   }
+
+   private static void apply(Object anObject, int method, Object[] args) {
+      log.println(java.util.Arrays.toString(new String[]{"invoke", anObject.toString(), Integer.toString(method), java.util.Arrays.toString(args)}));
+
+      final java.lang.reflect.Method[] methods = anObject.getClass().getMethods();
+      try {
+         if (args == null) methods[method].invoke(anObject);
+         else methods[method].invoke(anObject, args);
+      } catch (Throwable e) {
+         error(e);
+      }
+   }
+
+   private static void error(Throwable e) {
+      log.println(java.util.Arrays.toString(new String[]{"!", e.getClass().getCanonicalName(), e.getMessage(), java.util.Arrays.toString(e.getStackTrace())}));
+   }
+}  >>
+
+JCMethod(O,apply,IN,T,name) ::= <<private static~if(T)~ ~T~~endif~ ~name~(~IN:{it|~it.type~ ~it.value~};separator=", "~) {
+	log.println(java.util.Arrays.toString(new String[]{"~name~", ~IN:{it|~it.value~};separator=", "~}));
+	try {
+		~apply~
+		~if(O)~return ~O~~endif~
+	} catch (Throwable e) {
+		error(e);
+		return null;
+	}
+}  >>
+
 JavaLibrary(name,packages) ::= <<~name~
 
 ~packages:{it|~it~};separator="\n\n"~  >>
@@ -634,6 +872,18 @@ JavaPackage(name,types) ::= <<~name~
 ~types:{it|~it~};separator="\n"~  >>
 
 JavaType(packageName,name) ::= <<~packageName~.~name~  >>
+
+Streams() ::= << >>
+
+Stream(elements) ::= <<~elements:{it|~it~};separator="."~  >>
+
+distinct() ::= <<distinct()  >>
+
+concat(two,one) ::= <<concat(~one~,~two~)  >>
+
+anyMatch(predicate) ::= <<anyMatch(~predicate~)  >>
+
+allMatch(predicate) ::= <<allMatch(~predicate~)  >>
 
 Utils() ::= << >>
 

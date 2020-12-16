@@ -228,4 +228,25 @@ public class STModelDB extends STModelNeoFactory {
          }
       });
    }
+
+   public nextgen.model.STValue newSTValue(nextgen.model.STValue existing) {
+      switch (existing.getType()) {
+         case STMODEL:
+            return newSTValue(existing.getStModel());
+         case PRIMITIVE:
+            return newSTValue(existing.getValue());
+         case ENUM:
+            return newSTValue(existing.getStEnumValue());
+         default:
+            return null;
+      }
+   }
+
+   public nextgen.model.STFile newSTFile(nextgen.model.STFile otherFile) {
+      return newSTFile()
+            .setName(newSTValue(otherFile.getName()))
+            .setType(findOrCreateSTValueByValue(otherFile.getType().getValue()))
+            .setPath(newSTValue(otherFile.getPath()))
+            .setPackageName(newSTValue(otherFile.getPackageName()));
+   }
 }

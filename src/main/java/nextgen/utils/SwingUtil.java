@@ -302,6 +302,7 @@ public class SwingUtil {
    }
 
    public static <T> void showSelectDialog(String message, Component owner, Collection<T> set, Consumer<T> onConfirm) {
+      if (set.isEmpty()) return;
       showSelectDialog(message, owner, set, set.iterator().next(), onConfirm);
    }
 
