@@ -19,7 +19,7 @@ public class AddArgumentFromArgumentType extends nextgen.actions.TransactionActi
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
-         final java.util.Optional<nextgen.model.STTemplate> stTemplate = stModel.getArguments()
+         final java.util.Optional<nextgen.model.STTemplate> stTemplate = stModel.getArgumentsSorted()
                .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                .map(nextgen.model.STArgument::getValue)
                .filter(nextgen.model.STValue::hasType)

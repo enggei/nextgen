@@ -55,7 +55,7 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
          final String packageName = fieldMap.get("package").getText().trim();
 
          for (nextgen.model.STModel stModel : stModels) {
-            stModel.getArguments()
+            stModel.getArgumentsSorted()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
                   .ifPresent(stArgument -> {

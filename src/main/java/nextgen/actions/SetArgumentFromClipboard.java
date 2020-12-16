@@ -13,7 +13,7 @@ public class SetArgumentFromClipboard extends nextgen.actions.TransactionAction 
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      stModel.getArguments()
+      stModel.getArgumentsSorted()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
             .findAny()
             .ifPresent(stArgument -> {

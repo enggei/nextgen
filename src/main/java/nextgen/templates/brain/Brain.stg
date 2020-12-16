@@ -1,0 +1,92 @@
+delimiters "~","~"
+
+Entity(name) ::= <<package graph;
+
+public class ~name~ {
+
+   private final java.util.UUID uuid = java.util.UUID.randomUUID();
+
+   @Override
+   public String toString() {
+      return uuid.toString();
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      graph.~name~ node = (graph.~name~) o;
+      return uuid.equals(node.uuid);
+   }
+
+   @Override
+   public int hashCode() {
+      return java.util.Objects.hash(uuid);
+   }
+}  >>
+
+Process(name,O,I,packageName) ::= <<package ~packageName~;
+
+public interface ~name~ extends java.util.function.Function<~I~,~O~> {
+   
+}  >>
+
+ProcessImpl(I,process,apply,packageName,O,name) ::= <<package ~packageName~;
+
+public class ~name~ implements ~process~ {
+
+	@Override
+   public ~O~ apply(~I~ input) {
+      ~apply~
+   }
+}  >>
+
+Stream(packageName,name,T) ::= <<package ~packageName~;
+
+public interface ~name~ extends java.util.stream.Stream.Builder<~T~> {
+
+}  >>
+
+Tuple(packageName,name,O,I) ::= <<package ~packageName~;
+
+public interface ~name~ {
+
+	~I~ first();
+
+   ~O~ second();
+}  >>
+
+TupleImpl(tuple,name,I,second,packageName,O,first) ::= <<package ~packageName~;
+
+public class ~name~ implements ~tuple~ {
+
+	@Override
+   public ~I~ first() {
+      ~first~
+   }
+
+   @Override
+   public ~O~ second() {
+      ~second~
+   }
+}  >>
+
+Unit(name,T,packageName) ::= <<package ~packageName~;
+
+public interface ~name~ extends java.util.function.Supplier<~T~> {
+   
+}  >>
+
+UnitImpl(unit,packageName,name,T,get) ::= <<package ~packageName~;
+
+public class ~name~ implements ~unit~ {
+
+	@Override
+   public ~T~ get() {
+      ~get~
+   }
+}  >>
+
+eom() ::= "}"
+
+gt() ::= ">"
