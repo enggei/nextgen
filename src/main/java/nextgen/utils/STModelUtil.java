@@ -187,12 +187,7 @@ public class STModelUtil {
    }
 
    public static java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
-
       final java.util.List<nextgen.model.STProject> collect = stModel.getIncomingModelsSTProject().collect(java.util.stream.Collectors.toList());
-      for (nextgen.model.STProject stProject : collect) {
-         System.out.println(getSTModelName(stModel, "[STModel]") + " " + stProject.getName());
-      }
-
       return Optional.ofNullable(collect.size()==0 ? null : collect.get(0));
    }
 

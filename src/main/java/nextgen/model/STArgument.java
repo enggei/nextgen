@@ -1,7 +1,6 @@
 package nextgen.model;
 
 public class STArgument {
-
 	private final org.neo4j.graphdb.Node node;
 
 	public STArgument(org.neo4j.graphdb.Node node) { 

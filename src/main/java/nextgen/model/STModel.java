@@ -180,7 +180,6 @@ public class STModel {
 		if (!_files.isEmpty()) jsonObject.put("files", _files);
 
 		final io.vertx.core.json.JsonArray _arguments = new io.vertx.core.json.JsonArray();
-		getArguments().forEach(element -> _arguments.add(element.toJsonObject()));
 		if (!_arguments.isEmpty()) jsonObject.put("arguments", _arguments);
 
 		return jsonObject;

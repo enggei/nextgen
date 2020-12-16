@@ -18,17 +18,6 @@ public class STModelDB extends STModelNeoFactory {
       getDatabaseService().registerTransactionEventHandler(new TransactionEventHandler.Adapter<Object>() {
          @Override
          public Object beforeCommit(TransactionData data) throws Exception {
-
-//                System.out.println("deletedNodes");
-//                data.deletedNodes().forEach(node -> System.out.println(Neo4JUtil.toString(node)));
-//                System.out.println("deletedRelationships");
-//                data.deletedRelationships().forEach(relationship -> System.out.println(Neo4JUtil.toString(relationship)));
-//
-//                System.out.println("createdNodes");
-//                data.createdNodes().forEach(node -> System.out.println(Neo4JUtil.toString(node)));
-//                System.out.println("createdRelationships");
-//                data.createdRelationships().forEach(relationship -> System.out.println(Neo4JUtil.toString(relationship)));
-
             return super.beforeCommit(data);
          }
 
@@ -193,40 +182,6 @@ public class STModelDB extends STModelNeoFactory {
                   }));
 
       return clone;
-   }
-
-   public void reconcileValues() {
-      final Set<org.neo4j.graphdb.Node> delete = new LinkedHashSet<>();
-
-      doInTransaction(transaction ->
-            findAllSTValue()
-                  .filter(stValue -> !delete.contains(stValue.getNode()))
-                  .filter(nextgen.utils.STModelUtil::isValidPrimitive)
-                  .forEach(stValue ->
-                        findAllSTValueByValue(stValue.getValue())
-                              .filter(duplicate -> !duplicate.getUuid().equals(stValue.getUuid()))
-                              .filter(duplicate -> !delete.contains(duplicate.getNode()))
-                              .filter(nextgen.utils.STModelUtil::isValidPrimitive)
-                              .forEach(duplicate -> {
-
-                                 log.info("\t duplicate " + duplicate.getValue());
-
-                                 final org.neo4j.graphdb.Node duplicateNode = duplicate.getNode();
-                                 duplicateNode.getRelationships(org.neo4j.graphdb.Direction.INCOMING)
-                                       .forEach(relationship -> {
-                                          final org.neo4j.graphdb.Node src = relationship.getOtherNode(duplicateNode);
-                                          final org.neo4j.graphdb.Relationship newRelation = src.createRelationshipTo(stValue.getNode(), relationship.getType());
-                                          relationship.getPropertyKeys().forEach(s -> newRelation.setProperty(s, relationship.getProperty(s)));
-                                       });
-
-                                 delete.add(duplicateNode);
-                              })));
-
-      doInTransaction(transaction -> {
-         for (org.neo4j.graphdb.Node node : delete) {
-            node.getRelationships().forEach(org.neo4j.graphdb.Relationship::delete);
-         }
-      });
    }
 
    public nextgen.model.STValue newSTValue(nextgen.model.STValue existing) {
