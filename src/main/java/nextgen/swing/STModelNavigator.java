@@ -861,7 +861,7 @@ public class STModelNavigator extends JPanel {
 
 			getModel().getFiles()
 					.forEach(stFile -> add(new STFileSinkTreeNode(stFile)));
-			stTemplate.getParameters()
+			stTemplate.getParametersSorted()
 					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
 					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
@@ -1140,7 +1140,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			stTemplate.getParameters()
+			stTemplate.getParametersSorted()
 					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
 					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}
@@ -1551,7 +1551,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			stTemplate.getParameters()
+			stTemplate.getParametersSorted()
 					.sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
 					.forEach(stParameter -> add(new STParameterTreeNode(stParameter, model)));
 		}

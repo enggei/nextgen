@@ -91,16 +91,16 @@ public class STGenerator {
       stDomainTests.add("domainName", domainClassName);
 
       final ST stgString = generator.getInstanceOf("stgString");
-      stGroupModel.getTemplates()
+      stGroupModel.getTemplatesSorted()
             .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
             .forEach(stTemplate -> generateSTEntity(stTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 
-      stGroupModel.getEnums().forEach(stEnum -> {
+      stGroupModel.getEnumsSorted().forEach(stEnum -> {
          final ST stEnumDeclaration = generateSTEnum(packageDeclaration, stEnum);
          writeJavaFile(stEnumDeclaration.render(), packageDeclaration, stEnum.getName(), root);
       });
 
-      stGroupModel.getInterfaces().forEach(stInterface -> {
+      stGroupModel.getInterfacesSorted().forEach(stInterface -> {
          final ST interfaceDeclaration = generator.getInstanceOf("STInterface");
          interfaceDeclaration.add("packageName", packageDeclaration);
          interfaceDeclaration.add("name", stInterface.getName());
@@ -137,7 +137,7 @@ public class STGenerator {
       stEnumDeclaration.add("packageName", packageDeclaration);
       stEnumDeclaration.add("name", stEnum.getName());
 
-      stEnum.getValues().forEach(stEnumValue -> {
+      stEnum.getValuesSorted().forEach(stEnumValue -> {
 
          final ST stEnumValue1 = generator.getInstanceOf("STEnumValue");
          stEnumValue1.add("name", stEnumValue.getName());
@@ -151,7 +151,7 @@ public class STGenerator {
    public void generateSTEntity(STTemplate stTemplate, File root, String packageDeclaration, ST stDomain, ST stDomainTests, ST stgString) {
 
       if (stTemplate.getText().trim().length() == 0) {
-         stTemplate.getChildren()
+         stTemplate.getChildrenSorted()
                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                .forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
          return;
@@ -169,7 +169,7 @@ public class STGenerator {
       templateTestMethod.add("template", className);
       stDomainTests.addAggr("testcases.{name,impl}", className, templateTestMethod);
 
-      stTemplate.getChildren()
+      stTemplate.getChildrenSorted()
             .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
             .forEach(childTemplate -> generateSTEntity(childTemplate, root, packageDeclaration, stDomain, stDomainTests, stgString));
 

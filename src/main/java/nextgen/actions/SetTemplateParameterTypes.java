@@ -19,7 +19,7 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
       final java.util.Map<String, javax.swing.JRadioButton> labelParameterMap = new java.util.TreeMap<>();
       final javax.swing.ButtonGroup labelParameterGroup = new javax.swing.ButtonGroup();
 
-      stTemplate.getParameters().forEach(stParameter -> {
+      stTemplate.getParametersSorted().forEach(stParameter -> {
 
          switch (stParameter.getType()) {
 
@@ -52,7 +52,7 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
       });
 
       showDialog(owner, contentPanel, "Parameter Types", jDialog -> {
-         stTemplate.getParameters().forEach(stParameter -> {
+         stTemplate.getParametersSorted().forEach(stParameter -> {
 
             switch (stParameter.getType()) {
 

@@ -22,7 +22,7 @@ public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAc
 
       if (argumentType.equals("Object") || argumentType.equals("String")) {
 
-         final java.util.Optional<nextgen.model.STTemplate> stTemplate = stModel.getArgumentsSorted()
+         final java.util.Optional<nextgen.model.STTemplate> stTemplate = stModel.getArguments()
                .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                .map(nextgen.model.STArgument::getValue)
                .filter(nextgen.model.STValue::hasType)

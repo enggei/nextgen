@@ -25,7 +25,7 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
             .toArray(String[]::new);
 
       final java.util.Map<String, nextgen.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
-      final java.util.List<String> nameOptions = stTemplate.getParameters()
+      final java.util.List<String> nameOptions = stTemplate.getParametersSorted()
             .filter(stParameter -> stParameter.getType().equals(nextgen.model.STParameterType.SINGLE))
             .map(stParameter -> {
                parameterMap.put(stParameter.getName(), stParameter);
