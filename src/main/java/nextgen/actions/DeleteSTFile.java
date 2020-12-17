@@ -13,7 +13,7 @@ public class DeleteSTFile extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("DeleteSTFile" + " stFile" + " owner");
+   	log.info("DeleteSTFile" + " stFile" + " owner");
 
       confirm(owner, "Delete", unused -> appModel().delete(stFile));
    }

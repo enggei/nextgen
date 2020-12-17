@@ -13,7 +13,7 @@ public class AddInterface extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddInterface" + " children" + " owner");
+   	log.info("AddInterface" + " children" + " owner");
 
       final javax.swing.JTextField txtImplements = newTextField();
       final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 1));

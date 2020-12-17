@@ -17,7 +17,7 @@ public class SetKVArgumentFromInput extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetKVArgumentFromInput" + " stModel" + " stArgument" + " stParameterKey" + " owner");
+   	log.info("SetKVArgumentFromInput" + " stModel" + " stArgument" + " stParameterKey" + " owner");
 
       input(owner, stParameterKey.getName(), inputValue -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, inputValue));
    }

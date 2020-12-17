@@ -11,7 +11,7 @@ public class SetSTValueFromClipboard extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetSTValueFromClipboard" + " stValue");
+   	log.info("SetSTValueFromClipboard" + " stValue");
 
       stValue.removeStModel();
       stValue.setValue(nextgen.utils.SwingUtil.fromClipboard());

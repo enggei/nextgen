@@ -1,6 +1,6 @@
 package nextgen.swing;
 
-public class SelectOrAddSTModelValue extends nextgen.swing.ModelEditor<nextgen.model.STValue> {
+public class SelectOrAddSTModelValue extends nextgen.swing.BaseEditor<nextgen.model.STValue> {
 
    private final nextgen.model.STTemplate stTemplate;
    private final javax.swing.JRadioButton radFromTemplate;

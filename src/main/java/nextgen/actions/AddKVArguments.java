@@ -15,7 +15,7 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddKVArguments" + " stParameter" + " stModel" + " owner");
+   	log.info("AddKVArguments" + " stParameter" + " stModel" + " owner");
 
       final java.util.List<java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField>> maps = java.util.Arrays.asList(
             getStParameterKeyJTextFieldMap(),

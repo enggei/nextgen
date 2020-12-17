@@ -15,7 +15,7 @@ public class SetArgumentFromInput extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetArgumentFromInput" + " stModel" + " stParameter" + " owner");
+   	log.info("SetArgumentFromInput" + " stModel" + " stParameter" + " owner");
 
       input(owner, stParameter.getName(), inputValue -> appModel().setArgument(stModel, stParameter, inputValue));
       if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);

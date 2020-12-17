@@ -2,7 +2,7 @@ package nextgen.model.workflow;
 
 public class WorkFlowEvents {
 
-	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkFlowEvents.class);
+	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkFlowEvents.class);
 
 	public static void postNewWork(nextgen.model.workflow.Work model) {
 		log.info("post NewWork");

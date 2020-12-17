@@ -11,7 +11,7 @@ public class WriteAllSTModelsToFile extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("WriteAllSTModelsToFile" + " stModels");
+   	log.info("WriteAllSTModelsToFile" + " stModels");
 
       for (nextgen.model.STModel stModel : stModels) new WriteSTModelToFile(stModel).actionPerformed(actionEvent, transaction);
    }

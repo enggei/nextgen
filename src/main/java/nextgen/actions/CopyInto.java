@@ -13,7 +13,7 @@ public class CopyInto extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("CopyInto" + " thisModel" + " otherModel");
+   	log.info("CopyInto" + " thisModel" + " otherModel");
 
       appModel().copyInto(thisModel, otherModel);
    }

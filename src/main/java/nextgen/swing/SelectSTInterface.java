@@ -1,4 +1,4 @@
 package nextgen.swing;
 
-public class SelectSTInterface extends ModelEditor<nextgen.model.STInterface> {
+public class SelectSTInterface extends BaseEditor<nextgen.model.STInterface> {
 }

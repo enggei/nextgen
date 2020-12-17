@@ -11,7 +11,7 @@ public class ShowSTModelInCanvas extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("ShowSTModelInCanvas" + " stModel");
+   	log.info("ShowSTModelInCanvas" + " stModel");
 
       nextgen.events.ShowSTModelInCanvas.post(stModel);
    }

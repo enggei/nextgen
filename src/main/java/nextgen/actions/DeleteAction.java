@@ -15,7 +15,7 @@ public class DeleteAction extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("DeleteAction" + " stAction" + " owner" + " stGroup");
+   	log.info("DeleteAction" + " stAction" + " owner" + " stGroup");
 
       confirm(owner, "Delete", unused -> {
       		stGroup.removeActions(stAction);

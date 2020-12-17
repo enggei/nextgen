@@ -11,7 +11,7 @@ public class GenerateAllSTGroups extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("GenerateAllSTGroups" + " owner");
+   	log.info("GenerateAllSTGroups" + " owner");
 
       appModel().getAllSTGroups().forEach(stGroupModel -> new GenerateSTGroup(owner, stGroupModel).actionPerformed(actionEvent, transaction));
    }

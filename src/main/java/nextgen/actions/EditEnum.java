@@ -13,7 +13,7 @@ public class EditEnum extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("EditEnum" + " stEnum" + " owner");
+   	log.info("EditEnum" + " stEnum" + " owner");
 
       final int newFields = 5;
       final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout((int) stEnum.getValues().count() + newFields + 1, 2));

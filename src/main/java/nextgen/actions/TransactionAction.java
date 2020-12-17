@@ -4,6 +4,8 @@ import static nextgen.utils.SwingUtil.printStackTrace;
 
 public abstract class TransactionAction extends javax.swing.AbstractAction {
 
+   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransactionAction.class);
+
    protected TransactionAction(String name) {
       super(name);
    }
@@ -97,10 +99,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       return new nextgen.swing.SelectSTInterface();
    }
 
-   protected <T> void showEditor(javax.swing.JComponent owner, nextgen.swing.ModelEditor<T> modelEditor, java.util.function.BiConsumer<javax.swing.JDialog, T> saveAction) {
-      final javax.swing.JDialog dialog = newDialog(owner, modelEditor.title());
-      dialog.add(modelEditor, java.awt.BorderLayout.CENTER);
-      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog, modelEditor.getModel())));
+   protected <T> void showEditor(javax.swing.JComponent owner, nextgen.swing.BaseEditor<T> baseEditor, java.util.function.BiConsumer<javax.swing.JDialog, T> saveAction) {
+      final javax.swing.JDialog dialog = newDialog(owner, baseEditor.title());
+      dialog.add(baseEditor, java.awt.BorderLayout.CENTER);
+      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog, baseEditor.getModel())));
    }
 
    protected void showError(javax.swing.JComponent owner, Throwable throwable) {

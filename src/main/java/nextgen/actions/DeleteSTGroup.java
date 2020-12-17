@@ -13,7 +13,7 @@ public class DeleteSTGroup extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("DeleteSTGroup" + " stGroup" + " owner");
+   	log.info("DeleteSTGroup" + " stGroup" + " owner");
 
       confirm(owner, "Delete", unused -> appModel().delete(stGroup));
    }

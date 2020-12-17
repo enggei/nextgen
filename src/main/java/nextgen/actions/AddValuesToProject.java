@@ -13,7 +13,7 @@ public class AddValuesToProject extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddValuesToProject" + " project" + " owner");
+   	log.info("AddValuesToProject" + " project" + " owner");
 
       final java.util.List<javax.swing.JTextField> fields = new java.util.ArrayList<>();
       for (int i = 0; i < 10; i++) {

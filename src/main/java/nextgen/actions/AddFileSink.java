@@ -11,7 +11,7 @@ public class AddFileSink extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddFileSink" + " stModel");
+   	log.info("AddFileSink" + " stModel");
 
       final java.util.Optional<nextgen.model.STProject> stProject = nextgen.utils.STModelUtil.findSTProjectFor(stModel);
 

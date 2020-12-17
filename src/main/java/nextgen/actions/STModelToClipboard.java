@@ -11,7 +11,7 @@ public class STModelToClipboard extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("STModelToClipboard" + " stModel");
+   	log.info("STModelToClipboard" + " stModel");
 
       nextgen.utils.SwingUtil.toClipboard(appModel().render(stModel));
    }

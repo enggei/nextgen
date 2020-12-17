@@ -9,7 +9,7 @@ public class ReconcileDuplicateModels extends nextgen.actions.TransactionAction 
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("ReconcileDuplicateModels");
+   	log.info("ReconcileDuplicateModels");
 
       appModel().reconcileDuplicateModels();
    }

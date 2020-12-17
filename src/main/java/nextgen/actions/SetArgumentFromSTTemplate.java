@@ -15,7 +15,7 @@ public class SetArgumentFromSTTemplate extends nextgen.actions.TransactionAction
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetArgumentFromSTTemplate" + " stModel" + " stParameter" + " stTemplate");
+   	log.info("SetArgumentFromSTTemplate" + " stModel" + " stParameter" + " stTemplate");
 
       appModel().setArgument(stModel, stParameter, stTemplate);
    }

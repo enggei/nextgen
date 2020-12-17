@@ -764,7 +764,7 @@ public class STAppPresentationModel {
 
 
    public nextgen.swing.STAppPresentationModel detach(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
-      findFirstSTArgument(stModel, stParameter).ifPresent(argument -> detach(stModel, argument));
+      findAllSTArgument(stModel, stParameter).forEach(argument -> detach(stModel, argument));
       return this;
    }
 
@@ -812,6 +812,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
       return this;
    }
 
@@ -820,6 +821,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
       return null;
    }
 
@@ -828,6 +830,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
       return null;
    }
 
@@ -836,6 +839,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
       return null;
    }
 

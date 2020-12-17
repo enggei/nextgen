@@ -1049,9 +1049,6 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				final java.util.Optional<STModelNavigator.STModelTreeNode> parentNode = getParentNode(STModelNavigator.STModelTreeNode.class);
 
-				final String clipboard = nextgen.utils.SwingUtil.fromClipboard();
-				final String stModelUuid = clipboard.startsWith("stmodel-") ? clipboard.replaceAll("stmodel-","").trim() : null;
-
 				final java.util.List<nextgen.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
 
 				final java.util.List<nextgen.model.STModel> selectedSTModels = getSelectedSTModels()
@@ -1078,6 +1075,7 @@ public class STModelNavigator extends JPanel {
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), workspace));
 						actions.add(new nextgen.actions.AddArgumentFromClipboard(stModel, getModel()));
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), workspace));
+						actions.add(new nextgen.actions.DeleteSTArguments(workspace, getModel(), stModel));
 						break;
 					case KVLIST:
 						actions.add(new nextgen.actions.AddKVArguments(getModel(), stModel, workspace));

@@ -1,10 +1,10 @@
 package nextgen.swing;
 
-public class ModelEditor<T> extends AbstractEditor {
+public class BaseEditor<T> extends AbstractEditor {
 
    protected T model;
 
-   public ModelEditor() {
+   public BaseEditor() {
    }
 
    public T getModel() {

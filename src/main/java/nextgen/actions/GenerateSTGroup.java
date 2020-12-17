@@ -13,7 +13,7 @@ public class GenerateSTGroup extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("GenerateSTGroup" + " owner" + " stGroup");
+   	log.info("GenerateSTGroup" + " owner" + " stGroup");
 
       final nextgen.model.parser.ParseResult parseResult = nextgen.st.STParser.parse(nextgen.st.STGenerator.toSTGroup(stGroup));
 

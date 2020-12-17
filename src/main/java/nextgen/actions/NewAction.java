@@ -13,7 +13,7 @@ public class NewAction extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("NewAction" + " stGroup" + " owner");
+   	log.info("NewAction" + " stGroup" + " owner");
 
       input(owner, "New Action", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addAction(stGroup, name)));
    }

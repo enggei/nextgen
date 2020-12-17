@@ -15,7 +15,7 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetArgumentFromArgumentType" + " stModel" + " stParameter" + " owner");
+   	log.info("SetArgumentFromArgumentType" + " stModel" + " stParameter" + " owner");
 
       final String argumentType = stParameter.getArgumentType();
 

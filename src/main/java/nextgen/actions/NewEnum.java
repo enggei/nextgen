@@ -13,7 +13,7 @@ public class NewEnum extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("NewEnum" + " stGroup" + " owner");
+   	log.info("NewEnum" + " stGroup" + " owner");
 
       input(owner, "New Enum", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().newSTEnum(name)));
    }

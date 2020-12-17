@@ -15,7 +15,7 @@ public class SetArgumentFromSTValue extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetArgumentFromSTValue" + " stModel" + " stParameter" + " stValue");
+   	log.info("SetArgumentFromSTValue" + " stModel" + " stParameter" + " stValue");
 
       appModel().setArgument(stModel, stParameter, stValue);
       if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);

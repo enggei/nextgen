@@ -13,7 +13,7 @@ public class AddValueToProject extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddValueToProject" + " project" + " stValue");
+   	log.info("AddValueToProject" + " project" + " stValue");
 
       project.addValues(stValue);
       nextgen.events.NewSTProjectSTValue.post(stValue, project);

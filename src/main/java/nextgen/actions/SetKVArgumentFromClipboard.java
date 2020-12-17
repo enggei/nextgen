@@ -15,7 +15,7 @@ public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionActio
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("SetKVArgumentFromClipboard" + " stModel" + " stArgument" + " stParameterKey");
+   	log.info("SetKVArgumentFromClipboard" + " stModel" + " stArgument" + " stParameterKey");
 
       appModel().setArgumentKV(stModel, stArgument, stParameterKey, nextgen.utils.SwingUtil.fromClipboard());
    }

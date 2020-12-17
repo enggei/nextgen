@@ -13,7 +13,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("GenerateSources" + " stTemplate" + " stModels");
+   	log.info("GenerateSources" + " stTemplate" + " stModels");
 
       final String packageName = appModel().getSourceOutputPackage();
       final String className = "GenerateAll_" + stTemplate.getName();

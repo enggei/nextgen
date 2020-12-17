@@ -13,7 +13,7 @@ public class RunAction extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("RunAction" + " action" + " owner");
+   	log.info("RunAction" + " action" + " owner");
 
       try {
          final nextgen.templates.nextgen.TransactionAction source = asSource();

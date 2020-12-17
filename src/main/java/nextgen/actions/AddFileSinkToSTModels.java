@@ -15,7 +15,7 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("AddFileSinkToSTModels" + " stTemplate" + " stModels" + " owner");
+   	log.info("AddFileSinkToSTModels" + " stTemplate" + " stModels" + " owner");
 
       final String[] fileTypes = appModel().getFileTypes();
       final String[] pathTypes = appModel().getAllPathTypes();

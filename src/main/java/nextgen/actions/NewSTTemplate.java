@@ -13,7 +13,7 @@ public class NewSTTemplate extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	System.out.println("NewSTTemplate" + " stGroup" + " owner");
+   	log.info("NewSTTemplate" + " stGroup" + " owner");
 
       input(owner, "Name", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addTemplate(stGroup, name, "")));
    }
