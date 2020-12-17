@@ -1059,7 +1059,6 @@ public class STModelNavigator extends JPanel {
 
 				switch (getModel().getType()) {
 					case SINGLE:
-						if (stModelUuid != null) actions.add(new nextgen.actions.SetArgumentFromSTModelUuid("Set " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + nextgen.utils.STModelUtil.getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTTemplate("Set New " + stNode.getName(), stModel, getModel(), stNode)));
@@ -1069,7 +1068,6 @@ public class STModelNavigator extends JPanel {
 						if (nextgen.utils.STModelUtil.isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
-						if (stModelUuid != null) actions.add(new nextgen.actions.AddArgumentFromSTModelUuid("Add " + stModelUuid, stModel, getModel(), stModelUuid));
 						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + nextgen.utils.STModelUtil.getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));

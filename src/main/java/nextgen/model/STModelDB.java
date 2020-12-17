@@ -4,8 +4,6 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
-import java.util.*;
-
 import static nextgen.model.STValueType.*;
 
 public class STModelDB extends STModelNeoFactory {
@@ -14,25 +12,27 @@ public class STModelDB extends STModelNeoFactory {
 
    public STModelDB(String dbDir) {
       super(dbDir);
+      getDatabaseService().registerTransactionEventHandler(getTransactionEventHandler());
+      cleanup();
+   }
 
-      getDatabaseService().registerTransactionEventHandler(new TransactionEventHandler.Adapter<Object>() {
+   private org.neo4j.graphdb.event.TransactionEventHandler.Adapter<Object> getTransactionEventHandler() {
+      return new org.neo4j.graphdb.event.TransactionEventHandler.Adapter<Object>() {
          @Override
-         public Object beforeCommit(TransactionData data) throws Exception {
+         public Object beforeCommit(org.neo4j.graphdb.event.TransactionData data) throws Exception {
             return super.beforeCommit(data);
          }
 
          @Override
-         public void afterCommit(TransactionData data, Object state) {
+         public void afterCommit(org.neo4j.graphdb.event.TransactionData data, Object state) {
             super.afterCommit(data, state);
          }
 
          @Override
-         public void afterRollback(TransactionData data, Object state) {
+         public void afterRollback(org.neo4j.graphdb.event.TransactionData data, Object state) {
             super.afterRollback(data, state);
          }
-      });
-
-      cleanup();
+      };
    }
 
    @Override
@@ -40,7 +40,6 @@ public class STModelDB extends STModelNeoFactory {
       return super.findOrCreateSTValueByValue(value)
             .setType(PRIMITIVE);
    }
-
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
       return newSTArgument()
@@ -66,6 +65,27 @@ public class STModelDB extends STModelNeoFactory {
       return newSTValue()
             .setType(ENUM)
             .setStEnumValue(value);
+   }
+
+   public nextgen.model.STValue newSTValue(nextgen.model.STValue existing) {
+      switch (existing.getType()) {
+         case STMODEL:
+            return newSTValue(existing.getStModel());
+         case PRIMITIVE:
+            return newSTValue(existing.getValue());
+         case ENUM:
+            return newSTValue(existing.getStEnumValue());
+         default:
+            return null;
+      }
+   }
+
+   public nextgen.model.STFile newSTFile(nextgen.model.STFile otherFile) {
+      return newSTFile()
+            .setName(newSTValue(otherFile.getName()))
+            .setType(findOrCreateSTValueByValue(otherFile.getType().getValue()))
+            .setPath(newSTValue(otherFile.getPath()))
+            .setPackageName(newSTValue(otherFile.getPackageName()));
    }
 
    public void cleanup() {
@@ -118,7 +138,6 @@ public class STModelDB extends STModelNeoFactory {
       });
    }
 
-
    public void deleteUnnusedFiles() {
       findAllSTFile().forEach(stFile -> {
          if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
@@ -143,65 +162,5 @@ public class STModelDB extends STModelNeoFactory {
                log.info(toString(node));
                node.delete();
             });
-   }
-
-   public STModel cloneSTModel(String stModelUuid) {
-      return clone(findSTModelByUuid(stModelUuid));
-   }
-
-   public STModel clone(STModel stModel) {
-
-      final STTemplate stTemplate = stModel.getStTemplate();
-      final STModel clone = newSTModel().setStTemplate(stTemplate);
-
-      // ensure cloned-arguments are in same order as stModel-arguments:
-      stModel
-            .getArgumentsSorted()
-            .forEach(stArgument -> stTemplate.getParameters().filter(stParameter -> stArgument.getStParameter().equals(stParameter)).findFirst()
-                  .ifPresent(stParameter -> {
-                     switch (stParameter.getType()) {
-                        case SINGLE:
-                        case LIST:
-                           clone.addArguments(newSTArgument(stParameter, stArgument.getValue()));
-                           break;
-                        case KVLIST:
-                           final Collection<STArgumentKV> kvs = new ArrayList<>();
-                           stParameter
-                                 .getKeys()
-                                 .forEach(stParameterKey -> stArgument
-                                       .getKeyValues()
-                                       .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
-                                       .findAny()
-                                       .ifPresent(stArgumentKV -> kvs.add(newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stArgumentKV.getValue()))));
-
-                           final nextgen.model.STArgument newArgument = newSTArgument().setStParameter(stParameter);
-                           for (nextgen.model.STArgumentKV kv : kvs) newArgument.addKeyValues(kv);
-                           clone.addArguments(newArgument);
-                           break;
-                     }
-                  }));
-
-      return clone;
-   }
-
-   public nextgen.model.STValue newSTValue(nextgen.model.STValue existing) {
-      switch (existing.getType()) {
-         case STMODEL:
-            return newSTValue(existing.getStModel());
-         case PRIMITIVE:
-            return newSTValue(existing.getValue());
-         case ENUM:
-            return newSTValue(existing.getStEnumValue());
-         default:
-            return null;
-      }
-   }
-
-   public nextgen.model.STFile newSTFile(nextgen.model.STFile otherFile) {
-      return newSTFile()
-            .setName(newSTValue(otherFile.getName()))
-            .setType(findOrCreateSTValueByValue(otherFile.getType().getValue()))
-            .setPath(newSTValue(otherFile.getPath()))
-            .setPackageName(newSTValue(otherFile.getPackageName()));
    }
 }
