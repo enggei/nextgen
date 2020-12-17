@@ -13,11 +13,13 @@ public class SetSTProjectRoot extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("SetSTProjectRoot" + " stProject" + " owner");
+
       input(owner, "New Root", s -> {
 
       	stProject.setRoot(s);
       	
-         final nextgen.model.STValue newPath = appModel().db.newSTValue(s.trim());
+         final nextgen.model.STValue newPath = appModel().newSTValue(s.trim());
          nextgen.utils.STModelUtil.aggregateModels(stProject)
                .forEach(stModel -> stModel.getFiles()
                      .forEach(stFile -> {

@@ -13,7 +13,9 @@ public class SetSTGroupLanguage extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      select(owner, appModel().getLanguageTypes(), (java.util.function.Consumer<String>) stGroup::setLanguage);
+   	System.out.println("SetSTGroupLanguage" + " owner" + " stGroup");
+
+      select(owner, appModel().getLanguageTypes(), stGroup::setLanguage);
    }
 
 }

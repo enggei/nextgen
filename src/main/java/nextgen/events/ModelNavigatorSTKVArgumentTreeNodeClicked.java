@@ -5,7 +5,7 @@ public final class ModelNavigatorSTKVArgumentTreeNodeClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModelNavigatorSTKVArgumentTreeNodeClicked.class);
 
 	public static void post(nextgen.model.STArgumentKV kv) {
-		//log.info("post ModelNavigatorSTKVArgumentTreeNodeClicked");
+		System.out.println("ModelNavigatorSTKVArgumentTreeNodeClicked" + " kv");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new ModelNavigatorSTKVArgumentTreeNodeClicked(kv));
 	}
 

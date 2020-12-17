@@ -5,7 +5,7 @@ public final class NewSTProject {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTProject.class);
 
 	public static void post(nextgen.model.STProject project) {
-		//log.info("post NewSTProject");
+		System.out.println("NewSTProject" + " project");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTProject(project));
 	}
 

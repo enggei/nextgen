@@ -64,6 +64,7 @@ public class STModelDB extends STModelNeoFactory {
       if (value == null) return null;
       return newSTValue()
             .setType(ENUM)
+            .setValue(value.getLexical() == null || value.getLexical().trim().length() == 0 ? value.getName() : value.getLexical())
             .setStEnumValue(value);
    }
 

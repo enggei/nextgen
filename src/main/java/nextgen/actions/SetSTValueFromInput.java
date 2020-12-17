@@ -13,6 +13,8 @@ public class SetSTValueFromInput extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("SetSTValueFromInput" + " stValue" + " owner");
+
       input(owner, "Set Value", value -> {
          stValue.removeStModel();
          stValue.setValue(value);

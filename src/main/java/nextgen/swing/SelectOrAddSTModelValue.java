@@ -1,12 +1,12 @@
 package nextgen.swing;
 
-public class SelectOrAddNewModelPanel extends AbstractEditor {
+public class SelectOrAddSTModelValue extends nextgen.swing.ModelEditor<nextgen.model.STValue> {
 
    private final nextgen.model.STTemplate stTemplate;
    private final javax.swing.JRadioButton radFromTemplate;
    private final javax.swing.JList<ListElement> lstModels;
 
-   public SelectOrAddNewModelPanel(java.util.List<nextgen.model.STModel> stModelList, nextgen.model.STTemplate stTemplate) {
+   public SelectOrAddSTModelValue(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModelList) {
       setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
       this.stTemplate = stTemplate;
@@ -21,12 +21,17 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
       add(new javax.swing.JScrollPane(lstModels), java.awt.BorderLayout.CENTER);
    }
 
+   @Override
+   public String title() {
+      return "Select or add New";
+   }
+
    public nextgen.model.STValue getSTValue() {
-      if (radFromTemplate.isSelected()) {
-         return appModel().db.newSTValue(appModel().db.newSTModel().setStTemplate(stTemplate));
-      } else {
-         return appModel().db.newSTValue(lstModels.getSelectedValue().stModel);
-      }
+      if (radFromTemplate.isSelected())
+         return appModel().newSTValue(stTemplate);
+      else
+         return appModel().newSTValue(lstModels.getSelectedValue().stModel);
+
    }
 
    private final class ListElement {
@@ -50,7 +55,7 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
       private final java.util.List<ListElement> content = new java.util.ArrayList<>();
 
       public ListModel(java.util.List<nextgen.model.STModel> stModelList) {
-         stModelList.forEach(stModel -> content.add(new nextgen.swing.SelectOrAddNewModelPanel.ListElement(stModel)));
+         stModelList.forEach(stModel -> content.add(new nextgen.swing.SelectOrAddSTModelValue.ListElement(stModel)));
       }
 
       @Override
@@ -59,7 +64,7 @@ public class SelectOrAddNewModelPanel extends AbstractEditor {
       }
 
       @Override
-      public nextgen.swing.SelectOrAddNewModelPanel.ListElement getElementAt(int i) {
+      public nextgen.swing.SelectOrAddSTModelValue.ListElement getElementAt(int i) {
          return content.get(i);
       }
    }

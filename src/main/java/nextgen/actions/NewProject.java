@@ -11,10 +11,9 @@ public class NewProject extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      input(owner, "Name", s -> {
-         final nextgen.model.STProject stProject = appModel().db.newSTProject().setName(s);
-         nextgen.events.NewSTProject.post(stProject);
-      });
+   	System.out.println("NewProject" + " owner");
+
+      input(owner, "Name", s -> appModel().newSTProject(s));
    }
 
 }

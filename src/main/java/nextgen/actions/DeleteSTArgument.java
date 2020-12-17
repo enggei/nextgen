@@ -13,6 +13,8 @@ public class DeleteSTArgument extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("DeleteSTArgument" + " stArgument" + " owner");
+
       confirm(owner, "Remove", unused ->
             stArgument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> {
                final String uuid = stArgument.getUuid();

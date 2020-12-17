@@ -28,7 +28,7 @@ public class Layout {
 
 	private static final String _uuid = "uuid";
 
-	public STArgument setUuid(String value) { 
+	public Layout setUuid(String value) { 
 		if (value == null) {
 			removeUuid(); 
 		} else {
@@ -51,7 +51,7 @@ public class Layout {
 		return node.hasProperty(_uuid);
 	}
 
-	public STArgument removeUuid() { 
+	public Layout removeUuid() { 
 		node.removeProperty(_uuid);
 		return this;
 	}
@@ -87,7 +87,7 @@ public class Layout {
 
 	private static final String _name = "name";
 
-	public STArgument setName(String value) { 
+	public Layout setName(String value) { 
 		if (value == null) {
 			removeName(); 
 		} else {
@@ -110,7 +110,7 @@ public class Layout {
 		return node.hasProperty(_name);
 	}
 
-	public STArgument removeName() { 
+	public Layout removeName() { 
 		node.removeProperty(_name);
 		return this;
 	}

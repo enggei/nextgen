@@ -13,6 +13,8 @@ public class EditEnum extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("EditEnum" + " stEnum" + " owner");
+
       final int newFields = 5;
       final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout((int) stEnum.getValues().count() + newFields + 1, 2));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
@@ -53,9 +55,7 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       		final String newEnumLexical = newTxtEnumLexical.get(i).getText().trim();
       		if (newEnumValue.length() == 0) continue;
 
-      		stEnum.addValues(appModel().db.newSTEnumValue()
-      				.setName(newEnumValue)
-      				.setLexical(newEnumLexical.length() == 0 ? null : newEnumLexical));
+      		stEnum.addValues(appModel().newSTEnumValue(newEnumValue, newEnumLexical));
       	}
 
       	nextgen.events.STEnumChanged.post(stEnum);

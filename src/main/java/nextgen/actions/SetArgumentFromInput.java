@@ -15,24 +15,10 @@ public class SetArgumentFromInput extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      input(owner, stParameter.getName(), inputValue -> {
-         stModel.getArgumentsSorted()
-               .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-               .findAny()
-               .ifPresent(stArgument -> {
-                  final String uuid = stArgument.getUuid();
-                  stModel.removeArguments(stArgument);
-                  stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
-                  stArgument.delete();
-                  nextgen.events.STArgumentDeleted.post(stModel, uuid);
-               });
-         
-         final nextgen.model.STValue stValue = appModel().db.newSTValue(inputValue);
-         final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
-         stModel.addArguments(stArgument);
-         nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
-         if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
-      });
+   	System.out.println("SetArgumentFromInput" + " stModel" + " stParameter" + " owner");
+
+      input(owner, stParameter.getName(), inputValue -> appModel().setArgument(stModel, stParameter, inputValue));
+      if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
    }
 
 }

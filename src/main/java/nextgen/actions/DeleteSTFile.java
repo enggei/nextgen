@@ -13,12 +13,9 @@ public class DeleteSTFile extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      confirm(owner, "Delete", unused -> {
-         final String uuid = stFile.getUuid();
-         final nextgen.model.STFile found = appModel().db.findSTFileByUuid(uuid);
-         if (found != null) appModel().db.delete(found.getNode());
-         nextgen.events.STFileDeleted.post(uuid);
-      });
+   	System.out.println("DeleteSTFile" + " stFile" + " owner");
+
+      confirm(owner, "Delete", unused -> appModel().delete(stFile));
    }
 
 }

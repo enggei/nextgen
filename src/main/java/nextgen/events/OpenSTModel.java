@@ -5,7 +5,7 @@ public final class OpenSTModel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpenSTModel.class);
 
 	public static void post(nextgen.model.STModel model) {
-		//log.info("post OpenSTModel");
+		System.out.println("OpenSTModel" + " model");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTModel(model));
 	}
 

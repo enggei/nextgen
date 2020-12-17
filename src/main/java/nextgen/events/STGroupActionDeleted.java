@@ -5,7 +5,7 @@ public final class STGroupActionDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupActionDeleted.class);
 
 	public static void post(String uuid) {
-		//log.info("post STGroupActionDeleted");
+		System.out.println("STGroupActionDeleted" + " uuid");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STGroupActionDeleted(uuid));
 	}
 

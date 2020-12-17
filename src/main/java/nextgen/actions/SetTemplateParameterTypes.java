@@ -15,6 +15,8 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("SetTemplateParameterTypes" + " stGroup" + " stTemplate" + " owner");
+
       final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();
       final java.util.Map<String, javax.swing.JRadioButton> labelParameterMap = new java.util.TreeMap<>();
       final javax.swing.ButtonGroup labelParameterGroup = new javax.swing.ButtonGroup();

@@ -7,7 +7,7 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public AddKVArguments(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel, javax.swing.JComponent owner) {
-		super("Add...");
+		super("Add");
 		this.stParameter = stParameter;
 		this.stModel = stModel;
 		this.owner = owner;
@@ -15,34 +15,50 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
-      stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(40)));
+   	System.out.println("AddKVArguments" + " stParameter" + " stModel" + " owner");
 
-      final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));
-      inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
-      	inputPanel.add(new javax.swing.JLabel(fieldEntry.getKey().getName()));
-      	inputPanel.add(fieldEntry.getValue());
-      }
+      final java.util.List<java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField>> maps = java.util.Arrays.asList(
+            getStParameterKeyJTextFieldMap(),
+            getStParameterKeyJTextFieldMap(),
+            getStParameterKeyJTextFieldMap()
+      );
 
-      showDialog(owner, inputPanel, stParameter.getName(), jDialog -> {
-      	java.util.Collection<nextgen.model.STArgumentKV> kvs = new java.util.ArrayList<>();
-      	for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
-      		final String value = fieldEntry.getValue().getText().trim();
-      		if (value.length() == 0) continue;
+      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(maps.size(), 1));
 
-      		final nextgen.model.STValue stValue = appModel().db.newSTValue(value);
-      		final nextgen.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(fieldEntry.getKey()).setValue(stValue);
-      		kvs.add(stArgumentKV);
-      	}
+      maps.forEach(fieldMap -> {
+         final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));
+         inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
+         for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
+            inputPanel.add(newLabel(fieldEntry.getKey().getName()));
+            inputPanel.add(fieldEntry.getValue());
+         }
+         contentPanel.add(inputPanel);
+      });
 
-      	final nextgen.model.STArgument stArgument = appModel().db.newSTArgument().setStParameter(stParameter);
-      	for (nextgen.model.STArgumentKV kv : kvs) stArgument.addKeyValues(kv);
-      	stModel.addArguments(stArgument);
-      	nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument, kvs);
-
-      	close(jDialog);
+      showDialog(owner, contentPanel, stParameter.getName(), jDialog -> {
+         for (java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField> map : maps)
+            addSTArgument(map);
+         close(jDialog);
       });
    }
 
+   private java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField> getStParameterKeyJTextFieldMap() {
+      final java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField> fieldMap = new java.util.LinkedHashMap<>();
+      stParameter.getKeys().forEach(stParameterKey -> fieldMap.put(stParameterKey, newTextField(30)));
+      return fieldMap;
+   }
+
+   private void addSTArgument(java.util.Map<nextgen.model.STParameterKey, javax.swing.JTextField> fieldMap) {
+
+      if (fieldMap.values().stream().noneMatch(jTextField -> jTextField.getText().trim().length() > 0)) return;
+
+      java.util.List<nextgen.model.STArgumentKV> kvs = new java.util.ArrayList<>();
+      for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
+         final String value = fieldEntry.getValue().getText().trim();
+         if (value.length() == 0) continue;
+         appModel().addArgument(kvs, fieldEntry.getKey(), value);
+      }
+
+      appModel().addArgument(stModel, stParameter, kvs);
+   }
 }

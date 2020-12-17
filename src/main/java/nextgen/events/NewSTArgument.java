@@ -5,7 +5,7 @@ public final class NewSTArgument {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTArgument.class);
 
 	public static void post(nextgen.model.STArgument argument, nextgen.model.STModel model, nextgen.model.STParameter parameter, nextgen.model.STValue value) {
-		//log.info("post NewSTArgument");
+		System.out.println("NewSTArgument" + " argument" + " model" + " parameter" + " value");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTArgument(argument, model, parameter, value));
 	}
 

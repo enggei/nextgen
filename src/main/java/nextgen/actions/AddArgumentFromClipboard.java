@@ -13,10 +13,9 @@ public class AddArgumentFromClipboard extends nextgen.actions.TransactionAction 
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
-      stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+   	System.out.println("AddArgumentFromClipboard" + " stModel" + " stParameter");
+
+      appModel().addArgument(stModel, stParameter, nextgen.utils.SwingUtil.fromClipboard());
    }
 
 }

@@ -15,14 +15,10 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final String[] fileTypes = new String[]{"html", "java", "js", "xml"};
+   	System.out.println("AddFileSinkToSTModels" + " stTemplate" + " stModels" + " owner");
 
-      final String[] pathTypes = appModel().db.findAllSTFile()
-            .filter(stFile -> stFile.getPath() != null)
-            .filter(stFile -> stFile.getPath().getValue() != null)
-            .map(stFile -> stFile.getPath().getValue())
-            .distinct()
-            .toArray(String[]::new);
+      final String[] fileTypes = appModel().getFileTypes();
+      final String[] pathTypes = appModel().getAllPathTypes();
 
       final java.util.Map<String, nextgen.model.STParameter> parameterMap = new java.util.LinkedHashMap<>();
       final java.util.List<String> nameOptions = stTemplate.getParametersSorted()
@@ -58,15 +54,7 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
             stModel.getArgumentsSorted()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
-                  .ifPresent(stArgument -> {
-                     final nextgen.model.STFile stFile = appModel().db.newSTFile()
-                           .setName(appModel().db.newSTValue(appModel().render(stArgument)))
-                           .setType(appModel().db.findOrCreateSTValueByValue(type))
-                           .setPath(appModel().db.newSTValue(path))
-                           .setPackageName(appModel().db.newSTValue(packageName));
-                     stModel.addFiles(stFile);
-                     nextgen.events.NewFileSink.post(stModel, stFile);
-                  });
+                  .ifPresent(stArgument -> appModel().addFile(stModel, appModel().render(stArgument), packageName, path, type));
          }
          javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });

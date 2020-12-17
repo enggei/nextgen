@@ -5,7 +5,7 @@ public final class STArgumentChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STArgumentChanged.class);
 
 	public static void post(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument) {
-		//log.info("post STArgumentChanged");
+		System.out.println("STArgumentChanged" + " stModel" + " stArgument");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentChanged(stModel, stArgument));
 	}
 

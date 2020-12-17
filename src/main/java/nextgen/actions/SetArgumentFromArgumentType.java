@@ -15,134 +15,50 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("SetArgumentFromArgumentType" + " stModel" + " stParameter" + " owner");
+
       final String argumentType = stParameter.getArgumentType();
 
-      if (argumentType.equals("Object") || argumentType.equals("String")) {
+      final boolean argumentIsDefault = argumentType.equals("Object") || argumentType.equals("String");
+      if (argumentIsDefault) {
+      	final java.util.Optional<nextgen.model.STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
+      	if (stTemplate.isPresent())
+      		appModel().setArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
+      	else
+      		input(owner, "New value", s -> appModel().setArgument(stModel, stParameter, s));
+      	return;
+      }
 
-      	final java.util.Optional<nextgen.model.STTemplate> stTemplate = stModel.getArgumentsSorted()
-      			.filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-      			.map(nextgen.model.STArgument::getValue)
-      			.filter(nextgen.model.STValue::hasType)
-      			.filter(stValue -> stValue.getType() == nextgen.model.STValueType.STMODEL)
-      			.map(stValue -> stValue.getStModel().getStTemplate())
-      			.findFirst();
+      final nextgen.model.STGroupModel stGroupModel = appModel().getSTGroup(stModel);
+      final java.util.Optional<nextgen.model.STTemplate> stTemplate = appModel().findSTTemplateFromArgumentType(argumentType, stGroupModel);
+      if (stTemplate.isPresent()) {
 
-      	if (stTemplate.isPresent()) {
-      		removeExisting();
-      		final nextgen.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
-      		final nextgen.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-      		addValue(stValue);
-      	} else {
-      		input(owner, "New value", s -> {
-      			removeExisting();
-      			final nextgen.model.STValue stValue = appModel().db.newSTValue(s);
-      			addValue(stValue);
+      	final nextgen.model.ModelTypes.STModelList stModelList = appModel().getModelsFor(stTemplate.get());
+      	if (stModelList.isEmpty())
+      		appModel().setArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
+      	else
+      		showEditor(owner, getSelectOrAddSTModelValue(stTemplate.get(), stModelList), (dialog, model) -> {
+      			appModel().setArgument(stModel, stParameter, model);
+      			dialog.dispose();
       		});
-      	}
-
-      } else {
-
-      	final nextgen.model.STGroupModel stGroupModel = nextgen.utils.STModelUtil.getSTGroup(stModel.getStTemplate());
-      	final java.util.Optional<nextgen.model.STTemplate> stTemplate = nextgen.utils.STModelUtil
-      			.aggregateTemplates(stGroupModel)
-      			.filter(candidate -> candidate.getName().toLowerCase().equals(argumentType.toLowerCase()))
-      			.findAny();
-
-      	if (stTemplate.isPresent()) {
-
-      		final java.util.List<nextgen.model.STModel> stModelList = stTemplate.get().getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
-      		if (!stModelList.isEmpty()) {
-
-      			final nextgen.swing.SelectOrAddNewModelPanel input = new nextgen.swing.SelectOrAddNewModelPanel(stModelList, stTemplate.get());
-      			showDialog(owner, input, "Add", jDialog -> {
-      				removeExisting();
-      				final nextgen.model.STValue stValue = input.getSTValue();
-      				addValue(stValue);
-      				jDialog.dispose();
-      			});
-
-      		} else {
-      			removeExisting();
-      			final nextgen.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(stTemplate.get());
-      			final nextgen.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-      			addValue(stValue);
-      		}
-
-      	} else {
-      		final java.util.Set<nextgen.model.STTemplate> interfaces = nextgen.utils.STModelUtil.findSTTemplatesByInterface(argumentType, stGroupModel);
-      		if (!interfaces.isEmpty()) {
-      			if (interfaces.size() == 1) {
-      				removeExisting();
-      				final nextgen.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(interfaces.iterator().next());
-      				final nextgen.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-      				addValue(stValue);
-      			} else {
-
-      				final java.util.List<ListElement> selection = new java.util.ArrayList<>();
-      				interfaces.forEach(stTemplate1 -> selection.add(new ListElement(stTemplate1)));
-
-      				select(owner, selection, value -> {
-      					removeExisting();
-      					final nextgen.model.STModel stTemplateModel = appModel().db.newSTModel().setStTemplate(value.stTemplate);
-      					final nextgen.model.STValue stValue = appModel().db.newSTValue(stTemplateModel);
-      					addValue(stValue);
-      				});
-      			}
-
-      		} else {
-      			final nextgen.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByName(argumentType, stGroupModel);
-      			if (stEnum != null) {
-      				select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> {
-      					removeExisting();
-      					final nextgen.model.STValue stValue = appModel().db.newSTValue()
-      							.setType(nextgen.model.STValueType.ENUM)
-      							.setValue(value.getLexical() == null || value.getLexical().trim().length() == 0 ? value.getName() : value.getLexical());
-      					addValue(stValue);
-      				});
-      			} else {
-      				input(owner, "New value", s -> {
-      					removeExisting();
-      					final nextgen.model.STValue stValue = appModel().db.newSTValue(s);
-      					addValue(stValue);
-      				});
-      			}
-      		}
-      	}
-      }
-   }
-
-   private static final class ListElement {
-
-      private final nextgen.model.STTemplate stTemplate;
-      private final String text;
-
-      public ListElement(nextgen.model.STTemplate stTemplate) {
-         this.stTemplate = stTemplate;
-         this.text = stTemplate.getName();
+      	return;
       }
 
-      @Override
-      public String toString() {
-         return text;
+      final nextgen.model.ModelTypes.STTemplateSet stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
+      if (stTemplatesWithInterface.isEmpty()) {
+
+      	final nextgen.model.STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);
+      	if (stEnum == null)
+      		input(owner, "New value", s -> appModel().setArgument(stModel, stParameter, s));
+      	else
+      		select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> appModel().setArgument(stModel, stParameter, value));
+      	return;
       }
+
+      if (stTemplatesWithInterface.size() > 1)
+      	selectAndRender(owner, stTemplatesWithInterface, (nextgen.model.STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().setArgument(stModel, stParameter, model));
+      else
+      	appModel().setArgument(stModel, stParameter, stTemplatesWithInterface.iterator().next());
    }
 
-   private void removeExisting() {
-      stModel.getArgumentsSorted()
-            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-            .findAny()
-            .ifPresent(stArgument -> {
-               final String uuid = stArgument.getUuid();
-               stModel.removeArguments(stArgument);
-               stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
-               stArgument.delete();
-               nextgen.events.STArgumentDeleted.post(stModel, uuid);
-            });
-   }
-
-   private void addValue(nextgen.model.STValue stValue) {
-      final nextgen.model.STArgument stArgument = appModel().db.newSTArgument(stParameter, stValue);
-      stModel.addArguments(stArgument);
-      nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
-   }
 }

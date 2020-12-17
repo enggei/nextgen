@@ -263,6 +263,44 @@ public class SwingUtil {
       showInputDialog(message, owner, dimension, null, onConfirm);
    }
 
+   public static <T> void showSelectDialog(String message, Component owner, Collection<T> set, java.util.function.Function<T, String> renderer, T defaultValue, Consumer<T> onConfirm) {
+      final JComboBox<T> content = newComboBox(set, renderer, defaultValue);
+      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
+      dialog.add(content, BorderLayout.CENTER);
+      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+      final ConfirmAction onSave = new ConfirmAction() {
+         @Override
+         public void verifyAndCommit() throws Exception {
+            onConfirm.accept((T) content.getSelectedItem());
+         }
+      };
+
+      JButton btnSave;
+      commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            try {
+               onSave.verifyAndCommit();
+               dialog.dispose();
+            } catch (Exception e1) {
+               SwingUtil.showExceptionNoStack(content, e1);
+            }
+         }
+      }));
+      dialog.getRootPane().setDefaultButton(btnSave);
+
+      commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            SwingUtilities.invokeLater(dialog::dispose);
+         }
+      }));
+      dialog.add(commandPanel, BorderLayout.SOUTH);
+
+      showDialog(dialog, owner);
+   }
+
    public static <T> void showSelectDialog(String message, Component owner, Collection<T> set, T defaultValue, Consumer<T> onConfirm) {
       final JComboBox<T> content = newComboBox(set, defaultValue);
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
@@ -470,10 +508,6 @@ public class SwingUtil {
       });
    }
 
-   public static <T> JComboBox<T> newComboBox(T[] enumValues, T selected) {
-      return newComboBox(new LinkedHashSet<>(Arrays.asList(enumValues)), selected);
-   }
-
    @SuppressWarnings("unchecked")
    public static <T> JComboBox<T> newComboBox(Collection<T> enumValues, T selected) {
       final T[] values = (T[]) new Object[enumValues.size()];
@@ -481,6 +515,31 @@ public class SwingUtil {
       for (T enumValue : enumValues)
          values[index++] = enumValue;
       final JComboBox<T> comboBox = new JComboBox<>(values);
+      if (selected != null) comboBox.setSelectedItem(selected);
+
+      comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {
+         @Override
+         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            final String toString = value == null ? "[null]" : value.toString();
+            return super.getListCellRendererComponent(list, toString.length() > 50 ? toString.substring(0, 50) : toString, index, isSelected, cellHasFocus);
+         }
+      });
+
+      return comboBox;
+   }
+
+   public static <T> JComboBox<T> newComboBox(Collection<T> enumValues, java.util.function.Function<T, String> renderer, T selected) {
+      final T[] values = (T[]) new Object[enumValues.size()];
+      int index = 0;
+      for (T enumValue : enumValues)
+         values[index++] = enumValue;
+      final JComboBox<T> comboBox = new JComboBox<>(values);
+      comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {
+         @Override
+         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            return super.getListCellRendererComponent(list, renderer.apply((T) value), index, isSelected, cellHasFocus);
+         }
+      });
       if (selected != null) comboBox.setSelectedItem(selected);
 
       comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {

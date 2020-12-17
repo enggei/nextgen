@@ -5,7 +5,7 @@ public final class OpenSTTemplate {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpenSTTemplate.class);
 
 	public static void post(nextgen.model.STTemplate template) {
-		//log.info("post OpenSTTemplate");
+		System.out.println("OpenSTTemplate" + " template");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new OpenSTTemplate(template));
 	}
 

@@ -13,17 +13,17 @@ public class ImportSTTemplate extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("ImportSTTemplate" + " stGroup" + " owner");
+
       openFile(owner, file -> {
-      	appModel().setLastDir(file.getParentFile());
-      	appModel().doLaterInTransaction(t -> {
-      		final String fileName = file.getName();
-      		final String name = fileName.substring(0, fileName.indexOf("."));
-      		final nextgen.model.STTemplate stTemplate = appModel().db.newSTTemplate()
-                  .setName(name)
-                  .setText(nextgen.utils.FileUtil.readIntact(file));
+         appModel().setLastDir(file.getParentFile());
+         appModel().doLaterInTransaction(t -> {
+            final String fileName = file.getName();
+            final String name = fileName.substring(0, fileName.indexOf("."));
+            final nextgen.model.STTemplate stTemplate = appModel().newSTTemplate(name, nextgen.utils.FileUtil.readIntact(file));
             stGroup.addTemplates(stTemplate);
-      		nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
-      	});
+            nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
+         });
       });
    }
 

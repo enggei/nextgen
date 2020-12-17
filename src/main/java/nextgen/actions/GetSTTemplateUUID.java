@@ -11,6 +11,8 @@ public class GetSTTemplateUUID extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("GetSTTemplateUUID" + " stTemplate");
+
       nextgen.utils.SwingUtil.toClipboard(stTemplate.getUuid());
    }
 

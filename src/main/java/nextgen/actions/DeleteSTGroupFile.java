@@ -13,11 +13,9 @@ public class DeleteSTGroupFile extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      confirm(owner, "Delete", unused -> {
-      	final String uuid = stgroupFile.getUuid();
-      	stgroupFile.delete();
-      	nextgen.events.STGroupFileDeleted.post(uuid);
-      });
+   	System.out.println("DeleteSTGroupFile" + " stgroupFile" + " owner");
+
+      confirm(owner, "Delete", unused -> appModel().delete(stgroupFile));
    }
 
 }

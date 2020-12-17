@@ -5,7 +5,7 @@ public final class ModelNavigatorSTProjectTreeNodeClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModelNavigatorSTProjectTreeNodeClicked.class);
 
 	public static void post(nextgen.model.STProject stProject) {
-		//log.info("post ModelNavigatorSTProjectTreeNodeClicked");
+		System.out.println("ModelNavigatorSTProjectTreeNodeClicked" + " stProject");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new ModelNavigatorSTProjectTreeNodeClicked(stProject));
 	}
 

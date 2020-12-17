@@ -5,7 +5,7 @@ public final class TemplateNavigatorSTInterfaceTreeNodeClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateNavigatorSTInterfaceTreeNodeClicked.class);
 
 	public static void post(nextgen.model.STGroupModel stGroup, nextgen.model.STInterface stInterface) {
-		//log.info("post TemplateNavigatorSTInterfaceTreeNodeClicked");
+		System.out.println("TemplateNavigatorSTInterfaceTreeNodeClicked" + " stGroup" + " stInterface");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new TemplateNavigatorSTInterfaceTreeNodeClicked(stGroup, stInterface));
 	}
 

@@ -144,6 +144,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTValueElementEditorEnabled(nextgen.events.STValueElementEditorEnabled event) {
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.stValue)).ifPresent(treeModel::select);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProject(nextgen.events.NewSTProject event) {
 		findRootNode().ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STProjectTreeNode(event.project)));
 	}
@@ -572,7 +577,6 @@ public class STModelNavigator extends JPanel {
 				for (nextgen.model.STValue selected : selectedSTValues) 
 					actions.add(new nextgen.actions.AddValueToProject(getModel(), selected));
 				actions.add(new nextgen.actions.SetSTProjectRoot(getModel(), workspace));
-				actions.add(new nextgen.actions.AddValueToProjectFromInput(getModel(), workspace));
 				actions.add(new nextgen.actions.AddValuesToProject(getModel(), workspace));
 				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));
 				actions.add(new nextgen.actions.ShowSTProjectInCanvas(getModel()));
@@ -1076,7 +1080,6 @@ public class STModelNavigator extends JPanel {
 						actions.add(new nextgen.actions.AddArgumentFromArgumentType(stModel, getModel(), workspace));
 						break;
 					case KVLIST:
-						actions.add(new nextgen.actions.AddKVArgument(getModel(), stModel, workspace));
 						actions.add(new nextgen.actions.AddKVArguments(getModel(), stModel, workspace));
 						break;
 				}
@@ -1313,6 +1316,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new nextgen.actions.SetSTValueFromClipboard(getModel()));
 				actions.add(new nextgen.actions.STValueToClipboard(getModel()));
 				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, workspace));
 			});

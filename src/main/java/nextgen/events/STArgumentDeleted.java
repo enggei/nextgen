@@ -5,7 +5,7 @@ public final class STArgumentDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STArgumentDeleted.class);
 
 	public static void post(nextgen.model.STModel stModel, String uuid) {
-		//log.info("post STArgumentDeleted");
+		System.out.println("STArgumentDeleted" + " stModel" + " uuid");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentDeleted(stModel, uuid));
 	}
 

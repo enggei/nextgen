@@ -13,12 +13,9 @@ public class NewInterface extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      input(owner, "New Interface", s ->
-      		nextgen.utils.STModelUtil.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
-      			final nextgen.model.STInterface stInterface = appModel().db.newSTInterface().setName(s);
-      			stGroup.addInterfaces(stInterface);
-      			nextgen.events.NewSTInterface.post(stGroup, stInterface);
-      		}));
+   	System.out.println("NewInterface" + " stGroup" + " owner");
+
+      input(owner, "New Interface", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addInterface(stGroup, name)));
    }
 
 }

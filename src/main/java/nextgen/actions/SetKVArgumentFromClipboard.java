@@ -15,21 +15,9 @@ public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionActio
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      stArgument.getKeyValues()
-            .filter(existing -> existing.getStParameterKey().equals(stParameterKey))
-            .findFirst()
-            .ifPresent(existing -> {
-               stArgument.removeKeyValues(existing);
-               final String uuid = existing.getUuid();
-               existing.delete();
-               nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
-            });
+   	System.out.println("SetKVArgumentFromClipboard" + " stModel" + " stArgument" + " stParameterKey");
 
-      final nextgen.model.STValue stValue = appModel().db.newSTValue(nextgen.utils.SwingUtil.fromClipboard());
-      final nextgen.model.STArgumentKV stArgumentKV = appModel().db.newSTArgumentKV().setStParameterKey(stParameterKey).setValue(stValue);
-      stArgument.addKeyValues(stArgumentKV);
-
-      nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
+      appModel().setArgumentKV(stModel, stArgument, stParameterKey, nextgen.utils.SwingUtil.fromClipboard());
    }
 
 }

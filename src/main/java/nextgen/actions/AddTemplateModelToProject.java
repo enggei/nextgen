@@ -13,9 +13,9 @@ public class AddTemplateModelToProject extends nextgen.actions.TransactionAction
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-      final nextgen.model.STModel stModel = appModel().db.newSTModel().setStTemplate(stTemplate);
-      project.addModels(stModel);
-      nextgen.events.NewSTProjectSTModel.post(stModel, project, stTemplate);
+   	System.out.println("AddTemplateModelToProject" + " stTemplate" + " project");
+
+      appModel().addModel(project, stTemplate);
    }
 
 }

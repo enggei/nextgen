@@ -35,6 +35,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }
 
+   protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
    protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, T defaultValue, java.util.function.Consumer<T> consumer) {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }
@@ -83,6 +87,20 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       final javax.swing.JDialog dialog = newDialog(owner, title);
       dialog.add(component, java.awt.BorderLayout.CENTER);
       nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
+   }
+
+   protected nextgen.swing.SelectOrAddSTModelValue getSelectOrAddSTModelValue(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModelList) {
+      return new nextgen.swing.SelectOrAddSTModelValue(stTemplate, stModelList);
+   }
+
+   protected nextgen.swing.SelectSTInterface selectSTTemplate(nextgen.model.ModelTypes.STTemplateSet templateSet) {
+      return new nextgen.swing.SelectSTInterface();
+   }
+
+   protected <T> void showEditor(javax.swing.JComponent owner, nextgen.swing.ModelEditor<T> modelEditor, java.util.function.BiConsumer<javax.swing.JDialog, T> saveAction) {
+      final javax.swing.JDialog dialog = newDialog(owner, modelEditor.title());
+      dialog.add(modelEditor, java.awt.BorderLayout.CENTER);
+      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog, modelEditor.getModel())));
    }
 
    protected void showError(javax.swing.JComponent owner, Throwable throwable) {

@@ -13,6 +13,8 @@ public class RunInTerminal extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	System.out.println("RunInTerminal" + " stModel" + " owner");
+
       final String command = appModel().render(stModel);
       final java.io.File tempScript = createTempScript(command);
 
