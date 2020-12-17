@@ -85,10 +85,6 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
    }
 
-   protected void showTextResult(String title, String text, java.awt.Component parentComponent) {
-      nextgen.utils.SwingUtil.showTextResult(title, text, parentComponent);
-   }
-
    protected void showError(javax.swing.JComponent owner, Throwable throwable) {
       showError(owner, printStackTrace(throwable));
    }
@@ -113,5 +109,9 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected void toClipboard(Object value) {
       nextgen.utils.SwingUtil.toClipboard(value.toString());
+   }
+
+   protected String clipboard() {
+      return nextgen.utils.SwingUtil.fromClipboard();
    }
 }

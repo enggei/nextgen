@@ -195,7 +195,6 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 	protected void onCanvasRightClick(JPopupMenu pop, PInputEvent event) {
 
 
-		pop.addSeparator();
 		pop.add(new SelectAllNodes(event));
 		pop.add(new UnselectAllNodes(event));
 		pop.add(new RetainSelectedNodes(event));
@@ -1345,6 +1344,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		public STProjectNode(nextgen.model.STProject model) {
 			super(model, model.getUuid(), model.getName());
 		}
+
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 			super.onNodeRightClick(event, pop);
@@ -1391,6 +1391,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		public STModelNode(nextgen.model.STModel model) {
 			super(model, model.getUuid(), appModel().render(model));
 		}
+
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 			super.onNodeRightClick(event, pop);

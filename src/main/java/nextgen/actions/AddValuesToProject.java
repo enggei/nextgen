@@ -1,11 +1,11 @@
 package nextgen.actions;
 
-public class AddMultipleValuesToProject extends nextgen.actions.TransactionAction {
+public class AddValuesToProject extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STProject project;
    private final javax.swing.JComponent owner;
 
-	public AddMultipleValuesToProject(nextgen.model.STProject project, javax.swing.JComponent owner) {
+	public AddValuesToProject(nextgen.model.STProject project, javax.swing.JComponent owner) {
 		super("Add Multiple Values");
 		this.project = project;
 		this.owner = owner;
