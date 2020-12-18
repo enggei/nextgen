@@ -1394,6 +1394,7 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 		@Override
 		protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
+			pop.add(new ShowIncoming(event));
 			super.onNodeRightClick(event, pop);
 		}
 
@@ -1404,6 +1405,18 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 		}
 
 
+		final class ShowIncoming extends NodeAction {
+
+
+			ShowIncoming(PInputEvent event) {
+				super("Show incoming", event);
+			}
+
+			@Override
+			void actionPerformed(PInputEvent event, ActionEvent e) {
+
+			}
+		}
 
 	}
 

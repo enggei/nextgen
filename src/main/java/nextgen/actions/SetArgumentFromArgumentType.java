@@ -33,7 +33,7 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
       final java.util.Optional<nextgen.model.STTemplate> stTemplate = appModel().findSTTemplateFromArgumentType(argumentType, stGroupModel);
       if (stTemplate.isPresent()) {
 
-      	final nextgen.model.ModelTypes.STModelList stModelList = appModel().getModelsFor(stTemplate.get());
+      	final java.util.List<nextgen.model.STModel> stModelList = appModel().getModelsFor(stTemplate.get());
       	if (stModelList.isEmpty())
       		appModel().setArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
       	else
@@ -44,7 +44,7 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
       	return;
       }
 
-      final nextgen.model.ModelTypes.STTemplateSet stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
+      final java.util.Set<nextgen.model.STTemplate> stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
       if (stTemplatesWithInterface.isEmpty()) {
 
       	final nextgen.model.STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);

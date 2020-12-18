@@ -95,7 +95,7 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       return new nextgen.swing.SelectOrAddSTModelValue(stTemplate, stModelList);
    }
 
-   protected nextgen.swing.SelectSTInterface selectSTTemplate(nextgen.model.ModelTypes.STTemplateSet templateSet) {
+   protected nextgen.swing.SelectSTInterface selectSTTemplate(java.util.Set<nextgen.model.STTemplate> templateSet) {
       return new nextgen.swing.SelectSTInterface();
    }
 

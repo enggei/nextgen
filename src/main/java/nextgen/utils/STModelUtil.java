@@ -68,14 +68,8 @@ public class STModelUtil {
       return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter)) != null;
    }
 
-   public static Set<STTemplate> findSTInterfacesByName(String name, STGroupModel stGroupModel) {
-      final Set<STTemplate> set = new LinkedHashSet<>();
-      aggregateTemplates(stGroupModel).forEach(stTemplate -> stTemplate.getImplements().filter(name::equals).findFirst().ifPresent(s -> set.add(stTemplate)));
-      return set;
-   }
-
    public static java.util.Optional<nextgen.model.STTemplate> findSTTemplateByName(nextgen.model.STGroupModel stGroupModel, String name) {
-      return aggregateTemplates(stGroupModel).filter(stTemplate -> stTemplate.getName().toLowerCase().equals(name.toLowerCase())).findAny();
+      return aggregateTemplates(stGroupModel).filter(stTemplate -> stTemplate.getName().equalsIgnoreCase(name)).findAny();
    }
 
    public static Optional<String> isValidTemplateName(javax.swing.JComponent parent, STGroupModel stGroupModel, String name) {
@@ -85,7 +79,7 @@ public class STModelUtil {
          return Optional.empty();
       }
 
-      if (name.toLowerCase().equals("eom") || name.toLowerCase().equals("gt")) {
+      if (name.equalsIgnoreCase("eom") || name.equalsIgnoreCase("gt")) {
          SwingUtil.showMessage(name + " is a reserved name", parent);
          return Optional.empty();
       }
@@ -124,12 +118,6 @@ public class STModelUtil {
       return model.getName().startsWith("is") || model.getName().startsWith("has");
    }
 
-   public static boolean isValidPrimitive(nextgen.model.STValue stValue) {
-      return stValue.getType() != null &&
-            stValue.getValue() != null &&
-            stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE);
-   }
-
    public static String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
       final String found = getSTModelValue(stModel, "package", null);
       if (found != null) return found;
@@ -156,13 +144,6 @@ public class STModelUtil {
       return getSTGroup(stModel.getStTemplate());
    }
 
-   public static nextgen.model.STArgument findSTArgument(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel) {
-      return stModel.getArguments()
-            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-            .findFirst()
-            .orElse(null);
-   }
-
    public static java.util.stream.Stream<nextgen.model.STParameter> getSingleEnumsOrPrimitiveParameters(nextgen.model.STTemplate stTemplate) {
       return stTemplate.getParameters()
             .filter(stParameter -> stParameter.getType().equals(nextgen.model.STParameterType.SINGLE))
@@ -179,8 +160,8 @@ public class STModelUtil {
 
    public static java.util.stream.Stream<nextgen.model.STValue> getSTModelValues(nextgen.model.STModel model) {
       return model.getArguments()
-            .filter(stArgument -> stArgument.getValue() != null)
             .map(nextgen.model.STArgument::getValue)
+            .filter(java.util.Objects::nonNull)
             .filter(stValue -> stValue.getType() != null)
             .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
             .filter(stValue -> stValue.getStModel() != null);
@@ -206,18 +187,18 @@ public class STModelUtil {
       };
       private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListSTModelConsumer = (stArgument, stValue) -> {
       };
-      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListEnumConsumer = (stArgument, stValue) -> {
+      private final java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListEnumConsumer = (stArgument, stValue) -> {
       };
 
       private java.util.function.BiConsumer<nextgen.model.STArgument, java.util.Collection<nextgen.model.STArgumentKV>> onKVListConsumer = (stArgument, stArgumentKVS) -> {
       };
-      private java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTValueConsumer = (stArgumentKV, stValue) -> {
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTValueConsumer = (stArgumentKV, stValue) -> {
 
       };
-      private java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTModelConsumer = (stArgumentKV, stValue) -> {
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTModelConsumer = (stArgumentKV, stValue) -> {
 
       };
-      private java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListEnumConsumer = (stArgumentKV, stValue) -> {
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListEnumConsumer = (stArgumentKV, stValue) -> {
 
       };
 
@@ -296,26 +277,6 @@ public class STModelUtil {
 
       public STArgumentConsumer onKVListConsumer(java.util.function.BiConsumer<nextgen.model.STArgument, java.util.Collection<nextgen.model.STArgumentKV>> consumer) {
          this.onKVListConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListEnum(java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> consumer) {
-         this.onKVListEnumConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListSTModel(java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> consumer) {
-         this.onKVListSTModelConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onKVListSTValue(java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> consumer) {
-         this.onKVListSTValueConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onListEnum(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
-         this.onListEnumConsumer = consumer;
          return this;
       }
 

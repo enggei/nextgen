@@ -340,12 +340,12 @@ public class STAppPresentationModel {
       return nextgen.utils.STModelUtil.getSTGroup(stModel);
    }
 
-   public nextgen.model.ModelTypes.STModelList getModelsFor(nextgen.model.STTemplate stTemplate) {
-      return (nextgen.model.ModelTypes.STModelList) stTemplate.getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
+   public java.util.List<nextgen.model.STModel> getModelsFor(nextgen.model.STTemplate stTemplate) {
+      return stTemplate.getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
    }
 
-   public nextgen.model.ModelTypes.STTemplateSet findSTTemplatesWithInterface(String interfaceName, nextgen.model.STGroupModel stGroupModel) {
-      return (nextgen.model.ModelTypes.STTemplateSet) nextgen.utils.STModelUtil.findSTTemplatesByInterface(interfaceName, stGroupModel);
+   public java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String interfaceName, nextgen.model.STGroupModel stGroupModel) {
+      return  nextgen.utils.STModelUtil.findSTTemplatesByInterface(interfaceName, stGroupModel);
    }
 
    public nextgen.model.STEnum findSTEnumByName(String enumName, nextgen.model.STGroupModel stGroupModel) {
