@@ -36,7 +36,7 @@ public class AsBuilderCode extends nextgen.actions.TransactionAction {
             .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(appModel().getSTGroup(stModel).getName()))
             .setIsAsterisk(true));
 
-      nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());
+      toClipboard(blockStmt.toString());
       nextgen.st.STGenerator.writeJavaFile(compilationUnit, packageName, className, new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath()));
    }
 

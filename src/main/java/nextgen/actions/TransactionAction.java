@@ -29,8 +29,8 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
    }
 
-   protected void input(javax.swing.JComponent owner, String message, String defaultValue, java.util.function.Consumer<String> consumer) {
-      nextgen.utils.SwingUtil.showInputDialog(message, owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   protected void inputName(javax.swing.JComponent owner, String defaultValue, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog("Name", owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
    }
 
    protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Consumer<T> consumer) {
@@ -39,10 +39,6 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
-   }
-
-   protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, T defaultValue, java.util.function.Consumer<T> consumer) {
-      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }
 
    protected void openFile(javax.swing.JComponent owner, java.util.function.Consumer<java.io.File> consumer) {
@@ -93,10 +89,6 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected nextgen.swing.SelectOrAddSTModelValue getSelectOrAddSTModelValue(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModelList) {
       return new nextgen.swing.SelectOrAddSTModelValue(stTemplate, stModelList);
-   }
-
-   protected nextgen.swing.SelectSTInterface selectSTTemplate(java.util.Set<nextgen.model.STTemplate> templateSet) {
-      return new nextgen.swing.SelectSTInterface();
    }
 
    protected <T> void showEditor(javax.swing.JComponent owner, nextgen.swing.BaseEditor<T> baseEditor, java.util.function.BiConsumer<javax.swing.JDialog, T> saveAction) {

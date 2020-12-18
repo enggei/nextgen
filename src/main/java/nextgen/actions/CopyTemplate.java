@@ -13,7 +13,7 @@ public class CopyTemplate extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
    	log.info("CopyTemplate" + " stTemplate");
 
-      nextgen.utils.SwingUtil.toClipboard(stTemplate.getText());
+      toClipboard(stTemplate.getText());
    }
 
 }
