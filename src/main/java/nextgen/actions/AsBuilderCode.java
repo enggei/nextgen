@@ -1,21 +1,21 @@
 package nextgen.actions;
 
-public class GenerateSource extends nextgen.actions.TransactionAction {
+public class AsBuilderCode extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STModel stModel;
 
-	public GenerateSource(nextgen.model.STModel stModel) {
+	public AsBuilderCode(nextgen.model.STModel stModel) {
 		super("As builder code");
 		this.stModel = stModel;
 	}
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	log.info("GenerateSource" + " stModel");
+   	log.info("AsBuilderCode" + " stModel");
 
       final String packageName = appModel().getSourceOutputPackage();
       final String templateName = stModel.getStTemplate().getName();
-      final String className = nextgen.utils.STModelUtil.getSTModelName(stModel, templateName) + "Generator";
+      final String className = appModel().getSTModelName(stModel, templateName) + "Generator";
 
       final nextgen.templates.java.BlockStmt blockStmt = nextgen.templates.java.JavaPatterns.newBlockStmt()
             .addStatements(nextgen.templates.java.JavaPatterns.newReturnStmt().setExpression(appModel().stRenderer.renderGeneratorCode(stModel)));
@@ -33,7 +33,7 @@ public class GenerateSource extends nextgen.actions.TransactionAction {
       final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration);
 
       compilationUnit.addImportDeclaration(nextgen.templates.java.JavaPatterns
-            .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(nextgen.utils.STModelUtil.getSTGroup(stModel).getName()))
+            .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(appModel().getSTGroup(stModel).getName()))
             .setIsAsterisk(true));
 
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());

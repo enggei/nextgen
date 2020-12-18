@@ -1414,7 +1414,8 @@ public class STCanvas extends PCanvas implements PInputEventListener {
 
 			@Override
 			void actionPerformed(PInputEvent event, ActionEvent e) {
-
+				appModel().doLaterInTransaction(transaction -> {
+				});
 			}
 		}
 

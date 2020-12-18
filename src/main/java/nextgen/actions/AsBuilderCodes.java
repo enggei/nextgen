@@ -1,11 +1,11 @@
 package nextgen.actions;
 
-public class GenerateSources extends nextgen.actions.TransactionAction {
+public class AsBuilderCodes extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STTemplate stTemplate;
    private final java.util.List<nextgen.model.STModel> stModels;
 
-	public GenerateSources(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModels) {
+	public AsBuilderCodes(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModels) {
 		super("As builder code");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;
@@ -13,7 +13,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
-   	log.info("GenerateSources" + " stTemplate" + " stModels");
+   	log.info("AsBuilderCodes" + " stTemplate" + " stModels");
 
       final String packageName = appModel().getSourceOutputPackage();
       final String className = "GenerateAll_" + stTemplate.getName();
@@ -30,7 +30,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
       java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.model.STModel stModel : stModels) {
-         final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
+         final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.java.JavaPatterns
                .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel));
          blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
@@ -39,7 +39,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
 
       variableCount = new java.util.concurrent.atomic.AtomicInteger();
       for (nextgen.model.STModel stModel : stModels) {
-         final String stModelName = nextgen.utils.STModelUtil.getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
+         final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
                .setExpression(nextgen.templates.java.JavaPatterns.newMethodCallExpression()
                      .setScope("list")
@@ -62,7 +62,7 @@ public class GenerateSources extends nextgen.actions.TransactionAction {
       final nextgen.templates.java.CompilationUnit compilationUnit = nextgen.templates.java.JavaPatterns.newCompilationUnit(packageName, classOrInterfaceDeclaration);
 
       compilationUnit.addImportDeclaration(nextgen.templates.java.JavaPatterns
-            .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(nextgen.utils.STModelUtil.getSTGroup(stTemplate).getName()))
+            .newImportDeclaration(nextgen.swing.AppModel.getInstance().getOutputPackage() + "." + nextgen.utils.StringUtil.lowFirst(appModel().getSTGroup(stTemplate).getName()))
             .setIsAsterisk(true));
 
       nextgen.utils.SwingUtil.toClipboard(blockStmt.toString());

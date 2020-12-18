@@ -199,7 +199,7 @@ public class STModelNavigator extends JPanel {
 	public void onNewSTProjectSTModel(nextgen.events.NewSTProjectSTModel event) {
 		findSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.project))
 				.ifPresent(stProjectTreeNode -> {
-					final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(event.template);
+					final nextgen.model.STGroupModel stGroup = appModel().getSTGroup(event.template);
 					final java.util.Optional<STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
 					if (groupModelTreeNode.isPresent()) {
 						final java.util.Optional<STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
@@ -523,7 +523,7 @@ public class STModelNavigator extends JPanel {
 			model.getModels().sorted((m1, m2) -> appModel().getLabel(m1, () -> m1.getStTemplate().getName()).compareToIgnoreCase(appModel().getLabel(m2, () -> m2.getStTemplate().getName()))).forEach(stModel -> {
 
 				final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
-				final nextgen.model.STGroupModel stGroup = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+				final nextgen.model.STGroupModel stGroup = appModel().getSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
 					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
@@ -560,7 +560,7 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				final java.util.Set<nextgen.model.STModel> selectedSTModels = getSelectedSTModels().collect(java.util.stream.Collectors.toSet());
-				final java.util.Set<nextgen.model.STModel> projectSTModels = nextgen.utils.STModelUtil.aggregateModels(getModel());
+				final java.util.Set<nextgen.model.STModel> projectSTModels = appModel().aggregateModels(getModel());
 				selectedSTModels.removeAll(projectSTModels);
 
 				final java.util.Set<nextgen.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toSet());
@@ -806,7 +806,7 @@ public class STModelNavigator extends JPanel {
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModelAction(getModel())));
 				actions.add(new nextgen.actions.WriteAllSTModelsToFile(stModels));
-				actions.add(new nextgen.actions.GenerateSources(getModel(), stModels));
+				actions.add(new nextgen.actions.AsBuilderCodes(getModel(), stModels));
 				actions.add(new nextgen.actions.AddFileSinkToSTModels(getModel(), stModels, workspace));
 				actions.add(new nextgen.actions.DeleteSTFileFromSTModels(stModels, workspace));
 			});
@@ -892,7 +892,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
 				actions.add(new nextgen.actions.AddFileSink(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
-				actions.add(new nextgen.actions.GenerateSource(getModel()));
+				actions.add(new nextgen.actions.AsBuilderCode(getModel()));
 				actions.add(new nextgen.actions.DeleteSTModel(getModel(), workspace));
 				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));
 			});
@@ -1060,16 +1060,16 @@ public class STModelNavigator extends JPanel {
 
 				switch (getModel().getType()) {
 					case SINGLE:
-						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + nextgen.utils.STModelUtil.getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTTemplate("Set New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.SetArgumentFromArgumentType(stModel, getModel(), workspace));
 						actions.add(new nextgen.actions.SetArgumentFromInput(stModel, getModel(), workspace));
 						actions.add(new nextgen.actions.SetArgumentFromClipboard(stModel, getModel()));
-						if (nextgen.utils.STModelUtil.isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
+						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
-						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + nextgen.utils.STModelUtil.getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), workspace));
@@ -1162,7 +1162,7 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new nextgen.actions.CopyInto(getModel(), stModel)));
 				actions.add(new nextgen.actions.RunInTerminal(getModel(), workspace));
-				actions.add(new nextgen.actions.GenerateSource(getModel()));
+				actions.add(new nextgen.actions.AsBuilderCode(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.DeleteSTArgument(stArgument, workspace));
 				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));

@@ -15,7 +15,7 @@ public class RenameSTGroup extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
    	log.info("RenameSTGroup" + " stGroup" + " owner");
 
-      input(owner, "Name", stGroup.getName(), s -> nextgen.utils.STModelUtil.isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
+      input(owner, "Name", stGroup.getName(), s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
          stGroup.setName(name);
          nextgen.events.STGroupNameChanged.post(stGroup);
       }));

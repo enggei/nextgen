@@ -20,7 +20,7 @@ public class SetSTProjectRoot extends nextgen.actions.TransactionAction {
       	stProject.setRoot(s);
       	
          final nextgen.model.STValue newPath = appModel().newSTValue(s.trim());
-         nextgen.utils.STModelUtil.aggregateModels(stProject)
+         appModel().aggregateModels(stProject)
                .forEach(stModel -> stModel.getFiles()
                      .forEach(stFile -> {
                         stFile.setPath(newPath);

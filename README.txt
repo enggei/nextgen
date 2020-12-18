@@ -8,7 +8,7 @@ STGroup
 	templates		*	STTemplate
 	interfaces	    *	STInterface
 	enums			*	STEnum
-	actions		    *	STAction
+	actions         *	STAction
 
 	STGroupFile
 		packageName     1	STValue

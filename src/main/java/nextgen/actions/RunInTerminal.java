@@ -29,7 +29,8 @@ public class RunInTerminal extends nextgen.actions.TransactionAction {
          } catch (java.io.IOException | InterruptedException e) {
             showError(owner, e);
          } finally {
-            tempScript.delete();
+            final boolean deleted = tempScript.delete();
+            if (!deleted) System.out.println("Could not delete " + tempScript.getAbsolutePath());
          }
       });
    }

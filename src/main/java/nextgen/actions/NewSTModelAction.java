@@ -14,7 +14,7 @@ public class NewSTModelAction extends nextgen.actions.TransactionAction {
    	log.info("NewSTModelAction" + " stTemplate");
 
       final nextgen.model.STModel stModel = appModel().newSTModel(stTemplate);
-      nextgen.events.NewSTModel.post(stModel, nextgen.utils.STModelUtil.getSTGroup(stTemplate), stTemplate);
+      nextgen.events.NewSTModel.post(stModel, appModel().getSTGroup(stTemplate), stTemplate);
    }
 
 }

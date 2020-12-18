@@ -24,7 +24,7 @@ public class AddInterface extends nextgen.actions.TransactionAction {
          final String interfaceName = txtImplements.getText().trim();
          if (interfaceName.length()==0) return;
          for (nextgen.model.STTemplate child : children) {
-            final java.util.Optional<String> optional = child.getImplements().filter(s -> s.toLowerCase().equals(interfaceName.toLowerCase())).findAny();
+            final java.util.Optional<String> optional = child.getImplements().filter(s -> s.equalsIgnoreCase(interfaceName)).findAny();
             if(optional.isPresent()) continue;
             child.addImplements(interfaceName);
          }

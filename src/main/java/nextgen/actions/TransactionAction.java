@@ -131,7 +131,7 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.toClipboard(value.toString());
    }
 
-   protected String clipboard() {
+   protected String fromClipboard() {
       return nextgen.utils.SwingUtil.fromClipboard();
    }
 }

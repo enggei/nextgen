@@ -843,4 +843,41 @@ public class STAppPresentationModel {
       return null;
    }
 
+   public java.util.stream.Stream<nextgen.model.STTemplate> aggregateTemplates(nextgen.model.STGroupModel stGroup) {
+      return nextgen.utils.STModelUtil.aggregateTemplates(stGroup);
+   }
+
+   public java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
+      return nextgen.utils.STModelUtil.findSTProjectFor(stModel);
+   }
+
+   public String getSTModelName(nextgen.model.STModel stModel, String defaultValue) {
+      return nextgen.utils.STModelUtil.getSTModelName(stModel, defaultValue);
+   }
+
+   public String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
+      return nextgen.utils.STModelUtil.getSTModelPackage(stModel, defaultValue);
+   }
+
+   public nextgen.model.STGroupModel getSTGroup(nextgen.model.STTemplate stTemplate) {
+      return nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+   }
+
+   public java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STProject stProject) {
+      return nextgen.utils.STModelUtil.aggregateModels(stProject);
+   }
+
+   public boolean isBoolean(nextgen.model.STParameter stParameter) {
+      return nextgen.utils.STModelUtil.isBoolean(stParameter);
+   }
+
+   public nextgen.swing.STAppPresentationModel setValue(nextgen.model.STValue stValue, String value) {
+      stValue.removeStModel();
+      stValue.setValue(nextgen.utils.SwingUtil.fromClipboard());
+      stValue.setType(nextgen.model.STValueType.PRIMITIVE);
+      nextgen.events.STValueChanged.post(stValue);
+
+      stValue.getIncomingValueSTArgument().forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(nextgen.events.STModelChanged::post));
+      return this;
+   }
 }
