@@ -12,6 +12,8 @@ import java.util.function.Supplier;
 
 public class STAppPresentationModel {
 
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
+
    public final STModelDB db;
 
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
@@ -240,7 +242,7 @@ public class STAppPresentationModel {
       provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "abstract"));
 
       // Add a couple of "shorthand" completions. These completions don't require the input text to be the same thing as the replacement text.
-      provider.addCompletion(new org.fife.ui.autocomplete.ShorthandCompletion(provider, "sysout", "System.out.println();", "System.out.println("));
+      provider.addCompletion(new org.fife.ui.autocomplete.ShorthandCompletion(provider, "sysout", "log.info();", "log.info("));
 
       org.fife.ui.rsyntaxtextarea.CodeTemplateManager ctm = org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.getCodeTemplateManager();
       ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("fb", "for (int i=0; i<", "; i++) {\n\t\n}\n"));
@@ -752,8 +754,8 @@ public class STAppPresentationModel {
             stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> {
                final String render = render(stModel);
                if (modelMap.containsKey(render)) {
-                  System.out.println("\nfound duplicate:");
-                  System.out.println(render);
+                  log.info("\nfound duplicate:");
+                  log.info(render);
 
                   final STModel keep = modelMap.get(render);
 

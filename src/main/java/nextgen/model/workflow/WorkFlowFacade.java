@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 public class WorkFlowFacade extends WorkFlowNeoFactory {
 
+	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkFlowFacade.class);
+
 	public WorkFlowFacade(String dir) {
 		super(dir);
 	}
@@ -133,7 +135,7 @@ public class WorkFlowFacade extends WorkFlowNeoFactory {
 		w.setPackageName(work.getPackage());
 		work.getInputs().forEach(workInput -> w.addInputs(workInput.getType(), workInput.getName()));
 		work.getStatements().forEach(workStatement -> w.addStatements(workStatement.getStatement()));
-		System.out.println(w.toString());
+		log.info(w.toString());
 		return w;
 	}
 

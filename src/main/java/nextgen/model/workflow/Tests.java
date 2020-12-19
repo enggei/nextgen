@@ -93,6 +93,6 @@ public class Tests {
             .setName("Work_" + workNo.incrementAndGet())
             .setPackage("test")
             .addStatements(db.newWorkStatement()
-                  .setStatement("System.out.println(\"Work " + workNo.get() + "\");"));
+                  .setStatement("log.info(\"Work " + workNo.get() + "\");"));
    }
 }

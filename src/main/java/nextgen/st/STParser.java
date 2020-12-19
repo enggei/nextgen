@@ -34,15 +34,6 @@ public class STParser {
       return parse(new org.stringtemplate.v4.STGroupFile(stgFile.getAbsolutePath(), delimiter, delimiter));
    }
 
-   public static Optional<nextgen.model.parser.ParsedSTTemplate> parseTemplateAndGet(String text) {
-      return STParser
-            .parseTemplate(text)
-            .getParsed()
-            .getTemplates()
-            .stream()
-            .findFirst();
-   }
-
    public static nextgen.model.parser.ParseResult parseTemplate(String text) {
       return parse(new STGroupString("tmp", toStg(text), STGenerator.DELIMITERCHAR, STGenerator.DELIMITERCHAR));
    }
@@ -171,7 +162,7 @@ public class STParser {
                   .filter(stParameterKey -> stParameterKey.getName().equals(parameterKey.getName()))
                   .findFirst();
 
-            if (!exists.isPresent())
+            if (exists.isEmpty())
                stParameters.peek().addKeys(new nextgen.model.parser.ParsedSTParameterKey()
                      .setName(parameterKey.getName()))
                      .setArgumentType(parameterKey.getArgumentType());
@@ -324,7 +315,7 @@ public class STParser {
       return new nextgen.model.parser.ParsedSTParameter()
             .setName(name)
             .setType(nextgen.model.STParameterType.SINGLE)
-            .setArgumentType((name != null && (name.startsWith("is") || name.startsWith("use"))) ? "Boolean" : ((name != null && name.toLowerCase().equals("name")) ? "String" : "Object"));
+            .setArgumentType((name != null && (name.startsWith("is") || name.startsWith("use"))) ? "Boolean" : ((name != null && name.equalsIgnoreCase("name")) ? "String" : "Object"));
    }
 
    private static char loadDelimiter(File stgFile) {
@@ -356,8 +347,7 @@ public class STParser {
 
    private static String debug(AstNode astNode, int level) {
       final StringBuilder out = new StringBuilder();
-      for (int i = 0; i < level; i++)
-         out.append("\t");
+      out.append("\t".repeat(Math.max(0, level)));
       out.append(astNode.getType()).append(" \"").append(astNode.getAst().getText()).append("\"");
       astNode.getChildren().forEach(astNode1 -> out.append("\n").append(debug(astNode1, level + 1)));
       return out.toString();

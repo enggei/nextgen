@@ -13,6 +13,8 @@ import static nextgen.templates.java.JavaPatterns.newMethodCallExpression;
 
 public class STRenderer {
 
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STRenderer.class);
+
    private static final java.util.Map<nextgen.model.STGroupModel, STCache> cacheMap = new java.util.LinkedHashMap<>();
 
    private nextgen.swing.STAppPresentationModel appModel() {
@@ -75,7 +77,7 @@ public class STRenderer {
       if (value == null) return null;
 
       if (!value.hasType()) {
-         System.out.println("\tIllegal STValue " + value.toString());
+         log.warn("Illegal STValue " + value.toString());
          String s = value.getValue();
          return s == null ? render(value.getStModel()) : (s.trim().length() == 0 ? null : s.trim());
       }

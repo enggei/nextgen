@@ -3,12 +3,9 @@ package nextgen.st;
 import nextgen.model.STEnum;
 import nextgen.model.STGroupModel;
 import nextgen.model.STTemplate;
-import nextgen.model.STFile;
-import nextgen.model.STValue;
 import nextgen.templates.java.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.Modifiers;
-import nextgen.utils.FileUtil;
 import nextgen.utils.StringUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -18,14 +15,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 public class STGenerator {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGenerator.class);
-
-   public static boolean debug = true;
 
    public static final char DELIMITERCHAR = '~';
    public static final String DELIMITER = "" + DELIMITERCHAR;
@@ -40,29 +33,8 @@ public class STGenerator {
       this.generator = generator;
    }
 
-   public static ST asST(STTemplate stTemplate) {
-      return asST(newTemplateGroup(), stTemplate);
-   }
-
    public static ST asST(nextgen.model.parser.ParsedSTTemplate stTemplate) {
       return asST(newTemplateGroup(), stTemplate);
-   }
-
-   public static File asFile(STFile stFile) {
-
-      final STValue stPath = stFile.getPath();
-      final STValue stPackageName = stFile.getPackageName();
-      final STValue stFileName = stFile.getName();
-      final STValue stFileType = stFile.getType();
-
-      final String pathValue = stPath == null ? null : stPath.getValue("");
-      final String packageName = stPackageName == null ? "" : stPackageName.getValue("");
-      final String fileNameValue = stFileName == null ? null : stFileName.getValue("");
-      final String stFileTypeValue = stFileType == null ? null : stFileType.getValue();
-
-      final String fileType = stFileTypeValue == null ? "" : "." + stFileTypeValue;
-      final File parent = new File(pathValue, STGenerator.packageToPath(packageName));
-      return new java.io.File(parent, fileNameValue + fileType);
    }
 
    public void generateSTGroup(STGroupModel stGroupModel) {
@@ -352,66 +324,16 @@ public class STGenerator {
       }
    }
 
-   public static void copyDir(String srcRoot, String srcDir, File targetRoot, String targetDir) {
-
-      final File srcFile = new File(srcRoot, srcDir);
-      final File dstRoot = tryToCreateDirIfNotExists(new File(targetRoot, targetDir));
-
-      final File[] files = srcFile.listFiles();
-      if (files == null) return;
-
-      for (File file : files) {
-         if (file.isDirectory()) {
-            copyDir(srcFile.getAbsolutePath(), file.getName(), dstRoot, file.getName());
-         } else {
-            copyFile(file.getParent(), file.getName(), dstRoot.getParent(), dstRoot.getName());
-         }
-      }
-   }
-
-   public static void copyFile(String sourceDir, String sourceFile, String targetRoot, String dir) {
-      try {
-         Files.copy(new File(sourceDir, sourceFile).toPath(), new File(FileUtil.tryToCreateDirIfNotExists(new File(targetRoot, dir)), sourceFile)
-               .toPath(), StandardCopyOption.REPLACE_EXISTING);
-      } catch (IOException e) {
-         throw new RuntimeException(e);
-      }
-   }
-
-   public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, String name, File root) {
-      writeJavaFile(content, packageDeclaration == null ? null : packageDeclaration.getName(), name, root);
-   }
-
-   public static void writeJavaFile(Object content, nextgen.templates.java.PackageDeclaration packageDeclaration, Object name, File root) {
-      writeJavaFile(content, packageDeclaration == null ? null : packageDeclaration.getName(), name.toString(), root);
-   }
-
    public static void writeJavaFile(Object content, String packageDeclaration, String name, File root) {
-      if (name == null || name.length() == 0)
-         throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
+      if (name == null || name.length() == 0) throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
       writeToFile(content, packageDeclaration, name, "java", root);
    }
 
-//   public static void writeKotlinFile(Object content, nextgen.templates.kotlin.PackageDeclaration packageDeclaration, String name, File root) {
-//      writeKotlinFile(content, packageDeclaration.getName(), name, root);
-//   }
-//
-//   public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
-//      if (name == null || name.length() == 0)
-//         throw new IllegalArgumentException("WriteKotlinFile.name cannot be empty");
-//      writeToFile(content, packageDeclaration, name, "kt", root);
-//   }
-
-   public static void writeJsFile(Object content, String packageDeclaration, String name, File root) {
-      writeToFile(content, packageDeclaration, name, "js", root);
-   }
-
-   public static void writeHtmlFile(Object content, String packageDeclaration, String name, File root) {
-      writeToFile(content, packageDeclaration, name, "html", root);
-   }
-
-   public static void writeFile(Object content, String packageDeclaration, String name, File root) {
-      writeToFile(content, packageDeclaration, name.substring(0, name.indexOf(".")), name.substring(name.indexOf(".") + 1), root);
+   @Deprecated
+   public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
+      if (name == null || name.length() == 0)
+         throw new IllegalArgumentException("WriteKotlinFile.name cannot be empty");
+      writeToFile(content, packageDeclaration, name, "kt", root);
    }
 
    public static void writeToFile(Object content, String packageDeclaration, String name, String filetype, File root) {
@@ -428,7 +350,7 @@ public class STGenerator {
       return new File(file.getAbsolutePath().substring(root.getAbsolutePath().length() + 1));
    }
 
-   public static File tryToCreateFileIfNotExists(File f) {
+   public static void tryToCreateFileIfNotExists(java.io.File f) {
       if (!f.exists()) {
          tryToCreateDirIfNotExists(f.getParentFile());
          try {
@@ -437,10 +359,9 @@ public class STGenerator {
             throw new RuntimeException("Could not create file " + f.getName());
          }
       }
-      return f;
    }
 
-   public static File tryToCreateDirIfNotExists(File f) {
+   public static void tryToCreateDirIfNotExists(java.io.File f) {
 
       if (f == null) throw new RuntimeException("File cannot be null");
 
@@ -449,18 +370,15 @@ public class STGenerator {
             throw new RuntimeException("Could not create parent dirs for " + f.getAbsolutePath());
          if (!f.mkdir()) throw new RuntimeException("Could not create directory " + f.getName());
       }
-      return f;
    }
 
    public static void write(File file, Object content) {
 
       try {
          tryToCreateFileIfNotExists(file);
-         if (debug) log.info("writing file " + file.getAbsolutePath());
-
+         log.info("writing to " + file.getAbsolutePath());
          final BufferedWriter out = new BufferedWriter(new FileWriter(file));
          out.write(content == null ? "" : content.toString());
-         out.close();
 
       } catch (Exception e) {
          throw new RuntimeException("Could not write to " + file.getAbsolutePath() + " : " + e.getMessage(), e);

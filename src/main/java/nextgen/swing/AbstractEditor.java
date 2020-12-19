@@ -2,6 +2,8 @@ package nextgen.swing;
 
 public class AbstractEditor extends javax.swing.JPanel {
 
+   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractEditor.class);
+
    public AbstractEditor() {
       super(new java.awt.BorderLayout());
       setBackground(javax.swing.UIManager.getColor("Panel.background"));
@@ -123,7 +125,7 @@ public class AbstractEditor extends javax.swing.JPanel {
       final int endOffsetOfCurrentLine = textArea.getLineEndOffsetOfCurrentLine();
       try {
          final String line = textArea.getText(startOffsetOfCurrentLine, endOffsetOfCurrentLine - startOffsetOfCurrentLine).trim();
-         System.out.println(line);
+         log.info(line);
          nextgen.utils.SwingUtil.toClipboard(line);
       } catch (javax.swing.text.BadLocationException ignored) {
 

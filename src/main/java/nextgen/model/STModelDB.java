@@ -1,8 +1,6 @@
 package nextgen.model;
 
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.event.TransactionData;
-import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import static nextgen.model.STValueType.*;
 
@@ -17,7 +15,7 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    private org.neo4j.graphdb.event.TransactionEventHandler.Adapter<Object> getTransactionEventHandler() {
-      return new org.neo4j.graphdb.event.TransactionEventHandler.Adapter<Object>() {
+      return new org.neo4j.graphdb.event.TransactionEventHandler.Adapter<>() {
          @Override
          public Object beforeCommit(org.neo4j.graphdb.event.TransactionData data) throws Exception {
             return super.beforeCommit(data);
@@ -109,13 +107,13 @@ public class STModelDB extends STModelNeoFactory {
          findAllSTGroupAction().forEach(stGroupAction -> {
 
             if (stGroupAction.getNode().hasProperty("statements")) {
-               System.out.println(stGroupAction.getNode().getProperty("statements"));
+               log.info("statements " + stGroupAction.getNode().getProperty("statements"));
                stGroupAction.setStatements(newSTValue(stGroupAction.getNode().getProperty("statements").toString()));
                stGroupAction.getNode().removeProperty("statements");
             }
 
             if (stGroupAction.getNode().hasProperty("methods")) {
-               System.out.println(stGroupAction.getNode().getProperty("methods"));
+               log.info("methods " + stGroupAction.getNode().getProperty("methods"));
                stGroupAction.setMethods(newSTValue(stGroupAction.getNode().getProperty("methods").toString()));
                stGroupAction.getNode().removeProperty("methods");
             }
@@ -124,13 +122,13 @@ public class STModelDB extends STModelNeoFactory {
 
          findAllSTParameter().forEach(stParameter -> {
             if (stParameter.getArgumentType() != null) return;
-            System.out.println(stParameter.getUuid() + " " + stParameter.getName() + " adding Object argument type");
+            log.info(stParameter.getUuid() + " " + stParameter.getName() + " adding Object argument type");
             stParameter.setArgumentType("Object");
          });
 
          findAllSTParameterKey().forEach(stParameterKey -> {
             if (stParameterKey.getArgumentType() != null) return;
-            System.out.println("ParameterKey " + stParameterKey.getUuid() + " " + stParameterKey.getName() + " adding Object argument type");
+            log.info("ParameterKey " + stParameterKey.getUuid() + " " + stParameterKey.getName() + " adding Object argument type");
             stParameterKey.setArgumentType("Object");
          });
 

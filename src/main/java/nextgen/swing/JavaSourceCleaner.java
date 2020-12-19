@@ -30,6 +30,8 @@ import static nextgen.templates.java.JavaST.newMethodCallExpression;
 
 public class JavaSourceCleaner extends JFrame {
 
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JavaSourceCleaner.class);
+
    public JavaSourceCleaner() throws HeadlessException {
       super("Java Source Cleaner");
 
@@ -41,7 +43,7 @@ public class JavaSourceCleaner extends JFrame {
       pop.add(newAction("Format", actionEvent -> SwingUtil.format(rSyntaxTextArea)));
       pop.add(newAction("As Object array", actionEvent -> {
          final String output = asObjectArray(rSyntaxTextArea);
-         System.out.println(output);
+         log.info(output);
          SwingUtil.toClipboard(output);
       }));
       pop.add(newAction("As Imports", actionEvent -> asImports(rSyntaxTextArea)));
@@ -146,7 +148,7 @@ public class JavaSourceCleaner extends JFrame {
 
       final String s = addMethodDeclaration.toString();
       SwingUtil.toClipboard(s);
-      System.out.println(s);
+      log.info(s);
    }
 
    private void asFields(RSyntaxTextArea textArea) {

@@ -20,7 +20,7 @@ public class RunInTerminal extends nextgen.actions.TransactionAction {
 
       javax.swing.SwingUtilities.invokeLater(() -> {
          try {
-            System.out.println(tempScript.getAbsolutePath());
+            log.info(tempScript.getAbsolutePath());
 
             final ProcessBuilder pb = new ProcessBuilder("bash", tempScript.toString());
             pb.inheritIO();
@@ -30,7 +30,7 @@ public class RunInTerminal extends nextgen.actions.TransactionAction {
             showError(owner, e);
          } finally {
             final boolean deleted = tempScript.delete();
-            if (!deleted) System.out.println("Could not delete " + tempScript.getAbsolutePath());
+            if (!deleted) log.info("Could not delete " + tempScript.getAbsolutePath());
          }
       });
    }
