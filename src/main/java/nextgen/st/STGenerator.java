@@ -379,6 +379,7 @@ public class STGenerator {
          log.info("writing to " + file.getAbsolutePath());
          final BufferedWriter out = new BufferedWriter(new FileWriter(file));
          out.write(content == null ? "" : content.toString());
+         out.close();
 
       } catch (Exception e) {
          throw new RuntimeException("Could not write to " + file.getAbsolutePath() + " : " + e.getMessage(), e);
