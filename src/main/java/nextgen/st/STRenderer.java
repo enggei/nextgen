@@ -15,6 +15,10 @@ public class STRenderer {
 
    private static final java.util.Map<nextgen.model.STGroupModel, STCache> cacheMap = new java.util.LinkedHashMap<>();
 
+   private nextgen.swing.STAppPresentationModel appModel() {
+      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+   }
+
    public String render(STModel stModel) {
 
       if (stModel == null) return null;
@@ -98,7 +102,7 @@ public class STRenderer {
       final STTemplate stTemplate = stModel.getStTemplate();
       if (stTemplate == null) return null;
 
-      final nextgen.model.STGroupModel groupModel = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+      final nextgen.model.STGroupModel groupModel = appModel().getSTGroup(stTemplate);
 
       final AtomicReference<MethodCallExpression> expression = new AtomicReference<>(newMethodCallExpression()
             .setScope(StringUtil.capitalize(groupModel.getName()) + "ST")
@@ -183,7 +187,7 @@ public class STRenderer {
 
    private org.stringtemplate.v4.ST newInstanceOf(nextgen.model.STTemplate stTemplate) {
 
-      final nextgen.model.STGroupModel stGroupModel = nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+      final nextgen.model.STGroupModel stGroupModel = appModel().getSTGroup(stTemplate);
 
       final STCache cache = cacheMap.get(stGroupModel);
       if (cache != null && cache.isValid())

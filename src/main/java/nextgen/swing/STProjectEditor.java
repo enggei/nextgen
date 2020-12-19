@@ -14,7 +14,7 @@ public class STProjectEditor extends SearchReplaceEditor {
 
    @Override
    protected java.util.stream.Stream<nextgen.model.STModel> getSTModels() {
-      return nextgen.utils.STModelUtil.aggregateModels(model).stream();
+      return appModel().aggregateModels(model).stream();
    }
 
    public String getUuid() {

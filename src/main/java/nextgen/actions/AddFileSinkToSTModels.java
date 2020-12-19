@@ -54,7 +54,7 @@ public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
             stModel.getArgumentsSorted()
                   .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
                   .findFirst()
-                  .ifPresent(stArgument -> appModel().addFile(stModel, appModel().render(stArgument), packageName, path, type));
+                  .ifPresent(stArgument -> appModel().addFile(stModel, appModel().newSTFile(appModel().render(stArgument), packageName, path, type)));
          }
          javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
       });

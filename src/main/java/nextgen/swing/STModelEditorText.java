@@ -27,7 +27,7 @@ public class STModelEditorText extends AbstractEditor {
       txtEditor.setText(appModel().render(stModel));
       txtEditor.setCaretPosition(0);
       txtEditor.setEditable(false);
-      txtEditor.setSyntaxEditingStyle(nextgen.utils.STModelUtil.getSTGroup(stModel).getLanguage("text/plain"));
+      txtEditor.setSyntaxEditingStyle(appModel().getSTGroup(stModel).getLanguage("text/plain"));
    }
 
    private void toClipboard() {

@@ -15,7 +15,7 @@ public class NewAction extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
    	log.info("NewAction" + " stGroup" + " owner");
 
-      input(owner, "New Action", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addAction(stGroup, name)));
+      input(owner, "New Action", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addSTAction(stGroup, name)));
    }
 
 }

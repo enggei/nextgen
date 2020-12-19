@@ -31,7 +31,7 @@ public class AddValuesToProject extends nextgen.actions.TransactionAction {
          for (javax.swing.JTextField field : fields) {
             final String value = field.getText().trim();
             if(value.length()==0) continue;
-            appModel().addValue(project, value);
+            appModel().addSTValue(project, value);
          }
 
          close(jDialog);

@@ -13,7 +13,7 @@ public class AddFileSinkToGroup extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
    	log.info("AddFileSinkToGroup" + " stGroup");
 
-      appModel().addGroupFileTo(stGroup);
+      appModel().addSTGroupFile(stGroup);
    }
 
 }

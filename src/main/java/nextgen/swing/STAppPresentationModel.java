@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class STAppPresentationModel {
 
@@ -30,170 +29,112 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
-   public STAppPresentationModel addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
+   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
       kvs.add(newSTArgumentKV(stParameterKey, newSTValue(value)));
-      return this;
    }
 
-   public STAppPresentationModel addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STValue value) {
+   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STValue value) {
       kvs.add(newSTArgumentKV(stParameterKey, value));
-      return this;
    }
 
-   public STAppPresentationModel addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STArgumentKV value) {
-      return addArgument(kvs, stParameterKey, db.newSTValue(value.getValue()));
+   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STArgumentKV value) {
+      addArgument(kvs, stParameterKey, db.newSTValue(value.getValue()));
    }
 
-   public nextgen.swing.STAppPresentationModel addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STArgument value) {
+   public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STArgument value) {
       final nextgen.model.STValue stValue = db.newSTValue(value.getValue());
       final nextgen.model.STArgument stArgument = db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
-      return this;
    }
 
-   public nextgen.swing.STAppPresentationModel addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, java.util.Collection<nextgen.model.STArgumentKV> kvs) {
+   public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, java.util.Collection<nextgen.model.STArgumentKV> kvs) {
       final nextgen.model.STArgument stArgument = db.newSTArgument().setStParameter(stParameter);
       for (nextgen.model.STArgumentKV kv : kvs) stArgument.addKeyValues(kv);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument, kvs);
-      return this;
    }
 
-   public STAppPresentationModel addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
-      return addArgument(stModel, stParameter, newSTValue(value));
+   public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
+      addArgument(stModel, stParameter, newSTValue(value));
    }
 
-   public STAppPresentationModel addArgument(STModel stModel, STParameter stParameter, String value) {
-      return addArgument(stModel, stParameter, newSTValue(value));
+   public void addArgument(STModel stModel, STParameter stParameter, String value) {
+      addArgument(stModel, stParameter, newSTValue(value));
    }
 
-   public STAppPresentationModel addArgument(STModel stModel, STParameter stParameter, STEnumValue stEnumValue) {
-      return addArgument(stModel, stParameter, newSTValue(stEnumValue));
+   public void addArgument(STModel stModel, STParameter stParameter, STEnumValue stEnumValue) {
+      addArgument(stModel, stParameter, newSTValue(stEnumValue));
    }
 
-   public nextgen.swing.STAppPresentationModel addArgument(STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STTemplate value) {
-      return addArgument(stModel, stParameter, newSTValue(value));
+   public void addArgument(STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STTemplate value) {
+      addArgument(stModel, stParameter, newSTValue(value));
    }
 
-   public STAppPresentationModel addArgument(STModel stModel, STParameter stParameter, nextgen.model.STValue value) {
+   public void addArgument(STModel stModel, STParameter stParameter, nextgen.model.STValue value) {
       final nextgen.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
-      return this;
    }
 
-   private void addSTModel(nextgen.model.STProject stProject, nextgen.model.STModel stModel) {
+   public void addSTModel(nextgen.model.STProject stProject, nextgen.model.STModel stModel) {
+      stProject.addModels(stModel);
+      nextgen.events.NewSTProjectSTModel.post(stModel, stProject, stModel.getStTemplate());
+   }
+
+   public void addSTModel(nextgen.model.STProject stProject, nextgen.model.STTemplate stTemplate) {
+      final nextgen.model.STModel stModel = newSTModel(stTemplate);
       stProject.addModels(stModel);
       nextgen.events.NewSTProjectSTModel.post(stModel, stProject, stModel.getStTemplate());
    }
 
    public void addSTFile(nextgen.model.STModel thisModel, nextgen.model.STFile sourceFile) {
       final nextgen.model.STFile thisFile = db.newSTFile(sourceFile);
-      final String thisName = nextgen.utils.STModelUtil.getSTModelName(thisModel, null);
+      final String thisName = getSTModelName(thisModel, null);
       if (thisName != null) thisFile.setName(newSTValue(thisName));
       thisModel.addFiles(thisFile);
       nextgen.events.NewFileSink.post(thisModel, thisFile);
    }
 
-   public nextgen.swing.STAppPresentationModel addChild(nextgen.model.STTemplate stTemplate, String name) {
+   public void addChild(nextgen.model.STTemplate stTemplate, String name) {
       final nextgen.model.STTemplate child = newSTTemplate(name, "");
       stTemplate.addChildren(child);
       nextgen.events.NewSTTemplateChild.post(child, stTemplate);
-      return this;
    }
 
-   public void addModel(nextgen.model.STProject project, nextgen.model.STModel stModel) {
-      project.addModels(stModel);
-      nextgen.events.NewSTProjectSTModel.post(stModel, project, stModel.getStTemplate());
-   }
-
-   public void addModel(nextgen.model.STProject project, nextgen.model.STTemplate stTemplate) {
-      addModel(project, newSTModel(stTemplate));
-   }
-
-   public void addFile(nextgen.model.STModel stModel, String name, String packageName, String path, String filetype) {
-      final nextgen.model.STFile stFile = newSTFile(name, packageName, path, filetype);
+   public void addFile(nextgen.model.STModel stModel, nextgen.model.STFile stFile) {
       stModel.addFiles(stFile);
       nextgen.events.NewFileSink.post(stModel, stFile);
    }
 
-   public void addGroupFileTo(nextgen.model.STGroupModel stGroup) {
+   public void addSTGroupFile(nextgen.model.STGroupModel stGroup) {
       final nextgen.model.STGroupFile stGroupFile = db.newSTGroupFile();
       stGroup.addFiles(stGroupFile);
       nextgen.events.NewSTGroupFile.post(stGroup, stGroupFile);
    }
 
-   public void addValue(nextgen.model.STProject project, String value) {
+   public void addSTValue(nextgen.model.STProject project, String value) {
       final nextgen.model.STValue stValue = newSTValue(value);
       project.addValues(stValue);
       nextgen.events.NewSTProjectSTValue.post(stValue, project);
    }
 
-   public void addSTArgumentIfNotExists(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
-
-      final java.util.Optional<nextgen.model.STArgument> otherSTArgument = findFirstSTArgument(otherModel, otherSTParameter);
-      final java.util.Optional<nextgen.model.STArgument> thisSTArgument = findFirstSTArgument(thisModel, thisSTParameter);
-
-      if (otherSTArgument.isPresent() && thisSTArgument.isEmpty())
-         addArgument(thisModel, thisSTParameter, otherSTArgument.get());
-   }
-
-   public void addSTArgumentsNotAlreadyInList(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
-
-      final java.util.List<nextgen.model.STArgument> otherSTArguments = findAllSTArgument(otherModel, otherSTParameter);
-      final java.util.List<nextgen.model.STArgument> thisSTArguments = findAllSTArgument(thisModel, thisSTParameter);
-
-      for (nextgen.model.STArgument otherModelArgument : otherSTArguments)
-         if (noMatch(thisSTArguments, otherModelArgument))
-            addArgument(thisModel, thisSTParameter, otherModelArgument);
-   }
-
-   public void addSTArgumentKVNotAlreadyInList(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
-
-      final java.util.List<nextgen.model.STArgument> otherSTArguments = findAllSTArgument(otherModel, otherSTParameter);
-      final java.util.List<nextgen.model.STArgument> thisSTArguments = findAllSTArgument(thisModel, thisSTParameter);
-
-      for (nextgen.model.STArgument otherModelArgument : otherSTArguments) {
-         if (noMatch(thisSTArguments, otherModelArgument)) {
-
-            java.util.Collection<nextgen.model.STArgumentKV> thisKVs = new java.util.ArrayList<>();
-            final java.util.List<nextgen.model.STParameterKey> otherModelKeys = getKeys(otherSTParameter);
-            final java.util.List<nextgen.model.STParameterKey> thisKeys = getKeys(thisSTParameter);
-
-            for (nextgen.model.STParameterKey otherModelKey : otherModelKeys) {
-               for (nextgen.model.STParameterKey thisKey : thisKeys) {
-                  final boolean sameKeyName = otherModelKey.getName().equals(thisKey.getName());
-                  final boolean sameKeyType = otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
-                  if (sameKeyName && sameKeyType)
-                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> addArgument(thisKVs, thisKey, stArgumentKV));
-               }
-            }
-
-            if (!thisKVs.isEmpty()) addArgument(thisModel, thisSTParameter, thisKVs);
-         }
-      }
-   }
-
-   public nextgen.swing.STAppPresentationModel addAction(nextgen.model.STGroupModel stGroup, String actionName) {
+   public void addSTAction(nextgen.model.STGroupModel stGroup, String actionName) {
       final nextgen.model.STGroupAction stGroupAction = newSTGroupAction(actionName);
       stGroup.addActions(stGroupAction);
       nextgen.events.NewSTAction.post(stGroupAction, stGroup);
-      return this;
    }
 
-   public nextgen.swing.STAppPresentationModel addEnum(STGroupModel stGroup, String name) {
+   public void addEnum(STGroupModel stGroup, String name) {
       final nextgen.model.STEnum stEnum = newSTEnum(name);
       stGroup.addEnums(stEnum);
       nextgen.events.NewSTEnum.post(stGroup, stEnum);
-      return this;
    }
 
-   public nextgen.swing.STAppPresentationModel addInterface(STGroupModel stGroup, String interfaceName) {
+   public void addInterface(STGroupModel stGroup, String interfaceName) {
       final nextgen.model.STInterface stInterface = newSTInterface(interfaceName);
       stGroup.addInterfaces(stInterface);
       nextgen.events.NewSTInterface.post(stGroup, stInterface);
-      return this;
    }
 
    public void addTemplate(nextgen.model.STGroupModel stGroup, String name, String text) {
@@ -203,11 +144,42 @@ public class STAppPresentationModel {
    }
 
    public java.util.stream.Stream<nextgen.model.STTemplate> aggregateTemplates(nextgen.model.STGroupModel stGroup) {
-      return nextgen.utils.STModelUtil.aggregateTemplates(stGroup);
+      final List<STTemplate> templates = new java.util.ArrayList<>();
+      stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
+      return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+   }
+
+   private void aggregate(nextgen.model.STTemplate parentTemplate, java.util.List<nextgen.model.STTemplate> templates) {
+      templates.add(parentTemplate);
+      parentTemplate.getChildren().forEach(childTemplate -> aggregate(childTemplate, templates));
    }
 
    public java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STProject stProject) {
-      return nextgen.utils.STModelUtil.aggregateModels(stProject);
+      java.util.Set<nextgen.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stProject.getModels().forEach(stModel -> {
+         models.add(stModel);
+         models.addAll(aggregateModels(stModel));
+      });
+
+      return models;
+   }
+
+   private java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STModel stModel) {
+      java.util.Set<nextgen.model.STModel> models = new java.util.LinkedHashSet<>();
+
+      stModel.getArguments().forEach(stArgument -> {
+         final nextgen.model.STValue value = stArgument.getValue();
+         if (value == null) return;
+
+         if (nextgen.model.STValueType.STMODEL.equals(value.getType())) {
+            final nextgen.model.STModel valueSTModel = value.getStModel();
+            models.add(valueSTModel);
+            models.addAll(aggregateModels(valueSTModel));
+         }
+      });
+
+      return models;
    }
 
    public void copyInto(nextgen.model.STModel thisModel, nextgen.model.STModel otherModel) {
@@ -242,7 +214,7 @@ public class STAppPresentationModel {
       nextgen.events.STModelChanged.post(thisModel);
    }
 
-   public nextgen.swing.STAppPresentationModel copy(nextgen.model.STModel stModel) {
+   public void copy(nextgen.model.STModel stModel) {
 
       final nextgen.model.STModel copy = newSTModel(stModel.getStTemplate());
 
@@ -253,8 +225,7 @@ public class STAppPresentationModel {
          addSTModel(stProject.get(), copy);
 
       } else
-         nextgen.events.NewSTModel.post(copy, nextgen.utils.STModelUtil.getSTGroup(stModel.getStTemplate()), stModel.getStTemplate());
-      return this;
+         nextgen.events.NewSTModel.post(copy, getSTGroup(stModel.getStTemplate()), stModel.getStTemplate());
    }
 
    public org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupAction stGroupAction) {
@@ -410,11 +381,18 @@ public class STAppPresentationModel {
    }
 
    public java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
-      return nextgen.utils.STModelUtil.findSTProjectFor(stModel);
+      final java.util.List<nextgen.model.STProject> collect = stModel.getIncomingModelsSTProject().collect(java.util.stream.Collectors.toList());
+      return Optional.ofNullable(collect.size() == 0 ? null : collect.get(0));
    }
 
-   public java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String interfaceName, nextgen.model.STGroupModel stGroupModel) {
-      return nextgen.utils.STModelUtil.findSTTemplatesByInterface(interfaceName, stGroupModel);
+   public java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String name, nextgen.model.STGroupModel stGroupModel) {
+      final Set<STTemplate> set = new LinkedHashSet<>();
+      aggregateTemplates(stGroupModel)
+            .forEach(stTemplate -> stTemplate.getImplements()
+                  .filter(name::equals)
+                  .findFirst()
+                  .ifPresent(s -> set.add(stTemplate)));
+      return set;
    }
 
    public nextgen.model.STEnum findSTEnumByName(String enumName, nextgen.model.STGroupModel stGroupModel) {
@@ -432,8 +410,7 @@ public class STAppPresentationModel {
    }
 
    public java.util.Optional<nextgen.model.STTemplate> findSTTemplateFromArgumentType(String argumentType, nextgen.model.STGroupModel stGroupModel) {
-      return nextgen.utils.STModelUtil
-            .aggregateTemplates(stGroupModel)
+      return aggregateTemplates(stGroupModel)
             .filter(candidate -> candidate.getName().equalsIgnoreCase(argumentType))
             .findAny();
    }
@@ -582,31 +559,73 @@ public class STAppPresentationModel {
    }
 
    public nextgen.model.STGroupModel getSTGroup(STModel stModel) {
-      return nextgen.utils.STModelUtil.getSTGroup(stModel);
+      return getSTGroup(stModel.getStTemplate());
    }
 
    public java.util.List<nextgen.model.STModel> getModelsFor(nextgen.model.STTemplate stTemplate) {
       return stTemplate.getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
    }
 
-   public String getSTModelName(nextgen.model.STModel stModel, String defaultValue) {
-      return nextgen.utils.STModelUtil.getSTModelName(stModel, defaultValue);
+   public static String getSTModelName(nextgen.model.STModel stModel, String defaultValue) {
+      return getSTModelValue(stModel, "name", defaultValue);
+   }
+
+   public static String getSTModelValue(nextgen.model.STModel stModel, String parameterName, String defaultValue) {
+      final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
+
+      final java.util.Optional<nextgen.model.STParameter> foundParameter = stTemplate
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
+            .findAny();
+      if (foundParameter.isEmpty()) return defaultValue;
+
+      return stModel
+            .getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
+            .map(stArgument -> stArgument.getValue().getValue())
+            .findFirst()
+            .orElse(defaultValue);
    }
 
    public String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
-      return nextgen.utils.STModelUtil.getSTModelPackage(stModel, defaultValue);
+      final String found = getSTModelValue(stModel, "package", null);
+      if (found != null) return found;
+      return getSTModelValue(stModel, "packageName", defaultValue);
    }
 
    public nextgen.model.STGroupModel getSTGroup(nextgen.model.STTemplate stTemplate) {
-      return nextgen.utils.STModelUtil.getSTGroup(stTemplate);
+      final java.util.Optional<nextgen.model.STGroupModel> stGroupModel = stTemplate.getIncomingTemplatesSTGroupModel().findAny();
+      if (stGroupModel.isPresent()) return stGroupModel.get();
+
+      final java.util.Optional<nextgen.model.STTemplate> parent = stTemplate.getIncomingChildrenSTTemplate().findAny();
+      return parent.map(this::getSTGroup).orElse(null);
    }
 
    public boolean isBoolean(nextgen.model.STParameter stParameter) {
-      return nextgen.utils.STModelUtil.isBoolean(stParameter);
+      return stParameter.getName().startsWith("is") || stParameter.getName().startsWith("has");
    }
 
-   public java.util.Optional<String> isValidTemplateName(javax.swing.JComponent owner, nextgen.model.STGroupModel stGroup, String name) {
-      return nextgen.utils.STModelUtil.isValidTemplateName(owner, stGroup, name);
+   public java.util.Optional<String> isValidTemplateName(javax.swing.JComponent parent, nextgen.model.STGroupModel stGroup, String name) {
+      if (findSTTemplateByName(stGroup, name).isPresent()) {
+         nextgen.utils.SwingUtil.showMessage(name + " already in use in this group", parent);
+         return Optional.empty();
+      }
+
+      if (name.equalsIgnoreCase("eom") || name.equalsIgnoreCase("gt")) {
+         nextgen.utils.SwingUtil.showMessage(name + " is a reserved name", parent);
+         return Optional.empty();
+      }
+
+      if (!javax.lang.model.SourceVersion.isIdentifier(name)) {
+         nextgen.utils.SwingUtil.showMessage(name + " is a reserved java keyword", parent);
+         return Optional.empty();
+      }
+
+      return Optional.of(name);
+   }
+
+   private java.util.Optional<nextgen.model.STTemplate> findSTTemplateByName(nextgen.model.STGroupModel stGroup, String name) {
+      return aggregateTemplates(stGroup).filter(stTemplate -> stTemplate.getName().equalsIgnoreCase(name)).findAny();
    }
 
    public ImageIcon loadIcon(String iconName) {
@@ -815,39 +834,38 @@ public class STAppPresentationModel {
       stValue.getIncomingValueSTArgument().forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(nextgen.events.STModelChanged::post));
    }
 
-   public nextgen.utils.STModelUtil.STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
-      return new nextgen.utils.STModelUtil.STArgumentConsumer(stParameter);
+   public STAppPresentationModel.STArgumentConsumer stArgumentConsumer(STParameter stParameter) {
+      return new STAppPresentationModel.STArgumentConsumer(stParameter);
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STValue value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STValue value) {
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
-      return this;
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, String value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, String value) {
       detach(stModel, stParameter);
-      return addArgument(stModel, stParameter, value);
+      addArgument(stModel, stParameter, value);
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STEnumValue value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STEnumValue value) {
       detach(stModel, stParameter);
-      return addArgument(stModel, stParameter, value);
+      addArgument(stModel, stParameter, value);
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STTemplate value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STTemplate value) {
       detach(stModel, stParameter);
-      return addArgument(stModel, stParameter, value);
+      addArgument(stModel, stParameter, value);
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
       detach(stModel, stParameter);
-      return addArgument(stModel, stParameter, newSTValue(value));
+      addArgument(stModel, stParameter, newSTValue(value));
    }
 
-   public nextgen.swing.STAppPresentationModel setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, boolean value) {
+   public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, boolean value) {
       detach(stModel, stParameter);
-      return addArgument(stModel, stParameter, Boolean.toString(value));
+      addArgument(stModel, stParameter, Boolean.toString(value));
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STValue value) {
@@ -887,5 +905,228 @@ public class STAppPresentationModel {
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
       if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+   }
+
+   private void addSTArgumentIfNotExists(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
+
+      final java.util.Optional<nextgen.model.STArgument> otherSTArgument = findFirstSTArgument(otherModel, otherSTParameter);
+      final java.util.Optional<nextgen.model.STArgument> thisSTArgument = findFirstSTArgument(thisModel, thisSTParameter);
+
+      if (otherSTArgument.isPresent() && thisSTArgument.isEmpty())
+         addArgument(thisModel, thisSTParameter, otherSTArgument.get());
+   }
+
+   private void addSTArgumentsNotAlreadyInList(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
+
+      final java.util.List<nextgen.model.STArgument> otherSTArguments = findAllSTArgument(otherModel, otherSTParameter);
+      final java.util.List<nextgen.model.STArgument> thisSTArguments = findAllSTArgument(thisModel, thisSTParameter);
+
+      for (nextgen.model.STArgument otherModelArgument : otherSTArguments)
+         if (noMatch(thisSTArguments, otherModelArgument))
+            addArgument(thisModel, thisSTParameter, otherModelArgument);
+   }
+
+   private void addSTArgumentKVNotAlreadyInList(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
+
+      final java.util.List<nextgen.model.STArgument> otherSTArguments = findAllSTArgument(otherModel, otherSTParameter);
+      final java.util.List<nextgen.model.STArgument> thisSTArguments = findAllSTArgument(thisModel, thisSTParameter);
+
+      for (nextgen.model.STArgument otherModelArgument : otherSTArguments) {
+         if (noMatch(thisSTArguments, otherModelArgument)) {
+
+            java.util.Collection<nextgen.model.STArgumentKV> thisKVs = new java.util.ArrayList<>();
+            final java.util.List<nextgen.model.STParameterKey> otherModelKeys = getKeys(otherSTParameter);
+            final java.util.List<nextgen.model.STParameterKey> thisKeys = getKeys(thisSTParameter);
+
+            for (nextgen.model.STParameterKey otherModelKey : otherModelKeys) {
+               for (nextgen.model.STParameterKey thisKey : thisKeys) {
+                  final boolean sameKeyName = otherModelKey.getName().equals(thisKey.getName());
+                  final boolean sameKeyType = otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
+                  if (sameKeyName && sameKeyType)
+                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> addArgument(thisKVs, thisKey, stArgumentKV));
+               }
+            }
+
+            if (!thisKVs.isEmpty()) addArgument(thisModel, thisSTParameter, thisKVs);
+         }
+      }
+   }
+
+   public java.util.stream.Stream<nextgen.model.STParameter> getSingleEnumsOrPrimitiveParameters(nextgen.model.STTemplate stTemplate) {
+      return stTemplate.getParameters()
+            .filter(stParameter -> stParameter.getType().equals(nextgen.model.STParameterType.SINGLE))
+            .filter(stParameter -> stParameter.getArgumentType() != null)
+            .filter(stParameter -> isEnum(stParameter) || stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"));
+   }
+
+   private boolean isEnum(nextgen.model.STParameter stParameter) {
+      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter)) != null;
+   }
+
+   private nextgen.model.STGroupModel getSTGroup(nextgen.model.STParameter stParameter) {
+      return stParameter.getIncomingParametersSTTemplate()
+            .findFirst()
+            .map(this::getSTGroup)
+            .orElse(null);
+   }
+
+   public nextgen.model.STArgument getArgument(nextgen.model.STParameter stParameter, nextgen.model.STModel model) {
+      return model.getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
+            .findFirst()
+            .orElse(null);
+   }
+
+   public java.util.stream.Stream<nextgen.model.STValue> getSTModelValues(nextgen.model.STModel model) {
+      return model.getArguments()
+            .map(nextgen.model.STArgument::getValue)
+            .filter(java.util.Objects::nonNull)
+            .filter(stValue -> stValue.getType() != null)
+            .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
+            .filter(stValue -> stValue.getStModel() != null);
+   }
+
+   public nextgen.model.STEnum findSTEnumByArgumentType(nextgen.model.STParameter stParameter) {
+      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter));
+   }
+
+   public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
+
+      private final nextgen.model.STParameter stParameter;
+
+      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onSingleSTValueConsumer = (stArgument, stValue) -> {
+      };
+      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onSingleSTModelConsumer = (stArgument, stValue) -> {
+      };
+      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onSingleEnumConsumer = (stArgument, stValue) -> {
+      };
+
+      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListSTValueConsumer = (stArgument, stValue) -> {
+      };
+      private java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListSTModelConsumer = (stArgument, stValue) -> {
+      };
+      private final java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> onListEnumConsumer = (stArgument, stValue) -> {
+      };
+
+      private java.util.function.BiConsumer<nextgen.model.STArgument, java.util.Collection<nextgen.model.STArgumentKV>> onKVListConsumer = (stArgument, stArgumentKVS) -> {
+      };
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTValueConsumer = (stArgumentKV, stValue) -> {
+
+      };
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListSTModelConsumer = (stArgumentKV, stValue) -> {
+
+      };
+      private final java.util.function.BiConsumer<nextgen.model.STArgumentKV, nextgen.model.STValue> onKVListEnumConsumer = (stArgumentKV, stValue) -> {
+
+      };
+
+      public STArgumentConsumer(nextgen.model.STParameter stParameter) {
+         this.stParameter = stParameter;
+      }
+
+      @Override
+      public void accept(nextgen.model.STArgument stArgument) {
+         final nextgen.model.STValue value = stArgument.getValue();
+         switch (stParameter.getType()) {
+            case SINGLE:
+               if (value == null || value.getType() == null)
+                  break;
+               switch (value.getType()) {
+                  case STMODEL:
+                     if (value.getStModel() != null)
+                        onSingleSTModelConsumer.accept(stArgument, value);
+                     break;
+                  case PRIMITIVE:
+                     onSingleSTValueConsumer.accept(stArgument, value);
+                     break;
+                  case ENUM:
+                     onSingleEnumConsumer.accept(stArgument, value);
+                     break;
+               }
+               break;
+            case LIST:
+               if (value == null || value.getType() == null)
+                  break;
+               switch (value.getType()) {
+                  case STMODEL:
+                     if (value.getStModel() != null)
+                        onListSTModelConsumer.accept(stArgument, value);
+                     break;
+                  case PRIMITIVE:
+                     onListSTValueConsumer.accept(stArgument, value);
+                     break;
+                  case ENUM:
+                     onListEnumConsumer.accept(stArgument, value);
+                     break;
+               }
+               break;
+            case KVLIST:
+
+               onKVListConsumer.accept(stArgument, getStArgumentKVS(stParameter, stArgument));
+
+               stParameter
+                     .getKeys()
+                     .forEach(stParameterKey -> stArgument
+                           .getKeyValues()
+                           .filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey))
+                           .filter(stArgumentKV -> stArgumentKV.getValue() != null)
+                           .forEach(stArgumentKV -> {
+                              final nextgen.model.STValue kvValue = stArgumentKV.getValue();
+                              switch (kvValue.getType()) {
+                                 case STMODEL:
+                                    if (kvValue.getStModel() != null)
+                                       onKVListSTModelConsumer
+                                             .accept(stArgumentKV, kvValue);
+                                    break;
+                                 case PRIMITIVE:
+                                    onKVListSTValueConsumer
+                                          .accept(stArgumentKV, kvValue);
+                                    break;
+                                 case ENUM:
+                                    onKVListEnumConsumer
+                                          .accept(stArgumentKV, kvValue);
+                                    break;
+                              }
+                           }));
+
+               break;
+         }
+      }
+
+      public STArgumentConsumer onKVListConsumer(java.util.function.BiConsumer<nextgen.model.STArgument, java.util.Collection<nextgen.model.STArgumentKV>> consumer) {
+         this.onKVListConsumer = consumer;
+         return this;
+      }
+
+      public STArgumentConsumer onListSTModel(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
+         this.onListSTModelConsumer = consumer;
+         return this;
+      }
+
+      public STArgumentConsumer onListSTValue(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
+         this.onListSTValueConsumer = consumer;
+         return this;
+      }
+
+      public STArgumentConsumer onSingleEnum(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
+         this.onSingleEnumConsumer = consumer;
+         return this;
+      }
+
+      public STArgumentConsumer onSingleSTModel(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
+         this.onSingleSTModelConsumer = consumer;
+         return this;
+      }
+
+      public STArgumentConsumer onSingleSTValue(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
+         this.onSingleSTValueConsumer = consumer;
+         return this;
+      }
+
+      public java.util.Collection<nextgen.model.STArgumentKV> getStArgumentKVS(nextgen.model.STParameter stParameter, nextgen.model.STArgument stArgument) {
+         final java.util.Collection<nextgen.model.STArgumentKV> kvSet = new LinkedHashSet<>();
+         stParameter.getKeys().forEach(stParameterKey -> stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).forEach(kvSet::add));
+         return kvSet;
+      }
    }
 }

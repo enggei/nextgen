@@ -44,10 +44,10 @@ public class STModelEditorForm extends AbstractEditor {
 
       final STTemplate stTemplate = model.getStTemplate();
 
-      nextgen.utils.STModelUtil.getSingleEnumsOrPrimitiveParameters(stTemplate)
-            .forEach(stParameter -> stValues.add(new nextgen.swing.STModelEditorForm.STValueElement(model, stTemplate, stParameter, nextgen.utils.STModelUtil.getArgument(stParameter, model))));
+      appModel().getSingleEnumsOrPrimitiveParameters(stTemplate)
+            .forEach(stParameter -> stValues.add(new nextgen.swing.STModelEditorForm.STValueElement(model, stTemplate, stParameter, appModel().getArgument(stParameter, model))));
 
-      nextgen.utils.STModelUtil.getSTModelValues(model)
+      appModel().getSTModelValues(model)
             .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
    }
 
@@ -74,7 +74,7 @@ public class STModelEditorForm extends AbstractEditor {
          this.name = stTemplate.getName() + "." + stParameter.getName();
          this.text = argument == null ? "" : appModel().render(argument);
 
-         final nextgen.model.STEnum stEnum = nextgen.utils.STModelUtil.findSTEnumByArgumentType(stParameter);
+         final nextgen.model.STEnum stEnum = appModel().findSTEnumByArgumentType(stParameter);
          this.stEnumValues = (stEnum == null) ? java.util.Collections.emptyList() : stEnum.getValuesSorted().collect(java.util.stream.Collectors.toList());
          if (!this.stEnumValues.isEmpty()) {
             enumStrings = new String[stEnumValues.size()];
@@ -223,7 +223,7 @@ public class STModelEditorForm extends AbstractEditor {
             scrollPane.removeMouseWheelListener(mouseWheelListener);
 
          addPopupActions(textComponent).
-               add(newAction("Save", actionEvent -> tryToSave()));;
+               add(newAction("Save", actionEvent -> tryToSave()));
       }
 
       private java.awt.event.KeyListener getEditorKeyListener() {

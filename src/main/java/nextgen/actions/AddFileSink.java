@@ -19,7 +19,7 @@ public class AddFileSink extends nextgen.actions.TransactionAction {
       final String packageName = appModel().getSTModelPackage(stModel, "");
       final String root = stProject.isPresent() ? stProject.get().getRoot() : "";
 
-      appModel().addFile(stModel, name, packageName, root, "java");
+      appModel().addFile(stModel, appModel().newSTFile(name, packageName, root, "java"));
    }
 
 }

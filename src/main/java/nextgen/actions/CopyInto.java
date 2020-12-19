@@ -6,7 +6,7 @@ public class CopyInto extends nextgen.actions.TransactionAction {
    private final nextgen.model.STModel otherModel;
 
 	public CopyInto(nextgen.model.STModel thisModel, nextgen.model.STModel otherModel) {
-		super("Copy from " + nextgen.utils.STModelUtil.getSTModelName(otherModel, otherModel.getUuid()));
+		super("Copy from " + nextgen.swing.STAppPresentationModel.getSTModelName(otherModel, otherModel.getUuid()));
 		this.thisModel = thisModel;
 		this.otherModel = otherModel;
 	}
