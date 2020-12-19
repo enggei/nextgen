@@ -578,7 +578,7 @@ public class STModelNavigator extends JPanel {
 					actions.add(new nextgen.actions.AddValueToProject(getModel(), selected));
 				actions.add(new nextgen.actions.SetSTProjectRoot(getModel(), workspace));
 				actions.add(new nextgen.actions.AddValuesToProject(getModel(), workspace));
-				actions.add(new nextgen.actions.GenerateAllProjectModels(getModel()));
+				actions.add(new nextgen.actions.GenerateSTModels(getModel().getModels().collect(java.util.stream.Collectors.toList())));
 				actions.add(new nextgen.actions.ShowSTProjectInCanvas(getModel()));
 			});
 
@@ -805,7 +805,7 @@ public class STModelNavigator extends JPanel {
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.NewSTModelAction(getModel())));
-				actions.add(new nextgen.actions.WriteAllSTModelsToFile(stModels));
+				actions.add(new nextgen.actions.GenerateSTModels(stModels));
 				actions.add(new nextgen.actions.AsBuilderCodes(getModel(), stModels));
 				actions.add(new nextgen.actions.AddFileSinkToSTModels(getModel(), stModels, workspace));
 				actions.add(new nextgen.actions.DeleteSTFileFromSTModels(stModels, workspace));
@@ -889,7 +889,7 @@ public class STModelNavigator extends JPanel {
 				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new nextgen.actions.CopyInto(getModel(), stModel)));
 				actions.add(new nextgen.actions.RunInTerminal(getModel(), workspace));
 				actions.add(new nextgen.actions.STModelToClipboard(getModel()));
-				actions.add(new nextgen.actions.WriteSTModelToFile(getModel()));
+				actions.add(new nextgen.actions.GenerateSTModel(getModel()));
 				actions.add(new nextgen.actions.AddFileSink(getModel()));
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.AsBuilderCode(getModel()));

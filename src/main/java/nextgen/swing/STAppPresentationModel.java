@@ -472,15 +472,7 @@ public class STAppPresentationModel {
    }
 
    public void generateAll(nextgen.model.STProject project) {
-      project.getModels().forEach(stModel ->
-            stModel.getFiles().forEach(stFile -> {
-               final String content = render(stModel);
-               final String packageDeclaration = stFile.getPackageName().getValue();
-               final String name = stFile.getName().getValue();
-               final String filetype = stFile.getType().getValue();
-               final java.io.File root = new java.io.File(stFile.getPath().getValue());
-               nextgen.st.STGenerator.writeToFile(content, packageDeclaration, name, filetype, root);
-            }));
+
    }
 
    public java.util.stream.Stream<nextgen.model.STGroupModel> getAllSTGroups() {
@@ -990,6 +982,17 @@ public class STAppPresentationModel {
 
    public nextgen.model.STEnum findSTEnumByArgumentType(nextgen.model.STParameter stParameter) {
       return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter));
+   }
+
+   public void generateSTModel(nextgen.model.STModel stModel) {
+      stModel.getFiles().forEach(stFile -> {
+         final String content = render(stModel);
+         final String packageDeclaration = stFile.getPackageName().getValue();
+         final String name = stFile.getName().getValue();
+         final String filetype = stFile.getType().getValue();
+         final java.io.File root = new java.io.File(stFile.getPath().getValue());
+         nextgen.st.STGenerator.writeToFile(content, packageDeclaration, name, filetype, root);
+      });
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
