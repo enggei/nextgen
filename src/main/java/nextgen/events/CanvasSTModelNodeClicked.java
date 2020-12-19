@@ -5,7 +5,7 @@ public final class CanvasSTModelNodeClicked {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CanvasSTModelNodeClicked.class);
 
 	public static void post(nextgen.model.STModel stModel) {
-		System.out.println("CanvasSTModelNodeClicked" + " stModel");
+		log.info("CanvasSTModelNodeClicked" + " stModel");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new CanvasSTModelNodeClicked(stModel));
 	}
 

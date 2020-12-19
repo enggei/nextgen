@@ -5,7 +5,7 @@ public final class STGroupActionChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupActionChanged.class);
 
 	public static void post(nextgen.model.STGroupAction action) {
-		System.out.println("STGroupActionChanged" + " action");
+		log.info("STGroupActionChanged" + " action");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STGroupActionChanged(action));
 	}
 

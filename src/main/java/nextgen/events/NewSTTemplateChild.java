@@ -5,7 +5,7 @@ public final class NewSTTemplateChild {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTTemplateChild.class);
 
 	public static void post(nextgen.model.STTemplate template, nextgen.model.STTemplate parent) {
-		System.out.println("NewSTTemplateChild" + " template" + " parent");
+		log.info("NewSTTemplateChild" + " template" + " parent");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTTemplateChild(template, parent));
 	}
 

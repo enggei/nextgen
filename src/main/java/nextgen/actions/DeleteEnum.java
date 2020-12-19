@@ -17,10 +17,7 @@ public class DeleteEnum extends nextgen.actions.TransactionAction {
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
    	log.info("DeleteEnum" + " stEnum" + " stGroup" + " owner");
 
-      confirm(owner, "Delete", unused -> {
-         stGroup.removeEnums(stEnum);
-         nextgen.events.STEnumDeleted.post(stEnum.getUuid());
-      });
+      confirm(owner, "Delete", unused -> appModel().delete(stEnum));
    }
 
 }

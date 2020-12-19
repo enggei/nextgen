@@ -5,7 +5,7 @@ public final class ShowSTModelInCanvas {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ShowSTModelInCanvas.class);
 
 	public static void post(nextgen.model.STModel stModel) {
-		System.out.println("ShowSTModelInCanvas" + " stModel");
+		log.info("ShowSTModelInCanvas" + " stModel");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new ShowSTModelInCanvas(stModel));
 	}
 

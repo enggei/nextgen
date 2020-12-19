@@ -16,16 +16,8 @@ public class SetSTProjectRoot extends nextgen.actions.TransactionAction {
    	log.info("SetSTProjectRoot" + " stProject" + " owner");
 
       input(owner, "New Root", s -> {
-
-      	stProject.setRoot(s);
-      	
-         final nextgen.model.STValue newPath = appModel().newSTValue(s.trim());
-         appModel().aggregateModels(stProject)
-               .forEach(stModel -> stModel.getFiles()
-                     .forEach(stFile -> {
-                        stFile.setPath(newPath);
-                        nextgen.events.STFileChanged.post(stFile);
-                     }));
+         stProject.setRoot(s);
+         appModel().setAllModelPaths(stProject, s.trim());
       });
    }
 

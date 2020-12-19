@@ -1367,7 +1367,7 @@ public class STModelNavigator extends JPanel {
 
 			this.stParameter = stParameter;
 
-			setLabel(appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName));
+			setLabel(appModel().findKVArgumentValue(getModel(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -1383,7 +1383,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().tryToFindArgument(getModel().getKeyValues(), stParameter, "name", stParameter::getName));
+			setLabel(appModel().findKVArgumentValue(getModel(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
 			super.nodeChanged();
 		}

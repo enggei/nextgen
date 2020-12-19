@@ -5,7 +5,7 @@ public final class STTemplateParameterTypesChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateParameterTypesChanged.class);
 
 	public static void post(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate stTemplate) {
-		System.out.println("STTemplateParameterTypesChanged" + " stGroup" + " stTemplate");
+		log.info("STTemplateParameterTypesChanged" + " stGroup" + " stTemplate");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateParameterTypesChanged(stGroup, stTemplate));
 	}
 

@@ -5,7 +5,7 @@ public final class NewSTGroup {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTGroup.class);
 
 	public static void post(nextgen.model.STGroupModel group) {
-		System.out.println("NewSTGroup" + " group");
+		log.info("NewSTGroup" + " group");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTGroup(group));
 	}
 

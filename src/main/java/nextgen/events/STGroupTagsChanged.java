@@ -5,7 +5,7 @@ public final class STGroupTagsChanged {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STGroupTagsChanged.class);
 
 	public static void post(nextgen.model.STGroupModel stGroup) {
-		System.out.println("STGroupTagsChanged" + " stGroup");
+		log.info("STGroupTagsChanged" + " stGroup");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STGroupTagsChanged(stGroup));
 	}
 

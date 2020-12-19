@@ -5,7 +5,7 @@ public final class NewSTModel {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTModel.class);
 
 	public static void post(nextgen.model.STModel model, nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate template) {
-		System.out.println("NewSTModel" + " model" + " stGroup" + " template");
+		log.info("NewSTModel" + " model" + " stGroup" + " template");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTModel(model, stGroup, template));
 	}
 

@@ -5,7 +5,7 @@ public final class NewSTEnum {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewSTEnum.class);
 
 	public static void post(nextgen.model.STGroupModel stGroup, nextgen.model.STEnum stEnum) {
-		System.out.println("NewSTEnum" + " stGroup" + " stEnum");
+		log.info("NewSTEnum" + " stGroup" + " stEnum");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewSTEnum(stGroup, stEnum));
 	}
 

@@ -5,7 +5,7 @@ public final class STInterfaceDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STInterfaceDeleted.class);
 
 	public static void post(String uuid) {
-		System.out.println("STInterfaceDeleted" + " uuid");
+		log.info("STInterfaceDeleted" + " uuid");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STInterfaceDeleted(uuid));
 	}
 

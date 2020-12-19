@@ -5,7 +5,7 @@ public final class NewKV {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NewKV.class);
 
 	public static void post(nextgen.model.STModel stModel, nextgen.model.STArgument argument, nextgen.model.STArgumentKV kv, nextgen.model.STParameterKey stParameterKey, nextgen.model.STValue value) {
-		System.out.println("NewKV" + " stModel" + " argument" + " kv" + " stParameterKey" + " value");
+		log.info("NewKV" + " stModel" + " argument" + " kv" + " stParameterKey" + " value");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new NewKV(stModel, argument, kv, stParameterKey, value));
 	}
 

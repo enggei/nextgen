@@ -5,7 +5,7 @@ public final class STTemplateChildrenAdded {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateChildrenAdded.class);
 
 	public static void post(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate stTemplate, java.util.Set<nextgen.model.STTemplate> children) {
-		System.out.println("STTemplateChildrenAdded" + " stGroup" + " stTemplate" + " children");
+		log.info("STTemplateChildrenAdded" + " stGroup" + " stTemplate" + " children");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateChildrenAdded(stGroup, stTemplate, children));
 	}
 

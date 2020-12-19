@@ -5,7 +5,7 @@ public final class STTemplateDeleted {
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateDeleted.class);
 
 	public static void post(String uuid) {
-		System.out.println("STTemplateDeleted" + " uuid");
+		log.info("STTemplateDeleted" + " uuid");
 		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateDeleted(uuid));
 	}
 
