@@ -560,8 +560,29 @@ public class STAppPresentationModel {
       return stTemplate.getIncomingStTemplateSTModel().collect(java.util.stream.Collectors.toList());
    }
 
+   public static String getSTModelName(nextgen.model.STModel stModel) {
+      return getSTModelValue(stModel, "name", () -> stModel.getStTemplate().getName());
+   }
+
    public static String getSTModelName(nextgen.model.STModel stModel, String defaultValue) {
       return getSTModelValue(stModel, "name", defaultValue);
+   }
+
+   public static String getSTModelValue(nextgen.model.STModel stModel, String parameterName, Supplier<String> defaultValueSupplier) {
+      final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
+
+      final java.util.Optional<nextgen.model.STParameter> foundParameter = stTemplate
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
+            .findAny();
+      if (foundParameter.isEmpty()) return defaultValueSupplier.get();
+
+      return stModel
+            .getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
+            .map(stArgument -> stArgument.getValue().getValue())
+            .findFirst()
+            .orElse(defaultValueSupplier.get());
    }
 
    public static String getSTModelValue(nextgen.model.STModel stModel, String parameterName, String defaultValue) {
@@ -582,7 +603,7 @@ public class STAppPresentationModel {
    }
 
    public String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
-      final String found = getSTModelValue(stModel, "package", null);
+      final String found = getSTModelValue(stModel, "package", () -> null);
       if (found != null) return found;
       return getSTModelValue(stModel, "packageName", defaultValue);
    }

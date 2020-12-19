@@ -1060,7 +1060,7 @@ public class STModelNavigator extends JPanel {
 
 				switch (getModel().getType()) {
 					case SINGLE:
-						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTModels.forEach(stModel -> actions.add(new nextgen.actions.SetArgumentFromSTModel("Set " + STAppPresentationModel.getSTModelName(stModel), this.stModel, getModel(), stModel)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.SetArgumentFromSTTemplate("Set New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.SetArgumentFromArgumentType(stModel, getModel(), workspace));
@@ -1069,7 +1069,7 @@ public class STModelNavigator extends JPanel {
 						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
-						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + appModel().getSTModelName(stNode, appModel().render(stNode, 30)), stModel, getModel(), stNode)));
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + STAppPresentationModel.getSTModelName(stModel), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), workspace));

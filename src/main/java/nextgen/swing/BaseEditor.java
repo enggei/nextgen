@@ -7,6 +7,10 @@ public class BaseEditor<T> extends AbstractEditor {
    public BaseEditor() {
    }
 
+   public BaseEditor(T model) {
+      this.model = model;
+   }
+
    public T getModel() {
       return model;
    }
