@@ -2,6 +2,14 @@ A different type of texteditor for developers.
 
 Domain:
 
+
+STProject
+	name		    1	String
+	root		    1	String
+	models			*	STModel
+	values			*	STValue
+
+
 STGroup
 	name			1	String
 	files			*	STGroupFile
@@ -82,8 +90,3 @@ STGroup
 					STArgumentKV
 						stParameterKey  1	STParameterKey
 						value			1	STValue
-
-STProject
-	root		    1	String
-	models			*	STModel
-	values			*	STValue
