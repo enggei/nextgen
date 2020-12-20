@@ -1075,7 +1075,7 @@ public class STModelNavigator extends JPanel {
 						if (appModel().isBoolean(getModel())) actions.add(new nextgen.actions.SetArgumentToTrue(stModel, getModel()));
 						break;
 					case LIST:
-						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + STAppPresentationModel.getSTModelName(stModel), stModel, getModel(), stNode)));
+						selectedSTModels.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTModel("Add " + STAppPresentationModel.getSTModelName(stNode), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new nextgen.actions.AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));
 						actions.add(new nextgen.actions.AddArgumentFromInput(stModel, getModel(), workspace));
