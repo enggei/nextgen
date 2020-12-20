@@ -1,0 +1,145 @@
+{
+  "uuid" : "c14d2469-77a7-4bfe-9206-807dbc841b74",
+  "name" : "JavaEasyFlows",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "f28dc627-d6b5-4dfa-bec9-f2eac2ba867e",
+    "name" : "Work",
+    "text" : "package ~packageName~;\n\nimport org.jeasy.flows.work.*;\n~imports:{it|~it~};separator=\"\\n\"~\n\npublic class ~name~ implements Work {\n\n\t@Override\n\tpublic String getName() {\n\t\treturn \"~name~\";\n\t}\n\n\t@Override\n\tpublic WorkReport call(WorkContext context) {\n\t\t~inputs:{it|final ~it.type~ ~it.name~ = (~it.type~) context.get(\"~it.name~\");};separator=\"\\n\"~\n\n\t\t~statements:{it|~it~};separator=\"\\n\"~\n\t\t\n\t\treturn new DefaultWorkReport(WorkStatus.COMPLETED, context);\n\t}\n} ",
+    "parameters" : [ {
+      "uuid" : "318d36f2-0170-409b-b997-584ea0ba9c73",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "a27940ec-7a70-4607-8274-f7ee2d12dba9",
+      "name" : "imports",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "ca45a6e3-9ece-440f-8ad1-6f34533f2831",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e03880a1-857f-4109-aaa6-2e2192fa8a6a",
+      "name" : "inputs",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "0225a7b3-5a2f-400a-bbd6-88db3cdf777a",
+        "name" : "type",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "29b4aca2-6906-4adb-ab01-41ae781662b2",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "411a8a3e-bb43-4994-ae4f-3afe333ca764",
+      "name" : "statements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "5bfff6cf-b490-4e33-86b2-18635fe8991a",
+    "name" : "ConditionalFlow",
+    "text" : "ConditionalFlow.Builder.aNewConditionalFlow()\n\t\t.named(\"~name~\")\n\t\t.execute(~execute~)\n\t\t.when(WorkReportPredicate.COMPLETED)\n\t\t.then(~then~)\n\t\t.otherwise(~otherwise~)\n\t\t.build() ",
+    "parameters" : [ {
+      "uuid" : "b81c8582-9ab4-4460-8e78-3dc7f629cb98",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "8b289a52-38f6-4ce6-9777-db678caa65f5",
+      "name" : "execute",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "5efbd0a2-f822-4ff8-b0d8-f58f92efd3c3",
+      "name" : "then",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "f5878846-6fb2-43ea-a30a-f879272e4f7b",
+      "name" : "otherwise",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "f2c0de0b-76f3-4808-a7a2-17db4eb1aa48",
+    "name" : "SequentialFlow",
+    "text" : "SequentialFlow.Builder.aNewSequentialFlow()\n\t\t.named(\"~name~\")\n\t\t.execute(~execute~)~then:{it|\n\t\t.then(~it~)}~\n\t\t.build() ",
+    "parameters" : [ {
+      "uuid" : "72de3f2f-be61-4fe3-9fbe-795e38fc0f90",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "dd97a71e-8e1b-4761-9a0c-fb9006529705",
+      "name" : "execute",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "038a03a9-707c-4d6e-bc16-8a088708c8b7",
+      "name" : "then",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "b919a441-1586-4512-932b-771726408448",
+    "name" : "ParallelFlow",
+    "text" : "ParallelFlow.Builder.aNewParallelFlow(executorService)\n\t\t.named(\"~name~\")\n\t\t.execute(~execute:{it|~it~};separator=\", \"~)\n\t\t.build() ",
+    "parameters" : [ {
+      "uuid" : "6a69c9f5-c362-436a-80fa-fe608320a568",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "840c3508-b8fd-4e70-967b-5d27e877cc99",
+      "name" : "execute",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "299606fc-a6df-43d1-9fc0-151ffbfbc331",
+    "name" : "RepeatFlow",
+    "text" : "RepeatFlow.Builder.aNewRepeatFlow()\n\t\t.named(\"~name~\")\n\t\t.repeat(~repeat~)~if(times)~\n\t\t.times(~times~)~endif~~if(until)~\n\t\t.until(~until~)~endif~\n\t\t.build() ",
+    "parameters" : [ {
+      "uuid" : "4d80fbab-6691-4d69-bd92-df90d794b9d1",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "84151097-1a36-4d7d-9951-a15ce616efdd",
+      "name" : "repeat",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "b1cdc340-81df-490a-896a-3fd5419876e5",
+      "name" : "times",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "49fc2042-3fb2-4a17-ade8-c6786f242255",
+      "name" : "until",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "e313a7f5-2943-49c6-948d-d00365fed891",
+    "name" : "WorkFlowFacade",
+    "text" : "package ~packageName~;\n\nimport net.openhft.compiler.CompilerUtils;\nimport org.jeasy.flows.work.WorkReportPredicate;\n\nimport java.util.List;\nimport java.util.concurrent.ExecutorService;\nimport java.util.stream.Collectors;\nimport java.util.stream.Stream;\n\npublic class ~name~ extends WorkFlowNeoFactory {\n\n\tpublic ~name~(String dir) {\n\t\tsuper(dir);\n\t}\n\n\tpublic WorkFlowFacade(org.neo4j.graphdb.GraphDatabaseService db) {\n\t\tsuper(db);\n\t}\n\t\n\tpublic org.jeasy.flows.work.Work newInstance(Work work) {\n\t\treturn newInstance(toCode(work));\n\t}\n\n\tpublic org.jeasy.flows.work.Work newInstance(nextgen.templates.javaeasyflows.Work javaCode) {\n\t\tfinal String className = javaCode.getPackageName() + \".\" + javaCode.getName().toString();\n\t\ttry {\n\t\t\tfinal Class<?> workClass = CompilerUtils.CACHED_COMPILER.loadFromJava(className, javaCode.toString());\n\t\t\treturn (org.jeasy.flows.work.Work) workClass.getDeclaredConstructor().newInstance();\n\t\t} catch (Throwable e) {\n\t\t\tthrow new RuntimeException(e);\n\t\t}\n\t}\n\n\tpublic org.jeasy.flows.workflow.ConditionalFlow toFlow(ConditionalFlow flow, ExecutorService executorService) {\n\n\t\tfinal org.jeasy.flows.workflow.ConditionalFlow.Builder f = org.jeasy.flows.workflow.ConditionalFlow.Builder.aNewConditionalFlow()\n\t\t\t\t.named(flow.getName())\n\t\t\t\t.execute(toWork(flow.getExecute(), executorService));\n\n\t\tfinal WorkInstance then = flow.getThen();\n\t\tif (then != null) f.then(toWork(then, executorService));\n\n\t\tfinal WorkInstance otherwise = flow.getOtherwise();\n\t\tif (otherwise != null) f.otherwise(toWork(otherwise, executorService));\n\n\t\treturn f.build();\n\t}\n\n\tpublic org.jeasy.flows.workflow.SequentialFlow toFlow(SequentialFlow flow, ExecutorService executorService) {\n\n\t\tfinal org.jeasy.flows.workflow.SequentialFlow.Builder f = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()\n\t\t\t\t.named(flow.getName())\n\t\t\t\t.execute(toWork(flow.getExecute(), executorService));\n\n\t\tflow.getThen().forEach(workType -> f.then(toWork(workType, executorService)));\n\n\t\treturn f.build();\n\t}\n\n\tpublic org.jeasy.flows.workflow.ParallelFlow toFlow(ParallelFlow flow, ExecutorService executorService) {\n\n\t\tfinal org.jeasy.flows.workflow.ParallelFlow.Builder f = org.jeasy.flows.workflow.ParallelFlow.Builder.aNewParallelFlow(executorService)\n\t\t\t\t.named(flow.getName())\n\t\t\t\t.execute(toWork(flow.getExecute(), executorService));\n\n\t\treturn f.build();\n\t}\n\n\tpublic org.jeasy.flows.workflow.RepeatFlow toFlow(RepeatFlow flow, ExecutorService executorService) {\n\n\t\tfinal org.jeasy.flows.workflow.RepeatFlow.Builder f = org.jeasy.flows.workflow.RepeatFlow.Builder.aNewRepeatFlow()\n\t\t\t\t.named(flow.getName())\n\t\t\t\t.repeat(toWork(flow.getRepeat(), executorService));\n\n\t\tif (flow.getTimes() != null)\n\t\t\tf.times(flow.getTimes());\n\t\telse if (flow.getUntil() != null)\n\t\t\tf.until(toWorkReportPredicate(flow.getUntil()));\n\n\t\treturn f.build();\n\t}\n\n\tpublic WorkInstance newWorkInstance(nextgen.workflow.Work work) {\n\t\treturn newWorkInstance().setType(WorkType.WORK).setWork(work);\n\t}\n\n\tpublic WorkInstance newWorkInstance(nextgen.workflow.SequentialFlow work) {\n\t\treturn newWorkInstance().setType(WorkType.SEQUENTIAL).setSequential(work);\n\t}\n\n\tpublic WorkInstance newWorkInstance(nextgen.workflow.ParallelFlow work) {\n\t\treturn newWorkInstance().setType(WorkType.PARALLEL).setParallel(work);\n\t}\n\n\tpublic WorkInstance newWorkInstance(nextgen.workflow.ConditionalFlow work) {\n\t\treturn newWorkInstance().setType(WorkType.CONDITIONAL).setConditional(work);\n\t}\n\n\tpublic WorkInstance newWorkInstance(nextgen.workflow.RepeatFlow work) {\n\t\treturn newWorkInstance().setType(WorkType.REPEAT).setRepeat(work);\n\t}\n\n\tprivate org.jeasy.flows.work.Work[] toWork(Stream<WorkInstance> stream, ExecutorService executorService) {\n\t\tfinal List<WorkInstance> workTypes = stream.collect(Collectors.toList());\n\t\tfinal org.jeasy.flows.work.Work[] works = new org.jeasy.flows.work.Work[workTypes.size()];\n\t\tfor (int i = 0; i < workTypes.size(); i++)\n\t\t\tworks[i] = toWork(workTypes.get(i), executorService);\n\t\treturn works;\n\t}\n\n\tprivate org.jeasy.flows.work.Work toWork(WorkInstance workInstance, ExecutorService executorService) {\n\n\t\tswitch (workInstance.getType()) {\n\t\t\tcase WORK:\n\t\t\t\treturn newInstance(workInstance.getWork());\n\t\t\tcase CONDITIONAL:\n\t\t\t\treturn toFlow(workInstance.getConditional(), executorService);\n\t\t\tcase SEQUENTIAL:\n\t\t\t\treturn toFlow(workInstance.getSequential(), executorService);\n\t\t\tcase PARALLEL:\n\t\t\t\treturn toFlow(workInstance.getParallel(), executorService);\n\t\t\tcase REPEAT:\n\t\t\t\treturn toFlow(workInstance.getRepeat(), executorService);\n\t\t}\n\n\t\tthrow new RuntimeException(\"unsupported type \" + workInstance.getType());\n\t}\n\n\tprivate nextgen.templates.javaeasyflows.Work toCode(Work work) {\n\t\tfinal nextgen.templates.javaeasyflows.Work w = nextgen.templates.JavaEasyFlowsPatterns.newWork();\n\t\tw.setName(work.getName());\n\t\tw.setPackageName(work.getPackage());\n\t\twork.getInputs().forEach(workInput -> w.addInputs(workInput.getType(), workInput.getName()));\n\t\twork.getStatements().forEach(workStatement -> w.addStatements(workStatement.getStatement()));\n\t\tSystem.out.println(w.toString());\n\t\treturn w;\n\t}\n\n\tprivate WorkReportPredicate toWorkReportPredicate(UntilPredicate until) {\n\t\tswitch (until) {\n\t\t\tcase ALWAYS_TRUE:\n\t\t\t\treturn WorkReportPredicate.ALWAYS_TRUE;\n\t\t\tcase ALWAYS_FALSE:\n\t\t\t\treturn WorkReportPredicate.ALWAYS_FALSE;\n\t\t\tcase COMPLETED:\n\t\t\t\treturn WorkReportPredicate.COMPLETED;\n\t\t\tcase FAILED:\n\t\t\t\treturn WorkReportPredicate.FAILED;\n\t\t}\n\t\tthrow new RuntimeException(\"unsupported untilPredicate \" + until);\n\t}\n\n\tpublic org.jeasy.flows.work.WorkReport run(org.jeasy.flows.work.WorkContext workContext, nextgen.templates.javaeasyflows.Work w) {\n      final org.jeasy.flows.workflow.WorkFlow workflow = org.jeasy.flows.workflow.SequentialFlow.Builder.aNewSequentialFlow()\n            .execute(newInstance(w))\n            .build();\n      return org.jeasy.flows.engine.WorkFlowEngineBuilder.aNewWorkFlowEngine()\n            .build()\n            .run(workflow, workContext);\n   }\n} ",
+    "parameters" : [ {
+      "uuid" : "7f312d4f-868d-4141-80d9-7c1c97d8af21",
+      "name" : "packageName",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "e585cf41-6aff-471e-8e1a-8a6ba841b10c",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ]
+}

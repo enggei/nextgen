@@ -4,7 +4,7 @@ public class ImportData {
 
    public static void main(String[] args) {
 
-      java.util.Arrays.stream(java.util.Objects.requireNonNull(new java.io.File("/home/goe/projects/nextgen/components/core/src/main/resources/templates").listFiles(file -> file.getName().endsWith(".json"))))
+      java.util.Arrays.stream(java.util.Objects.requireNonNull(new java.io.File("./src/main/resources/templates").listFiles(file -> file.getName().endsWith(".json"))))
             .forEach(file -> {
                try {
                   stGroups.add(new io.vertx.core.json.JsonObject(io.vertx.core.buffer.Buffer.buffer(java.nio.file.Files.readAllBytes(file.toPath()))));
@@ -13,7 +13,7 @@ public class ImportData {
                }
             });
 
-      final nextgen.model.STModelDB db = new nextgen.model.STModelDB("/home/goe/projects/nextgen/db");
+      final nextgen.model.STModelDB db = new nextgen.model.STModelDB("./db");
 
       db.doInTransaction(transaction -> db.findAllSTGroupModel().forEach(stGroupModel -> {
          stGroupModel.getEnums().forEach(ImportData::delete);

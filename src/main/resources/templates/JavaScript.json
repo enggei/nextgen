@@ -1,0 +1,855 @@
+{
+  "uuid" : "3ff969ac-4b1c-43fb-968a-7c579bf6779b",
+  "name" : "JavaScript",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "248f73b6-364f-47e0-82f4-3ff9320a04e1",
+    "name" : "BlockStmt",
+    "text" : "~stmt~ {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+    "parameters" : [ {
+      "uuid" : "96d02900-9aad-48fd-a451-e828fae6f377",
+      "name" : "stmt",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3bf873f3-d886-4153-a45f-be3303609854",
+      "name" : "statements",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "1841ee29-23bc-43b0-8920-1cf3a66f43ac",
+    "name" : "Decorator",
+    "text" : "@~name~~if(parameters)~(~parameters:{it|~it~};separator=\", \"~)~endif~ ",
+    "parameters" : [ {
+      "uuid" : "e4fd7519-e10e-41fa-9f46-9635ccbbc2b1",
+      "name" : "name",
+      "argumentType" : "Object",
+      "type" : "SINGLE"
+    }, {
+      "uuid" : "930d5e00-0e46-4bd1-b79e-df1ceecd52ac",
+      "name" : "parameters",
+      "argumentType" : "Object",
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "31e86568-78ff-454a-96e3-9dce9b673ea8",
+    "name" : "JsonObject",
+    "text" : "{ ~values:{it|~it~};separator=\", \"~ } ",
+    "parameters" : [ {
+      "uuid" : "da1c4610-522e-4c49-8a8f-9a1dc6f88e7b",
+      "name" : "values",
+      "argumentType" : "Object",
+      "type" : "LIST"
+    } ]
+  }, {
+    "uuid" : "0a0edb56-b90b-42b2-9fae-dd0c1321b773",
+    "name" : "NameArray",
+    "text" : "~name~ : [ ~values:{it|~it~};separator=\", \"~ ] ",
+    "parameters" : [ {
+      "uuid" : "94827655-ff32-464f-8204-7ef49463e79c",
+      "name" : "values",
+      "argumentType" : "Object",
+      "type" : "LIST"
+    }, {
+      "uuid" : "76c4bb66-d1a7-4053-b1b4-b88bd8b9b449",
+      "name" : "name",
+      "argumentType" : "Object",
+      "type" : "SINGLE"
+    } ]
+  }, {
+    "uuid" : "e5dd09d9-0522-4c5a-87fa-b7795bcebeeb",
+    "name" : "NameValue",
+    "text" : "~name~: ~value~ ",
+    "parameters" : [ {
+      "uuid" : "baad6df2-6eac-4d36-84d5-f24268397889",
+      "name" : "name",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "3bbf4604-4fb9-47f2-96b7-f3afdc9d35df",
+      "name" : "value",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "f9255cd0-4923-4cf1-b043-f3a78599da93",
+    "name" : "Functions",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "f654d911-35eb-4442-8917-2eac49b84131",
+      "name" : "ArrowFunction",
+      "text" : "(~params:{it|~it~};separator=\",\"~) => ~if(expression)~~expression~~else~{\n\t\t~statements:{it|~it~};separator=\"\\n\"~ \n\t}~endif~ ",
+      "parameters" : [ {
+        "uuid" : "44aee0a6-f294-4197-b47e-2a6f17c1da04",
+        "name" : "params",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ab765fe6-0f89-4eae-8aa0-77d089720456",
+        "name" : "expression",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "253fd62b-b0fb-4d83-9154-b038b1d11bd4",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "46c87215-26b5-4e66-8e66-e634043b31f9",
+      "name" : "Function",
+      "text" : "function ~name~(~parameters:{it|~it~};separator=\",\"~) {\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "ad12de5b-5906-4903-b3bf-75236b19e2cc",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c5e0406b-a3db-4199-a260-7be403fe2e33",
+        "name" : "parameters",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "540b97aa-d63c-4305-8503-e644283efcbc",
+        "name" : "statements",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "77d40926-2e71-4fbf-9338-ee0731dc48d1",
+      "name" : "FunctionExpression",
+      "text" : "let ~name~ = ~function~; ",
+      "parameters" : [ {
+        "uuid" : "08642b88-8acb-4e0d-8beb-7a0d98dcda8a",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ed2bb2dc-a8c2-4341-ad9e-aec1b2a3df7e",
+        "name" : "function",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "15d942fc-60ab-4895-b34e-796207fa1718",
+      "name" : "functionCall",
+      "text" : "~if(scope)~~scope~.~endif~~name~(~parameters:{it|~it~};separator=\",\"~) ",
+      "parameters" : [ {
+        "uuid" : "ff9afa71-8e9b-4524-a535-30b18e513d9c",
+        "name" : "scope",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "db052219-877b-4e95-905e-676ab895fb4e",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "ce9d1508-8038-4f95-807d-e63faa039b6a",
+        "name" : "parameters",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "ce966875-ba45-40eb-a6bd-4d8916584901",
+      "name" : "returnStmt",
+      "text" : "return ~returnValue~; ",
+      "parameters" : [ {
+        "uuid" : "de434301-c0ba-4710-a9aa-7edfc84a34b5",
+        "name" : "returnValue",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "1ac74952-9a9e-48e9-bc47-5d25633a5b3f",
+    "name" : "React",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "00d49daa-e635-4d45-90a6-6e8ad54a1db4",
+      "name" : "indexJS",
+      "text" : "import ReactDOM from 'react-dom';\nimport React from 'react';\nimport { BrowserRouter } from 'react-router-dom';\nimport { useStrict } from 'mobx';\nimport { Provider } from 'mobx-react';\n\nimport App from './App';\n\n~stores:{it|import ~it;format=\"lowFirst\"~ from './stores/~it;format=\"capitalize\"~.js';};separator=\"\\n\"~\n\nconst stores = {\n\t~stores:{it|~it;format=\"lowFirst\"~};separator=\",\\n\"~\n};\n\nReactDOM.render((\n\t<Provider {...stores}>\n\t\t<BrowserRouter>\n\t\t\t<App />\n\t\t</BrowserRouter>\n\t</Provider>\n), document.getElementById('root')); ",
+      "parameters" : [ {
+        "uuid" : "8dfc16a0-e5fb-4a55-9ae0-0420799ad557",
+        "name" : "stores",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "d2b49f7d-c4ec-4966-881f-4ae00d7a6908",
+      "name" : "indexHtml",
+      "text" : "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n\n    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500\"/>\n    ~stylesheets:{it|<link rel=\"stylesheet\" href=\"~it~\"/>};separator=\"\\n\"~\n\n    <title>~title~</title>\n</head>\n<body>\n<noscript>\n    You need to enable JavaScript to run ~title~.\n</noscript>\n<div id=\"root\"></div>\n<script type=\"text/javascript\" src=\"main.js\"></script>\n</body>\n</html> ",
+      "parameters" : [ {
+        "uuid" : "c8305574-4ce3-4060-b6d4-cd8f9fbd2be1",
+        "name" : "stylesheets",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "626f09c8-f0fc-46ae-a392-75837e77ebc4",
+        "name" : "title",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "173c89f3-b4a8-4e24-9ba9-7e9707aea9a1",
+      "name" : "indexCSS",
+      "text" : "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n} ",
+      "parameters" : [ ]
+    }, {
+      "uuid" : "9b379402-3e73-44e1-846e-eea87f334654",
+      "name" : "ReactRouter",
+      "text" : "",
+      "children" : [ {
+        "uuid" : "aa3cf47d-0823-4105-aa8b-a3843322cf6d",
+        "name" : "Link",
+        "text" : "<Link innerRef={ ref } to=\"~to~\" { ...props } /> ",
+        "parameters" : [ {
+          "uuid" : "d0b1fe16-d829-437b-8051-368a22aa7596",
+          "name" : "to",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "cb0c96ee-1562-44a1-ac14-7cb96f535c93",
+        "name" : "ForwardRef",
+        "text" : "React.forwardRef((props, ref) => (\n\t<RouterLink ref={ref} to=~to~~if(target)~ target=\"~target~\"~endif~ {...props} />\n)); ",
+        "parameters" : [ {
+          "uuid" : "2f41389d-2eef-41cf-ba9c-8d414d82ba79",
+          "name" : "to",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "0850fab0-6472-4c5b-8f6f-96329602a0b5",
+          "name" : "target",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "f35c3548-1344-4fff-b720-20640c46c4a9",
+        "name" : "withRouterImport",
+        "text" : "import { withRouter } from 'react-router-dom'; ",
+        "parameters" : [ ]
+      }, {
+        "uuid" : "c322d60c-8dc1-4e72-81a7-b202cab8eb6e",
+        "name" : "ReactRouterLinkImport",
+        "text" : "import { Link } from 'react-router-dom'; ",
+        "parameters" : [ ]
+      } ]
+    }, {
+      "uuid" : "774f9a05-c6ea-4af8-878c-1932ef5e0906",
+      "name" : "JSX",
+      "text" : "// deprecated, use JSX-group ",
+      "children" : [ {
+        "uuid" : "31602a2d-7462-44cb-8305-76cb7a9e5222",
+        "name" : "FunctionalComponent",
+        "text" : "~dependencies:{it|~it~};separator=\"\\n\"~\n\nfunction ~name~(props) {\n\n\treturn (\n\t\t~element~\n\t)\n}\n\nexport default ~name~; ",
+        "parameters" : [ {
+          "uuid" : "3c99476a-9033-4770-a4b2-dcd1ee009164",
+          "name" : "dependencies",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "87df0633-98ca-4ff3-b3d7-28bebdb5a5d4",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5053607d-8a19-4e8a-aab5-e92611c94fdd",
+          "name" : "element",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "59814359-6f01-4138-9900-c11839c56461",
+        "name" : "DestructorProp",
+        "text" : "const { ~prop:{it|~it~};separator=\", \"~ } = this.props~if(child)~.~child~~endif~; ",
+        "parameters" : [ {
+          "uuid" : "3940d9cc-a3ac-4093-8b80-b61d20028014",
+          "name" : "child",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "eda2f2cf-79b3-4220-a047-15df0125b3e3",
+          "name" : "prop",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "1354a2c8-9e86-488e-a142-fe35f7aa0acb",
+        "name" : "returnStatement",
+        "text" : "~if(condition)~if (~condition~) ~endif~return (\n\t~if(element)~~element~~else~null~endif~\n\t); ",
+        "parameters" : [ {
+          "uuid" : "35dcad68-3a58-4085-a349-c72142f3dd4c",
+          "name" : "condition",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "31e293e3-a369-4c77-9285-1e61fe469a8e",
+          "name" : "element",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "5385edbb-3152-4134-9b3b-a939fa30c4ac",
+        "name" : "Prop",
+        "text" : "~name~~if(value)~=~value~~elseif(stringValue)~=\"~stringValue~\"~else~={ ~expression~ }~endif~ ",
+        "parameters" : [ {
+          "uuid" : "93a18e09-7e50-4ea5-b0e3-0dcbc71e497c",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "1ab2c957-6342-4b64-9e1b-00229b915de1",
+          "name" : "value",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "f79b90f7-bf23-46e2-bf7c-49009bcd1920",
+          "name" : "stringValue",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "385fe578-328c-4a68-a1b4-b9dccb7f54ae",
+          "name" : "expression",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "ec09e561-5533-4d1f-9134-205620a76d7a",
+        "name" : "State",
+        "text" : "{\n\t~values:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n} ",
+        "parameters" : [ {
+          "uuid" : "9a45f5e7-2414-4810-969e-3ba0edb5f5e2",
+          "name" : "values",
+          "argumentType" : "Object",
+          "type" : "KVLIST",
+          "keys" : [ {
+            "uuid" : "0973bb5b-19a7-4de8-ba56-cd1ee3fe3b69",
+            "name" : "name",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "4941b694-35aa-4fc5-a16f-cc8964ddbd3b",
+            "name" : "value",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      }, {
+        "uuid" : "9752d4ad-2141-445a-9a80-3a79072db167",
+        "name" : "ClassComponent",
+        "text" : "import React from 'react';\n~imports:{it|import ~it.ref~ from '~it.path~';};separator=\"\\n\"~\n~componentImports:{it|~it~};separator=\"\\n\"~\n~dependencies:{it|~it~};separator=\"\\n\"~\n\n~constDeclarations:{it|~it~};separator=\"\\n\\n\"~\n\n~decorators:{it|~it~};separator=\"\\n\"~\nclass ~name~ extends React.Component {\n\n\t~fields:{it|~it.name~};separator=\"\\n\"~\n\t\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tconsole.log(\"new ~name~ : \" +  this.props);\n~if(state)~\n\t\tthis.state = {\n\t\t\t~state:{it|~it~};separator=\",\\n\"~;\n\t\t}\n~endif~\n\n\t\t~constructorStatements:{it|~it~};separator=\"\\n\"~\n\t\t~events:{it|this.~it.methodName~ = this.~it.methodName~.bind(this);};separator=\"\\n\"~\n\t}\n\n~if(events)~\n\t~events:{it|~it.declaration~};separator=\"\\n\\n\"~\n\n~endif~\n~if(methods)~\n\t~methods:{it|~it~};separator=\"\\n\\n\"~\n\n~endif~\n\n\tstatic getDerivedStateFromError(error) {\n\t\t// Update state so the next render will show the fallback UI.\n\t\treturn { hasError: true };\n\t}\n\n\tcomponentDidCatch(error, errorInfo) {\n\t\t// You can also log the error to an error reporting service\n\t\tconsole.info(error);\n\t\tconsole.info(errorInfo);\n\t}\n\n\trender() {\n\t\tconsole.log(\"render ~name~ : \" +  this.props);\n~if(renderCondition)~\n\t\tif(~renderCondition~) {\n\t\t\tconsole.info(\"~name~.~renderCondition~ TRUE\");\n\t\t\treturn ( \n\t\t\t\t~renderTrue~\n\t\t\t);\n\t\t} else {\n\t\t\tconsole.info(\"~name~.~renderCondition~ FALSE\");\n\t\t\treturn (\n\t\t\t\t~renderFalse~\n\t\t\t);\n\t\t}\n~else~\n\t\treturn (\n\t\t\t~if(renderElement)~~renderElement~~else~null~endif~\n\t\t);\n~endif~\n\t}\n}\n\nexport default (~name~); ",
+        "parameters" : [ {
+          "uuid" : "4b461799-67b0-4758-bc6b-d3f04c7b826a",
+          "name" : "imports",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "1b41de43-6f06-4762-b63d-c1908f73c524",
+            "name" : "ref",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "c5387ec3-a931-492c-a7ba-88b3951319c8",
+            "name" : "path",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "bd1fa7c3-bb9e-48a9-995b-d4a6e246bff9",
+          "name" : "componentImports",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "5774b4ed-f9d0-4fd5-b2ab-6ed1c3b1e0b5",
+          "name" : "dependencies",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "d431a89b-77bb-4990-827d-99dd069bebe1",
+          "name" : "constDeclarations",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "453af56b-d7b3-4848-b82c-d7c38162a83d",
+          "name" : "decorators",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "a522f3d0-667a-4c3d-bea0-ab2b6c2cdfd1",
+          "name" : "name",
+          "type" : "SINGLE",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "9611e002-0461-4839-a051-81c091b5b7f2",
+          "name" : "fields",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "78084b91-0980-4e7d-9d8c-1864f42945c7",
+            "name" : "name",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "a84dc23d-aa48-472c-a94f-a54f66f6ca05",
+          "name" : "state",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "c5ee4918-a61e-4bc1-b2ed-e1eae0081721",
+          "name" : "constructorStatements",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "001ed227-f3dc-4921-9272-975443a9bdf8",
+          "name" : "events",
+          "type" : "KVLIST",
+          "argumentType" : "Object",
+          "keys" : [ {
+            "uuid" : "f4ce1d8c-5f15-4d90-abb6-370ffc5aa8f9",
+            "name" : "methodName",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "495a61ab-647f-460b-9169-c059908a638b",
+            "name" : "declaration",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "7f51fdcc-903d-4499-a7d2-b4c7a3115f4f",
+          "name" : "methods",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "3d800881-78e0-4544-95dc-ddf2bfdb691d",
+          "name" : "renderCondition",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "9f1acf8e-bdeb-4a23-ae3b-fc4418e3bb1b",
+          "name" : "renderTrue",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "feb5a78a-f21f-4ffd-9fea-d9992672757d",
+          "name" : "renderFalse",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "46c39a02-967d-4022-bef3-93d165ec564f",
+          "name" : "renderElement",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "c7c5c8b4-df97-446b-bf2f-4721d782af39",
+        "name" : "Dependency",
+        "text" : "import ~value~ from '~packageName~'; ",
+        "parameters" : [ {
+          "uuid" : "9a58bbe5-7e49-410d-bbe9-334829b60d19",
+          "name" : "value",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "078ac514-3b84-4415-89ac-459c7fb646b0",
+          "name" : "packageName",
+          "argumentType" : "Object",
+          "type" : "SINGLE"
+        } ]
+      }, {
+        "uuid" : "ef2c7e87-4fb4-497b-afe3-ed22271f2076",
+        "name" : "MethodDeclaration",
+        "text" : "~if(const)~const ~endif~~name~ = (~parameters:{it|~it~};separator=\",\"~) => {\n\tconsole.info(\"call ~name~\");\n\t~statements:{it|~it~};separator=\"\\n\"~\n} ",
+        "parameters" : [ {
+          "uuid" : "08cc0e28-fcd5-47f4-8106-e5518badd6ac",
+          "name" : "const",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "cfdb85b9-02a7-419e-a64a-66ba811c9600",
+          "name" : "name",
+          "type" : "SINGLE"
+        }, {
+          "uuid" : "e303ee66-5504-4238-81c4-502b4bf12643",
+          "name" : "parameters",
+          "type" : "LIST",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "23566a07-0242-4a51-a55c-3b8684036e5d",
+          "name" : "statements",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "dfb86837-4149-4405-8ba9-262c22ee0924",
+        "name" : "namedImport",
+        "text" : "{ ~names:{it|~it~};separator=\", \"~ } ",
+        "parameters" : [ {
+          "uuid" : "b6217f8e-9cf7-41c2-bee8-7820ea339880",
+          "name" : "names",
+          "argumentType" : "Object",
+          "type" : "LIST"
+        } ]
+      }, {
+        "uuid" : "a58a9128-7ab6-4655-8dda-8a8a51d00c40",
+        "name" : "MapProperty",
+        "text" : "{\n\t~property~.map((element, i) => (\n\t\t~forEach~\n\t)) \n} ",
+        "parameters" : [ {
+          "uuid" : "729081ef-720c-47f2-aec9-b73303eecb60",
+          "name" : "property",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        }, {
+          "uuid" : "cbeef884-76c8-46f2-90ea-6947b5158e52",
+          "name" : "forEach",
+          "type" : "SINGLE",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "93992efd-e8a2-41d3-ac8c-26264c35f8be",
+        "name" : "elements",
+        "text" : "",
+        "children" : [ {
+          "uuid" : "2788616b-7e55-4cec-9048-011db0d47640",
+          "name" : "ul",
+          "text" : "<ul ~if(className)~className=~className~~endif~~attributes:{it|~it.name~=~it.value~};separator=\" \"~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</ul>~else~ />~endif~ ",
+          "parameters" : [ {
+            "uuid" : "a5985912-ae2a-42f5-b1c8-87c1df8902cc",
+            "name" : "className",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "913df8bd-af1d-4ffe-8645-17251c4f4e9d",
+            "name" : "attributes",
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "065c484d-09cd-4121-8bf9-cc32c8037c70",
+              "name" : "name",
+              "argumentType" : "Object"
+            }, {
+              "uuid" : "70d254cf-a7de-4da1-a6ac-16a8c662cee8",
+              "name" : "value",
+              "argumentType" : "Object"
+            } ]
+          }, {
+            "uuid" : "8b123609-8d2a-4c2d-bb26-5fcd32ac83c7",
+            "name" : "children",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "b89bf2b1-0fcb-4e17-83a3-37e3b047572f",
+          "name" : "div",
+          "text" : "<div ~if(className)~className=~className~~endif~~attributes:{it|~it.name~=~it.value~};separator=\" \"~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</div>~else~ />~endif~ ",
+          "parameters" : [ {
+            "uuid" : "7aaa5be0-2c52-4fb8-980d-26b35f5fecfb",
+            "name" : "className",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "7702e247-cf56-45e0-a3cb-85b0434b33fd",
+            "name" : "attributes",
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "26e70a7f-f5a2-4246-b183-338fc158946c",
+              "name" : "name",
+              "argumentType" : "Object"
+            }, {
+              "uuid" : "02728256-83d0-46bb-8a15-0ecf1237e623",
+              "name" : "value",
+              "argumentType" : "Object"
+            } ]
+          }, {
+            "uuid" : "4b487ec6-441a-4606-8fb5-9b9ee7ff98f2",
+            "name" : "children",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "451fadfc-f362-445e-840b-b59f87ab6821",
+          "name" : "form",
+          "text" : "<form ~if(className)~className=~className~ ~endif~onSubmit=~onSubmit~~if(noValidate)~ noValidate~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</form>~else~ />~endif~ ",
+          "parameters" : [ {
+            "uuid" : "b17874d4-3e46-4392-b030-dac3a3712bbb",
+            "name" : "className",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "fde6d034-19c9-40cb-9e6f-8b5abeeb2427",
+            "name" : "onSubmit",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "adac3ea0-3363-4585-9308-9cdc3c6b524e",
+            "name" : "noValidate",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "de0a318f-bcc1-4ac9-8c28-77947fa2394c",
+            "name" : "children",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          } ]
+        }, {
+          "uuid" : "562c6189-0000-4cce-b64d-2a4594b462b2",
+          "name" : "Element",
+          "text" : "<~name~~if(singleAttributes)~ ~singleAttributes:{it|~it~};separator=\" \"~~endif~~if(attributes)~ ~attributes:{it|\n\n\t~it.key~=~it.value~}~~endif~~if(props)~ ~props:{it|~it~};separator=\" \"~~endif~~if(children)~>\n\t~children:{it|~it~};separator=\"\\n\"~\n</~name~>~else~ />~endif~ ",
+          "parameters" : [ {
+            "uuid" : "4b634c2b-c83f-4c9d-9dc8-7e2ac576e507",
+            "name" : "name",
+            "type" : "SINGLE",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "ae3b7a98-473a-4616-8160-2cf1ab632ef1",
+            "name" : "singleAttributes",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "81d7ac69-a3aa-49f5-8708-dd3f655a1ae9",
+            "name" : "attributes",
+            "type" : "KVLIST",
+            "argumentType" : "Object",
+            "keys" : [ {
+              "uuid" : "36c36974-9ae3-4cbf-88ba-8a11ffdf0221",
+              "name" : "key",
+              "argumentType" : "Object"
+            }, {
+              "uuid" : "ad5ae6c1-9b04-4107-8b3f-1eb58f310046",
+              "name" : "value",
+              "argumentType" : "Object"
+            } ]
+          }, {
+            "uuid" : "1f285e4d-9995-4266-9c29-dc1778962fa6",
+            "name" : "props",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          }, {
+            "uuid" : "fb108dfe-4cec-4bfa-ae1d-ea0172334eb7",
+            "name" : "children",
+            "type" : "LIST",
+            "argumentType" : "Object"
+          } ]
+        } ]
+      } ],
+      "parameters" : [ ]
+    }, {
+      "uuid" : "14e250cf-b417-4fb7-b512-a54f6ba8fe58",
+      "name" : "App",
+      "text" : "import React, { Component } from 'react';\nimport { Switch, Route, withRouter } from 'react-router-dom';\n\nimport { Provider } from 'mobx-react';\nimport { inject, observer } from 'mobx-react';\n\n~routes:{it|import ~it.component~ from './pages/~it.filename~';};separator=\"\\n\"~\n\nimport NavigationBar from './components/NavigationBar.js';\n\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport { ThemeProvider } from '@material-ui/styles';\nimport { createMuiTheme } from '@material-ui/core/styles';\n\n// https://in-your-saas.github.io/material-ui-theme-editor/\n//const theme = createMuiTheme({\"palette\":{\"common\":{\"black\":\"#000\",\"white\":\"#fff\"},\"background\":{\"paper\":\"#fff\",\"default\":\"#fafafa\"},\"primary\":{\"light\":\"rgba(255, 255, 255, 1)\",\"main\":\"rgba(22, 22, 23, 1)\",\"dark\":\"rgba(74, 74, 74, 1)\",\"contrastText\":\"#fff\"},\"secondary\":{\"light\":\"#ff4081\",\"main\":\"rgba(245, 166, 35, 1)\",\"dark\":\"#c51162\",\"contrastText\":\"#fff\"},\"error\":{\"light\":\"#e57373\",\"main\":\"#f44336\",\"dark\":\"#d32f2f\",\"contrastText\":\"#fff\"},\"text\":{\"primary\":\"rgba(0, 0, 0, 0.87)\",\"secondary\":\"rgba(0, 0, 0, 0.54)\",\"disabled\":\"rgba(0, 0, 0, 0.38)\",\"hint\":\"rgba(0, 0, 0, 0.38)\"}}});\nconst theme = createMuiTheme(~theme~);\n\n@inject(~stores:{it|'~it~'};separator=\", \"~)\n@withRouter\n@observer\nclass App extends Component {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\t\n\t\tif (!this.props.appStore.token) \n\t\t\tthis.props.appStore.setAppLoaded();\n\t\t\n\t}\n\n\tcomponentDidMount() {\n\t\t\n\t\tif (this.props.appStore.token) \n\t\t\tthis.props.userStore.pullUser().finally(() => this.props.appStore.setAppLoaded());\n\t}\n\n\trender() {\n\n\t\tif (this.props.appStore.appLoaded) {\n\t\t\treturn (\n\t\t\t\t<ThemeProvider theme={theme}>\n\t\t\t\t\t<CssBaseline />\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<NavigationBar userStore={ this.props.userStore }></NavigationBar>\n\t\t\t\t\t</div>\n\t\t\t\t\t<Switch>\n\t\t\t\t\t\t~routes:{it|<Route path=\"~it.path~\" ~if(it.render)~render=~it.render~~else~component={~it.component~\\}~endif~ />};separator=\"\\n\"~\n\t\t\t\t\t</Switch>\n\t\t\t\t</ThemeProvider>);\n\t\t} else return null;\n\t}\n}\n\nexport default App; ",
+      "children" : [ ],
+      "parameters" : [ {
+        "uuid" : "cc92bfe7-515c-40b4-a306-4812f53b72d3",
+        "name" : "routes",
+        "type" : "KVLIST",
+        "argumentType" : "Object",
+        "keys" : [ {
+          "uuid" : "de6131f7-c83c-442e-90c1-f629c73cc81d",
+          "name" : "component",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "d9fa7f3b-e4d3-4396-a24a-7762b50fd4ef",
+          "name" : "filename",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "9ad5f37c-6768-4cb8-ba4d-93b11343a626",
+          "name" : "path",
+          "argumentType" : "String"
+        }, {
+          "uuid" : "14483225-9549-4c2a-b9e2-f479148f09bc",
+          "name" : "render",
+          "argumentType" : "Object"
+        } ]
+      }, {
+        "uuid" : "9148ab79-ad82-49c2-b833-2926650c54c2",
+        "name" : "theme",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "776d4803-5982-41e1-997a-615c23f69a0f",
+        "name" : "stores",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "f1578428-b77d-4405-aee9-f75c4f317c92",
+    "name" : "ControlFlow",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "815a0c8e-e5d8-4002-823d-15ba11da3dc6",
+      "name" : "If",
+      "text" : "if (~condition~) ~then~~if(otherwise)~\nelse ~otherwise~~endif~ ",
+      "parameters" : [ {
+        "uuid" : "f8a9aa62-5c93-4f7d-87e2-3543f395f248",
+        "name" : "condition",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "b2d995c2-264c-4091-be75-0df89824457d",
+        "name" : "then",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "310deafc-63fc-447a-a826-03f2981a1427",
+        "name" : "otherwise",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "e6d4efcc-47c2-4e52-bb4b-8c82f97bc9f7",
+      "name" : "Conditional",
+      "text" : "~condition~ ? ~then~ : ~otherwise~ ",
+      "parameters" : [ {
+        "uuid" : "9044cb77-e11e-49b4-9fd8-947524c8069b",
+        "name" : "condition",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "737fa37b-cb37-4812-9d37-d3aa9f9d4152",
+        "name" : "then",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "82d85fd0-2b9c-45f3-831a-e48f10f4919b",
+        "name" : "otherwise",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "18493e33-7099-4c6e-a20c-000e1cfede29",
+    "name" : "Superagent",
+    "text" : "import superagentPromise from 'superagent-promise';\nimport _superagent from 'superagent';\n\nimport appStore from './stores/AppStore';\nimport authStore from './stores/AuthStore';\n\nconst superagent = superagentPromise(_superagent, global.Promise);\n\nconst handleErrors = err => {\n\tif (err && err.response && err.response.status === 401) {\n\t\tauthStore.logout();\n\t}\n\treturn err;\n};\n\nconst responseBody = res => res.body;\n\nconst tokenPlugin = req => {\n\tif (appStore.token) {\n\t\treq.set('Authorization', `Bearer ${appStore.token}`);\n\t}\n};\n\nconst requests = {\n\tdel: url =>\n\t\tsuperagent\n\t\t\t.del(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tget: url =>\n\t\tsuperagent\n\t\t\t.get(`${url}`)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tput: (url, body) =>\n\t\tsuperagent\n\t\t\t.put(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody),\n\tpost: (url, body) =>\n\t\tsuperagent\n\t\t\t.post(`${url}`, body)\n\t\t\t.use(tokenPlugin)\n\t\t\t.end(handleErrors)\n\t\t\t.then(responseBody)\n};\n\n~agentDeclarations:{it|~it.declaration~};separator=\"\\n\"~\n\nexport default {\n\t~agentDeclarations:{it|~it.name~};separator=\",\\n\"~\n}; ",
+    "parameters" : [ {
+      "uuid" : "038c1527-25ec-44cc-83e5-3898a8463c40",
+      "name" : "agentDeclarations",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "0901de84-7cb0-40df-87f7-e6c771c8edc3",
+        "name" : "declaration",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "67ce8b88-4767-4ff9-b1a6-3f8fa722b116",
+        "name" : "name",
+        "argumentType" : "Object"
+      } ]
+    } ],
+    "children" : [ {
+      "uuid" : "6c458cfe-4e20-4668-b4fa-855460ef2fba",
+      "name" : "agentEndpoint",
+      "text" : "~name~: (~if(urlParam)~~urlParam~~if(parameters)~, ~endif~~endif~~parameters:{it|~it~};separator=\",\"~) => requests.~action~('/~url~'~if(urlParam)~ + ~urlParam~~endif~~if(parameters)~, { ~parameters:{it|~it~};separator=\",\"~ }~endif~) ",
+      "parameters" : [ {
+        "uuid" : "f015e1ac-3367-40bc-9635-e332b430d8e9",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "d3e4fbb7-1970-4328-8931-258cb6cddf1b",
+        "name" : "urlParam",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "2ef5b4d3-1eba-4ede-a268-e1832bc9d11b",
+        "name" : "parameters",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3d56afd1-2666-49b3-b618-83e3c0354d42",
+        "name" : "action",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c715b828-e4b3-4a37-a246-536ba3f7a0d1",
+        "name" : "url",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    }, {
+      "uuid" : "b029cde7-43af-4ba8-bec5-119e51e9a460",
+      "name" : "agentDeclaration",
+      "text" : "const ~name~ = { \n\t~agentEndpoint:{it|~it~};separator=\",\\n\"~\n} ",
+      "parameters" : [ {
+        "uuid" : "b49848db-b2dd-4702-8fe6-1f36e6e82f53",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "String"
+      }, {
+        "uuid" : "093e4406-1915-4d29-bf66-38cc90bac993",
+        "name" : "agentEndpoint",
+        "type" : "LIST",
+        "argumentType" : "AgentEndpoint"
+      } ]
+    }, {
+      "uuid" : "11411a9d-db8a-4c28-9b71-3b135e55e198",
+      "name" : "agentRequest",
+      "text" : "agent.~endpoint~.~method~(~params:{it|~it~};separator=\",\"~)\n\t~then:{it|.then(~it~)};separator=\"\\n\"~\n\t.catch(action((err) => {\n\t\tconsole.info(\"error ~endpoint~.~method~ : \" + err.rawResponse);\n\t\tthis.setErrors(err.response && err.response.body && err.response.body.errors);\n\t\tthrow err;\n\t}))\n\t.finally(~finally~) ",
+      "parameters" : [ {
+        "uuid" : "06016b93-26a6-4a67-8a4a-55d3101aa143",
+        "name" : "endpoint",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "f37b75bd-72e4-4092-a919-bb60a72ae4fd",
+        "name" : "method",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "501c0d20-e4f1-49f2-9a28-8d9115dd3a65",
+        "name" : "params",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "3c7db85a-e04c-4295-b022-401e6b802d68",
+        "name" : "then",
+        "type" : "LIST",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "127b6e37-7b95-45c4-a198-f8bbb474f267",
+        "name" : "finally",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "5c3f387e-20bd-4a51-8409-dd9a1b0ec4cc",
+    "name" : "jsonArray",
+    "text" : "[ ~items:{it|~it~};separator=\"\\n\"~ ] ",
+    "parameters" : [ {
+      "uuid" : "e1a96640-ba46-4d81-92e8-cfba5606ac78",
+      "name" : "items",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    } ]
+  }, {
+    "uuid" : "fba464a5-18c1-4251-a4e4-a451634c6c91",
+    "name" : "variables",
+    "text" : "",
+    "children" : [ {
+      "uuid" : "0ea7db1d-c907-46b3-a41f-319d644c2a35",
+      "name" : "constVariable",
+      "text" : "const ~name~ = ~value~; ",
+      "parameters" : [ {
+        "uuid" : "7f82cb73-443b-4c7e-858a-984470fd16f4",
+        "name" : "name",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "c7f0f24c-e463-4734-9243-a6adf3a58f17",
+        "name" : "value",
+        "type" : "SINGLE",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  }, {
+    "uuid" : "184df464-61a5-4d94-84d8-9aaa56ea2d02",
+    "name" : "Statement",
+    "text" : "~expression~; ",
+    "parameters" : [ {
+      "uuid" : "3d44e07a-fce9-4c70-82ea-5cd46cbbe841",
+      "name" : "expression",
+      "type" : "SINGLE",
+      "argumentType" : "Object"
+    } ]
+  } ],
+  "stgFile" : "/home/goe/projects/nextgen/components/core/src/main/resources/templates/React.stg",
+  "icon" : "language-javascript",
+  "enums" : [ ],
+  "tags" : "javascript"
+}

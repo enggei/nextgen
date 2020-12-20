@@ -1,0 +1,30 @@
+{
+  "uuid" : "1441b64e-560b-4b64-be6a-4372836d00a7",
+  "name" : "Cypher",
+  "delimiter" : "~",
+  "templates" : [ {
+    "uuid" : "1262cfb5-c7b8-43b4-9c59-6ba01e437669",
+    "name" : "CreateNode",
+    "text" : "CREATE (~if(labels)~n:~endif~~labels:{it|~it~};separator=\":\"~ ~if(properties)~{ ~properties:{it|~it.name~: ~it.value~};separator=\", \"~ }~endif~) ",
+    "parameters" : [ {
+      "uuid" : "b9141391-06ee-43d8-8659-f85b83f67951",
+      "name" : "labels",
+      "type" : "LIST",
+      "argumentType" : "Object"
+    }, {
+      "uuid" : "c6ebc9fe-1dc8-42ee-895f-d0b8dbd68cb0",
+      "name" : "properties",
+      "type" : "KVLIST",
+      "argumentType" : "Object",
+      "keys" : [ {
+        "uuid" : "62910cb3-c44e-49d4-a106-d1553c356543",
+        "name" : "name",
+        "argumentType" : "Object"
+      }, {
+        "uuid" : "160e1575-9d39-40df-acb3-ffe4cf4a4131",
+        "name" : "value",
+        "argumentType" : "Object"
+      } ]
+    } ]
+  } ]
+}
