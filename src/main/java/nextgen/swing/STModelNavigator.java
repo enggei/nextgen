@@ -126,6 +126,12 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onNewSTParameter(nextgen.events.NewSTParameter event) {
+		findAllSTModelTreeNode(stModelTreeNode -> stModelTreeNode.stTemplate.equals(event.stTemplate))
+		      .forEach(stModelTreeNode -> treeModel.addNodeInSortedOrder(stModelTreeNode, new nextgen.swing.STModelNavigator.STParameterTreeNode(event.stParameter, stModelTreeNode.getModel())));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
 		findAllSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.stTemplate))
 		      .forEach(stTemplateTreeNode -> stTemplateTreeNode.getChildren(STModelTreeNode.class).forEach(nextgen.swing.STModelNavigator.STModelTreeNode::nodeChanged));

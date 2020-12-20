@@ -26,22 +26,11 @@ public class STFileEditor extends AbstractEditor {
       txtType.addKeyListener(editorKeyListener);
       txtPath.addKeyListener(editorKeyListener);
 
-      final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(4, 2));
-      inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-      inputPanel.add(new javax.swing.JLabel("Name"));
-      inputPanel.add(txtName);
-
-      inputPanel.add(new javax.swing.JLabel("Package"));
-      inputPanel.add(txtPackage);
-
-      inputPanel.add(new javax.swing.JLabel("Type"));
-      inputPanel.add(txtType);
-
-      inputPanel.add(new javax.swing.JLabel("Path"));
-      inputPanel.add(txtPath);
-
-      add(inputPanel, java.awt.BorderLayout.NORTH);
+      add(newGridPanel(4, 2)
+            .appendLabel("Name").append(txtName)
+            .appendLabel("Package").append(txtPackage)
+            .appendLabel("Type").append(txtType)
+            .appendLabel("Path").append(txtPath), java.awt.BorderLayout.CENTER);
    }
 
    public nextgen.model.STFile getModel() {

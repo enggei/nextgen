@@ -295,18 +295,7 @@ public class STParser {
             model.addParameters((nextgen.model.STParameter) o);
 
          } else if (o instanceof nextgen.model.parser.ParsedSTParameter) {
-            final nextgen.model.parser.ParsedSTParameter parsedSTParameter = (nextgen.model.parser.ParsedSTParameter) o;
-
-            final nextgen.model.STParameter stParameter = appModel().db.newSTParameter()
-                  .setName(parsedSTParameter.getName())
-                  .setArgumentType(parsedSTParameter.getArgumentType())
-                  .setType(parsedSTParameter.getType());
-
-            parsedSTParameter.getKeys().forEach(stParameterKey -> stParameter.addKeys(appModel().db.newSTParameterKey()
-                  .setName(stParameterKey.getName())
-                  .setArgumentType(stParameterKey.getArgumentType())));
-
-            model.addParameters(stParameter);
+            appModel().addSTParameter(model, (nextgen.model.parser.ParsedSTParameter) o);
          }
       });
    }

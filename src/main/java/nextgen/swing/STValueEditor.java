@@ -3,6 +3,7 @@ package nextgen.swing;
 public class STValueEditor extends AbstractEditor {
 
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = nextgen.utils.SwingUtil.newRSyntaxTextArea(20, 80);
+   private final STValueEditorForm stValueEditorForm = new STValueEditorForm();
 
    private nextgen.model.STValue stValue;
    private String uuid;
@@ -15,12 +16,16 @@ public class STValueEditor extends AbstractEditor {
       addPopupActions(txtEditor).
             add(newAction("Save", actionEvent -> tryToSave()));;
 
-      add(new org.fife.ui.rtextarea.RTextScrollPane(txtEditor), java.awt.BorderLayout.CENTER);
+      final javax.swing.JTabbedPane editors = new javax.swing.JTabbedPane();
+      editors.add("Editor", new org.fife.ui.rtextarea.RTextScrollPane(txtEditor));
+      editors.add("Values", stValueEditorForm);
+      add(editors, java.awt.BorderLayout.CENTER);
    }
 
    public void setSTValue(nextgen.model.STValue stValue) {
       this.stValue = stValue;
       this.uuid = stValue.getUuid();
+      stValueEditorForm.setModel(stValue);
       txtEditor.setText(appModel().render(stValue));
       txtEditor.setCaretPosition(0);
       txtEditor.setEditable(stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE));

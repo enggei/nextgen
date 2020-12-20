@@ -84,8 +84,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
 
             stModel.getArguments()
+                  .filter(stArgument -> stArgument.getValue() != null)
                   .map(nextgen.model.STArgument::getValue)
-                  .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                   .filter(nextgen.model.STValue::hasValue)
@@ -95,8 +95,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
             stModel.getArguments()
                   .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
+                        .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                         .map(nextgen.model.STArgumentKV::getValue)
-                        .filter(java.util.Objects::nonNull)
                         .filter(stValue -> stValue.getType() != null)
                         .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                         .filter(nextgen.model.STValue::hasValue)
@@ -106,16 +106,16 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
             stModel.getArguments()
                   .forEach(stArgument -> stArgument.getKeyValues()
+                        .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                         .map(nextgen.model.STArgumentKV::getValue)
-                        .filter(java.util.Objects::nonNull)
                         .filter(stValue -> stValue.getType() != null)
                         .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                         .filter(stValue -> stValue.getStModel() != null)
                         .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
             stModel.getArguments()
+                  .filter(stArgument -> stArgument.getValue() != null)
                   .map(nextgen.model.STArgument::getValue)
-                  .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                   .filter(stValue -> stValue.getStModel() != null)
@@ -269,7 +269,6 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          this.element = (STValueElement) value;
          this.component.setText(element.text);
          this.component.setCaretPosition(0);
-         nextgen.events.STValueElementEditorEnabled.post(element.stValue);
          return scrollPane;
       }
    }

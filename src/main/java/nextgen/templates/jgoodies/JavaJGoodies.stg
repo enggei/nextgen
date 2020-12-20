@@ -1,0 +1,55 @@
+delimiters "~","~"
+
+grammar() ::= <<columnSpecs ::= columnSpec+ 
+rowSpecs ::= rowSpec+
+
+columnSpec ::= [columnAlignment:] size [:resizeBehavior]
+rowSpec ::= [rowAlignment :] size [:resizeBehavior]
+columnAlignment ::= LEFT | CENTER | RIGHT | FILL | L | C | R | F
+rowAlignment ::= TOP | CENTER | BOTTOM | FILL | T | C | B | F
+size ::= constantSize | componentSize | boundedSize
+componentSize ::= MIN | PREF | DEFAULT | M | P | D
+constantSize ::= {integer}integerUnit | {double}doubleUnit
+integerUnit ::= PX | PT | DLU
+doubleUnit ::= IN | MM | CM
+boundedSize ::= MIN(constantSize;componentSize) | MAX(constantSize;componentSize)
+resizeBehavior ::= NONE | GROW | GROW({double) | G({double})
+
+
+constraints ::= column, row [, colSpan, rowSpan][, hAlign, vAlign]
+column ::= {an integer}
+row ::= {an integer}
+colSpan ::= {an integer}
+rowSpan ::= {an integer}
+hAlign ::= LEFT | CENTER | RIGHT | DEFAULT | FILL | L | C | R | D | F
+vAlign ::= TOP | CENTER | BOTTOM | DEFAULT | FILL | T | C | B | D | F  >>
+
+rowSpecs(rowSpec) ::= <<~rowSpec:{it|~it~};separator=", "~  >>
+
+columnSpecs(columnSpec) ::= <<~columnSpec:{it|~it~};separator=", "~  >>
+
+grow(double) ::= <<grow~if(double)~(~double~)~endif~  >>
+
+rowSpan(n) ::= <<~n~  >>
+
+colSpan(n) ::= <<~n~  >>
+
+row(n) ::= <<~n~  >>
+
+column(n) ::= <<~n~  >>
+
+constraints(hAlign,rowSpan,colSpan,row,vAlign,column) ::= <<~column~, ~row ~[, ~colSpan~, ~rowSpan~][, ~hAlign~, ~vAlign~]  >>
+
+resizeBehavior(GROW) ::= <<~if(GROW)~~GROW~~else~NONE~endif~  >>
+
+boundedSize(componentSize,constantSize) ::= <<MIN(~constantSize~;~componentSize~) | MAX(~constantSize~;~componentSize~)  >>
+
+constantSize(unit,value) ::= <<~value~~unit~  >>
+
+rowSpec(resizeBehavior,rowAlignment,size) ::= <<~if(rowAlignment)~~rowAlignment~:~endif~~size~~if(resizeBehavior)~:~resizeBehavior~~endif~  >>
+
+columnSpec(columnAlignment,size,resizeBehavior) ::= <<~if(columnAlignment)~~columnAlignment~:~endif~~size~~if(resizeBehavior)~:~resizeBehavior~~endif~  >>
+
+eom() ::= "}"
+
+gt() ::= ">"

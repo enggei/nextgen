@@ -31,6 +31,28 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
+   public void addSTEnum(nextgen.model.STGroupModel stGroup, String name) {
+      final nextgen.model.STEnum stEnum = db.newSTEnum()
+            .setName(name);
+
+      stGroup.addEnums(stEnum);
+      nextgen.events.NewSTEnum.post(stGroup, stEnum);
+   }
+
+   public void addSTParameter(nextgen.model.STTemplate model, nextgen.model.parser.ParsedSTParameter parsedSTParameter) {
+      final nextgen.model.STParameter stParameter = db.newSTParameter()
+            .setName(parsedSTParameter.getName())
+            .setArgumentType(parsedSTParameter.getArgumentType())
+            .setType(parsedSTParameter.getType());
+
+      parsedSTParameter.getKeys().forEach(stParameterKey -> stParameter.addKeys(db.newSTParameterKey()
+            .setName(stParameterKey.getName())
+            .setArgumentType(stParameterKey.getArgumentType())));
+
+      model.addParameters(stParameter);
+      nextgen.events.NewSTParameter.post(stParameter, model);
+   }
+
    public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
       kvs.add(newSTArgumentKV(stParameterKey, newSTValue(value)));
    }
@@ -1014,6 +1036,18 @@ public class STAppPresentationModel {
          final java.io.File root = new java.io.File(stFile.getPath().getValue());
          nextgen.st.STGenerator.writeToFile(content, packageDeclaration, name, filetype, root);
       });
+   }
+
+   public nextgen.model.STEnum getSTEnum(nextgen.model.STEnumValue stEnumValue) {
+      return stEnumValue.getIncomingValuesSTEnum().findFirst().get();
+   }
+
+   public java.util.Collection<nextgen.model.STEnumValue> asCollection(nextgen.model.STEnum stEnum) {
+      return stEnum.getValuesSorted().collect(java.util.stream.Collectors.toList());
+   }
+
+   public java.util.Collection<nextgen.model.STEnumValue> asCollection(nextgen.model.STEnumValue stEnumValue) {
+      return asCollection(getSTEnum(stEnumValue));
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {

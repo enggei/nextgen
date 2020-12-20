@@ -24,7 +24,7 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       // existing values:
       final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();
       final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();
-      stEnum.getValues().forEach(stEnumValue -> {
+      stEnum.getValuesSorted().forEach(stEnumValue -> {
       	txtEnumValuesName.put(stEnumValue, newTextField(stEnumValue.getName(), 10));
       	txtEnumLexical.put(stEnumValue, newTextField(stEnumValue.getLexical(), 10));
       	contentPanel.add(txtEnumValuesName.get(stEnumValue));
@@ -46,6 +46,11 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       		final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
       		final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
 
+      		if (txtEnumValueName.length() == 0) {
+      			stEnum.removeValues(stEnumValue);
+      			continue;
+      		}
+
       		stEnumValue.setName(txtEnumValueName);
       		stEnumValue.setLexical(txtEnumValueLexical.length() == 0 ? null : txtEnumValueLexical);
       	}
@@ -57,7 +62,8 @@ public class EditEnum extends nextgen.actions.TransactionAction {
 
       		stEnum.addValues(appModel().newSTEnumValue(newEnumValue, newEnumLexical));
       	}
-
+      	
+      	jDialog.dispose();
       	nextgen.events.STEnumChanged.post(stEnum);
       });
    }

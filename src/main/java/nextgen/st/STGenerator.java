@@ -173,7 +173,7 @@ public class STGenerator {
          switch (stParameter.getType()) {
             case SINGLE:
 
-               final String singleArgumentType = capitalize(stParameter.getArgumentType("Object"));
+               final String singleArgumentType = stParameter.getArgumentType("Object");
                stEntity.addAggr("singleFields.{name,type}", stParameter.getName(), singleArgumentType);
                final ST singleAccessors = generator.getInstanceOf("entitySingleAccessors");
                singleAccessors.add("entity", className);
@@ -184,7 +184,7 @@ public class STGenerator {
 
             case LIST:
 
-               final String listArgumentType = capitalize(stParameter.getArgumentType("Object"));
+               final String listArgumentType = stParameter.getArgumentType("Object");
                stEntity.addAggr("listFields.{name,type}", stParameter.getName(), listArgumentType);
                final ST listAccessors = generator.getInstanceOf("entityListAccessors");
                listAccessors.add("entity", className);
@@ -202,7 +202,7 @@ public class STGenerator {
                kvListAccessors.add("entity", className);
                kvListAccessors.add("name", stParameter.getName());
                stParameter.getKeys().forEach(stParameterKey -> {
-                  kvListAccessors.addAggr("keys.{name,type}", stParameterKey.getName(), capitalize(stParameterKey.getArgumentType("Object")));
+                  kvListAccessors.addAggr("keys.{name,type}", stParameterKey.getName(), stParameterKey.getArgumentType("Object"));
                   aggrSpec.add("keys", stParameterKey.getName());
                   aggrValues.add("values", stParameterKey.getName());
                });
