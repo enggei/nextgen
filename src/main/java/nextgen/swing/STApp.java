@@ -42,7 +42,7 @@ public class STApp extends JFrame {
    public static AppModel loadConfig(String[] args) throws IOException {
 
       final AppConfig appConfig = args.length == 0 ? new nextgen.swing.AppConfig() : new nextgen.swing.AppConfig(new File(args[0]));
-      final String root = "/home/goe/projects/nextgen";
+      final String root = ".";
 
       AppModel
             .getInstance()
