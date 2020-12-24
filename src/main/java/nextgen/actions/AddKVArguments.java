@@ -56,7 +56,7 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
       for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
          final String value = fieldEntry.getValue().getText().trim();
          if (value.length() == 0) continue;
-         appModel().addArgument(kvs, fieldEntry.getKey(), value);
+         kvs.add(appModel().newSTArgumentKV(fieldEntry.getKey(), appModel().newSTValue(value)));
       }
 
       appModel().addArgument(stModel, stParameter, kvs);

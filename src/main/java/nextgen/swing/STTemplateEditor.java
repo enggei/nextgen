@@ -86,7 +86,7 @@ public class STTemplateEditor extends AbstractEditor {
       stTemplate = null;
       final StringBuilder text = new StringBuilder();
       text.append(stEnum.getName());
-      stEnum.getValues().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical() == null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
+      stEnum.getValuesSorted().forEach(stEnumValue -> text.append("\n\t").append(stEnumValue.getName()).append(stEnumValue.getLexical() == null ? "" : (" -> \"" + stEnumValue.getLexical() + "\"")));
       reset(text.toString());
    }
 
@@ -314,37 +314,37 @@ public class STTemplateEditor extends AbstractEditor {
       public STEditorCommandPanel() {
          super(new FlowLayout(FlowLayout.LEFT));
 
-         add(new JButton(newAction("Insert Single", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert Single", actionEvent -> {
             insertSingle();
             txtEditor.requestFocusInWindow();
          })));
 
-         add(new JButton(newAction("Insert Single Capitalized", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert Single Capitalized", actionEvent -> {
             insertCapitalized();
             txtEditor.requestFocusInWindow();
          })));
-         add(new JButton(newAction("Insert List", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert List", actionEvent -> {
             insertList();
             txtEditor.requestFocusInWindow();
          })));
-         add(new JButton(newAction("Insert If", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert If", actionEvent -> {
             insertIf();
             txtEditor.requestFocusInWindow();
          })));
-         add(new JButton(newAction("Insert If-else", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert If-else", actionEvent -> {
             insertIfElse();
             txtEditor.requestFocusInWindow();
          })));
-         add(new JButton(newAction("Replace text and insert Single", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Replace text and insert Single", actionEvent -> {
             replaceAndInsertSingle();
             txtEditor.requestFocusInWindow();
          })));
-         add(new JButton(newAction("Save", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Save", actionEvent -> {
             commit();
             txtEditor.requestFocusInWindow();
          })));
 
-         add(new JButton(newAction("Generate", actionEvent -> {
+         add(nextgen.swing.ComponentFactory.newJButton(newAction("Generate", actionEvent -> {
             generate();
             txtEditor.requestFocusInWindow();
          })));
@@ -361,7 +361,7 @@ public class STTemplateEditor extends AbstractEditor {
 
    private static class STEditorInfoPanel extends JPanel {
 
-      private final JTextArea textArea = new JTextArea();
+      private final JTextArea textArea = nextgen.swing.ComponentFactory.newJTextArea();
 
       public STEditorInfoPanel() {
          super(new BorderLayout());
@@ -369,7 +369,7 @@ public class STTemplateEditor extends AbstractEditor {
          this.textArea.setTabSize(3);
          this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-         add(new JScrollPane(textArea), BorderLayout.CENTER);
+         add(nextgen.swing.ComponentFactory.newJScrollPane(textArea), BorderLayout.CENTER);
          setPreferredSize(new Dimension(800, 200));
       }
 

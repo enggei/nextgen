@@ -515,7 +515,7 @@ public class TreeNavigator {
 				"		tree.addMouseListener(new ~name~.~name~MouseListener());\n" + 
 				"\n" + 
 				"		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));\n" + 
-				"		add(new JScrollPane(tree), BorderLayout.CENTER);\n" + 
+				"		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);\n" +
 				"\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 

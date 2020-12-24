@@ -1,18 +1,22 @@
 package nextgen.templates.jgoodies;
 
-public enum rowAlignment {
+public enum vAlignment {
 
-	TOP() {
-		@Override
-		public String toString() { return "top"; }
-	},
 	CENTER() {
 		@Override
 		public String toString() { return "center"; }
 	},
+	TOP() {
+		@Override
+		public String toString() { return "top"; }
+	},
 	BOTTOM() {
 		@Override
 		public String toString() { return "bottom"; }
+	},
+	DEFAULT() {
+		@Override
+		public String toString() { return "default"; }
 	},
 	FILL() {
 		@Override

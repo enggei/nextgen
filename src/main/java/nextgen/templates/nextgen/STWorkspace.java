@@ -297,7 +297,7 @@ public class STWorkspace {
 				"			super(new FlowLayout(FlowLayout.LEFT, 0, 0));\n" + 
 				"			setOpaque(false);\n" + 
 				"\n" + 
-				"			final JLabel label = new JLabel(title);\n" + 
+				"			final JLabel label = nextgen.swing.ComponentFactory.newJLabel(title);\n" +
 				"			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
 				"			add(label);\n" + 
 				"\n" + 

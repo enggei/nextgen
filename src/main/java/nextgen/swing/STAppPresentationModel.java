@@ -53,17 +53,17 @@ public class STAppPresentationModel {
       nextgen.events.NewSTParameter.post(stParameter, model);
    }
 
-   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
-      kvs.add(newSTArgumentKV(stParameterKey, newSTValue(value)));
-   }
+//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
+//      kvs.add(newSTArgumentKV(stParameterKey, newSTValue(value)));
+//   }
+//
+//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STValue value) {
+//      kvs.add(newSTArgumentKV(stParameterKey, value));
+//   }
 
-   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STValue value) {
-      kvs.add(newSTArgumentKV(stParameterKey, value));
-   }
-
-   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STArgumentKV value) {
-      addArgument(kvs, stParameterKey, db.newSTValue(value.getValue()));
-   }
+//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STArgumentKV value) {
+//      addArgument(kvs, stParameterKey, db.newSTValue(value.getValue()));
+//   }
 
    public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STArgument value) {
       final nextgen.model.STValue stValue = db.newSTValue(value.getValue());
@@ -691,6 +691,18 @@ public class STAppPresentationModel {
       return db.newSTModel().setStTemplate(stTemplate);
    }
 
+   public nextgen.model.STValue newSTValue(STValue stValue) {
+      switch (stValue.getType()) {
+         case STMODEL:
+            return db.newSTValue(stValue.getStModel());
+         case PRIMITIVE:
+            return db.newSTValue(stValue.getValue());
+         case ENUM:
+            return db.newSTValue(stValue.getStEnumValue());
+      }
+      return null;
+   }
+
    public nextgen.model.STValue newSTValue(STModel stModel) {
       return db.newSTValue(stModel);
    }
@@ -980,7 +992,8 @@ public class STAppPresentationModel {
                   final boolean sameKeyName = otherModelKey.getName().equals(thisKey.getName());
                   final boolean sameKeyType = otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
                   if (sameKeyName && sameKeyType)
-                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> addArgument(thisKVs, thisKey, stArgumentKV));
+                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> thisKVs.add(newSTArgumentKV(thisKey, newSTValue(stArgumentKV.getValue()))));
+//                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> addArgument(thisKVs, thisKey, stArgumentKV));
                }
             }
 

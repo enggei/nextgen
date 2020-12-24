@@ -30,7 +30,7 @@ public class STModelNavigator extends JPanel {
 		tree.addMouseListener(new STModelNavigator.STModelNavigatorMouseListener());
 
 		setPreferredSize(new Dimension(800, 600));
-		add(new JScrollPane(tree), BorderLayout.CENTER);
+		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
@@ -1784,15 +1784,22 @@ public class STModelNavigator extends JPanel {
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
 			final int childCount = parent.getChildCount();
+
+			final List<BaseTreeNode<?>> children = new java.util.ArrayList<>();
 			for (int i = 0; i < childCount; i++) {
 				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
 				if (predicate.test(childAt))
 					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
 				else {
-					final Optional<T> node = find(childAt, predicate);
-					if (node.isPresent()) return node;
+					children.add(childAt);
 				}
 			}
+
+			for (nextgen.swing.STModelNavigator.BaseTreeNode<?> childAt : children) {
+				final Optional<T> node = find(childAt, predicate);
+				if (node.isPresent()) return node;
+			}
+
 			return Optional.empty();
 		}
 

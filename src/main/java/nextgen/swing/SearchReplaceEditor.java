@@ -11,28 +11,9 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
       this.resultsModel = new ResultsTableModel();
 
-      final javax.swing.JPanel searchPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
       final javax.swing.JButton btnSearch = new javax.swing.JButton(getSearchAction(txtSearch));
-      searchPanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
-      searchPanel.add(new javax.swing.JLabel("Search"));
-      searchPanel.add(txtSearch);
-      searchPanel.add(btnSearch);
-      txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
-
-      final javax.swing.JPanel replacePanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
       final javax.swing.JTextField txtReplace = new javax.swing.JTextField(30);
       final javax.swing.JButton btnReplace = new javax.swing.JButton(getReplaceAction(txtSearch, txtReplace));
-      replacePanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
-      replacePanel.add(new javax.swing.JLabel("Replace with"));
-      replacePanel.add(txtReplace);
-      replacePanel.add(btnReplace);
-      txtReplace.addMouseListener(getSearchFieldMouseListener(txtReplace));
-
-      final javax.swing.JPanel north = new javax.swing.JPanel(new java.awt.GridLayout(2, 1));
-      north.add(searchPanel);
-      north.add(replacePanel);
-      add(north, java.awt.BorderLayout.NORTH);
 
       results = new javax.swing.JTable(resultsModel);
       results.setIntercellSpacing(new java.awt.Dimension(0, 5));
@@ -45,7 +26,19 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       final javax.swing.JScrollPane jScrollPane = new javax.swing.JScrollPane(results);
       jScrollPane.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
-      add(jScrollPane, java.awt.BorderLayout.CENTER);
+
+      final nextgen.swing.forms.SearchForm searchForm = new nextgen.swing.forms.SearchForm();
+      searchForm.setLblsearch(newLabel("Search"));
+      searchForm.setTxtsearch(txtSearch);
+      searchForm.setBtnsearch(btnSearch);
+      searchForm.setLblreplace(newLabel("Replace with"));
+      searchForm.setTxtreplace(txtReplace);
+      searchForm.setBtnreplace(btnReplace);
+      searchForm.setSpresult(jScrollPane);
+      add(searchForm, java.awt.BorderLayout.CENTER);
+
+      txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
+      txtReplace.addMouseListener(getSearchFieldMouseListener(txtReplace));
    }
 
    protected abstract java.util.stream.Stream<nextgen.model.STModel> getSTModels();

@@ -5,6 +5,7 @@ public class JavaJGoodiesST {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
+	.append(FormPanel.st + "\n")
 	.append(Grammar.st + "\n")
 	.append(BoundedSize.st + "\n")
 	.append(ColSpan.st + "\n")
@@ -54,6 +55,10 @@ public class JavaJGoodiesST {
 	public static void setSTGroup(final String stgFile) {
 		stGroup = decorate(new org.stringtemplate.v4.STGroupFile(stgFile, '~', '~'));
 	}
+
+	public static FormPanel newFormPanel() {
+		return new FormPanel(stGroup);
+	}  
 
 	public static Grammar newGrammar() {
 		return new Grammar(stGroup);

@@ -132,6 +132,14 @@ public class STModelDB extends STModelNeoFactory {
             stParameterKey.setArgumentType("Object");
          });
 
+         findAllSTModel().forEach(stModel -> {
+            if (stModel.getStTemplate() == null) {
+               log.error(stModel.toString());
+               stModel.delete();
+            }
+         });
+
+
          deleteUnnusedNodes();
          deleteUnnusedFiles();
       });

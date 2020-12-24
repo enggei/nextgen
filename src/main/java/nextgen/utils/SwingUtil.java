@@ -40,7 +40,7 @@ public class SwingUtil {
    }
 
    public static JTextField newTextField() {
-      return new JTextField();
+      return nextgen.swing.ComponentFactory.newJTextField();
    }
 
    public static void selectFromClipboard(Component owner, Consumer<Object> consumer) {
@@ -116,15 +116,15 @@ public class SwingUtil {
    }
 
    public static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize, boolean modal) {
-      final JPanel panel = new JPanel(new BorderLayout());
-      panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
+      final JPanel panel = nextgen.swing.ComponentFactory.newJPanel(new BorderLayout());
+      panel.add(nextgen.swing.ComponentFactory.newJLabel(title + " : "), BorderLayout.NORTH);
 
-      final JTextArea txtEditor = new JTextArea(text);
+      final JTextArea txtEditor = nextgen.swing.ComponentFactory.newJTextArea(text);
       txtEditor.setBackground(UIManager.getColor("Panel.background"));
       txtEditor.setTabSize(3);
       txtEditor.setCaretPosition(0);
 
-      final JScrollPane content = new JScrollPane(txtEditor);
+      final JScrollPane content = nextgen.swing.ComponentFactory.newJScrollPane(txtEditor);
       content.setBackground(Color.getColor("Panel.background"));
       if (defaultSize != null) {
          content.setMaximumSize(defaultSize);
@@ -141,9 +141,9 @@ public class SwingUtil {
    }
 
    public static void showTextInput(String title, JTextArea textArea, Component component, ConfirmAction onSave) {
-      final JPanel panel = new JPanel(new BorderLayout(5, 5));
-      panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
-      final JScrollPane content = new JScrollPane(textArea);
+      final JPanel panel = nextgen.swing.ComponentFactory.newJPanel(new BorderLayout(5, 5));
+      panel.add(nextgen.swing.ComponentFactory.newJLabel(title + " : "), BorderLayout.NORTH);
+      final JScrollPane content = nextgen.swing.ComponentFactory.newJScrollPane(textArea);
       content.setMaximumSize(new Dimension(800, 600));
       content.setPreferredSize(new Dimension(800, 600));
       content.setMinimumSize(new Dimension(800, 600));
@@ -158,9 +158,9 @@ public class SwingUtil {
       final String stacktrace = printStackTrace(throwable);
 
       if (component != null) {
-         final JPanel panel = new JPanel(new BorderLayout());
-         panel.add(new JLabel(message + " : "), BorderLayout.NORTH);
-         final JScrollPane content = new JScrollPane(new JTextArea(stacktrace));
+         final JPanel panel = nextgen.swing.ComponentFactory.newJPanel(new BorderLayout());
+         panel.add(nextgen.swing.ComponentFactory.newJLabel(message + " : "), BorderLayout.NORTH);
+         final JScrollPane content = nextgen.swing.ComponentFactory.newJScrollPane(nextgen.swing.ComponentFactory.newJTextArea(stacktrace));
          content.setMaximumSize(new Dimension(800, 600));
          content.setPreferredSize(new Dimension(800, 600));
          content.setMinimumSize(new Dimension(800, 600));
@@ -205,11 +205,11 @@ public class SwingUtil {
       final Component component = content instanceof FormPanel ? ((FormPanel) content).build() : (content instanceof DebugFormPanel ? ((DebugFormPanel) content)
             .build() : content);
       dialog.add(component, BorderLayout.CENTER);
-      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPanel = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
 
       if (onSave != null) {
          JButton btnSave;
-         commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+         commandPanel.add(btnSave = nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getConfirmTitle()) {
             @Override
             public void actionPerformed(ActionEvent e) {
                try {
@@ -223,7 +223,7 @@ public class SwingUtil {
          dialog.getRootPane().setDefaultButton(btnSave);
       }
 
-      commandPanel.add(new JButton(new AbstractAction(onSave == null ? "Close" : onSave.getCancelTitle()) {
+      commandPanel.add(nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave == null ? "Close" : onSave.getCancelTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(dialog::dispose);
@@ -267,7 +267,7 @@ public class SwingUtil {
       final JComboBox<T> content = newComboBox(set, renderer, defaultValue);
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
       dialog.add(content, BorderLayout.CENTER);
-      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPanel = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
 
       final ConfirmAction onSave = new ConfirmAction() {
          @Override
@@ -277,7 +277,7 @@ public class SwingUtil {
       };
 
       JButton btnSave;
-      commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+      commandPanel.add(btnSave = nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getConfirmTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             try {
@@ -290,7 +290,7 @@ public class SwingUtil {
       }));
       dialog.getRootPane().setDefaultButton(btnSave);
 
-      commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+      commandPanel.add(nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getCancelTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(dialog::dispose);
@@ -305,7 +305,7 @@ public class SwingUtil {
       final JComboBox<T> content = newComboBox(set, defaultValue);
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
       dialog.add(content, BorderLayout.CENTER);
-      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPanel = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
 
       final ConfirmAction onSave = new ConfirmAction() {
          @Override
@@ -315,7 +315,7 @@ public class SwingUtil {
       };
 
       JButton btnSave;
-      commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+      commandPanel.add(btnSave = nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getConfirmTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             try {
@@ -328,7 +328,7 @@ public class SwingUtil {
       }));
       dialog.getRootPane().setDefaultButton(btnSave);
 
-      commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+      commandPanel.add(nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getCancelTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(dialog::dispose);
@@ -349,14 +349,14 @@ public class SwingUtil {
       final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();
       rSyntaxTextArea.setText(startValue == null ? "" : startValue);
 
-      final JPanel content = new JPanel(new BorderLayout());
+      final JPanel content = nextgen.swing.ComponentFactory.newJPanel(new BorderLayout());
       content.add(new org.fife.ui.rtextarea.RTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
       content.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
       content.setPreferredSize(dimension);
 
       final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), message, true);
       dialog.add(content, BorderLayout.CENTER);
-      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPanel = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
 
       final ConfirmAction onSave = new ConfirmAction() {
          @Override
@@ -384,7 +384,7 @@ public class SwingUtil {
          }
       });
       JButton btnSave;
-      commandPanel.add(btnSave = new JButton(new AbstractAction(onSave.getConfirmTitle()) {
+      commandPanel.add(btnSave = nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getConfirmTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             try {
@@ -397,7 +397,7 @@ public class SwingUtil {
       }));
       dialog.getRootPane().setDefaultButton(btnSave);
 
-      commandPanel.add(new JButton(new AbstractAction(onSave.getCancelTitle()) {
+      commandPanel.add(nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getCancelTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(dialog::dispose);
@@ -460,7 +460,7 @@ public class SwingUtil {
 
    public static void showDialog(final JDialog dialog, final Component relativeTo, final Component contentPane, final JButton confirmAction, final JButton cancelAction, final JButton defaultAction) {
       dialog.add(contentPane, BorderLayout.CENTER);
-      final JPanel commandPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPane = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
       commandPane.add(confirmAction);
       commandPane.add(cancelAction);
       dialog.add(commandPane, BorderLayout.SOUTH);
@@ -657,11 +657,11 @@ public class SwingUtil {
       }
 
       public void addLabel(String text, int column, int row, int colSpan, int rowSpan) {
-         this.add(new JLabel(text), column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
+         this.add(nextgen.swing.ComponentFactory.newJLabel(text), column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
       }
 
       public void addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
-         final JLabel label = new JLabel(text);
+         final JLabel label = nextgen.swing.ComponentFactory.newJLabel(text);
          label.setFont(label.getFont().deriveFont(Font.BOLD));
          this.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);
       }
@@ -747,7 +747,7 @@ public class SwingUtil {
       }
 
       public JLabel addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
-         final JLabel label = new JLabel(text);
+         final JLabel label = nextgen.swing.ComponentFactory.newJLabel(text);
          this.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);
          return label;
       }
@@ -929,9 +929,9 @@ public class SwingUtil {
 
       dialog.getRootPane().setDefaultButton(btnSave);
 
-      final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      final JPanel commandPanel = nextgen.swing.ComponentFactory.newJPanel(new FlowLayout(FlowLayout.RIGHT));
       commandPanel.add(btnSave);
-      commandPanel.add(new JButton(new AbstractAction("Cancel") {
+      commandPanel.add(nextgen.swing.ComponentFactory.newJButton(new AbstractAction("Cancel") {
          @Override
          public void actionPerformed(ActionEvent e) {
             SwingUtilities.invokeLater(dialog::dispose);

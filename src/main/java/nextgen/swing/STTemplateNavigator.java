@@ -30,7 +30,7 @@ public class STTemplateNavigator extends JPanel {
 		tree.addMouseListener(new STTemplateNavigator.STTemplateNavigatorMouseListener());
 
 		setPreferredSize(new Dimension(600, 500));
-		add(new JScrollPane(tree), BorderLayout.CENTER);
+		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
@@ -849,7 +849,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STGroupFileTreeNode(nextgen.model.STGroupFile model) {
-			super(model, null);
+			super(model, appModel().loadIcon("sq-white"));
 
 
 			setLabel(appModel().render(getModel().getPath()));

@@ -409,7 +409,7 @@ public class STWorkspace extends JTabbedPane {
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			setOpaque(false);
 
-			this.label = new JLabel(title);
+			this.label = nextgen.swing.ComponentFactory.newJLabel(title);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 

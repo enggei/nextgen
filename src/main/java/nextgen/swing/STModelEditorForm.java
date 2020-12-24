@@ -13,7 +13,7 @@ public class STModelEditorForm extends AbstractEditor {
 
    public STModelEditorForm() {
 
-      final JTable results = new JTable(resultsModel);
+      final JTable results = nextgen.swing.ComponentFactory.newJTable(resultsModel);
       results.setIntercellSpacing(new Dimension(0, 5));
       results.setAutoCreateRowSorter(true);
       results.setShowGrid(false);
@@ -22,7 +22,7 @@ public class STModelEditorForm extends AbstractEditor {
       results.getColumnModel().getColumn(1).setCellRenderer(new STValueElementRenderer());
       results.getColumnModel().getColumn(1).setCellEditor(new STValueElementEditor());
 
-      final JScrollPane jScrollPane = new JScrollPane(results);
+      final JScrollPane jScrollPane = nextgen.swing.ComponentFactory.newJScrollPane(results);
       jScrollPane.setBackground(UIManager.getColor("Panel.background"));
       jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
       add(jScrollPane, BorderLayout.CENTER);

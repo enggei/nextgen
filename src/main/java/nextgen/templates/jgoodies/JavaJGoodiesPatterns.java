@@ -6,7 +6,15 @@ public class JavaJGoodiesPatterns extends JavaJGoodiesST {
       final nextgen.templates.jgoodies.ColumnSpec columnSpec = newColumnSpec();
       columnSpec.setColumnAlignment(fill);
       columnSpec.setSize(size == null ? newConstantSize(defaultSize()) : newConstantSize(size));
-      columnSpec.setResizeBehavior(grow==null ? null : newResizeBehavior().setGROW(newGrow().setDouble(grow)));
+      columnSpec.setResizeBehavior(grow == null ? null : newResizeBehavior().setGROW(grow));
+      return columnSpec;
+   }
+
+   public static nextgen.templates.jgoodies.ColumnSpec newColumnSpec(Object fill, Object size, Object grow) {
+      final nextgen.templates.jgoodies.ColumnSpec columnSpec = newColumnSpec();
+      columnSpec.setColumnAlignment(fill == null ? null : columnAlignment.valueOf(fill.toString()));
+      columnSpec.setSize(size == null ? newConstantSize(defaultSize()) : newConstantSize(size.toString().trim()));
+      columnSpec.setResizeBehavior(grow == null ? null : newResizeBehavior().setGROW(grow));
       return columnSpec;
    }
 
@@ -14,7 +22,15 @@ public class JavaJGoodiesPatterns extends JavaJGoodiesST {
       final nextgen.templates.jgoodies.RowSpec rowSpec = newRowSpec();
       rowSpec.setRowAlignment(fill);
       rowSpec.setSize(size == null ? newConstantSize(defaultSize()) : newConstantSize(size));
-      rowSpec.setResizeBehavior(grow==null ? null : newResizeBehavior().setGROW(newGrow().setDouble(grow)));
+      rowSpec.setResizeBehavior(grow == null ? null : newResizeBehavior().setGROW(grow));
+      return rowSpec;
+   }
+
+   public static nextgen.templates.jgoodies.RowSpec newRowSpec(Object fill, Object size, Object grow) {
+      final nextgen.templates.jgoodies.RowSpec rowSpec = newRowSpec();
+      rowSpec.setRowAlignment(fill == null ? null : rowAlignment.valueOf(fill.toString()));
+      rowSpec.setSize(size == null ? newConstantSize(defaultSize()) : newConstantSize(size.toString().trim()));
+      rowSpec.setResizeBehavior(grow == null ? null : newResizeBehavior().setGROW(grow));
       return rowSpec;
    }
 

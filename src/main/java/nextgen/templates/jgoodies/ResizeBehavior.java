@@ -5,7 +5,7 @@ public class ResizeBehavior {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Grow _GROW;
+	private Object _GROW;
 
 	ResizeBehavior(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -22,16 +22,16 @@ public class ResizeBehavior {
 		return st.render().trim();
 	}
 
-	public ResizeBehavior setGROW(Grow value) {
+	public ResizeBehavior setGROW(Object value) {
 		this._GROW = value;
 		return this;
 	}
 
-	public Grow getGROW() {
+	public Object getGROW() {
 		return this._GROW;
 	}
 
-	public Grow getGROW(Grow defaultValue) {
+	public Object getGROW(Object defaultValue) {
 		return this._GROW == null ? defaultValue : this._GROW;
 	}
 
