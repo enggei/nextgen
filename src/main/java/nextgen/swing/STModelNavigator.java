@@ -30,7 +30,7 @@ public class STModelNavigator extends JPanel {
 		tree.addMouseListener(new STModelNavigator.STModelNavigatorMouseListener());
 
 		setPreferredSize(new Dimension(800, 600));
-		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);
+		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
@@ -38,6 +38,7 @@ public class STModelNavigator extends JPanel {
 	private final class STModelNavigatorCellRenderer extends DefaultTreeCellRenderer {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+
 			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;
 			final ImageIcon icon = node.getIcon();
 			setIcon(icon);
@@ -45,7 +46,7 @@ public class STModelNavigator extends JPanel {
 			setClosedIcon(icon);
 			setLeafIcon(icon);
 			setToolTipText(node.getTooltip());
-			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);
+			return ComponentFactory.decorate(super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus));
 		}
 	}
 
@@ -1795,7 +1796,7 @@ public class STModelNavigator extends JPanel {
 				}
 			}
 
-			for (nextgen.swing.STModelNavigator.BaseTreeNode<?> childAt : children) {
+			for (BaseTreeNode<?> childAt : children) {
 				final Optional<T> node = find(childAt, predicate);
 				if (node.isPresent()) return node;
 			}

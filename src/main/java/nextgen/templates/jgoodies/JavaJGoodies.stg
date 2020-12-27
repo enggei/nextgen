@@ -1,14 +1,18 @@
 delimiters "~","~"
 
-FormPanel(statements,mainStatements,components,name,extending,rowSpec,package,colSpec) ::= <<package ~package~;
+FormPanel(components,rowSpec,statements,rows,colSpec,package,name,extending,columns) ::= <<package ~package~;
+
+import javax.swing.*;
 
 public class ~name~~if(extending)~ extends ~extending~~endif~ {
-
+	
+	// columns 	~columns~	"~colSpec~"
+	// rows 		~rows~ 	"~rowSpec~"
+	
 	~components:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	public ~name~() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("~colSpec~", "~rowSpec~"));
-		setBackground(javax.swing.UIManager.getColor("Panel.background"));
 		~statements:{it|~it~};separator="\n"~
 ~components:{it|~if(it.init)~
 		set~it.name;format="capitalize"~(~it.init~);
@@ -17,34 +21,10 @@ public class ~name~~if(extending)~ extends ~extending~~endif~ {
 
 ~components:{it|
 	public ~name~ set~it.name;format="capitalize"~(~it.type~ component) {
-		this.~it.name~ = component;
-		add(~it.name~, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, "~it.hAlign~, ~it.vAlign~"));
+		add(this.~it.name~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, "~it.hAlign~, ~it.vAlign~"));
 		return this;
 	~eom()~
 };separator="\n"~
-
-~components:{it|
-	public ~name~ decorate~it.name;format="capitalize"~(java.util.function.Consumer<~it.type~> consumer) {
-		consumer.accept(this.~it.name~);
-		return this;
-	~eom()~
-};separator="\n"~
-
-~components:{it|
-	public ~it.type~ get~it.name;format="capitalize"~() {
-		return ~it.name~;
-	~eom()~
-};separator="\n"~
-
-	public static void main(String[] args) throws Throwable {
-		final java.awt.Font font = new java.awt.Font("InputMono", java.awt.Font.PLAIN, 24);
-		javax.swing.UIManager.put("TextField.font", font);
-		javax.swing.UIManager.put("TextArea.font", font);
-		
-		~mainStatements:{it|~it~};separator="\n"~
-
-		nextgen.utils.SwingUtil.showPanel(new ~name~());
-	}
 }  >>
 
 grammar() ::= <<columnSpecs ::= columnSpec+ 

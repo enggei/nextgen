@@ -20,7 +20,7 @@ public class AddValuesToProject extends nextgen.actions.TransactionAction {
          fields.add(newTextField(30));
       }
 
-      final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fields.size(), 1));
+      final javax.swing.JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(fields.size(), 1));
       inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
       for (javax.swing.JTextField field : fields) {
          inputPanel.add(field);

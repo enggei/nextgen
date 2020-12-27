@@ -30,7 +30,7 @@ public class STTemplateNavigator extends JPanel {
 		tree.addMouseListener(new STTemplateNavigator.STTemplateNavigatorMouseListener());
 
 		setPreferredSize(new Dimension(600, 500));
-		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);
+		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
@@ -38,6 +38,7 @@ public class STTemplateNavigator extends JPanel {
 	private final class STTemplateNavigatorCellRenderer extends DefaultTreeCellRenderer {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+
 			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;
 			final ImageIcon icon = node.getIcon();
 			setIcon(icon);
@@ -45,7 +46,7 @@ public class STTemplateNavigator extends JPanel {
 			setClosedIcon(icon);
 			setLeafIcon(icon);
 			setToolTipText(node.getTooltip());
-			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);
+			return ComponentFactory.decorate(super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus));
 		}
 	}
 
@@ -997,15 +998,22 @@ public class STTemplateNavigator extends JPanel {
 
 		protected <T extends BaseTreeNode<?>> Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>> predicate) {
 			final int childCount = parent.getChildCount();
+
+			final List<BaseTreeNode<?>> children = new java.util.ArrayList<>();
 			for (int i = 0; i < childCount; i++) {
 				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
 				if (predicate.test(childAt))
 					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
 				else {
-					final Optional<T> node = find(childAt, predicate);
-					if (node.isPresent()) return node;
+					children.add(childAt);
 				}
 			}
+
+			for (BaseTreeNode<?> childAt : children) {
+				final Optional<T> node = find(childAt, predicate);
+				if (node.isPresent()) return node;
+			}
+
 			return Optional.empty();
 		}
 

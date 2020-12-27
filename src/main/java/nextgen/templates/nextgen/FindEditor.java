@@ -5,10 +5,10 @@ public class FindEditor {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _modelType;
-	private Object _titleExpression;
 	private Object _componentType;
 	private Object _componentName;
+	private Object _titleExpression;
+	private Object _modelType;
 
 	FindEditor(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,56 +21,12 @@ public class FindEditor {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("findEditor");
-		st.add("modelType", _modelType);
-		st.add("titleExpression", _titleExpression);
 		st.add("componentType", _componentType);
 		st.add("componentName", _componentName);
+		st.add("titleExpression", _titleExpression);
+		st.add("modelType", _modelType);
 		return st.render().trim();
 	}
-
-	public FindEditor setModelType(Object value) {
-		this._modelType = value;
-		return this;
-	}
-
-	public Object getModelType() {
-		return this._modelType;
-	}
-
-	public Object getModelType(Object defaultValue) {
-		return this._modelType == null ? defaultValue : this._modelType;
-	}
-
-	public boolean hasModelType() {
-		return this._modelType != null;
-	}
-
-	public FindEditor removeModelType() {
-		this._modelType = null;
-		return this;
-	} 
-
-	public FindEditor setTitleExpression(Object value) {
-		this._titleExpression = value;
-		return this;
-	}
-
-	public Object getTitleExpression() {
-		return this._titleExpression;
-	}
-
-	public Object getTitleExpression(Object defaultValue) {
-		return this._titleExpression == null ? defaultValue : this._titleExpression;
-	}
-
-	public boolean hasTitleExpression() {
-		return this._titleExpression != null;
-	}
-
-	public FindEditor removeTitleExpression() {
-		this._titleExpression = null;
-		return this;
-	} 
 
 	public FindEditor setComponentType(Object value) {
 		this._componentType = value;
@@ -116,6 +72,50 @@ public class FindEditor {
 		return this;
 	} 
 
+	public FindEditor setTitleExpression(Object value) {
+		this._titleExpression = value;
+		return this;
+	}
+
+	public Object getTitleExpression() {
+		return this._titleExpression;
+	}
+
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	}
+
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
+	}
+
+	public FindEditor removeTitleExpression() {
+		this._titleExpression = null;
+		return this;
+	} 
+
+	public FindEditor setModelType(Object value) {
+		this._modelType = value;
+		return this;
+	}
+
+	public Object getModelType() {
+		return this._modelType;
+	}
+
+	public Object getModelType(Object defaultValue) {
+		return this._modelType == null ? defaultValue : this._modelType;
+	}
+
+	public boolean hasModelType() {
+		return this._modelType != null;
+	}
+
+	public FindEditor removeModelType() {
+		this._modelType = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -131,7 +131,7 @@ public class FindEditor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "findEditor(modelType,titleExpression,componentType,componentName) ::= <<public ~componentType~ get~componentName;format=\"capitalize\"~(~modelType~ model) {\n" + 
+	static final String st = "findEditor(componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format=\"capitalize\"~(~modelType~ model) {\n" + 
 				"	for (int i = 0; i < getTabCount(); i++) {\n" + 
 				"		final Component tabComponentAt = getComponentAt(i);\n" + 
 				"		if (tabComponentAt instanceof ~componentType~ && (((~componentType~) tabComponentAt).getModel().equals(model))) {\n" + 

@@ -26,7 +26,7 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
          switch (stParameter.getType()) {
 
             case SINGLE:
-               final javax.swing.JRadioButton radioButton = new javax.swing.JRadioButton("Set as Label");
+               final javax.swing.JRadioButton radioButton = nextgen.swing.ComponentFactory.newJRadioButton("Set as Label");
                labelParameterMap.put(stParameter.getName(), radioButton);
                labelParameterGroup.add(radioButton);
                radioButton.setSelected(stTemplate.getLabelParameter() != null && stTemplate.getLabelParameter().equals(stParameter));
@@ -44,7 +44,7 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
          }
       });
 
-      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(txtParameterMap.size(), 3));
+      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtParameterMap.size(), 3));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
       txtParameterMap.forEach((key, value) -> {
          contentPanel.add(newLabel(key));

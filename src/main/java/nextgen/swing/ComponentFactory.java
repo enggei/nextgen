@@ -1,13 +1,23 @@
 package nextgen.swing;
 
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
+
+import javax.swing.*;
+import java.awt.*;
+
 public class ComponentFactory {
 
-   // UIs
-   private static final javax.swing.plaf.ButtonUI button = new javax.swing.JButton().getUI();
-   private static final javax.swing.plaf.ButtonUI toggleButton = new javax.swing.JToggleButton().getUI();
-   private static final javax.swing.plaf.PanelUI panel = new javax.swing.JPanel().getUI();
+   private static final DarculaTheme theme = new DarculaTheme();
+
+   public static final Font font = new Font("Dialog", Font.PLAIN, 12);
+
+   public static void applyLaf() {
+      LafManager.install(theme);
+   }
 
    // components
+
    public static javax.swing.JLabel newJLabel() {
       return decorate(new javax.swing.JLabel());
    }
@@ -28,8 +38,8 @@ public class ComponentFactory {
       return decorate(new javax.swing.JTable());
    }
 
-   public static javax.swing.JList<?> newJList() {
-      return decorate(new javax.swing.JList<>());
+   public static <T> javax.swing.JList<T> newJList() {
+      return decorate(new JList<>());
    }
 
    public static javax.swing.JToggleButton newJToggleButton() {
@@ -52,8 +62,12 @@ public class ComponentFactory {
       return decorate(new javax.swing.JPanel());
    }
 
-   public static javax.swing.JScrollPane newJScrollPane(java.awt.Component jComponent) {
-      return decorate(new javax.swing.JScrollPane(jComponent));
+   public static JPopupMenu newJPopupMenu() {
+      return decorate(new JPopupMenu());
+   }
+
+   public static javax.swing.JMenuItem newJMenuItem() {
+      return decorate(new javax.swing.JMenuItem());
    }
 
    public static javax.swing.JScrollPane newJScrollPane() {
@@ -63,52 +77,77 @@ public class ComponentFactory {
    // decorators
 
    public static javax.swing.JLabel decorate(javax.swing.JLabel component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JTextField decorate(javax.swing.JTextField component) {
-      return component;
-   }
-
-   public static javax.swing.JButton decorate(javax.swing.JButton component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JTextArea decorate(javax.swing.JTextArea component) {
+      baseDecorate(component);
       return component;
    }
 
-   public static javax.swing.JTable decorate(javax.swing.JTable component) {
-      return component;
-   }
-
-   public static javax.swing.JList<?> decorate(javax.swing.JList<?> component) {
+   public static javax.swing.JButton decorate(javax.swing.JButton component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JToggleButton decorate(javax.swing.JToggleButton component) {
-      component.setUI(toggleButton);
+      baseDecorate(component);
+      return component;
+   }
+
+   public static javax.swing.JTable decorate(javax.swing.JTable component) {
+      baseDecorate(component);
+      return component;
+   }
+
+   public static <T> javax.swing.JList<T> decorate(javax.swing.JList<T> component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JTabbedPane decorate(javax.swing.JTabbedPane component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JCheckBox decorate(javax.swing.JCheckBox component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JRadioButton decorate(javax.swing.JRadioButton component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JPanel decorate(javax.swing.JPanel component) {
+      baseDecorate(component);
       return component;
    }
 
    public static javax.swing.JScrollPane decorate(javax.swing.JScrollPane component) {
+      baseDecorate(component);
       return component;
+   }
+
+   public static javax.swing.JMenuItem decorate(javax.swing.JMenuItem component) {
+      baseDecorate(component);
+      return component;
+   }
+
+   public static javax.swing.JPopupMenu decorate(javax.swing.JPopupMenu component) {
+      baseDecorate(component);
+      return component;
+   }
+
+   private static void baseDecorate(JComponent component) {
+      component.setFont(font);
    }
 
    // convenience methods
@@ -187,5 +226,60 @@ public class ComponentFactory {
       return component;
    }
 
+   public static LayoutManager newBoxLineLayout(JComponent component) {
+      final BoxLayout layout = new BoxLayout(component, BoxLayout.LINE_AXIS);
+      component.setLayout(layout);
+      return layout;
+   }
 
+   public static LayoutManager newBoxPageLayout(JComponent component) {
+      final BoxLayout layout = new BoxLayout(component, BoxLayout.PAGE_AXIS);
+      component.setLayout(layout);
+      return layout;
+   }
+
+   public static JRadioButton newJRadioButton(String text, boolean selected) {
+      final JRadioButton component = newJRadioButton();
+      component.setText(text);
+      component.setSelected(selected);
+      return component;
+   }
+
+   public static JPanel newFlowPanel() {
+      final JPanel component = newJPanel();
+      component.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+      return component;
+   }
+
+   public static JPanel newBorderPanel() {
+      final JPanel component = newJPanel();
+      component.setLayout(new java.awt.BorderLayout());
+      return component;
+   }
+
+   public static javax.swing.JScrollPane newJScrollPane(java.awt.Component jComponent) {
+      return decorate(new javax.swing.JScrollPane(jComponent));
+   }
+
+   public static JScrollPane newJScrollPane(JComponent innerComponent, int width, int height) {
+      final JScrollPane component = newJScrollPane(innerComponent);
+      component.setPreferredSize(new Dimension(width, height));
+      component.setMaximumSize(new Dimension(width, height));
+      component.setMinimumSize(new Dimension(width, height));
+      component.setSize(new Dimension(width, height));
+      component.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+      component.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+      return component;
+   }
+
+   public static JMenuItem newJMenuItem(Action action) {
+      final JMenuItem component = newJMenuItem();
+      component.setAction(action);
+      return component;
+   }
+
+   public static Component decorate(Component component) {
+      component.setFont(font);
+      return component;
+   }
 }

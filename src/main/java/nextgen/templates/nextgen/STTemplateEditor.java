@@ -303,36 +303,36 @@ public class STTemplateEditor {
 				"		public STEditorCommandPanel() {\n" + 
 				"			super(new FlowLayout(FlowLayout.LEFT));\n" + 
 				"\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Insert Single\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Insert Single\", actionEvent -> {\n" + 
 				"				insertSingle();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
 				"\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Insert Single Capitalized\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Insert Single Capitalized\", actionEvent -> {\n" + 
 				"				insertCapitalized();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Insert List\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Insert List\", actionEvent -> {\n" + 
 				"				insertList();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Insert If\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Insert If\", actionEvent -> {\n" + 
 				"				insertIf();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Insert If-else\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Insert If-else\", actionEvent -> {\n" + 
 				"				insertIfElse();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Replace text and insert Single\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Replace text and insert Single\", actionEvent -> {\n" + 
 				"				replaceAndInsertSingle();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Save\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Save\", actionEvent -> {\n" + 
 				"				commit();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJButton(newAction(\"Generate\", actionEvent -> {\n" +
+				"			add(new JButton(newAction(\"Generate\", actionEvent -> {\n" + 
 				"				generate();\n" + 
 				"				textArea.requestFocusInWindow();\n" + 
 				"			})));\n" + 
@@ -341,7 +341,7 @@ public class STTemplateEditor {
 				"\n" + 
 				"	private class STEditorInfoPanel extends JPanel {\n" + 
 				"\n" + 
-				"		private final JTextArea textArea = nextgen.swing.ComponentFactory.newJTextArea();\n" +
+				"		private final JTextArea textArea = new JTextArea();\n" + 
 				"\n" + 
 				"		public STEditorInfoPanel() {\n" + 
 				"			super(new BorderLayout());\n" + 
@@ -349,7 +349,7 @@ public class STTemplateEditor {
 				"			this.textArea.setTabSize(3);\n" + 
 				"			this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));\n" + 
 				"\n" + 
-				"			add(nextgen.swing.ComponentFactory.newJScrollPane(textArea), BorderLayout.CENTER);\n" +
+				"			add(new JScrollPane(textArea), BorderLayout.CENTER);\n" + 
 				"			setPreferredSize(new Dimension(800, 200));\n" + 
 				"		}\n" + 
 				"\n" + 

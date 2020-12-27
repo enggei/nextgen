@@ -3,6 +3,7 @@ package nextgen.utils;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
+import nextgen.swing.ComponentFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -437,8 +438,7 @@ public class SwingUtil {
       }
    }
 
-   public static void printSwingDefaults(PrintStream out) {
-
+   public static java.util.stream.Stream<java.util.Map.Entry<Object, Object>> getUIDefaults() {
       final UIDefaults uid = UIManager.getDefaults();
       final Enumeration<Object> uidKeys = uid.keys();
       final String cr = System.getProperty("line.separator");
@@ -449,9 +449,10 @@ public class SwingUtil {
          uidKey = uidKeys.nextElement();
          sortedMap.put(uidKey.toString(), uid.get(uidKey));
       }
-
-      for (Object key : sortedMap.keySet()) out.print(key + "=" + sortedMap.get(key) + cr);
-
+      return sortedMap.entrySet().stream();
+   }
+   public static void printSwingDefaults(PrintStream out) {
+      getUIDefaults().forEach(entry -> out.println(entry.getKey() + "=" + entry.getValue()));
 //      UIManager.put("OptionPane.cancelButtonText", "Cancel");
 //      UIManager.put("OptionPane.noButtonText", "No");
 //      UIManager.put("OptionPane.okButtonText", "Confirm");
@@ -554,7 +555,7 @@ public class SwingUtil {
    }
 
    public static javax.swing.JTextField newTextField(String text, int columns, String[] options, int startIndex) {
-      final javax.swing.JTextField textField = new javax.swing.JTextField(text, columns);
+      final javax.swing.JTextField textField = nextgen.swing.ComponentFactory.newJTextField(text, columns);
 
       textField.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -825,10 +826,10 @@ public class SwingUtil {
 
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
-      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
-      rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
-      rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
-      rSyntaxTextArea.setFont(UIManager.getFont("TextField.font"));
+//      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
+//      rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
+//      rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
+      rSyntaxTextArea.setFont(ComponentFactory.font);
       rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
          @Override
@@ -891,7 +892,7 @@ public class SwingUtil {
    }
 
    public static javax.swing.JTextField newTextField(String content, int columns) {
-      javax.swing.JTextField textField = new javax.swing.JTextField(content, columns);
+      javax.swing.JTextField textField = nextgen.swing.ComponentFactory.newJTextField(content, columns);
       textField.addMouseListener(new java.awt.event.MouseAdapter() {
          @Override
          public void mouseClicked(java.awt.event.MouseEvent e) {

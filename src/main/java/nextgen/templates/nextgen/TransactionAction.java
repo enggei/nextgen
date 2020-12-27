@@ -5,15 +5,15 @@ public class TransactionAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
-	private Object _name;
-	private Object _title;
 	private Object _titleExpression;
-	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private String _name;
+	private Object _title;
+	private Object _packageName;
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _staticFields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	TransactionAction(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -26,50 +26,50 @@ public class TransactionAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TransactionAction");
-		st.add("packageName", _packageName);
+		st.add("titleExpression", _titleExpression);
 		st.add("name", _name);
 		st.add("title", _title);
-		st.add("titleExpression", _titleExpression);
-		for (Object o : _imports) st.add("imports", o);
-		for (Object o : _statements) st.add("statements", o);
+		st.add("packageName", _packageName);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
+		for (Object o : _statements) st.add("statements", o);
+		for (Object o : _imports) st.add("imports", o);
 		for (java.util.Map<String, Object> map : _staticFields) st.addAggr("staticFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
-	public TransactionAction setPackageName(Object value) {
-		this._packageName = value;
+	public TransactionAction setTitleExpression(Object value) {
+		this._titleExpression = value;
 		return this;
 	}
 
-	public Object getPackageName() {
-		return this._packageName;
+	public Object getTitleExpression() {
+		return this._titleExpression;
 	}
 
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
+	public Object getTitleExpression(Object defaultValue) {
+		return this._titleExpression == null ? defaultValue : this._titleExpression;
 	}
 
-	public boolean hasPackageName() {
-		return this._packageName != null;
+	public boolean hasTitleExpression() {
+		return this._titleExpression != null;
 	}
 
-	public TransactionAction removePackageName() {
-		this._packageName = null;
+	public TransactionAction removeTitleExpression() {
+		this._titleExpression = null;
 		return this;
 	} 
 
-	public TransactionAction setName(Object value) {
+	public TransactionAction setName(String value) {
 		this._name = value;
 		return this;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return this._name;
 	}
 
-	public Object getName(Object defaultValue) {
+	public String getName(String defaultValue) {
 		return this._name == null ? defaultValue : this._name;
 	}
 
@@ -104,84 +104,26 @@ public class TransactionAction {
 		return this;
 	} 
 
-	public TransactionAction setTitleExpression(Object value) {
-		this._titleExpression = value;
+	public TransactionAction setPackageName(Object value) {
+		this._packageName = value;
 		return this;
 	}
 
-	public Object getTitleExpression() {
-		return this._titleExpression;
+	public Object getPackageName() {
+		return this._packageName;
 	}
 
-	public Object getTitleExpression(Object defaultValue) {
-		return this._titleExpression == null ? defaultValue : this._titleExpression;
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
 	}
 
-	public boolean hasTitleExpression() {
-		return this._titleExpression != null;
+	public boolean hasPackageName() {
+		return this._packageName != null;
 	}
 
-	public TransactionAction removeTitleExpression() {
-		this._titleExpression = null;
+	public TransactionAction removePackageName() {
+		this._packageName = null;
 		return this;
-	} 
-
-	public TransactionAction addImports(Object value) {
-		this._imports.add(value);
-		return this;
-	}
-
-	public TransactionAction setImports(Object[] value) {
-		this._imports.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TransactionAction setImports(java.util.Collection<Object> values) {
-		this._imports.addAll(values);
-		return this;
-	}
-
-	public TransactionAction removeImports(Object value) {
-		this._imports.remove(value);
-		return this;
-	}
-
-	public TransactionAction removeImports(int index) {
-		this._imports.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getImports() {
-		return this._imports;
-	} 
-
-	public TransactionAction addStatements(Object value) {
-		this._statements.add(value);
-		return this;
-	}
-
-	public TransactionAction setStatements(Object[] value) {
-		this._statements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TransactionAction setStatements(java.util.Collection<Object> values) {
-		this._statements.addAll(values);
-		return this;
-	}
-
-	public TransactionAction removeStatements(Object value) {
-		this._statements.remove(value);
-		return this;
-	}
-
-	public TransactionAction removeStatements(int index) {
-		this._statements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getStatements() {
-		return this._statements;
 	} 
 
 	public TransactionAction addMethods(Object value) {
@@ -213,60 +155,63 @@ public class TransactionAction {
 		return this._methods;
 	} 
 
-	public TransactionAction addFields(Object _name, Object _type) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		map.put("type", _type);
-		this._fields.add(map);
+	public TransactionAction addStatements(Object value) {
+		this._statements.add(value);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
+	public TransactionAction setStatements(Object[] value) {
+		this._statements.addAll(java.util.Arrays.asList(value));
+		return this;
 	}
 
-	public TransactionAction addFields(TransactionAction_Fields value) {
-		return addFields(value._name, value._type);
+	public TransactionAction setStatements(java.util.Collection<Object> values) {
+		this._statements.addAll(values);
+		return this;
 	}
 
-	public java.util.stream.Stream<TransactionAction_Fields> streamFields() {
-		return this._fields.stream().map(TransactionAction_Fields::new);
+	public TransactionAction removeStatements(Object value) {
+		this._statements.remove(value);
+		return this;
 	}
 
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(TransactionAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	public TransactionAction removeStatements(int index) {
+		this._statements.remove(index);
+		return this;
 	}
 
+	public java.util.List<Object> getStatements() {
+		return this._statements;
+	} 
 
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	public TransactionAction addImports(Object value) {
+		this._imports.add(value);
+		return this;
 	}
 
+	public TransactionAction setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
 
-	public static final class TransactionAction_Fields {
+	public TransactionAction setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
 
-		Object _name;
-		Object _type;
+	public TransactionAction removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
 
-		public TransactionAction_Fields(Object _name, Object _type) {
-			this._name = _name;
-			this._type = _type;
-		}
+	public TransactionAction removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
 
-		private TransactionAction_Fields(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-			this._type = (Object) map.get("type");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-	}  
+	public java.util.List<Object> getImports() {
+		return this._imports;
+	} 
 
 	public TransactionAction addStaticFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -336,6 +281,61 @@ public class TransactionAction {
 
 	}  
 
+	public TransactionAction addFields(Object _name, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("type", _type);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public TransactionAction addFields(TransactionAction_Fields value) {
+		return addFields(value._name, value._type);
+	}
+
+	public java.util.stream.Stream<TransactionAction_Fields> streamFields() {
+		return this._fields.stream().map(TransactionAction_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(TransactionAction_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(TransactionAction_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class TransactionAction_Fields {
+
+		Object _name;
+		Object _type;
+
+		public TransactionAction_Fields(Object _name, Object _type) {
+			this._name = _name;
+			this._type = _type;
+		}
+
+		private TransactionAction_Fields(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+	}  
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -349,15 +349,19 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(packageName,fields,imports,name,staticFields,title,titleExpression,statements,methods) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
+	static final String st = "TransactionAction(methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
+				"\n" + 
 				"~if(imports)~\n" + 
 				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~endif~\n" + 
 				"public class ~name~ extends nextgen.actions.TransactionAction {\n" + 
-				"\n" + 
-				"   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
+				"~if(staticFields)~\n" + 
 				"   \n" + 
+				"   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator=\"\\n\"~\n" + 
+				"~endif~\n" + 
+				"\n" + 
+				"\n" + 
 				"   ~fields:{it|private final ~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"~if(title)~\n" + 
 				"\n" + 
@@ -383,6 +387,8 @@ public class TransactionAction {
 				"~endif~\n" + 
 				"   @Override\n" + 
 				"   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {\n" + 
+				"   	log.info(\"~name~\"~fields:{it|  + \" ~it.name~\"}~);\n" + 
+				"   	\n" + 
 				"      ~statements:{it|~it~};separator=\"\\n\"~\n" + 
 				"   }\n" + 
 				"\n" + 

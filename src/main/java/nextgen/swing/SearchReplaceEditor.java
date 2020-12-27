@@ -1,21 +1,21 @@
 package nextgen.swing;
 
+import nextgen.swing.forms.SearchForm;
+
 public abstract class SearchReplaceEditor extends AbstractEditor {
 
    private final javax.swing.JTable results;
 
-   protected final javax.swing.JTextField txtSearch = new javax.swing.JTextField(30);
-   protected final ResultsTableModel resultsModel;
+   protected final javax.swing.JTextField txtSearch = nextgen.swing.ComponentFactory.newJTextField(30);
+   protected final ResultsTableModel resultsModel = new ResultsTableModel();
 
    public SearchReplaceEditor() {
 
-      this.resultsModel = new ResultsTableModel();
+      final javax.swing.JButton btnSearch = nextgen.swing.ComponentFactory.newJButton(getSearchAction(txtSearch));
+      final javax.swing.JTextField txtReplace = nextgen.swing.ComponentFactory.newJTextField(30);
+      final javax.swing.JButton btnReplace = nextgen.swing.ComponentFactory.newJButton(getReplaceAction(txtSearch, txtReplace));
 
-      final javax.swing.JButton btnSearch = new javax.swing.JButton(getSearchAction(txtSearch));
-      final javax.swing.JTextField txtReplace = new javax.swing.JTextField(30);
-      final javax.swing.JButton btnReplace = new javax.swing.JButton(getReplaceAction(txtSearch, txtReplace));
-
-      results = new javax.swing.JTable(resultsModel);
+      results = nextgen.swing.ComponentFactory.newJTable(resultsModel);
       results.setIntercellSpacing(new java.awt.Dimension(0, 5));
       results.setShowGrid(false);
       results.setRowMargin(0);
@@ -23,19 +23,18 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       results.getColumn("Result").setCellRenderer(new STValueElementRenderer());
       results.getColumn("Result").setCellEditor(new STValueElementEditor());
 
-      final javax.swing.JScrollPane jScrollPane = new javax.swing.JScrollPane(results);
+      final javax.swing.JScrollPane jScrollPane = nextgen.swing.ComponentFactory.newJScrollPane(results);
       jScrollPane.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
 
-      final nextgen.swing.forms.SearchForm searchForm = new nextgen.swing.forms.SearchForm();
-      searchForm.setLblsearch(newLabel("Search"));
-      searchForm.setTxtsearch(txtSearch);
-      searchForm.setBtnsearch(btnSearch);
-      searchForm.setLblreplace(newLabel("Replace with"));
-      searchForm.setTxtreplace(txtReplace);
-      searchForm.setBtnreplace(btnReplace);
-      searchForm.setSpresult(jScrollPane);
-      add(searchForm, java.awt.BorderLayout.CENTER);
+      add(new SearchForm()
+            .setLblsearch(newLabel("Search"))
+            .setTxtsearch(txtSearch)
+            .setBtnsearch(btnSearch)
+            .setLblreplace(newLabel("Replace with"))
+            .setTxtreplace(txtReplace)
+            .setBtnreplace(btnReplace)
+            .setScrresult(jScrollPane), java.awt.BorderLayout.CENTER);
 
       txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
       txtReplace.addMouseListener(getSearchFieldMouseListener(txtReplace));
@@ -77,8 +76,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
 
             stModel.getArguments()
-                  .filter(stArgument -> stArgument.getValue() != null)
                   .map(nextgen.model.STArgument::getValue)
+                  .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                   .filter(nextgen.model.STValue::hasValue)
@@ -88,8 +87,8 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
             stModel.getArguments()
                   .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
-                        .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                         .map(nextgen.model.STArgumentKV::getValue)
+                        .filter(java.util.Objects::nonNull)
                         .filter(stValue -> stValue.getType() != null)
                         .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                         .filter(nextgen.model.STValue::hasValue)
@@ -99,16 +98,16 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
             stModel.getArguments()
                   .forEach(stArgument -> stArgument.getKeyValues()
-                        .filter(stArgumentKV -> stArgumentKV.getValue() != null)
                         .map(nextgen.model.STArgumentKV::getValue)
+                        .filter(java.util.Objects::nonNull)
                         .filter(stValue -> stValue.getType() != null)
                         .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                         .filter(stValue -> stValue.getStModel() != null)
                         .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
             stModel.getArguments()
-                  .filter(stArgument -> stArgument.getValue() != null)
                   .map(nextgen.model.STArgument::getValue)
+                  .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
                   .filter(stValue -> stValue.getStModel() != null)

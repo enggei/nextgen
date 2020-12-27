@@ -1,4 +1,4 @@
-package nextgen.swing.forms;
+package nextgen.swing.forms.builder;
 public class FormModel {
 
 	private final java.util.UUID uuid;
@@ -16,6 +16,8 @@ public class FormModel {
 	private Object[] rAlignments = nextgen.templates.jgoodies.rowAlignment.values();
 	private java.util.List<Column> columns = new java.util.ArrayList<>();
 	private java.util.List<Row> rows = new java.util.ArrayList<>();
+	private String name = "";
+	private String packageName = "nextgen.swing.forms";
 	private Object[] vAlignments = nextgen.templates.jgoodies.vAlignment.values();;
 	private String[] componentPrefixes = {"", "lbl", "txt", "btn", "txtArea", "tbl", "lst", "tbtn", "chk", "rd", "p", "scr", "tb", "comp" };
 
@@ -168,6 +170,26 @@ public class FormModel {
 
 	public java.util.List<Row> rows() {
 		return rows;
+	}
+
+
+	public FormModel setName(String value) {
+		this.name = value;
+		return this;
+	}
+
+	public String name() {
+		return name;
+	}
+
+
+	public FormModel setPackageName(String value) {
+		this.packageName = value;
+		return this;
+	}
+
+	public String packageName() {
+		return packageName;
 	}
 
 

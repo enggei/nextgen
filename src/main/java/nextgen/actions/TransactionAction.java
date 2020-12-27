@@ -74,11 +74,11 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    }
 
    protected javax.swing.JLabel newLabel(String name) {
-      return new javax.swing.JLabel(name);
+      return nextgen.swing.ComponentFactory.newJLabel(name);
    }
 
    protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
-      return new javax.swing.JButton(appModel().newTransactionAction(name, onClick));
+      return nextgen.swing.ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
    }
 
    protected void showDialog(javax.swing.JComponent owner, javax.swing.JComponent component, String title, java.util.function.Consumer<javax.swing.JDialog> saveAction) {
@@ -102,10 +102,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    }
 
    protected void showError(javax.swing.JComponent owner, String errors) {
-      final javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.BorderLayout());
-      final javax.swing.JTextArea textArea = new javax.swing.JTextArea(errors);
+      final javax.swing.JPanel panel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.BorderLayout());
+      final javax.swing.JTextArea textArea = nextgen.swing.ComponentFactory.newJTextArea(errors);
       textArea.setEditable(false);
-      final javax.swing.JScrollPane content = new javax.swing.JScrollPane(textArea);
+      final javax.swing.JScrollPane content = nextgen.swing.ComponentFactory.newJScrollPane(textArea);
       final java.awt.Dimension dimension = new java.awt.Dimension(1024, 800);
       content.setMaximumSize(dimension);
       content.setPreferredSize(dimension);

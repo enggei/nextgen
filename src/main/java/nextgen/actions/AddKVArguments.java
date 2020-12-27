@@ -23,10 +23,10 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
             getStParameterKeyJTextFieldMap()
       );
 
-      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(maps.size(), 1));
+      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(maps.size(), 1));
 
       maps.forEach(fieldMap -> {
-         final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(fieldMap.size(), 2));
+         final javax.swing.JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(fieldMap.size(), 2));
          inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
          for (java.util.Map.Entry<nextgen.model.STParameterKey, javax.swing.JTextField> fieldEntry : fieldMap.entrySet()) {
             inputPanel.add(newLabel(fieldEntry.getKey().getName()));

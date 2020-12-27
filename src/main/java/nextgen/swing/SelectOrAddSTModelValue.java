@@ -11,14 +11,14 @@ public class SelectOrAddSTModelValue extends nextgen.swing.BaseEditor<nextgen.mo
 
       this.stTemplate = stTemplate;
 
-      radFromTemplate = new javax.swing.JRadioButton("New " + stTemplate.getName(), true);
+      radFromTemplate = nextgen.swing.ComponentFactory.newJRadioButton("New " + stTemplate.getName(), true);
 
-      lstModels = new javax.swing.JList<>();
+      lstModels = nextgen.swing.ComponentFactory.newJList();
       lstModels.setModel(new ListModel(stModelList));
       lstModels.addListSelectionListener(listSelectionEvent -> radFromTemplate.setSelected(false));
 
       add(radFromTemplate, java.awt.BorderLayout.NORTH);
-      add(new javax.swing.JScrollPane(lstModels), java.awt.BorderLayout.CENTER);
+      add(nextgen.swing.ComponentFactory.newJScrollPane(lstModels), java.awt.BorderLayout.CENTER);
    }
 
    @Override

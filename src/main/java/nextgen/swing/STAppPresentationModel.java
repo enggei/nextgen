@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class STAppPresentationModel {
 
@@ -718,6 +719,12 @@ public class STAppPresentationModel {
    public nextgen.model.STValue newSTValue(String value) {
       return db.newSTValue(value);
    }
+   public nextgen.model.STValue newSTValue(int value) { return newSTValue(Integer.toString(value)); }
+   public nextgen.model.STValue newSTValue(float value) { return newSTValue(Float.toString(value)); }
+   public nextgen.model.STValue newSTValue(long value) { return newSTValue(Long.toString(value)); }
+   public nextgen.model.STValue newSTValue(byte value) { return newSTValue(Byte.toString(value)); }
+   public nextgen.model.STValue newSTValue(char value) { return newSTValue(Character.toString(value)); }
+   public nextgen.model.STValue newSTValue(boolean value) { return newSTValue(Boolean.toString(value)); }
 
    public nextgen.model.STEnumValue newSTEnumValue(String name, String lexical) {
       return db
@@ -1062,6 +1069,20 @@ public class STAppPresentationModel {
    public java.util.Collection<nextgen.model.STEnumValue> asCollection(nextgen.model.STEnumValue stEnumValue) {
       return asCollection(getSTEnum(stEnumValue));
    }
+
+   public Stream<ParameterArguments> getSTParameters(STModel model) {
+
+      final List<ParameterArguments> result = new ArrayList<>();
+      model.getStTemplate().getParametersSorted().forEach(stParameter -> {
+         final ParameterArguments stModelArguments = new ParameterArguments();
+         stModelArguments.setParameter(stParameter);
+         model.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> stModelArguments.arguments().add(stArgument));
+         result.add(stModelArguments);
+      });
+
+      return result.stream();
+   }
+
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 

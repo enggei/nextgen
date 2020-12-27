@@ -5,11 +5,11 @@ public class STWorkspace {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _packageName;
 	private Object _name;
+	private Object _packageName;
 	private java.util.List<Object> _constructorParameters = new java.util.ArrayList<>();
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _componentMethods = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	STWorkspace(org.stringtemplate.v4.STGroup stGroup) {
@@ -23,36 +23,14 @@ public class STWorkspace {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STWorkspace");
-		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("packageName", _packageName);
 		for (Object o : _constructorParameters) st.add("constructorParameters", o);
-		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _componentMethods) st.add("componentMethods", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,init,type}", map.get("name"), map.get("init"), map.get("type"));
 		return st.render().trim();
 	}
-
-	public STWorkspace setPackageName(Object value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public Object getPackageName() {
-		return this._packageName;
-	}
-
-	public Object getPackageName(Object defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public STWorkspace removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
 
 	public STWorkspace setName(Object value) {
 		this._name = value;
@@ -73,6 +51,28 @@ public class STWorkspace {
 
 	public STWorkspace removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public STWorkspace setPackageName(Object value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public Object getPackageName() {
+		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public STWorkspace removePackageName() {
+		this._packageName = null;
 		return this;
 	} 
 
@@ -105,35 +105,6 @@ public class STWorkspace {
 		return this._constructorParameters;
 	} 
 
-	public STWorkspace addMethods(Object value) {
-		this._methods.add(value);
-		return this;
-	}
-
-	public STWorkspace setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public STWorkspace setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
-	}
-
-	public STWorkspace removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
-	}
-
-	public STWorkspace removeMethods(int index) {
-		this._methods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
-	} 
-
 	public STWorkspace addComponentMethods(Object value) {
 		this._componentMethods.add(value);
 		return this;
@@ -161,6 +132,35 @@ public class STWorkspace {
 
 	public java.util.List<Object> getComponentMethods() {
 		return this._componentMethods;
+	} 
+
+	public STWorkspace addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public STWorkspace setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STWorkspace setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public STWorkspace removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public STWorkspace removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public STWorkspace addFields(Object _name, Object _init, Object _type) {
@@ -244,7 +244,7 @@ public class STWorkspace {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STWorkspace(constructorParameters,methods,fields,packageName,componentMethods,name) ::= <<package ~packageName~;\n" + 
+	static final String st = "STWorkspace(name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
@@ -256,6 +256,7 @@ public class STWorkspace {
 				"\n" + 
 				"public class ~name~ extends JTabbedPane {\n" + 
 				"\n" + 
+				"	private final java.util.Map<java.awt.Component, nextgen.swing.STWorkspace.ButtonTabComponent> tabComponents = new java.util.LinkedHashMap<>();\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name~() {\n" + 
@@ -272,7 +273,7 @@ public class STWorkspace {
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	// components\n" + 
-				"	\n" + 
+				"\n" + 
 				"	~componentMethods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	private nextgen.swing.STAppPresentationModel appModel() {\n" + 
@@ -285,19 +286,23 @@ public class STWorkspace {
 				"				return Optional.of((T) getComponentAt(i));\n" + 
 				"		return Optional.empty();\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	private void addPane(String title, JComponent component) {\n" + 
 				"		addTab(title, component);\n" + 
-				"		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));\n" + 
+				"		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);\n" + 
+				"      tabComponents.put(component, tabComponent);\n" + 
+				"      setTabComponentAt(indexOfComponent(component), tabComponent);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	class ButtonTabComponent extends JPanel {\n" + 
+				"\n" + 
+				"		private final javax.swing.JLabel label;\n" + 
 				"\n" + 
 				"		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {\n" + 
 				"			super(new FlowLayout(FlowLayout.LEFT, 0, 0));\n" + 
 				"			setOpaque(false);\n" + 
 				"\n" + 
-				"			final JLabel label = nextgen.swing.ComponentFactory.newJLabel(title);\n" +
+				"			this.label = new JLabel(title);\n" + 
 				"			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
 				"			add(label);\n" + 
 				"\n" + 
@@ -311,7 +316,7 @@ public class STWorkspace {
 				"							pop.add(new AbstractAction(\"Close\") {\n" + 
 				"								@Override\n" + 
 				"								public void actionPerformed(ActionEvent actionEvent) {\n" + 
-				"									pane.remove(component);\n" + 
+				"									close(component);\n" + 
 				"								}\n" + 
 				"							});\n" + 
 				"\n" + 
@@ -337,6 +342,14 @@ public class STWorkspace {
 				"				}\n" + 
 				"			});\n" + 
 				"		}\n" + 
+				"\n" + 
+				"		void setTitle(String title) {\n" + 
+				"			SwingUtilities.invokeLater(() -> label.setText(title));\n" + 
+				"		}\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private void close(JComponent component) {\n" + 
+				"		SwingUtilities.invokeLater(() -> remove(component));\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	private void closeAllExcept(JComponent component) {\n" + 

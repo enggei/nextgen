@@ -1,13 +1,13 @@
 package nextgen.swing;
 
+
 public class AbstractEditor extends javax.swing.JPanel {
 
    protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractEditor.class);
 
    public AbstractEditor() {
       super(new java.awt.BorderLayout());
-      setBackground(javax.swing.UIManager.getColor("Panel.background"));
-//      setBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getColor("Panel.background")));
+      ComponentFactory.decorate(this);
       setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
    }
 
@@ -45,7 +45,7 @@ public class AbstractEditor extends javax.swing.JPanel {
    }
 
    protected javax.swing.JLabel newLabel(String name) {
-      return new javax.swing.JLabel(name);
+      return nextgen.swing.ComponentFactory.newJLabel(name);
    }
 
    protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
@@ -53,7 +53,7 @@ public class AbstractEditor extends javax.swing.JPanel {
    }
 
    protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
-      return new javax.swing.JButton(appModel().newTransactionAction(name, onClick));
+      return nextgen.swing.ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
    }
 
    protected java.awt.event.KeyListener getEditorKeyListener() {
@@ -142,84 +142,21 @@ public class AbstractEditor extends javax.swing.JPanel {
       return new AbstractEditor.ColumnPanel();
    }
 
-   protected BorderPanel newBorderPanel() {
-      return new AbstractEditor.BorderPanel();
-   }
-
-   protected FormPanel newFormPanel(nextgen.swing.FormPanelParameters params) {
-      return new AbstractEditor.FormPanel(params);
-   }
-
    protected GridPanel newGridPanel(int rows, int cols) {
       return new AbstractEditor.GridPanel(rows, cols);
-   }
-
-   protected GridPanel newGrid1x1Panel() {
-      return new AbstractEditor.GridPanel(1, 1);
-   }
-
-   protected GridPanel newGrid2x2Panel() {
-      return new AbstractEditor.GridPanel(2, 2);
    }
 
    protected static class FlowPanel extends BasePanel {
       FlowPanel() {
          super();
-         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
-      }
-   }
-
-   protected static class BorderPanel extends BasePanel {
-      BorderPanel() {
-         super();
-         setLayout(new java.awt.BorderLayout(4, 4));
-      }
-
-      public BorderPanel addNorth(javax.swing.JComponent component) {
-         add(component, java.awt.BorderLayout.NORTH);
-         return this;
-      }
-
-      public BorderPanel addSouth(javax.swing.JComponent component) {
-         add(component, java.awt.BorderLayout.SOUTH);
-         return this;
-      }
-
-      public BorderPanel addEast(javax.swing.JComponent component) {
-         add(component, java.awt.BorderLayout.EAST);
-         return this;
-      }
-
-      public BorderPanel addEast(javax.swing.Action action) {
-         add(new javax.swing.JButton(action), java.awt.BorderLayout.EAST);
-         return this;
-      }
-
-      public BorderPanel addEast(String label) {
-         add(new javax.swing.JLabel(label), java.awt.BorderLayout.EAST);
-         return this;
-      }
-
-      public BorderPanel addWest(javax.swing.JComponent component) {
-         add(component, java.awt.BorderLayout.WEST);
-         return this;
-      }
-
-      public BorderPanel addWest(String label) {
-         add(new javax.swing.JLabel(label), java.awt.BorderLayout.WEST);
-         return this;
-      }
-
-      public BorderPanel addCenter(javax.swing.JComponent component) {
-         add(component, java.awt.BorderLayout.CENTER);
-         return this;
+         setLayout(nextgen.swing.ComponentFactory.newBoxLineLayout(this));
       }
    }
 
    protected static class ColumnPanel extends BasePanel {
       ColumnPanel() {
          super();
-         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
+         setLayout(nextgen.swing.ComponentFactory.newBoxPageLayout(this));
       }
    }
 
@@ -227,79 +164,6 @@ public class AbstractEditor extends javax.swing.JPanel {
       GridPanel(int rows, int cols) {
          super();
          setLayout(new java.awt.GridLayout(rows, cols, 4, 4));
-      }
-   }
-
-   protected static class ConstantFormPanel extends FormPanel {
-
-      ConstantFormPanel() {
-         super(new nextgen.swing.FormPanelParameters() {
-            @Override
-            public String columnSpecs() {
-               return "fill:50px:grow(.25), fill:50px:grow, fill:50px:grow(.25)";
-            }
-
-            @Override
-            public String rowSpecs() {
-               return "fill:50px";
-            }
-
-            @Override
-            public java.util.stream.Stream<nextgen.swing.FormPanelParameters.FormComponent> components() {
-
-               final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger();
-
-               return java.util.Arrays.stream(new nextgen.swing.FormPanelParameters.FormComponent[]{
-
-                     new nextgen.swing.FormPanelParameters.FormComponent() {
-                        @Override
-                        public javax.swing.JComponent component() {
-                           return new javax.swing.JLabel("Comp " + count.incrementAndGet());
-                        }
-
-                        @Override
-                        public Object constraints() {
-                           return new com.jgoodies.forms.layout.CellConstraints().xy(1, 1);
-                        }
-                     },
-
-               new nextgen.swing.FormPanelParameters.FormComponent() {
-                        @Override
-                        public javax.swing.JComponent component() {
-                           return new javax.swing.JLabel("Comp " + count.incrementAndGet());
-                        }
-
-                        @Override
-                        public Object constraints() {
-                           return new com.jgoodies.forms.layout.CellConstraints().xy(2, 1);
-                        }
-                     },
-
-                     new nextgen.swing.FormPanelParameters.FormComponent() {
-                        @Override
-                        public javax.swing.JComponent component() {
-                           return new javax.swing.JLabel("Comp " + count.incrementAndGet());
-                        }
-
-                        @Override
-                        public Object constraints() {
-                           return new com.jgoodies.forms.layout.CellConstraints().xy(3, 1);
-                        }
-                     },
-
-               });
-            }
-         });
-      }
-   }
-
-   protected static class FormPanel extends BasePanel {
-      FormPanel(FormPanelParameters params) {
-         super();
-         final com.jgoodies.forms.layout.FormLayout layout = new com.jgoodies.forms.layout.FormLayout(params.columnSpecs(), params.rowSpecs());
-         setLayout(layout);
-
-         params.components().forEach(formComponent -> add(formComponent.component(), formComponent.constraints()));
       }
    }
 
@@ -325,6 +189,7 @@ public class AbstractEditor extends javax.swing.JPanel {
    public static class BasePanel extends javax.swing.JPanel {
 
       public BasePanel() {
+         ComponentFactory.decorate(this);
          setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
       }
 
@@ -333,25 +198,9 @@ public class AbstractEditor extends javax.swing.JPanel {
          return this;
       }
 
-      public AbstractEditor.BasePanel appendButton(javax.swing.Action action) {
-         add(new javax.swing.JButton(action));
-         return this;
-      }
-
       public AbstractEditor.BasePanel appendLabel(String label) {
-         add(new javax.swing.JLabel(label));
+         add(nextgen.swing.ComponentFactory.newJLabel(label));
          return this;
       }
-   }
-
-   protected javax.swing.JScrollPane newScrollPane(javax.swing.JComponent component) {
-      return newScrollPane(component, 5);
-   }
-
-   protected javax.swing.JScrollPane newScrollPane(javax.swing.JComponent component, int tick) {
-      final javax.swing.JScrollPane jScrollPane = new javax.swing.JScrollPane(component);
-      jScrollPane.setBackground(javax.swing.UIManager.getColor("Panel.background"));
-      jScrollPane.getVerticalScrollBar().setUnitIncrement(tick);
-      return jScrollPane;
    }
 }

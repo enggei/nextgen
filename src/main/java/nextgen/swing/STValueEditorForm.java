@@ -20,7 +20,7 @@ public class STValueEditorForm extends BaseEditor<nextgen.model.STValue> {
          if(nextgen.model.STModelNeoFactory.isSTFile(startNode)) center.append(new nextgen.swing.model.STFilePanel(new nextgen.model.STFile(startNode)));
       });
 
-      add(new javax.swing.JScrollPane(center), java.awt.BorderLayout.CENTER);
+      add(nextgen.swing.ComponentFactory.newJScrollPane(center), java.awt.BorderLayout.CENTER);
 
       editorUpdated();
    }

@@ -8,16 +8,16 @@ public class Canvas {
 	private String _name;
 	private String _packageName;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<CanvasRelation> _canvasRelations = new java.util.ArrayList<>();
 	private java.util.List<CanvasNode> _canvasNodes = new java.util.ArrayList<>();
+	private java.util.List<Object> _rightClickStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _finalFields = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _keyPressActions = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _rightClickActions = new java.util.ArrayList<>();
 
 	Canvas(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -33,16 +33,16 @@ public class Canvas {
 		st.add("name", _name);
 		st.add("packageName", _packageName);
 		for (Object o : _imports) st.add("imports", o);
-		for (Object o : _constructorStatements) st.add("constructorStatements", o);
-		for (Object o : _methods) st.add("methods", o);
-		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (Object o : _canvasRelations) st.add("canvasRelations", o);
 		for (Object o : _canvasNodes) st.add("canvasNodes", o);
+		for (Object o : _rightClickStatements) st.add("rightClickStatements", o);
 		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _constructorStatements) st.add("constructorStatements", o);
+		for (Object o : _methods) st.add("methods", o);
+		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
+		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _finalFields) st.addAggr("finalFields.{init,type,name}", map.get("init"), map.get("type"), map.get("name"));
-		for (java.util.Map<String, Object> map : _keyPressActions) st.addAggr("keyPressActions.{key,name}", map.get("key"), map.get("name"));
-		for (java.util.Map<String, Object> map : _rightClickActions) st.addAggr("rightClickActions.{name}", map.get("name"));
 		return st.render().trim();
 	}
 
@@ -119,93 +119,6 @@ public class Canvas {
 		return this._imports;
 	} 
 
-	public Canvas addConstructorStatements(Object value) {
-		this._constructorStatements.add(value);
-		return this;
-	}
-
-	public Canvas setConstructorStatements(Object[] value) {
-		this._constructorStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Canvas setConstructorStatements(java.util.Collection<Object> values) {
-		this._constructorStatements.addAll(values);
-		return this;
-	}
-
-	public Canvas removeConstructorStatements(Object value) {
-		this._constructorStatements.remove(value);
-		return this;
-	}
-
-	public Canvas removeConstructorStatements(int index) {
-		this._constructorStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getConstructorStatements() {
-		return this._constructorStatements;
-	} 
-
-	public Canvas addMethods(Object value) {
-		this._methods.add(value);
-		return this;
-	}
-
-	public Canvas setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Canvas setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
-	}
-
-	public Canvas removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
-	}
-
-	public Canvas removeMethods(int index) {
-		this._methods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
-	} 
-
-	public Canvas addRightClickStatements(Object value) {
-		this._rightClickStatements.add(value);
-		return this;
-	}
-
-	public Canvas setRightClickStatements(Object[] value) {
-		this._rightClickStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Canvas setRightClickStatements(java.util.Collection<Object> values) {
-		this._rightClickStatements.addAll(values);
-		return this;
-	}
-
-	public Canvas removeRightClickStatements(Object value) {
-		this._rightClickStatements.remove(value);
-		return this;
-	}
-
-	public Canvas removeRightClickStatements(int index) {
-		this._rightClickStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getRightClickStatements() {
-		return this._rightClickStatements;
-	} 
-
 	public Canvas addCanvasRelations(CanvasRelation value) {
 		this._canvasRelations.add(value);
 		return this;
@@ -264,6 +177,35 @@ public class Canvas {
 		return this._canvasNodes;
 	} 
 
+	public Canvas addRightClickStatements(Object value) {
+		this._rightClickStatements.add(value);
+		return this;
+	}
+
+	public Canvas setRightClickStatements(Object[] value) {
+		this._rightClickStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setRightClickStatements(java.util.Collection<Object> values) {
+		this._rightClickStatements.addAll(values);
+		return this;
+	}
+
+	public Canvas removeRightClickStatements(Object value) {
+		this._rightClickStatements.remove(value);
+		return this;
+	}
+
+	public Canvas removeRightClickStatements(int index) {
+		this._rightClickStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getRightClickStatements() {
+		return this._rightClickStatements;
+	} 
+
 	public Canvas addActions(Object value) {
 		this._actions.add(value);
 		return this;
@@ -292,6 +234,161 @@ public class Canvas {
 	public java.util.List<Object> getActions() {
 		return this._actions;
 	} 
+
+	public Canvas addConstructorStatements(Object value) {
+		this._constructorStatements.add(value);
+		return this;
+	}
+
+	public Canvas setConstructorStatements(Object[] value) {
+		this._constructorStatements.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setConstructorStatements(java.util.Collection<Object> values) {
+		this._constructorStatements.addAll(values);
+		return this;
+	}
+
+	public Canvas removeConstructorStatements(Object value) {
+		this._constructorStatements.remove(value);
+		return this;
+	}
+
+	public Canvas removeConstructorStatements(int index) {
+		this._constructorStatements.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getConstructorStatements() {
+		return this._constructorStatements;
+	} 
+
+	public Canvas addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public Canvas setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public Canvas setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public Canvas removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public Canvas removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
+	public Canvas addRightClickActions(Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		this._rightClickActions.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRightClickActions() {
+		return this._rightClickActions;
+	}
+
+	public Canvas addRightClickActions(Canvas_RightClickActions value) {
+		return addRightClickActions(value._name);
+	}
+
+	public java.util.stream.Stream<Canvas_RightClickActions> streamRightClickActions() {
+		return this._rightClickActions.stream().map(Canvas_RightClickActions::new);
+	}
+
+	public java.util.List<Object> getRightClickActions_Name() {
+		return streamRightClickActions().map(Canvas_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Canvas_RightClickActions {
+
+		Object _name;
+
+		public Canvas_RightClickActions(Object _name) {
+			this._name = _name;
+		}
+
+		private Canvas_RightClickActions(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
+
+	public Canvas addKeyPressActions(Object _key, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("key", _key);
+		map.put("name", _name);
+		this._keyPressActions.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getKeyPressActions() {
+		return this._keyPressActions;
+	}
+
+	public Canvas addKeyPressActions(Canvas_KeyPressActions value) {
+		return addKeyPressActions(value._key, value._name);
+	}
+
+	public java.util.stream.Stream<Canvas_KeyPressActions> streamKeyPressActions() {
+		return this._keyPressActions.stream().map(Canvas_KeyPressActions::new);
+	}
+
+	public java.util.List<Object> getKeyPressActions_Key() {
+		return streamKeyPressActions().map(Canvas_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getKeyPressActions_Name() {
+		return streamKeyPressActions().map(Canvas_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class Canvas_KeyPressActions {
+
+		Object _key;
+		Object _name;
+
+		public Canvas_KeyPressActions(Object _key, Object _name) {
+			this._key = _key;
+			this._name = _name;
+		}
+
+		private Canvas_KeyPressActions(java.util.Map<String, Object> map) {
+			this._key = (Object) map.get("key");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getKey() {
+			return this._key;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+	}  
 
 	public Canvas addFields(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -416,103 +513,6 @@ public class Canvas {
 
 	}  
 
-	public Canvas addKeyPressActions(Object _key, Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("key", _key);
-		map.put("name", _name);
-		this._keyPressActions.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getKeyPressActions() {
-		return this._keyPressActions;
-	}
-
-	public Canvas addKeyPressActions(Canvas_KeyPressActions value) {
-		return addKeyPressActions(value._key, value._name);
-	}
-
-	public java.util.stream.Stream<Canvas_KeyPressActions> streamKeyPressActions() {
-		return this._keyPressActions.stream().map(Canvas_KeyPressActions::new);
-	}
-
-	public java.util.List<Object> getKeyPressActions_Key() {
-		return streamKeyPressActions().map(Canvas_KeyPressActions::getKey).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getKeyPressActions_Name() {
-		return streamKeyPressActions().map(Canvas_KeyPressActions::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class Canvas_KeyPressActions {
-
-		Object _key;
-		Object _name;
-
-		public Canvas_KeyPressActions(Object _key, Object _name) {
-			this._key = _key;
-			this._name = _name;
-		}
-
-		private Canvas_KeyPressActions(java.util.Map<String, Object> map) {
-			this._key = (Object) map.get("key");
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getKey() {
-			return this._key;
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
-
-	public Canvas addRightClickActions(Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("name", _name);
-		this._rightClickActions.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getRightClickActions() {
-		return this._rightClickActions;
-	}
-
-	public Canvas addRightClickActions(Canvas_RightClickActions value) {
-		return addRightClickActions(value._name);
-	}
-
-	public java.util.stream.Stream<Canvas_RightClickActions> streamRightClickActions() {
-		return this._rightClickActions.stream().map(Canvas_RightClickActions::new);
-	}
-
-	public java.util.List<Object> getRightClickActions_Name() {
-		return streamRightClickActions().map(Canvas_RightClickActions::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class Canvas_RightClickActions {
-
-		Object _name;
-
-		public Canvas_RightClickActions(Object _name) {
-			this._name = _name;
-		}
-
-		private Canvas_RightClickActions(java.util.Map<String, Object> map) {
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -526,7 +526,7 @@ public class Canvas {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Canvas(imports,name,fields,packageName,constructorStatements,methods,rightClickStatements,finalFields,keyPressActions,rightClickActions,canvasRelations,canvasNodes,actions) ::= <<package ~packageName~;\n" + 
+	static final String st = "Canvas(imports,canvasRelations,name,canvasNodes,rightClickStatements,rightClickActions,keyPressActions,actions,fields,packageName,finalFields,constructorStatements,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import org.piccolo2d.PCamera;\n" + 
 				"import org.piccolo2d.PCanvas;\n" + 
@@ -579,7 +579,7 @@ public class Canvas {
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		this(UIManager.getColor(\"Panel.background\"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=\", \"~~endif~);\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	public ~name~(Color background, Dimension preferredSize~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"		super();\n" + 
 				"\n" + 
@@ -731,7 +731,7 @@ public class Canvas {
 				"		~rightClickStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator=\"\\n\"~\n" + 
-				"		pop.addSeparator();\n" + 
+				"		~if(rightClickActions) ~pop.addSeparator();~endif~\n" + 
 				"		pop.add(new SelectAllNodes(event));\n" + 
 				"		pop.add(new UnselectAllNodes(event));\n" + 
 				"		pop.add(new RetainSelectedNodes(event));\n" + 
@@ -941,7 +941,7 @@ public class Canvas {
 				"			});\n" + 
 				"		}\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	final class SelectAllNodes extends CanvasAction {\n" + 
 				"\n" + 
 				"		SelectAllNodes(PInputEvent event) {\n" + 
@@ -1007,7 +1007,7 @@ public class Canvas {
 				"			});\n" + 
 				"		}\n" + 
 				"	}\n" + 
-				"	\n" + 
+				"\n" + 
 				"	final class LayoutVerticallyAction extends CanvasAction {\n" + 
 				"\n" + 
 				"		private java.awt.Point position;\n" + 
@@ -1042,6 +1042,10 @@ public class Canvas {
 				"		}\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	private nextgen.swing.STAppPresentationModel appModel() {\n" + 
+				"		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"	~canvasNodes:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~canvasRelations:{it|~it~};separator=\"\\n\\n\"~\n" + 

@@ -16,7 +16,7 @@ public class AddInterface extends nextgen.actions.TransactionAction {
    	log.info("AddInterface" + " children" + " owner");
 
       final javax.swing.JTextField txtImplements = newTextField();
-      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 1));
+      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(1, 1));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
       contentPanel.add(txtImplements);
 

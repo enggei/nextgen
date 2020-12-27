@@ -1,5 +1,7 @@
 package nextgen.swing;
 
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 import nextgen.utils.SwingUtil;
 
 import javax.swing.*;
@@ -26,14 +28,10 @@ public class STApp extends JFrame {
 
    public static void main(String[] args) throws IOException {
 
-      final AppModel config = loadConfig(args);
+      loadConfig(args);
 
-      com.formdev.flatlaf.FlatDarculaLaf.install();
+      ComponentFactory.applyLaf();
 
-      final Font font = new Font(config.getFontName(), Font.PLAIN, config.getFontSize());
-      //UIManager.put("Tree.font", font);
-      UIManager.put("TextField.font", font);
-      UIManager.put("TextArea.font", font);
       org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.setTemplatesEnabled(true);
 
       SwingUtil.show(new STApp());

@@ -7,7 +7,7 @@ public void on~eventName~(~eventType~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-Canvas(imports,name,fields,packageName,constructorStatements,methods,rightClickStatements,finalFields,keyPressActions,rightClickActions,canvasRelations,canvasNodes,actions) ::= <<package ~packageName~;
+Canvas(imports,canvasRelations,name,canvasNodes,rightClickStatements,rightClickActions,keyPressActions,actions,fields,packageName,finalFields,constructorStatements,methods) ::= <<package ~packageName~;
 
 import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
@@ -60,7 +60,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		this(UIManager.getColor("Panel.background"), new Dimension(1024, 1024)~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~);
 	}
-	
+
 	public ~name~(Color background, Dimension preferredSize~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 		super();
 
@@ -212,7 +212,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		~rightClickStatements:{it|~it~};separator="\n"~
 
 		~rightClickActions:{it|pop.add(new ~it.name~(event));};separator="\n"~
-		pop.addSeparator();
+		~if(rightClickActions) ~pop.addSeparator();~endif~
 		pop.add(new SelectAllNodes(event));
 		pop.add(new UnselectAllNodes(event));
 		pop.add(new RetainSelectedNodes(event));
@@ -422,7 +422,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 			});
 		}
 	}
-	
+
 	final class SelectAllNodes extends CanvasAction {
 
 		SelectAllNodes(PInputEvent event) {
@@ -488,7 +488,7 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 			});
 		}
 	}
-	
+
 	final class LayoutVerticallyAction extends CanvasAction {
 
 		private java.awt.Point position;
@@ -523,6 +523,10 @@ public class ~name~ extends PCanvas implements PInputEventListener {
 		}
 	}
 
+	private nextgen.swing.STAppPresentationModel appModel() {
+		return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+	}
+	
 	~canvasNodes:{it|~it~};separator="\n\n"~
 
 	~canvasRelations:{it|~it~};separator="\n\n"~
@@ -1423,7 +1427,7 @@ BaseCanvasNode() ::= <<protected class BaseCanvasNode<T> extends PNode {
 	}
 }  >>
 
-CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftClickStatements,keyPressActions,actions,methods,fields,modelType,name,addedToCanvasStatements,labelExpression,uuidExpression) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {
+CanvasNode(leftClickStatements,keyPressActions,methods,newNodeAddedStatements,uuidExpression,rightClickActions,actions,modelType,labelExpression,rightClickStatements,name,addedToCanvasStatements,fields) ::= <<final class ~name~ extends BaseCanvasNode<~modelType~> {
 
 	~fields:{it|private ~it.type~ ~it.name~;};separator="\n"~
 
@@ -1447,6 +1451,8 @@ CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftCli
 	}
 	
 ~endif~
+
+
 	@Override
 	protected void onNodeRightClick(PInputEvent event, JPopupMenu pop) {
 		~rightClickStatements:{it|~it~};separator="\n"~
@@ -1475,7 +1481,6 @@ CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftCli
 		}
 		super.onNodeKeyPressed(event);
 	}
-	
 ~endif~
 	
 	~actions:{it|~it~};separator="\n\n"~
@@ -1483,7 +1488,7 @@ CanvasNode(rightClickActions,newNodeAddedStatements,rightClickStatements,leftCli
 	~methods:{it|~it~};separator="\n\n"~
 }
 
-private void add~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
+public void add~name~(~modelType~ model~if(uuidExpression)~~else~, String uuid~endif~~if(labelExpression)~~else~, String label~endif~~if(fields)~, ~fields:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 	addNode(~if(uuidExpression)~~uuidExpression~~else~uuid~endif~, new~name~(model~if(uuidExpression)~~else~, uuid~endif~~if(labelExpression)~~else~, label~endif~~if(fields)~, ~fields:{it|~it.name~};separator=", "~~endif~));
 }
 
@@ -1839,6 +1844,22 @@ public static String delete(~entity~ entity) {
 	return entity.getUuid();
 }  >>
 
+STModelEditor(model,statements,properties,name,packageName) ::= <<package ~packageName~;
+
+public class ~name~ extends nextgen.swing.AbstractEditor {
+
+   public ~name~(~model~ model) {
+
+      ~properties:{it|final FlowPanel ~it.name~Panel = newFlowPanel().append(newLabel("~it.name;format="capitalize"~")).append(new ~it.component~(model.get~it.name;format="capitalize"~()));};separator="\n"~
+
+      final ColumnPanel center = newColumnPanel()~properties:{it|.append(~it.name~Panel)}~;
+
+      ~statements:{it|~it~};separator="\n"~
+
+      add(center, java.awt.BorderLayout.CENTER);
+   }
+}  >>
+
 STTemplateEditor(name,packageName) ::= <<package ~packageName~;
 
 import nextgen.DomainFacade;
@@ -2059,36 +2080,36 @@ public class ~name~ extends javax.swing.JPanel {
 		public STEditorCommandPanel() {
 			super(new FlowLayout(FlowLayout.LEFT));
 
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert Single", actionEvent -> {
+			add(new JButton(newAction("Insert Single", actionEvent -> {
 				insertSingle();
 				textArea.requestFocusInWindow();
 			})));
 
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert Single Capitalized", actionEvent -> {
+			add(new JButton(newAction("Insert Single Capitalized", actionEvent -> {
 				insertCapitalized();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert List", actionEvent -> {
+			add(new JButton(newAction("Insert List", actionEvent -> {
 				insertList();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert If", actionEvent -> {
+			add(new JButton(newAction("Insert If", actionEvent -> {
 				insertIf();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Insert If-else", actionEvent -> {
+			add(new JButton(newAction("Insert If-else", actionEvent -> {
 				insertIfElse();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Replace text and insert Single", actionEvent -> {
+			add(new JButton(newAction("Replace text and insert Single", actionEvent -> {
 				replaceAndInsertSingle();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Save", actionEvent -> {
+			add(new JButton(newAction("Save", actionEvent -> {
 				commit();
 				textArea.requestFocusInWindow();
 			})));
-			add(nextgen.swing.ComponentFactory.newJButton(newAction("Generate", actionEvent -> {
+			add(new JButton(newAction("Generate", actionEvent -> {
 				generate();
 				textArea.requestFocusInWindow();
 			})));
@@ -2097,7 +2118,7 @@ public class ~name~ extends javax.swing.JPanel {
 
 	private class STEditorInfoPanel extends JPanel {
 
-		private final JTextArea textArea = nextgen.swing.ComponentFactory.newJTextArea();
+		private final JTextArea textArea = new JTextArea();
 
 		public STEditorInfoPanel() {
 			super(new BorderLayout());
@@ -2105,7 +2126,7 @@ public class ~name~ extends javax.swing.JPanel {
 			this.textArea.setTabSize(3);
 			this.textArea.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-			add(nextgen.swing.ComponentFactory.newJScrollPane(textArea), BorderLayout.CENTER);
+			add(new JScrollPane(textArea), BorderLayout.CENTER);
 			setPreferredSize(new Dimension(800, 200));
 		}
 
@@ -2164,7 +2185,7 @@ public class ~name~ extends javax.swing.JPanel {
 	}
 }  >>
 
-STWorkspace(constructorParameters,methods,fields,packageName,componentMethods,name) ::= <<package ~packageName~;
+STWorkspace(name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;
 
 import javax.swing.*;
 import java.awt.*;
@@ -2176,6 +2197,7 @@ import java.util.function.Predicate;
 
 public class ~name~ extends JTabbedPane {
 
+	private final java.util.Map<java.awt.Component, nextgen.swing.STWorkspace.ButtonTabComponent> tabComponents = new java.util.LinkedHashMap<>();
 	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
 	public ~name~() {
@@ -2192,7 +2214,7 @@ public class ~name~ extends JTabbedPane {
 	~methods:{it|~it~};separator="\n\n"~
 
 	// components
-	
+
 	~componentMethods:{it|~it~};separator="\n\n"~
 
 	private nextgen.swing.STAppPresentationModel appModel() {
@@ -2205,19 +2227,23 @@ public class ~name~ extends JTabbedPane {
 				return Optional.of((T) getComponentAt(i));
 		return Optional.empty();
 	}
-	
+
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
-		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this, title, component));
+		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);
+      tabComponents.put(component, tabComponent);
+      setTabComponentAt(indexOfComponent(component), tabComponent);
 	}
 
 	class ButtonTabComponent extends JPanel {
+
+		private final javax.swing.JLabel label;
 
 		ButtonTabComponent(final JTabbedPane pane, String title, JComponent component) {
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			setOpaque(false);
 
-			final JLabel label = nextgen.swing.ComponentFactory.newJLabel(title);
+			this.label = new JLabel(title);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 
@@ -2231,7 +2257,7 @@ public class ~name~ extends JTabbedPane {
 							pop.add(new AbstractAction("Close") {
 								@Override
 								public void actionPerformed(ActionEvent actionEvent) {
-									pane.remove(component);
+									close(component);
 								}
 							});
 
@@ -2257,6 +2283,14 @@ public class ~name~ extends JTabbedPane {
 				}
 			});
 		}
+
+		void setTitle(String title) {
+			SwingUtilities.invokeLater(() -> label.setText(title));
+		}
+	}
+
+	private void close(JComponent component) {
+		SwingUtilities.invokeLater(() -> remove(component));
 	}
 
 	private void closeAllExcept(JComponent component) {
@@ -2278,7 +2312,7 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-findEditor(modelType,titleExpression,componentType,componentName) ::= <<public ~componentType~ get~componentName;format="capitalize"~(~modelType~ model) {
+findEditor(componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format="capitalize"~(~modelType~ model) {
 	for (int i = 0; i < getTabCount(); i++) {
 		final Component tabComponentAt = getComponentAt(i);
 		if (tabComponentAt instanceof ~componentType~ && (((~componentType~) tabComponentAt).getModel().equals(model))) {
@@ -2322,15 +2356,19 @@ public void remove~name;format="capitalize"~() {
    }
 }  >>
 
-TransactionAction(packageName,fields,imports,name,staticFields,title,titleExpression,statements,methods) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
+TransactionAction(methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
+
 ~if(imports)~
 ~imports:{it|import ~it~;};separator="\n"~
 
 ~endif~
 public class ~name~ extends nextgen.actions.TransactionAction {
-
-   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
+~if(staticFields)~
    
+   ~staticFields:{it|private static final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
+~endif~
+
+
    ~fields:{it|private final ~it.type~ ~it.name~;};separator="\n"~
 ~if(title)~
 
@@ -2356,13 +2394,15 @@ public class ~name~ extends nextgen.actions.TransactionAction {
 ~endif~
    @Override
    protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   	log.info("~name~"~fields:{it|  + " ~it.name~"}~);
+   	
       ~statements:{it|~it~};separator="\n"~
    }
 
    ~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-TreeNavigator(methods,treeNodes,baseTreeNode,events,treeModelConstructorStatements,packageName,imports,name,fields,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,rootNodeExpression,preferredWidth) ::= <<package ~packageName~;
+TreeNavigator(imports,packageName,fields,name,methods,treeNodes,constructorStatements,preferredHeight,preferredWidth,treeModelConstructorStatements,rootNodeExpression,baseTreeNode,events,unhandledNodeSelectedStatements,treeNodesSelected) ::= <<package ~packageName~;
 
 ~imports:{it|~it~;};separator="\n"~
 
@@ -2395,7 +2435,7 @@ public class ~name~ extends JPanel {
 		tree.addMouseListener(new ~name~.~name~MouseListener());
 
 		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));
-		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);
+		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		~constructorStatements:{it|~it~};separator="\n"~
 	}
@@ -2403,6 +2443,7 @@ public class ~name~ extends JPanel {
 	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+			ComponentFactory.decorate(this);
 			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;
 			final ImageIcon icon = node.getIcon();
 			setIcon(icon);
@@ -2431,40 +2472,40 @@ public class ~name~ extends JPanel {
 	}
 
 	private final class ~name~MouseListener extends MouseAdapter {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-         if (SwingUtilities.isRightMouseButton(e)) {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (SwingUtilities.isRightMouseButton(e)) {
 
-            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-            if (selectionPath == null) return;
-            final Object lastPathComponent = selectionPath.getLastPathComponent();
-            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selectionPath == null) return;
+				final Object lastPathComponent = selectionPath.getLastPathComponent();
+				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-            showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
+				showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());
 
-         } else {
+			} else {
 
-            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
-            if (selectionPath == null) return;
-            final Object lastPathComponent = selectionPath.getLastPathComponent();
-            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
+				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selectionPath == null) return;
+				final Object lastPathComponent = selectionPath.getLastPathComponent();
+				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
-            appModel().doLaterInTransaction(transaction -> {
+				appModel().doLaterInTransaction(transaction -> {
 					~treeNodesSelected:{it|if (is~it~(lastPathComponent)) 
 	on~it~Selected((~it~) lastPathComponent);
 };separator="else "~~if(treeNodesSelected)~					else 
 		~endif~						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);
-            });
-         }
-      }
-   }
+				});
+			}
+		}
+	}
 
-   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
-   	~unhandledNodeSelectedStatements:{it|~it~};separator="\n"~
-   }
+	private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {
+		~unhandledNodeSelectedStatements:{it|~it~};separator="\n"~
+	}
 
 	~events:{it|~it~};separator="\n\n"~
-   
+
 	~baseTreeNode~
 
 	~treeNodes:{it|~it~};separator="\n\n"~	
@@ -2548,21 +2589,57 @@ public class ~name~ extends JPanel {
 
 		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
 			final int childCount = parent.getChildCount();
+
+			final List<BaseTreeNode<?>~gt()~ children = new java.util.ArrayList<>();
 			for (int i = 0; i < childCount; i++) {
 				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
 				if (predicate.test(childAt))
 					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());
 				else {
-					final Optional<T> node = find(childAt, predicate);
-					if (node.isPresent()) return node;
+					children.add(childAt);
 				}
 			}
+
+			for (nextgen.swing.STModelNavigator.BaseTreeNode<?> childAt : children) {
+				final Optional<T> node = find(childAt, predicate);
+				if (node.isPresent()) return node;
+			}
+
 			return Optional.empty();
 		}
 
 		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {
 			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
 					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();
+			final Collection<T> children = new java.util.ArrayList<>();
+			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) 
+				children.add((T) root);
+			children.addAll(findAll((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode)));
+			return children;
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {
+			return findAll(parent, navigatorTreeNode -> navigatorTreeNode.getClass()
+					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));
+		}
+
+		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {
+			final Collection<T> children = new java.util.ArrayList<>();
+			final int childCount = parent.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);
+				if (predicate.test(childAt))
+					children.add((T) new TreePath(childAt.getPath()).getLastPathComponent());
+				else {
+					children.addAll(findAll(childAt, predicate));
+				}
+			}
+			return children;
 		}
 
 		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {
@@ -2741,12 +2818,12 @@ BaseTreeNode() ::= <<public class BaseTreeNode<T> extends DefaultMutableTreeNode
 	}
 }  >>
 
-EventSubscription(statements,eventName,threadMode) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
+EventSubscription(threadMode,eventName,statements) ::= <<@org.greenrobot.eventbus.Subscribe(~if(threadMode)~threadMode = org.greenrobot.eventbus.ThreadMode.~threadMode~~endif~)
 public void on~eventName;format="capitalize"~(nextgen.events.~eventName~ event) {
 	~statements:{it|~it~};separator="\n"~
 }  >>
 
-TreeNode(modelType,name,hasUuid,fields,privateFields,getActionsStatements,constructorStatements,methods,actions,icon,tooltipExpression,labelExpression,selectionStatements,parameters) ::= <<// ~name~
+TreeNode(getActionsStatements,constructorStatements,modelType,tooltipExpression,name,labelExpression,privateFields,fields,actions,parameters,icon,hasUuid,methods,selectionStatements) ::= <<// ~name~
 public class ~name~ extends BaseTreeNode<~modelType~> {
 ~if(hasUuid)~
 
@@ -2802,8 +2879,16 @@ private Optional<~name~> find~name;format="capitalize"~() {
 	return treeModel.find(~name~.class, treeNode -> true);
 }
 
+private java.util.Collection<~name~> findAll~name;format="capitalize"~() {
+	return treeModel.findAll(~name~.class, treeNode -> true);
+}
+
 private Optional<~name~> find~name;format="capitalize"~(java.util.function.Predicate<~name~> predicate) {
 	return treeModel.find(~name~.class, predicate);
+}
+
+private java.util.Collection<~name~> findAll~name;format="capitalize"~(java.util.function.Predicate<~name~> predicate) {
+	return treeModel.findAll(~name~.class, predicate);
 }
 
 private Optional<~name~> find~name;format="capitalize"~(BaseTreeNode<?> parent, java.util.function.Predicate<~name~> predicate) {

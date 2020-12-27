@@ -38,7 +38,7 @@ public class STGroupActionEditor extends AbstractEditor {
       ac.setTriggerKey(key);
       ac.install(txtStatements);
 
-      final javax.swing.JPanel namePanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+      final javax.swing.JPanel namePanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.BorderLayout());
       namePanel.setBackground(javax.swing.UIManager.getColor("Panel.background"));
       namePanel.add(txtName, java.awt.BorderLayout.NORTH);
 
@@ -49,7 +49,7 @@ public class STGroupActionEditor extends AbstractEditor {
       addPopupActions(txtImports).
             add(newAction("Save", actionEvent -> tryToSave()));;
 
-      final javax.swing.JTabbedPane tabbedPane = new javax.swing.JTabbedPane();
+      final javax.swing.JTabbedPane tabbedPane = nextgen.swing.ComponentFactory.newJTabbedPane();
       tabbedPane.add("Name", namePanel);
       tabbedPane.add("Statements", new org.fife.ui.rtextarea.RTextScrollPane(txtStatements));
       tabbedPane.add("Methods", new org.fife.ui.rtextarea.RTextScrollPane(txtMethods));

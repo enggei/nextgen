@@ -5,20 +5,20 @@ public class TreeNavigator {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private BaseTreeNode _baseTreeNode;
 	private String _packageName;
 	private String _name;
 	private String _preferredHeight;
-	private Object _rootNodeExpression;
 	private String _preferredWidth;
+	private Object _rootNodeExpression;
+	private BaseTreeNode _baseTreeNode;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<TreeNode> _treeNodes = new java.util.ArrayList<>();
-	private java.util.List<Object> _events = new java.util.ArrayList<>();
-	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
+	private java.util.List<Object> _treeModelConstructorStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _events = new java.util.ArrayList<>();
 	private java.util.List<Object> _unhandledNodeSelectedStatements = new java.util.ArrayList<>();
+	private java.util.List<Object> _treeNodesSelected = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	TreeNavigator(org.stringtemplate.v4.STGroup stGroup) {
@@ -32,45 +32,23 @@ public class TreeNavigator {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TreeNavigator");
-		st.add("baseTreeNode", _baseTreeNode);
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		st.add("preferredHeight", _preferredHeight);
-		st.add("rootNodeExpression", _rootNodeExpression);
 		st.add("preferredWidth", _preferredWidth);
+		st.add("rootNodeExpression", _rootNodeExpression);
+		st.add("baseTreeNode", _baseTreeNode);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _treeNodes) st.add("treeNodes", o);
-		for (Object o : _events) st.add("events", o);
-		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
-		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
-		for (Object o : _treeNodesSelected) st.add("treeNodesSelected", o);
+		for (Object o : _treeModelConstructorStatements) st.add("treeModelConstructorStatements", o);
+		for (Object o : _events) st.add("events", o);
 		for (Object o : _unhandledNodeSelectedStatements) st.add("unhandledNodeSelectedStatements", o);
+		for (Object o : _treeNodesSelected) st.add("treeNodesSelected", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
-
-	public TreeNavigator setBaseTreeNode(BaseTreeNode value) {
-		this._baseTreeNode = value;
-		return this;
-	}
-
-	public BaseTreeNode getBaseTreeNode() {
-		return this._baseTreeNode;
-	}
-
-	public BaseTreeNode getBaseTreeNode(BaseTreeNode defaultValue) {
-		return this._baseTreeNode == null ? defaultValue : this._baseTreeNode;
-	}
-
-	public boolean hasBaseTreeNode() {
-		return this._baseTreeNode != null;
-	}
-
-	public TreeNavigator removeBaseTreeNode() {
-		this._baseTreeNode = null;
-		return this;
-	} 
 
 	public TreeNavigator setPackageName(String value) {
 		this._packageName = value;
@@ -138,6 +116,28 @@ public class TreeNavigator {
 		return this;
 	} 
 
+	public TreeNavigator setPreferredWidth(String value) {
+		this._preferredWidth = value;
+		return this;
+	}
+
+	public String getPreferredWidth() {
+		return this._preferredWidth;
+	}
+
+	public String getPreferredWidth(String defaultValue) {
+		return this._preferredWidth == null ? defaultValue : this._preferredWidth;
+	}
+
+	public boolean hasPreferredWidth() {
+		return this._preferredWidth != null;
+	}
+
+	public TreeNavigator removePreferredWidth() {
+		this._preferredWidth = null;
+		return this;
+	} 
+
 	public TreeNavigator setRootNodeExpression(Object value) {
 		this._rootNodeExpression = value;
 		return this;
@@ -160,26 +160,55 @@ public class TreeNavigator {
 		return this;
 	} 
 
-	public TreeNavigator setPreferredWidth(String value) {
-		this._preferredWidth = value;
+	public TreeNavigator setBaseTreeNode(BaseTreeNode value) {
+		this._baseTreeNode = value;
 		return this;
 	}
 
-	public String getPreferredWidth() {
-		return this._preferredWidth;
+	public BaseTreeNode getBaseTreeNode() {
+		return this._baseTreeNode;
 	}
 
-	public String getPreferredWidth(String defaultValue) {
-		return this._preferredWidth == null ? defaultValue : this._preferredWidth;
+	public BaseTreeNode getBaseTreeNode(BaseTreeNode defaultValue) {
+		return this._baseTreeNode == null ? defaultValue : this._baseTreeNode;
 	}
 
-	public boolean hasPreferredWidth() {
-		return this._preferredWidth != null;
+	public boolean hasBaseTreeNode() {
+		return this._baseTreeNode != null;
 	}
 
-	public TreeNavigator removePreferredWidth() {
-		this._preferredWidth = null;
+	public TreeNavigator removeBaseTreeNode() {
+		this._baseTreeNode = null;
 		return this;
+	} 
+
+	public TreeNavigator addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public TreeNavigator setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
 	} 
 
 	public TreeNavigator addMethods(Object value) {
@@ -240,33 +269,33 @@ public class TreeNavigator {
 		return this._treeNodes;
 	} 
 
-	public TreeNavigator addEvents(Object value) {
-		this._events.add(value);
+	public TreeNavigator addConstructorStatements(Object value) {
+		this._constructorStatements.add(value);
 		return this;
 	}
 
-	public TreeNavigator setEvents(Object[] value) {
-		this._events.addAll(java.util.Arrays.asList(value));
+	public TreeNavigator setConstructorStatements(Object[] value) {
+		this._constructorStatements.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNavigator setEvents(java.util.Collection<Object> values) {
-		this._events.addAll(values);
+	public TreeNavigator setConstructorStatements(java.util.Collection<Object> values) {
+		this._constructorStatements.addAll(values);
 		return this;
 	}
 
-	public TreeNavigator removeEvents(Object value) {
-		this._events.remove(value);
+	public TreeNavigator removeConstructorStatements(Object value) {
+		this._constructorStatements.remove(value);
 		return this;
 	}
 
-	public TreeNavigator removeEvents(int index) {
-		this._events.remove(index);
+	public TreeNavigator removeConstructorStatements(int index) {
+		this._constructorStatements.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getEvents() {
-		return this._events;
+	public java.util.List<Object> getConstructorStatements() {
+		return this._constructorStatements;
 	} 
 
 	public TreeNavigator addTreeModelConstructorStatements(Object value) {
@@ -298,91 +327,33 @@ public class TreeNavigator {
 		return this._treeModelConstructorStatements;
 	} 
 
-	public TreeNavigator addImports(Object value) {
-		this._imports.add(value);
+	public TreeNavigator addEvents(Object value) {
+		this._events.add(value);
 		return this;
 	}
 
-	public TreeNavigator setImports(Object[] value) {
-		this._imports.addAll(java.util.Arrays.asList(value));
+	public TreeNavigator setEvents(Object[] value) {
+		this._events.addAll(java.util.Arrays.asList(value));
 		return this;
 	}
 
-	public TreeNavigator setImports(java.util.Collection<Object> values) {
-		this._imports.addAll(values);
+	public TreeNavigator setEvents(java.util.Collection<Object> values) {
+		this._events.addAll(values);
 		return this;
 	}
 
-	public TreeNavigator removeImports(Object value) {
-		this._imports.remove(value);
+	public TreeNavigator removeEvents(Object value) {
+		this._events.remove(value);
 		return this;
 	}
 
-	public TreeNavigator removeImports(int index) {
-		this._imports.remove(index);
+	public TreeNavigator removeEvents(int index) {
+		this._events.remove(index);
 		return this;
 	}
 
-	public java.util.List<Object> getImports() {
-		return this._imports;
-	} 
-
-	public TreeNavigator addConstructorStatements(Object value) {
-		this._constructorStatements.add(value);
-		return this;
-	}
-
-	public TreeNavigator setConstructorStatements(Object[] value) {
-		this._constructorStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setConstructorStatements(java.util.Collection<Object> values) {
-		this._constructorStatements.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeConstructorStatements(Object value) {
-		this._constructorStatements.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeConstructorStatements(int index) {
-		this._constructorStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getConstructorStatements() {
-		return this._constructorStatements;
-	} 
-
-	public TreeNavigator addTreeNodesSelected(Object value) {
-		this._treeNodesSelected.add(value);
-		return this;
-	}
-
-	public TreeNavigator setTreeNodesSelected(Object[] value) {
-		this._treeNodesSelected.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNavigator setTreeNodesSelected(java.util.Collection<Object> values) {
-		this._treeNodesSelected.addAll(values);
-		return this;
-	}
-
-	public TreeNavigator removeTreeNodesSelected(Object value) {
-		this._treeNodesSelected.remove(value);
-		return this;
-	}
-
-	public TreeNavigator removeTreeNodesSelected(int index) {
-		this._treeNodesSelected.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getTreeNodesSelected() {
-		return this._treeNodesSelected;
+	public java.util.List<Object> getEvents() {
+		return this._events;
 	} 
 
 	public TreeNavigator addUnhandledNodeSelectedStatements(Object value) {
@@ -412,6 +383,35 @@ public class TreeNavigator {
 
 	public java.util.List<Object> getUnhandledNodeSelectedStatements() {
 		return this._unhandledNodeSelectedStatements;
+	} 
+
+	public TreeNavigator addTreeNodesSelected(Object value) {
+		this._treeNodesSelected.add(value);
+		return this;
+	}
+
+	public TreeNavigator setTreeNodesSelected(Object[] value) {
+		this._treeNodesSelected.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNavigator setTreeNodesSelected(java.util.Collection<Object> values) {
+		this._treeNodesSelected.addAll(values);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodesSelected(Object value) {
+		this._treeNodesSelected.remove(value);
+		return this;
+	}
+
+	public TreeNavigator removeTreeNodesSelected(int index) {
+		this._treeNodesSelected.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getTreeNodesSelected() {
+		return this._treeNodesSelected;
 	} 
 
 	public TreeNavigator addFields(Object _type, String _name) {
@@ -482,7 +482,7 @@ public class TreeNavigator {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNavigator(methods,treeNodes,baseTreeNode,events,treeModelConstructorStatements,packageName,imports,name,fields,preferredHeight,constructorStatements,treeNodesSelected,unhandledNodeSelectedStatements,rootNodeExpression,preferredWidth) ::= <<package ~packageName~;\n" + 
+	static final String st = "TreeNavigator(imports,packageName,fields,name,methods,treeNodes,constructorStatements,preferredHeight,preferredWidth,treeModelConstructorStatements,rootNodeExpression,baseTreeNode,events,unhandledNodeSelectedStatements,treeNodesSelected) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"~imports:{it|~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -515,7 +515,7 @@ public class TreeNavigator {
 				"		tree.addMouseListener(new ~name~.~name~MouseListener());\n" + 
 				"\n" + 
 				"		setPreferredSize(new Dimension(~if(preferredWidth)~~preferredWidth~~else~400~endif~, ~if(preferredHeight)~~preferredHeight~~else~600~endif~));\n" + 
-				"		add(nextgen.swing.ComponentFactory.newJScrollPane(tree), BorderLayout.CENTER);\n" +
+				"		add(new JScrollPane(tree), BorderLayout.CENTER);\n" + 
 				"\n" + 
 				"		~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
@@ -523,6 +523,7 @@ public class TreeNavigator {
 				"	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {\n" + 
 				"		@Override\n" + 
 				"		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {\n" + 
+				"			ComponentFactory.decorate(this);\n" + 
 				"			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;\n" + 
 				"			final ImageIcon icon = node.getIcon();\n" + 
 				"			setIcon(icon);\n" + 
@@ -551,40 +552,40 @@ public class TreeNavigator {
 				"	}\n" + 
 				"\n" + 
 				"	private final class ~name~MouseListener extends MouseAdapter {\n" + 
-				"      @Override\n" + 
-				"      public void mouseClicked(MouseEvent e) {\n" + 
-				"         if (SwingUtilities.isRightMouseButton(e)) {\n" + 
+				"		@Override\n" + 
+				"		public void mouseClicked(MouseEvent e) {\n" + 
+				"			if (SwingUtilities.isRightMouseButton(e)) {\n" + 
 				"\n" + 
-				"            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
-				"            if (selectionPath == null) return;\n" + 
-				"            final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
-				"            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
+				"				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
+				"				if (selectionPath == null) return;\n" + 
+				"				final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
+				"				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
 				"\n" + 
-				"            showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n" + 
+				"				showPopup((BaseTreeNode<?>) lastPathComponent, e.getX(), e.getY());\n" + 
 				"\n" + 
-				"         } else {\n" + 
+				"			} else {\n" + 
 				"\n" + 
-				"            final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
-				"            if (selectionPath == null) return;\n" + 
-				"            final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
-				"            if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
+				"				final TreePath selectionPath = tree.getPathForLocation(e.getX(), e.getY());\n" + 
+				"				if (selectionPath == null) return;\n" + 
+				"				final Object lastPathComponent = selectionPath.getLastPathComponent();\n" + 
+				"				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;\n" + 
 				"\n" + 
-				"            appModel().doLaterInTransaction(transaction -> {\n" + 
+				"				appModel().doLaterInTransaction(transaction -> {\n" + 
 				"					~treeNodesSelected:{it|if (is~it~(lastPathComponent)) \n" + 
 				"	on~it~Selected((~it~) lastPathComponent);\n" + 
 				"};separator=\"else \"~~if(treeNodesSelected)~					else \n" + 
 				"		~endif~						onUnhandledNodeSelected((BaseTreeNode<?>) lastPathComponent);\n" + 
-				"            });\n" + 
-				"         }\n" + 
-				"      }\n" + 
-				"   }\n" + 
+				"				});\n" + 
+				"			}\n" + 
+				"		}\n" + 
+				"	}\n" + 
 				"\n" + 
-				"   private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {\n" + 
-				"   	~unhandledNodeSelectedStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"   }\n" + 
+				"	private void onUnhandledNodeSelected(BaseTreeNode<?> selectedNode) {\n" + 
+				"		~unhandledNodeSelectedStatements:{it|~it~};separator=\"\\n\"~\n" + 
+				"	}\n" + 
 				"\n" + 
 				"	~events:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"   \n" + 
+				"\n" + 
 				"	~baseTreeNode~\n" + 
 				"\n" + 
 				"	~treeNodes:{it|~it~};separator=\"\\n\\n\"~	\n" + 
@@ -668,21 +669,57 @@ public class TreeNavigator {
 				"\n" + 
 				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
 				"			final int childCount = parent.getChildCount();\n" + 
+				"\n" + 
+				"			final List<BaseTreeNode<?>~gt()~ children = new java.util.ArrayList<>();\n" + 
 				"			for (int i = 0; i < childCount; i++) {\n" + 
 				"				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);\n" + 
 				"				if (predicate.test(childAt))\n" + 
 				"					return Optional.of((T) new TreePath(childAt.getPath()).getLastPathComponent());\n" + 
 				"				else {\n" + 
-				"					final Optional<T> node = find(childAt, predicate);\n" + 
-				"					if (node.isPresent()) return node;\n" + 
+				"					children.add(childAt);\n" + 
 				"				}\n" + 
 				"			}\n" + 
+				"\n" + 
+				"			for (nextgen.swing.STModelNavigator.BaseTreeNode<?> childAt : children) {\n" + 
+				"				final Optional<T> node = find(childAt, predicate);\n" + 
+				"				if (node.isPresent()) return node;\n" + 
+				"			}\n" + 
+				"\n" + 
 				"			return Optional.empty();\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		protected <T extends BaseTreeNode<?>~gt()~ Optional<T> find(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
 				"			return find(parent, navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
 				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
+				"			final BaseTreeNode<?> root = (BaseTreeNode<?>) getRoot();\n" + 
+				"			final Collection<T> children = new java.util.ArrayList<>();\n" + 
+				"			if (root.getClass().isAssignableFrom(nodeType) && predicate.test((T) root)) \n" + 
+				"				children.add((T) root);\n" + 
+				"			children.addAll(findAll((BaseTreeNode<?>) getRoot(), navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
+				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode)));\n" + 
+				"			return children;\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(BaseTreeNode<?> parent, Class<T> nodeType, java.util.function.Predicate<T> predicate) {\n" + 
+				"			return findAll(parent, navigatorTreeNode -> navigatorTreeNode.getClass()\n" + 
+				"					.isAssignableFrom(nodeType) && predicate.test((T) navigatorTreeNode));\n" + 
+				"		}\n" + 
+				"\n" + 
+				"		protected <T extends BaseTreeNode<?>~gt()~ java.util.Collection<T> findAll(BaseTreeNode<?> parent, java.util.function.Predicate<BaseTreeNode<?>~gt()~ predicate) {\n" + 
+				"			final Collection<T> children = new java.util.ArrayList<>();\n" + 
+				"			final int childCount = parent.getChildCount();\n" + 
+				"			for (int i = 0; i < childCount; i++) {\n" + 
+				"				final BaseTreeNode<?> childAt = (BaseTreeNode<?>) parent.getChildAt(i);\n" + 
+				"				if (predicate.test(childAt))\n" + 
+				"					children.add((T) new TreePath(childAt.getPath()).getLastPathComponent());\n" + 
+				"				else {\n" + 
+				"					children.addAll(findAll(childAt, predicate));\n" + 
+				"				}\n" + 
+				"			}\n" + 
+				"			return children;\n" + 
 				"		}\n" + 
 				"\n" + 
 				"		private void addNodeInSortedOrderAndSelect(BaseTreeNode<?> parent, BaseTreeNode<?> child) {\n" + 

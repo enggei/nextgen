@@ -17,6 +17,7 @@ public class NextgenST {
 	.append(CanvasAction.st + "\n")
 	.append(DomainFacade.st + "\n")
 	.append(EntityConstraints.st + "\n")
+	.append(STModelEditor.st + "\n")
 	.append(STTemplateEditor.st + "\n")
 	.append(STWorkspace.st + "\n")
 	.append(FindEditor.st + "\n")
@@ -109,6 +110,10 @@ public class NextgenST {
 
 	public static EntityConstraints newEntityConstraints() {
 		return new EntityConstraints(stGroup);
+	}  
+
+	public static STModelEditor newSTModelEditor() {
+		return new STModelEditor(stGroup);
 	}  
 
 	public static STTemplateEditor newSTTemplateEditor() {

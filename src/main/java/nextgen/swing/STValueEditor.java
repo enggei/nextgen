@@ -16,7 +16,7 @@ public class STValueEditor extends AbstractEditor {
       addPopupActions(txtEditor).
             add(newAction("Save", actionEvent -> tryToSave()));;
 
-      final javax.swing.JTabbedPane editors = new javax.swing.JTabbedPane();
+      final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
       editors.add("Editor", new org.fife.ui.rtextarea.RTextScrollPane(txtEditor));
       editors.add("Values", stValueEditorForm);
       add(editors, java.awt.BorderLayout.CENTER);

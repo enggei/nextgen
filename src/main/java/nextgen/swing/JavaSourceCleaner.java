@@ -6,6 +6,8 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 import nextgen.templates.java.JavaPatterns;
 import nextgen.templates.java.ClassOrInterfaceDeclaration;
 import nextgen.templates.java.MethodCallExpression;
@@ -252,7 +254,7 @@ public class JavaSourceCleaner extends JFrame {
    }
 
    public static void main(String[] args) {
-      com.formdev.flatlaf.FlatDarculaLaf.install();
+      LafManager.install(new DarculaTheme());
       SwingUtil.show(new JavaSourceCleaner());
    }
 }

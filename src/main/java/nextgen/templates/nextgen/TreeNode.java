@@ -6,18 +6,18 @@ public class TreeNode {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _modelType;
-	private String _name;
-	private Boolean _hasUuid;
-	private Object _icon;
 	private Object _tooltipExpression;
+	private String _name;
 	private Object _labelExpression;
+	private Object _icon;
+	private Boolean _hasUuid;
 	private java.util.List<Object> _getActionsStatements = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorStatements = new java.util.ArrayList<>();
-	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _actions = new java.util.ArrayList<>();
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _selectionStatements = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _privateFields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _parameters = new java.util.ArrayList<>();
 
 	TreeNode(org.stringtemplate.v4.STGroup stGroup) {
@@ -32,18 +32,18 @@ public class TreeNode {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TreeNode");
 		st.add("modelType", _modelType);
-		st.add("name", _name);
-		st.add("hasUuid", _hasUuid);
-		st.add("icon", _icon);
 		st.add("tooltipExpression", _tooltipExpression);
+		st.add("name", _name);
 		st.add("labelExpression", _labelExpression);
+		st.add("icon", _icon);
+		st.add("hasUuid", _hasUuid);
 		for (Object o : _getActionsStatements) st.add("getActionsStatements", o);
 		for (Object o : _constructorStatements) st.add("constructorStatements", o);
-		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _actions) st.add("actions", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _selectionStatements) st.add("selectionStatements", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _privateFields) st.addAggr("privateFields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name}", map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _parameters) st.addAggr("parameters.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
@@ -70,6 +70,28 @@ public class TreeNode {
 		return this;
 	} 
 
+	public TreeNode setTooltipExpression(Object value) {
+		this._tooltipExpression = value;
+		return this;
+	}
+
+	public Object getTooltipExpression() {
+		return this._tooltipExpression;
+	}
+
+	public Object getTooltipExpression(Object defaultValue) {
+		return this._tooltipExpression == null ? defaultValue : this._tooltipExpression;
+	}
+
+	public boolean hasTooltipExpression() {
+		return this._tooltipExpression != null;
+	}
+
+	public TreeNode removeTooltipExpression() {
+		this._tooltipExpression = null;
+		return this;
+	} 
+
 	public TreeNode setName(String value) {
 		this._name = value;
 		return this;
@@ -92,25 +114,25 @@ public class TreeNode {
 		return this;
 	} 
 
-	public TreeNode setHasUuid(Boolean value) {
-		this._hasUuid = value;
+	public TreeNode setLabelExpression(Object value) {
+		this._labelExpression = value;
 		return this;
 	}
 
-	public Boolean getHasUuid() {
-		return this._hasUuid;
+	public Object getLabelExpression() {
+		return this._labelExpression;
 	}
 
-	public Boolean getHasUuid(Boolean defaultValue) {
-		return this._hasUuid == null ? defaultValue : this._hasUuid;
+	public Object getLabelExpression(Object defaultValue) {
+		return this._labelExpression == null ? defaultValue : this._labelExpression;
 	}
 
-	public boolean hasHasUuid() {
-		return this._hasUuid != null;
+	public boolean hasLabelExpression() {
+		return this._labelExpression != null;
 	}
 
-	public TreeNode removeHasUuid() {
-		this._hasUuid = null;
+	public TreeNode removeLabelExpression() {
+		this._labelExpression = null;
 		return this;
 	} 
 
@@ -136,47 +158,25 @@ public class TreeNode {
 		return this;
 	} 
 
-	public TreeNode setTooltipExpression(Object value) {
-		this._tooltipExpression = value;
+	public TreeNode setHasUuid(Boolean value) {
+		this._hasUuid = value;
 		return this;
 	}
 
-	public Object getTooltipExpression() {
-		return this._tooltipExpression;
+	public Boolean getHasUuid() {
+		return this._hasUuid;
 	}
 
-	public Object getTooltipExpression(Object defaultValue) {
-		return this._tooltipExpression == null ? defaultValue : this._tooltipExpression;
+	public Boolean getHasUuid(Boolean defaultValue) {
+		return this._hasUuid == null ? defaultValue : this._hasUuid;
 	}
 
-	public boolean hasTooltipExpression() {
-		return this._tooltipExpression != null;
+	public boolean hasHasUuid() {
+		return this._hasUuid != null;
 	}
 
-	public TreeNode removeTooltipExpression() {
-		this._tooltipExpression = null;
-		return this;
-	} 
-
-	public TreeNode setLabelExpression(Object value) {
-		this._labelExpression = value;
-		return this;
-	}
-
-	public Object getLabelExpression() {
-		return this._labelExpression;
-	}
-
-	public Object getLabelExpression(Object defaultValue) {
-		return this._labelExpression == null ? defaultValue : this._labelExpression;
-	}
-
-	public boolean hasLabelExpression() {
-		return this._labelExpression != null;
-	}
-
-	public TreeNode removeLabelExpression() {
-		this._labelExpression = null;
+	public TreeNode removeHasUuid() {
+		this._hasUuid = null;
 		return this;
 	} 
 
@@ -238,35 +238,6 @@ public class TreeNode {
 		return this._constructorStatements;
 	} 
 
-	public TreeNode addMethods(Object value) {
-		this._methods.add(value);
-		return this;
-	}
-
-	public TreeNode setMethods(Object[] value) {
-		this._methods.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public TreeNode setMethods(java.util.Collection<Object> values) {
-		this._methods.addAll(values);
-		return this;
-	}
-
-	public TreeNode removeMethods(Object value) {
-		this._methods.remove(value);
-		return this;
-	}
-
-	public TreeNode removeMethods(int index) {
-		this._methods.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getMethods() {
-		return this._methods;
-	} 
-
 	public TreeNode addActions(Object value) {
 		this._actions.add(value);
 		return this;
@@ -294,6 +265,35 @@ public class TreeNode {
 
 	public java.util.List<Object> getActions() {
 		return this._actions;
+	} 
+
+	public TreeNode addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public TreeNode setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public TreeNode setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public TreeNode removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public TreeNode removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public TreeNode addSelectionStatements(Object value) {
@@ -324,61 +324,6 @@ public class TreeNode {
 	public java.util.List<Object> getSelectionStatements() {
 		return this._selectionStatements;
 	} 
-
-	public TreeNode addFields(Object _type, Object _name) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
-		this._fields.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
-	}
-
-	public TreeNode addFields(TreeNode_Fields value) {
-		return addFields(value._type, value._name);
-	}
-
-	public java.util.stream.Stream<TreeNode_Fields> streamFields() {
-		return this._fields.stream().map(TreeNode_Fields::new);
-	}
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(TreeNode_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(TreeNode_Fields::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class TreeNode_Fields {
-
-		Object _type;
-		Object _name;
-
-		public TreeNode_Fields(Object _type, Object _name) {
-			this._type = _type;
-			this._name = _name;
-		}
-
-		private TreeNode_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (Object) map.get("name");
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-		public Object getName() {
-			return this._name;
-		}
-
-	}  
 
 	public TreeNode addPrivateFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -444,6 +389,61 @@ public class TreeNode {
 
 		public Object getInit() {
 			return this._init;
+		}
+
+	}  
+
+	public TreeNode addFields(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public TreeNode addFields(TreeNode_Fields value) {
+		return addFields(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<TreeNode_Fields> streamFields() {
+		return this._fields.stream().map(TreeNode_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(TreeNode_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Name() {
+		return streamFields().map(TreeNode_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class TreeNode_Fields {
+
+		Object _type;
+		Object _name;
+
+		public TreeNode_Fields(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private TreeNode_Fields(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 	}  
@@ -516,7 +516,7 @@ public class TreeNode {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TreeNode(modelType,name,hasUuid,fields,privateFields,getActionsStatements,constructorStatements,methods,actions,icon,tooltipExpression,labelExpression,selectionStatements,parameters) ::= <<// ~name~\n" + 
+	static final String st = "TreeNode(getActionsStatements,constructorStatements,modelType,tooltipExpression,name,labelExpression,privateFields,fields,actions,parameters,icon,hasUuid,methods,selectionStatements) ::= <<// ~name~\n" + 
 				"public class ~name~ extends BaseTreeNode<~modelType~> {\n" + 
 				"~if(hasUuid)~\n" + 
 				"\n" + 
@@ -572,8 +572,16 @@ public class TreeNode {
 				"	return treeModel.find(~name~.class, treeNode -> true);\n" + 
 				"}\n" + 
 				"\n" + 
+				"private java.util.Collection<~name~> findAll~name;format=\"capitalize\"~() {\n" + 
+				"	return treeModel.findAll(~name~.class, treeNode -> true);\n" + 
+				"}\n" + 
+				"\n" + 
 				"private Optional<~name~> find~name;format=\"capitalize\"~(java.util.function.Predicate<~name~> predicate) {\n" + 
 				"	return treeModel.find(~name~.class, predicate);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private java.util.Collection<~name~> findAll~name;format=\"capitalize\"~(java.util.function.Predicate<~name~> predicate) {\n" + 
+				"	return treeModel.findAll(~name~.class, predicate);\n" + 
 				"}\n" + 
 				"\n" + 
 				"private Optional<~name~> find~name;format=\"capitalize\"~(BaseTreeNode<?> parent, java.util.function.Predicate<~name~> predicate) {\n" + 

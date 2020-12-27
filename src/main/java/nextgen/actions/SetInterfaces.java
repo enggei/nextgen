@@ -25,7 +25,7 @@ public class SetInterfaces extends nextgen.actions.TransactionAction {
       txtImplements.add(newTextField("", 15));
       txtImplements.add(newTextField("", 15));
 
-      final javax.swing.JPanel contentPanel = new javax.swing.JPanel(new java.awt.GridLayout(txtImplements.size(), 1));
+      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtImplements.size(), 1));
       contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
       for (javax.swing.JTextField txtImplement : txtImplements)
          contentPanel.add(txtImplement);

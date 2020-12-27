@@ -20,13 +20,13 @@ public class STGroupFileEditor extends AbstractEditor {
       txtPackage.addKeyListener(editorKeyListener);
       txtPath.addKeyListener(editorKeyListener);
 
-      final javax.swing.JPanel inputPanel = new javax.swing.JPanel(new java.awt.GridLayout(4, 2));
+      final javax.swing.JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(4, 2));
       inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-      inputPanel.add(new javax.swing.JLabel("Package"));
+      inputPanel.add(nextgen.swing.ComponentFactory.newJLabel("Package"));
       inputPanel.add(txtPackage);
 
-      inputPanel.add(new javax.swing.JLabel("Path"));
+      inputPanel.add(nextgen.swing.ComponentFactory.newJLabel("Path"));
       inputPanel.add(txtPath);
 
       add(inputPanel, java.awt.BorderLayout.NORTH);
