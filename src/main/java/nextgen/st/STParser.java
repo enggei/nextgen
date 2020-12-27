@@ -232,7 +232,7 @@ public class STParser {
 
       model.setText(parsed.getText());
 
-      final List<nextgen.model.STParameter> existingParameters = model.getParameters().collect(Collectors.toList());
+      final List<nextgen.model.STParameter> existingParameters = model.getParametersSorted().collect(Collectors.toList());
       final java.util.List<nextgen.model.parser.ParsedSTParameter> parsedParameters = parsed.getParameters();
 
       final java.util.List<Object> newParameters = new java.util.ArrayList<>();

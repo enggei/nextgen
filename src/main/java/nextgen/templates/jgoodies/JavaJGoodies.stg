@@ -1,14 +1,20 @@
 delimiters "~","~"
 
-FormPanel(package,rowSpec,rows,name,components,model,colSpec,columns,extending,statements) ::= <<package ~package~;
+FormPanel(package,statements,rowSpec,rows,components,model,extending,name,colSpec,columns) ::= <<package ~package~;
 
 import javax.swing.*;
 
 public class ~name~~if(extending)~ extends ~extending~~endif~ {
 	
-	// columns 	~columns~	"~colSpec~"
-	// rows 		~rows~ 	"~rowSpec~"
-	
+	/*
+	 
+	 columns 	~columns~	"~colSpec~"
+	 
+	 rows 		~rows~ 	"~rowSpec~"
+	 
+	 ~model~
+	 
+	*/	
 	~components:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	public ~name~() {
@@ -25,12 +31,6 @@ public class ~name~~if(extending)~ extends ~extending~~endif~ {
 		return this;
 	~eom()~
 };separator="\n"~
-
-	/* 
-	   
-	 /~model~
-	 
-	*/
 }  >>
 
 grammar() ::= <<columnSpecs ::= columnSpec+ 

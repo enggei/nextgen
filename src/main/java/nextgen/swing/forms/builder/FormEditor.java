@@ -100,7 +100,7 @@ public class FormEditor extends JPanel {
       extending = new SelectButton(model.extending());
       formName = ComponentFactory.newJTextField(model.name(), 15);
       formPackage = ComponentFactory.newJTextField(model.packageName(), 15);
-      final JButton btnMakePanel = ComponentFactory.newJButton("Make Panel");
+      final JButton btnMakePanel = ComponentFactory.newJButton("Save");
 
       final JPanel westCenter = ComponentFactory.newJPanel(new java.awt.GridLayout(4, 2));
       westCenter.add(newJLabel("Form.extends"));
@@ -200,9 +200,10 @@ public class FormEditor extends JPanel {
 
    private void makePanel() {
 
-      System.out.println(debug(model));
-
-      if (makePanelAction != null) makePanelAction.accept(this);
+      if (makePanelAction != null) {
+         makePanelAction.accept(this);
+         return;
+      }
 
       final ColumnSpecs columnSpecs = getColumnSpecs();
       final RowSpecs rowSpecs = getRowSpecs();
@@ -212,6 +213,7 @@ public class FormEditor extends JPanel {
 
       final FormPanel formPanel = newFormPanel()
             .setPackage(packageName)
+            .setModel(debug())
             .setName(name)
             .setColSpec(columnSpecs)
             .setRowSpec(rowSpecs)
@@ -270,7 +272,7 @@ public class FormEditor extends JPanel {
             .append(" ").append(row.size())
             .append(" ").append(row.grow())
             .append("\n"));
-      model.cells().forEach(cell -> out
+      getCellComponents().forEach(cell -> out
             .append("cell ").append(cell.x())
             .append(" ").append(cell.y())
             .append(" ").append(cell.height())
@@ -284,11 +286,7 @@ public class FormEditor extends JPanel {
    }
 
    private void addComponent(FormPanel formPanel, FormModel.Cell cell) {
-      int width = cell.width();
-      int height = cell.height();
-      final String hAlign = cell.hAlign().toString();
-      final String vAlign = cell.vAlign().toString();
-      formPanel.addComponents(width, vAlign, height, hAlign, getCellX(cell), null, getCellType(cell), getCellName(cell), getCellY(cell));
+      formPanel.addComponents(getCellY(cell), getCellName(cell), getCellType(cell), null, getCellX(cell), cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width());
    }
 
    private void addComponent(JPanel formPanel, FormModel.Cell cell) {
@@ -340,7 +338,7 @@ public class FormEditor extends JPanel {
 
    private FormModel.Cell newCell(int x, int y, FormModel.Cell cache) {
       if (cache == null) return newCell(x, y);
-      return cache;
+      return cache.setHAlign(cellHAlignment.getValue()).setVAlign(cellVAlignment.getValue());
    }
 
    private void renderModel() {
@@ -497,7 +495,7 @@ public class FormEditor extends JPanel {
                            public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
                               SwingUtilities.invokeLater(() -> {
                                  index.set(finalI);
-                                 setText(values.get(index.get()).toString());
+                                 setText(formatter.apply(values.get(index.get())));
                                  if (action != null) action.accept(SelectButton.this);
                               });
                            }
@@ -530,10 +528,6 @@ public class FormEditor extends JPanel {
          if (!values.contains(value)) values.add(value);
          index.set(values.indexOf(value));
          setText(formatter.apply(values.get(index.get())));
-      }
-
-      public void updateText() {
-         SwingUtilities.invokeLater(() -> setText(formatter.apply(values.get(index.get()))));
       }
    }
 
@@ -613,14 +607,12 @@ public class FormEditor extends JPanel {
                .action(button -> {
                   cell.setVAlign(button.getValue());
                   renderModel();
-                  button.updateText();
                });
          components[5] = new SelectButton(model.hAlignments(), cell.hAlign())
                .formatter((o) -> "h " + o)
                .action(button -> {
                   cell.setHAlign(button.getValue());
                   renderModel();
-                  button.updateText();
                });
          for (JComponent component : components) add(component);
       }
@@ -762,7 +754,7 @@ public class FormEditor extends JPanel {
 
    public static void main(String[] args) {
       ComponentFactory.applyLaf();
-      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel","tmp","col 2 1 LEFT PREF none\n" +
+      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel", "tmp", "col 2 1 LEFT PREF none\n" +
             "col 3 1 LEFT PREF grow\n" +
             "col 4 1 LEFT PREF none\n" +
             "row 1 2 FILL PREF none\n" +

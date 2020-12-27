@@ -49,9 +49,11 @@ public class STModelEditor extends BaseEditor<STModel> {
                   break;
                case "name":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().name());
+                  getModel().getFiles().filter(stFile -> !stFile.getName().getValue().equals(formEditor.model().name())).forEach(stFile -> stFile.setName(appModel().newSTValue(formEditor.model().name())));
                   break;
                case "package":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().packageName());
+                  getModel().getFiles().filter(stFile -> !stFile.getPackageName().getValue().equals(formEditor.model().packageName())).forEach(stFile -> stFile.setPackageName(appModel().newSTValue(formEditor.model().packageName())));
                   break;
                case "extending":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), appModel().db.findOrCreateSTValueByValue("JPanel"));
@@ -111,8 +113,6 @@ public class STModelEditor extends BaseEditor<STModel> {
 
          STModelChanged.post(getModel());
       });
-
-
    }
 
    @Override
