@@ -15,118 +15,58 @@ import static nextgen.templates.jgoodies.JavaJGoodiesST.*;
 
 public class FormEditor extends JPanel {
 
+   private final JPanel formPanel = ComponentFactory.decorate(new com.jgoodies.forms.debug.FormDebugPanel());
+   private final JScrollPane formScrollPane = newJScrollPane(formPanel);
+
+   private final SelectButton colCount;
+   private final SelectButton rowCount;
+   private final SelectButton columnAlignments;
+   private final SelectButton rowAlignments;
+   private final SelectButton columnSizes;
+   private final SelectButton rowSizes;
+   private final SelectButton columnGrowths;
+   private final SelectButton rowGrowths;
+   private final SelectButton cellHAlignment;
+   private final SelectButton cellVAlignment;
+   private final SelectButton extending;
+   private final JTextField formName;
+   private final JTextField formPackage;
+   private final FormModel model;
+
    private Consumer<FormEditor> makePanelAction;
 
-   public static void main(String[] args) {
-      ComponentFactory.applyLaf();
-      nextgen.utils.SwingUtil.showPanel(new FormEditor());
+   public FormEditor(String name, String packageName, String model) {
+      this(parse(name, packageName, model));
    }
 
-
-   FormModel model = newFormModel("mod SearchForm nextgen.swing.forms\n" +
-         "col 2 1 LEFT PREF none\n" +
-         "col 3 1 LEFT PREF grow\n" +
-         "col 4 1 LEFT PREF none\n" +
-         "row 1 2 FILL PREF none\n" +
-         "row 1 3 FILL PREF none\n" +
-         "row 1 4 FILL PREF none\n" +
-         "cell 2 2 1 1 FILL FILL Label search\n" +
-         "cell 2 3 1 1 FILL FILL Label replace\n" +
-         "cell 2 4 1 3 FILL FILL ScrollPane result\n" +
-         "cell 3 2 1 1 FILL FILL TextField search\n" +
-         "cell 3 3 1 1 FILL FILL TextField replace\n" +
-         "cell 3 4 1 1 FILL FILL NONE null\n" +
-         "cell 4 2 1 1 FILL FILL Button search\n" +
-         "cell 4 3 1 1 FILL FILL Button replace\n" +
-         "cell 4 4 1 1 FILL FILL NONE null");
-
-   private FormModel newFormModel(String s) {
-      final FormModel model = new FormModel();
-
-      for (String l : s.split("\n")) {
-         final String[] c = l.trim().split("[ ]");
-         int i = 1;
-         switch (c[0]) {
-            case "mod":
-               model.setName(c[i++]);
-               model.setPackageName(c[i++]);
-               break;
-            case "col":
-               model.columns().add(new FormModel.Column()
-                     .setX(Integer.parseInt(c[i++]))
-                     .setY(Integer.parseInt(c[i++]))
-                     .setColumnAlignment(columnAlignment.valueOf(c[i++]))
-                     .setSize(c[i++])
-                     .setGrow(c[i++])
-               );
-
-               break;
-            case "row":
-               model.rows().add(new FormModel.Row()
-                     .setX(Integer.parseInt(c[i++]))
-                     .setY(Integer.parseInt(c[i++]))
-                     .setRowAlignment(rowAlignment.valueOf(c[i++]))
-                     .setSize(c[i++])
-                     .setGrow(c[i++])
-               );
-
-               break;
-
-            case "cell":
-               model.cells().add(new FormModel.Cell()
-                     .setX(Integer.parseInt(c[i++]))
-                     .setY(Integer.parseInt(c[i++]))
-                     .setHeight(Integer.parseInt(c[i++]))
-                     .setWidth(Integer.parseInt(c[i++]))
-                     .setHAlign(hAlignment.valueOf(c[i++]))
-                     .setVAlign(vAlignment.valueOf(c[i++]))
-                     .setComponent(c[i++])
-                     .setName(c[i++])
-               );
-               break;
-         }
-      }
-      return model;
-   }
-
-   SelectButton colCount = new SelectButton(model.counts(), Integer.toString(model.columns().size()));
-   SelectButton rowCount = new SelectButton(model.counts(), Integer.toString(model.rows().size()));
-   SelectButton columnAlignments = new SelectButton(model.cAlignments());
-   SelectButton rowAlignments = new SelectButton(model.rAlignments());
-   SelectButton columnSizes = new SelectButton(model.sizes());
-   SelectButton rowSizes = new SelectButton(model.sizes());
-   SelectButton columnGrowths = new SelectButton(model.growths());
-   SelectButton rowGrowths = new SelectButton(model.growths());
-   SelectButton cellHAlignment = new SelectButton(model.hAlignments());
-   SelectButton cellVAlignment = new SelectButton(model.vAlignments());
-
-   JButton btnReset = ComponentFactory.newJButton("Reset");
-   JButton btnGenerate = ComponentFactory.newJButton("Generate");
-   JButton btnAddColumn = ComponentFactory.newJButton("Add Column");
-   JButton btnDelColumn = ComponentFactory.newJButton("Del Column");
-   JButton btnAddRow = ComponentFactory.newJButton("Add Row");
-   JButton btnDelRow = ComponentFactory.newJButton("Del Row");
-   JButton btnMakePanel = ComponentFactory.newJButton("Make Panel");
-
-   SelectButton prefPanelWidth = new SelectButton(model.panelWidths());
-   SelectButton prefPanelHeight = new SelectButton(model.panelHeights());
-   SelectButton extending = new SelectButton(model.extending());
-
-   JTextField formName = ComponentFactory.newJTextField(model.name(), 15);
-   JTextField formPackage = ComponentFactory.newJTextField(model.packageName(), 15);
-
-   JTabbedPane tabbedPane = ComponentFactory.newJTabbedPane();
-   JPanel formPanel = ComponentFactory.decorate(new com.jgoodies.forms.debug.FormDebugPanel());
-   JScrollPane formScrollPane = newJScrollPane(formPanel);
-
-   public FormEditor() {
+   public FormEditor(FormModel model) {
       super(new java.awt.BorderLayout(10, 10));
-      ComponentFactory.decorate(this);
 
+      this.model = model;
+
+      ComponentFactory.decorate(this);
       setPreferredSize(new java.awt.Dimension(2500, 1200));
+
+      colCount = new SelectButton(model.counts(), Integer.toString(model.columns().size()));
+      rowCount = new SelectButton(model.counts(), Integer.toString(model.rows().size()));
+      columnAlignments = new SelectButton(model.cAlignments());
+      rowAlignments = new SelectButton(model.rAlignments());
+      columnSizes = new SelectButton(model.sizes());
+      rowSizes = new SelectButton(model.sizes());
+      columnGrowths = new SelectButton(model.growths());
+      rowGrowths = new SelectButton(model.growths());
+      cellHAlignment = new SelectButton(model.hAlignments());
+      cellVAlignment = new SelectButton(model.vAlignments());
 
       final JPanel west = ComponentFactory.newJPanel(new java.awt.BorderLayout());
       final JPanel westNorth = ComponentFactory.newJPanel(new java.awt.GridLayout(14, 2));
+      final JButton btnGenerate = ComponentFactory.newJButton("Generate");
+      final JButton btnAddColumn = ComponentFactory.newJButton("Add Column");
+      final JButton btnDelColumn = ComponentFactory.newJButton("Del Column");
+      final JButton btnAddRow = ComponentFactory.newJButton("Add Row");
+      final JButton btnDelRow = ComponentFactory.newJButton("Del Row");
+      final JButton btnReset = ComponentFactory.newJButton("Reset");
+
       westNorth.add(newJLabel("Columns"));
       westNorth.add(colCount);
       westNorth.add(newJLabel("ColumnAlignment"));
@@ -157,11 +97,12 @@ public class FormEditor extends JPanel {
       westNorth.add(btnReset);
       west.add(westNorth, java.awt.BorderLayout.NORTH);
 
-      final JPanel westCenter = ComponentFactory.newJPanel(new java.awt.GridLayout(6, 2));
-      westCenter.add(newJLabel("Form.width"));
-      westCenter.add(prefPanelWidth);
-      westCenter.add(newJLabel("Form.height"));
-      westCenter.add(prefPanelHeight);
+      extending = new SelectButton(model.extending());
+      formName = ComponentFactory.newJTextField(model.name(), 15);
+      formPackage = ComponentFactory.newJTextField(model.packageName(), 15);
+      final JButton btnMakePanel = ComponentFactory.newJButton("Make Panel");
+
+      final JPanel westCenter = ComponentFactory.newJPanel(new java.awt.GridLayout(4, 2));
       westCenter.add(newJLabel("Form.extends"));
       westCenter.add(extending);
       westCenter.add(newJLabel("Form.package"));
@@ -171,9 +112,9 @@ public class FormEditor extends JPanel {
       westCenter.add(newJLabel("Form"));
       westCenter.add(btnMakePanel);
       west.add(westCenter, java.awt.BorderLayout.SOUTH);
-
       add(west, java.awt.BorderLayout.WEST);
 
+      final JTabbedPane tabbedPane = ComponentFactory.newJTabbedPane();
       tabbedPane.add("FormPanel", formScrollPane);
       add(tabbedPane, java.awt.BorderLayout.CENTER);
 
@@ -199,8 +140,6 @@ public class FormEditor extends JPanel {
       btnDelRow.addActionListener(actionEvent -> delRow());
       btnMakePanel.addActionListener(actionEvent -> makePanel());
 
-      prefPanelWidth.action(button -> renderModel());
-      prefPanelHeight.action(button -> renderModel());
       extending.action(button -> renderModel());
 
       renderModel();
@@ -209,6 +148,48 @@ public class FormEditor extends JPanel {
    public FormModel model() {
       return model;
    }
+
+   public java.util.stream.Stream<FormModel.Cell> getCellComponents() {
+      return model.cells().stream().filter(cell -> !cell.component().equals(model.components()[0]));  // [0] = "NONE"
+   }
+
+   public String debug() {
+      return debug(model);
+   }
+
+   public RowSpecs getRowSpecs() {
+      final RowSpecs rowSpecs = newRowSpecs();
+      model.rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      return rowSpecs;
+   }
+
+   public ColumnSpecs getColumnSpecs() {
+      final ColumnSpecs columnSpecs = newColumnSpecs();
+      model.columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      return columnSpecs;
+   }
+
+   public FormEditor onMakePanel(Consumer<FormEditor> makePanelAction) {
+      this.makePanelAction = makePanelAction;
+      return this;
+   }
+
+   public String getCellName(FormModel.Cell cell) {
+      return model.componentPrefixes()[indexOf(model.components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
+   }
+
+   public String getCellType(FormModel.Cell cell) {
+      return "J" + cell.component();
+   }
+
+   public int getCellX(FormModel.Cell cell) {
+      return cell.x() - 1;
+   }
+
+   public int getCellY(FormModel.Cell cell) {
+      return cell.y() - 1;
+   }
+
 
    private void reset() {
       model.columns().clear();
@@ -240,10 +221,6 @@ public class FormEditor extends JPanel {
       getCellComponents().forEach(cell -> addComponent(formPanel, cell));
 
       nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
-   }
-
-   private java.util.stream.Stream<FormModel.Cell> getCellComponents() {
-      return model.cells().stream().filter(cell -> !cell.component().equals(model.components()[0]));  // [0] = "NONE"
    }
 
    private java.awt.Component newComponent(FormModel.Cell cell) {
@@ -278,30 +255,32 @@ public class FormEditor extends JPanel {
    }
 
    private String debug(FormModel model) {
-      final StringBuilder out = new StringBuilder("\nmod ").append(model.name())
-            .append(" ").append(model.packageName());
+      final StringBuilder out = new StringBuilder();
       model.columns().forEach(column -> out
-            .append("\ncol ").append(column.x())
+            .append("col ").append(column.x())
             .append(" ").append(column.y())
             .append(" ").append(column.columnAlignment().name())
             .append(" ").append(column.size())
-            .append(" ").append(column.grow()));
+            .append(" ").append(column.grow())
+            .append("\n"));
       model.rows().forEach(row -> out
-            .append("\nrow ").append(row.x())
+            .append("row ").append(row.x())
             .append(" ").append(row.y())
             .append(" ").append(row.rowAlignment().name())
             .append(" ").append(row.size())
-            .append(" ").append(row.grow()));
+            .append(" ").append(row.grow())
+            .append("\n"));
       model.cells().forEach(cell -> out
-            .append("\ncell ").append(cell.x())
+            .append("cell ").append(cell.x())
             .append(" ").append(cell.y())
             .append(" ").append(cell.height())
             .append(" ").append(cell.width())
             .append(" ").append(cell.hAlign().name())
             .append(" ").append(cell.vAlign().name())
             .append(" ").append(cell.component())
-            .append(" ").append(cell.name()));
-      return out.toString();
+            .append(" ").append(cell.name())
+            .append("\n"));
+      return out.toString().trim();
    }
 
    private void addComponent(FormPanel formPanel, FormModel.Cell cell) {
@@ -366,8 +345,6 @@ public class FormEditor extends JPanel {
 
    private void renderModel() {
       SwingUtilities.invokeLater(() -> {
-         System.out.println("renderModel");
-         final long start = System.currentTimeMillis();
 
          final ColumnSpecs columnSpecs = getEditorColumnSpecs();
          final RowSpecs rowSpecs = getEditorRowSpecs();
@@ -387,8 +364,6 @@ public class FormEditor extends JPanel {
 
          formScrollPane.getVerticalScrollBar().setUnitIncrement(100);
          formScrollPane.getHorizontalScrollBar().setUnitIncrement(100);
-
-         System.out.println("took " + (System.currentTimeMillis() - start) + "ms");
       });
    }
 
@@ -414,18 +389,6 @@ public class FormEditor extends JPanel {
       return JavaJGoodiesPatterns.newRowSpec()
             .setSize(newConstantSize().setValue("200"))
             .setRowAlignment(rowAlignment.FILL);
-   }
-
-   public RowSpecs getRowSpecs() {
-      final RowSpecs rowSpecs = newRowSpecs();
-      model.rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
-      return rowSpecs;
-   }
-
-   public ColumnSpecs getColumnSpecs() {
-      final ColumnSpecs columnSpecs = newColumnSpecs();
-      model.columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
-      return columnSpecs;
    }
 
    private RowSpec asRowSpec(FormModel.Row row) {
@@ -492,27 +455,6 @@ public class FormEditor extends JPanel {
       renderModel();
    }
 
-   public FormEditor onMakePanel(Consumer<FormEditor> makePanelAction) {
-      this.makePanelAction = makePanelAction;
-      return this;
-   }
-
-   public String getCellName(FormModel.Cell cell) {
-      return model.componentPrefixes()[indexOf(model.components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
-   }
-
-   public String getCellType(FormModel.Cell cell) {
-      return "J" + cell.component();
-   }
-
-   public int getCellX(FormModel.Cell cell) {
-      return cell.x() - 1;
-   }
-
-   public int getCellY(FormModel.Cell cell) {
-      return cell.y() - 1;
-   }
-
    private static final class SelectButton extends JToggleButton {
 
       private final java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger(0);
@@ -520,15 +462,15 @@ public class FormEditor extends JPanel {
       private java.util.function.Consumer<SelectButton> action;
       private java.util.function.Function<Object, String> formatter = Object::toString;
 
-      public SelectButton(Object[] array) {
+      SelectButton(Object[] array) {
          this(array, indexOf(array, 0));
       }
 
-      public SelectButton(Object[] array, Object initial) {
+      SelectButton(Object[] array, Object initial) {
          this(array, indexOf(array, initial));
       }
 
-      public SelectButton(Object[] array, int initial) {
+      SelectButton(Object[] array, int initial) {
          ComponentFactory.decorate(this);
 
          this.values.addAll(java.util.Arrays.asList(array));
@@ -569,29 +511,29 @@ public class FormEditor extends JPanel {
          });
       }
 
-      public SelectButton action(java.util.function.Consumer<SelectButton> actionListenerConsumer) {
+      SelectButton action(java.util.function.Consumer<SelectButton> actionListenerConsumer) {
          this.action = actionListenerConsumer;
          return this;
       }
 
-      public SelectButton formatter(java.util.function.Function<Object, String> formatter) {
+      SelectButton formatter(java.util.function.Function<Object, String> formatter) {
          this.formatter = formatter;
          return this;
       }
 
       @SuppressWarnings("unchecked")
-      public <T> T getValue() {
+      <T> T getValue() {
          return (T) values.get(index.get());
       }
 
-      public int getIndex() {
-         return index.get();
-      }
-
-      public void setValue(Object value) {
+      void setValue(Object value) {
          if (!values.contains(value)) values.add(value);
          index.set(values.indexOf(value));
          setText(formatter.apply(values.get(index.get())));
+      }
+
+      public void updateText() {
+         SwingUtilities.invokeLater(() -> setText(formatter.apply(values.get(index.get()))));
       }
    }
 
@@ -671,12 +613,14 @@ public class FormEditor extends JPanel {
                .action(button -> {
                   cell.setVAlign(button.getValue());
                   renderModel();
+                  button.updateText();
                });
          components[5] = new SelectButton(model.hAlignments(), cell.hAlign())
                .formatter((o) -> "h " + o)
                .action(button -> {
                   cell.setHAlign(button.getValue());
                   renderModel();
+                  button.updateText();
                });
          for (JComponent component : components) add(component);
       }
@@ -766,5 +710,72 @@ public class FormEditor extends JPanel {
 
          pane.add(title, container);
       }
+   }
+
+   public static FormModel parse(String name, String packageName, String s) {
+
+      final FormModel model = new FormModel();
+      model.setName(name);
+      model.setPackageName(packageName);
+
+      for (String l : s.split("\n")) {
+         final String[] c = l.trim().split("[ ]");
+         int i = 1;
+         switch (c[0]) {
+            case "col":
+               model.columns().add(new FormModel.Column()
+                     .setX(Integer.parseInt(c[i++]))
+                     .setY(Integer.parseInt(c[i++]))
+                     .setColumnAlignment(columnAlignment.valueOf(c[i++]))
+                     .setSize(c[i++])
+                     .setGrow(c[i])
+               );
+
+               break;
+            case "row":
+               model.rows().add(new FormModel.Row()
+                     .setX(Integer.parseInt(c[i++]))
+                     .setY(Integer.parseInt(c[i++]))
+                     .setRowAlignment(rowAlignment.valueOf(c[i++]))
+                     .setSize(c[i++])
+                     .setGrow(c[i])
+               );
+
+               break;
+
+            case "cell":
+               model.cells().add(new FormModel.Cell()
+                     .setX(Integer.parseInt(c[i++]))
+                     .setY(Integer.parseInt(c[i++]))
+                     .setHeight(Integer.parseInt(c[i++]))
+                     .setWidth(Integer.parseInt(c[i++]))
+                     .setHAlign(hAlignment.valueOf(c[i++]))
+                     .setVAlign(vAlignment.valueOf(c[i++]))
+                     .setComponent(c[i++])
+                     .setName(c[i])
+               );
+               break;
+         }
+      }
+      return model;
+   }
+
+   public static void main(String[] args) {
+      ComponentFactory.applyLaf();
+      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel","tmp","col 2 1 LEFT PREF none\n" +
+            "col 3 1 LEFT PREF grow\n" +
+            "col 4 1 LEFT PREF none\n" +
+            "row 1 2 FILL PREF none\n" +
+            "row 1 3 FILL PREF none\n" +
+            "row 1 4 FILL PREF none\n" +
+            "cell 2 2 1 1 FILL FILL Label search\n" +
+            "cell 2 3 1 1 FILL FILL Label replace\n" +
+            "cell 2 4 1 3 FILL FILL ScrollPane result\n" +
+            "cell 3 2 1 1 FILL FILL TextField search\n" +
+            "cell 3 3 1 1 FILL FILL TextField replace\n" +
+            "cell 3 4 1 1 FILL FILL NONE null\n" +
+            "cell 4 2 1 1 FILL FILL Button search\n" +
+            "cell 4 3 1 1 FILL FILL Button replace\n" +
+            "cell 4 4 1 1 FILL FILL NONE null"));
    }
 }

@@ -826,10 +826,9 @@ public class SwingUtil {
 
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
-//      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
-//      rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
-//      rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
-      rSyntaxTextArea.setFont(ComponentFactory.font);
+      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
+      rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
+      rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
       rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
          @Override

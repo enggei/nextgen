@@ -591,6 +591,16 @@ public class STAppPresentationModel {
       return getSTModelValue(stModel, "name", defaultValue);
    }
 
+   public static String getSTModelPackage(nextgen.model.STModel stModel) {
+      return getSTModelPackage(stModel, "");
+   }
+
+   public static String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
+      final String found = getSTModelValue(stModel, "package", () -> null);
+      if (found != null) return found;
+      return getSTModelValue(stModel, "packageName", defaultValue);
+   }
+
    public static String getSTModelValue(nextgen.model.STModel stModel, String parameterName, Supplier<String> defaultValueSupplier) {
       final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
 
@@ -623,12 +633,6 @@ public class STAppPresentationModel {
             .map(stArgument -> stArgument.getValue().getValue())
             .findFirst()
             .orElse(defaultValue);
-   }
-
-   public String getSTModelPackage(nextgen.model.STModel stModel, String defaultValue) {
-      final String found = getSTModelValue(stModel, "package", () -> null);
-      if (found != null) return found;
-      return getSTModelValue(stModel, "packageName", defaultValue);
    }
 
    public nextgen.model.STGroupModel getSTGroup(nextgen.model.STTemplate stTemplate) {
@@ -719,12 +723,30 @@ public class STAppPresentationModel {
    public nextgen.model.STValue newSTValue(String value) {
       return db.newSTValue(value);
    }
-   public nextgen.model.STValue newSTValue(int value) { return newSTValue(Integer.toString(value)); }
-   public nextgen.model.STValue newSTValue(float value) { return newSTValue(Float.toString(value)); }
-   public nextgen.model.STValue newSTValue(long value) { return newSTValue(Long.toString(value)); }
-   public nextgen.model.STValue newSTValue(byte value) { return newSTValue(Byte.toString(value)); }
-   public nextgen.model.STValue newSTValue(char value) { return newSTValue(Character.toString(value)); }
-   public nextgen.model.STValue newSTValue(boolean value) { return newSTValue(Boolean.toString(value)); }
+
+   public nextgen.model.STValue newSTValue(int value) {
+      return newSTValue(Integer.toString(value));
+   }
+
+   public nextgen.model.STValue newSTValue(float value) {
+      return newSTValue(Float.toString(value));
+   }
+
+   public nextgen.model.STValue newSTValue(long value) {
+      return newSTValue(Long.toString(value));
+   }
+
+   public nextgen.model.STValue newSTValue(byte value) {
+      return newSTValue(Byte.toString(value));
+   }
+
+   public nextgen.model.STValue newSTValue(char value) {
+      return newSTValue(Character.toString(value));
+   }
+
+   public nextgen.model.STValue newSTValue(boolean value) {
+      return newSTValue(Boolean.toString(value));
+   }
 
    public nextgen.model.STEnumValue newSTEnumValue(String name, String lexical) {
       return db
@@ -900,8 +922,21 @@ public class STAppPresentationModel {
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, String value) {
+      if (isSameArgument(stModel, stParameter, value)) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
+   }
+
+   private boolean isSameArgument(STModel stModel, STParameter stParameter, String value) {
+      return getSTParameters(stModel)
+            .filter(parameterArguments -> parameterArguments.parameter().equals(stParameter))
+            .map(parameterArguments -> parameterArguments.arguments().stream().findAny())
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(STArgument::getValue)
+            .filter(Objects::nonNull)
+            .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
+            .anyMatch(stValue -> stValue.getValue().equals(value));
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STEnumValue value) {

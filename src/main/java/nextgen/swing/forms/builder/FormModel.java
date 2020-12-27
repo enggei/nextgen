@@ -17,7 +17,7 @@ public class FormModel {
 	private java.util.List<Column> columns = new java.util.ArrayList<>();
 	private java.util.List<Row> rows = new java.util.ArrayList<>();
 	private String name = "";
-	private String packageName = "nextgen.swing.forms";
+	private String packageName = "";
 	private Object[] vAlignments = nextgen.templates.jgoodies.vAlignment.values();;
 	private String[] componentPrefixes = {"", "lbl", "txt", "btn", "txtArea", "tbl", "lst", "tbtn", "chk", "rd", "p", "scr", "tb", "comp" };
 

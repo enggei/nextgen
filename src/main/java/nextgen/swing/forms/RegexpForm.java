@@ -2,7 +2,7 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-public class SearchForm extends JPanel {
+public class RegexpForm extends JPanel {
 
 	/*
 
@@ -10,7 +10,6 @@ public class SearchForm extends JPanel {
 
 	 rows 		3 	"fill:PREF:none, fill:PREF:none, fill:PREF:none"
 
-	 mod SearchForm nextgen.swing.forms
 	 col 2 1 LEFT PREF none
 	 col 3 1 LEFT PREF grow
 	 col 4 1 LEFT PREF none
@@ -36,41 +35,41 @@ public class SearchForm extends JPanel {
 	JButton btnsearch;
 	JButton btnreplace;
 
-	public SearchForm() {
+	public RegexpForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("left:PREF:none, left:PREF:grow, left:PREF:none", "fill:PREF:none, fill:PREF:none, fill:PREF:none"));
 	}
 
-	public SearchForm setLblsearch(JLabel component) {
+	public RegexpForm setLblsearch(JLabel component) {
 		add(this.lblsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setLblreplace(JLabel component) {
+	public RegexpForm setLblreplace(JLabel component) {
 		add(this.lblreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setScrresult(JScrollPane component) {
+	public RegexpForm setScrresult(JScrollPane component) {
 		add(this.scrresult = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 3, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setTxtsearch(JTextField component) {
+	public RegexpForm setTxtsearch(JTextField component) {
 		add(this.txtsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setTxtreplace(JTextField component) {
+	public RegexpForm setTxtreplace(JTextField component) {
 		add(this.txtreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setBtnsearch(JButton component) {
+	public RegexpForm setBtnsearch(JButton component) {
 		add(this.btnsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public SearchForm setBtnreplace(JButton component) {
+	public RegexpForm setBtnreplace(JButton component) {
 		add(this.btnreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}

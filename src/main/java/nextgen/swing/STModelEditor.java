@@ -7,6 +7,8 @@ import nextgen.swing.forms.builder.*;
 import java.awt.*;
 import java.util.*;
 
+import static nextgen.swing.STAppPresentationModel.*;
+
 public class STModelEditor extends BaseEditor<STModel> {
 
    private final STModelEditorText txtEditor = new nextgen.swing.STModelEditorText();
@@ -22,7 +24,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       editors.add("Values", new STModelEditorGrid(stModel));
       editors.add("Form", formComponent);
       if (stModel.getStTemplate().getUuid().equals("c69858b9-e9aa-4022-98e5-bd6b3bfe0e8b"))
-         editors.add("FormBuilder", new FormEditor().onMakePanel(this::saveModel));
+         editors.add("FormBuilder", newFormEditor(stModel).onMakePanel(this::saveModel));
       add(editors, BorderLayout.CENTER);
 
       txtEditor.setStModel(stModel);
@@ -30,11 +32,21 @@ public class STModelEditor extends BaseEditor<STModel> {
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
+   private FormEditor newFormEditor(STModel stModel) {
+      final String model = getSTModelValue(stModel, "model", "");
+      final String modelName = getSTModelName(stModel);
+      final String modelPackage = getSTModelPackage(stModel);
+      return new FormEditor(modelName, modelPackage, model);
+   }
+
    private void saveModel(FormEditor formEditor) {
 
       appModel().doLaterInTransaction((tx) -> {
          appModel().getSTParameters(getModel()).forEach(parameterArguments -> {
             switch (parameterArguments.parameter().getName()) {
+               case "model":
+                  appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.debug());
+                  break;
                case "name":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().name());
                   break;
@@ -42,7 +54,7 @@ public class STModelEditor extends BaseEditor<STModel> {
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().packageName());
                   break;
                case "extending":
-                  appModel().setArgument(getModel(), parameterArguments.parameter(), "JPanel");
+                  appModel().setArgument(getModel(), parameterArguments.parameter(), appModel().db.findOrCreateSTValueByValue("JPanel"));
                   break;
                case "colSpec":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.getColumnSpecs().toString());
@@ -61,7 +73,7 @@ public class STModelEditor extends BaseEditor<STModel> {
 
                   final Map<FormModel.Cell, Collection<STArgumentKV>> map = new LinkedHashMap<>();
                   parameterArguments.parameter().getKeysSorted().forEach(stParameterKey -> {
-                     formEditor.model().cells().stream().filter(cell -> !cell.component().equals("NONE")).forEach(cell -> {
+                     formEditor.getCellComponents().forEach(cell -> {
                         map.putIfAbsent(cell, new ArrayList<>());
                         switch (stParameterKey.getName()) {
                            case "name":
@@ -91,7 +103,6 @@ public class STModelEditor extends BaseEditor<STModel> {
                         }
                      });
                   });
-
 
                   map.values().forEach(kvs -> appModel().addArgument(getModel(), parameterArguments.parameter(), kvs));
                   break;

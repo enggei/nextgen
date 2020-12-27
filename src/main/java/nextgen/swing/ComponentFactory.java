@@ -10,7 +10,7 @@ public class ComponentFactory {
 
    private static final DarculaTheme theme = new DarculaTheme();
 
-   public static final Font font = new Font("Dialog", Font.PLAIN, 12);
+//   public static final Font font = new Font("Dialog", Font.PLAIN, 12);
 
    public static void applyLaf() {
       LafManager.install(theme);
@@ -74,7 +74,12 @@ public class ComponentFactory {
       return decorate(new javax.swing.JScrollPane());
    }
 
+
    // decorators
+
+   public static Component decorate(Component component) {
+      return component;
+   }
 
    public static javax.swing.JLabel decorate(javax.swing.JLabel component) {
       baseDecorate(component);
@@ -146,8 +151,9 @@ public class ComponentFactory {
       return component;
    }
 
-   private static void baseDecorate(JComponent component) {
-      component.setFont(font);
+   private static JComponent baseDecorate(JComponent component) {
+//      component.setFont(font);
+      return component;
    }
 
    // convenience methods
@@ -278,8 +284,4 @@ public class ComponentFactory {
       return component;
    }
 
-   public static Component decorate(Component component) {
-      component.setFont(font);
-      return component;
-   }
 }
