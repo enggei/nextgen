@@ -151,7 +151,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTValueElementEditorEnabled(nextgen.events.STValueElementEditorEnabled event) {
+	public void onSTValueSelected(nextgen.events.STValueSelected event) {
 		treeModel.find(treeNode -> treeNode.getModel().equals(event.stValue)).ifPresent(treeModel::select);
 	}
 
@@ -287,10 +287,9 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
-		findSTValueArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		findSTModelArgumentTreeNode(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		findSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findAllSTValueArgumentTreeNode().stream().filter(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
+		findAllSTModelArgumentTreeNode().stream().filter(treeNode -> treeNode.stArgumentUuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
+		findAllSTKVArgumentTreeNode().stream().filter(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()

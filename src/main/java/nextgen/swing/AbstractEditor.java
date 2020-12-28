@@ -1,6 +1,8 @@
 package nextgen.swing;
 
 
+import javax.swing.*;
+
 public class AbstractEditor extends javax.swing.JPanel {
 
    protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractEditor.class);
@@ -52,12 +54,39 @@ public class AbstractEditor extends javax.swing.JPanel {
       return nextgen.swing.ComponentFactory.newJLabel(name);
    }
 
+   protected void input(javax.swing.JComponent owner, String message, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+
    protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }
 
    protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
       return nextgen.swing.ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
+   }
+
+   protected javax.swing.JButton newButton(Action action) {
+      return nextgen.swing.ComponentFactory.newJButton(action);
+   }
+
+   protected javax.swing.JButton newButton(String name, int hAlign, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
+      final JButton component = ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
+      component.setHorizontalTextPosition(hAlign);
+      return component;
+   }
+
+   protected javax.swing.JButton newRightAlignedButton(Action action) {
+      final JButton jButton = newButton(action);
+      jButton.setHorizontalAlignment(SwingConstants.RIGHT);
+      return jButton;
+   }
+
+   protected javax.swing.JButton newRightAlignedButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
+      final JButton jButton = newButton(name, SwingConstants.RIGHT, onClick);
+      jButton.setHorizontalAlignment(SwingConstants.RIGHT);
+      return jButton;
    }
 
    protected java.awt.event.KeyListener getEditorKeyListener() {

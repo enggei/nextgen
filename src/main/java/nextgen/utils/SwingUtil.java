@@ -451,6 +451,7 @@ public class SwingUtil {
       }
       return sortedMap.entrySet().stream();
    }
+
    public static void printSwingDefaults(PrintStream out) {
       getUIDefaults().forEach(entry -> out.println(entry.getKey() + "=" + entry.getValue()));
 //      UIManager.put("OptionPane.cancelButtonText", "Cancel");
@@ -590,6 +591,8 @@ public class SwingUtil {
             }
          }
       });
+
+      textField.setCaretPosition(0);
 
       return textField;
    }

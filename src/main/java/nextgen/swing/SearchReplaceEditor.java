@@ -261,6 +261,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          this.element = (STValueElement) value;
          this.component.setText(element.text);
          this.component.setCaretPosition(0);
+         nextgen.events.STValueSelected.post(element.stValue);
          return scrollPane;
       }
    }

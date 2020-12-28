@@ -356,6 +356,16 @@ public class STAppPresentationModel {
       findAllSTArgument(stModel, stParameter).forEach(argument -> detach(stModel, argument));
    }
 
+   private void detach(nextgen.model.STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
+      final Optional<STArgumentKV> existing = stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).findAny();
+      if(existing.isPresent()) {
+         final String uuid = existing.get().getUuid();
+         stArgument.removeKeyValues(existing.get());
+         existing.get().delete();
+         nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+      }
+   }
+
    public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> consumer) {
       db.doInTransaction(consumer);
    }
@@ -427,7 +437,8 @@ public class STAppPresentationModel {
    public java.util.Optional<nextgen.model.STTemplate> findFirstTemplateInArguments(STModel stModel, nextgen.model.STParameter stParameter) {
       return stModel.getArgumentsSorted()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
-            .map(nextgen.model.STArgument::getValue)
+            .map(STArgument::getValue)
+            .filter(Objects::nonNull)
             .filter(nextgen.model.STValue::hasType)
             .filter(stValue -> stValue.getType() == nextgen.model.STValueType.STMODEL)
             .map(stValue -> stValue.getStModel().getStTemplate())
@@ -897,6 +908,10 @@ public class STAppPresentationModel {
       return stArgument == null ? "" : render(stArgument.getValue(), maxLength);
    }
 
+   public String render(STArgument stArgument, String defaultValue) {
+      return stArgument == null ? defaultValue : render(stArgument.getValue(), defaultValue);
+   }
+
    public void setAllModelPaths(nextgen.model.STProject stProject, String path) {
       final nextgen.model.STValue newPath = newSTValue(path);
       aggregateModels(stProject).forEach(stModel -> stModel.getFiles().forEach(stFile -> {
@@ -966,6 +981,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STValue value) {
+      detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, value);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, value);
@@ -973,6 +989,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, String value) {
+      detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
@@ -981,6 +998,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STEnumValue value) {
+      detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
@@ -989,6 +1007,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STTemplate value) {
+      detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
@@ -997,6 +1016,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STModel value) {
+      detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);

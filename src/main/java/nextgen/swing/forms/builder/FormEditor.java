@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import static nextgen.swing.ComponentFactory.*;
 import static nextgen.templates.jgoodies.JavaJGoodiesST.*;
@@ -36,6 +36,8 @@ public class FormEditor extends JPanel {
    private final JTextField formName;
    private final JTextField formPackage;
 
+   private final JButton btnUndo = ComponentFactory.newJButton("Undo");
+
    private final Stack<FormModel> models = new Stack<>();
 
    private Consumer<FormEditor> makePanelAction;
@@ -48,7 +50,6 @@ public class FormEditor extends JPanel {
       super(new java.awt.BorderLayout(10, 10));
 
       models.push(model);
-      models.push(new FormModel(models.peek()));
 
       ComponentFactory.decorate(this);
       setPreferredSize(new java.awt.Dimension(2500, 1200));
@@ -71,7 +72,7 @@ public class FormEditor extends JPanel {
       final JButton btnDelColumn = ComponentFactory.newJButton("Del Column");
       final JButton btnAddRow = ComponentFactory.newJButton("Add Row");
       final JButton btnDelRow = ComponentFactory.newJButton("Del Row");
-      final JButton btnUndo = ComponentFactory.newJButton("Undo");
+
 
       westNorth.add(newJLabel("Columns"));
       westNorth.add(colCount);
@@ -155,25 +156,10 @@ public class FormEditor extends JPanel {
       return models.peek();
    }
 
-   public java.util.stream.Stream<FormModel.Cell> getComponentCells() {
-      return models.peek().cells().stream()
-            .filter(cell -> !cell.component().equals(models.peek().components()[0]));  // [0] = "NONE"
-   }
-
-   public String debug() {
-      return debug(models.peek());
-   }
-
-   public RowSpecs getRowSpecs() {
-      final RowSpecs rowSpecs = newRowSpecs();
-      models.peek().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
-      return rowSpecs;
-   }
-
-   public ColumnSpecs getColumnSpecs() {
-      final ColumnSpecs columnSpecs = newColumnSpecs();
-      models.peek().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
-      return columnSpecs;
+   private void copyFormModel() {
+      System.out.println("pushing");
+      models.push(new FormModel(model()));
+      btnUndo.setEnabled(true);
    }
 
    public FormEditor onMakePanel(Consumer<FormEditor> makePanelAction) {
@@ -181,8 +167,25 @@ public class FormEditor extends JPanel {
       return this;
    }
 
+   public java.util.stream.Stream<FormModel.Cell> getComponentCells() {
+      return model().cells().stream()
+            .filter(cell -> !cell.component().equals(model().components()[0]));  // [0] = "NONE"
+   }
+
+   public RowSpecs getRowSpecs() {
+      final RowSpecs rowSpecs = newRowSpecs();
+      model().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      return rowSpecs;
+   }
+
+   public ColumnSpecs getColumnSpecs() {
+      final ColumnSpecs columnSpecs = newColumnSpecs();
+      model().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      return columnSpecs;
+   }
+
    public String getCellName(FormModel.Cell cell) {
-      return models.peek().componentPrefixes()[indexOf(models.peek().components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
+      return model().componentPrefixes()[indexOf(model().components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
    }
 
    public String getCellType(FormModel.Cell cell) {
@@ -197,9 +200,13 @@ public class FormEditor extends JPanel {
       return cell.y() - 1;
    }
 
-
    private void undo() {
-      if (models.size() > 1) models.pop();
+      if (models.size() > 1) {
+         models.pop();
+         System.out.println("popping");
+      } else {
+         btnUndo.setEnabled(false);
+      }
       renderModel();
    }
 
@@ -223,11 +230,11 @@ public class FormEditor extends JPanel {
             .setColSpec(columnSpecs)
             .setRowSpec(rowSpecs)
             .setExtending("javax.swing.JPanel")
-            .setColumns(models.peek().columns().size())
-            .setRows(models.peek().rows().size());
-      getComponentCells().forEach(cell -> addComponent(formPanel, cell));
+            .setColumns(model().columns().size())
+            .setRows(model().rows().size());
+      getComponentCells().forEach(cell -> formPanel.addComponents(cell.y() - 1, getCellName(cell), getCellType(cell), null, cell.x() - 1, cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width()));
 
-      nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
+      //nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
    }
 
    private java.awt.Component newComponent(FormModel.Cell cell) {
@@ -264,39 +271,6 @@ public class FormEditor extends JPanel {
       return null;
    }
 
-   private String debug(FormModel model) {
-      final StringBuilder out = new StringBuilder();
-      model.columns().forEach(column -> out
-            .append("col ").append(column.x())
-            .append(" ").append(column.y())
-            .append(" ").append(column.columnAlignment().name())
-            .append(" ").append(column.size())
-            .append(" ").append(column.grow())
-            .append("\n"));
-      model.rows().forEach(row -> out
-            .append("row ").append(row.x())
-            .append(" ").append(row.y())
-            .append(" ").append(row.rowAlignment().name())
-            .append(" ").append(row.size())
-            .append(" ").append(row.grow())
-            .append("\n"));
-      model.cells().forEach(cell -> out
-            .append("cell ").append(cell.x())
-            .append(" ").append(cell.y())
-            .append(" ").append(cell.height())
-            .append(" ").append(cell.width())
-            .append(" ").append(cell.hAlign().name())
-            .append(" ").append(cell.vAlign().name())
-            .append(" ").append(cell.component())
-            .append(" ").append(cell.name())
-            .append("\n"));
-      System.out.println(out.toString().trim());
-      return out.toString().trim();
-   }
-
-   private void addComponent(FormPanel formPanel, FormModel.Cell cell) {
-      formPanel.addComponents(getCellY(cell), getCellName(cell), getCellType(cell), null, getCellX(cell), cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width());
-   }
 
    private void addComponent(JPanel formPanel, FormModel.Cell cell) {
       int width = cell.width();
@@ -315,18 +289,18 @@ public class FormEditor extends JPanel {
 
          copyFormModel();
 
-         models.peek().columns().clear();
+         model().columns().clear();
          for (int i = 0; i < cols; i++)
-            models.peek().columns().add(newColumn()
+            model().columns().add(newColumn()
                   .setColumnAlignment(columnAlignments.getValue())
                   .setSize(columnSizes.getValue())
                   .setGrow(columnGrowths.getValue())
                   .setX(i + 2)
                   .setY(1));
 
-         models.peek().rows().clear();
+         model().rows().clear();
          for (int i = 0; i < rows; i++)
-            models.peek().rows().add(newRow()
+            model().rows().add(newRow()
                   .setRowAlignment(rowAlignments.getValue())
                   .setSize(rowSizes.getValue())
                   .setGrow(rowGrowths.getValue())
@@ -334,13 +308,13 @@ public class FormEditor extends JPanel {
                   .setY(i + 2));
 
          final java.util.Map<String, FormModel.Cell> existing = new java.util.LinkedHashMap<>();
-         models.peek().cells().forEach(cell -> existing.put(cell.x() + "_" + cell.y(), cell));
-         models.peek().cells().clear();
+         model().cells().forEach(cell -> existing.put(cell.x() + "_" + cell.y(), cell));
+         model().cells().clear();
          for (int i = 0; i < cols; i++)
             for (int j = 0; j < rows; j++) {
                final int iOffset = i + 2;
                final int jOffset = j + 2;
-               models.peek().cells().add(newCell(iOffset, jOffset, existing.get(iOffset + "_" + jOffset)));
+               model().cells().add(newCell(iOffset, jOffset, existing.get(iOffset + "_" + jOffset)));
             }
 
          renderModel();
@@ -364,9 +338,9 @@ public class FormEditor extends JPanel {
          formPanel.setLayout(formLayout);
 
          formPanel.add(ComponentFactory.newBorderPanel(), constraints.xy(1, 1));
-         models.peek().columns().forEach(column -> formPanel.add(new ColumnCell(column), constraints.xy(column.x(), column.y())));
-         models.peek().rows().forEach(row -> formPanel.add(new RowCell(row), constraints.xy(row.x(), row.y())));
-         getEditorCells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), getW(cell), getH(cell), cell.hAlign() + ", " + cell.vAlign())));
+         model().columns().forEach(column -> formPanel.add(new ColumnCell(column), constraints.xy(column.x(), column.y())));
+         model().rows().forEach(row -> formPanel.add(new RowCell(row), constraints.xy(row.x(), row.y())));
+         getEditorCells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), cell.width(), cell.height(), cell.hAlign() + ", " + cell.vAlign())));
 
          formPanel.revalidate();
          formPanel.repaint();
@@ -376,17 +350,9 @@ public class FormEditor extends JPanel {
       });
    }
 
-   private int getW(FormModel.Cell cell) {
-      return Math.min(cell.width(), (models.peek().columns().size() - cell.x() + 2));
-   }
-
-   private int getH(FormModel.Cell cell) {
-      return Math.min(cell.height(), (models.peek().rows().size() - cell.y() + 2));
-   }
-
    private Stream<FormModel.Cell> getEditorCells() {
       final Map<String, FormModel.Cell> occupied = new LinkedHashMap<>();
-      final List<FormModel.Cell> cells = models.peek().cells();
+      final List<FormModel.Cell> cells = model().cells();
       for (FormModel.Cell cell : cells) {
          String key = cell.x() + " " + cell.y();
          if (occupied.containsKey(key)) continue;
@@ -402,18 +368,19 @@ public class FormEditor extends JPanel {
          }
       }
 
+//      return occupied.values().stream().filter(cell -> getX(cell) < model().columns().size() - 2).filter(cell -> getY(cell) < model().rows().size() - 2);
       return occupied.values().stream();
    }
 
    private ColumnSpecs getEditorColumnSpecs() {
       final ColumnSpecs columnSpecs = newColumnSpecs().addColumnSpec(nullColumnSpec());
-      models.peek().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      model().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
       return columnSpecs;
    }
 
    private RowSpecs getEditorRowSpecs() {
       final RowSpecs rowSpecs = newRowSpecs().addRowSpec(nullRowSpec());
-      models.peek().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      model().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
       return rowSpecs;
    }
 
@@ -438,38 +405,37 @@ public class FormEditor extends JPanel {
    }
 
    private void addColumn() {
-      copyFormModel().columns().add(newColumn()
+      copyFormModel();
+
+      model().columns().add(newColumn()
             .setColumnAlignment(columnAlignments.getValue())
             .setSize(columnSizes.getValue())
             .setGrow(columnGrowths.getValue())
-            .setX(models.peek().columns().size() + 2)
+            .setX(model().columns().size() + 2)
             .setY(1));
 
-      colCount.setValue(Integer.toString(models.peek().columns().size()));
+      colCount.setValue(Integer.toString(model().columns().size()));
 
-      for (int i = 0; i < models.peek().rows().size(); i++)
-         models.peek().cells().add(newCell(models.peek().columns().size() + 1, i + 2));
+      for (int i = 0; i < model().rows().size(); i++)
+         model().cells().add(newCell(model().columns().size() + 1, i + 2));
 
       renderModel();
    }
 
-   private FormModel copyFormModel() {
-      models.push(new FormModel(models.peek()));
-      return models.peek();
-   }
-
    private void addRow() {
-      copyFormModel().rows().add(newRow()
+      copyFormModel();
+
+      model().rows().add(newRow()
             .setRowAlignment(rowAlignments.getValue())
             .setSize(rowSizes.getValue())
             .setGrow(rowGrowths.getValue())
             .setX(1)
-            .setY(models.peek().rows().size() + 2));
+            .setY(model().rows().size() + 2));
 
-      rowCount.setValue(Integer.toString(models.peek().rows().size()));
+      rowCount.setValue(Integer.toString(model().rows().size()));
 
-      for (int i = 0; i < models.peek().columns().size(); i++)
-         models.peek().cells().add(newCell(i + 2, models.peek().rows().size() + 1));
+      for (int i = 0; i < model().columns().size(); i++)
+         model().cells().add(newCell(i + 2, model().rows().size() + 1));
 
       renderModel();
    }
@@ -487,15 +453,27 @@ public class FormEditor extends JPanel {
    }
 
    private void delColumn() {
-      if (models.peek().columns().size() > 1) models.peek().columns().remove(models.peek().columns().size() - 1);
-      colCount.setValue(Integer.toString(models.peek().columns().size()));
-      renderModel();
+      if (model().columns().size() > 0) {
+         System.out.println("delColumn");
+         copyFormModel();
+         final FormModel.Column column = model().columns().remove(model().columns().size() - 1);
+         final List<FormModel.Cell> colCells = model().cells().stream().filter(cell -> cell.x() >= column.x()).collect(Collectors.toList());
+         for (FormModel.Cell colCell : colCells) model().cells().remove(colCell);
+         colCount.setValue(Integer.toString(model().columns().size()));
+         renderModel();
+      }
    }
 
    private void delRow() {
-      if (models.peek().rows().size() > 1) models.peek().rows().remove(models.peek().rows().size() - 1);
-      rowCount.setValue(Integer.toString(models.peek().rows().size()));
-      renderModel();
+      if (model().rows().size() > 0) {
+         System.out.println("delRow");
+         copyFormModel();
+         final FormModel.Row row = model().rows().remove(model().rows().size() - 1);
+         final List<FormModel.Cell> rowCells = model().cells().stream().filter(cell -> cell.y() >= row.y()).collect(Collectors.toList());
+         for (FormModel.Cell rowCell : rowCells) model().cells().remove(rowCell);
+         rowCount.setValue(Integer.toString(model().rows().size()));
+         renderModel();
+      }
    }
 
    public String getModelName() {
@@ -514,15 +492,15 @@ public class FormEditor extends JPanel {
          ComponentFactory.decorate(this);
 
          components = new JComponent[3];
-         components[0] = new SelectButton(models.peek().cAlignments(), col.columnAlignment()).action(button -> {
+         components[0] = new SelectButton(model().cAlignments(), col.columnAlignment()).action(button -> {
             col.setColumnAlignment(button.getValue());
             renderModel();
          });
-         components[1] = new SelectButton(models.peek().sizes(), col.size()).action(button -> {
+         components[1] = new SelectButton(model().sizes(), col.size()).action(button -> {
             col.setSize(button.getValue());
             renderModel();
          });
-         components[2] = new SelectButton(models.peek().growths(), col.grow()).action(button -> {
+         components[2] = new SelectButton(model().growths(), col.grow()).action(button -> {
             col.setGrow(button.getValue());
             renderModel();
          });
@@ -537,15 +515,15 @@ public class FormEditor extends JPanel {
          super(new java.awt.GridLayout(3, 1));
          ComponentFactory.decorate(this);
          components = new JComponent[3];
-         components[0] = new SelectButton(models.peek().rAlignments(), row.rowAlignment()).action(button -> {
+         components[0] = new SelectButton(model().rAlignments(), row.rowAlignment()).action(button -> {
             row.setRowAlignment(button.getValue());
             renderModel();
          });
-         components[1] = new SelectButton(models.peek().sizes(), row.size()).action(button -> {
+         components[1] = new SelectButton(model().sizes(), row.size()).action(button -> {
             row.setSize(button.getValue());
             renderModel();
          });
-         components[2] = new SelectButton(models.peek().growths(), row.grow()).action(button -> {
+         components[2] = new SelectButton(model().growths(), row.grow()).action(button -> {
             row.setGrow(button.getValue());
             renderModel();
          });
@@ -562,7 +540,7 @@ public class FormEditor extends JPanel {
          setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
          components = new JComponent[6];
-         components[0] = new SelectButton(models.peek().components(), cell.component()).action(button -> {
+         components[0] = new SelectButton(model().components(), cell.component()).action(button -> {
             cell.setComponent(button.getValue());
             renderModel();
          });
@@ -570,21 +548,21 @@ public class FormEditor extends JPanel {
             cell.setName(inputField.getText());
             renderModel();
          });
-         components[2] = new SelectButton(getAvailableWidths(models.peek(), cell), (Object) cell.width()).action(button -> {
+         components[2] = new SelectButton(getAvailableWidths(model(), cell), (Object) cell.width()).action(button -> {
             cell.setWidth(button.getValue());
             renderModel();
          });
-         components[3] = new SelectButton(getAvailableHeights(models.peek(), cell), (Object) cell.height()).action(button -> {
+         components[3] = new SelectButton(getAvailableHeights(model(), cell), (Object) cell.height()).action(button -> {
             cell.setHeight(button.getValue());
             renderModel();
          });
-         components[4] = new SelectButton(models.peek().vAlignments(), cell.vAlign())
+         components[4] = new SelectButton(model().vAlignments(), cell.vAlign())
                .formatter((o) -> "v " + o)
                .action(button -> {
                   cell.setVAlign(button.getValue());
                   renderModel();
                });
-         components[5] = new SelectButton(models.peek().hAlignments(), cell.hAlign())
+         components[5] = new SelectButton(model().hAlignments(), cell.hAlign())
                .formatter((o) -> "h " + o)
                .action(button -> {
                   cell.setHAlign(button.getValue());
@@ -730,7 +708,7 @@ public class FormEditor extends JPanel {
 
    public static void main(String[] args) {
       ComponentFactory.applyLaf();
-      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel", "tmp", debug(modelTwo())));
+      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel", "tmp", debug(modelOne())));
    }
 
    private static String debug(String s) {
@@ -738,39 +716,44 @@ public class FormEditor extends JPanel {
       return s;
    }
 
-   private static String modelTwo() {
-      return "col 2 1 CENTER pref none\n" +
-            "col 3 1 LEFT pref none\n" +
-            "col 4 1 LEFT pref none\n" +
+   private static String modelOne() {
+      return "col 2 1 CENTER 75 none\n" +
+            "col 3 1 CENTER 75 none\n" +
+            "col 4 1 FILL pref grow\n" +
+            "col 5 1 LEFT pref none\n" +
             "row 1 2 TOP pref none\n" +
-            "row 1 3 TOP pref none\n" +
-            "row 1 4 TOP pref none\n" +
-            "cell 2 2 1 1 CENTER CENTER Label search\n" +
-            "cell 2 3 1 1 CENTER CENTER Label replace\n" +
-            "cell 2 4 1 3 CENTER CENTER ScrollPane result\n" +
-            "cell 3 2 1 1 CENTER CENTER TextField search\n" +
-            "cell 3 3 1 1 CENTER CENTER TextField replace\n" +
-            "cell 3 4 1 1 CENTER CENTER NONE null\n" +
-            "cell 4 2 1 1 CENTER CENTER Button search\n" +
-            "cell 4 3 1 1 CENTER CENTER Button replace\n" +
-            "cell 4 4 1 1 CENTER CENTER NONE null";
+            "cell 2 2 1 1 FILL TOP Label key\n" +
+            "cell 3 2 1 1 FILL TOP Component value\n" +
+            "cell 4 2 1 1 CENTER CENTER NONE null";
    }
 
-   private static String modelOne() {
-      return "col 2 1 LEFT PREF none\n" +
-            "col 3 1 LEFT PREF grow\n" +
-            "col 4 1 LEFT PREF none\n" +
-            "row 1 2 FILL PREF none\n" +
-            "row 1 3 FILL PREF none\n" +
-            "row 1 4 FILL PREF none\n" +
-            "cell 2 2 1 1 FILL FILL Label search\n" +
-            "cell 2 3 1 1 FILL FILL Label replace\n" +
-            "cell 2 4 1 3 FILL FILL ScrollPane result\n" +
-            "cell 3 2 1 1 FILL FILL TextField search\n" +
-            "cell 3 3 1 1 FILL FILL TextField replace\n" +
-            "cell 3 4 1 1 FILL FILL NONE null\n" +
-            "cell 4 2 1 1 FILL FILL Button search\n" +
-            "cell 4 3 1 1 FILL FILL Button replace\n" +
-            "cell 4 4 1 1 FILL FILL NONE null";
+   public String debug() {
+      final StringBuilder out = new StringBuilder();
+      model().columns().forEach(column -> out
+            .append("col ").append(column.x())
+            .append(" ").append(column.y())
+            .append(" ").append(column.columnAlignment().name())
+            .append(" ").append(column.size())
+            .append(" ").append(column.grow())
+            .append("\n"));
+      model().rows().forEach(row -> out
+            .append("row ").append(row.x())
+            .append(" ").append(row.y())
+            .append(" ").append(row.rowAlignment().name())
+            .append(" ").append(row.size())
+            .append(" ").append(row.grow())
+            .append("\n"));
+      model().cells().forEach(cell -> out
+            .append("cell ").append(cell.x())
+            .append(" ").append(cell.y())
+            .append(" ").append(cell.height())
+            .append(" ").append(cell.width())
+            .append(" ").append(cell.hAlign().name())
+            .append(" ").append(cell.vAlign().name())
+            .append(" ").append(cell.component())
+            .append(" ").append(cell.name())
+            .append("\n"));
+      System.out.println(out.toString().trim());
+      return out.toString().trim();
    }
 }

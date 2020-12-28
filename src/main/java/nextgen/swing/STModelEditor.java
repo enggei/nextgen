@@ -11,9 +11,8 @@ import static nextgen.swing.STAppPresentationModel.*;
 
 public class STModelEditor extends BaseEditor<STModel> {
 
-   private final STModelEditorText txtEditor = new nextgen.swing.STModelEditorText();
-   private final STModelEditorForm formComponent = new STModelEditorForm();
-   private final STModelEditorForm2 formComponent2 = new STModelEditorForm2();
+   private final STModelEditorText modelEditorText = new STModelEditorText();
+   private final STModelEditorForm modelEditorForm = new STModelEditorForm();
    private final String uuid;
 
    public STModelEditor(STModel stModel) {
@@ -21,17 +20,15 @@ public class STModelEditor extends BaseEditor<STModel> {
       this.uuid = stModel.getUuid();
 
       final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
-      editors.add("Editor", txtEditor);
-      editors.add("Values", new STModelEditorGrid(stModel));
-      editors.add("Form", formComponent);
-      editors.add("New Form", formComponent2);
+      editors.add("Editor", modelEditorText);
+      editors.add("Form", modelEditorForm);
+      editors.add("Search", new STModelEditorGrid(stModel));
       if (stModel.getStTemplate().getUuid().equals("c69858b9-e9aa-4022-98e5-bd6b3bfe0e8b"))
          editors.add("FormBuilder", newFormEditor(stModel).onMakePanel(this::saveModel));
       add(editors, BorderLayout.CENTER);
 
-      txtEditor.setStModel(stModel);
-      formComponent.setModel(stModel);
-      formComponent2.setModel(stModel);
+      modelEditorText.setStModel(stModel);
+      modelEditorForm.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
@@ -145,63 +142,64 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
       if (model.equals(event.stModel)) {
-         txtEditor.setStModel(event.stModel);
-         formComponent.setModel(event.stModel);
-         formComponent2.setModel(event.stModel);
+         modelEditorText.setStModel(event.stModel);
+         modelEditorForm.setModel(event.stModel);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTModelChanged(nextgen.events.STModelChanged event) {
       if (model.equals(event.model)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onNewSTArgument(nextgen.events.NewSTArgument event) {
       if (model.equals(event.model)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentChanged(nextgen.events.STArgumentChanged event) {
       if (model.equals(event.stModel)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
       if (model.equals(event.stModel)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
       if (model.equals(event.model)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onNewKV(nextgen.events.NewKV event) {
+      if (model.equals(event.stModel)) {
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 
    @org.greenrobot.eventbus.Subscribe()
    public void onKVDeleted(nextgen.events.KVDeleted event) {
       if (model.equals(event.stModel)) {
-         txtEditor.setStModel(model);
-         formComponent.setModel(model);
-         formComponent2.setModel(model);
+         modelEditorText.setStModel(model);
+         modelEditorForm.setModel(model);
       }
    }
 }

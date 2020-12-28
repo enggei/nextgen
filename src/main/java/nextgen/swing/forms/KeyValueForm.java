@@ -8,7 +8,7 @@ public class KeyValueForm extends JPanel {
 	JComponent compvalue;
 
 	public KeyValueForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("center:75:none, center:75:none, fill:pref:grow, left:pref:none", "top:pref:none"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:120:none, left:75:grow", "top:pref:grow"));
 	}
 
 	public KeyValueForm setLblkey(JLabel component) {
@@ -25,18 +25,15 @@ public class KeyValueForm extends JPanel {
 
 	/*
 
-	 columns 	4	"center:75:none, center:75:none, fill:pref:grow, left:pref:none"
+	 columns 	2	"fill:120:none, left:75:grow"
 
-	 rows 		1 	"top:pref:none"
+	 rows 		1 	"top:pref:grow"
 
-	 col 1 1 CENTER 75 none
-	 col 2 1 CENTER 75 none
-	 col 3 1 FILL pref grow
-	 col 5 1 LEFT pref none
-	 row 1 2 TOP pref none
+	 col 2 1 FILL 120 none
+	 col 3 1 LEFT 75 grow
+	 row 1 2 TOP pref grow
 	 cell 2 2 1 1 FILL TOP Label key
 	 cell 3 2 1 1 FILL TOP Component value
-	 cell 5 2 1 1 CENTER CENTER NONE null
 
 	*/	
 }

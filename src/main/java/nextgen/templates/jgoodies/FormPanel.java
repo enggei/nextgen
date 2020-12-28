@@ -5,14 +5,14 @@ public class FormPanel {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _package;
-	private Object _rowSpec;
-	private Object _rows;
-	private Object _model;
-	private Object _extending;
-	private String _name;
 	private Object _colSpec;
+	private Object _rowSpec;
+	private Object _package;
+	private String _name;
+	private Object _extending;
+	private Object _model;
 	private Object _columns;
+	private Object _rows;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _components = new java.util.ArrayList<>();
 
@@ -27,38 +27,38 @@ public class FormPanel {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("FormPanel");
-		st.add("package", _package);
-		st.add("rowSpec", _rowSpec);
-		st.add("rows", _rows);
-		st.add("model", _model);
-		st.add("extending", _extending);
-		st.add("name", _name);
 		st.add("colSpec", _colSpec);
+		st.add("rowSpec", _rowSpec);
+		st.add("package", _package);
+		st.add("name", _name);
+		st.add("extending", _extending);
+		st.add("model", _model);
 		st.add("columns", _columns);
+		st.add("rows", _rows);
 		for (Object o : _statements) st.add("statements", o);
 		for (java.util.Map<String, Object> map : _components) st.addAggr("components.{y,name,type,init,x,hAlign,h,vAlign,w}", map.get("y"), map.get("name"), map.get("type"), map.get("init"), map.get("x"), map.get("hAlign"), map.get("h"), map.get("vAlign"), map.get("w"));
 		return st.render().trim();
 	}
 
-	public FormPanel setPackage(Object value) {
-		this._package = value;
+	public FormPanel setColSpec(Object value) {
+		this._colSpec = value;
 		return this;
 	}
 
-	public Object getPackage() {
-		return this._package;
+	public Object getColSpec() {
+		return this._colSpec;
 	}
 
-	public Object getPackage(Object defaultValue) {
-		return this._package == null ? defaultValue : this._package;
+	public Object getColSpec(Object defaultValue) {
+		return this._colSpec == null ? defaultValue : this._colSpec;
 	}
 
-	public boolean hasPackage() {
-		return this._package != null;
+	public boolean hasColSpec() {
+		return this._colSpec != null;
 	}
 
-	public FormPanel removePackage() {
-		this._package = null;
+	public FormPanel removeColSpec() {
+		this._colSpec = null;
 		return this;
 	} 
 
@@ -84,69 +84,25 @@ public class FormPanel {
 		return this;
 	} 
 
-	public FormPanel setRows(Object value) {
-		this._rows = value;
+	public FormPanel setPackage(Object value) {
+		this._package = value;
 		return this;
 	}
 
-	public Object getRows() {
-		return this._rows;
+	public Object getPackage() {
+		return this._package;
 	}
 
-	public Object getRows(Object defaultValue) {
-		return this._rows == null ? defaultValue : this._rows;
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
 	}
 
-	public boolean hasRows() {
-		return this._rows != null;
+	public boolean hasPackage() {
+		return this._package != null;
 	}
 
-	public FormPanel removeRows() {
-		this._rows = null;
-		return this;
-	} 
-
-	public FormPanel setModel(Object value) {
-		this._model = value;
-		return this;
-	}
-
-	public Object getModel() {
-		return this._model;
-	}
-
-	public Object getModel(Object defaultValue) {
-		return this._model == null ? defaultValue : this._model;
-	}
-
-	public boolean hasModel() {
-		return this._model != null;
-	}
-
-	public FormPanel removeModel() {
-		this._model = null;
-		return this;
-	} 
-
-	public FormPanel setExtending(Object value) {
-		this._extending = value;
-		return this;
-	}
-
-	public Object getExtending() {
-		return this._extending;
-	}
-
-	public Object getExtending(Object defaultValue) {
-		return this._extending == null ? defaultValue : this._extending;
-	}
-
-	public boolean hasExtending() {
-		return this._extending != null;
-	}
-
-	public FormPanel removeExtending() {
-		this._extending = null;
+	public FormPanel removePackage() {
+		this._package = null;
 		return this;
 	} 
 
@@ -172,25 +128,47 @@ public class FormPanel {
 		return this;
 	} 
 
-	public FormPanel setColSpec(Object value) {
-		this._colSpec = value;
+	public FormPanel setExtending(Object value) {
+		this._extending = value;
 		return this;
 	}
 
-	public Object getColSpec() {
-		return this._colSpec;
+	public Object getExtending() {
+		return this._extending;
 	}
 
-	public Object getColSpec(Object defaultValue) {
-		return this._colSpec == null ? defaultValue : this._colSpec;
+	public Object getExtending(Object defaultValue) {
+		return this._extending == null ? defaultValue : this._extending;
 	}
 
-	public boolean hasColSpec() {
-		return this._colSpec != null;
+	public boolean hasExtending() {
+		return this._extending != null;
 	}
 
-	public FormPanel removeColSpec() {
-		this._colSpec = null;
+	public FormPanel removeExtending() {
+		this._extending = null;
+		return this;
+	} 
+
+	public FormPanel setModel(Object value) {
+		this._model = value;
+		return this;
+	}
+
+	public Object getModel() {
+		return this._model;
+	}
+
+	public Object getModel(Object defaultValue) {
+		return this._model == null ? defaultValue : this._model;
+	}
+
+	public boolean hasModel() {
+		return this._model != null;
+	}
+
+	public FormPanel removeModel() {
+		this._model = null;
 		return this;
 	} 
 
@@ -213,6 +191,28 @@ public class FormPanel {
 
 	public FormPanel removeColumns() {
 		this._columns = null;
+		return this;
+	} 
+
+	public FormPanel setRows(Object value) {
+		this._rows = value;
+		return this;
+	}
+
+	public Object getRows() {
+		return this._rows;
+	}
+
+	public Object getRows(Object defaultValue) {
+		return this._rows == null ? defaultValue : this._rows;
+	}
+
+	public boolean hasRows() {
+		return this._rows != null;
+	}
+
+	public FormPanel removeRows() {
+		this._rows = null;
 		return this;
 	} 
 
@@ -404,21 +404,12 @@ public class FormPanel {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormPanel(package,statements,rowSpec,rows,components,model,extending,name,colSpec,columns) ::= <<package ~package~;\n" + 
+	static final String st = "FormPanel(components,colSpec,rowSpec,package,statements,name,extending,model,columns,rows) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"\n" + 
 				"public class ~name~~if(extending)~ extends ~extending~~endif~ {\n" + 
-				"	\n" + 
-				"	/*\n" + 
-				"	 \n" + 
-				"	 columns 	~columns~	\"~colSpec~\"\n" + 
-				"	 \n" + 
-				"	 rows 		~rows~ 	\"~rowSpec~\"\n" + 
-				"	 \n" + 
-				"	 ~model~\n" + 
-				"	 \n" + 
-				"	*/	\n" + 
+				"\n" + 
 				"	~components:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	public ~name~() {\n" + 
@@ -435,5 +426,16 @@ public class FormPanel {
 				"		return this;\n" + 
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	\n" + 
+				"	/*\n" + 
+				"	 \n" + 
+				"	 columns 	~columns~	\"~colSpec~\"\n" + 
+				"	 \n" + 
+				"	 rows 		~rows~ 	\"~rowSpec~\"\n" + 
+				"	 \n" + 
+				"	 ~model~\n" + 
+				"	 \n" + 
+				"	*/	\n" + 
 				"} >>";
 }  
