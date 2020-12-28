@@ -6,7 +6,7 @@ public class DeleteSTValue extends nextgen.actions.TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public DeleteSTValue(nextgen.model.STValue stValue, javax.swing.JComponent owner) {
-		super("Delete");
+		super("DEL");
 		this.stValue = stValue;
 		this.owner = owner;
 	}

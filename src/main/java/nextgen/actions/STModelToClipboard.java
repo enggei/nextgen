@@ -5,7 +5,7 @@ public class STModelToClipboard extends nextgen.actions.TransactionAction {
    private final nextgen.model.STModel stModel;
 
 	public STModelToClipboard(nextgen.model.STModel stModel) {
-		super("To Clipboard");
+		super("T-CP");
 		this.stModel = stModel;
 	}
 

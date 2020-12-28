@@ -6,7 +6,7 @@ public class DeleteSTArgument extends nextgen.actions.TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public DeleteSTArgument(nextgen.model.STArgument stArgument, javax.swing.JComponent owner) {
-		super("Delete");
+		super("DEL");
 		this.stArgument = stArgument;
 		this.owner = owner;
 	}

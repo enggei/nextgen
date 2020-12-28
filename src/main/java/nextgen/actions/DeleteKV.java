@@ -6,7 +6,7 @@ public class DeleteKV extends nextgen.actions.TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public DeleteKV(nextgen.model.STArgumentKV argumentKV, javax.swing.JComponent owner) {
-		super("Remove");
+		super("DEL");
 		this.argumentKV = argumentKV;
 		this.owner = owner;
 	}

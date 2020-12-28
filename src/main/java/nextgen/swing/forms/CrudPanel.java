@@ -10,7 +10,7 @@ public class CrudPanel extends JPanel {
 	JButton btnfromClipboard;
 
 	public CrudPanel() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:pref:grow, fill:120:none, fill:120:none, fill:120:none", "top:pref:none"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:pref:grow, fill:75:none, fill:75:none, fill:75:none", "top:pref:none"));
 	}
 
 	public CrudPanel setTxtvalue(JTextField component) {
@@ -37,14 +37,14 @@ public class CrudPanel extends JPanel {
 
 	/*
 
-	 columns 	4	"fill:pref:grow, fill:120:none, fill:120:none, fill:120:none"
+	 columns 	4	"fill:pref:grow, fill:75:none, fill:75:none, fill:75:none"
 
 	 rows 		1 	"top:pref:none"
 
 	 col 2 1 FILL pref grow
-	 col 3 1 FILL 120 none
-	 col 4 1 FILL 120 none
-	 col 5 1 FILL 120 none
+	 col 3 1 FILL 75 none
+	 col 4 1 FILL 75 none
+	 col 5 1 FILL 75 none
 	 row 1 2 TOP pref none
 	 cell 2 2 1 1 FILL FILL TextField value
 	 cell 3 2 1 1 FILL TOP Button delete

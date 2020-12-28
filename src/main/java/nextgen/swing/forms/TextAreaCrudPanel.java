@@ -10,7 +10,7 @@ public class TextAreaCrudPanel extends JPanel {
 	JButton btnfromClipboard;
 
 	public TextAreaCrudPanel() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:120:none, fill:120:none, fill:120:none, left:pref:grow", "top:pref:none, top:pref:none"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:none, fill:75:none, fill:75:none, left:75:grow", "top:pref:none, top:pref:none"));
 	}
 
 	public TextAreaCrudPanel setScrtextArea(JScrollPane component) {
@@ -37,14 +37,14 @@ public class TextAreaCrudPanel extends JPanel {
 
 	/*
 
-	 columns 	4	"fill:120:none, fill:120:none, fill:120:none, left:pref:grow"
+	 columns 	4	"fill:75:none, fill:75:none, fill:75:none, left:75:grow"
 
 	 rows 		2 	"top:pref:none, top:pref:none"
 
-	 col 2 1 FILL 120 none
-	 col 3 1 FILL 120 none
-	 col 4 1 FILL 120 none
-	 col 5 1 LEFT pref grow
+	 col 2 1 FILL 75 none
+	 col 3 1 FILL 75 none
+	 col 4 1 FILL 75 none
+	 col 5 1 LEFT 75 grow
 	 row 1 2 TOP pref none
 	 row 1 3 TOP pref none
 	 cell 2 2 1 4 FILL CENTER ScrollPane textArea
