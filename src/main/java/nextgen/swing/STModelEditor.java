@@ -13,6 +13,7 @@ public class STModelEditor extends BaseEditor<STModel> {
 
    private final STModelEditorText txtEditor = new nextgen.swing.STModelEditorText();
    private final STModelEditorForm formComponent = new STModelEditorForm();
+   private final STModelEditorForm2 formComponent2 = new STModelEditorForm2();
    private final String uuid;
 
    public STModelEditor(STModel stModel) {
@@ -23,12 +24,14 @@ public class STModelEditor extends BaseEditor<STModel> {
       editors.add("Editor", txtEditor);
       editors.add("Values", new STModelEditorGrid(stModel));
       editors.add("Form", formComponent);
+      editors.add("New Form", formComponent2);
       if (stModel.getStTemplate().getUuid().equals("c69858b9-e9aa-4022-98e5-bd6b3bfe0e8b"))
          editors.add("FormBuilder", newFormEditor(stModel).onMakePanel(this::saveModel));
       add(editors, BorderLayout.CENTER);
 
       txtEditor.setStModel(stModel);
       formComponent.setModel(stModel);
+      formComponent2.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
 
@@ -48,12 +51,12 @@ public class STModelEditor extends BaseEditor<STModel> {
                   appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.debug());
                   break;
                case "name":
-                  appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().name());
-                  getModel().getFiles().filter(stFile -> !stFile.getName().getValue().equals(formEditor.model().name())).forEach(stFile -> stFile.setName(appModel().newSTValue(formEditor.model().name())));
+                  appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.getModelName());
+                  getModel().getFiles().filter(stFile -> stFile.getName()==null || !stFile.getName().getValue().equals(formEditor.model().name())).forEach(stFile -> stFile.setName(appModel().newSTValue(formEditor.model().name())));
                   break;
                case "package":
-                  appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.model().packageName());
-                  getModel().getFiles().filter(stFile -> !stFile.getPackageName().getValue().equals(formEditor.model().packageName())).forEach(stFile -> stFile.setPackageName(appModel().newSTValue(formEditor.model().packageName())));
+                  appModel().setArgument(getModel(), parameterArguments.parameter(), formEditor.getModelPackage());
+                  getModel().getFiles().filter(stFile -> stFile.getPackageName()==null || !stFile.getPackageName().getValue().equals(formEditor.model().packageName())).forEach(stFile -> stFile.setPackageName(appModel().newSTValue(formEditor.model().packageName())));
                   break;
                case "extending":
                   appModel().setArgument(getModel(), parameterArguments.parameter(), appModel().db.findOrCreateSTValueByValue("JPanel"));
@@ -75,7 +78,7 @@ public class STModelEditor extends BaseEditor<STModel> {
 
                   final Map<FormModel.Cell, Collection<STArgumentKV>> map = new LinkedHashMap<>();
                   parameterArguments.parameter().getKeysSorted().forEach(stParameterKey -> {
-                     formEditor.getCellComponents().forEach(cell -> {
+                     formEditor.getComponentCells().forEach(cell -> {
                         map.putIfAbsent(cell, new ArrayList<>());
                         switch (stParameterKey.getName()) {
                            case "name":
@@ -111,6 +114,8 @@ public class STModelEditor extends BaseEditor<STModel> {
             }
          });
 
+         appModel().generateSTModel(getModel());
+
          STModelChanged.post(getModel());
       });
    }
@@ -142,6 +147,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.stModel)) {
          txtEditor.setStModel(event.stModel);
          formComponent.setModel(event.stModel);
+         formComponent2.setModel(event.stModel);
       }
    }
 
@@ -150,6 +156,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.model)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 
@@ -158,6 +165,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.model)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 
@@ -166,6 +174,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.stModel)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 
@@ -174,6 +183,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.stModel)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 
@@ -182,6 +192,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.model)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 
@@ -190,6 +201,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       if (model.equals(event.stModel)) {
          txtEditor.setStModel(model);
          formComponent.setModel(model);
+         formComponent2.setModel(model);
       }
    }
 }

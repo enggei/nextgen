@@ -28,6 +28,10 @@ public class AbstractEditor extends javax.swing.JPanel {
       return newTextField("", columns);
    }
 
+   protected javax.swing.JTextField newTextField(String text) {
+      return newTextField(text, 30);
+   }
+
    protected javax.swing.JTextField newTextField(String text, int columns) {
       return newTextField(text, columns, new String[0], -1);
    }

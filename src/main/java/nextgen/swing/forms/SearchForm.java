@@ -4,30 +4,6 @@ import javax.swing.*;
 
 public class SearchForm extends JPanel {
 
-	/*
-
-	 columns 	3	"left:PREF:none, left:PREF:grow, left:PREF:none"
-
-	 rows 		3 	"fill:PREF:none, fill:PREF:none, fill:PREF:none"
-
-	 mod SearchForm nextgen.swing.forms
-	 col 2 1 LEFT PREF none
-	 col 3 1 LEFT PREF grow
-	 col 4 1 LEFT PREF none
-	 row 1 2 FILL PREF none
-	 row 1 3 FILL PREF none
-	 row 1 4 FILL PREF none
-	 cell 2 2 1 1 FILL FILL Label search
-	 cell 2 3 1 1 FILL FILL Label replace
-	 cell 2 4 1 3 FILL FILL ScrollPane result
-	 cell 3 2 1 1 FILL FILL TextField search
-	 cell 3 3 1 1 FILL FILL TextField replace
-	 cell 3 4 1 1 FILL FILL NONE null
-	 cell 4 2 1 1 FILL FILL Button search
-	 cell 4 3 1 1 FILL FILL Button replace
-	 cell 4 4 1 1 FILL FILL NONE null
-
-	*/	
 	JLabel lblsearch;
 	JLabel lblreplace;
 	JScrollPane scrresult;
@@ -37,7 +13,7 @@ public class SearchForm extends JPanel {
 	JButton btnreplace;
 
 	public SearchForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("left:PREF:none, left:PREF:grow, left:PREF:none", "fill:PREF:none, fill:PREF:none, fill:PREF:none"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("left:PREF:none, left:PREF:grow, left:PREF:none", "fill:PREF:none, fill:PREF:none, fill:PREF:grow"));
 	}
 
 	public SearchForm setLblsearch(JLabel component) {
@@ -75,4 +51,27 @@ public class SearchForm extends JPanel {
 		return this;
 	}
 
+
+
+	/*
+
+	 columns 	3	"left:PREF:none, left:PREF:grow, left:PREF:none"
+
+	 rows 		3 	"fill:PREF:none, fill:PREF:none, fill:PREF:grow"
+
+	 col 2 1 LEFT PREF none
+	 col 3 1 LEFT PREF grow
+	 col 4 1 LEFT PREF none
+	 row 1 2 FILL PREF none
+	 row 1 3 FILL PREF none
+	 row 1 4 FILL PREF grow
+	 cell 2 2 1 1 FILL FILL Label search
+	 cell 2 3 1 1 FILL FILL Label replace
+	 cell 2 4 1 3 FILL FILL ScrollPane result
+	 cell 3 2 1 1 FILL FILL TextField search
+	 cell 3 3 1 1 FILL FILL TextField replace
+	 cell 4 2 1 1 FILL FILL Button search
+	 cell 4 3 1 1 FILL FILL Button replace
+
+	*/	
 }

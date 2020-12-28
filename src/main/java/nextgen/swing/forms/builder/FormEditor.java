@@ -1,21 +1,25 @@
 package nextgen.swing.forms.builder;
 
 import com.jgoodies.forms.layout.*;
-import nextgen.swing.ComponentFactory;
+import nextgen.swing.*;
 import nextgen.templates.jgoodies.ColumnSpec;
 import nextgen.templates.jgoodies.RowSpec;
 import nextgen.templates.jgoodies.*;
 
 import javax.swing.*;
 
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static nextgen.swing.ComponentFactory.*;
 import static nextgen.templates.jgoodies.JavaJGoodiesST.*;
 
 public class FormEditor extends JPanel {
 
-   private final JPanel formPanel = ComponentFactory.decorate(new com.jgoodies.forms.debug.FormDebugPanel());
+   private final JPanel formPanel = ComponentFactory.decorate(newJPanel());
    private final JScrollPane formScrollPane = newJScrollPane(formPanel);
 
    private final SelectButton colCount;
@@ -31,7 +35,8 @@ public class FormEditor extends JPanel {
    private final SelectButton extending;
    private final JTextField formName;
    private final JTextField formPackage;
-   private final FormModel model;
+
+   private final Stack<FormModel> models = new Stack<>();
 
    private Consumer<FormEditor> makePanelAction;
 
@@ -42,7 +47,8 @@ public class FormEditor extends JPanel {
    public FormEditor(FormModel model) {
       super(new java.awt.BorderLayout(10, 10));
 
-      this.model = model;
+      models.push(model);
+      models.push(new FormModel(models.peek()));
 
       ComponentFactory.decorate(this);
       setPreferredSize(new java.awt.Dimension(2500, 1200));
@@ -58,14 +64,14 @@ public class FormEditor extends JPanel {
       cellHAlignment = new SelectButton(model.hAlignments());
       cellVAlignment = new SelectButton(model.vAlignments());
 
-      final JPanel west = ComponentFactory.newJPanel(new java.awt.BorderLayout());
+      final JPanel west = ComponentFactory.newBorderPanel();
       final JPanel westNorth = ComponentFactory.newJPanel(new java.awt.GridLayout(14, 2));
       final JButton btnGenerate = ComponentFactory.newJButton("Generate");
       final JButton btnAddColumn = ComponentFactory.newJButton("Add Column");
       final JButton btnDelColumn = ComponentFactory.newJButton("Del Column");
       final JButton btnAddRow = ComponentFactory.newJButton("Add Row");
       final JButton btnDelRow = ComponentFactory.newJButton("Del Row");
-      final JButton btnReset = ComponentFactory.newJButton("Reset");
+      final JButton btnUndo = ComponentFactory.newJButton("Undo");
 
       westNorth.add(newJLabel("Columns"));
       westNorth.add(colCount);
@@ -94,7 +100,7 @@ public class FormEditor extends JPanel {
       westNorth.add(btnAddRow);
       westNorth.add(btnDelRow);
       westNorth.add(newJLabel(""));
-      westNorth.add(btnReset);
+      westNorth.add(btnUndo);
       west.add(westNorth, java.awt.BorderLayout.NORTH);
 
       extending = new SelectButton(model.extending());
@@ -133,7 +139,7 @@ public class FormEditor extends JPanel {
       cellVAlignment.action(button -> generateForm());
       btnGenerate.addActionListener(actionEvent -> generateForm());
 
-      btnReset.addActionListener(actionEvent -> reset());
+      btnUndo.addActionListener(actionEvent -> undo());
       btnAddColumn.addActionListener(actionEvent -> addColumn());
       btnAddRow.addActionListener(actionEvent -> addRow());
       btnDelColumn.addActionListener(actionEvent -> delColumn());
@@ -146,26 +152,27 @@ public class FormEditor extends JPanel {
    }
 
    public FormModel model() {
-      return model;
+      return models.peek();
    }
 
-   public java.util.stream.Stream<FormModel.Cell> getCellComponents() {
-      return model.cells().stream().filter(cell -> !cell.component().equals(model.components()[0]));  // [0] = "NONE"
+   public java.util.stream.Stream<FormModel.Cell> getComponentCells() {
+      return models.peek().cells().stream()
+            .filter(cell -> !cell.component().equals(models.peek().components()[0]));  // [0] = "NONE"
    }
 
    public String debug() {
-      return debug(model);
+      return debug(models.peek());
    }
 
    public RowSpecs getRowSpecs() {
       final RowSpecs rowSpecs = newRowSpecs();
-      model.rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      models.peek().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
       return rowSpecs;
    }
 
    public ColumnSpecs getColumnSpecs() {
       final ColumnSpecs columnSpecs = newColumnSpecs();
-      model.columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      models.peek().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
       return columnSpecs;
    }
 
@@ -175,7 +182,7 @@ public class FormEditor extends JPanel {
    }
 
    public String getCellName(FormModel.Cell cell) {
-      return model.componentPrefixes()[indexOf(model.components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
+      return models.peek().componentPrefixes()[indexOf(models.peek().components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
    }
 
    public String getCellType(FormModel.Cell cell) {
@@ -191,11 +198,9 @@ public class FormEditor extends JPanel {
    }
 
 
-   private void reset() {
-      model.columns().clear();
-      model.rows().clear();
-      model.cells().clear();
-      generateForm();
+   private void undo() {
+      if (models.size() > 1) models.pop();
+      renderModel();
    }
 
    private void makePanel() {
@@ -218,9 +223,9 @@ public class FormEditor extends JPanel {
             .setColSpec(columnSpecs)
             .setRowSpec(rowSpecs)
             .setExtending("javax.swing.JPanel")
-            .setColumns(model.columns().size())
-            .setRows(model.rows().size());
-      getCellComponents().forEach(cell -> addComponent(formPanel, cell));
+            .setColumns(models.peek().columns().size())
+            .setRows(models.peek().rows().size());
+      getComponentCells().forEach(cell -> addComponent(formPanel, cell));
 
       nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
    }
@@ -250,7 +255,10 @@ public class FormEditor extends JPanel {
          case "Panel":
             return ComponentFactory.newJPanel();
          case "ScrollPane":
-            return ComponentFactory.newJScrollPane();
+            final JScrollPane jScrollPane = newJScrollPane();
+            jScrollPane.setPreferredSize(new Dimension(800, 600));
+            jScrollPane.setBackground(Color.RED);
+            return jScrollPane;
       }
 
       return null;
@@ -272,7 +280,7 @@ public class FormEditor extends JPanel {
             .append(" ").append(row.size())
             .append(" ").append(row.grow())
             .append("\n"));
-      getCellComponents().forEach(cell -> out
+      model.cells().forEach(cell -> out
             .append("cell ").append(cell.x())
             .append(" ").append(cell.y())
             .append(" ").append(cell.height())
@@ -282,6 +290,7 @@ public class FormEditor extends JPanel {
             .append(" ").append(cell.component())
             .append(" ").append(cell.name())
             .append("\n"));
+      System.out.println(out.toString().trim());
       return out.toString().trim();
    }
 
@@ -295,7 +304,7 @@ public class FormEditor extends JPanel {
       final String hAlign = cell.hAlign().toString();
       final String vAlign = cell.vAlign().toString();
       final java.awt.Component comp = newComponent(cell);
-      if (comp != null) formPanel.add(comp, new CellConstraints().xywh(getCellX(cell), getCellY(cell), width, height, hAlign + "," + vAlign));
+      if (comp != null) formPanel.add(comp, new CellConstraints().xywh(cell.x() - 1, cell.y() - 1, width, height, hAlign + "," + vAlign));
    }
 
    private void generateForm() {
@@ -304,18 +313,20 @@ public class FormEditor extends JPanel {
          int cols = Integer.parseInt(colCount.getValue());
          int rows = Integer.parseInt(rowCount.getValue());
 
-         model.columns().clear();
+         copyFormModel();
+
+         models.peek().columns().clear();
          for (int i = 0; i < cols; i++)
-            model.columns().add(newColumn()
+            models.peek().columns().add(newColumn()
                   .setColumnAlignment(columnAlignments.getValue())
                   .setSize(columnSizes.getValue())
                   .setGrow(columnGrowths.getValue())
                   .setX(i + 2)
                   .setY(1));
 
-         model.rows().clear();
+         models.peek().rows().clear();
          for (int i = 0; i < rows; i++)
-            model.rows().add(newRow()
+            models.peek().rows().add(newRow()
                   .setRowAlignment(rowAlignments.getValue())
                   .setSize(rowSizes.getValue())
                   .setGrow(rowGrowths.getValue())
@@ -323,13 +334,13 @@ public class FormEditor extends JPanel {
                   .setY(i + 2));
 
          final java.util.Map<String, FormModel.Cell> existing = new java.util.LinkedHashMap<>();
-         model.cells().forEach(cell -> existing.put(cell.x() + "_" + cell.y(), cell));
-         model.cells().clear();
+         models.peek().cells().forEach(cell -> existing.put(cell.x() + "_" + cell.y(), cell));
+         models.peek().cells().clear();
          for (int i = 0; i < cols; i++)
             for (int j = 0; j < rows; j++) {
                final int iOffset = i + 2;
                final int jOffset = j + 2;
-               model.cells().add(newCell(iOffset, jOffset, existing.get(iOffset + "_" + jOffset)));
+               models.peek().cells().add(newCell(iOffset, jOffset, existing.get(iOffset + "_" + jOffset)));
             }
 
          renderModel();
@@ -353,9 +364,9 @@ public class FormEditor extends JPanel {
          formPanel.setLayout(formLayout);
 
          formPanel.add(ComponentFactory.newBorderPanel(), constraints.xy(1, 1));
-         model.columns().forEach(column -> formPanel.add(new ColumnCell(column), constraints.xy(column.x(), column.y())));
-         model.rows().forEach(row -> formPanel.add(new RowCell(row), constraints.xy(row.x(), row.y())));
-         model.cells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), cell.width(), cell.height(), cell.hAlign() + ", " + cell.vAlign())));
+         models.peek().columns().forEach(column -> formPanel.add(new ColumnCell(column), constraints.xy(column.x(), column.y())));
+         models.peek().rows().forEach(row -> formPanel.add(new RowCell(row), constraints.xy(row.x(), row.y())));
+         getEditorCells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), getW(cell), getH(cell), cell.hAlign() + ", " + cell.vAlign())));
 
          formPanel.revalidate();
          formPanel.repaint();
@@ -365,16 +376,45 @@ public class FormEditor extends JPanel {
       });
    }
 
-   private RowSpecs getEditorRowSpecs() {
-      final RowSpecs rowSpecs = newRowSpecs().addRowSpec(nullRowSpec());
-      model.rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
-      return rowSpecs;
+   private int getW(FormModel.Cell cell) {
+      return Math.min(cell.width(), (models.peek().columns().size() - cell.x() + 2));
+   }
+
+   private int getH(FormModel.Cell cell) {
+      return Math.min(cell.height(), (models.peek().rows().size() - cell.y() + 2));
+   }
+
+   private Stream<FormModel.Cell> getEditorCells() {
+      final Map<String, FormModel.Cell> occupied = new LinkedHashMap<>();
+      final List<FormModel.Cell> cells = models.peek().cells();
+      for (FormModel.Cell cell : cells) {
+         String key = cell.x() + " " + cell.y();
+         if (occupied.containsKey(key)) continue;
+
+         for (int i = 0; i < cell.width(); i++) {
+            int x = cell.x() + i;
+            occupied.put(x + " " + cell.y(), cell);
+         }
+
+         for (int i = 0; i < cell.height(); i++) {
+            int y = cell.y() + i;
+            occupied.put(cell.x() + " " + y, cell);
+         }
+      }
+
+      return occupied.values().stream();
    }
 
    private ColumnSpecs getEditorColumnSpecs() {
       final ColumnSpecs columnSpecs = newColumnSpecs().addColumnSpec(nullColumnSpec());
-      model.columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      models.peek().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
       return columnSpecs;
+   }
+
+   private RowSpecs getEditorRowSpecs() {
+      final RowSpecs rowSpecs = newRowSpecs().addRowSpec(nullRowSpec());
+      models.peek().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      return rowSpecs;
    }
 
    private nextgen.templates.jgoodies.ColumnSpec nullColumnSpec() {
@@ -398,33 +438,38 @@ public class FormEditor extends JPanel {
    }
 
    private void addColumn() {
-      model.columns().add(newColumn()
+      copyFormModel().columns().add(newColumn()
             .setColumnAlignment(columnAlignments.getValue())
             .setSize(columnSizes.getValue())
             .setGrow(columnGrowths.getValue())
-            .setX(model.columns().size() + 2)
+            .setX(models.peek().columns().size() + 2)
             .setY(1));
 
-      colCount.setValue(Integer.toString(model.columns().size()));
+      colCount.setValue(Integer.toString(models.peek().columns().size()));
 
-      for (int i = 0; i < model.rows().size(); i++)
-         model.cells().add(newCell(model.columns().size() + 1, i + 2));
+      for (int i = 0; i < models.peek().rows().size(); i++)
+         models.peek().cells().add(newCell(models.peek().columns().size() + 1, i + 2));
 
       renderModel();
    }
 
+   private FormModel copyFormModel() {
+      models.push(new FormModel(models.peek()));
+      return models.peek();
+   }
+
    private void addRow() {
-      model.rows().add(newRow()
+      copyFormModel().rows().add(newRow()
             .setRowAlignment(rowAlignments.getValue())
             .setSize(rowSizes.getValue())
             .setGrow(rowGrowths.getValue())
             .setX(1)
-            .setY(model.rows().size() + 2));
+            .setY(models.peek().rows().size() + 2));
 
-      rowCount.setValue(Integer.toString(model.rows().size()));
+      rowCount.setValue(Integer.toString(models.peek().rows().size()));
 
-      for (int i = 0; i < model.columns().size(); i++)
-         model.cells().add(newCell(i + 2, model.rows().size() + 1));
+      for (int i = 0; i < models.peek().columns().size(); i++)
+         models.peek().cells().add(newCell(i + 2, models.peek().rows().size() + 1));
 
       renderModel();
    }
@@ -442,93 +487,23 @@ public class FormEditor extends JPanel {
    }
 
    private void delColumn() {
-      if (model.columns().size() > 1) model.columns().remove(model.columns().size() - 1);
-      colCount.setValue(Integer.toString(model.columns().size()));
+      if (models.peek().columns().size() > 1) models.peek().columns().remove(models.peek().columns().size() - 1);
+      colCount.setValue(Integer.toString(models.peek().columns().size()));
       renderModel();
    }
 
    private void delRow() {
-      if (model.rows().size() > 1) model.rows().remove(model.rows().size() - 1);
-      rowCount.setValue(Integer.toString(model.rows().size()));
+      if (models.peek().rows().size() > 1) models.peek().rows().remove(models.peek().rows().size() - 1);
+      rowCount.setValue(Integer.toString(models.peek().rows().size()));
       renderModel();
    }
 
-   private static final class SelectButton extends JToggleButton {
+   public String getModelName() {
+      return formName.getText().trim();
+   }
 
-      private final java.util.concurrent.atomic.AtomicInteger index = new java.util.concurrent.atomic.AtomicInteger(0);
-      private final java.util.List<Object> values = new java.util.ArrayList<>();
-      private java.util.function.Consumer<SelectButton> action;
-      private java.util.function.Function<Object, String> formatter = Object::toString;
-
-      SelectButton(Object[] array) {
-         this(array, indexOf(array, 0));
-      }
-
-      SelectButton(Object[] array, Object initial) {
-         this(array, indexOf(array, initial));
-      }
-
-      SelectButton(Object[] array, int initial) {
-         ComponentFactory.decorate(this);
-
-         this.values.addAll(java.util.Arrays.asList(array));
-         this.index.set(initial);
-
-         setText(values.get(index.get()).toString());
-         addActionListener(actionEvent -> SwingUtilities.invokeLater(() -> {
-            if (index.incrementAndGet() >= values.size()) index.set(0);
-            setValue(values.get(index.get()));
-            if (action != null) action.accept(this);
-         }));
-
-         addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-               if (SwingUtilities.isRightMouseButton(e)) {
-                  SwingUtilities.invokeLater(() -> {
-                     JPopupMenu pop = ComponentFactory.newJPopupMenu();
-                     for (int i = 0; i < values.size(); i++) {
-                        Object value = values.get(i);
-                        int finalI = i;
-                        pop.add(ComponentFactory.newJMenuItem(new AbstractAction(value.toString()) {
-                           @Override
-                           public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-                              SwingUtilities.invokeLater(() -> {
-                                 index.set(finalI);
-                                 setText(formatter.apply(values.get(index.get())));
-                                 if (action != null) action.accept(SelectButton.this);
-                              });
-                           }
-                        }));
-                     }
-
-                     pop.show(SelectButton.this, e.getX(), e.getY());
-                  });
-               }
-            }
-         });
-      }
-
-      SelectButton action(java.util.function.Consumer<SelectButton> actionListenerConsumer) {
-         this.action = actionListenerConsumer;
-         return this;
-      }
-
-      SelectButton formatter(java.util.function.Function<Object, String> formatter) {
-         this.formatter = formatter;
-         return this;
-      }
-
-      @SuppressWarnings("unchecked")
-      <T> T getValue() {
-         return (T) values.get(index.get());
-      }
-
-      void setValue(Object value) {
-         if (!values.contains(value)) values.add(value);
-         index.set(values.indexOf(value));
-         setText(formatter.apply(values.get(index.get())));
-      }
+   public String getModelPackage() {
+      return formPackage.getText().trim();
    }
 
    private class ColumnCell extends JPanel {
@@ -539,15 +514,15 @@ public class FormEditor extends JPanel {
          ComponentFactory.decorate(this);
 
          components = new JComponent[3];
-         components[0] = new SelectButton(model.cAlignments(), col.columnAlignment()).action(button -> {
+         components[0] = new SelectButton(models.peek().cAlignments(), col.columnAlignment()).action(button -> {
             col.setColumnAlignment(button.getValue());
             renderModel();
          });
-         components[1] = new SelectButton(model.sizes(), col.size()).action(button -> {
+         components[1] = new SelectButton(models.peek().sizes(), col.size()).action(button -> {
             col.setSize(button.getValue());
             renderModel();
          });
-         components[2] = new SelectButton(model.growths(), col.grow()).action(button -> {
+         components[2] = new SelectButton(models.peek().growths(), col.grow()).action(button -> {
             col.setGrow(button.getValue());
             renderModel();
          });
@@ -562,15 +537,15 @@ public class FormEditor extends JPanel {
          super(new java.awt.GridLayout(3, 1));
          ComponentFactory.decorate(this);
          components = new JComponent[3];
-         components[0] = new SelectButton(model.rAlignments(), row.rowAlignment()).action(button -> {
+         components[0] = new SelectButton(models.peek().rAlignments(), row.rowAlignment()).action(button -> {
             row.setRowAlignment(button.getValue());
             renderModel();
          });
-         components[1] = new SelectButton(model.sizes(), row.size()).action(button -> {
+         components[1] = new SelectButton(models.peek().sizes(), row.size()).action(button -> {
             row.setSize(button.getValue());
             renderModel();
          });
-         components[2] = new SelectButton(model.growths(), row.grow()).action(button -> {
+         components[2] = new SelectButton(models.peek().growths(), row.grow()).action(button -> {
             row.setGrow(button.getValue());
             renderModel();
          });
@@ -584,9 +559,10 @@ public class FormEditor extends JPanel {
       public Cell(FormModel.Cell cell) {
          super(new java.awt.GridLayout(6, 1));
          ComponentFactory.decorate(this);
+         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
          components = new JComponent[6];
-         components[0] = new SelectButton(model.components(), cell.component()).action(button -> {
+         components[0] = new SelectButton(models.peek().components(), cell.component()).action(button -> {
             cell.setComponent(button.getValue());
             renderModel();
          });
@@ -594,21 +570,21 @@ public class FormEditor extends JPanel {
             cell.setName(inputField.getText());
             renderModel();
          });
-         components[2] = new SelectButton(getAvailableWidths(model, cell), (Object) cell.width()).action(button -> {
+         components[2] = new SelectButton(getAvailableWidths(models.peek(), cell), (Object) cell.width()).action(button -> {
             cell.setWidth(button.getValue());
             renderModel();
          });
-         components[3] = new SelectButton(getAvailableHeights(model, cell), (Object) cell.height()).action(button -> {
+         components[3] = new SelectButton(getAvailableHeights(models.peek(), cell), (Object) cell.height()).action(button -> {
             cell.setHeight(button.getValue());
             renderModel();
          });
-         components[4] = new SelectButton(model.vAlignments(), cell.vAlign())
+         components[4] = new SelectButton(models.peek().vAlignments(), cell.vAlign())
                .formatter((o) -> "v " + o)
                .action(button -> {
                   cell.setVAlign(button.getValue());
                   renderModel();
                });
-         components[5] = new SelectButton(model.hAlignments(), cell.hAlign())
+         components[5] = new SelectButton(models.peek().hAlignments(), cell.hAlign())
                .formatter((o) -> "h " + o)
                .action(button -> {
                   cell.setHAlign(button.getValue());
@@ -685,7 +661,7 @@ public class FormEditor extends JPanel {
 
                final FormLayout layout = new FormLayout(getColumnSpecs().toString(), getRowSpecs().toString());
                final JPanel innerPanel = getInnerPanel(layout, extending);
-               getCellComponents().forEach(cell -> addComponent(innerPanel, cell));
+               getComponentCells().forEach(cell -> addComponent(innerPanel, cell));
                container.add(innerPanel, java.awt.BorderLayout.CENTER);
 
                container.revalidate();
@@ -754,7 +730,34 @@ public class FormEditor extends JPanel {
 
    public static void main(String[] args) {
       ComponentFactory.applyLaf();
-      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel", "tmp", "col 2 1 LEFT PREF none\n" +
+      nextgen.utils.SwingUtil.showPanel(new FormEditor("SearchPanel", "tmp", debug(modelTwo())));
+   }
+
+   private static String debug(String s) {
+      System.out.println(s);
+      return s;
+   }
+
+   private static String modelTwo() {
+      return "col 2 1 CENTER pref none\n" +
+            "col 3 1 LEFT pref none\n" +
+            "col 4 1 LEFT pref none\n" +
+            "row 1 2 TOP pref none\n" +
+            "row 1 3 TOP pref none\n" +
+            "row 1 4 TOP pref none\n" +
+            "cell 2 2 1 1 CENTER CENTER Label search\n" +
+            "cell 2 3 1 1 CENTER CENTER Label replace\n" +
+            "cell 2 4 1 3 CENTER CENTER ScrollPane result\n" +
+            "cell 3 2 1 1 CENTER CENTER TextField search\n" +
+            "cell 3 3 1 1 CENTER CENTER TextField replace\n" +
+            "cell 3 4 1 1 CENTER CENTER NONE null\n" +
+            "cell 4 2 1 1 CENTER CENTER Button search\n" +
+            "cell 4 3 1 1 CENTER CENTER Button replace\n" +
+            "cell 4 4 1 1 CENTER CENTER NONE null";
+   }
+
+   private static String modelOne() {
+      return "col 2 1 LEFT PREF none\n" +
             "col 3 1 LEFT PREF grow\n" +
             "col 4 1 LEFT PREF none\n" +
             "row 1 2 FILL PREF none\n" +
@@ -768,6 +771,6 @@ public class FormEditor extends JPanel {
             "cell 3 4 1 1 FILL FILL NONE null\n" +
             "cell 4 2 1 1 FILL FILL Button search\n" +
             "cell 4 3 1 1 FILL FILL Button replace\n" +
-            "cell 4 4 1 1 FILL FILL NONE null"));
+            "cell 4 4 1 1 FILL FILL NONE null";
    }
 }

@@ -201,6 +201,12 @@ public class ComponentFactory {
       return component;
    }
 
+   public static javax.swing.JCheckBox newJCheckBox(boolean selected) {
+      final javax.swing.JCheckBox component = newJCheckBox();
+      component.setSelected(selected);
+      return component;
+   }
+
    public static javax.swing.JRadioButton newJRadioButton(String text) {
       final javax.swing.JRadioButton component = newJRadioButton();
       component.setText(text);
@@ -257,26 +263,21 @@ public class ComponentFactory {
       return component;
    }
 
-   public static JPanel newBorderPanel() {
+   public static JPanel newPagePanel() {
       final JPanel component = newJPanel();
-      component.setLayout(new java.awt.BorderLayout());
+      component.setLayout(new BoxLayout(component, BoxLayout.PAGE_AXIS));
       return component;
+   }
+
+   public static JPanel newBorderPanel() {
+      return newJPanel(new BorderLayout());
    }
 
    public static javax.swing.JScrollPane newJScrollPane(java.awt.Component jComponent) {
       return decorate(new javax.swing.JScrollPane(jComponent));
    }
 
-   public static JScrollPane newJScrollPane(JComponent innerComponent, int width, int height) {
-      final JScrollPane component = newJScrollPane(innerComponent);
-      component.setPreferredSize(new Dimension(width, height));
-      component.setMaximumSize(new Dimension(width, height));
-      component.setMinimumSize(new Dimension(width, height));
-      component.setSize(new Dimension(width, height));
-      component.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-      component.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      return component;
-   }
+
 
    public static JMenuItem newJMenuItem(Action action) {
       final JMenuItem component = newJMenuItem();
@@ -284,4 +285,7 @@ public class ComponentFactory {
       return component;
    }
 
+   public static JPanel newGridPanel(int rows, int cols) {
+      return newJPanel(new GridLayout(rows, cols));
+   }
 }

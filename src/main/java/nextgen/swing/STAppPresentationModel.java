@@ -613,6 +613,8 @@ public class STAppPresentationModel {
       return stModel
             .getArguments()
             .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
+            .filter(stArgument -> stArgument.getValue() != null)
+            .filter(stArgument -> stArgument.getValue().getValue() != null)
             .map(stArgument -> stArgument.getValue().getValue())
             .findFirst()
             .orElse(defaultValueSupplier.get());
@@ -888,7 +890,11 @@ public class STAppPresentationModel {
    }
 
    public String render(STArgument stArgument) {
-      return render(stArgument.getValue());
+      return stArgument == null ? "" : render(stArgument.getValue());
+   }
+
+   public String render(STArgument stArgument, int maxLength) {
+      return stArgument == null ? "" : render(stArgument.getValue(), maxLength);
    }
 
    public void setAllModelPaths(nextgen.model.STProject stProject, String path) {
@@ -1085,7 +1091,7 @@ public class STAppPresentationModel {
    public void generateSTModel(nextgen.model.STModel stModel) {
       stModel.getFiles().forEach(stFile -> {
          final String content = render(stModel);
-         final String packageDeclaration = stFile.getPackageName().getValue();
+         final String packageDeclaration = stFile.getPackageName() == null ? null : stFile.getPackageName().getValue();
          final String name = stFile.getName().getValue();
          final String filetype = stFile.getType().getValue();
          final java.io.File root = new java.io.File(stFile.getPath().getValue());

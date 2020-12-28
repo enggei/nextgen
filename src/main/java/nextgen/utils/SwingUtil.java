@@ -811,6 +811,13 @@ public class SwingUtil {
       return newRSyntaxTextArea(10, 80);
    }
 
+   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(String text) {
+      final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(10, 80);
+      rSyntaxTextArea.setText(text);
+      rSyntaxTextArea.setCaretPosition(0);
+      return rSyntaxTextArea;
+   }
+
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
       return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
    }
@@ -824,11 +831,12 @@ public class SwingUtil {
          System.err.println("Could not load theme " + e.getMessage());
       }
 
+      rSyntaxTextArea.setFont(UIManager.getFont("TextField.font"));
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
       rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
-      rSyntaxTextArea.setBackground(UIManager.getColor("Panel.background"));
-      rSyntaxTextArea.setForeground(UIManager.getColor("Tree.foreground"));
+      rSyntaxTextArea.setBackground(UIManager.getColor("TextField.background"));
+      rSyntaxTextArea.setForeground(UIManager.getColor("TextField.foreground"));
       rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
          @Override

@@ -15,7 +15,7 @@ public class WriteSTFile extends nextgen.actions.TransactionAction {
 
       stFile.getIncomingFilesSTModel().forEach(stModel -> {
          final String content = appModel().render(stModel);
-         final String packageDeclaration = stFile.getPackageName().getValue();
+         final String packageDeclaration = stFile.getPackageName()==null ? "" : stFile.getPackageName().getValue();
          final String name = stFile.getName().getValue();
          final String filetype = stFile.getType().getValue();
          final java.io.File root = new java.io.File(stFile.getPath().getValue());

@@ -29,6 +29,28 @@ public class FormModel {
 		this.uuid = uuid;
 	}
 
+	public FormModel(FormModel source) {
+		this();
+		setCells(source.cells.stream().map(Cell::new).collect(java.util.stream.Collectors.toList()));
+		this.components = source.components;
+		this.panelWidths = source.panelWidths;
+		this.panelHeights = source.panelHeights;
+		this.extending = source.extending;
+		this.laf = source.laf;
+		this.hAlignments = source.hAlignments;
+		this.counts = source.counts;
+		this.sizes = source.sizes;
+		this.growths = source.growths;
+		this.cAlignments = source.cAlignments;
+		this.rAlignments = source.rAlignments;
+		setColumns(source.columns.stream().map(Column::new).collect(java.util.stream.Collectors.toList()));
+		setRows(source.rows.stream().map(Row::new).collect(java.util.stream.Collectors.toList()));
+		this.name = source.name;
+		this.packageName = source.packageName;
+		this.vAlignments = source.vAlignments;
+		this.componentPrefixes = source.componentPrefixes;
+	}
+
 	public java.util.UUID getUuid() {
 		return this.uuid;
 	}	
@@ -218,12 +240,12 @@ public class FormModel {
 		private final java.util.UUID uuid;
 		private int x;
 		private int y;
-		private String component;
 		private String name;
 		private int width = 1;
 		private int height = 1;
 		private nextgen.templates.jgoodies.hAlignment hAlign;
 		private nextgen.templates.jgoodies.vAlignment vAlign;
+		private String component;
 
 		public Cell() {
 			this.uuid = java.util.UUID.randomUUID();
@@ -231,6 +253,18 @@ public class FormModel {
 
 		public Cell(java.util.UUID uuid) {
 			this.uuid = uuid;
+		}
+
+		public Cell(Cell source) {
+			this();
+			this.x = source.x;
+			this.y = source.y;
+			this.name = source.name;
+			this.width = source.width;
+			this.height = source.height;
+			this.hAlign = source.hAlign;
+			this.vAlign = source.vAlign;
+			setComponent(source.component);
 		}
 
 		public java.util.UUID getUuid() {
@@ -254,16 +288,6 @@ public class FormModel {
 
 		public int y() {
 			return y;
-		}
-
-
-		public Cell setComponent(String value) {
-			this.component = value;
-			return this;
-		}
-
-		public String component() {
-			return component;
 		}
 
 
@@ -317,6 +341,22 @@ public class FormModel {
 		}
 
 
+		public Cell setComponent(String value) {
+			this.component = value;
+			return this;
+		}
+
+		public String component() {
+			return component;
+		}
+
+
+
+		@Override
+		public String toString() {
+			return x + " " + y + " " + component + " " + name;
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) return true;
@@ -346,6 +386,15 @@ public class FormModel {
 
 		public Column(java.util.UUID uuid) {
 			this.uuid = uuid;
+		}
+
+		public Column(Column source) {
+			this();
+			this.columnAlignment = source.columnAlignment;
+			this.size = source.size;
+			this.grow = source.grow;
+			this.x = source.x;
+			this.y = source.y;
 		}
 
 		public java.util.UUID getUuid() {
@@ -402,6 +451,12 @@ public class FormModel {
 		}
 
 
+
+		@Override
+		public String toString() {
+			return x + " " + y;
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) return true;
@@ -431,6 +486,15 @@ public class FormModel {
 
 		public Row(java.util.UUID uuid) {
 			this.uuid = uuid;
+		}
+
+		public Row(Row source) {
+			this();
+			this.rowAlignment = source.rowAlignment;
+			this.size = source.size;
+			this.grow = source.grow;
+			this.x = source.x;
+			this.y = source.y;
 		}
 
 		public java.util.UUID getUuid() {
@@ -486,6 +550,12 @@ public class FormModel {
 			return y;
 		}
 
+
+
+		@Override
+		public String toString() {
+			return x + " " + y;
+		}
 
 		@Override
 		public boolean equals(Object o) {
