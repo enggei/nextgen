@@ -1,5 +1,8 @@
 package nextgen.actions;
 
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+
 public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STTemplate stTemplate;

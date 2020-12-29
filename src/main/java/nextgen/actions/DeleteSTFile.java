@@ -1,5 +1,8 @@
 package nextgen.actions;
 
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+
 public class DeleteSTFile extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.STFile stFile;

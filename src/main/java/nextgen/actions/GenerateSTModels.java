@@ -1,5 +1,8 @@
 package nextgen.actions;
 
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+
 public class GenerateSTModels extends nextgen.actions.TransactionAction {
 
    private final java.util.List<nextgen.model.STModel> stModels;

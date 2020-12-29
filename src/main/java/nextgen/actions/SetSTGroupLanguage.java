@@ -1,5 +1,8 @@
 package nextgen.actions;
 
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+
 public class SetSTGroupLanguage extends nextgen.actions.TransactionAction {
 
    private final javax.swing.JComponent owner;
