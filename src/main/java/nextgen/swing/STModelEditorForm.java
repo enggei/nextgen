@@ -4,7 +4,6 @@ import nextgen.actions.*;
 import nextgen.model.*;
 import nextgen.swing.forms.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,6 +145,8 @@ public class STModelEditorForm extends BaseEditor<STModel> {
    private JButton getButton(Action action) {
       final JButton component = newButton(action);
       component.setPreferredSize(new Dimension(65, component.getPreferredSize().height));
+      component.setMinimumSize(new Dimension(65, component.getPreferredSize().height));
+      component.setMaximumSize(new Dimension(65, component.getPreferredSize().height));
       return component;
    }
 
@@ -166,8 +167,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
    }
 
    private JPanel getContentPanel() {
-      final JPanel jPanel = newPagePanel();
-      return jPanel;
+      return newPagePanel();
    }
 
    private JComponent newSTValueComponent(STModel model, STParameterKey stParameterKey, STArgument stArgument, STArgumentKV argument) {
