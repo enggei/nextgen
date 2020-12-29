@@ -2,11 +2,11 @@ package nextgen.swing;
 
 import nextgen.model.STModel;
 
-public class STModelEditorGrid extends SearchReplaceEditor {
+public class STModelSearchReplaceEditor extends SearchReplaceEditor {
 
    private STModel model;
 
-   public STModelEditorGrid(nextgen.model.STModel model) {
+   public STModelSearchReplaceEditor(nextgen.model.STModel model) {
       super();
       this.model = model;
    }

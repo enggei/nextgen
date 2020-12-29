@@ -912,6 +912,19 @@ public class STAppPresentationModel {
       return stArgument == null ? defaultValue : render(stArgument.getValue(), defaultValue);
    }
 
+   public String render(STArgumentKV stArgument) {
+      return stArgument == null ? "" : render(stArgument.getValue());
+   }
+
+   public String render(STArgumentKV stArgument, int maxLength) {
+      return stArgument == null ? "" : render(stArgument.getValue(), maxLength);
+   }
+
+   public String render(STArgumentKV stArgument, String defaultValue) {
+      return stArgument == null ? defaultValue : render(stArgument.getValue(), defaultValue);
+   }
+
+
    public void setAllModelPaths(nextgen.model.STProject stProject, String path) {
       final nextgen.model.STValue newPath = newSTValue(path);
       aggregateModels(stProject).forEach(stModel -> stModel.getFiles().forEach(stFile -> {

@@ -1,27 +1,22 @@
 package nextgen.swing;
 
-public class STTemplatesEditor extends SearchReplaceEditor {
+import java.awt.*;
+
+public class STTemplatesEditor extends BaseEditor<nextgen.model.STTemplate> {
 
    private final String uuid;
-   private final nextgen.model.STTemplate model;
 
    public STTemplatesEditor(nextgen.model.STTemplate model) {
-      super();
-
-      this.model = model;
+      super(model);
       this.uuid = model.getUuid();
+
+      final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
+      editors.add("Search", new STTemplatesSearchReplaceEditor(model));
+      add(editors, BorderLayout.CENTER);
    }
 
-   @Override
-   protected java.util.stream.Stream<nextgen.model.STModel> getSTModels() {
-      return model.getIncomingStTemplateSTModel();
-   }
 
    public String getUuid() {
       return uuid;
-   }
-
-   public nextgen.model.STTemplate getModel() {
-      return model;
    }
 }

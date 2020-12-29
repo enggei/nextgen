@@ -1,5 +1,7 @@
 package nextgen.actions;
 
+import javax.swing.*;
+
 import static nextgen.utils.SwingUtil.printStackTrace;
 
 public abstract class TransactionAction extends javax.swing.AbstractAction {
@@ -8,6 +10,11 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
 
    protected TransactionAction(String name) {
       super(name);
+   }
+
+   public TransactionAction setName(String name) {
+      putValue(Action.NAME, name);
+      return this;
    }
 
    @Override

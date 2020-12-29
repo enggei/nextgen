@@ -156,6 +156,11 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onSTModelSelected(nextgen.events.STModelSelected event) {
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.stModel)).ifPresent(treeModel::select);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProject(nextgen.events.NewSTProject event) {
 		findRootNode().ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new STProjectTreeNode(event.project)));
 	}
@@ -900,7 +905,6 @@ public class STModelNavigator extends JPanel {
 				actions.add(new nextgen.actions.CopyModel(getModel()));
 				actions.add(new nextgen.actions.AsBuilderCode(getModel()));
 				actions.add(new nextgen.actions.DeleteSTModel(getModel(), workspace));
-				actions.add(new nextgen.actions.ShowSTModelInCanvas(getModel()));
 			});
 
 			return actions;
@@ -937,7 +941,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelTreeNodeSelected(STModelTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STFileSinkTreeNode
@@ -1208,7 +1212,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelArgumentTreeNodeSelected(STModelArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STValueTreeNode
@@ -1617,7 +1621,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelKVArgumentTreeNodeSelected(STModelKVArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.stTemplate, selectedNode.getModel());
+		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STValueKVArgumentTreeNode

@@ -22,7 +22,7 @@ public class STModelEditor extends BaseEditor<STModel> {
       final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
       editors.add("Editor", modelEditorText);
       editors.add("Form", modelEditorForm);
-      editors.add("Search", new STModelEditorGrid(stModel));
+      editors.add("Search", new STModelSearchReplaceEditor(stModel));
       if (stModel.getStTemplate().getUuid().equals("c69858b9-e9aa-4022-98e5-bd6b3bfe0e8b"))
          editors.add("FormBuilder", newFormEditor(stModel).onMakePanel(this::saveModel));
       add(editors, BorderLayout.CENTER);
