@@ -7,7 +7,7 @@ public class SetArgumentFromArgumentType extends nextgen.actions.TransactionActi
    private final javax.swing.JComponent owner;
 
 	public SetArgumentFromArgumentType(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, javax.swing.JComponent owner) {
-		super("Set");
+		super("SET");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
 		this.owner = owner;

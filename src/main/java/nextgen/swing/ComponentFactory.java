@@ -98,6 +98,7 @@ public class ComponentFactory {
 
    public static javax.swing.JButton decorate(javax.swing.JButton component) {
       baseDecorate(component);
+      component.setBackground(Color.DARK_GRAY);
       return component;
    }
 

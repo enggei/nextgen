@@ -7,7 +7,7 @@ public class AddArgumentFromArgumentType extends nextgen.actions.TransactionActi
    private final javax.swing.JComponent owner;
 
 	public AddArgumentFromArgumentType(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, javax.swing.JComponent owner) {
-		super("Add");
+		super("ADD");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
 		this.owner = owner;

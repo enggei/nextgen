@@ -698,8 +698,7 @@ public class FormEditor extends JPanel {
                      .setHAlign(hAlignment.valueOf(c[i++]))
                      .setVAlign(vAlignment.valueOf(c[i++]))
                      .setComponent(c[i++])
-                     .setName(c[i])
-               );
+                     .setName(c.length == 9 ? c[i] : null));
                break;
          }
       }

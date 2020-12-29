@@ -10,26 +10,30 @@ public class TextAreaCrudPanel extends JPanel {
 	JButton btnfromClipboard;
 
 	public TextAreaCrudPanel() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:none, fill:75:none, fill:75:none, left:75:grow", "top:pref:none, top:pref:none"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:grow, fill:75:none, fill:75:none, left:75:none", "top:pref:none, top:pref:none"));
 	}
 
 	public TextAreaCrudPanel setScrtextArea(JScrollPane component) {
+		if (component == null) return this;
 		add(this.scrtextArea = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
 		return this;
 	}
 
 	public TextAreaCrudPanel setBtndelete(JButton component) {
-		add(this.btndelete = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "FILL, FILL"));
+		if (component == null) return this;
+		add(this.btndelete = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public TextAreaCrudPanel setBtntoClipboard(JButton component) {
-		add(this.btntoClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		if (component == null) return this;
+		add(this.btntoClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public TextAreaCrudPanel setBtnfromClipboard(JButton component) {
-		add(this.btnfromClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
+		if (component == null) return this;
+		add(this.btnfromClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
@@ -37,24 +41,24 @@ public class TextAreaCrudPanel extends JPanel {
 
 	/*
 
-	 columns 	4	"fill:75:none, fill:75:none, fill:75:none, left:75:grow"
+	 columns 	4	"fill:75:grow, fill:75:none, fill:75:none, left:75:none"
 
 	 rows 		2 	"top:pref:none, top:pref:none"
 
-	 col 2 1 FILL 75 none
+	 col 2 1 FILL 75 grow
 	 col 3 1 FILL 75 none
 	 col 4 1 FILL 75 none
-	 col 5 1 LEFT 75 grow
+	 col 5 1 LEFT 75 none
 	 row 1 2 TOP pref none
 	 row 1 3 TOP pref none
 	 cell 2 2 1 4 FILL CENTER ScrollPane textArea
-	 cell 2 3 1 1 FILL FILL Button delete
+	 cell 2 3 1 1 FILL FILL NONE 
 	 cell 3 2 1 1 CENTER CENTER NONE null
-	 cell 3 3 1 1 FILL FILL Button toClipboard
+	 cell 3 3 1 1 FILL FILL Button delete
 	 cell 4 2 1 1 CENTER CENTER NONE null
-	 cell 4 3 1 1 FILL FILL Button fromClipboard
+	 cell 4 3 1 1 FILL FILL Button toClipboard
 	 cell 5 2 1 1 CENTER CENTER NONE null
-	 cell 5 3 1 1 CENTER CENTER NONE null
+	 cell 5 3 1 1 FILL FILL Button fromClipboard
 
 	*/	
 }

@@ -29,7 +29,7 @@ public class STModelNavigator extends JPanel {
 		tree.addKeyListener(new STModelNavigator.STModelNavigatorKeyListener());
 		tree.addMouseListener(new STModelNavigator.STModelNavigatorMouseListener());
 
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(400, 600));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);

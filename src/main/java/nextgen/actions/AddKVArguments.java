@@ -7,7 +7,7 @@ public class AddKVArguments extends nextgen.actions.TransactionAction {
    private final javax.swing.JComponent owner;
 
 	public AddKVArguments(nextgen.model.STParameter stParameter, nextgen.model.STModel stModel, javax.swing.JComponent owner) {
-		super("Add");
+		super("ADD");
 		this.stParameter = stParameter;
 		this.stModel = stModel;
 		this.owner = owner;

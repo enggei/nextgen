@@ -2,6 +2,7 @@ package nextgen.swing;
 
 
 import javax.swing.*;
+import java.awt.*;
 
 public class AbstractEditor extends javax.swing.JPanel {
 
@@ -75,18 +76,6 @@ public class AbstractEditor extends javax.swing.JPanel {
       final JButton component = ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
       component.setHorizontalTextPosition(hAlign);
       return component;
-   }
-
-   protected javax.swing.JButton newRightAlignedButton(Action action) {
-      final JButton jButton = newButton(action);
-      jButton.setHorizontalAlignment(SwingConstants.RIGHT);
-      return jButton;
-   }
-
-   protected javax.swing.JButton newRightAlignedButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
-      final JButton jButton = newButton(name, SwingConstants.RIGHT, onClick);
-      jButton.setHorizontalAlignment(SwingConstants.RIGHT);
-      return jButton;
    }
 
    protected java.awt.event.KeyListener getEditorKeyListener() {

@@ -422,6 +422,7 @@ public class FormPanel {
 				"\n" + 
 				"~components:{it|\n" + 
 				"	public ~name~ set~it.name;format=\"capitalize\"~(~it.type~ component) {\n" + 
+				"		if (component == null) return this;\n" + 
 				"		add(this.~it.name~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, \"~it.hAlign~, ~it.vAlign~\"));\n" + 
 				"		return this;\n" + 
 				"	~eom()~\n" + 

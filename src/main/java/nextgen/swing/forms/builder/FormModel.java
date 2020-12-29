@@ -264,7 +264,7 @@ public class FormModel {
 			this.height = source.height;
 			this.hAlign = source.hAlign;
 			this.vAlign = source.vAlign;
-			setComponent(source.component);
+			this.component = source.component;
 		}
 
 		public java.util.UUID getUuid() {
