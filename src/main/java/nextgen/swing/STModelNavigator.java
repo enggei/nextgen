@@ -1,5 +1,6 @@
 package nextgen.swing;
 
+import nextgen.actions.*; //;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -128,8 +129,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTParameter(nextgen.events.NewSTParameter event) {
-		findAllSTModelTreeNode(stModelTreeNode -> stModelTreeNode.stTemplate.equals(event.stTemplate))
-		      .forEach(stModelTreeNode -> treeModel.addNodeInSortedOrder(stModelTreeNode, new nextgen.swing.STModelNavigator.STParameterTreeNode(event.stParameter, stModelTreeNode.getModel())));
+		findAllSTModelTreeNode(stModelTreeNode -> stModelTreeNode.stTemplate.equals(event.stTemplate)).forEach(stModelTreeNode -> treeModel.addNodeInSortedOrder(stModelTreeNode, new nextgen.swing.STModelNavigator.STParameterTreeNode(event.stParameter, stModelTreeNode.getModel())));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -478,9 +478,9 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.ReconcileDuplicateModels());
-				actions.add(new nextgen.actions.NewProject(tree));
-				actions.add(new nextgen.actions.UndoDBTransaction());
+				actions.add(new NewProject(tree));
+				actions.add(new ReconcileDuplicateModels());
+				actions.add(new UndoDBTransaction());
 			});
 
 			return actions;

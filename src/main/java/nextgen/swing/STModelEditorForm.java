@@ -197,7 +197,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> appModel().setArgument(model, stParameter, rSyntaxTextArea.getText().trim()));
+                  appModel().doLaterInTransaction(tx -> stArgument.setValue(appModel().newSTValue(rSyntaxTextArea.getText().trim())));
                }
             }
          });
@@ -243,7 +243,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> appModel().setArgumentKV(model, stArgument, stParameterKey, rSyntaxTextArea.getText().trim()));
+                  appModel().doLaterInTransaction(tx -> argument.setValue(appModel().newSTValue(rSyntaxTextArea.getText().trim())));
                }
             }
          });
