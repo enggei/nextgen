@@ -2,26 +2,30 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class RunInTerminal extends nextgen.actions.TransactionAction {
+public class RunInTerminal extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
-   private final javax.swing.JComponent owner;
+   private final STModel stModel;
+   private final JComponent owner;
 
-	public RunInTerminal(nextgen.model.STModel stModel, javax.swing.JComponent owner) {
+	public RunInTerminal(STModel stModel, JComponent owner) {
 		super("Run in Terminal");
 		this.stModel = stModel;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("RunInTerminal" + " stModel" + " owner");
 
       final String command = appModel().render(stModel);
       final java.io.File tempScript = createTempScript(command);
 
-      javax.swing.SwingUtilities.invokeLater(() -> {
+      SwingUtilities.invokeLater(() -> {
          try {
             log.info(tempScript.getAbsolutePath());
 

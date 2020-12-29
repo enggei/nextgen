@@ -2,23 +2,27 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class NewSTGroupAction extends nextgen.actions.TransactionAction {
+public class NewSTGroupAction extends TransactionAction {
 
-   private final javax.swing.JComponent owner;
+   private final JComponent owner;
 
-	public NewSTGroupAction(javax.swing.JComponent owner) {
+	public NewSTGroupAction(JComponent owner) {
 		super("New STGroup");
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("NewSTGroupAction" + " owner");
 
       input(owner, "Name", name -> {
 
-         final nextgen.model.STGroupModel existing = appModel().findSTGroupModelByName(name);
+         final STGroupModel existing = appModel().findSTGroupModelByName(name);
          if (existing != null) {
             nextgen.utils.SwingUtil.showMessage(name + " group already exists in this directory", owner);
             return;

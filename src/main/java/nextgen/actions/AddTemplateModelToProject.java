@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class AddTemplateModelToProject extends nextgen.actions.TransactionAction {
+public class AddTemplateModelToProject extends TransactionAction {
 
-   private final nextgen.model.STTemplate stTemplate;
-   private final nextgen.model.STProject project;
+   private final STTemplate stTemplate;
+   private final STProject project;
 
-	public AddTemplateModelToProject(String name, nextgen.model.STTemplate stTemplate, nextgen.model.STProject project) {
+	public AddTemplateModelToProject(String name, STTemplate stTemplate, STProject project) {
       super(name);
       this.stTemplate = stTemplate;
       this.project = project;
    }
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AddTemplateModelToProject" + " stTemplate" + " project");
 
       appModel().addSTModel(project, stTemplate);

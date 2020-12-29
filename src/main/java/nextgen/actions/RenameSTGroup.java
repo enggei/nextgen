@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class RenameSTGroup extends nextgen.actions.TransactionAction {
+public class RenameSTGroup extends TransactionAction {
 
-   private final nextgen.model.STGroupModel stGroup;
-   private final javax.swing.JComponent owner;
+   private final STGroupModel stGroup;
+   private final JComponent owner;
 
-	public RenameSTGroup(nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public RenameSTGroup(STGroupModel stGroup, JComponent owner) {
 		super("Rename");
 		this.stGroup = stGroup;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("RenameSTGroup" + " stGroup" + " owner");
 
       inputName(owner, stGroup.getName(), s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> {

@@ -2,31 +2,35 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class EditEnum extends nextgen.actions.TransactionAction {
+public class EditEnum extends TransactionAction {
 
-   private final nextgen.model.STEnum stEnum;
-   private final javax.swing.JComponent owner;
+   private final STEnum stEnum;
+   private final JComponent owner;
 
-	public EditEnum(nextgen.model.STEnum stEnum, javax.swing.JComponent owner) {
+	public EditEnum(STEnum stEnum, JComponent owner) {
 		super("Edit");
 		this.stEnum = stEnum;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("EditEnum" + " stEnum" + " owner");
 
       final int newFields = 5;
-      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout((int) stEnum.getValues().count() + newFields + 1, 2));
-      contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
+      final JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout((int) stEnum.getValues().count() + newFields + 1, 2));
+      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
       contentPanel.add(newLabel("Name"));
       contentPanel.add(newLabel("Lexical"));
 
       // existing values:
-      final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();
-      final java.util.Map<nextgen.model.STEnumValue, javax.swing.JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();
+      final java.util.Map<STEnumValue, JTextField> txtEnumValuesName = new java.util.LinkedHashMap<>();
+      final java.util.Map<STEnumValue, JTextField> txtEnumLexical = new java.util.LinkedHashMap<>();
       stEnum.getValuesSorted().forEach(stEnumValue -> {
       	txtEnumValuesName.put(stEnumValue, newTextField(stEnumValue.getName(), 10));
       	txtEnumLexical.put(stEnumValue, newTextField(stEnumValue.getLexical(), 10));
@@ -35,8 +39,8 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       });
 
       // allow adding new values:
-      final java.util.Map<Integer, javax.swing.JTextField> newTxtEnumValuesName = new java.util.LinkedHashMap<>();
-      final java.util.Map<Integer, javax.swing.JTextField> newTxtEnumLexical = new java.util.LinkedHashMap<>();
+      final java.util.Map<Integer, JTextField> newTxtEnumValuesName = new java.util.LinkedHashMap<>();
+      final java.util.Map<Integer, JTextField> newTxtEnumLexical = new java.util.LinkedHashMap<>();
       for (int i = 0; i < newFields; i++) {
       	newTxtEnumValuesName.put(i, newTextField("", 10));
       	newTxtEnumLexical.put(i, newTextField("", 10));
@@ -45,7 +49,7 @@ public class EditEnum extends nextgen.actions.TransactionAction {
       }
 
       showDialog(owner, contentPanel, "Edit Enum", jDialog -> {
-      	for (nextgen.model.STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
+      	for (STEnumValue stEnumValue : txtEnumValuesName.keySet()) {
       		final String txtEnumValueName = txtEnumValuesName.get(stEnumValue).getText().trim();
       		final String txtEnumValueLexical = txtEnumLexical.get(stEnumValue).getText().trim();
 

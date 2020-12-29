@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetSTValueFromClipboard extends nextgen.actions.TransactionAction {
+public class SetSTValueFromClipboard extends TransactionAction {
 
-   private final nextgen.model.STValue stValue;
+   private final STValue stValue;
 
-	public SetSTValueFromClipboard(nextgen.model.STValue stValue) {
+	public SetSTValueFromClipboard(STValue stValue) {
 		super("FROM");
 		this.stValue = stValue;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetSTValueFromClipboard" + " stValue");
 
       appModel().setValue(stValue, fromClipboard());

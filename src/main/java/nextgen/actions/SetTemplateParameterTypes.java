@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction {
+public class SetTemplateParameterTypes extends TransactionAction {
 
-   private final nextgen.model.STGroupModel stGroup;
-   private final nextgen.model.STTemplate stTemplate;
-   private final javax.swing.JComponent owner;
+   private final STGroupModel stGroup;
+   private final STTemplate stTemplate;
+   private final JComponent owner;
 
-	public SetTemplateParameterTypes(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public SetTemplateParameterTypes(STGroupModel stGroup, STTemplate stTemplate, JComponent owner) {
 		super("Set parameter types");
 		this.stGroup = stGroup;
 		this.stTemplate = stTemplate;
@@ -17,19 +21,19 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetTemplateParameterTypes" + " stGroup" + " stTemplate" + " owner");
 
-      final java.util.Map<String, javax.swing.JTextField> txtParameterMap = new java.util.TreeMap<>();
-      final java.util.Map<String, javax.swing.JRadioButton> labelParameterMap = new java.util.TreeMap<>();
-      final javax.swing.ButtonGroup labelParameterGroup = new javax.swing.ButtonGroup();
+      final java.util.Map<String, JTextField> txtParameterMap = new java.util.TreeMap<>();
+      final java.util.Map<String, JRadioButton> labelParameterMap = new java.util.TreeMap<>();
+      final ButtonGroup labelParameterGroup = new ButtonGroup();
 
       stTemplate.getParametersSorted().forEach(stParameter -> {
 
          switch (stParameter.getType()) {
 
             case SINGLE:
-               final javax.swing.JRadioButton radioButton = nextgen.swing.ComponentFactory.newJRadioButton("Set as Label");
+               final JRadioButton radioButton = nextgen.swing.ComponentFactory.newJRadioButton("Set as Label");
                labelParameterMap.put(stParameter.getName(), radioButton);
                labelParameterGroup.add(radioButton);
                radioButton.setSelected(stTemplate.getLabelParameter() != null && stTemplate.getLabelParameter().equals(stParameter));
@@ -47,12 +51,12 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
          }
       });
 
-      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtParameterMap.size(), 3));
-      contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
+      final JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtParameterMap.size(), 3));
+      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
       txtParameterMap.forEach((key, value) -> {
          contentPanel.add(newLabel(key));
          contentPanel.add(value);
-         final javax.swing.JRadioButton jRadioButton = labelParameterMap.get(key);
+         final JRadioButton jRadioButton = labelParameterMap.get(key);
          contentPanel.add(jRadioButton == null ? newLabel("") : jRadioButton);
       });
 
@@ -63,17 +67,17 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
 
                case SINGLE:
                case LIST:
-                  final javax.swing.JTextField txtTypes = txtParameterMap.get(stParameter.getName());
+                  final JTextField txtTypes = txtParameterMap.get(stParameter.getName());
                   final String types = txtTypes.getText().trim();
                   stParameter.setArgumentType(types.length() == 0 ? (stParameter.getName().startsWith("is") ? "Boolean" : "Object") : types);
 
-                  final javax.swing.JRadioButton jRadioButton = labelParameterMap.get(stParameter.getName());
+                  final JRadioButton jRadioButton = labelParameterMap.get(stParameter.getName());
                   if (jRadioButton != null && jRadioButton.isSelected()) stTemplate.setLabelParameter(stParameter);
                   break;
 
                case KVLIST:
                   stParameter.getKeys().forEach(stParameterKey -> {
-                     final javax.swing.JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
+                     final JTextField txtKVTypes = txtParameterMap.get(stParameter.getName() + "." + stParameterKey.getName());
                      final String kvTypes = txtKVTypes.getText().trim();
                      stParameterKey.setArgumentType(kvTypes.length() == 0 ? (stParameterKey.getName().startsWith("is") ? "Boolean" : "Object") : kvTypes);
                   });
@@ -82,7 +86,7 @@ public class SetTemplateParameterTypes extends nextgen.actions.TransactionAction
          });
 
          nextgen.events.STTemplateParameterTypesChanged.post(stGroup, stTemplate);
-         javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
+         SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
 

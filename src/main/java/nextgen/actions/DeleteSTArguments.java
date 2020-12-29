@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class DeleteSTArguments extends nextgen.actions.TransactionAction {
+public class DeleteSTArguments extends TransactionAction {
 
-   private final javax.swing.JComponent owner;
-   private final nextgen.model.STParameter stParameter;
-   private final nextgen.model.STModel stModel;
+   private final JComponent owner;
+   private final STParameter stParameter;
+   private final STModel stModel;
 
-	public DeleteSTArguments(javax.swing.JComponent owner, nextgen.model.STParameter stParameter, nextgen.model.STModel stModel) {
+	public DeleteSTArguments(JComponent owner, STParameter stParameter, STModel stModel) {
 		super("Delete All");
 		this.owner = owner;
 		this.stParameter = stParameter;
@@ -17,7 +21,7 @@ public class DeleteSTArguments extends nextgen.actions.TransactionAction {
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("DeleteSTArguments" + " owner" + " stParameter" + " stModel");
 
       confirm(owner, "Remove All", unused -> appModel().detach(stModel, stParameter));

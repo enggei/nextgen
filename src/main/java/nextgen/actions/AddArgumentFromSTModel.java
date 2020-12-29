@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class AddArgumentFromSTModel extends nextgen.actions.TransactionAction {
+public class AddArgumentFromSTModel extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
-   private final nextgen.model.STParameter stParameter;
-   private final nextgen.model.STModel value;
+   private final STModel stModel;
+   private final STParameter stParameter;
+   private final STModel value;
 
-	public AddArgumentFromSTModel(String name, nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
+	public AddArgumentFromSTModel(String name, STModel stModel, STParameter stParameter, STModel value) {
       super(name);
       this.stModel = stModel;
       this.stParameter = stParameter;
@@ -17,7 +21,7 @@ public class AddArgumentFromSTModel extends nextgen.actions.TransactionAction {
    }
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AddArgumentFromSTModel" + " stModel" + " stParameter" + " value");
 
       appModel().addArgument(stModel, stParameter, value);

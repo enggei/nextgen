@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class DeleteKV extends nextgen.actions.TransactionAction {
+public class DeleteKV extends TransactionAction {
 
-   private final nextgen.model.STArgumentKV argumentKV;
-   private final javax.swing.JComponent owner;
+   private final STArgumentKV argumentKV;
+   private final JComponent owner;
 
-	public DeleteKV(nextgen.model.STArgumentKV argumentKV, javax.swing.JComponent owner) {
+	public DeleteKV(STArgumentKV argumentKV, JComponent owner) {
 		super("DEL");
 		this.argumentKV = argumentKV;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("DeleteKV" + " argumentKV" + " owner");
 
       confirm(owner, "Delete", unused ->

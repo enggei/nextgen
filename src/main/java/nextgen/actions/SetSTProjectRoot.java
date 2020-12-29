@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetSTProjectRoot extends nextgen.actions.TransactionAction {
+public class SetSTProjectRoot extends TransactionAction {
 
-   private final nextgen.model.STProject stProject;
-   private final javax.swing.JComponent owner;
+   private final STProject stProject;
+   private final JComponent owner;
 
-	public SetSTProjectRoot(nextgen.model.STProject stProject, javax.swing.JComponent owner) {
+	public SetSTProjectRoot(STProject stProject, JComponent owner) {
 		super("Change root");
 		this.stProject = stProject;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetSTProjectRoot" + " stProject" + " owner");
 
       input(owner, "New Root", s -> {

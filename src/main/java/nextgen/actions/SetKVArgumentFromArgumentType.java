@@ -2,15 +2,19 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAction {
+public class SetKVArgumentFromArgumentType extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
-   private final nextgen.model.STArgument stArgument;
-   private final nextgen.model.STParameterKey stParameterKey;
-   private final javax.swing.JComponent owner;
+   private final STModel stModel;
+   private final STArgument stArgument;
+   private final STParameterKey stParameterKey;
+   private final JComponent owner;
 
-	public SetKVArgumentFromArgumentType(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, javax.swing.JComponent owner) {
+	public SetKVArgumentFromArgumentType(STModel stModel, STArgument stArgument, STParameterKey stParameterKey, JComponent owner) {
 		super("Set " + stParameterKey.getName());
 		this.stModel = stModel;
 		this.stArgument = stArgument;
@@ -19,15 +23,15 @@ public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAc
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetKVArgumentFromArgumentType" + " stModel" + " stArgument" + " stParameterKey" + " owner");
 
       final String argumentType = stParameterKey.getArgumentType();
-      final nextgen.model.STParameter stParameter = stArgument.getStParameter();
+      final STParameter stParameter = stArgument.getStParameter();
 
       final boolean argumentIsDefault = argumentType.equals("Object") || argumentType.equals("String");
       if (argumentIsDefault) {
-         final java.util.Optional<nextgen.model.STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
+         final java.util.Optional<STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
          if (stTemplate.isPresent())
             appModel().setArgumentKV(stModel, stArgument, stParameterKey, appModel().newSTValue(stTemplate.get()));
          else
@@ -35,11 +39,11 @@ public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAc
          return;
       }
 
-      final nextgen.model.STGroupModel stGroupModel = appModel().getSTGroup(stModel);
-      final java.util.Optional<nextgen.model.STTemplate> stTemplate = appModel().findSTTemplateFromArgumentType(argumentType, stGroupModel);
+      final STGroupModel stGroupModel = appModel().getSTGroup(stModel);
+      final java.util.Optional<STTemplate> stTemplate = appModel().findSTTemplateFromArgumentType(argumentType, stGroupModel);
       if (stTemplate.isPresent()) {
 
-         final java.util.List<nextgen.model.STModel> stModelList = appModel().getModelsFor(stTemplate.get());
+         final java.util.List<STModel> stModelList = appModel().getModelsFor(stTemplate.get());
          if (stModelList.isEmpty())
             appModel().setArgumentKV(stModel, stArgument, stParameterKey, appModel().newSTValue(stTemplate.get()));
          else
@@ -50,10 +54,10 @@ public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAc
          return;
       }
 
-      final java.util.Set<nextgen.model.STTemplate> stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
+      final java.util.Set<STTemplate> stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
       if (stTemplatesWithInterface.isEmpty()) {
 
-         final nextgen.model.STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);
+         final STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);
          if (stEnum == null)
             input(owner, "New value", s -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, s));
          else
@@ -62,7 +66,7 @@ public class SetKVArgumentFromArgumentType extends nextgen.actions.TransactionAc
       }
 
       if (stTemplatesWithInterface.size() > 1)
-         selectAndRender(owner, stTemplatesWithInterface, (nextgen.model.STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, model));
+         selectAndRender(owner, stTemplatesWithInterface, (STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, model));
       else
          appModel().setArgumentKV(stModel, stArgument, stParameterKey, stTemplatesWithInterface.iterator().next());
    }

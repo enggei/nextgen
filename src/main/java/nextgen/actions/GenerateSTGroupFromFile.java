@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class GenerateSTGroupFromFile extends nextgen.actions.TransactionAction {
+public class GenerateSTGroupFromFile extends TransactionAction {
 
-   private final nextgen.model.STGroupFile stGroupFile;
-   private final javax.swing.JComponent owner;
+   private final STGroupFile stGroupFile;
+   private final JComponent owner;
 
-	public GenerateSTGroupFromFile(nextgen.model.STGroupFile stGroupFile, javax.swing.JComponent owner) {
+	public GenerateSTGroupFromFile(STGroupFile stGroupFile, JComponent owner) {
 		super("Generate");
 		this.stGroupFile = stGroupFile;
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("GenerateSTGroupFromFile" + " stGroupFile" + " owner");
 
       stGroupFile.getIncomingFilesSTGroupModel().findFirst().ifPresent(stGroupModel -> {

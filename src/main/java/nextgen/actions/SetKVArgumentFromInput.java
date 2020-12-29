@@ -2,15 +2,19 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetKVArgumentFromInput extends nextgen.actions.TransactionAction {
+public class SetKVArgumentFromInput extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
-   private final nextgen.model.STArgument stArgument;
-   private final nextgen.model.STParameterKey stParameterKey;
-   private final javax.swing.JComponent owner;
+   private final STModel stModel;
+   private final STArgument stArgument;
+   private final STParameterKey stParameterKey;
+   private final JComponent owner;
 
-	public SetKVArgumentFromInput(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, javax.swing.JComponent owner) {
+	public SetKVArgumentFromInput(STModel stModel, STArgument stArgument, STParameterKey stParameterKey, JComponent owner) {
 		super("Set " + stParameterKey.getName() + " from Input");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
@@ -19,7 +23,7 @@ public class SetKVArgumentFromInput extends nextgen.actions.TransactionAction {
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetKVArgumentFromInput" + " stModel" + " stArgument" + " stParameterKey" + " owner");
 
       input(owner, stParameterKey.getName(), inputValue -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, inputValue));

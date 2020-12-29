@@ -2,20 +2,24 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class AsBuilderCodes extends nextgen.actions.TransactionAction {
+public class AsBuilderCodes extends TransactionAction {
 
-   private final nextgen.model.STTemplate stTemplate;
-   private final java.util.List<nextgen.model.STModel> stModels;
+   private final STTemplate stTemplate;
+   private final java.util.List<STModel> stModels;
 
-	public AsBuilderCodes(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModels) {
+	public AsBuilderCodes(STTemplate stTemplate, java.util.List<STModel> stModels) {
 		super("As builder code");
 		this.stTemplate = stTemplate;
 		this.stModels = stModels;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AsBuilderCodes" + " stTemplate" + " stModels");
 
       final String packageName = appModel().getSourceOutputPackage();
@@ -32,7 +36,7 @@ public class AsBuilderCodes extends nextgen.actions.TransactionAction {
             .setExpression(listVariable));
 
       java.util.concurrent.atomic.AtomicInteger variableCount = new java.util.concurrent.atomic.AtomicInteger();
-      for (nextgen.model.STModel stModel : stModels) {
+      for (STModel stModel : stModels) {
          final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          final nextgen.templates.java.VariableDeclarationExpression variableDeclarationExpression = nextgen.templates.java.JavaPatterns
                .newFinalVariableDeclarationExpression(type, stModelName, appModel().stRenderer.renderGeneratorCode(stModel));
@@ -41,7 +45,7 @@ public class AsBuilderCodes extends nextgen.actions.TransactionAction {
       }
 
       variableCount = new java.util.concurrent.atomic.AtomicInteger();
-      for (nextgen.model.STModel stModel : stModels) {
+      for (STModel stModel : stModels) {
          final String stModelName = appModel().getSTModelName(stModel, "var_" + variableCount.incrementAndGet());
          blockStmt.addStatements(nextgen.templates.java.JavaPatterns.newExpressionStmt()
                .setExpression(nextgen.templates.java.JavaPatterns.newMethodCallExpression()

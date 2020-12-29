@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetInterfaces extends nextgen.actions.TransactionAction {
+public class SetInterfaces extends TransactionAction {
 
-   private final nextgen.model.STGroupModel stGroup;
-   private final nextgen.model.STTemplate stTemplate;
-   private final javax.swing.JComponent owner;
+   private final STGroupModel stGroup;
+   private final STTemplate stTemplate;
+   private final JComponent owner;
 
-	public SetInterfaces(nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate stTemplate, javax.swing.JComponent owner) {
+	public SetInterfaces(STGroupModel stGroup, STTemplate stTemplate, JComponent owner) {
 		super("Set interfaces");
 		this.stGroup = stGroup;
 		this.stTemplate = stTemplate;
@@ -17,32 +21,32 @@ public class SetInterfaces extends nextgen.actions.TransactionAction {
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetInterfaces" + " stGroup" + " stTemplate" + " owner");
 
-      final java.util.List<javax.swing.JTextField> txtImplements = new java.util.ArrayList<>();
+      final java.util.List<JTextField> txtImplements = new java.util.ArrayList<>();
       stTemplate.getImplements().forEach(implement -> {
-         final javax.swing.JTextField textField = newTextField(implement, 15);
+         final JTextField textField = newTextField(implement, 15);
          txtImplements.add(textField);
       });
       txtImplements.add(newTextField("", 15));
       txtImplements.add(newTextField("", 15));
 
-      final javax.swing.JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtImplements.size(), 1));
-      contentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 0, 5));
-      for (javax.swing.JTextField txtImplement : txtImplements)
+      final JPanel contentPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(txtImplements.size(), 1));
+      contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+      for (JTextField txtImplement : txtImplements)
          contentPanel.add(txtImplement);
 
       showDialog(owner, contentPanel, "Edit", jDialog -> {
          stTemplate.removeAllImplements();
-         for (javax.swing.JTextField txtImplement : txtImplements) {
+         for (JTextField txtImplement : txtImplements) {
             final String trim = txtImplement.getText().trim();
             if (trim.length() == 0) continue;
             stTemplate.addImplements(trim);
          }
 
          nextgen.events.STTemplateInterfacesChanged.post(stGroup, stTemplate);
-         javax.swing.SwingUtilities.invokeLater(jDialog::dispose);
+         SwingUtilities.invokeLater(jDialog::dispose);
       });
    }
 

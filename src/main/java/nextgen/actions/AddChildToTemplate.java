@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class AddChildToTemplate extends nextgen.actions.TransactionAction {
+public class AddChildToTemplate extends TransactionAction {
 
-   private final nextgen.model.STTemplate stTemplate;
-   private final nextgen.model.STGroupModel stGroup;
-   private final javax.swing.JComponent owner;
+   private final STTemplate stTemplate;
+   private final STGroupModel stGroup;
+   private final JComponent owner;
 
-	public AddChildToTemplate(nextgen.model.STTemplate stTemplate, nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public AddChildToTemplate(STTemplate stTemplate, STGroupModel stGroup, JComponent owner) {
 		super("Add Child template");
 		this.stTemplate = stTemplate;
 		this.stGroup = stGroup;
@@ -17,7 +21,7 @@ public class AddChildToTemplate extends nextgen.actions.TransactionAction {
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AddChildToTemplate" + " stTemplate" + " stGroup" + " owner");
 
       input(owner, "Name", s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> appModel().addChild(stTemplate, name)));

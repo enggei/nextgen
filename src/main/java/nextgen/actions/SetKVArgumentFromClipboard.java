@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionAction {
+public class SetKVArgumentFromClipboard extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
-   private final nextgen.model.STArgument stArgument;
-   private final nextgen.model.STParameterKey stParameterKey;
+   private final STModel stModel;
+   private final STArgument stArgument;
+   private final STParameterKey stParameterKey;
 
-	public SetKVArgumentFromClipboard(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey) {
+	public SetKVArgumentFromClipboard(STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
 		super("FROM");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
@@ -17,7 +21,7 @@ public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionActio
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("SetKVArgumentFromClipboard" + " stModel" + " stArgument" + " stParameterKey");
 
       appModel().setArgumentKV(stModel, stArgument, stParameterKey, fromClipboard());

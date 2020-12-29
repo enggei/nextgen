@@ -2,21 +2,25 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class AddFileSink extends nextgen.actions.TransactionAction {
+public class AddFileSink extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
+   private final STModel stModel;
 
-	public AddFileSink(nextgen.model.STModel stModel) {
+	public AddFileSink(STModel stModel) {
 		super("Add File Sink");
 		this.stModel = stModel;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AddFileSink" + " stModel");
 
-      final java.util.Optional<nextgen.model.STProject> stProject = appModel().findSTProjectFor(stModel);
+      final java.util.Optional<STProject> stProject = appModel().findSTProjectFor(stModel);
 
       final String name = appModel().getSTModelName(stModel, "");
       final String packageName = appModel().getSTModelPackage(stModel, "");

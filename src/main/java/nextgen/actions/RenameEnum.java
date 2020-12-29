@@ -2,14 +2,18 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class RenameEnum extends nextgen.actions.TransactionAction {
+public class RenameEnum extends TransactionAction {
 
-   private final nextgen.model.STEnum stEnum;
-   private final nextgen.model.STGroupModel stGroup;
-   private final javax.swing.JComponent owner;
+   private final STEnum stEnum;
+   private final STGroupModel stGroup;
+   private final JComponent owner;
 
-	public RenameEnum(nextgen.model.STEnum stEnum, nextgen.model.STGroupModel stGroup, javax.swing.JComponent owner) {
+	public RenameEnum(STEnum stEnum, STGroupModel stGroup, JComponent owner) {
 		super("Rename");
 		this.stEnum = stEnum;
 		this.stGroup = stGroup;
@@ -17,7 +21,7 @@ public class RenameEnum extends nextgen.actions.TransactionAction {
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("RenameEnum" + " stEnum" + " stGroup" + " owner");
 
       inputName(owner, stEnum.getName(), s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> {

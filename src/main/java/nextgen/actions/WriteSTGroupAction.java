@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class WriteSTGroupAction extends nextgen.actions.TransactionAction {
+public class WriteSTGroupAction extends TransactionAction {
 
-   private final nextgen.model.STGroupAction action;
+   private final STGroupAction action;
 
-	public WriteSTGroupAction(nextgen.model.STGroupAction action) {
+	public WriteSTGroupAction(STGroupAction action) {
 		super("Generate Source");
 		this.action = action;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("WriteSTGroupAction" + " action");
 
       action.getIncomingActionsSTGroupModel().findAny().ifPresent(stGroupModel -> {
@@ -24,7 +28,7 @@ public class WriteSTGroupAction extends nextgen.actions.TransactionAction {
                .setPackageName(packageName)
                .setName(action.getName())
                .setTitle(action.getName())
-               .addFields("owner", "javax.swing.JComponent")
+               .addFields("owner", "JComponent")
                .setImports(imports == null ? new Object[0] : imports.split("\n"))
                .addStatements(action.getStatements() == null ? new Object[0] : appModel().render(action.getStatements()))
                .addMethods(action.getMethods() == null ? new Object[0] : appModel().render(action.getMethods()));

@@ -18,6 +18,11 @@ public class STWorkspace extends JTabbedPane {
 
 	public STWorkspace() {
 		setPreferredSize(new Dimension(600, 600));
+		setMinimumSize(new Dimension(100, 100));
+		getCanvas();
+		templateNavigator = new STTemplateNavigator(this);
+		modelNavigator = new STModelNavigator(this);
+		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
 
 	public STTemplateNavigator getTemplateNavigator() {
@@ -392,8 +397,8 @@ public class STWorkspace extends JTabbedPane {
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
 		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);
-      tabComponents.put(component, tabComponent);
-      setTabComponentAt(indexOfComponent(component), tabComponent);
+		tabComponents.put(component, tabComponent);
+		setTabComponentAt(indexOfComponent(component), tabComponent);
 	}
 
 	class ButtonTabComponent extends JPanel {

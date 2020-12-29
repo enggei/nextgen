@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class GenerateSTModels extends nextgen.actions.TransactionAction {
+public class GenerateSTModels extends TransactionAction {
 
-   private final java.util.List<nextgen.model.STModel> stModels;
+   private final java.util.List<STModel> stModels;
 
-	public GenerateSTModels(java.util.List<nextgen.model.STModel> stModels) {
+	public GenerateSTModels(java.util.List<STModel> stModels) {
 		super("Generate All");
 		this.stModels = stModels;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("GenerateSTModels" + " stModels");
 
       stModels.forEach(stModel -> appModel().generateSTModel(stModel));

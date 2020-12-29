@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class CopyTemplate extends nextgen.actions.TransactionAction {
+public class CopyTemplate extends TransactionAction {
 
-   private final nextgen.model.STTemplate stTemplate;
+   private final STTemplate stTemplate;
 
-	public CopyTemplate(nextgen.model.STTemplate stTemplate) {
+	public CopyTemplate(STTemplate stTemplate) {
 		super("Copy");
 		this.stTemplate = stTemplate;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("CopyTemplate" + " stTemplate");
 
       toClipboard(stTemplate.getText());

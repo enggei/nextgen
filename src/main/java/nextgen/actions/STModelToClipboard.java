@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class STModelToClipboard extends nextgen.actions.TransactionAction {
+public class STModelToClipboard extends TransactionAction {
 
-   private final nextgen.model.STModel stModel;
+   private final STModel stModel;
 
-	public STModelToClipboard(nextgen.model.STModel stModel) {
+	public STModelToClipboard(STModel stModel) {
 		super("TO");
 		this.stModel = stModel;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("STModelToClipboard" + " stModel");
 
       toClipboard(appModel().render(stModel));

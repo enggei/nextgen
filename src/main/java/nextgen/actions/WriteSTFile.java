@@ -2,18 +2,22 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class WriteSTFile extends nextgen.actions.TransactionAction {
+public class WriteSTFile extends TransactionAction {
 
-   private final nextgen.model.STFile stFile;
+   private final STFile stFile;
 
-	public WriteSTFile(nextgen.model.STFile stFile) {
+	public WriteSTFile(STFile stFile) {
 		super("Generate");
 		this.stFile = stFile;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("WriteSTFile" + " stFile");
 
       stFile.getIncomingFilesSTModel().forEach(stModel -> {

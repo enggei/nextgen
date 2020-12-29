@@ -2,15 +2,19 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
 
-public class RemoveInterfaceFromSTTemplate extends nextgen.actions.TransactionAction {
+public class RemoveInterfaceFromSTTemplate extends TransactionAction {
 
-   private final nextgen.model.STGroupModel stGroup;
-   private final nextgen.model.STTemplate stTemplate;
+   private final STGroupModel stGroup;
+   private final STTemplate stTemplate;
    private final String interfaceName;
-   private final javax.swing.JComponent owner;
+   private final JComponent owner;
 
-	public RemoveInterfaceFromSTTemplate(String name, nextgen.model.STGroupModel stGroup, nextgen.model.STTemplate stTemplate, String interfaceName, javax.swing.JComponent owner) {
+	public RemoveInterfaceFromSTTemplate(String name, STGroupModel stGroup, STTemplate stTemplate, String interfaceName, JComponent owner) {
       super(name);
       this.stGroup = stGroup;
       this.stTemplate = stTemplate;
@@ -19,7 +23,7 @@ public class RemoveInterfaceFromSTTemplate extends nextgen.actions.TransactionAc
    }
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("RemoveInterfaceFromSTTemplate" + " stGroup" + " stTemplate" + " interfaceName" + " owner");
 
       confirm(owner, "Remove", unused -> {
