@@ -1,5 +1,6 @@
 package nextgen.swing;
 
+import nextgen.actions.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -408,9 +409,9 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteAction(getModel(), workspace, parent.getModel())));
-				actions.add(new nextgen.actions.RunAction(getModel(), workspace));
-				actions.add(new nextgen.actions.WriteSTGroupAction(getModel()));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new DeleteAction(getModel(), workspace, parent.getModel())));
+				actions.add(new RunAction(getModel(), workspace));
+				actions.add(new WriteSTGroupAction(getModel()));
 			});
 
 			return actions;
@@ -479,8 +480,8 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.NewSTGroupAction(tree));
-				actions.add(new nextgen.actions.GenerateAllSTGroups(tree));
+				actions.add(new NewSTGroupAction(tree));
+				actions.add(new GenerateAllSTGroups(tree));
 			});
 
 			return actions;
@@ -555,16 +556,16 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.NewAction(getModel(), workspace));
-				actions.add(new nextgen.actions.ImportSTTemplate(getModel(), workspace));
-				actions.add(new nextgen.actions.GenerateSTGroup(workspace, getModel()));
-				actions.add(new nextgen.actions.NewSTTemplate(getModel(), workspace));
-				actions.add(new nextgen.actions.NewEnum(getModel(), workspace));
-				actions.add(new nextgen.actions.NewInterface(getModel(), workspace));
-				actions.add(new nextgen.actions.RenameSTGroup(getModel(), workspace));
-				actions.add(new nextgen.actions.DeleteSTGroup(getModel(), workspace));
-				actions.add(new nextgen.actions.AddFileSinkToGroup(getModel()));
-				actions.add(new nextgen.actions.SetSTGroupLanguage(workspace, getModel()));
+				actions.add(new NewAction(getModel(), workspace));
+				actions.add(new ImportSTTemplate(getModel(), workspace));
+				actions.add(new GenerateSTGroup(workspace, getModel()));
+				actions.add(new NewSTTemplate(getModel(), workspace));
+				actions.add(new NewEnum(getModel(), workspace));
+				actions.add(new NewInterface(getModel(), workspace));
+				actions.add(new RenameSTGroup(getModel(), workspace));
+				actions.add(new DeleteSTGroup(getModel(), workspace));
+				actions.add(new AddFileSinkToGroup(getModel()));
+				actions.add(new SetSTGroupLanguage(workspace, getModel()));
 			});
 
 			return actions;
@@ -635,9 +636,9 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.RenameEnum(getModel(), parent.getModel(), workspace)));
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteEnum(getModel(), parent.getModel(), workspace)));
-				actions.add(new nextgen.actions.EditEnum(getModel(), workspace));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new RenameEnum(getModel(), parent.getModel(), workspace)));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new DeleteEnum(getModel(), parent.getModel(), workspace)));
+				actions.add(new EditEnum(getModel(), workspace));
 			});
 
 			return actions;
@@ -711,20 +712,20 @@ public class STTemplateNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				final java.util.Set<nextgen.model.STTemplate> candidateChildren = getSelectedTemplates();
 				final Set<nextgen.model.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
-				actions.add(new nextgen.actions.NewSTModelAction(getModel()));
+				actions.add(new NewSTModelAction(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-					actions.add(new nextgen.actions.AddChildToTemplate(getModel(), parent.getModel(), workspace));
-					actions.add(new nextgen.actions.SetTemplateParameterTypes(parent.getModel(), getModel(), workspace));
-					if (!candidateChildren.isEmpty()) actions.add(new nextgen.actions.AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, workspace));
-					appModel().db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName)).forEach(stProject -> actions.add(new nextgen.actions.AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
-					if (!childTemplates.isEmpty()) actions.add(new nextgen.actions.AddInterface("Add interfaces to children", childTemplates, workspace));
-					actions.add(new nextgen.actions.SetInterfaces(parent.getModel(), getModel(), workspace));
-					getModel().getImplements().forEach(implement -> actions.add(new nextgen.actions.RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, workspace)));
-					actions.add(new nextgen.actions.RenameSTTemplate(getModel(), parent.getModel(), workspace));
+					actions.add(new AddChildToTemplate(getModel(), parent.getModel(), workspace));
+					actions.add(new SetTemplateParameterTypes(parent.getModel(), getModel(), workspace));
+					if (!candidateChildren.isEmpty()) actions.add(new AddChildrenToTemplate("Add " + candidateChildren.size() + " templates as children", parent.getModel(), getModel(), candidateChildren, workspace));
+					appModel().db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName)).forEach(stProject -> actions.add(new AddTemplateModelToProject("Add to " + stProject.getName(), getModel(), stProject)));
+					if (!childTemplates.isEmpty()) actions.add(new AddInterface("Add interfaces to children", childTemplates, workspace));
+					actions.add(new SetInterfaces(parent.getModel(), getModel(), workspace));
+					getModel().getImplements().forEach(implement -> actions.add(new RemoveInterfaceFromSTTemplate("Remove " + implement, parent.getModel(), getModel(), implement, workspace)));
+					actions.add(new RenameSTTemplate(getModel(), parent.getModel(), workspace));
 				});
-				actions.add(new nextgen.actions.DeleteSTTemplate(getModel(), workspace));
-				actions.add(new nextgen.actions.GetSTTemplateUUID(getModel()));
-				actions.add(new nextgen.actions.CopyTemplate(getModel()));
+				actions.add(new DeleteSTTemplate(getModel(), workspace));
+				actions.add(new GetSTTemplateUUID(getModel()));
+				actions.add(new CopyTemplate(getModel()));
 			});
 
 			return actions;
@@ -804,8 +805,8 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.RenameSTInterface(getModel(), parent.getModel(), workspace)));
-				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new nextgen.actions.DeleteSTInterface(getModel(), parent.getModel(), workspace)));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new RenameSTInterface(getModel(), parent.getModel(), workspace)));
+				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new DeleteSTInterface(getModel(), parent.getModel(), workspace)));
 			});
 
 			return actions;
@@ -875,8 +876,8 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new nextgen.actions.GenerateSTGroupFromFile(getModel(), workspace));
-				actions.add(new nextgen.actions.DeleteSTGroupFile(getModel(), workspace));
+				actions.add(new GenerateSTGroupFromFile(getModel(), workspace));
+				actions.add(new DeleteSTGroupFile(getModel(), workspace));
 			});
 
 			return actions;
