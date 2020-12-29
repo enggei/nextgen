@@ -17,7 +17,9 @@ public class VertxST {
 	.append(PrimitiveAccessors.st + "\n")
 	.append(ReferenceAccessors.st + "\n")
 	.append(Server.st + "\n")
+	.append(ServerConfig.st + "\n")
 	.append(WebVerticle.st + "\n")
+	.append(RequestHandler.st + "\n")
 	.append(RouteHandler.st + "\n")
 	.append(SendEventBusAction.st + "\n")
 	.toString()  ;
@@ -104,8 +106,16 @@ public class VertxST {
 		return new Server(stGroup);
 	}  
 
+	public static ServerConfig newServerConfig() {
+		return new ServerConfig(stGroup);
+	}  
+
 	public static WebVerticle newWebVerticle() {
 		return new WebVerticle(stGroup);
+	}  
+
+	public static RequestHandler newRequestHandler() {
+		return new RequestHandler(stGroup);
 	}  
 
 	public static RouteHandler newRouteHandler() {

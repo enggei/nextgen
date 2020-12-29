@@ -1,5 +1,6 @@
 package nextgen.swing;
 
+import com.jgoodies.forms.layout.FormLayout;
 import nextgen.actions.*;
 import nextgen.model.*;
 import nextgen.swing.forms.*;
@@ -14,6 +15,16 @@ import static nextgen.swing.ComponentFactory.*;
 import static nextgen.utils.SwingUtil.*;
 
 public class STModelEditorForm extends BaseEditor<STModel> {
+
+   public STModelEditorForm() {
+      addComponentListener(new java.awt.event.ComponentAdapter() {
+         @Override
+         public void componentShown(java.awt.event.ComponentEvent e) {
+            if (getModel() == null) return;
+            setModel(getModel());
+         }
+      });
+   }
 
    @Override
    public void setModel(STModel model) {
@@ -54,9 +65,8 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             case SINGLE:
                if (parameterArguments.arguments().isEmpty())
                   panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnone(getButton(new SetArgumentFromArgumentType(model, parameterArguments.parameter(), panel).setName("SET")))));
-               else {
+               else
                   panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(newSTValueComponent(model, parameterArguments.parameter(), parameterArguments.arguments().get(0))));
-               }
 
                break;
             case LIST: {
@@ -72,16 +82,17 @@ public class STModelEditorForm extends BaseEditor<STModel> {
 
                         listPanel.add(getKeyValueForm()
                               .setCompkey(new ButtonFormRight().setCompone(getButton(i, parameterArguments.arguments().size()).action(selectButton -> {
-                                 int selectedIndex = Integer.parseInt(selectButton.getValue().toString()) -1;
+                                 int selectedIndex = Integer.parseInt(selectButton.getValue().toString()) - 1;
                                  appModel().reorder(model, argument, parameterArguments.arguments().get(selectedIndex));
                               })))
                               .setCompvalue(newSTValueComponent(model, parameterArguments.parameter(), argument)));
+                        listPanel.add(getKeyValueForm().setCompkey(new ButtonFormRight().setBtnthree(getButton(new DeleteSTArgument(argument, listPanel)))));
                      });
 
-               if (listPanel.getComponents().length != 0)
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
+               if (listPanel.getComponents().length == 0)
+                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), panel)))));
                else
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), panel)))));
+                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
             }
             break;
             case KVLIST:
@@ -90,6 +101,9 @@ public class STModelEditorForm extends BaseEditor<STModel> {
                final JPanel listPanel = getContentPanel();
 
                parameterArguments.arguments().forEach(stArgument -> {
+
+                  if (listPanel.getComponents().length == 0)
+                     listPanel.add(getKeyValueForm().setCompkey(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, listPanel)))));
 
                   index.incrementAndGet();
 
@@ -112,17 +126,15 @@ public class STModelEditorForm extends BaseEditor<STModel> {
                   });
 
                   if (kvPanel.getComponents().length != 0) {
-                     if (listPanel.getComponents().length == 0) listPanel.add(getKeyValueForm().setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, listPanel)))));
-                     kvPanel.add(getKeyValueForm()
-                           .setCompkey(new ButtonFormRight().setBtnthree(getButton(new DeleteSTArgument(stArgument, listPanel)))));
+                     kvPanel.add(getKeyValueForm().setCompkey(new ButtonFormRight().setBtnthree(getButton(new DeleteSTArgument(stArgument, listPanel)))));
                      listPanel.add(kvPanel);
                   }
                });
 
-               if (listPanel.getComponents().length != 0)
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
+               if (listPanel.getComponents().length == 0)
+                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, panel)))));
                else
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, panel)))));
+                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
                break;
          }
       });
@@ -197,7 +209,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> stArgument.setValue(appModel().newSTValue(rSyntaxTextArea.getText().trim())));
+                  appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, rSyntaxTextArea.getText().trim()));
                }
             }
          });
@@ -210,7 +222,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
       } else if (stParameter.getName().startsWith("is") || stParameter.getName().startsWith("has")) {
 
          final JCheckBox component = newJCheckBox("true".equals(render));
-         component.addActionListener(actionEvent -> appModel().doLaterInTransaction(tx -> appModel().setArgument(model, stParameter, component.isSelected())));
+         component.addActionListener(actionEvent -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, component.isSelected() ? "true" : null)));
          return component;
 
       } else {
@@ -219,7 +231,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> appModel().setArgument(model, stParameter, textField.getText().trim()));
+                  appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, textField.getText().trim()));
                }
             }
          });
@@ -243,7 +255,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> argument.setValue(appModel().newSTValue(rSyntaxTextArea.getText().trim())));
+                  appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, argument, rSyntaxTextArea.getText().trim()));
                }
             }
          });
@@ -258,7 +270,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
 
          final JCheckBox component = newJCheckBox("true".equals(render));
          component.setHorizontalAlignment(SwingConstants.RIGHT);
-         component.addActionListener(actionEvent -> appModel().doLaterInTransaction(tx -> appModel().setArgumentKV(model, stArgument, stParameterKey, appModel().newSTValue(component.isSelected()))));
+         component.addActionListener(actionEvent -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, argument, component.isSelected() ? "true" : null)));
          return component;
 
       } else {
@@ -267,7 +279,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             @Override
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-                  appModel().doLaterInTransaction(tx -> appModel().setArgumentKV(model, stArgument, stParameterKey, textField.getText().trim()));
+                  appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, argument, textField.getText().trim()));
                }
             }
          });

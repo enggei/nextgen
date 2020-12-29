@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static nextgen.utils.SwingUtil.*;
 
-public class STModelEditorText extends AbstractEditor {
+public class STModelEditorText extends BaseEditor<STModel> {
 
    private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
 
@@ -21,9 +21,18 @@ public class STModelEditorText extends AbstractEditor {
       txtEditor.addKeyListener(getEditorKeyListener());
 
       add(newRTextScrollPane(txtEditor), java.awt.BorderLayout.CENTER);
+
+      addComponentListener(new java.awt.event.ComponentAdapter() {
+         @Override
+         public void componentShown(java.awt.event.ComponentEvent e) {
+            if (getModel() == null) return;
+            setModel(getModel());
+         }
+      });
    }
 
-   public void setStModel(nextgen.model.STModel stModel) {
+   @Override
+   public void setModel(STModel stModel) {
       txtEditor.setText(appModel().render(stModel));
       txtEditor.setCaretPosition(0);
       txtEditor.setEditable(false);
@@ -68,7 +77,7 @@ public class STModelEditorText extends AbstractEditor {
                parameterMenu.add(new nextgen.actions.DeleteSTArguments(txtEditor, stParameter, stModel));
 
                final AtomicInteger listIndex = new AtomicInteger(0);
-               arguments.forEach(stArgument -> {
+               arguments.stream().filter(stArgument -> stArgument.getValue()!=null).forEach(stArgument -> {
                   listIndex.incrementAndGet();
                   final JMenu listArgumentMenu = new JMenu(listIndex.toString());
                   switch (stArgument.getValue().getType()) {

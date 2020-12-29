@@ -6,8 +6,8 @@ public class ListPrimitiveAccessors implements EntityAccessor {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _className;
-	private Object _name;
 	private Object _type;
+	private Object _name;
 
 	ListPrimitiveAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class ListPrimitiveAccessors implements EntityAccessor {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("listPrimitiveAccessors");
 		st.add("className", _className);
-		st.add("name", _name);
 		st.add("type", _type);
+		st.add("name", _name);
 		return st.render().trim();
 	}
 
@@ -48,28 +48,6 @@ public class ListPrimitiveAccessors implements EntityAccessor {
 		return this;
 	} 
 
-	public ListPrimitiveAccessors setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public ListPrimitiveAccessors removeName() {
-		this._name = null;
-		return this;
-	} 
-
 	public ListPrimitiveAccessors setType(Object value) {
 		this._type = value;
 		return this;
@@ -92,6 +70,28 @@ public class ListPrimitiveAccessors implements EntityAccessor {
 		return this;
 	} 
 
+	public ListPrimitiveAccessors setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public ListPrimitiveAccessors removeName() {
+		this._name = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,7 +107,7 @@ public class ListPrimitiveAccessors implements EntityAccessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listPrimitiveAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "listPrimitiveAccessors(className,type,name) ::= <<public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	io.vertx.core.json.JsonArray jsonArray = jsonObject.getJsonArray(\"~name~\");\n" + 
 				"	if (jsonArray == null) jsonObject.put(\"~name~\", jsonArray = new io.vertx.core.json.JsonArray());\n" + 
 				"	jsonArray.add(value);\n" + 

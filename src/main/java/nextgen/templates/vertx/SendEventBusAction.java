@@ -47,6 +47,12 @@ public class SendEventBusAction {
 	} 
 
 
+	public SendEventBusAction setParams(java.util.Collection<SendEventBusAction_Params> values) {
+			this._params.clear();
+			values.stream().map(SendEventBusAction_Params::asMap).forEach(map -> _params.add(map));
+			return this;
+		}
+
 	public SendEventBusAction addParams(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -85,6 +91,13 @@ public class SendEventBusAction {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

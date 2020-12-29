@@ -8,7 +8,6 @@ public class Server {
 	private Object _packageName;
 	private Object _name;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
-	private java.util.List<Object> _startStatements = new java.util.ArrayList<>();
 
 	Server(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -24,7 +23,6 @@ public class Server {
 		st.add("packageName", _packageName);
 		st.add("name", _name);
 		for (Object o : _imports) st.add("imports", o);
-		for (Object o : _startStatements) st.add("startStatements", o);
 		return st.render().trim();
 	}
 
@@ -101,35 +99,6 @@ public class Server {
 		return this._imports;
 	} 
 
-	public Server addStartStatements(Object value) {
-		this._startStatements.add(value);
-		return this;
-	}
-
-	public Server setStartStatements(Object[] value) {
-		this._startStatements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public Server setStartStatements(java.util.Collection<Object> values) {
-		this._startStatements.addAll(values);
-		return this;
-	}
-
-	public Server removeStartStatements(Object value) {
-		this._startStatements.remove(value);
-		return this;
-	}
-
-	public Server removeStartStatements(int index) {
-		this._startStatements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getStartStatements() {
-		return this._startStatements;
-	} 
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -144,12 +113,7 @@ public class Server {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "Server(packageName,imports,name,startStatements) ::= <<package ~packageName~;\n" + 
-				"\n" + 
-				"import io.vertx.core.DeploymentOptions;\n" + 
-				"import io.vertx.core.Vertx;\n" + 
-				"\n" + 
-				"import java.io.IOException;\n" + 
+	static final String st = "Server(packageName,imports,name) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -157,20 +121,19 @@ public class Server {
 				"\n" + 
 				"	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);\n" + 
 				"\n" + 
-				"	public ~name~(String configPath) throws IOException {\n" + 
+				"	public ~name~(String configPath) throws java.io.IOException {\n" + 
 				"		log.info(\"Starting server\");\n" + 
 				"\n" + 
 				"		final io.vertx.core.json.JsonObject serverDeployment = configPath == null\n" + 
 				"				? new io.vertx.core.json.JsonObject(read(getClass().getResourceAsStream(\"/config.json\")))\n" + 
 				"				: new io.vertx.core.json.JsonObject(read(new java.io.FileInputStream(configPath)));\n" + 
 				"\n" + 
-				"		final DeploymentOptions deploymentOptions = new DeploymentOptions().setConfig(serverDeployment);\n" + 
+				"		final io.vertx.core.DeploymentOptions deploymentOptions = new io.vertx.core.DeploymentOptions().setConfig(serverDeployment);\n" + 
 				"		log.info(\"serverDeploymentOptions \" + serverDeployment.encode());\n" + 
-				"		\n" + 
-				"		final Vertx vertx = Vertx.vertx();\n" + 
 				"\n" + 
-				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		\n" + 
+				"		final io.vertx.core.Vertx vertx = io.vertx.core.Vertx.vertx();\n" + 
+				"\n" + 
+				"\n" + 
 				"		serverDeployment.getJsonArray(\"verticles\")\n" + 
 				"				.stream()\n" + 
 				"				.map(o -> (io.vertx.core.json.JsonObject)o)\n" + 
@@ -197,7 +160,7 @@ public class Server {
 				"		return io.vertx.core.buffer.Buffer.buffer(content);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	public static void main(java.lang.String[] args) throws IOException {\n" + 
+				"	public static void main(java.lang.String[] args) throws java.io.IOException {\n" + 
 				"		System.setProperty(\"io.netty.tryReflectionSetAccessible\", \"true\");\n" + 
 				"		new ~name~(args.length == 1 ? args[0] : null);\n" + 
 				"	}\n" + 

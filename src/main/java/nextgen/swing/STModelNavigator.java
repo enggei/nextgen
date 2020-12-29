@@ -1496,11 +1496,24 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STModelTreeNode.class).ifPresent(parent -> {
-					getSelectedSTModels().forEach(stModel -> actions.add(new SetKVArgumentFromSTModel(parent.getModel(), stArgument, stParameterKey, stModel)));
-					getSelectedSTValues().forEach(stValue -> actions.add(new SetKVArgumentFromSTValue(parent.getModel(), stArgument, stParameterKey, stValue)));
+				final java.util.Optional<STModelNavigator.STModelTreeNode> parentNode = getParentNode(STModelNavigator.STModelTreeNode.class);
+
+				final java.util.List<nextgen.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
+
+				final java.util.List<nextgen.model.STModel> selectedSTModels = getSelectedSTModels()
+										.filter(stModel1 -> parentNode.isPresent())
+										.filter(stModel1 -> !stModel1.equals(parentNode.get().getModel()))
+										.collect(java.util.stream.Collectors.toList());
+
+				final java.util.List<nextgen.model.STTemplate> stTemplates = nextgen.swing.AppModel.getInstance().getWorkspace().getSelectedSTTemplates().collect(java.util.stream.Collectors.toList());
+
+				parentNode.ifPresent(parent -> {
+					selectedSTModels.forEach(stModel -> actions.add(new SetKVArgumentFromSTModel(parent.getModel(), stArgument, stParameterKey, stModel)));
+					selectedSTValues.forEach(stValue -> actions.add(new SetKVArgumentFromSTValue(parent.getModel(), stArgument, stParameterKey, stValue)));
+					stTemplates.forEach(stNode -> actions.add(new SetArgumentKVFromSTTemplate("Set New " + stNode.getName(), parent.getModel(), stNode, stParameterKey, stArgument)));
 					actions.add(new SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, workspace));
 					actions.add(new SetKVArgumentFromClipboard(parent.getModel(), stArgument, stParameterKey));
+					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), stArgument, stParameterKey, workspace));
 				});
 				actions.add(new DeleteKV(getModel(), workspace));
 			});

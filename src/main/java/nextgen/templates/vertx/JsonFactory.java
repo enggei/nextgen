@@ -113,7 +113,7 @@ public class JsonFactory {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JsonFactory(package,name,entities) ::= <<package ~package~;\n" + 
+	static final String st = "JsonFactory(entities,package,name) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 

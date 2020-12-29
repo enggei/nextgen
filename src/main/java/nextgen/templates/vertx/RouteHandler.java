@@ -6,7 +6,6 @@ public class RouteHandler {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _name;
-	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _params = new java.util.ArrayList<>();
 
 	RouteHandler(org.stringtemplate.v4.STGroup stGroup) {
@@ -21,8 +20,7 @@ public class RouteHandler {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("RouteHandler");
 		st.add("name", _name);
-		for (Object o : _statements) st.add("statements", o);
-		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -48,39 +46,17 @@ public class RouteHandler {
 		return this;
 	} 
 
-	public RouteHandler addStatements(Object value) {
-		this._statements.add(value);
-		return this;
-	}
 
-	public RouteHandler setStatements(Object[] value) {
-		this._statements.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
+	public RouteHandler setParams(java.util.Collection<RouteHandler_Params> values) {
+			this._params.clear();
+			values.stream().map(RouteHandler_Params::asMap).forEach(map -> _params.add(map));
+			return this;
+		}
 
-	public RouteHandler setStatements(java.util.Collection<Object> values) {
-		this._statements.addAll(values);
-		return this;
-	}
-
-	public RouteHandler removeStatements(Object value) {
-		this._statements.remove(value);
-		return this;
-	}
-
-	public RouteHandler removeStatements(int index) {
-		this._statements.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getStatements() {
-		return this._statements;
-	} 
-
-	public RouteHandler addParams(Object _type, Object _name) {
+	public RouteHandler addParams(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		this._params.add(map);
 		return this;
 	}
@@ -90,44 +66,52 @@ public class RouteHandler {
 	}
 
 	public RouteHandler addParams(RouteHandler_Params value) {
-		return addParams(value._type, value._name);
+		return addParams(value._name, value._type);
 	}
 
 	public java.util.stream.Stream<RouteHandler_Params> streamParams() {
 		return this._params.stream().map(RouteHandler_Params::new);
 	}
 
-	public java.util.List<Object> getParams_Type() {
-		return streamParams().map(RouteHandler_Params::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getParams_Name() {
 		return streamParams().map(RouteHandler_Params::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getParams_Type() {
+		return streamParams().map(RouteHandler_Params::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class RouteHandler_Params {
 
-		Object _type;
 		Object _name;
+		Object _type;
 
-		public RouteHandler_Params(Object _type, Object _name) {
-			this._type = _type;
+		public RouteHandler_Params(Object _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
 		private RouteHandler_Params(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
-			return this._name;
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
 		}
 
 	}  
@@ -145,8 +129,15 @@ public class RouteHandler {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RouteHandler(name,params,statements) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
+	static final String st = "RouteHandler(name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
 				"	debug(\"~name~\", routingContext);\n" + 
-				"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"	vertx.eventBus().request(\"~name~\", routingContext.getBody(), reply -> {\n" + 
+				"		if (reply.succeeded()) {\n" + 
+				"			sendHtmlResponse(routingContext, OK, java.util.Objects.requireNonNull(~name;format=\"capitalize\"~RequestHandler.handle(reply.result())));	\n" + 
+				"		} else {\n" + 
+				"			sendErrors(routingContext, INTERNAL_SERVER_ERROR,	reply.cause().getMessage());\n" + 
+				"		}\n" + 
+				"	});\n" + 
 				"} >>";
 }  

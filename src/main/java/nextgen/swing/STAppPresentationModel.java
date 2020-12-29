@@ -1038,6 +1038,55 @@ public class STAppPresentationModel {
       if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
    }
 
+   public void updateSTArgument(STModel stModel, STArgument stArgument, String value) {
+      final STValue stArgumentValue = stArgument.getValue();
+      if (stArgumentValue == null) {
+         stArgument.setValue(newSTValue(value));
+         nextgen.events.STArgumentChanged.post(stModel, stArgument);
+      } else {
+         switch (stArgumentValue.getType()) {
+            case STMODEL:
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               break;
+            case PRIMITIVE:
+               if (render(stArgument, "").equals(value)) return;
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               break;
+            case ENUM:
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               break;
+         }
+      }
+   }
+
+   public void updateSTArgument(STModel stModel, STArgumentKV stArgument, String value) {
+      final STValue stArgumentValue = stArgument.getValue();
+      if (stArgumentValue == null) {
+         stArgument.setValue(newSTValue(value));
+         nextgen.events.STKVArgumentChanged.post(stArgument, stModel);
+      } else {
+         switch (stArgumentValue.getType()) {
+            case STMODEL:
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STKVArgumentChanged.post(stArgument, stModel);
+               break;
+            case PRIMITIVE:
+               if (render(stArgument, "").equals(value)) return;
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STKVArgumentChanged.post(stArgument, stModel);
+               break;
+            case ENUM:
+               stArgument.setValue(newSTValue(value));
+               nextgen.events.STKVArgumentChanged.post(stArgument, stModel);
+               break;
+         }
+      }
+   }
+
+
    private void addSTArgumentIfNotExists(STModel otherModel, nextgen.model.STParameter otherSTParameter, STModel thisModel, nextgen.model.STParameter thisSTParameter) {
 
       final java.util.Optional<nextgen.model.STArgument> otherSTArgument = findFirstSTArgument(otherModel, otherSTParameter);

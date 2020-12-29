@@ -1,5 +1,7 @@
 package nextgen.swing;
 
+import nextgen.model.STValue;
+
 public class SelectOrAddSTModelValue extends nextgen.swing.BaseEditor<nextgen.model.STValue> {
 
    private final nextgen.model.STTemplate stTemplate;
@@ -26,12 +28,12 @@ public class SelectOrAddSTModelValue extends nextgen.swing.BaseEditor<nextgen.mo
       return "Select or add New";
    }
 
-   public nextgen.model.STValue getSTValue() {
+   @Override
+   public STValue getModel() {
       if (radFromTemplate.isSelected())
          return appModel().newSTValue(stTemplate);
       else
          return appModel().newSTValue(lstModels.getSelectedValue().stModel);
-
    }
 
    private final class ListElement {

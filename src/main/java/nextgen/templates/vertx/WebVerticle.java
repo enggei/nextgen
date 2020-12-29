@@ -5,14 +5,14 @@ public class WebVerticle {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _packageName;
 	private String _name;
+	private String _packageName;
 	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _startStatements = new java.util.ArrayList<>();
 	private java.util.List<RouteHandler> _handlers = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _routes = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
 
 	WebVerticle(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -25,38 +25,16 @@ public class WebVerticle {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("WebVerticle");
-		st.add("packageName", _packageName);
 		st.add("name", _name);
+		st.add("packageName", _packageName);
 		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _startStatements) st.add("startStatements", o);
 		for (Object o : _handlers) st.add("handlers", o);
 		for (Object o : _methods) st.add("methods", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{type,name,init}", map.get("type"), map.get("name"), map.get("init"));
-		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{action,url,handler}", map.get("action"), map.get("url"), map.get("handler"));
+		for (java.util.Map<String, Object> map : _routes) st.addAggr("routes.{order,url,action,handler}", map.get("order"), map.get("url"), map.get("action"), map.get("handler"));
+		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{init,name,type}", map.get("init"), map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
-
-	public WebVerticle setPackageName(String value) {
-		this._packageName = value;
-		return this;
-	}
-
-	public String getPackageName() {
-		return this._packageName;
-	}
-
-	public String getPackageName(String defaultValue) {
-		return this._packageName == null ? defaultValue : this._packageName;
-	}
-
-	public boolean hasPackageName() {
-		return this._packageName != null;
-	}
-
-	public WebVerticle removePackageName() {
-		this._packageName = null;
-		return this;
-	} 
 
 	public WebVerticle setName(String value) {
 		this._name = value;
@@ -77,6 +55,28 @@ public class WebVerticle {
 
 	public WebVerticle removeName() {
 		this._name = null;
+		return this;
+	} 
+
+	public WebVerticle setPackageName(String value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public String getPackageName() {
+		return this._packageName;
+	}
+
+	public String getPackageName(String defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public WebVerticle removePackageName() {
+		this._packageName = null;
 		return this;
 	} 
 
@@ -196,78 +196,17 @@ public class WebVerticle {
 		return this._methods;
 	} 
 
-	public WebVerticle addFields(Object _type, String _name, Object _init) {
+	public WebVerticle setRoutes(java.util.Collection<WebVerticle_Routes> values) {
+			this._routes.clear();
+			values.stream().map(WebVerticle_Routes::asMap).forEach(map -> _routes.add(map));
+			return this;
+		}
+
+	public WebVerticle addRoutes(Object _order, Object _url, Object _action, Object _handler) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
-		map.put("init", _init);
-		this._fields.add(map);
-		return this;
-	}
-
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
-	}
-
-	public WebVerticle addFields(WebVerticle_Fields value) {
-		return addFields(value._type, value._name, value._init);
-	}
-
-	public java.util.stream.Stream<WebVerticle_Fields> streamFields() {
-		return this._fields.stream().map(WebVerticle_Fields::new);
-	}
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(WebVerticle_Fields::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<String> getFields_Name() {
-		return streamFields().map(WebVerticle_Fields::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getFields_Init() {
-		return streamFields().map(WebVerticle_Fields::getInit).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public static final class WebVerticle_Fields {
-
-		Object _type;
-		String _name;
-		Object _init;
-
-		public WebVerticle_Fields(Object _type, String _name, Object _init) {
-			this._type = _type;
-			this._name = _name;
-			this._init = _init;
-		}
-
-		private WebVerticle_Fields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (String) map.get("name");
-			this._init = (Object) map.get("init");
-		}
-
-		public Object getType() {
-			return this._type;
-		}
-
-		public String getName() {
-			return this._name;
-		}
-
-		public Object getInit() {
-			return this._init;
-		}
-
-	}  
-
-	public WebVerticle addRoutes(Object _action, Object _url, Object _handler) {
-		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("action", _action);
+		map.put("order", _order);
 		map.put("url", _url);
+		map.put("action", _action);
 		map.put("handler", _handler);
 		this._routes.add(map);
 		return this;
@@ -278,20 +217,25 @@ public class WebVerticle {
 	}
 
 	public WebVerticle addRoutes(WebVerticle_Routes value) {
-		return addRoutes(value._action, value._url, value._handler);
+		return addRoutes(value._order, value._url, value._action, value._handler);
 	}
 
 	public java.util.stream.Stream<WebVerticle_Routes> streamRoutes() {
 		return this._routes.stream().map(WebVerticle_Routes::new);
 	}
 
-	public java.util.List<Object> getRoutes_Action() {
-		return streamRoutes().map(WebVerticle_Routes::getAction).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getRoutes_Order() {
+		return streamRoutes().map(WebVerticle_Routes::getOrder).collect(java.util.stream.Collectors.toList());
 	}
 
 
 	public java.util.List<Object> getRoutes_Url() {
 		return streamRoutes().map(WebVerticle_Routes::getUrl).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRoutes_Action() {
+		return streamRoutes().map(WebVerticle_Routes::getAction).collect(java.util.stream.Collectors.toList());
 	}
 
 
@@ -302,32 +246,132 @@ public class WebVerticle {
 
 	public static final class WebVerticle_Routes {
 
-		Object _action;
+		Object _order;
 		Object _url;
+		Object _action;
 		Object _handler;
 
-		public WebVerticle_Routes(Object _action, Object _url, Object _handler) {
-			this._action = _action;
+		public WebVerticle_Routes(Object _order, Object _url, Object _action, Object _handler) {
+			this._order = _order;
 			this._url = _url;
+			this._action = _action;
 			this._handler = _handler;
 		}
 
 		private WebVerticle_Routes(java.util.Map<String, Object> map) {
-			this._action = (Object) map.get("action");
+			this._order = (Object) map.get("order");
 			this._url = (Object) map.get("url");
+			this._action = (Object) map.get("action");
 			this._handler = (Object) map.get("handler");
 		}
 
-		public Object getAction() {
-			return this._action;
+		public Object getOrder() {
+			return this._order;
 		}
 
 		public Object getUrl() {
 			return this._url;
 		}
 
+		public Object getAction() {
+			return this._action;
+		}
+
 		public Object getHandler() {
 			return this._handler;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("order", _order);
+			map.put("url", _url);
+			map.put("action", _action);
+			map.put("handler", _handler);
+			return map;
+		}
+
+	}  
+
+	public WebVerticle setFields(java.util.Collection<WebVerticle_Fields> values) {
+			this._fields.clear();
+			values.stream().map(WebVerticle_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
+
+	public WebVerticle addFields(Object _init, String _name, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("init", _init);
+		map.put("name", _name);
+		map.put("type", _type);
+		this._fields.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getFields() {
+		return this._fields;
+	}
+
+	public WebVerticle addFields(WebVerticle_Fields value) {
+		return addFields(value._init, value._name, value._type);
+	}
+
+	public java.util.stream.Stream<WebVerticle_Fields> streamFields() {
+		return this._fields.stream().map(WebVerticle_Fields::new);
+	}
+
+	public java.util.List<Object> getFields_Init() {
+		return streamFields().map(WebVerticle_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<String> getFields_Name() {
+		return streamFields().map(WebVerticle_Fields::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getFields_Type() {
+		return streamFields().map(WebVerticle_Fields::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class WebVerticle_Fields {
+
+		Object _init;
+		String _name;
+		Object _type;
+
+		public WebVerticle_Fields(Object _init, String _name, Object _type) {
+			this._init = _init;
+			this._name = _name;
+			this._type = _type;
+		}
+
+		private WebVerticle_Fields(java.util.Map<String, Object> map) {
+			this._init = (Object) map.get("init");
+			this._name = (String) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getInit() {
+			return this._init;
+		}
+
+		public String getName() {
+			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("init", _init);
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
 		}
 
 	}  
@@ -345,14 +389,12 @@ public class WebVerticle {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "WebVerticle(packageName,imports,name,fields,startStatements,routes,handlers,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "WebVerticle(imports,startStatements,handlers,routes,methods,name,fields,packageName) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Future;\n" + 
 				"import io.vertx.core.MultiMap;\n" + 
-				"import io.vertx.core.Vertx;\n" + 
-				"import io.vertx.core.eventbus.DeliveryOptions;\n" + 
 				"import io.vertx.core.http.HttpHeaders;\n" + 
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
 				"import io.vertx.core.json.JsonArray;\n" + 
@@ -370,18 +412,16 @@ public class WebVerticle {
 				"import io.vertx.ext.web.sstore.LocalSessionStore;\n" + 
 				"\n" + 
 				"import java.util.Map;\n" + 
-				"import java.util.Optional;\n" + 
-				"import java.util.concurrent.atomic.AtomicInteger;\n" + 
 				"\n" + 
 				"import static io.netty.handler.codec.http.HttpResponseStatus.*;\n" + 
 				"\n" + 
-				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
+				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 
-				"	protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n" + 
+				"	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name;format=\"capitalize\"~.class);\n" + 
 				"	private static final String JSON_CONTENT_TYPE = \"application/json; charset=utf-8\";\n" + 
-				"\n" + 
+				"	private static final String HTML_CONTENT_TYPE = \"text/html; charset=utf-8\";\n" + 
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	@Override\n" + 
@@ -390,55 +430,87 @@ public class WebVerticle {
 				"\n" + 
 				"		~startStatements:{it|~it~};separator=\"\\n\"~\n" + 
 				"\n" + 
+				"		final JWTAuth auth = JWTAuth.create(vertx, new JWTAuthOptions()\n" + 
+				"				.addPubSecKey(new io.vertx.ext.auth.PubSecKeyOptions()\n" + 
+				"						.setAlgorithm(config().getString(\"jwt.algorithm\"))\n" + 
+				"						.setPublicKey(readPem(config().getString(\"jwt.publicKey\")))\n" + 
+				"						.setSecretKey(readPem(config().getString(\"jwt.secretKey\")))\n" + 
+				"				));\n" + 
+				"\n" + 
 				"		final Router router = Router.router(vertx);\n" + 
 				"		router.route().handler(BodyHandler.create());\n" + 
 				"		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n" + 
-				"		~routes:{it|router.~it.action~(\"/~it.url~\").handler(~it.handler~);};separator=\"\\n\"~\n" + 
-				"\n" + 
+				"		router.post(\"/login\").handler(routingContext -> login(routingContext, auth));\n" + 
+				"		router.route(\"/secure/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
+				"		~routes:{it|router.~it.action~(\"/~it.url~\")~if(it.order)~.order(~it.order~)~endif~.handler(this::~it.handler~);};separator=\"\\n\"~\n" + 
+				"		\n" + 
 				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
 				"\n" + 
-				"		ssl.ifPresent(sslDeploymentSettings ->\n" + 
-				"				serverOptions\n" + 
-				"						.setSsl(true)\n" + 
-				"						.setPemKeyCertOptions(\n" + 
-				"								new PemKeyCertOptions().\n" + 
-				"										setKeyPath(sslDeploymentSettings.getKey()).\n" + 
-				"										setCertPath(sslDeploymentSettings.getCert())));\n" + 
+				"		if (config().getBoolean(\"ssl\", false)) {\n" + 
+				"			serverOptions\n" + 
+				"					.setSsl(true)\n" + 
+				"					.setPemKeyCertOptions(\n" + 
+				"							new PemKeyCertOptions().\n" + 
+				"									setKeyPath(config().getString(\"ssl.keyPath\")).\n" + 
+				"									setCertPath(config().getString(\"ssl.certPath\")));\n" + 
+				"		}\n" + 
 				"\n" + 
 				"		final StaticHandler staticHandler = StaticHandler.create();\n" + 
-				"		staticHandler.setWebRoot(deploymentOptions.getWebRoot());\n" + 
-				"		staticHandler.setCachingEnabled(false);\n" + 
-				"		staticHandler.setEnableRangeSupport(true);\n" + 
+				"		staticHandler.setWebRoot(config().getString(\"web.root\"));\n" + 
+				"		staticHandler.setCachingEnabled(config().getBoolean(\"web.cachingEnabled\"));\n" + 
+				"		staticHandler.setEnableRangeSupport(config().getBoolean(\"web.enableRangeSupport\"));\n" + 
 				"		router.route(\"/*\").handler(staticHandler);\n" + 
 				"\n" + 
-				"		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(deploymentOptions.getPort());\n" + 
+				"		vertx.createHttpServer(serverOptions).requestHandler(router::accept).listen(config().getInteger(\"web.port\"));\n" + 
 				"\n" + 
-				"		log.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpHost() + \":\" + deploymentOptions.getPort());\n" + 
-				"		log.info(\"server running on \" + (ssl.isPresent() ? \"https\" : \"http\") + \"://\" + deploymentOptions.getTcpName() + \":\" + deploymentOptions.getPort());\n" + 
+				"		log.info(\"server running on \" + (config().getBoolean(\"ssl\",false) ? \"https\" : \"http\") + \"://\" + config().getString(\"web.host\") + \":\" + config().getInteger(\"web.port\"));\n" + 
 				"\n" + 
 				"		startFuture.succeeded();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private void login(RoutingContext routingContext, JWTAuth auth) {\n" + 
+				"		debug(\"login\", routingContext);\n" + 
+				"\n" + 
+				"		vertx.eventBus().request(\"login\", routingContext.getBodyAsJson(), reply -> {\n" + 
+				"\n" + 
+				"			if (reply.succeeded()) {\n" + 
+				"				final JsonObject replyBody = (JsonObject) reply.result().body();\n" + 
+				"\n" + 
+				"				if (replyBody.getBoolean(\"login.success\", false)) {\n" + 
+				"\n" + 
+				"					final String token = auth.generateToken(\n" + 
+				"							new io.vertx.core.json.JsonObject().put(\"sub\", replyBody.getString(\"username\")),\n" + 
+				"							new JWTOptions()\n" + 
+				"									.setAlgorithm(config().getString(\"jwt.algorithm\"))\n" + 
+				"									.setExpiresInMinutes(config().getInteger(\"jwt.expiresInMinutes\"))\n" + 
+				"									.setSubject(replyBody.getString(\"username\")));\n" + 
+				"\n" + 
+				"					final JsonObject session = new io.vertx.core.json.JsonObject()\n" + 
+				"							.put(\"username\", replyBody.getString(\"username\"))\n" + 
+				"							.put(\"token\", token);\n" + 
+				"\n" + 
+				"					sendResponse(routingContext, OK, session);\n" + 
+				"\n" + 
+				"				} else {\n" + 
+				"\n" + 
+				"					sendResponse(routingContext, OK, replyBody);	\n" + 
+				"				}\n" + 
+				"\n" + 
+				"			} else {\n" + 
+				"\n" + 
+				"				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	\"Server Error\");\n" + 
+				"			}\n" + 
+				"		});\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	~handlers:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
-				"	private static void getFromDomainDB(Vertx vertx, RoutingContext routingContext, String action, JsonObject params) {\n" + 
-				"		vertx.eventBus().request(\"domain.db\", params, new DeliveryOptions().addHeader(\"action\", action), reply -> {\n" + 
-				"			if (reply.succeeded()) {\n" + 
-				"				JsonObject body = (JsonObject) reply.result().body();\n" + 
-				"				log.info(body.encode());\n" + 
-				"				sendResponse(routingContext, OK, body);\n" + 
-				"			} else {\n" + 
-				"				sendErrors(routingContext, INTERNAL_SERVER_ERROR,	\"Server Error\");\n" + 
-				"			}\n" + 
-				"		});\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	private static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {\n" + 
+				"	static void sendErrors(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String... errors) {\n" + 
 				"		final JsonArray errorsArray = new JsonArray();\n" + 
 				"		for (String error : errors)\n" + 
-				"				errorsArray.add(error.trim());\n" + 
+				"			errorsArray.add(error.trim());\n" + 
 				"\n" + 
 				"		final String encode = new JsonObject().put(\"errors\", errorsArray).encode();\n" + 
 				"		log.info(routingContext.request().absoluteURI() + \" \" + encode);\n" + 
@@ -449,17 +521,26 @@ public class WebVerticle {
 				"					.end(encode);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {\n" + 
+				"	static void sendResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, JsonObject response) {\n" + 
 				"		final String encode = response.encode();\n" + 
 				"		log.info(routingContext.request().absoluteURI() + \" \" + encode);\n" + 
 				"		routingContext.response()\n" + 
-				"					.setStatusCode(httpResponseStatus.code())\n" + 
-				"					.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n" + 
-				"					.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n" + 
-				"					.end(encode);\n" + 
+				"				.setStatusCode(httpResponseStatus.code())\n" + 
+				"				.putHeader(HttpHeaders.CONTENT_LENGTH, encode.length() + \"\")\n" + 
+				"				.putHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE)\n" + 
+				"				.end(encode);\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	private static void debug(String method, RoutingContext routingContext) {\n" + 
+				"	static void sendHtmlResponse(RoutingContext routingContext, HttpResponseStatus httpResponseStatus, String html) {\n" + 
+				"		log.info(routingContext.request().absoluteURI() + \" \" + html);\n" + 
+				"		routingContext.response()\n" + 
+				"				.setStatusCode(httpResponseStatus.code())\n" + 
+				"				.putHeader(HttpHeaders.CONTENT_LENGTH, html.length() + \"\")\n" + 
+				"				.putHeader(HttpHeaders.CONTENT_TYPE, HTML_CONTENT_TYPE)\n" + 
+				"				.end(html);\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	static void debug(String method, RoutingContext routingContext) {\n" + 
 				"		final String uri = method + \" \" + routingContext.request().method().name() + \" \" + routingContext.request().uri();\n" + 
 				"		boolean isAuthenticated = routingContext.user() != null;\n" + 
 				"		log.info(uri + \" \" + (isAuthenticated ? \"(authenticated)\" : \"(NOT authenticated)\"));\n" + 
@@ -467,6 +548,23 @@ public class WebVerticle {
 				"		for (Map.Entry<String, String> header : headers)\n" + 
 				"				log.info(\"\\t\" + header.getKey() + \"=\" + header.getValue());\n" + 
 				"		log.info(\"body \" + routingContext.getBody().toString());\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	private String readPem(String path) throws java.io.IOException {\n" + 
+				"		final java.io.File file = new java.io.File(path);\n" + 
+				"		final java.io.BufferedInputStream inputStream = new java.io.BufferedInputStream(new java.io.FileInputStream(file));\n" + 
+				"		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();\n" + 
+				"		int read;\n" + 
+				"		byte[] data = new byte[2048];\n" + 
+				"		while ((read = inputStream.read(data, 0, data.length)) != -1)\n" + 
+				"			buffer.write(data, 0, read);\n" + 
+				"		inputStream.close();\n" + 
+				"		final byte[] content = buffer.toByteArray();\n" + 
+				"		buffer.close();\n" + 
+				"		final String s = new String(content);\n" + 
+				"		final int startIndex = s.indexOf(\"KEY-----\") + 8;\n" + 
+				"		final int endIndex = s.indexOf(\"-----END\");\n" + 
+				"		return s.substring(startIndex, endIndex).trim();\n" + 
 				"	}\n" + 
 				"} >>";
 }  

@@ -5,9 +5,9 @@ public class ReferenceAccessors implements EntityAccessor {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _type;
 	private Object _className;
 	private Object _name;
-	private Object _type;
 
 	ReferenceAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -20,11 +20,33 @@ public class ReferenceAccessors implements EntityAccessor {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("referenceAccessors");
+		st.add("type", _type);
 		st.add("className", _className);
 		st.add("name", _name);
-		st.add("type", _type);
 		return st.render().trim();
 	}
+
+	public ReferenceAccessors setType(Object value) {
+		this._type = value;
+		return this;
+	}
+
+	public Object getType() {
+		return this._type;
+	}
+
+	public Object getType(Object defaultValue) {
+		return this._type == null ? defaultValue : this._type;
+	}
+
+	public boolean hasType() {
+		return this._type != null;
+	}
+
+	public ReferenceAccessors removeType() {
+		this._type = null;
+		return this;
+	} 
 
 	public ReferenceAccessors setClassName(Object value) {
 		this._className = value;
@@ -70,28 +92,6 @@ public class ReferenceAccessors implements EntityAccessor {
 		return this;
 	} 
 
-	public ReferenceAccessors setType(Object value) {
-		this._type = value;
-		return this;
-	}
-
-	public Object getType() {
-		return this._type;
-	}
-
-	public Object getType(Object defaultValue) {
-		return this._type == null ? defaultValue : this._type;
-	}
-
-	public boolean hasType() {
-		return this._type != null;
-	}
-
-	public ReferenceAccessors removeType() {
-		this._type = null;
-		return this;
-	} 
-
 
 
 	@Override
@@ -107,7 +107,7 @@ public class ReferenceAccessors implements EntityAccessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "referenceAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "referenceAccessors(type,className,name) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	jsonObject.put(\"~name~\", value.getJsonObject());\n" + 
 				"	return this;\n" + 
 				"}\n" + 

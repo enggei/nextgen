@@ -5,10 +5,10 @@ public class JsonWrapper {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private String _package;
-	private String _name;
 	private Object _neoNodeMapper;
 	private Object _lexical;
+	private String _name;
+	private String _package;
 	private java.util.List<EntityAccessor> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
@@ -23,58 +23,14 @@ public class JsonWrapper {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("JsonWrapper");
-		st.add("package", _package);
-		st.add("name", _name);
 		st.add("neoNodeMapper", _neoNodeMapper);
 		st.add("lexical", _lexical);
+		st.add("name", _name);
+		st.add("package", _package);
 		for (Object o : _accessors) st.add("accessors", o);
-		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{type,name,initializer}", map.get("type"), map.get("name"), map.get("initializer"));
+		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{initializer,name,type}", map.get("initializer"), map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
-
-	public JsonWrapper setPackage(String value) {
-		this._package = value;
-		return this;
-	}
-
-	public String getPackage() {
-		return this._package;
-	}
-
-	public String getPackage(String defaultValue) {
-		return this._package == null ? defaultValue : this._package;
-	}
-
-	public boolean hasPackage() {
-		return this._package != null;
-	}
-
-	public JsonWrapper removePackage() {
-		this._package = null;
-		return this;
-	} 
-
-	public JsonWrapper setName(String value) {
-		this._name = value;
-		return this;
-	}
-
-	public String getName() {
-		return this._name;
-	}
-
-	public String getName(String defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public JsonWrapper removeName() {
-		this._name = null;
-		return this;
-	} 
 
 	public JsonWrapper setNeoNodeMapper(Object value) {
 		this._neoNodeMapper = value;
@@ -120,6 +76,50 @@ public class JsonWrapper {
 		return this;
 	} 
 
+	public JsonWrapper setName(String value) {
+		this._name = value;
+		return this;
+	}
+
+	public String getName() {
+		return this._name;
+	}
+
+	public String getName(String defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public JsonWrapper removeName() {
+		this._name = null;
+		return this;
+	} 
+
+	public JsonWrapper setPackage(String value) {
+		this._package = value;
+		return this;
+	}
+
+	public String getPackage() {
+		return this._package;
+	}
+
+	public String getPackage(String defaultValue) {
+		return this._package == null ? defaultValue : this._package;
+	}
+
+	public boolean hasPackage() {
+		return this._package != null;
+	}
+
+	public JsonWrapper removePackage() {
+		this._package = null;
+		return this;
+	} 
+
 	public JsonWrapper addAccessors(EntityAccessor value) {
 		this._accessors.add(value);
 		return this;
@@ -149,11 +149,17 @@ public class JsonWrapper {
 		return this._accessors;
 	} 
 
-	public JsonWrapper addExternalFields(Object _type, String _name, Object _initializer) {
+	public JsonWrapper setExternalFields(java.util.Collection<JsonWrapper_ExternalFields> values) {
+			this._externalFields.clear();
+			values.stream().map(JsonWrapper_ExternalFields::asMap).forEach(map -> _externalFields.add(map));
+			return this;
+		}
+
+	public JsonWrapper addExternalFields(Object _initializer, String _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
-		map.put("name", _name);
 		map.put("initializer", _initializer);
+		map.put("name", _name);
+		map.put("type", _type);
 		this._externalFields.add(map);
 		return this;
 	}
@@ -163,15 +169,15 @@ public class JsonWrapper {
 	}
 
 	public JsonWrapper addExternalFields(JsonWrapper_ExternalFields value) {
-		return addExternalFields(value._type, value._name, value._initializer);
+		return addExternalFields(value._initializer, value._name, value._type);
 	}
 
 	public java.util.stream.Stream<JsonWrapper_ExternalFields> streamExternalFields() {
 		return this._externalFields.stream().map(JsonWrapper_ExternalFields::new);
 	}
 
-	public java.util.List<Object> getExternalFields_Type() {
-		return streamExternalFields().map(JsonWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getExternalFields_Initializer() {
+		return streamExternalFields().map(JsonWrapper_ExternalFields::getInitializer).collect(java.util.stream.Collectors.toList());
 	}
 
 
@@ -180,39 +186,48 @@ public class JsonWrapper {
 	}
 
 
-	public java.util.List<Object> getExternalFields_Initializer() {
-		return streamExternalFields().map(JsonWrapper_ExternalFields::getInitializer).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getExternalFields_Type() {
+		return streamExternalFields().map(JsonWrapper_ExternalFields::getType).collect(java.util.stream.Collectors.toList());
 	}
 
 
 	public static final class JsonWrapper_ExternalFields {
 
-		Object _type;
-		String _name;
 		Object _initializer;
+		String _name;
+		Object _type;
 
-		public JsonWrapper_ExternalFields(Object _type, String _name, Object _initializer) {
-			this._type = _type;
-			this._name = _name;
+		public JsonWrapper_ExternalFields(Object _initializer, String _name, Object _type) {
 			this._initializer = _initializer;
+			this._name = _name;
+			this._type = _type;
 		}
 
 		private JsonWrapper_ExternalFields(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
-			this._name = (String) map.get("name");
 			this._initializer = (Object) map.get("initializer");
+			this._name = (String) map.get("name");
+			this._type = (Object) map.get("type");
 		}
 
-		public Object getType() {
-			return this._type;
+		public Object getInitializer() {
+			return this._initializer;
 		}
 
 		public String getName() {
 			return this._name;
 		}
 
-		public Object getInitializer() {
-			return this._initializer;
+		public Object getType() {
+			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("initializer", _initializer);
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
 		}
 
 	}  
@@ -230,7 +245,7 @@ public class JsonWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "JsonWrapper(package,name,externalFields,accessors,neoNodeMapper,lexical) ::= <<package ~package~;\n" + 
+	static final String st = "JsonWrapper(accessors,neoNodeMapper,lexical,externalFields,name,package) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
 				"\n" + 

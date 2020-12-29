@@ -27,7 +27,7 @@ public class STModelEditor extends BaseEditor<STModel> {
          editors.add("FormBuilder", newFormEditor(stModel).onMakePanel(this::saveModel));
       add(editors, BorderLayout.CENTER);
 
-      modelEditorText.setStModel(stModel);
+      modelEditorText.setModel(stModel);
       modelEditorForm.setModel(stModel);
       org.greenrobot.eventbus.EventBus.getDefault().register(this);
    }
@@ -142,7 +142,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
       if (model.equals(event.stModel)) {
-         modelEditorText.setStModel(event.stModel);
+         modelEditorText.setModel(event.stModel);
          modelEditorForm.setModel(event.stModel);
       }
    }
@@ -150,7 +150,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onSTModelChanged(nextgen.events.STModelChanged event) {
       if (model.equals(event.model)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -158,7 +158,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onNewSTArgument(nextgen.events.NewSTArgument event) {
       if (model.equals(event.model)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -166,7 +166,15 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentChanged(nextgen.events.STArgumentChanged event) {
       if (model.equals(event.stModel)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
+         modelEditorForm.setModel(model);
+      }
+   }
+
+   @org.greenrobot.eventbus.Subscribe()
+   public void onSTKVArgumentChanged(nextgen.events.STKVArgumentChanged event) {
+      if (model.equals(event.stModel)) {
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -174,7 +182,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
       if (model.equals(event.stModel)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -182,7 +190,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onNewSTKVArgument(nextgen.events.NewSTKVArgument event) {
       if (model.equals(event.model)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -190,7 +198,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onNewKV(nextgen.events.NewKV event) {
       if (model.equals(event.stModel)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }
@@ -198,7 +206,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    @org.greenrobot.eventbus.Subscribe()
    public void onKVDeleted(nextgen.events.KVDeleted event) {
       if (model.equals(event.stModel)) {
-         modelEditorText.setStModel(model);
+         modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
    }

@@ -6,8 +6,8 @@ public class EnumAccessors implements EntityAccessor {
 	private final org.stringtemplate.v4.STGroup stGroup;
 
 	private Object _className;
-	private Object _name;
 	private Object _type;
+	private Object _name;
 
 	EnumAccessors(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -21,8 +21,8 @@ public class EnumAccessors implements EntityAccessor {
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("enumAccessors");
 		st.add("className", _className);
-		st.add("name", _name);
 		st.add("type", _type);
+		st.add("name", _name);
 		return st.render().trim();
 	}
 
@@ -48,28 +48,6 @@ public class EnumAccessors implements EntityAccessor {
 		return this;
 	} 
 
-	public EnumAccessors setName(Object value) {
-		this._name = value;
-		return this;
-	}
-
-	public Object getName() {
-		return this._name;
-	}
-
-	public Object getName(Object defaultValue) {
-		return this._name == null ? defaultValue : this._name;
-	}
-
-	public boolean hasName() {
-		return this._name != null;
-	}
-
-	public EnumAccessors removeName() {
-		this._name = null;
-		return this;
-	} 
-
 	public EnumAccessors setType(Object value) {
 		this._type = value;
 		return this;
@@ -92,6 +70,28 @@ public class EnumAccessors implements EntityAccessor {
 		return this;
 	} 
 
+	public EnumAccessors setName(Object value) {
+		this._name = value;
+		return this;
+	}
+
+	public Object getName() {
+		return this._name;
+	}
+
+	public Object getName(Object defaultValue) {
+		return this._name == null ? defaultValue : this._name;
+	}
+
+	public boolean hasName() {
+		return this._name != null;
+	}
+
+	public EnumAccessors removeName() {
+		this._name = null;
+		return this;
+	} 
+
 
 
 	@Override
@@ -107,7 +107,7 @@ public class EnumAccessors implements EntityAccessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "enumAccessors(className,name,type) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
+	static final String st = "enumAccessors(className,type,name) ::= <<public ~className;format=\"capitalize\"~ set~name;format=\"capitalize\"~(~type~ value) { \n" + 
 				"	if (value == null) return this;\n" + 
 				"	jsonObject.put(\"~name~\", value.name());\n" + 
 				"	return this;\n" + 

@@ -22,7 +22,7 @@ public class DomainAction {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("DomainAction");
 		st.add("name", _name);
 		for (Object o : _statements) st.add("statements", o);
-		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{type,name}", map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
 
@@ -77,10 +77,16 @@ public class DomainAction {
 		return this._statements;
 	} 
 
-	public DomainAction addParams(Object _type, Object _name) {
+	public DomainAction setParams(java.util.Collection<DomainAction_Params> values) {
+			this._params.clear();
+			values.stream().map(DomainAction_Params::asMap).forEach(map -> _params.add(map));
+			return this;
+		}
+
+	public DomainAction addParams(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
-		map.put("type", _type);
 		map.put("name", _name);
+		map.put("type", _type);
 		this._params.add(map);
 		return this;
 	}
@@ -90,44 +96,52 @@ public class DomainAction {
 	}
 
 	public DomainAction addParams(DomainAction_Params value) {
-		return addParams(value._type, value._name);
+		return addParams(value._name, value._type);
 	}
 
 	public java.util.stream.Stream<DomainAction_Params> streamParams() {
 		return this._params.stream().map(DomainAction_Params::new);
 	}
 
-	public java.util.List<Object> getParams_Type() {
-		return streamParams().map(DomainAction_Params::getType).collect(java.util.stream.Collectors.toList());
-	}
-
-
 	public java.util.List<Object> getParams_Name() {
 		return streamParams().map(DomainAction_Params::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
+	public java.util.List<Object> getParams_Type() {
+		return streamParams().map(DomainAction_Params::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
 	public static final class DomainAction_Params {
 
-		Object _type;
 		Object _name;
+		Object _type;
 
-		public DomainAction_Params(Object _type, Object _name) {
-			this._type = _type;
+		public DomainAction_Params(Object _name, Object _type) {
 			this._name = _name;
+			this._type = _type;
 		}
 
 		private DomainAction_Params(java.util.Map<String, Object> map) {
-			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
 		}
 
 		public Object getType() {
 			return this._type;
 		}
 
-		public Object getName() {
-			return this._name;
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
 		}
 
 	}  
@@ -145,17 +159,19 @@ public class DomainAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainAction(name,params,statements) ::= <<private void ~name~(Message<JsonObject> message) {\n" + 
-				"	log.info(\"~name~ \" + message.body().encodePrettily());\n" + 
+	static final String st = "DomainAction(statements,params,name) ::= <<private void ~name~(Message<io.vertx.core.buffer.Buffer> message) {\n" + 
+				"	debug(\"~name~\", message);\n" + 
 				"~if(params)~\n" + 
 				"	final JsonObject body = message.body();\n" + 
 				"	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~(\"~it.name~\");};separator=\"\\n\"~\n" + 
 				"~endif~\n" + 
 				"	\n" + 
-				"	db.doInTransaction(transaction -> {\n" + 
+				"	doInTransaction(transaction -> {\n" + 
+				"		final JsonObject reply = new JsonObject();\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
+				"		message.reply(reply);\n" + 
 				"	}, throwable -> {\n" + 
-				"		message.fail(ErrorCodes.DB_ERROR.ordinal(), throwable.getMessage());\n" + 
+				"		message.fail(500, throwable.getMessage());\n" + 
 				"	});\n" + 
 				"} >>";
 }  
