@@ -6,7 +6,7 @@ public class FormModel {
 	private String[] components = {"NONE", "Label", "TextField", "Button", "TextArea", "Table", "List", "ToggleButton", "CheckBox", "RadioButton", "Panel", "ScrollPane", "TabbedPane", "Component" };
 	private String[] panelWidths = {"600", "800", "1024", "1200"};
 	private String[] panelHeights = {"480", "600", "768", "800", "1024", "1200"};
-	private String[] extending = { "JPanel", "DebugPanel" };
+	private String[] extending = { "DebugPanel", "JPanel" };
 	private String[] laf = { "NONE", "darcula" };
 	private Object[] hAlignments = nextgen.templates.jgoodies.hAlignment.values();;
 	private String[] counts = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};

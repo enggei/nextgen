@@ -1,6 +1,7 @@
 package nextgen.swing;
 
 import nextgen.model.*;
+import org.neo4j.graphdb.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -358,7 +359,7 @@ public class STAppPresentationModel {
 
    private void detach(nextgen.model.STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
       final Optional<STArgumentKV> existing = stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).findAny();
-      if(existing.isPresent()) {
+      if (existing.isPresent()) {
          final String uuid = existing.get().getUuid();
          stArgument.removeKeyValues(existing.get());
          existing.get().delete();
@@ -1157,6 +1158,29 @@ public class STAppPresentationModel {
       return result.stream();
    }
 
+   public void reorder(STModel model, STArgument one, STArgument two) {
+
+      doLaterInTransaction(tx -> {
+
+         Relationship first = null;
+         Relationship second = null;
+         for (Relationship relationship : model.getNode().getRelationships(Direction.OUTGOING, STModel._arguments)) {
+            if (relationship.getEndNode().equals(one.getNode())) first = relationship;
+            else if (relationship.getEndNode().equals(two.getNode())) second = relationship;
+         }
+
+         if (first != null && second != null && (first.hasProperty("_t") && second.hasProperty("_t"))) {
+            final long firstT = (long) first.getProperty("_t");
+            final long secondT = (long) second.getProperty("_t");
+
+            second.setProperty("_t", firstT);
+            first.setProperty("_t", secondT);
+
+            nextgen.events.STModelChanged.post(model);
+         }
+
+      });
+   }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 

@@ -112,7 +112,7 @@ public class STModel {
 		return this;
 	}
 
-	private static final org.neo4j.graphdb.RelationshipType _arguments = org.neo4j.graphdb.RelationshipType.withName("arguments");
+	public static final org.neo4j.graphdb.RelationshipType _arguments = org.neo4j.graphdb.RelationshipType.withName("arguments");
 
 	public STModel addArguments(STArgument dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _arguments).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();

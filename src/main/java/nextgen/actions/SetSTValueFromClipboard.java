@@ -8,7 +8,7 @@ public class SetSTValueFromClipboard extends nextgen.actions.TransactionAction {
    private final nextgen.model.STValue stValue;
 
 	public SetSTValueFromClipboard(nextgen.model.STValue stValue) {
-		super("F-CP");
+		super("FROM");
 		this.stValue = stValue;
 	}
 

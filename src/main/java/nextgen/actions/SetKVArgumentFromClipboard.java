@@ -10,7 +10,7 @@ public class SetKVArgumentFromClipboard extends nextgen.actions.TransactionActio
    private final nextgen.model.STParameterKey stParameterKey;
 
 	public SetKVArgumentFromClipboard(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey) {
-		super("F-CP");
+		super("FROM");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
 		this.stParameterKey = stParameterKey;

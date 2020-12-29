@@ -9,7 +9,7 @@ public class SetArgumentFromClipboard extends nextgen.actions.TransactionAction 
    private final nextgen.model.STParameter stParameter;
 
 	public SetArgumentFromClipboard(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
-		super("F-CP");
+		super("FROM");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
 	}
