@@ -201,7 +201,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
                }
             }
          });
-         return new TextAreaCrudPanel()
+         return new TextAreaCrudForm()
                .setScrtextArea(newRTextScrollPane(rSyntaxTextArea))
                .setBtndelete(getButton(new DeleteSTArgument(stArgument, rSyntaxTextArea)))
                .setBtnfromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)))
@@ -248,7 +248,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
             }
          });
 
-         return new TextAreaCrudPanel()
+         return new TextAreaCrudForm()
                .setScrtextArea(newRTextScrollPane(rSyntaxTextArea))
                .setBtndelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
                .setBtnfromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))

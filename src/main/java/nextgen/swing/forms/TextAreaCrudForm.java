@@ -2,36 +2,36 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-public class TextAreaCrudPanel extends JPanel {
+public class TextAreaCrudForm extends JPanel {
 
 	JScrollPane scrtextArea;
 	JButton btndelete;
 	JButton btntoClipboard;
 	JButton btnfromClipboard;
 
-	public TextAreaCrudPanel() {
+	public TextAreaCrudForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:grow, fill:75:none, fill:75:none, left:75:none", "top:pref:none, top:pref:none"));
 	}
 
-	public TextAreaCrudPanel setScrtextArea(JScrollPane component) {
+	public TextAreaCrudForm setScrtextArea(JScrollPane component) {
 		if (component == null) return this;
 		add(this.scrtextArea = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
 		return this;
 	}
 
-	public TextAreaCrudPanel setBtndelete(JButton component) {
+	public TextAreaCrudForm setBtndelete(JButton component) {
 		if (component == null) return this;
 		add(this.btndelete = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public TextAreaCrudPanel setBtntoClipboard(JButton component) {
+	public TextAreaCrudForm setBtntoClipboard(JButton component) {
 		if (component == null) return this;
 		add(this.btntoClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public TextAreaCrudPanel setBtnfromClipboard(JButton component) {
+	public TextAreaCrudForm setBtnfromClipboard(JButton component) {
 		if (component == null) return this;
 		add(this.btnfromClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
 		return this;
