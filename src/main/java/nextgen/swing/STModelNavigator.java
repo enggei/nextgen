@@ -86,10 +86,10 @@ public class STModelNavigator extends JPanel {
 				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 				appModel().doLaterInTransaction(transaction -> {
-					if (isRootNode(lastPathComponent)) 
-						onRootNodeSelected((RootNode) lastPathComponent);
-					else if (isSTProjectTreeNode(lastPathComponent)) 
+					if (isSTProjectTreeNode(lastPathComponent)) 
 						onSTProjectTreeNodeSelected((STProjectTreeNode) lastPathComponent);
+					else if (isRootNode(lastPathComponent)) 
+						onRootNodeSelected((RootNode) lastPathComponent);
 					else if (isModelsTreeNode(lastPathComponent)) 
 						onModelsTreeNodeSelected((ModelsTreeNode) lastPathComponent);
 					else if (isSTGroupModelTreeNode(lastPathComponent)) 
