@@ -1124,20 +1124,12 @@ public class STAppPresentationModel {
                   final boolean sameKeyType = otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
                   if (sameKeyName && sameKeyType)
                      findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> thisKVs.add(newSTArgumentKV(thisKey, newSTValue(stArgumentKV.getValue()))));
-//                     findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> addArgument(thisKVs, thisKey, stArgumentKV));
                }
             }
 
             if (!thisKVs.isEmpty()) addArgument(thisModel, thisSTParameter, thisKVs);
          }
       }
-   }
-
-   public java.util.stream.Stream<nextgen.model.STParameter> getSingleEnumsOrPrimitiveParameters(nextgen.model.STTemplate stTemplate) {
-      return stTemplate.getParameters()
-            .filter(stParameter -> stParameter.getType().equals(nextgen.model.STParameterType.SINGLE))
-            .filter(stParameter -> stParameter.getArgumentType() != null)
-            .filter(stParameter -> isEnum(stParameter) || stParameter.getArgumentType().equals("String") || stParameter.getArgumentType().equals("Object"));
    }
 
    private boolean isEnum(nextgen.model.STParameter stParameter) {

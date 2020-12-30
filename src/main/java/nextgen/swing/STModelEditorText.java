@@ -33,18 +33,21 @@ public class STModelEditorText extends BaseEditor<STModel> {
 
    @Override
    public void setModel(STModel stModel) {
-      txtEditor.setText(appModel().render(stModel));
-      txtEditor.setCaretPosition(0);
-      txtEditor.setEditable(false);
-      txtEditor.setSyntaxEditingStyle(appModel().getSTGroup(stModel).getLanguage("text/plain"));
+      super.setModel(stModel);
+      appModel().doLaterInTransaction(tx -> {
+         txtEditor.setText(appModel().render(stModel));
+         txtEditor.setCaretPosition(0);
+         txtEditor.setEditable(false);
+         txtEditor.setSyntaxEditingStyle(appModel().getSTGroup(stModel).getLanguage("text/plain"));
 
-      final javax.swing.JPopupMenu pop = txtEditor.getPopupMenu();
-      pop.removeAll();
-      pop.add(newAction("To Clipboard", actionEvent -> toClipboard()));
+         final javax.swing.JPopupMenu pop = txtEditor.getPopupMenu();
+         pop.removeAll();
+         pop.add(newAction("To Clipboard", actionEvent -> toClipboard()));
 
-      JMenu menu = new JMenu("Values");
-      pop.add(menu);
-      addToMenu(menu, stModel);
+         JMenu menu = new JMenu("Values");
+         pop.add(menu);
+         addToMenu(menu, stModel);
+      });
    }
 
    private void addToMenu(JMenu menu, STModel stModel) {
@@ -77,7 +80,7 @@ public class STModelEditorText extends BaseEditor<STModel> {
                parameterMenu.add(new nextgen.actions.DeleteSTArguments(txtEditor, stParameter, stModel));
 
                final AtomicInteger listIndex = new AtomicInteger(0);
-               arguments.stream().filter(stArgument -> stArgument.getValue()!=null).forEach(stArgument -> {
+               arguments.stream().filter(stArgument -> stArgument.getValue() != null).forEach(stArgument -> {
                   listIndex.incrementAndGet();
                   final JMenu listArgumentMenu = new JMenu(listIndex.toString());
                   switch (stArgument.getValue().getType()) {

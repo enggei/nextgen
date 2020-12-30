@@ -1,6 +1,5 @@
 package nextgen.swing;
 
-import com.jgoodies.forms.layout.FormLayout;
 import nextgen.actions.*;
 import nextgen.model.*;
 import nextgen.swing.forms.*;
@@ -64,7 +63,8 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          switch (parameterArguments.parameter().getType()) {
             case SINGLE:
                if (parameterArguments.arguments().isEmpty())
-                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnone(getButton(new SetArgumentFromArgumentType(model, parameterArguments.parameter(), panel).setName("SET")))));
+                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(newPrimitiveComponent(model, parameterArguments.parameter())));
+//                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnone(getButton(new SetArgumentFromArgumentType(model, parameterArguments.parameter(), panel).setName("SET")))));
                else
                   panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(newSTValueComponent(model, parameterArguments.parameter(), parameterArguments.arguments().get(0))));
 
@@ -196,6 +196,30 @@ public class STModelEditorForm extends BaseEditor<STModel> {
       }
 
       return null;
+   }
+
+   private JComponent newPrimitiveComponent(STModel model, STParameter stParameter) {
+
+        if (stParameter.getName().startsWith("is") || stParameter.getName().startsWith("has")) {
+         final JCheckBox component = newJCheckBox();
+         component.addActionListener(actionEvent -> appModel().doLaterInTransaction(tx -> appModel().setArgument(model, stParameter, component.isSelected() ? "true" : null)));
+         return component;
+
+      } else {
+         final JTextField textField = newTextField();
+         textField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+               if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
+                  appModel().doLaterInTransaction(tx -> appModel().setArgument(model, stParameter, textField.getText().trim()));
+               }
+            }
+         });
+
+         return new CrudPanel()
+               .setTxtvalue(textField)
+               .setBtnfromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)));
+      }
    }
 
    private JComponent newPrimitiveComponent(STModel model, STParameter stParameter, STArgument stArgument) {
