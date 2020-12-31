@@ -1127,7 +1127,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTParameterTreeNodeSelected(STParameterTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTParameterTreeNodeClicked.post(selectedNode.getModel());
+		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(stModelTreeNode -> nextgen.events.ModelNavigatorSTParameterTreeNodeClicked.post(selectedNode.getModel(), stModelTreeNode.getModel()));
 	}
 
 	// STModelArgumentTreeNode

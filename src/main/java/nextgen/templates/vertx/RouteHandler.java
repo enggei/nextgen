@@ -132,9 +132,9 @@ public class RouteHandler {
 	static final String st = "RouteHandler(name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
 				"	debug(\"~name~\", routingContext);\n" + 
 				"\n" + 
-				"	vertx.eventBus().request(\"~name~\", routingContext.getBody(), reply -> {\n" + 
+				"	vertx.eventBus().request(\"~name~\", routingContext.getBody(), (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {\n" + 
 				"		if (reply.succeeded()) {\n" + 
-				"			sendHtmlResponse(routingContext, OK, java.util.Objects.requireNonNull(~name;format=\"capitalize\"~RequestHandler.handle(reply.result())));	\n" + 
+				"			sendHtmlResponse(routingContext, OK, new ~name;format=\"capitalize\"~Page(reply.result().body()).toString());	\n" + 
 				"		} else {\n" + 
 				"			sendErrors(routingContext, INTERNAL_SERVER_ERROR,	reply.cause().getMessage());\n" + 
 				"		}\n" + 

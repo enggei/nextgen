@@ -3,7 +3,8 @@ package nextgen.utils;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
-import nextgen.swing.ComponentFactory;
+import nextgen.swing.*;
+import nextgen.templates.javaswing.App;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -272,6 +273,7 @@ public class SwingUtil {
 
       final ConfirmAction onSave = new ConfirmAction() {
          @Override
+         @SuppressWarnings("unchecked")
          public void verifyAndCommit() throws Exception {
             onConfirm.accept((T) content.getSelectedItem());
          }
@@ -281,12 +283,14 @@ public class SwingUtil {
       commandPanel.add(btnSave = nextgen.swing.ComponentFactory.newJButton(new AbstractAction(onSave.getConfirmTitle()) {
          @Override
          public void actionPerformed(ActionEvent e) {
-            try {
-               onSave.verifyAndCommit();
-               dialog.dispose();
-            } catch (Exception e1) {
-               SwingUtil.showExceptionNoStack(content, e1);
-            }
+            AppModel.getInstance().getSTAppPresentationModel().doLaterInTransaction(tx -> {
+               try {
+                  onSave.verifyAndCommit();
+                  dialog.dispose();
+               } catch (Exception e1) {
+                  SwingUtil.showExceptionNoStack(content, e1);
+               }
+            });
          }
       }));
       dialog.getRootPane().setDefaultButton(btnSave);
@@ -536,18 +540,15 @@ public class SwingUtil {
       for (T enumValue : enumValues)
          values[index++] = enumValue;
       final JComboBox<T> comboBox = new JComboBox<>(values);
-      comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {
-         @Override
-         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            return super.getListCellRendererComponent(list, renderer.apply((T) value), index, isSelected, cellHasFocus);
-         }
-      });
       if (selected != null) comboBox.setSelectedItem(selected);
+
+      final Map<Object, String > render = new LinkedHashMap<>();
+      enumValues.forEach(v -> render.put(v, renderer.apply(v)));
 
       comboBox.setRenderer(new javax.swing.DefaultListCellRenderer() {
          @Override
          public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            final String toString = value == null ? "[null]" : value.toString();
+            final String toString = value == null ? "[null]" : render.get(value);
             return super.getListCellRendererComponent(list, toString.length() > 50 ? toString.substring(0, 50) : toString, index, isSelected, cellHasFocus);
          }
       });

@@ -60,7 +60,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTParameterTreeNodeClicked(ModelNavigatorSTParameterTreeNodeClicked event) {
-		getSTParameterEditor(event.stParameter);
+		getSTParameterEditor(event.parameter, event.model);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -358,7 +358,7 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STParameterEditor getSTParameterEditor(STParameter model) {
+	public STParameterEditor getSTParameterEditor(STParameter model,STModel stModel) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof STParameterEditor && (((STParameterEditor) tabComponentAt).getModel().equals(model))) {
@@ -368,7 +368,7 @@ public class STWorkspace extends JTabbedPane {
 			}
 		}
 
-		final STParameterEditor component = new STParameterEditor(model);
+		final STParameterEditor component = new STParameterEditor(model,stModel);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;

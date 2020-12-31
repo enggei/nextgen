@@ -66,7 +66,10 @@ public class SetKVArgumentFromArgumentType extends TransactionAction {
       }
 
       if (stTemplatesWithInterface.size() > 1)
-         selectAndRender(owner, stTemplatesWithInterface, (STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().setArgumentKV(stModel, stArgument, stParameterKey, model));
+         showEditor(owner, new nextgen.swing.SelectSTTemplate(stTemplatesWithInterface), (dialog, model) -> {
+      		appModel().setArgumentKV(stModel, stArgument, stParameterKey, model);
+      		dialog.dispose();
+      	});
       else
          appModel().setArgumentKV(stModel, stArgument, stParameterKey, stTemplatesWithInterface.iterator().next());
    }

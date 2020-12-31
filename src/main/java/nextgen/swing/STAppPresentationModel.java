@@ -33,14 +33,6 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
-   public void addSTEnum(nextgen.model.STGroupModel stGroup, String name) {
-      final nextgen.model.STEnum stEnum = db.newSTEnum()
-            .setName(name);
-
-      stGroup.addEnums(stEnum);
-      nextgen.events.NewSTEnum.post(stGroup, stEnum);
-   }
-
    public void addSTParameter(nextgen.model.STTemplate model, nextgen.model.parser.ParsedSTParameter parsedSTParameter) {
       final nextgen.model.STParameter stParameter = db.newSTParameter()
             .setName(parsedSTParameter.getName())
@@ -55,23 +47,37 @@ public class STAppPresentationModel {
       nextgen.events.NewSTParameter.post(stParameter, model);
    }
 
-//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, String value) {
-//      kvs.add(newSTArgumentKV(stParameterKey, newSTValue(value)));
-//   }
-//
-//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STValue value) {
-//      kvs.add(newSTArgumentKV(stParameterKey, value));
-//   }
+   public void notifyIfLabel(STValue stValue) {
+      stValue.getIncomingValueSTArgument().forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> notifyIfLabel(stModel, stArgument)));
+   }
 
-//   public void addArgument(java.util.Collection<nextgen.model.STArgumentKV> kvs, STParameterKey stParameterKey, STArgumentKV value) {
-//      addArgument(kvs, stParameterKey, db.newSTValue(value.getValue()));
-//   }
+   public void notifyIfLabel(STModel stModel, STArgument stArgument) {
+      notifyIfLabel(stModel, stArgument.getStParameter());
+   }
+
+   public void notifyIfLabel(STModel stModel, STArgumentKV stArgument) {
+      notifyIfLabel(stModel, stArgument.getStParameterKey());
+   }
+
+   public void notifyIfLabel(STModel stModel, STParameterKey stParameterKey) {
+      stParameterKey.getIncomingKeysSTParameter().findFirst().ifPresent(parameter -> notifyIfLabel(stModel, parameter));
+   }
+
+   public void notifyIfLabel(STModel stModel, STParameter stParameter) {
+      final Optional<STTemplate> stTemplate = stParameter.getIncomingParametersSTTemplate().findFirst();
+      if (stTemplate.isPresent()) {
+         if (stTemplate.get().getLabelParameter() != null && stTemplate.get().getLabelParameter().equals(stParameter)) nextgen.events.STModelChanged.post(stModel);
+         else if (stTemplate.get().getLabelParameter() == null && "name".equalsIgnoreCase(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
+      }
+   }
 
    public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STArgument value) {
-      final nextgen.model.STValue stValue = db.newSTValue(value.getValue());
+      final nextgen.model.STValue stValue = newSTValue(value.getValue());
       final nextgen.model.STArgument stArgument = db.newSTArgument(stParameter, stValue);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, stValue);
+
+      notifyIfLabel(stModel, stParameter);
    }
 
    public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, java.util.Collection<nextgen.model.STArgumentKV> kvs) {
@@ -79,6 +85,8 @@ public class STAppPresentationModel {
       for (nextgen.model.STArgumentKV kv : kvs) stArgument.addKeyValues(kv);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument, kvs);
+
+      notifyIfLabel(stModel, stParameter);
    }
 
    public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
@@ -101,6 +109,8 @@ public class STAppPresentationModel {
       final nextgen.model.STArgument stArgument = db.newSTArgument(stParameter, value);
       stModel.addArguments(stArgument);
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
+
+      notifyIfLabel(stModel, stParameter);
    }
 
    public void addSTModel(nextgen.model.STProject stProject, nextgen.model.STModel stModel) {
@@ -114,8 +124,14 @@ public class STAppPresentationModel {
       nextgen.events.NewSTProjectSTModel.post(stModel, stProject, stModel.getStTemplate());
    }
 
-   public void addSTFile(nextgen.model.STModel thisModel, nextgen.model.STFile sourceFile) {
-      final nextgen.model.STFile thisFile = db.newSTFile(sourceFile);
+   public void addSTFile(nextgen.model.STModel thisModel, nextgen.model.STFile otherFile) {
+
+      final nextgen.model.STFile thisFile = db.newSTFile()
+            .setName(newSTValue(otherFile.getName()))
+            .setType(db.findOrCreateSTValueByValue(otherFile.getType().getValue()))
+            .setPath(newSTValue(otherFile.getPath()))
+            .setPackageName(newSTValue(otherFile.getPackageName()));
+
       final String thisName = getSTModelName(thisModel, null);
       if (thisName != null) thisFile.setName(newSTValue(thisName));
       thisModel.addFiles(thisFile);
@@ -151,7 +167,7 @@ public class STAppPresentationModel {
       nextgen.events.NewSTAction.post(stGroupAction, stGroup);
    }
 
-   public void addEnum(STGroupModel stGroup, String name) {
+   public void addSTEnum(nextgen.model.STGroupModel stGroup, String name) {
       final nextgen.model.STEnum stEnum = newSTEnum(name);
       stGroup.addEnums(stEnum);
       nextgen.events.NewSTEnum.post(stGroup, stEnum);
@@ -240,7 +256,7 @@ public class STAppPresentationModel {
       nextgen.events.STModelChanged.post(thisModel);
    }
 
-   public void copy(nextgen.model.STModel stModel) {
+   public nextgen.model.STModel copy(nextgen.model.STModel stModel) {
 
       final nextgen.model.STModel copy = newSTModel(stModel.getStTemplate());
 
@@ -252,6 +268,8 @@ public class STAppPresentationModel {
 
       } else
          nextgen.events.NewSTModel.post(copy, getSTGroup(stModel.getStTemplate()), stModel.getStTemplate());
+
+      return copy;
    }
 
    public org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupAction stGroupAction) {
@@ -506,10 +524,6 @@ public class STAppPresentationModel {
       return new String[]{"html", "java", "js", "xml"};
    }
 
-   public void generateAll(nextgen.model.STProject project) {
-
-   }
-
    public java.util.stream.Stream<nextgen.model.STGroupModel> getAllSTGroups() {
       return db.findAllSTGroupModel();
    }
@@ -713,7 +727,7 @@ public class STAppPresentationModel {
    public nextgen.model.STValue newSTValue(STValue stValue) {
       switch (stValue.getType()) {
          case STMODEL:
-            return db.newSTValue(stValue.getStModel());
+            return db.newSTValue(copy(stValue.getStModel()));
          case PRIMITIVE:
             return db.newSTValue(stValue.getValue());
          case ENUM:
@@ -874,10 +888,6 @@ public class STAppPresentationModel {
       });
    }
 
-   public void removeExisting(STModel stModel, STParameter stParameter) {
-      findFirstSTArgument(stModel, stParameter).ifPresent(stArgument -> detach(stModel, stArgument));
-   }
-
    public String render(STModel stModel) {
       return stRenderer.render(stModel);
    }
@@ -999,7 +1009,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, value);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, value);
-      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+      notifyIfLabel(stModel, stParameterKey);
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, String value) {
@@ -1008,7 +1018,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
-      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+      notifyIfLabel(stModel, stParameterKey);
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STEnumValue value) {
@@ -1017,7 +1027,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
-      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+      notifyIfLabel(stModel, stParameterKey);
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STTemplate value) {
@@ -1026,7 +1036,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
-      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+      notifyIfLabel(stModel, stParameterKey);
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STModel value) {
@@ -1035,7 +1045,7 @@ public class STAppPresentationModel {
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
       stArgument.addKeyValues(stArgumentKV);
       nextgen.events.NewKV.post(stModel, stArgument, stArgumentKV, stParameterKey, stValue);
-      if ("name".equals(stParameterKey.getName())) nextgen.events.STModelChanged.post(stModel);
+      notifyIfLabel(stModel, stParameterKey);
    }
 
    public void updateSTArgument(STModel stModel, STArgument stArgument, String value) {
@@ -1053,6 +1063,7 @@ public class STAppPresentationModel {
                if (render(stArgument, "").equals(value)) return;
                stArgument.setValue(newSTValue(value));
                nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               notifyIfLabel(stModel, stArgument);
                break;
             case ENUM:
                stArgument.setValue(newSTValue(value));
@@ -1077,6 +1088,7 @@ public class STAppPresentationModel {
                if (render(stArgument, "").equals(value)) return;
                stArgument.setValue(newSTValue(value));
                nextgen.events.STKVArgumentChanged.post(stArgument, stModel);
+               notifyIfLabel(stModel, stArgument);
                break;
             case ENUM:
                stArgument.setValue(newSTValue(value));
@@ -1121,7 +1133,9 @@ public class STAppPresentationModel {
             for (nextgen.model.STParameterKey otherModelKey : otherModelKeys) {
                for (nextgen.model.STParameterKey thisKey : thisKeys) {
                   final boolean sameKeyName = otherModelKey.getName().equals(thisKey.getName());
-                  final boolean sameKeyType = otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
+                  final boolean otherKeyTypeNull = otherModelKey.getArgumentType() == null;
+                  final boolean thisKeyTypeNull = thisKey.getArgumentType() == null;
+                  final boolean sameKeyType = (otherKeyTypeNull || thisKeyTypeNull) || otherModelKey.getArgumentType().equals(thisKey.getArgumentType());
                   if (sameKeyName && sameKeyType)
                      findSTArgumentKV(otherModelArgument, otherModelKey).ifPresent(stArgumentKV -> thisKVs.add(newSTArgumentKV(thisKey, newSTValue(stArgumentKV.getValue()))));
                }
@@ -1132,35 +1146,11 @@ public class STAppPresentationModel {
       }
    }
 
-   private boolean isEnum(nextgen.model.STParameter stParameter) {
-      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter)) != null;
-   }
-
-   private nextgen.model.STGroupModel getSTGroup(nextgen.model.STParameter stParameter) {
-      return stParameter.getIncomingParametersSTTemplate()
-            .findFirst()
-            .map(this::getSTGroup)
-            .orElse(null);
-   }
-
    public nextgen.model.STArgument getArgument(nextgen.model.STParameter stParameter, nextgen.model.STModel model) {
       return model.getArguments()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
             .findFirst()
             .orElse(null);
-   }
-
-   public java.util.stream.Stream<nextgen.model.STValue> getSTModelValues(nextgen.model.STModel model) {
-      return model.getArguments()
-            .map(nextgen.model.STArgument::getValue)
-            .filter(java.util.Objects::nonNull)
-            .filter(stValue -> stValue.getType() != null)
-            .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.STMODEL))
-            .filter(stValue -> stValue.getStModel() != null);
-   }
-
-   public nextgen.model.STEnum findSTEnumByArgumentType(nextgen.model.STParameter stParameter) {
-      return findSTEnumByName(stParameter.getArgumentType(), getSTGroup(stParameter));
    }
 
    public void generateSTModel(nextgen.model.STModel stModel) {
@@ -1338,11 +1328,6 @@ public class STAppPresentationModel {
 
       public STArgumentConsumer onListSTValue(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
          this.onListSTValueConsumer = consumer;
-         return this;
-      }
-
-      public STArgumentConsumer onSingleEnum(java.util.function.BiConsumer<nextgen.model.STArgument, nextgen.model.STValue> consumer) {
-         this.onSingleEnumConsumer = consumer;
          return this;
       }
 

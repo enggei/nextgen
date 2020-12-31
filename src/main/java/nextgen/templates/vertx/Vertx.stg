@@ -56,13 +56,89 @@ DomainAction(statements,params,name) ::= <<private void ~name~(Message<io.vertx.
 	doInTransaction(transaction -> {
 		final JsonObject reply = new JsonObject();
 		~statements:{it|~it~};separator="\n"~
-		message.reply(reply);
+		message.reply(reply.toBuffer());
 	}, throwable -> {
 		message.fail(500, throwable.getMessage());
 	});
 }  >>
 
 Entities() ::= << >>
+
+JsonModel(accessors,package,name) ::= <<package ~package~;
+
+import io.vertx.core.buffer.*;
+import io.vertx.core.json.*;
+
+public class ~name;format="capitalize"~ extends JsonObject {
+
+	public ~name;format="capitalize"~() { 
+	}
+
+	public ~name;format="capitalize"~(Buffer buffer) {
+		super(buffer);
+	}
+
+	public ~name;format="capitalize"~(JsonObject jsonObject) {
+		super(jsonObject.getMap());
+	}
+	
+	~accessors:{it|~it~};separator="\n\n"~
+
+	static JsonArray getJsonArray(JsonObject item, String key) {
+		return item.getJsonArray(key, new JsonArray());
+	}
+
+	static JsonArray getOrCreateJsonArray(JsonObject item, String key) {
+      final JsonArray jsonArray = item.getJsonArray(key);
+      if (jsonArray != null) return jsonArray;
+      item.put(key, new JsonArray());
+      return getJsonArray(item, key);
+   }
+   
+	static java.util.stream.Stream<JsonObject> stream(JsonObject js, String key) {
+		return getJsonArray(js, key).stream().map(o -> (JsonObject) o);
+	}
+
+	public static ~name;format="capitalize"~ read(java.io.InputStream inputStream) throws java.io.IOException {
+		if (inputStream == null) throw new java.io.IOException("inputStream is null");
+		java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+		int read;
+		byte[] data = new byte[2048];
+		while ((read = inputStream.read(data, 0, data.length)) != -1)
+			buffer.write(data, 0, read);
+		inputStream.close();
+		final byte[] content = buffer.toByteArray();
+		buffer.close();
+
+		return new ~name;format="capitalize"~(Buffer.buffer(content));		
+	}
+}  >>
+
+manyAccessor(type,model,name) ::= <<public ~model~ add~name;format="capitalize"~(JsonObject value) {
+	getOrCreateJsonArray(this, "~name~").add(value);
+	return this;
+}
+
+public JsonArray get~name;format="capitalize"~() {
+	return getJsonArray(this, "~name~");
+}
+
+public java.util.stream.Stream<JsonObject> ~name~Stream() {
+	return stream(this, "~name~");
+}
+
+public java.util.stream.Stream<~type~> ~name~ModelStream() {
+	return stream(this, "~name~").map(~type~::new);
+}  >>
+
+singleAccessor(model,name,type) ::= <<public ~type~ get~name;format="capitalize"~() {
+	return get~type~("~name~");
+}
+
+public ~model~ set~name;format="capitalize"~(~type~ value) {
+	put("~name~", value);
+	return this;
+}  >>
 
 JsonFactory(entities,package,name) ::= <<package ~package~;
 
@@ -326,6 +402,32 @@ public ~className;format="capitalize"~ clear~name;format="capitalize"~() {
 	return this;
 }  >>
 
+Page(name,packageName) ::= <<package ~packageName~;
+
+import io.vertx.core.buffer.Buffer;
+import munster.models.HomePageModel;
+import ui.materialdesignlight.Page;
+
+public class ~name~ extends BasePage {
+
+	private final String render;
+
+	public ~name~(Buffer buffer) {
+		
+		final HomePageModel model = new HomePageModel(buffer);
+		final Page page = newStandardPage(model);
+
+		model.cardModelStream().forEach(item -> page.addBody(newCard(item)));
+
+		render = page.toString().trim();
+	}
+
+	@Override
+	public String toString() {
+		return render;
+	}
+}  >>
+
 Server(packageName,imports,name) ::= <<package ~packageName~;
 
 ~imports:{it|~it~};separator="\n"~
@@ -405,9 +507,9 @@ ServerConfig(webCachingEnabled,webEnableRangeSupport,verticles,name,webHost,webP
 WebVerticle(imports,startStatements,handlers,routes,methods,name,fields,packageName) ::= <<package ~packageName~;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.MultiMap;
+import io.vertx.core.*;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonArray;
@@ -581,12 +683,14 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	}
 }  >>
 
-RequestHandler(page,statements,packageName,name) ::= <<package ~packageName~;
+RequestHandler(mappers,statements,packageName,name) ::= <<package ~packageName~;
 
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.core.json.*;
 import ui.materialdesignlight.*;
+import java.util.stream.*;
+import java.util.*;
+import io.vertx.ext.web.RoutingContext;
 
 import static ui.materialdesignlight.MaterialDesignLightST.*;
 
@@ -595,34 +699,66 @@ public class ~name~ {
 	public static String handle(Message<Object> message) {
 		final Object body = message.body();
 		final JsonObject js = (JsonObject) body;
-		
+
 		final Page page = newPage();
-		final String name = js.getString("name", "~page~");
-		final String title = js.getString("title", "~page;format="capitalize"~");
-		
-		page.setHeader(newHeader()
-				.setTitle(title)
-				.setLgMenu(java.util.Arrays.stream(PageModel._pageRoutes)
-						.map(pageRoute -> new Header.Header_LgMenu(name.equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))
-						.collect(java.util.stream.Collectors.toList()))
-				.setSmMenu(java.util.Arrays.stream(PageModel._pageRoutes)
-						.map(pageRoute -> new Header.Header_SmMenu(name.equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))
-						.collect(java.util.stream.Collectors.toList())))
+		page
+				.setHeader(newHeader()
+						.setTitle(getTitle(js))
+						.setLgMenu(getLgMenu(js))
+						.setSmMenu(getSmMenu(js)))
 				.setFooter(newMiniFooter()
-						.setHeading(title));
-		
+						.setHeading(getTitle(js)));
+
 		~statements:{it|~it~};separator="\n"~
-		
+
 		return page.toString();
 	}
+
+	~mappers:{it|~it~};separator="\n\n"~
+
+	static String getName(JsonObject item) {
+	   return item.getString("name","");
+	}
+
+	static String getTitle(JsonObject item) {
+	   return item.getString("title","");
+	}
+
+	static List<Header.Header_LgMenu> getLgMenu(JsonObject js) {
+	   return Arrays.stream(PageModel._pageRoutes)
+	         .map(pageRoute -> new Header.Header_LgMenu(getName(js).equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))
+	         .collect(Collectors.toList());
+	}
+	
+	static List<Header.Header_SmMenu> getSmMenu(JsonObject js) {
+	   return Arrays.stream(PageModel._pageRoutes)
+	         .map(pageRoute -> new Header.Header_SmMenu(getName(js).equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))
+	         .collect(Collectors.toList());
+	}
+}  >>
+
+RQJsonArray(name) ::= <<static JsonArray get~name;format="capitalize"~(JsonObject item) {
+	return item.getJsonArray("~name~", new JsonArray());
+}
+
+private static Stream<JsonObject> stream~name;format="capitalize"~(JsonObject js) {
+	return get~name;format="capitalize"~(js).stream().map(o -> (JsonObject) o);
+}  >>
+
+RQJsonObject(name,defaultValue) ::= <<static JsonObject get~name;format="capitalize"~(JsonObject item) {
+	return item.getJsonObject("~name~", ~defaultValue~);
+}  >>
+
+RQString(defaultValue,name) ::= <<static String get~name;format="capitalize"~(JsonObject item) {
+	return item.getString("~name~","~defaultValue~");
 }  >>
 
 RouteHandler(name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
 	debug("~name~", routingContext);
 
-	vertx.eventBus().request("~name~", routingContext.getBody(), reply -> {
+	vertx.eventBus().request("~name~", routingContext.getBody(), (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {
 		if (reply.succeeded()) {
-			sendHtmlResponse(routingContext, OK, java.util.Objects.requireNonNull(~name;format="capitalize"~RequestHandler.handle(reply.result())));	
+			sendHtmlResponse(routingContext, OK, new ~name;format="capitalize"~Page(reply.result().body()).toString());	
 		} else {
 			sendErrors(routingContext, INTERNAL_SERVER_ERROR,	reply.cause().getMessage());
 		}

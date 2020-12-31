@@ -169,7 +169,7 @@ public class DomainAction {
 				"	doInTransaction(transaction -> {\n" + 
 				"		final JsonObject reply = new JsonObject();\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		message.reply(reply);\n" + 
+				"		message.reply(reply.toBuffer());\n" + 
 				"	}, throwable -> {\n" + 
 				"		message.fail(500, throwable.getMessage());\n" + 
 				"	});\n" + 

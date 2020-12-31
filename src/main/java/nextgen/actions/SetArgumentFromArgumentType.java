@@ -63,7 +63,10 @@ public class SetArgumentFromArgumentType extends TransactionAction {
       }
 
       if (stTemplatesWithInterface.size() > 1)
-      	selectAndRender(owner, stTemplatesWithInterface, (STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().setArgument(stModel, stParameter, model));
+      	showEditor(owner, new nextgen.swing.SelectSTTemplate(stTemplatesWithInterface), (dialog, model) -> {
+      		appModel().setArgument(stModel, stParameter, model);
+      		dialog.dispose();
+      	});
       else
       	appModel().setArgument(stModel, stParameter, stTemplatesWithInterface.iterator().next());
    }

@@ -392,9 +392,9 @@ public class WebVerticle {
 	static final String st = "WebVerticle(imports,startStatements,handlers,routes,methods,name,fields,packageName) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import io.netty.handler.codec.http.HttpResponseStatus;\n" + 
-				"import io.vertx.core.AbstractVerticle;\n" + 
-				"import io.vertx.core.Future;\n" + 
-				"import io.vertx.core.MultiMap;\n" + 
+				"import io.vertx.core.*;\n" + 
+				"import io.vertx.core.buffer.Buffer;\n" + 
+				"import io.vertx.core.eventbus.Message;\n" + 
 				"import io.vertx.core.http.HttpHeaders;\n" + 
 				"import io.vertx.core.http.HttpServerOptions;\n" + 
 				"import io.vertx.core.json.JsonArray;\n" + 

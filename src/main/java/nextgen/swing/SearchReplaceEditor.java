@@ -125,6 +125,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                   final String replaceAll = stValueElement.text.replace(txtSearch.getText(), txtReplace.getText());
                   stValueElement.stValue.setValue(replaceAll);
                   stValueElement.text = appModel().render(stValueElement.stValue);
+                  appModel().notifyIfLabel(stValueElement.stValue);
                });
                resultsModel.fireTableDataChanged();
             }));

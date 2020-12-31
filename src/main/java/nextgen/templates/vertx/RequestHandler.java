@@ -5,9 +5,9 @@ public class RequestHandler {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _page;
 	private Object _packageName;
 	private String _name;
+	private java.util.List<RQString> _mappers = new java.util.ArrayList<>();
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
 
 	RequestHandler(org.stringtemplate.v4.STGroup stGroup) {
@@ -21,34 +21,12 @@ public class RequestHandler {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("RequestHandler");
-		st.add("page", _page);
 		st.add("packageName", _packageName);
 		st.add("name", _name);
+		for (Object o : _mappers) st.add("mappers", o);
 		for (Object o : _statements) st.add("statements", o);
 		return st.render().trim();
 	}
-
-	public RequestHandler setPage(Object value) {
-		this._page = value;
-		return this;
-	}
-
-	public Object getPage() {
-		return this._page;
-	}
-
-	public Object getPage(Object defaultValue) {
-		return this._page == null ? defaultValue : this._page;
-	}
-
-	public boolean hasPage() {
-		return this._page != null;
-	}
-
-	public RequestHandler removePage() {
-		this._page = null;
-		return this;
-	} 
 
 	public RequestHandler setPackageName(Object value) {
 		this._packageName = value;
@@ -94,6 +72,35 @@ public class RequestHandler {
 		return this;
 	} 
 
+	public RequestHandler addMappers(RQString value) {
+		this._mappers.add(value);
+		return this;
+	}
+
+	public RequestHandler setMappers(RQString[] value) {
+		this._mappers.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public RequestHandler setMappers(java.util.Collection<RQString> values) {
+		this._mappers.addAll(values);
+		return this;
+	}
+
+	public RequestHandler removeMappers(RQString value) {
+		this._mappers.remove(value);
+		return this;
+	}
+
+	public RequestHandler removeMappers(int index) {
+		this._mappers.remove(index);
+		return this;
+	}
+
+	public java.util.List<RQString> getMappers() {
+		return this._mappers;
+	} 
+
 	public RequestHandler addStatements(Object value) {
 		this._statements.add(value);
 		return this;
@@ -137,12 +144,14 @@ public class RequestHandler {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RequestHandler(page,statements,packageName,name) ::= <<package ~packageName~;\n" + 
+	static final String st = "RequestHandler(mappers,statements,packageName,name) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import io.vertx.core.eventbus.Message;\n" + 
-				"import io.vertx.core.json.JsonObject;\n" + 
-				"import io.vertx.ext.web.RoutingContext;\n" + 
+				"import io.vertx.core.json.*;\n" + 
 				"import ui.materialdesignlight.*;\n" + 
+				"import java.util.stream.*;\n" + 
+				"import java.util.*;\n" + 
+				"import io.vertx.ext.web.RoutingContext;\n" + 
 				"\n" + 
 				"import static ui.materialdesignlight.MaterialDesignLightST.*;\n" + 
 				"\n" + 
@@ -151,25 +160,41 @@ public class RequestHandler {
 				"	public static String handle(Message<Object> message) {\n" + 
 				"		final Object body = message.body();\n" + 
 				"		final JsonObject js = (JsonObject) body;\n" + 
-				"		\n" + 
+				"\n" + 
 				"		final Page page = newPage();\n" + 
-				"		final String name = js.getString(\"name\", \"~page~\");\n" + 
-				"		final String title = js.getString(\"title\", \"~page;format=\"capitalize\"~\");\n" + 
-				"		\n" + 
-				"		page.setHeader(newHeader()\n" + 
-				"				.setTitle(title)\n" + 
-				"				.setLgMenu(java.util.Arrays.stream(PageModel._pageRoutes)\n" + 
-				"						.map(pageRoute -> new Header.Header_LgMenu(name.equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))\n" + 
-				"						.collect(java.util.stream.Collectors.toList()))\n" + 
-				"				.setSmMenu(java.util.Arrays.stream(PageModel._pageRoutes)\n" + 
-				"						.map(pageRoute -> new Header.Header_SmMenu(name.equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))\n" + 
-				"						.collect(java.util.stream.Collectors.toList())))\n" + 
+				"		page\n" + 
+				"				.setHeader(newHeader()\n" + 
+				"						.setTitle(getTitle(js))\n" + 
+				"						.setLgMenu(getLgMenu(js))\n" + 
+				"						.setSmMenu(getSmMenu(js)))\n" + 
 				"				.setFooter(newMiniFooter()\n" + 
-				"						.setHeading(title));\n" + 
-				"		\n" + 
+				"						.setHeading(getTitle(js)));\n" + 
+				"\n" + 
 				"		~statements:{it|~it~};separator=\"\\n\"~\n" + 
-				"		\n" + 
+				"\n" + 
 				"		return page.toString();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	~mappers:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	static String getName(JsonObject item) {\n" + 
+				"	   return item.getString(\"name\",\"\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	static String getTitle(JsonObject item) {\n" + 
+				"	   return item.getString(\"title\",\"\");\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	static List<Header.Header_LgMenu> getLgMenu(JsonObject js) {\n" + 
+				"	   return Arrays.stream(PageModel._pageRoutes)\n" + 
+				"	         .map(pageRoute -> new Header.Header_LgMenu(getName(js).equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))\n" + 
+				"	         .collect(Collectors.toList());\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	static List<Header.Header_SmMenu> getSmMenu(JsonObject js) {\n" + 
+				"	   return Arrays.stream(PageModel._pageRoutes)\n" + 
+				"	         .map(pageRoute -> new Header.Header_SmMenu(getName(js).equals(pageRoute.name()), pageRoute.name(), pageRoute.route()))\n" + 
+				"	         .collect(Collectors.toList());\n" + 
 				"	}\n" + 
 				"} >>";
 }  

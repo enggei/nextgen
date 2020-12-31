@@ -28,44 +28,47 @@ public class AddArgumentFromArgumentType extends TransactionAction {
 
       final boolean argumentIsDefault = argumentType.equals("Object") || argumentType.equals("String");
       if (argumentIsDefault) {
-         final java.util.Optional<STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
-         if (stTemplate.isPresent())
-            appModel().addArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
-         else
-            input(owner, "New value", s -> appModel().addArgument(stModel, stParameter, s));
-         return;
+      	final java.util.Optional<STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
+      	if (stTemplate.isPresent())
+      		appModel().addArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
+      	else
+      		input(owner, "New value", s -> appModel().addArgument(stModel, stParameter, s));
+      	return;
       }
 
       final STGroupModel stGroupModel = appModel().getSTGroup(stModel);
       final java.util.Optional<STTemplate> stTemplate = appModel().findSTTemplateFromArgumentType(argumentType, stGroupModel);
       if (stTemplate.isPresent()) {
 
-         final java.util.List<STModel> stModelList = appModel().getModelsFor(stTemplate.get());
-         if (stModelList.isEmpty())
-            appModel().addArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
-         else
-            showEditor(owner, getSelectOrAddSTModelValue(stTemplate.get(), stModelList), (dialog, model) -> {
-               appModel().addArgument(stModel, stParameter, model);
-               dialog.dispose();
-            });
-         return;
+      	final java.util.List<STModel> stModelList = appModel().getModelsFor(stTemplate.get());
+      	if (stModelList.isEmpty())
+      		appModel().addArgument(stModel, stParameter, appModel().newSTValue(stTemplate.get()));
+      	else
+      		showEditor(owner, getSelectOrAddSTModelValue(stTemplate.get(), stModelList), (dialog, model) -> {
+      			appModel().addArgument(stModel, stParameter, model);
+      			dialog.dispose();
+      		});
+      	return;
       }
 
       final java.util.Set<STTemplate> stTemplatesWithInterface = appModel().findSTTemplatesWithInterface(argumentType, stGroupModel);
       if (stTemplatesWithInterface.isEmpty()) {
 
-         final STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);
-         if (stEnum == null)
-            input(owner, "New value", s -> appModel().addArgument(stModel, stParameter, s));
-         else
-            select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> appModel().addArgument(stModel, stParameter, value));
-         return;
+      	final STEnum stEnum = appModel().findSTEnumByName(argumentType, stGroupModel);
+      	if (stEnum == null)
+      		input(owner, "New value", s -> appModel().addArgument(stModel, stParameter, s));
+      	else
+      		select(owner, stEnum.getValues().collect(java.util.stream.Collectors.toSet()), value -> appModel().addArgument(stModel, stParameter, value));
+      	return;
       }
 
       if (stTemplatesWithInterface.size() > 1)
-         selectAndRender(owner, stTemplatesWithInterface, (STTemplate::getName), stTemplatesWithInterface.iterator().next(), model -> appModel().addArgument(stModel, stParameter, model));
+      	showEditor(owner, new nextgen.swing.SelectSTTemplate(stTemplatesWithInterface), (dialog, model) -> {
+      			appModel().addArgument(stModel, stParameter, model);
+      			dialog.dispose();
+      		});
       else
-         appModel().addArgument(stModel, stParameter, stTemplatesWithInterface.iterator().next());
+      	appModel().addArgument(stModel, stParameter, stTemplatesWithInterface.iterator().next());
    }
 
 }

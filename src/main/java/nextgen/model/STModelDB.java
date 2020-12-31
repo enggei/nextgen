@@ -40,12 +40,14 @@ public class STModelDB extends STModelNeoFactory {
    }
 
    public STArgument newSTArgument(STParameter stParameter, STValue stValue) {
+      if (stParameter == null || stValue == null) return null;
       return newSTArgument()
             .setStParameter(stParameter)
             .setValue(stValue);
    }
 
    public STValue newSTValue(STModel stModel) {
+      if (stModel == null) return null;
       return newSTValue()
             .setType(STMODEL)
             .setStModel(stModel);
@@ -64,27 +66,6 @@ public class STModelDB extends STModelNeoFactory {
             .setType(ENUM)
             .setValue(value.getLexical() == null || value.getLexical().trim().length() == 0 ? value.getName() : value.getLexical())
             .setStEnumValue(value);
-   }
-
-   public nextgen.model.STValue newSTValue(nextgen.model.STValue existing) {
-      switch (existing.getType()) {
-         case STMODEL:
-            return newSTValue(existing.getStModel());
-         case PRIMITIVE:
-            return newSTValue(existing.getValue());
-         case ENUM:
-            return newSTValue(existing.getStEnumValue());
-         default:
-            return null;
-      }
-   }
-
-   public nextgen.model.STFile newSTFile(nextgen.model.STFile otherFile) {
-      return newSTFile()
-            .setName(newSTValue(otherFile.getName()))
-            .setType(findOrCreateSTValueByValue(otherFile.getType().getValue()))
-            .setPath(newSTValue(otherFile.getPath()))
-            .setPackageName(newSTValue(otherFile.getPackageName()));
    }
 
    public void cleanup() {

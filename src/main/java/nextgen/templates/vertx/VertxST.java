@@ -8,6 +8,9 @@ public class VertxST {
 	.append(DomainVerticle.st + "\n")
 	.append(DomainAction.st + "\n")
 	.append(JsonFactory.st + "\n")
+	.append(JsonModel.st + "\n")
+	.append(ManyAccessor.st + "\n")
+	.append(SingleAccessor.st + "\n")
 	.append(JsonWrapper.st + "\n")
 	.append(EnumAccessors.st + "\n")
 	.append(ExternalAccessors.st + "\n")
@@ -16,10 +19,14 @@ public class VertxST {
 	.append(ListReferenceAccessors.st + "\n")
 	.append(PrimitiveAccessors.st + "\n")
 	.append(ReferenceAccessors.st + "\n")
+	.append(Page.st + "\n")
 	.append(Server.st + "\n")
 	.append(ServerConfig.st + "\n")
 	.append(WebVerticle.st + "\n")
 	.append(RequestHandler.st + "\n")
+	.append(RQJsonArray.st + "\n")
+	.append(RQJsonObject.st + "\n")
+	.append(RQString.st + "\n")
 	.append(RouteHandler.st + "\n")
 	.append(SendEventBusAction.st + "\n")
 	.toString()  ;
@@ -70,6 +77,18 @@ public class VertxST {
 		return new JsonFactory(stGroup);
 	}  
 
+	public static JsonModel newJsonModel() {
+		return new JsonModel(stGroup);
+	}  
+
+	public static ManyAccessor newManyAccessor() {
+		return new ManyAccessor(stGroup);
+	}  
+
+	public static SingleAccessor newSingleAccessor() {
+		return new SingleAccessor(stGroup);
+	}  
+
 	public static JsonWrapper newJsonWrapper() {
 		return new JsonWrapper(stGroup);
 	}  
@@ -102,6 +121,10 @@ public class VertxST {
 		return new ReferenceAccessors(stGroup);
 	}  
 
+	public static Page newPage() {
+		return new Page(stGroup);
+	}  
+
 	public static Server newServer() {
 		return new Server(stGroup);
 	}  
@@ -116,6 +139,18 @@ public class VertxST {
 
 	public static RequestHandler newRequestHandler() {
 		return new RequestHandler(stGroup);
+	}  
+
+	public static RQJsonArray newRQJsonArray() {
+		return new RQJsonArray(stGroup);
+	}  
+
+	public static RQJsonObject newRQJsonObject() {
+		return new RQJsonObject(stGroup);
+	}  
+
+	public static RQString newRQString() {
+		return new RQString(stGroup);
 	}  
 
 	public static RouteHandler newRouteHandler() {
