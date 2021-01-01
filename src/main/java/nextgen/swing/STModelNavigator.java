@@ -1514,6 +1514,7 @@ public class STModelNavigator extends JPanel {
 					actions.add(new SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, workspace));
 					actions.add(new SetKVArgumentFromClipboard(parent.getModel(), stArgument, stParameterKey));
 					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), stArgument, stParameterKey, workspace));
+					if (appModel().isBoolean(stParameterKey)) actions.add(new SetKVArgumentToTrue(parent.getModel(), getModel()));
 				});
 				actions.add(new DeleteKV(getModel(), workspace));
 			});

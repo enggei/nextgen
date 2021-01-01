@@ -21,12 +21,11 @@ public class STValuesEditor extends SearchReplaceEditor {
     protected Action getSearchAction(JTextField txtSearch) {
         return appModel().newTransactionAction("Search", transaction -> {
             reset();
-            resultsModel.setResult(appModel().db.findAllSTValue()
+            results.setContent(appModel().db.findAllSTValue()
                   .filter(stValue -> stValue.getType() != null)
                   .filter(stValue -> stValue.getType().equals(STValueType.PRIMITIVE))
                   .filter(STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-                  .map(STValueElement::new)
                   .collect(Collectors.toList()));
         });
     }

@@ -4,36 +4,36 @@ import javax.swing.*;
 
 public class CrudPanel extends JPanel {
 
-	JTextField txtvalue;
-	JButton btndelete;
-	JButton btntoClipboard;
-	JButton btnfromClipboard;
+	JTextField value_JTextField;
+	JButton delete_JButton;
+	JButton toClipboard_JButton;
+	JButton fromClipboard_JButton;
 
 	public CrudPanel() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:pref:grow, fill:75:none, fill:75:none, fill:75:none", "top:pref:none"));
 	}
 
-	public CrudPanel setTxtvalue(JTextField component) {
+	public CrudPanel setValue(JTextField component) {
 		if (component == null) return this;
-		add(this.txtvalue = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "FILL, FILL"));
+		add(this.value_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public CrudPanel setBtndelete(JButton component) {
+	public CrudPanel setDelete(JButton component) {
 		if (component == null) return this;
-		add(this.btndelete = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, TOP"));
+		add(this.delete_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, TOP"));
 		return this;
 	}
 
-	public CrudPanel setBtntoClipboard(JButton component) {
+	public CrudPanel setToClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btntoClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "FILL, TOP"));
+		add(this.toClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "FILL, TOP"));
 		return this;
 	}
 
-	public CrudPanel setBtnfromClipboard(JButton component) {
+	public CrudPanel setFromClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btnfromClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 1, 1, 1, "FILL, TOP"));
+		add(this.fromClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 1, 1, 1, "FILL, TOP"));
 		return this;
 	}
 

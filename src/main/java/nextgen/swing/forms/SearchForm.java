@@ -4,13 +4,13 @@ import javax.swing.*;
 
 public class SearchForm extends JPanel {
 
-	JLabel lblsearch;
-	JLabel lblreplace;
-	JScrollPane scrresult;
-	JTextField txtsearch;
-	JTextField txtreplace;
-	JButton btnsearch;
-	JButton btnreplace;
+	JLabel lblsearch_JLabel;
+	JLabel lblreplace_JLabel;
+	JScrollPane scrresult_JScrollPane;
+	JTextField txtsearch_JTextField;
+	JTextField txtreplace_JTextField;
+	JButton btnsearch_JButton;
+	JButton btnreplace_JButton;
 
 	public SearchForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("left:PREF:none, left:PREF:grow, left:PREF:none", "fill:PREF:none, fill:PREF:none, fill:PREF:grow"));
@@ -18,43 +18,43 @@ public class SearchForm extends JPanel {
 
 	public SearchForm setLblsearch(JLabel component) {
 		if (component == null) return this;
-		add(this.lblsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "FILL, FILL"));
+		add(this.lblsearch_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setLblreplace(JLabel component) {
 		if (component == null) return this;
-		add(this.lblreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "FILL, FILL"));
+		add(this.lblreplace_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setScrresult(JScrollPane component) {
 		if (component == null) return this;
-		add(this.scrresult = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 3, 1, "FILL, FILL"));
+		add(this.scrresult_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 3, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setTxtsearch(JTextField component) {
 		if (component == null) return this;
-		add(this.txtsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(this.txtsearch_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setTxtreplace(JTextField component) {
 		if (component == null) return this;
-		add(this.txtreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(this.txtreplace_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setBtnsearch(JButton component) {
 		if (component == null) return this;
-		add(this.btnsearch = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "FILL, FILL"));
+		add(this.btnsearch_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public SearchForm setBtnreplace(JButton component) {
 		if (component == null) return this;
-		add(this.btnreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
+		add(this.btnreplace_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 

@@ -4,10 +4,10 @@ import javax.swing.*;
 
 public class TextAreaCrudForm extends JPanel {
 
-	JScrollPane scrtextArea;
-	JButton btndelete;
-	JButton btntoClipboard;
-	JButton btnfromClipboard;
+	JScrollPane scrtextArea_JScrollPane;
+	JButton btndelete_JButton;
+	JButton btntoClipboard_JButton;
+	JButton btnfromClipboard_JButton;
 
 	public TextAreaCrudForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:grow, fill:75:none, fill:75:none, left:75:none", "top:pref:none, top:pref:none"));
@@ -15,25 +15,25 @@ public class TextAreaCrudForm extends JPanel {
 
 	public TextAreaCrudForm setScrtextArea(JScrollPane component) {
 		if (component == null) return this;
-		add(this.scrtextArea = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
+		add(this.scrtextArea_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
 		return this;
 	}
 
 	public TextAreaCrudForm setBtndelete(JButton component) {
 		if (component == null) return this;
-		add(this.btndelete = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(this.btndelete_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public TextAreaCrudForm setBtntoClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btntoClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
+		add(this.btntoClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 	public TextAreaCrudForm setBtnfromClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btnfromClipboard = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
+		add(this.btnfromClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 

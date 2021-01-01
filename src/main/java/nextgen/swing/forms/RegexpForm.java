@@ -4,141 +4,141 @@ import javax.swing.*;
 
 public class RegexpForm extends JPanel {
 
-	JComponent compsource;
-	JLabel lblPattern;
-	JTextField txtpattern;
-	JLabel lblInsert;
-	JTextField txtinsert;
-	JRadioButton rdreplace;
-	JRadioButton rdinsertAfter;
-	JRadioButton rdinsertBefore;
-	JComponent comptarget;
-	JRadioButton rdinsertLineAfter;
-	JRadioButton rdinsertLineBefore;
-	JRadioButton rdremove;
-	JRadioButton rdremoveLine;
-	JRadioButton rdremoveLineBefore;
-	JRadioButton rdremoveLineAfter;
-	JCheckBox chkcompressLines;
-	JCheckBox chkshowDifference;
-	JCheckBox chkkeepOnlyMatches;
-	JButton btnsetSource;
+	JComponent source_JComponent;
+	JLabel Pattern_JLabel;
+	JTextField pattern_JTextField;
+	JLabel Insert_JLabel;
+	JTextField insert_JTextField;
+	JRadioButton replace_JRadioButton;
+	JRadioButton insertAfter_JRadioButton;
+	JRadioButton insertBefore_JRadioButton;
+	JComponent target_JComponent;
+	JRadioButton insertLineAfter_JRadioButton;
+	JRadioButton insertLineBefore_JRadioButton;
+	JRadioButton remove_JRadioButton;
+	JRadioButton removeLine_JRadioButton;
+	JRadioButton removeLineBefore_JRadioButton;
+	JRadioButton removeLineAfter_JRadioButton;
+	JCheckBox compressLines_JCheckBox;
+	JCheckBox showDifference_JCheckBox;
+	JCheckBox keepOnlyMatches_JCheckBox;
+	JButton setSource_JButton;
 
 	public RegexpForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:pref:grow(.5), left:pref:none, fill:pref:grow(.5)", "top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:none, top:pref:grow"));
 	}
 
-	public RegexpForm setCompsource(JComponent component) {
+	public RegexpForm setSource(JComponent component) {
 		if (component == null) return this;
-		add(this.compsource = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 18, "FILL, FILL"));
+		add(this.source_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 18, "FILL, FILL"));
 		return this;
 	}
 
-	public RegexpForm setLblPattern(JLabel component) {
+	public RegexpForm setPattern(JLabel component) {
 		if (component == null) return this;
-		add(this.lblPattern = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "LEFT, TOP"));
+		add(this.Pattern_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setTxtpattern(JTextField component) {
+	public RegexpForm setPattern(JTextField component) {
 		if (component == null) return this;
-		add(this.txtpattern = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "LEFT, TOP"));
+		add(this.pattern_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setLblInsert(JLabel component) {
+	public RegexpForm setInsert(JLabel component) {
 		if (component == null) return this;
-		add(this.lblInsert = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 3, 1, 1, "LEFT, TOP"));
+		add(this.Insert_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 3, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setTxtinsert(JTextField component) {
+	public RegexpForm setInsert(JTextField component) {
 		if (component == null) return this;
-		add(this.txtinsert = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 4, 1, 1, "LEFT, TOP"));
+		add(this.insert_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 4, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdreplace(JRadioButton component) {
+	public RegexpForm setReplace(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdreplace = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "LEFT, TOP"));
+		add(this.replace_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdinsertAfter(JRadioButton component) {
+	public RegexpForm setInsertAfter(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdinsertAfter = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 6, 1, 1, "LEFT, TOP"));
+		add(this.insertAfter_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 6, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdinsertBefore(JRadioButton component) {
+	public RegexpForm setInsertBefore(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdinsertBefore = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 7, 1, 1, "LEFT, TOP"));
+		add(this.insertBefore_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 7, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setComptarget(JComponent component) {
+	public RegexpForm setTarget(JComponent component) {
 		if (component == null) return this;
-		add(this.comptarget = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 18, "FILL, FILL"));
+		add(this.target_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 18, "FILL, FILL"));
 		return this;
 	}
 
-	public RegexpForm setRdinsertLineAfter(JRadioButton component) {
+	public RegexpForm setInsertLineAfter(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdinsertLineAfter = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 8, 1, 1, "LEFT, TOP"));
+		add(this.insertLineAfter_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 8, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdinsertLineBefore(JRadioButton component) {
+	public RegexpForm setInsertLineBefore(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdinsertLineBefore = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 9, 1, 1, "LEFT, TOP"));
+		add(this.insertLineBefore_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 9, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdremove(JRadioButton component) {
+	public RegexpForm setRemove(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdremove = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 10, 1, 1, "LEFT, TOP"));
+		add(this.remove_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 10, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdremoveLine(JRadioButton component) {
+	public RegexpForm setRemoveLine(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdremoveLine = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 11, 1, 1, "LEFT, TOP"));
+		add(this.removeLine_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 11, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdremoveLineBefore(JRadioButton component) {
+	public RegexpForm setRemoveLineBefore(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdremoveLineBefore = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 12, 1, 1, "LEFT, TOP"));
+		add(this.removeLineBefore_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 12, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setRdremoveLineAfter(JRadioButton component) {
+	public RegexpForm setRemoveLineAfter(JRadioButton component) {
 		if (component == null) return this;
-		add(this.rdremoveLineAfter = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 13, 1, 1, "LEFT, TOP"));
+		add(this.removeLineAfter_JRadioButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 13, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setChkcompressLines(JCheckBox component) {
+	public RegexpForm setCompressLines(JCheckBox component) {
 		if (component == null) return this;
-		add(this.chkcompressLines = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 14, 1, 1, "LEFT, TOP"));
+		add(this.compressLines_JCheckBox = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 14, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setChkshowDifference(JCheckBox component) {
+	public RegexpForm setShowDifference(JCheckBox component) {
 		if (component == null) return this;
-		add(this.chkshowDifference = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 15, 1, 1, "LEFT, TOP"));
+		add(this.showDifference_JCheckBox = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 15, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setChkkeepOnlyMatches(JCheckBox component) {
+	public RegexpForm setKeepOnlyMatches(JCheckBox component) {
 		if (component == null) return this;
-		add(this.chkkeepOnlyMatches = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 16, 1, 1, "LEFT, TOP"));
+		add(this.keepOnlyMatches_JCheckBox = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 16, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public RegexpForm setBtnsetSource(JButton component) {
+	public RegexpForm setSetSource(JButton component) {
 		if (component == null) return this;
-		add(this.btnsetSource = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 17, 1, 1, "FILL, TOP"));
+		add(this.setSource_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 17, 1, 1, "FILL, TOP"));
 		return this;
 	}
 

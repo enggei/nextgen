@@ -63,10 +63,10 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          switch (parameterArguments.parameter().getType()) {
             case SINGLE:
                if (parameterArguments.arguments().isEmpty())
-                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(newPrimitiveComponent(model, parameterArguments.parameter())));
-//                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnone(getButton(new SetArgumentFromArgumentType(model, parameterArguments.parameter(), panel).setName("SET")))));
+                  panel.add(getKeyValueForm().setKey(getLabel(parameterArguments.parameter().getName())).setValue(newPrimitiveComponent(model, parameterArguments.parameter())));
+//                  panel.add(getKeyValueForm().setKey(getLabel(parameterArguments.parameter().getName())).setValue(new ButtonFormLeft().setOne(getButton(new SetArgumentFromArgumentType(model, parameterArguments.parameter(), panel).setName("SET")))));
                else
-                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(newSTValueComponent(model, parameterArguments.parameter(), parameterArguments.arguments().get(0))));
+                  panel.add(getKeyValueForm().setKey(getLabel(parameterArguments.parameter().getName())).setValue(newSTValueComponent(model, parameterArguments.parameter(), parameterArguments.arguments().get(0))));
 
                break;
             case LIST: {
@@ -78,21 +78,21 @@ public class STModelEditorForm extends BaseEditor<STModel> {
                         final int i = index.incrementAndGet();
 
                         if (listPanel.getComponents().length == 0)
-                           listPanel.add(getKeyValueForm().setCompkey(new ButtonFormLeft().setBtnone(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), listPanel)))));
+                           listPanel.add(getKeyValueForm().setKey(new ButtonFormLeft().setOne(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), listPanel)))));
 
                         listPanel.add(getKeyValueForm()
-                              .setCompkey(new ButtonFormRight().setCompone(getButton(i, parameterArguments.arguments().size()).action(selectButton -> {
+                              .setKey(new ButtonFormRight().setOne(getButton(i, parameterArguments.arguments().size()).action(selectButton -> {
                                  int selectedIndex = Integer.parseInt(selectButton.getValue().toString()) - 1;
                                  appModel().reorder(model, argument, parameterArguments.arguments().get(selectedIndex));
                               })))
-                              .setCompvalue(newSTValueComponent(model, parameterArguments.parameter(), argument)));
-                        listPanel.add(getKeyValueForm().setCompkey(new ButtonFormRight().setBtnthree(getButton(new DeleteSTArgument(argument, listPanel)))));
+                              .setValue(newSTValueComponent(model, parameterArguments.parameter(), argument)));
+                        listPanel.add(getKeyValueForm().setKey(new ButtonFormRight().setThree(getButton(new DeleteSTArgument(argument, listPanel)))));
                      });
 
                if (listPanel.getComponents().length == 0)
-                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), panel)))));
+                  panel.add(getKeyValueForm().setKey(getLabel(parameterArguments.parameter().getName())).setValue(new ButtonFormLeft().setThree(getButton(new AddArgumentFromArgumentType(model, parameterArguments.parameter(), panel)))));
                else
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
+                  panel.add(getKeyValueForm(parameterArguments).setValue(listPanel));
             }
             break;
             case KVLIST:
@@ -103,7 +103,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
                parameterArguments.arguments().forEach(stArgument -> {
 
                   if (listPanel.getComponents().length == 0)
-                     listPanel.add(getKeyValueForm().setCompkey(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, listPanel)))));
+                     listPanel.add(getKeyValueForm().setKey(new ButtonFormLeft().setThree(getButton(new AddKVArguments(parameterArguments.parameter(), model, listPanel)))));
 
                   index.incrementAndGet();
 
@@ -118,23 +118,23 @@ public class STModelEditorForm extends BaseEditor<STModel> {
 
                      if (found.isPresent()) {
                         kvPanel.add(getKeyValueForm()
-                              .setCompkey(getLabel((index.get()) + "." + stParameterKey.getName()))
-                              .setCompvalue(newSTValueComponent(model, stParameterKey, stArgument, found.get())));
+                              .setKey(getLabel((index.get()) + "." + stParameterKey.getName()))
+                              .setValue(newSTValueComponent(model, stParameterKey, stArgument, found.get())));
                      } else {
-                        kvPanel.add(getKeyValueForm(index.get(), stParameterKey).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new SetKVArgumentFromArgumentType(model, stArgument, stParameterKey, kvPanel).setName("SET")))));
+                        kvPanel.add(getKeyValueForm(index.get(), stParameterKey).setValue(new ButtonFormLeft().setThree(getButton(new SetKVArgumentFromArgumentType(model, stArgument, stParameterKey, kvPanel).setName("SET")))));
                      }
                   });
 
                   if (kvPanel.getComponents().length != 0) {
-                     kvPanel.add(getKeyValueForm().setCompkey(new ButtonFormRight().setBtnthree(getButton(new DeleteSTArgument(stArgument, listPanel)))));
+                     kvPanel.add(getKeyValueForm().setKey(new ButtonFormRight().setThree(getButton(new DeleteSTArgument(stArgument, listPanel)))));
                      listPanel.add(kvPanel);
                   }
                });
 
                if (listPanel.getComponents().length == 0)
-                  panel.add(getKeyValueForm().setCompkey(getLabel(parameterArguments.parameter().getName())).setCompvalue(new ButtonFormLeft().setBtnthree(getButton(new AddKVArguments(parameterArguments.parameter(), model, panel)))));
+                  panel.add(getKeyValueForm().setKey(getLabel(parameterArguments.parameter().getName())).setValue(new ButtonFormLeft().setThree(getButton(new AddKVArguments(parameterArguments.parameter(), model, panel)))));
                else
-                  panel.add(getKeyValueForm(parameterArguments).setCompvalue(listPanel));
+                  panel.add(getKeyValueForm(parameterArguments).setValue(listPanel));
                break;
          }
       });
@@ -217,8 +217,8 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          });
 
          return new CrudPanel()
-               .setTxtvalue(textField)
-               .setBtnfromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)));
+               .setValue(textField)
+               .setFromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)));
       }
    }
 
@@ -261,10 +261,10 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          });
 
          return new CrudPanel()
-               .setTxtvalue(textField)
-               .setBtndelete(getButton(new DeleteSTArgument(stArgument, STModelEditorForm.this)))
-               .setBtnfromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)))
-               .setBtntoClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
+               .setValue(textField)
+               .setDelete(getButton(new DeleteSTArgument(stArgument, STModelEditorForm.this)))
+               .setFromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)))
+               .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
       }
    }
 
@@ -309,21 +309,21 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          });
 
          return new CrudPanel()
-               .setTxtvalue(textField)
-               .setBtndelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
-               .setBtnfromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))
-               .setBtntoClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
+               .setValue(textField)
+               .setDelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
+               .setFromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))
+               .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
       }
    }
 
    private KeyValueForm getKeyValueForm(ParameterArguments parameterArguments) {
       return getKeyValueForm()
-            .setCompkey(getLabel(parameterArguments.parameter().getName()));
+            .setKey(getLabel(parameterArguments.parameter().getName()));
    }
 
    private KeyValueForm getKeyValueForm(int index, STParameterKey stParameterKey) {
       return getKeyValueForm()
-            .setCompkey(getLabel(index + "." + stParameterKey.getName()));
+            .setKey(getLabel(index + "." + stParameterKey.getName()));
    }
 
    private KeyValueForm getKeyValueForm() {

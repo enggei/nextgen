@@ -157,7 +157,6 @@ public class FormEditor extends JPanel {
    }
 
    private void copyFormModel() {
-      System.out.println("pushing");
       models.push(new FormModel(model()));
       btnUndo.setEnabled(true);
    }
@@ -185,7 +184,7 @@ public class FormEditor extends JPanel {
    }
 
    public String getCellName(FormModel.Cell cell) {
-      return model().componentPrefixes()[indexOf(model().components(), cell.component())] + (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
+      return (cell.name() == null ? (cell.component() + "_" + cell.x() + "" + cell.y()) : cell.name());
    }
 
    public String getCellType(FormModel.Cell cell) {
@@ -217,24 +216,24 @@ public class FormEditor extends JPanel {
          return;
       }
 
-      final ColumnSpecs columnSpecs = getColumnSpecs();
-      final RowSpecs rowSpecs = getRowSpecs();
-
-      final String packageName = formPackage.getText().trim();
-      final String name = formName.getText().trim();
-
-      final FormPanel formPanel = newFormPanel()
-            .setPackage(packageName)
-            .setModel(debug())
-            .setName(name)
-            .setColSpec(columnSpecs)
-            .setRowSpec(rowSpecs)
-            .setExtending("javax.swing.JPanel")
-            .setColumns(model().columns().size())
-            .setRows(model().rows().size());
-      getComponentCells().forEach(cell -> formPanel.addComponents(cell.y() - 1, getCellName(cell), getCellType(cell), null, cell.x() - 1, cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width()));
-
-      //nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
+//      final ColumnSpecs columnSpecs = getColumnSpecs();
+//      final RowSpecs rowSpecs = getRowSpecs();
+//
+//      final String packageName = formPackage.getText().trim();
+//      final String name = formName.getText().trim();
+//
+//      final FormPanel formPanel = newFormPanel()
+//            .setPackage(packageName)
+//            .setModel(debug())
+//            .setName(name)
+//            .setColSpec(columnSpecs)
+//            .setRowSpec(rowSpecs)
+//            .setExtending("javax.swing.JPanel")
+//            .setColumns(model().columns().size())
+//            .setRows(model().rows().size());
+//      getComponentCells().forEach(cell -> formPanel.addComponents(cell.y() - 1, getCellName(cell), getCellType(cell), null, cell.x() - 1, cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width()));
+//
+//      //nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
    }
 
    private java.awt.Component newComponent(FormModel.Cell cell) {
@@ -343,7 +342,7 @@ public class FormEditor extends JPanel {
          getEditorCells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), cell.width(), cell.height(), cell.hAlign() + ", " + cell.vAlign())));
 
          formPanel.revalidate();
-         formPanel.repaint();
+//         formPanel.repaint();
 
          formScrollPane.getVerticalScrollBar().setUnitIncrement(100);
          formScrollPane.getHorizontalScrollBar().setUnitIncrement(100);
@@ -643,7 +642,7 @@ public class FormEditor extends JPanel {
                container.add(innerPanel, java.awt.BorderLayout.CENTER);
 
                container.revalidate();
-               container.repaint();
+//               container.repaint();
             }
 
             private JPanel getInnerPanel(FormLayout layout, SelectButton extending) {

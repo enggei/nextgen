@@ -1,4 +1,6 @@
 package nextgen.swing.forms.builder;
+
+
 public class FormModel {
 
 	private final java.util.UUID uuid;
@@ -10,7 +12,7 @@ public class FormModel {
 	private String[] laf = { "NONE", "darcula" };
 	private Object[] hAlignments = nextgen.templates.jgoodies.hAlignment.values();;
 	private String[] counts = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-	private String[] sizes = {"pref", "4", "6", "8", "15", "30", "45", "75", "120", "240", "480", "600", "640", "724", "800", "1024"};
+	private String[] sizes = {"pref", "4", "max(50dlu;pref)", "min(50dlu;pref)", "75", "120", "240", "480", "600", "640", "724", "800"};
 	private String[] growths = {"none", "grow", "grow(.1)", "grow(.2)", "grow(.3)", "grow(.5)", "grow(.6)"};
 	private Object[] cAlignments = nextgen.templates.jgoodies.columnAlignment.values();
 	private Object[] rAlignments = nextgen.templates.jgoodies.rowAlignment.values();
@@ -49,6 +51,28 @@ public class FormModel {
 		this.packageName = source.packageName;
 		this.vAlignments = source.vAlignments;
 		this.componentPrefixes = source.componentPrefixes;
+	}
+
+	public FormModel(java.util.List<Cell> cells, String[] components, String[] panelWidths, String[] panelHeights, String[] extending, String[] laf, Object[] hAlignments, String[] counts, String[] sizes, String[] growths, Object[] cAlignments, Object[] rAlignments, java.util.List<Column> columns, java.util.List<Row> rows, String name, String packageName, Object[] vAlignments, String[] componentPrefixes) {
+		this();
+		this.cells = cells;
+		this.components = components;
+		this.panelWidths = panelWidths;
+		this.panelHeights = panelHeights;
+		this.extending = extending;
+		this.laf = laf;
+		this.hAlignments = hAlignments;
+		this.counts = counts;
+		this.sizes = sizes;
+		this.growths = growths;
+		this.cAlignments = cAlignments;
+		this.rAlignments = rAlignments;
+		this.columns = columns;
+		this.rows = rows;
+		this.name = name;
+		this.packageName = packageName;
+		this.vAlignments = vAlignments;
+		this.componentPrefixes = componentPrefixes;
 	}
 
 	public java.util.UUID getUuid() {
@@ -235,7 +259,7 @@ public class FormModel {
 	}
 
 
-	public static  class Cell {
+	public static class Cell {
 
 		private final java.util.UUID uuid;
 		private int x;
@@ -265,6 +289,18 @@ public class FormModel {
 			this.hAlign = source.hAlign;
 			this.vAlign = source.vAlign;
 			this.component = source.component;
+		}
+
+		public Cell(int x, int y, String name, int width, int height, nextgen.templates.jgoodies.hAlignment hAlign, nextgen.templates.jgoodies.vAlignment vAlign, String component) {
+			this();
+			this.x = x;
+			this.y = y;
+			this.name = name;
+			this.width = width;
+			this.height = height;
+			this.hAlign = hAlign;
+			this.vAlign = vAlign;
+			this.component = component;
 		}
 
 		public java.util.UUID getUuid() {
@@ -371,7 +407,7 @@ public class FormModel {
 		}
 	}
 
-	public static  class Column {
+	public static class Column {
 
 		private final java.util.UUID uuid;
 		private nextgen.templates.jgoodies.columnAlignment columnAlignment;
@@ -395,6 +431,15 @@ public class FormModel {
 			this.grow = source.grow;
 			this.x = source.x;
 			this.y = source.y;
+		}
+
+		public Column(nextgen.templates.jgoodies.columnAlignment columnAlignment, String size, String grow, int x, int y) {
+			this();
+			this.columnAlignment = columnAlignment;
+			this.size = size;
+			this.grow = grow;
+			this.x = x;
+			this.y = y;
 		}
 
 		public java.util.UUID getUuid() {
@@ -471,7 +516,7 @@ public class FormModel {
 		}
 	}
 
-	public static  class Row {
+	public static class Row {
 
 		private final java.util.UUID uuid;
 		private nextgen.templates.jgoodies.rowAlignment rowAlignment;
@@ -495,6 +540,15 @@ public class FormModel {
 			this.grow = source.grow;
 			this.x = source.x;
 			this.y = source.y;
+		}
+
+		public Row(nextgen.templates.jgoodies.rowAlignment rowAlignment, String size, String grow, int x, int y) {
+			this();
+			this.rowAlignment = rowAlignment;
+			this.size = size;
+			this.grow = grow;
+			this.x = x;
+			this.y = y;
 		}
 
 		public java.util.UUID getUuid() {

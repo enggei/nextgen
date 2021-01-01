@@ -23,14 +23,13 @@ public class STParameterSearchReplaceEditor extends SearchReplaceEditor {
       return appModel().newTransactionAction("Search", transaction -> {
          reset();
 
-         final java.util.List<nextgen.swing.SearchReplaceEditor.STValueElement> stValues = model.getIncomingStParameterSTArgument()
+         final java.util.List<STValue> stValues = model.getIncomingStParameterSTArgument()
                .map(STArgument::getValue)
                .filter(Objects::nonNull)
                .filter(stValue -> stValue.getType() != null)
                .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                .filter(nextgen.model.STValue::hasValue)
                .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-               .map(nextgen.swing.SearchReplaceEditor.STValueElement::new)
                .collect(java.util.stream.Collectors.toList());
 
          model.getIncomingStParameterSTArgument()
@@ -41,7 +40,6 @@ public class STParameterSearchReplaceEditor extends SearchReplaceEditor {
                      .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                      .filter(nextgen.model.STValue::hasValue)
                      .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-                     .map(STValueElement::new)
                      .collect(java.util.stream.Collectors.toList())));
 
          model.getIncomingStParameterSTArgument()
@@ -61,11 +59,11 @@ public class STParameterSearchReplaceEditor extends SearchReplaceEditor {
                .filter(stValue -> stValue.getStModel() != null)
                .forEach(stValue -> addSTValues(stValue.getStModel(), stValues));
 
-         resultsModel.setResult(stValues);
+         results.setContent(stValues);
       });
    }
 
-   private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
+   private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValue> stValues) {
       stValues.addAll(stModel.getArguments()
             .map(STArgument::getValue)
             .filter(Objects::nonNull)
@@ -73,7 +71,6 @@ public class STParameterSearchReplaceEditor extends SearchReplaceEditor {
             .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
             .filter(nextgen.model.STValue::hasValue)
             .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-            .map(STValueElement::new)
             .collect(java.util.stream.Collectors.toList()));
 
       stModel.getArguments()
@@ -84,7 +81,6 @@ public class STParameterSearchReplaceEditor extends SearchReplaceEditor {
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                   .filter(nextgen.model.STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-                  .map(STValueElement::new)
                   .collect(java.util.stream.Collectors.toList())));
 
       stModel.getArguments()

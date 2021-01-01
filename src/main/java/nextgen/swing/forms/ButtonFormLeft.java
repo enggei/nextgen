@@ -4,29 +4,29 @@ import javax.swing.*;
 
 public class ButtonFormLeft extends JPanel {
 
-	JButton btnone;
-	JButton btntwo;
-	JButton btnthree;
+	JButton one_JButton;
+	JButton two_JButton;
+	JButton three_JButton;
 
 	public ButtonFormLeft() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("left:pref:none, left:pref:none, left:pref:none", "center:pref:none"));
 	}
 
-	public ButtonFormLeft setBtnone(JButton component) {
+	public ButtonFormLeft setOne(JButton component) {
 		if (component == null) return this;
-		add(this.btnone = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "LEFT, CENTER"));
+		add(this.one_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "LEFT, CENTER"));
 		return this;
 	}
 
-	public ButtonFormLeft setBtntwo(JButton component) {
+	public ButtonFormLeft setTwo(JButton component) {
 		if (component == null) return this;
-		add(this.btntwo = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "LEFT, CENTER"));
+		add(this.two_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "LEFT, CENTER"));
 		return this;
 	}
 
-	public ButtonFormLeft setBtnthree(JButton component) {
+	public ButtonFormLeft setThree(JButton component) {
 		if (component == null) return this;
-		add(this.btnthree = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "LEFT, CENTER"));
+		add(this.three_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 1, 1, 1, "LEFT, CENTER"));
 		return this;
 	}
 

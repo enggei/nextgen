@@ -675,6 +675,10 @@ public class STAppPresentationModel {
       return stParameter.getName().startsWith("is") || stParameter.getName().startsWith("has");
    }
 
+   public boolean isBoolean(nextgen.model.STParameterKey stParameterKey) {
+      return stParameterKey.getName().startsWith("is") || stParameterKey.getName().startsWith("has");
+   }
+
    public java.util.Optional<String> isValidTemplateName(javax.swing.JComponent parent, nextgen.model.STGroupModel stGroup, String name) {
       if (findSTTemplateByName(stGroup, name).isPresent()) {
          nextgen.utils.SwingUtil.showMessage(name + " already in use in this group", parent);

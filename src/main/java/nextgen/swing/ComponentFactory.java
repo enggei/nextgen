@@ -2,9 +2,11 @@ package nextgen.swing;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.DarculaTheme;
+import nextgen.swing.forms.ButtonFormLeft;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class ComponentFactory {
 
@@ -214,6 +216,21 @@ public class ComponentFactory {
       return component;
    }
 
+   public static javax.swing.JTextField newJTextField(String text) {
+      final javax.swing.JTextField component = newJTextField();
+      component.setText(text);
+      component.setColumns(15);
+      return component;
+   }
+
+   public static javax.swing.JTextField newJTextField(String text, KeyListener keyListener) {
+      final javax.swing.JTextField component = newJTextField();
+      component.setText(text);
+      component.setColumns(15);
+      component.addKeyListener(keyListener);
+      return component;
+   }
+
    public static javax.swing.JTextField newJTextField(String text, int cols) {
       final javax.swing.JTextField component = newJTextField();
       component.setText(text);
@@ -278,7 +295,20 @@ public class ComponentFactory {
       return decorate(new javax.swing.JScrollPane(jComponent));
    }
 
+   public static JButton newJButton(String title, ActionListener actionListener) {
+      return newJButton(new AbstractAction(title) {
+         @Override
+         public void actionPerformed(ActionEvent actionEvent) {
+            SwingUtilities.invokeLater(() -> actionListener.actionPerformed(actionEvent));
+         }
+      });
+   }
 
+   public static ButtonFormLeft newAddDelPanel(ActionListener onAdd, ActionListener onDel) {
+      return new ButtonFormLeft()
+            .setOne(newJButton("Add", onAdd))
+            .setTwo(newJButton("Del", onDel));
+   }
 
    public static JMenuItem newJMenuItem(Action action) {
       final JMenuItem component = newJMenuItem();

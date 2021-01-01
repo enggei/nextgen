@@ -1,8 +1,12 @@
 package nextgen.swing;
 
 
+import nextgen.templates.java.Consumer;
+import org.neo4j.graphdb.Transaction;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 public class AbstractEditor extends javax.swing.JPanel {
 
@@ -76,6 +80,28 @@ public class AbstractEditor extends javax.swing.JPanel {
       final JButton component = ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
       component.setHorizontalTextPosition(hAlign);
       return component;
+   }
+
+   protected KeyListener newSaveListener(java.util.function.Consumer<JTextField> onSave) {
+      return new java.awt.event.KeyAdapter() {
+         @Override
+         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
+               SwingUtilities.invokeLater(() -> onSave.accept((JTextField) keyEvent.getComponent()));
+            }
+         }
+      };
+   }
+
+   protected KeyListener newSaveListenerTransactional(java.util.function.Consumer<JTextField> onSave) {
+      return new java.awt.event.KeyAdapter() {
+         @Override
+         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
+               appModel().doLaterInTransaction(tx -> onSave.accept((JTextField) keyEvent.getComponent()));
+            }
+         }
+      };
    }
 
    protected java.awt.event.KeyListener getEditorKeyListener() {

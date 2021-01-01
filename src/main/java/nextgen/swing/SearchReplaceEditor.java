@@ -1,31 +1,21 @@
 package nextgen.swing;
 
+import nextgen.model.STValue;
 import nextgen.swing.forms.SearchForm;
+import nextgen.swing.table.STValueTable;
 
 public abstract class SearchReplaceEditor extends AbstractEditor {
 
-   private final javax.swing.JTable results;
-
+   protected final STValueTable results = new STValueTable();
    protected final javax.swing.JTextField txtSearch = nextgen.swing.ComponentFactory.newJTextField(30);
-   protected final ResultsTableModel resultsModel = new ResultsTableModel();
 
    public SearchReplaceEditor() {
 
       final javax.swing.JButton btnSearch = nextgen.swing.ComponentFactory.newJButton(getSearchAction(txtSearch));
       final javax.swing.JTextField txtReplace = nextgen.swing.ComponentFactory.newJTextField(30);
       final javax.swing.JButton btnReplace = nextgen.swing.ComponentFactory.newJButton(getReplaceAction(txtSearch, txtReplace));
-
-      results = nextgen.swing.ComponentFactory.newJTable(resultsModel);
-      results.setIntercellSpacing(new java.awt.Dimension(0, 5));
-      results.setShowGrid(false);
-      results.setRowMargin(0);
-      results.setRowHeight(150);
-      results.getColumn("Result").setCellRenderer(new STValueElementRenderer());
-      results.getColumn("Result").setCellEditor(new STValueElementEditor());
-
       final javax.swing.JScrollPane jScrollPane = nextgen.swing.ComponentFactory.newJScrollPane(results);
-      jScrollPane.setBackground(javax.swing.UIManager.getColor("Panel.background"));
-      jScrollPane.getVerticalScrollBar().setUnitIncrement(5);
+      jScrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
       add(new SearchForm()
             .setLblsearch(newLabel("Search"))
@@ -67,13 +57,13 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          public void actionPerformed(java.awt.event.ActionEvent e) {
             appModel().doLaterInTransaction(transaction -> {
                reset();
-               final java.util.List<STValueElement> stValues = new java.util.ArrayList<>();
+               final java.util.List<STValue> stValues = new java.util.ArrayList<>();
                getSTModels().forEach(stModel -> addSTValues(stModel, stValues));
-               resultsModel.setResult(stValues);
+               results.setContent(stValues);
             });
          }
 
-         private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValueElement> stValues) {
+         private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValue> stValues) {
 
             stModel.getArguments()
                   .map(nextgen.model.STArgument::getValue)
@@ -82,7 +72,6 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                   .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                   .filter(nextgen.model.STValue::hasValue)
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-                  .map(STValueElement::new)
                   .forEach(stValues::add);
 
             stModel.getArguments()
@@ -93,7 +82,6 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                         .filter(stValue -> stValue.getType().equals(nextgen.model.STValueType.PRIMITIVE))
                         .filter(nextgen.model.STValue::hasValue)
                         .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
-                        .map(STValueElement::new)
                         .collect(java.util.stream.Collectors.toList())));
 
             stModel.getArguments()
@@ -121,13 +109,14 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
          @Override
          public void actionPerformed(java.awt.event.ActionEvent e) {
             javax.swing.SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> {
-               resultsModel.content.forEach(stValueElement -> {
-                  final String replaceAll = stValueElement.text.replace(txtSearch.getText(), txtReplace.getText());
-                  stValueElement.stValue.setValue(replaceAll);
-                  stValueElement.text = appModel().render(stValueElement.stValue);
-                  appModel().notifyIfLabel(stValueElement.stValue);
+               results.getContent().forEach(element -> {
+                  final STValue stValue = element.model;
+                  final String newValue = stValue.getValue().replace(txtSearch.getText(), txtReplace.getText());
+                  stValue.setValue(newValue);
+                  appModel().notifyIfLabel(stValue);
+                  element.setValue(newValue);
                });
-               resultsModel.fireTableDataChanged();
+               results.refresh();
             }));
          }
       };
@@ -140,7 +129,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
             cellEditor.stopCellEditing();
          else
             cellEditor.cancelCellEditing();
-      resultsModel.clear();
+      results.clear();
    }
 
    protected final class STValueElement {

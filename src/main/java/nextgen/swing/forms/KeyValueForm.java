@@ -4,22 +4,22 @@ import javax.swing.*;
 
 public class KeyValueForm extends JPanel {
 
-	JComponent compkey;
-	JComponent compvalue;
+	JComponent key_JComponent;
+	JComponent value_JComponent;
 
 	public KeyValueForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("left:120:none, left:pref:grow", "top:pref:none, top:pref:grow"));
 	}
 
-	public KeyValueForm setCompkey(JComponent component) {
+	public KeyValueForm setKey(JComponent component) {
 		if (component == null) return this;
-		add(this.compkey = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.key_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public KeyValueForm setCompvalue(JComponent component) {
+	public KeyValueForm setValue(JComponent component) {
 		if (component == null) return this;
-		add(this.compvalue = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 2, "FILL, TOP"));
+		add(this.value_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 2, "FILL, TOP"));
 		return this;
 	}
 

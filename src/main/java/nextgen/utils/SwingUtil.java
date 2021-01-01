@@ -835,12 +835,12 @@ public class SwingUtil {
          System.err.println("Could not load theme " + e.getMessage());
       }
 
-      rSyntaxTextArea.setFont(UIManager.getFont("TextField.font"));
+//      rSyntaxTextArea.setFont(UIManager.getFont("TextField.font"));
       rSyntaxTextArea.setTabSize(3);
       rSyntaxTextArea.setHighlightCurrentLine(false);
-      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
-      rSyntaxTextArea.setBackground(UIManager.getColor("TextField.background"));
-      rSyntaxTextArea.setForeground(UIManager.getColor("TextField.foreground"));
+//      rSyntaxTextArea.setSelectionColor(Color.decode("#2b8cbe"));
+//      rSyntaxTextArea.setBackground(UIManager.getColor("TextField.background"));
+//      rSyntaxTextArea.setForeground(UIManager.getColor("TextField.foreground"));
       rSyntaxTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 
          @Override
