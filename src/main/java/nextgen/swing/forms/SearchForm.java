@@ -30,7 +30,7 @@ public class SearchForm extends JPanel {
 
 	public SearchForm setResult(JScrollPane component) {
 		if (component == null) return this;
-		add(this.result_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 3, 1, "FILL, TOP"));
+		add(this.result_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 3, 1, "FILL, FILL"));
 		return this;
 	}
 
@@ -74,7 +74,7 @@ public class SearchForm extends JPanel {
 	 row 1 4 FILL PREF grow
 	 cell 2 2 1 1 FILL FILL Label search
 	 cell 2 3 1 1 FILL FILL Label replace
-	 cell 2 4 1 3 FILL TOP ScrollPane result
+	 cell 2 4 1 3 FILL FILL ScrollPane result
 	 cell 3 2 1 1 FILL FILL TextField search
 	 cell 3 3 1 1 FILL FILL TextField replace
 	 cell 4 2 1 1 FILL FILL Button search

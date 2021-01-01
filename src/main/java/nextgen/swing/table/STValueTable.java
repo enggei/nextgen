@@ -1,22 +1,26 @@
 package nextgen.swing.table;
 
-import javax.swing.*;
-import java.awt.*;
+import nextgen.model.STValue;
 
+import java.awt.*;
+import java.util.function.Consumer;
 public class STValueTable extends javax.swing.JTable {
 
 /*
 	0 value	String	
-
-
 */
+	private Consumer<STValue> selectionListener;
 
 	public STValueTable() {
 		super(new ResultsTableModel());
 		setIntercellSpacing(new java.awt.Dimension(0, 5));
-      setShowGrid(false);
-      setRowMargin(0);
-      setRowHeight(150);
+		setShowGrid(false);
+		setRowMargin(0);
+		setRowHeight(150);
+	}
+
+	public void setSelectionListener(Consumer<STValue> selectionListener) {
+		this.selectionListener = selectionListener;
 	}
 
 	public void setContent(java.util.Collection<nextgen.model.STValue> content) {
@@ -24,10 +28,15 @@ public class STValueTable extends javax.swing.JTable {
 		final ResultsTableModel tableModel = new ResultsTableModel(content);
 		setModel(tableModel);
 
-		getColumn("value").setCellRenderer(new CellRenderer());
-      getColumn("value").setCellEditor(new CellEditor());
+		getSelectionModel().addListSelectionListener(event -> {
+			if (event.getValueIsAdjusting()) return;
+			if (getSelectedRow() != -1 && selectionListener != null) selectionListener.accept(tableModel().getValueAt(getSelectedRow()));
+		});
 
-      tableModel.fireTableStructureChanged();
+		getColumn("value").setCellRenderer(new CellRenderer());
+		getColumn("value").setCellEditor(new CellEditor());
+
+		tableModel.fireTableStructureChanged();
 	}
 
 	public java.util.stream.Stream<RowElement> getContent() {
@@ -62,7 +71,7 @@ public class STValueTable extends javax.swing.JTable {
 		public void setValue(Object value) { this.value = (String)value; }
 	}
 
-	final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
+	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
 
 		final javax.swing.JTextField component = new javax.swing.JTextField();
 
@@ -82,7 +91,7 @@ public class STValueTable extends javax.swing.JTable {
 		}
 	}
 
-	private final class CellRenderer extends javax.swing.JTextField implements javax.swing.table.TableCellRenderer {
+	static private final class CellRenderer extends javax.swing.JTextField implements javax.swing.table.TableCellRenderer {
 
 		CellRenderer() {
 			super("");
@@ -162,6 +171,10 @@ public class STValueTable extends javax.swing.JTable {
 			switch(columnIndex) {
 				case 0: break;
 			}
+		}
+
+		private nextgen.model.STValue getValueAt(int row) {
+			return content.get(row).model;
 		}
 	}
 }
