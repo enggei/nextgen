@@ -12,7 +12,7 @@ public class FormModel {
 	private String[] laf = { "NONE", "darcula" };
 	private Object[] hAlignments = nextgen.templates.jgoodies.hAlignment.values();;
 	private String[] counts = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-	private String[] sizes = {"pref", "4", "max(50dlu;pref)", "min(50dlu;pref)", "75", "120", "240", "480", "600", "640", "724", "800"};
+	private String[] sizes = {"pref", "4", "15", "20", "25", "30", "max(25dlu;pref)", "min(25dlu;pref)", "max(50dlu;pref)", "min(50dlu;pref)", "75", "120", "240", "480", "600", "640", "724", "800"};
 	private String[] growths = {"none", "grow", "grow(.1)", "grow(.2)", "grow(.3)", "grow(.5)", "grow(.6)"};
 	private Object[] cAlignments = nextgen.templates.jgoodies.columnAlignment.values();
 	private Object[] rAlignments = nextgen.templates.jgoodies.rowAlignment.values();

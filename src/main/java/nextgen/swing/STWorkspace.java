@@ -308,17 +308,17 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	public STProjectEditor getSTProjectEditor(STProject model) {
+	public nextgen.swing.editors.STProjectEditor getSTProjectEditor(STProject model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
-			if (tabComponentAt instanceof STProjectEditor && (((STProjectEditor) tabComponentAt).getModel().equals(model))) {
-				final STProjectEditor component = (STProjectEditor) tabComponentAt;
+			if (tabComponentAt instanceof nextgen.swing.editors.STProjectEditor && (((nextgen.swing.editors.STProjectEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.editors.STProjectEditor component = (nextgen.swing.editors.STProjectEditor) tabComponentAt;
 				setSelectedComponent(component);
 				return component;
 			}
 		}
 
-		final STProjectEditor component = new STProjectEditor(model);
+		final nextgen.swing.editors.STProjectEditor component = new nextgen.swing.editors.STProjectEditor(model);
 		addPane(model.getName(), component);
 		setSelectedComponent(component);
 		return component;
@@ -326,7 +326,7 @@ public class STWorkspace extends JTabbedPane {
 
 	public void removeSTProjectEditor(String uuid) {
 		for (int i = 0; i < getTabCount(); i++) {
-		   if (getComponentAt(i) instanceof STProjectEditor && (((STProjectEditor) getComponentAt(i)).getUuid().equals(uuid))) {
+		   if (getComponentAt(i) instanceof nextgen.swing.editors.STProjectEditor && (((nextgen.swing.editors.STProjectEditor) getComponentAt(i)).getUuid().equals(uuid))) {
 		      int componentIndex = i;
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }

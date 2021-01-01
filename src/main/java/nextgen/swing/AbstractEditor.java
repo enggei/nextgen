@@ -1,11 +1,7 @@
 package nextgen.swing;
 
 
-import nextgen.templates.java.Consumer;
-import org.neo4j.graphdb.Transaction;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyListener;
 
 public class AbstractEditor extends javax.swing.JPanel {
@@ -63,23 +59,8 @@ public class AbstractEditor extends javax.swing.JPanel {
       nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
    }
 
-
-   protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
-      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
-   }
-
-   protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
-      return nextgen.swing.ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
-   }
-
    protected javax.swing.JButton newButton(Action action) {
       return nextgen.swing.ComponentFactory.newJButton(action);
-   }
-
-   protected javax.swing.JButton newButton(String name, int hAlign, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
-      final JButton component = ComponentFactory.newJButton(appModel().newTransactionAction(name, onClick));
-      component.setHorizontalTextPosition(hAlign);
-      return component;
    }
 
    protected KeyListener newSaveListener(java.util.function.Consumer<JTextField> onSave) {
@@ -143,13 +124,11 @@ public class AbstractEditor extends javax.swing.JPanel {
    protected void selectFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
       if (!textArea.isEditable()) return;
 
-      appModel().doLaterInTransaction(transaction -> {
-         nextgen.utils.SwingUtil.selectFromClipboard(textArea, o -> {
-            textArea.setText(o.toString().trim());
-            textArea.setCaretPosition(0);
-            tryToSave();
-         });
-      });
+      appModel().doLaterInTransaction(transaction -> nextgen.utils.SwingUtil.selectFromClipboard(textArea, o -> {
+         textArea.setText(o.toString().trim());
+         textArea.setCaretPosition(0);
+         tryToSave();
+      }));
    }
 
    protected void prependFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {

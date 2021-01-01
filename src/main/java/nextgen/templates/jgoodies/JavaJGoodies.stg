@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class ~name~~if(extending)~ extends ~extending~~endif~ {
 
-	~components:{it|~it.type~ ~it.name~;};separator="\n"~
+	~components:{it|~it.type~ ~it.name~_~it.type~;};separator="\n"~
 	
 	public ~name~() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("~colSpec~", "~rowSpec~"));
@@ -19,7 +19,7 @@ public class ~name~~if(extending)~ extends ~extending~~endif~ {
 ~components:{it|
 	public ~name~ set~it.name;format="capitalize"~(~it.type~ component) {
 		if (component == null) return this;
-		add(this.~it.name~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, "~it.hAlign~, ~it.vAlign~"));
+		add(this.~it.name~_~it.type~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, "~it.hAlign~, ~it.vAlign~"));
 		return this;
 	~eom()~
 };separator="\n"~

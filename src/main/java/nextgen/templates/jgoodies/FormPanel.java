@@ -245,6 +245,12 @@ public class FormPanel {
 		return this._statements;
 	} 
 
+	public FormPanel setComponents(java.util.Collection<FormPanel_Components> values) {
+			this._components.clear();
+			values.stream().map(FormPanel_Components::asMap).forEach(map -> _components.add(map));
+			return this;
+		}
+
 	public FormPanel addComponents(Object _y, Object _name, Object _type, Object _init, Object _x, Object _hAlign, Object _h, Object _vAlign, Object _w) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("y", _y);
@@ -389,6 +395,21 @@ public class FormPanel {
 			return this._w;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("y", _y);
+			map.put("name", _name);
+			map.put("type", _type);
+			map.put("init", _init);
+			map.put("x", _x);
+			map.put("hAlign", _hAlign);
+			map.put("h", _h);
+			map.put("vAlign", _vAlign);
+			map.put("w", _w);
+			return map;
+		}
+
 	}  
 
 	@Override
@@ -410,7 +431,7 @@ public class FormPanel {
 				"\n" + 
 				"public class ~name~~if(extending)~ extends ~extending~~endif~ {\n" + 
 				"\n" + 
-				"	~components:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
+				"	~components:{it|~it.type~ ~it.name~_~it.type~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	public ~name~() {\n" + 
 				"		setLayout(new com.jgoodies.forms.layout.FormLayout(\"~colSpec~\", \"~rowSpec~\"));\n" + 
@@ -423,7 +444,7 @@ public class FormPanel {
 				"~components:{it|\n" + 
 				"	public ~name~ set~it.name;format=\"capitalize\"~(~it.type~ component) {\n" + 
 				"		if (component == null) return this;\n" + 
-				"		add(this.~it.name~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, \"~it.hAlign~, ~it.vAlign~\"));\n" + 
+				"		add(this.~it.name~_~it.type~ = component, new com.jgoodies.forms.layout.CellConstraints().xywh(~it.x~, ~it.y~, ~it.w~, ~it.h~, \"~it.hAlign~, ~it.vAlign~\"));\n" + 
 				"		return this;\n" + 
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 

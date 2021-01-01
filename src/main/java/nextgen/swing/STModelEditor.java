@@ -42,6 +42,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    private void saveModel(FormEditor formEditor) {
 
       appModel().doLaterInTransaction((tx) -> {
+
          appModel().getSTParameters(getModel()).forEach(parameterArguments -> {
             switch (parameterArguments.parameter().getName()) {
                case "model":
