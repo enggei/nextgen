@@ -3,10 +3,14 @@ package nextgen.swing;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import nextgen.swing.forms.ButtonFormLeft;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import static nextgen.utils.SwingUtil.*;
 
 public class ComponentFactory {
 
@@ -30,6 +34,10 @@ public class ComponentFactory {
 
    public static javax.swing.JButton newJButton() {
       return decorate(new javax.swing.JButton());
+   }
+
+   public static RSyntaxTextArea newRSyntaxTextArea() {
+      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(5, 60));
    }
 
    public static javax.swing.JTextArea newJTextArea() {
@@ -76,6 +84,9 @@ public class ComponentFactory {
       return decorate(new javax.swing.JScrollPane());
    }
 
+   public static RTextScrollPane newRTextScrollPane(RSyntaxTextArea rSyntaxTextArea) {
+      return decorate(new RTextScrollPane(rSyntaxTextArea));
+   }
 
    // decorators
 
@@ -95,6 +106,44 @@ public class ComponentFactory {
 
    public static javax.swing.JTextArea decorate(javax.swing.JTextArea component) {
       baseDecorate(component);
+      return component;
+   }
+
+   public static RSyntaxTextArea decorate(RSyntaxTextArea component) {
+      baseDecorate(component);
+
+      try {
+         org.fife.ui.rsyntaxtextarea.Theme theme = org.fife.ui.rsyntaxtextarea.Theme.load(component.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+         theme.apply(component);
+      } catch (java.io.IOException e) {
+         System.err.println("Could not load theme " + e.getMessage());
+      }
+
+      component.setTabSize(3);
+      component.setHighlightCurrentLine(false);
+//      component.setFont(UIManager.getFont("TextField.font"));
+      component.setSelectionColor(Color.decode("#2b8cbe"));
+//      component.setBackground(Color.DARK_GRAY);
+//      component.setForeground(UIManager.getColor("TextField.foreground"));
+      component.addKeyListener(new java.awt.event.KeyAdapter() {
+
+         @Override
+         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {
+               format(component);
+            }
+         }
+      });
+
+      return component;
+   }
+
+   public static RTextScrollPane decorate(RTextScrollPane component) {
+      baseDecorate(component);
+//      component.setBackground(Color.DARK_GRAY);
+      component.getGutter().setBackground(component.getBackground());
+      component.getGutter().setForeground(Color.WHITE);
+      //component.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
       return component;
    }
 
@@ -256,6 +305,32 @@ public class ComponentFactory {
       return component;
    }
 
+   public static javax.swing.JTextArea newJTextArea(String text, KeyListener keyListener) {
+      final javax.swing.JTextArea component = newJTextArea();
+      component.setText(text);
+      component.addKeyListener(keyListener);
+      return component;
+   }
+
+   public static RSyntaxTextArea newRSyntaxTextArea(String text, KeyListener keyListener) {
+      final RSyntaxTextArea component = newRSyntaxTextArea();
+      component.setText(text);
+      component.setCaretPosition(0);
+      component.addKeyListener(keyListener);
+      return component;
+   }
+
+   public static RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
+      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+   }
+
+   public static RSyntaxTextArea newRSyntaxTextArea(String text) {
+      final RSyntaxTextArea component = newRSyntaxTextArea();
+      component.setText(text);
+      component.setCaretPosition(0);
+      return component;
+   }
+
    public static LayoutManager newBoxLineLayout(JComponent component) {
       final BoxLayout layout = new BoxLayout(component, BoxLayout.LINE_AXIS);
       component.setLayout(layout);
@@ -284,6 +359,7 @@ public class ComponentFactory {
    public static JPanel newPagePanel() {
       final JPanel component = newJPanel();
       component.setLayout(new BoxLayout(component, BoxLayout.PAGE_AXIS));
+      component.setAlignmentY(JPanel.TOP_ALIGNMENT);
       return component;
    }
 

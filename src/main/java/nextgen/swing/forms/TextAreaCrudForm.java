@@ -2,42 +2,69 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
+import static nextgen.swing.ComponentFactory.*;
+
 public class TextAreaCrudForm extends JPanel {
 
-	JScrollPane scrtextArea_JScrollPane;
-	JButton btndelete_JButton;
-	JButton btntoClipboard_JButton;
-	JButton btnfromClipboard_JButton;
+	JComponent textArea_JComponent;
+	JButton delete_JButton;
+	JButton toClipboard_JButton;
+	JButton fromClipboard_JButton;
 
 	public TextAreaCrudForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("fill:75:grow, fill:75:none, fill:75:none, left:75:none", "top:pref:none, top:pref:none"));
 	}
 
-	public TextAreaCrudForm setScrtextArea(JScrollPane component) {
+	public JComponent getTextAreaJComponent() {
+		return textArea_JComponent;
+	}
+
+	public TextAreaCrudForm setTextArea(JComponent component) {
 		if (component == null) return this;
-		add(this.scrtextArea_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
+		add(this.textArea_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
 		return this;
 	}
 
-	public TextAreaCrudForm setBtndelete(JButton component) {
+	public JButton getDeleteJButton() {
+		return delete_JButton;
+	}
+
+	public TextAreaCrudForm setDelete(JButton component) {
 		if (component == null) return this;
-		add(this.btndelete_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(this.delete_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public TextAreaCrudForm setBtntoClipboard(JButton component) {
+	public JButton getToClipboardJButton() {
+		return toClipboard_JButton;
+	}
+
+	public TextAreaCrudForm setToClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btntoClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
+		add(this.toClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public TextAreaCrudForm setBtnfromClipboard(JButton component) {
+	public JButton getFromClipboardJButton() {
+		return fromClipboard_JButton;
+	}
+
+	public TextAreaCrudForm setFromClipboard(JButton component) {
 		if (component == null) return this;
-		add(this.btnfromClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
+		add(this.fromClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 
+	public void setModel(nextgen.model.STValue model, java.awt.event.KeyListener keyListener) {
+		final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = newRSyntaxTextArea(model.getValue(), keyListener);
+		setTextArea(component);
+		component.setEditable(model.getType().equals(nextgen.model.STValueType.PRIMITIVE));
+	}
+
+	public void onSave(nextgen.model.STValue model) {
+		model.setValue(((JTextArea)this.textArea_JComponent).getText().trim());
+	}
 
 	/*
 
@@ -51,8 +78,8 @@ public class TextAreaCrudForm extends JPanel {
 	 col 5 1 LEFT 75 none
 	 row 1 2 TOP pref none
 	 row 1 3 TOP pref none
-	 cell 2 2 1 4 FILL CENTER ScrollPane textArea
-	 cell 2 3 1 1 FILL FILL NONE 
+	 cell 2 2 1 4 FILL CENTER Component textArea
+	 cell 2 3 1 1 FILL FILL NONE null
 	 cell 3 2 1 1 CENTER CENTER NONE null
 	 cell 3 3 1 1 FILL FILL Button delete
 	 cell 4 2 1 1 CENTER CENTER NONE null

@@ -812,19 +812,25 @@ public class SwingUtil {
    }
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea() {
-      return newRSyntaxTextArea(10, 80);
+      return ComponentFactory.newRSyntaxTextArea(10, 80);
    }
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(String text) {
-      final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(10, 80);
+      final RSyntaxTextArea rSyntaxTextArea = ComponentFactory.newRSyntaxTextArea(text);
       rSyntaxTextArea.setText(text);
       rSyntaxTextArea.setCaretPosition(0);
       return rSyntaxTextArea;
    }
 
-   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
-      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
-   }
+//   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(String text, KeyListener keyListener) {
+//      final RSyntaxTextArea textArea = newRSyntaxTextArea(text);
+//      textArea.addKeyListener(keyListener);
+//      return textArea;
+//   }
+//
+//   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
+//      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+//   }
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {
 
@@ -855,14 +861,14 @@ public class SwingUtil {
       return rSyntaxTextArea;
    }
 
-   public static RTextScrollPane newRTextScrollPane(RSyntaxTextArea rSyntaxTextArea) {
-      final RTextScrollPane scrollPane = new RTextScrollPane(rSyntaxTextArea);
-      scrollPane.setBackground(UIManager.getColor("Panel.background"));
-      scrollPane.getGutter().setBackground(scrollPane.getBackground());
-      scrollPane.getGutter().setForeground(UIManager.getColor("TextField.foreground"));
-      scrollPane.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
-      return scrollPane;
-   }
+//   public static RTextScrollPane newRTextScrollPane(RSyntaxTextArea rSyntaxTextArea) {
+//      final RTextScrollPane scrollPane = new RTextScrollPane(rSyntaxTextArea);
+//      scrollPane.setBackground(UIManager.getColor("Panel.background"));
+//      scrollPane.getGutter().setBackground(scrollPane.getBackground());
+//      scrollPane.getGutter().setForeground(UIManager.getColor("TextField.foreground"));
+//      scrollPane.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
+//      return scrollPane;
+//   }
 
    public static void format(JTextArea txtEditor) {
       final int caretPosition = txtEditor.getCaretPosition();

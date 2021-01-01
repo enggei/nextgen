@@ -1,5 +1,27 @@
 A different type of texteditor for developers.
 
+
+Domain
+    name            1   String
+    roots           *   DomainEntity
+    properties      *   DomainProperty
+
+    DomainEntity
+        name            1   String
+        relations       *   DomainRelation
+        properties      *   DomainProperty
+
+    DomainProperty
+        name            1   String
+        value           1   Object
+
+        DomainRelation
+            name            1   String
+            entity          1   DomainEntity
+            properties      *   DomainProperty
+
+
+
 Domain:
 
 

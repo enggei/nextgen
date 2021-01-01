@@ -1,16 +1,14 @@
 package nextgen.swing;
 
-import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
-
 public class STGroupActionEditor extends AbstractEditor {
 
    private final nextgen.model.STGroupAction model;
    private final String uuid;
 
    private final javax.swing.JTextField txtName = newTextField(30);
-   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtStatements = newRSyntaxTextArea(20, 80);
-   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtMethods = newRSyntaxTextArea(20, 80);
-   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtImports = newRSyntaxTextArea(20, 80);
+   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtStatements = ComponentFactory.newRSyntaxTextArea(20, 80);
+   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtMethods = ComponentFactory.newRSyntaxTextArea(20, 80);
+   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtImports = ComponentFactory.newRSyntaxTextArea(20, 80);
 
    public STGroupActionEditor(nextgen.model.STGroupAction model) {
 

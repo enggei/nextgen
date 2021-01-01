@@ -1,8 +1,10 @@
 delimiters "~","~"
 
-FormPanel(components,colSpec,rowSpec,package,statements,name,extending,model,columns,rows) ::= <<package ~package~;
+FormPanel(models,components,colSpec,rowSpec,package,statements,name,extending,model,columns,rows) ::= <<package ~package~;
 
 import javax.swing.*;
+
+import static nextgen.swing.ComponentFactory.*;
 
 public class ~name~~if(extending)~ extends ~extending~~endif~ {
 
@@ -24,7 +26,11 @@ public class ~name~~if(extending)~ extends ~extending~~endif~ {
 	~eom()~
 };separator="\n"~
 
-	
+~models:{it|
+	public void setModel(~it.type~ model) {
+		~it.mappings~
+	~eom()~
+};separator="\n\n"~
 	/*
 	 
 	 columns 	~columns~	"~colSpec~"
@@ -78,7 +84,7 @@ constraints(hAlign,rowSpan,colSpan,row,vAlign,column) ::= <<~column~, ~row ~[, ~
 
 resizeBehavior(GROW) ::= <<~if(GROW)~~GROW~~else~NONE~endif~  >>
 
-boundedSize(componentSize,constantSize) ::= <<MIN(~constantSize~;~componentSize~) | MAX(~constantSize~;~componentSize~)  >>
+boundedSize(min,componentSize,constantSize) ::= <<~if(min)~min(~constantSize~;~componentSize~)~else~max(~constantSize~;~componentSize~)~endif~  >>
 
 constantSize(unit,value) ::= <<~value~~unit~  >>
 

@@ -2,12 +2,12 @@ package nextgen.templates.domain;
 
 public enum RelationType {
 
-	LIST,
-	ENUM_LIST,
-	PRIM_LIST,
-	REF,
+	ENUM,
+	EXT_REF,
 	EXT_LIST,
 	PRIM_REF,
-	EXT_REF,
-	ENUM
+	PRIM_LIST,
+	REF,
+	LIST,
+	ENUM_LIST
 }  

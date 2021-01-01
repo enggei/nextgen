@@ -14,6 +14,7 @@ public class FormPanel {
 	private Object _columns;
 	private Object _rows;
 	private java.util.List<Object> _statements = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _models = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _components = new java.util.ArrayList<>();
 
 	FormPanel(org.stringtemplate.v4.STGroup stGroup) {
@@ -36,6 +37,7 @@ public class FormPanel {
 		st.add("columns", _columns);
 		st.add("rows", _rows);
 		for (Object o : _statements) st.add("statements", o);
+		for (java.util.Map<String, Object> map : _models) st.addAggr("models.{mappings,type}", map.get("mappings"), map.get("type"));
 		for (java.util.Map<String, Object> map : _components) st.addAggr("components.{y,name,type,init,x,hAlign,h,vAlign,w}", map.get("y"), map.get("name"), map.get("type"), map.get("init"), map.get("x"), map.get("hAlign"), map.get("h"), map.get("vAlign"), map.get("w"));
 		return st.render().trim();
 	}
@@ -245,6 +247,75 @@ public class FormPanel {
 		return this._statements;
 	} 
 
+	public FormPanel setModels(java.util.Collection<FormPanel_Models> values) {
+			this._models.clear();
+			values.stream().map(FormPanel_Models::asMap).forEach(map -> _models.add(map));
+			return this;
+		}
+
+	public FormPanel addModels(Object _mappings, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("mappings", _mappings);
+		map.put("type", _type);
+		this._models.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getModels() {
+		return this._models;
+	}
+
+	public FormPanel addModels(FormPanel_Models value) {
+		return addModels(value._mappings, value._type);
+	}
+
+	public java.util.stream.Stream<FormPanel_Models> streamModels() {
+		return this._models.stream().map(FormPanel_Models::new);
+	}
+
+	public java.util.List<Object> getModels_Mappings() {
+		return streamModels().map(FormPanel_Models::getMappings).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getModels_Type() {
+		return streamModels().map(FormPanel_Models::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class FormPanel_Models {
+
+		Object _mappings;
+		Object _type;
+
+		public FormPanel_Models(Object _mappings, Object _type) {
+			this._mappings = _mappings;
+			this._type = _type;
+		}
+
+		private FormPanel_Models(java.util.Map<String, Object> map) {
+			this._mappings = (Object) map.get("mappings");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getMappings() {
+			return this._mappings;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("mappings", _mappings);
+			map.put("type", _type);
+			return map;
+		}
+
+	}  
+
 	public FormPanel setComponents(java.util.Collection<FormPanel_Components> values) {
 			this._components.clear();
 			values.stream().map(FormPanel_Components::asMap).forEach(map -> _components.add(map));
@@ -425,9 +496,11 @@ public class FormPanel {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "FormPanel(components,colSpec,rowSpec,package,statements,name,extending,model,columns,rows) ::= <<package ~package~;\n" + 
+	static final String st = "FormPanel(models,components,colSpec,rowSpec,package,statements,name,extending,model,columns,rows) ::= <<package ~package~;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
+				"\n" + 
+				"import static nextgen.swing.ComponentFactory.*;\n" + 
 				"\n" + 
 				"public class ~name~~if(extending)~ extends ~extending~~endif~ {\n" + 
 				"\n" + 
@@ -449,7 +522,11 @@ public class FormPanel {
 				"	~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"\n" + 
-				"	\n" + 
+				"~models:{it|\n" + 
+				"	public void setModel(~it.type~ model) {\n" + 
+				"		~it.mappings~\n" + 
+				"	~eom()~\n" + 
+				"};separator=\"\\n\\n\"~\n" + 
 				"	/*\n" + 
 				"	 \n" + 
 				"	 columns 	~columns~	\"~colSpec~\"\n" + 

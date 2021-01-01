@@ -200,40 +200,15 @@ public class FormEditor extends JPanel {
    }
 
    private void undo() {
-      if (models.size() > 1) {
+      if (models.size() > 1)
          models.pop();
-         System.out.println("popping");
-      } else {
+       else
          btnUndo.setEnabled(false);
-      }
       renderModel();
    }
 
    private void makePanel() {
-
-      if (makePanelAction != null) {
-         makePanelAction.accept(this);
-         return;
-      }
-
-//      final ColumnSpecs columnSpecs = getColumnSpecs();
-//      final RowSpecs rowSpecs = getRowSpecs();
-//
-//      final String packageName = formPackage.getText().trim();
-//      final String name = formName.getText().trim();
-//
-//      final FormPanel formPanel = newFormPanel()
-//            .setPackage(packageName)
-//            .setModel(debug())
-//            .setName(name)
-//            .setColSpec(columnSpecs)
-//            .setRowSpec(rowSpecs)
-//            .setExtending("javax.swing.JPanel")
-//            .setColumns(model().columns().size())
-//            .setRows(model().rows().size());
-//      getComponentCells().forEach(cell -> formPanel.addComponents(cell.y() - 1, getCellName(cell), getCellType(cell), null, cell.x() - 1, cell.hAlign().name(), cell.height(), cell.vAlign().name(), cell.width()));
-//
-//      //nextgen.st.STGenerator.writeJavaFile(formPanel, packageName, name, "./src/main/java");
+      if (makePanelAction != null) makePanelAction.accept(this);
    }
 
    private java.awt.Component newComponent(FormModel.Cell cell) {
@@ -342,7 +317,7 @@ public class FormEditor extends JPanel {
          getEditorCells().forEach(cell -> formPanel.add(new Cell(cell), constraints.xywh(cell.x(), cell.y(), cell.width(), cell.height(), cell.hAlign() + ", " + cell.vAlign())));
 
          formPanel.revalidate();
-//         formPanel.repaint();
+         formPanel.repaint();
 
          formScrollPane.getVerticalScrollBar().setUnitIncrement(100);
          formScrollPane.getHorizontalScrollBar().setUnitIncrement(100);
@@ -373,13 +348,13 @@ public class FormEditor extends JPanel {
 
    private ColumnSpecs getEditorColumnSpecs() {
       final ColumnSpecs columnSpecs = newColumnSpecs().addColumnSpec(nullColumnSpec());
-      model().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column)));
+      model().columns().forEach(column -> columnSpecs.addColumnSpec(asColumnSpec(column).setSize(JavaJGoodiesPatterns.newBoundedSize().setMin("true").setConstantSize(newConstantSize().setValue("200")).setComponentSize("pref"))));
       return columnSpecs;
    }
 
    private RowSpecs getEditorRowSpecs() {
       final RowSpecs rowSpecs = newRowSpecs().addRowSpec(nullRowSpec());
-      model().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row)));
+      model().rows().forEach(row -> rowSpecs.addRowSpec(asRowSpec(row).setSize(JavaJGoodiesPatterns.newBoundedSize().setMin("true").setConstantSize(newConstantSize().setValue("200")).setComponentSize("pref"))));
       return rowSpecs;
    }
 
@@ -453,7 +428,6 @@ public class FormEditor extends JPanel {
 
    private void delColumn() {
       if (model().columns().size() > 0) {
-         System.out.println("delColumn");
          copyFormModel();
          final FormModel.Column column = model().columns().remove(model().columns().size() - 1);
          final List<FormModel.Cell> colCells = model().cells().stream().filter(cell -> cell.x() >= column.x()).collect(Collectors.toList());
@@ -465,7 +439,6 @@ public class FormEditor extends JPanel {
 
    private void delRow() {
       if (model().rows().size() > 0) {
-         System.out.println("delRow");
          copyFormModel();
          final FormModel.Row row = model().rows().remove(model().rows().size() - 1);
          final List<FormModel.Cell> rowCells = model().cells().stream().filter(cell -> cell.y() >= row.y()).collect(Collectors.toList());
@@ -592,12 +565,6 @@ public class FormEditor extends JPanel {
       }
    }
 
-   private static int indexOf(Object[] values, Object initial) {
-      for (int i = 0; i < values.length; i++)
-         if (initial.equals(values[i])) return i;
-      return 0;
-   }
-
    private static class InputField extends JTextField {
 
       private java.util.function.Consumer<InputField> action;
@@ -642,7 +609,7 @@ public class FormEditor extends JPanel {
                container.add(innerPanel, java.awt.BorderLayout.CENTER);
 
                container.revalidate();
-//               container.repaint();
+               container.repaint();
             }
 
             private JPanel getInnerPanel(FormLayout layout, SelectButton extending) {

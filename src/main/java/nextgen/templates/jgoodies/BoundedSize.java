@@ -5,6 +5,7 @@ public class BoundedSize implements Size {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _min;
 	private Object _componentSize;
 	private Object _constantSize;
 
@@ -19,10 +20,33 @@ public class BoundedSize implements Size {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("boundedSize");
+		st.add("min", _min);
 		st.add("componentSize", _componentSize);
 		st.add("constantSize", _constantSize);
 		return st.render().trim();
 	}
+
+	public BoundedSize setMin(Object value) {
+		this._min = value;
+		return this;
+	}
+
+	public Object getMin() {
+		return this._min;
+	}
+
+	public Object getMin(Object defaultValue) {
+		return this._min == null ? defaultValue : this._min;
+	}
+
+	public boolean hasMin() {
+		return this._min != null;
+	}
+
+	public BoundedSize removeMin() {
+		this._min = null;
+		return this;
+	} 
 
 	public BoundedSize setComponentSize(Object value) {
 		this._componentSize = value;
@@ -83,5 +107,5 @@ public class BoundedSize implements Size {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "boundedSize(componentSize,constantSize) ::= <<MIN(~constantSize~;~componentSize~) | MAX(~constantSize~;~componentSize~) >>";
+	static final String st = "boundedSize(min,componentSize,constantSize) ::= <<~if(min)~min(~constantSize~;~componentSize~)~else~max(~constantSize~;~componentSize~)~endif~ >>";
 }  

@@ -7,17 +7,14 @@ import org.fife.ui.rtextarea.SearchEngine;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Optional;
 
-import static nextgen.utils.SwingUtil.newRSyntaxTextArea;
-
 public class STTemplateEditor extends AbstractEditor {
 
-   private final RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 60);
+   private final RSyntaxTextArea txtEditor = ComponentFactory.newRSyntaxTextArea(20, 60);
    private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
    private final STEditorInfoPanel infoPanel;
 
@@ -67,7 +64,7 @@ public class STTemplateEditor extends AbstractEditor {
 
       this.commandPanel.setEditable(false);
 
-      add(SwingUtil.newRTextScrollPane(txtEditor), BorderLayout.CENTER);
+      add(ComponentFactory.newRTextScrollPane(txtEditor), BorderLayout.CENTER);
       add(commandPanel, BorderLayout.NORTH);
       add(infoPanel, BorderLayout.SOUTH);
       setPreferredSize(new Dimension(800, 600));

@@ -1,13 +1,29 @@
 delimiters "~","~"
 
-Domain(entities,observable,packageName,name) ::= <<Domain: ~name~ ~if(packageName)~(~packageName~)~endif~ ~if(observable)~observable~endif~
-Entities:
-	~entities:{it|~it~};separator="\n"~  >>
+Domain(properties,name) ::= <<~name~
+    ~properties:{it|~it.name~	~it.quantifier~	~it.type~~if(it.decl)~
+    
+~it.decl~
+~endif~};separator="\n"~  >>
 
-Relation(lexical,self,eqha,name,type,dst) ::= <<~name~ ~type~ ~dst~~if(lexical)~ lexical~endif~~if(self)~ self-referential~endif~~if(eqha)~ ~eqha~~endif~  >>
+toForm(properties,packageName,name) ::= <<~if(packageName)~package ~packageName~;
+~endif~
+public class ~name~ extends javax.swing.JPanel {
 
-Entity(isEnum,enumValues,eqha,relations,name) ::= <<Entity: ~name~ ~if(isEnum)~Enum : ~enumValues:{it|~it~};separator=","~~endif~ ~if(eqha)~~eqha~~endif~
-~relations:{it|~it~};separator="\n"~  >>
+	~properties:{it|~if(it.decl)~~else~~it.type~ get~it.name;format="capitalize"~();~endif~};separator="\n"~
+	~properties:{it|~if(it.decl)~
+
+~it.decl~~endif~};separator="\n"~
+}  >>
+
+toInterfaces(name,packageName,properties) ::= <<~if(packageName)~package ~packageName~;
+~endif~
+public interface ~name~ {
+
+	~properties:{it|~if(it.decl)~~else~~it.type~ get~it.name;format="capitalize"~();~endif~};separator="\n"~
+	
+	~properties:{it|~if(it.decl)~~it.decl~~endif~};separator="\n"~
+}  >>
 
 eom() ::= "}"
 

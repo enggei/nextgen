@@ -6,8 +6,8 @@ public class DomainST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(Domain.st + "\n")
-	.append(Entity.st + "\n")
-	.append(Relation.st + "\n")
+	.append(ToForm.st + "\n")
+	.append(ToInterfaces.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -48,12 +48,12 @@ public class DomainST {
 		return new Domain(stGroup);
 	}  
 
-	public static Entity newEntity() {
-		return new Entity(stGroup);
+	public static ToForm newToForm() {
+		return new ToForm(stGroup);
 	}  
 
-	public static Relation newRelation() {
-		return new Relation(stGroup);
+	public static ToInterfaces newToInterfaces() {
+		return new ToInterfaces(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {

@@ -37,8 +37,8 @@ public class JavaSourceCleaner extends JFrame {
    public JavaSourceCleaner() throws HeadlessException {
       super("Java Source Cleaner");
 
-      final RSyntaxTextArea rSyntaxTextArea = SwingUtil.newRSyntaxTextArea(30, 100);
-      add(SwingUtil.newRTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
+      final RSyntaxTextArea rSyntaxTextArea = ComponentFactory.newRSyntaxTextArea(30, 100);
+      add(ComponentFactory.newRTextScrollPane(rSyntaxTextArea), BorderLayout.CENTER);
 
       final JPopupMenu pop = rSyntaxTextArea.getPopupMenu();
       pop.addSeparator();
@@ -109,15 +109,13 @@ public class JavaSourceCleaner extends JFrame {
                         .setName("setName")
                         .addArguments("\"" + methodDeclaration.getNameAsString() + "\""));
 
-                  methodDeclaration.getParameters().forEach(parameter -> {
-                     expression.set(newMethodCallExpression()
-                           .setScope(expression.get())
-                           .setName("addParameters")
-                           .addArguments(newMethodCallExpression()
-                                 .setName("newParameter")
-                                 .addArguments("\"" + parameter.getTypeAsString() + "\"")
-                                 .addArguments("\"" + parameter.getNameAsString() + "\"")));
-                  });
+                  methodDeclaration.getParameters().forEach(parameter -> expression.set(newMethodCallExpression()
+                        .setScope(expression.get())
+                        .setName("addParameters")
+                        .addArguments(newMethodCallExpression()
+                              .setName("newParameter")
+                              .addArguments("\"" + parameter.getTypeAsString() + "\"")
+                              .addArguments("\"" + parameter.getNameAsString() + "\""))));
 
                   methodDeclaration.getBody().ifPresent(blockStmt -> {
 

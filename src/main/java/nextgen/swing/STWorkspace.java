@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import nextgen.events.*;
 import nextgen.model.*;
+import nextgen.swing.editors.STValueEditor;
 
 public class STWorkspace extends JTabbedPane {
 
@@ -106,7 +107,7 @@ public class STWorkspace extends JTabbedPane {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTValueTreeNodeClicked(ModelNavigatorSTValueTreeNodeClicked event) {
 		final STValueEditor stValueEditor = getSTValueEditor();
-		stValueEditor.setSTValue(event.stValue);
+		stValueEditor.setModel(event.stValue);
 		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
 	}
 

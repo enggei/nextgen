@@ -2,6 +2,7 @@ package nextgen.swing;
 
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.event.KeyListener;
 
 public class AbstractEditor extends javax.swing.JPanel {
@@ -63,23 +64,23 @@ public class AbstractEditor extends javax.swing.JPanel {
       return nextgen.swing.ComponentFactory.newJButton(action);
    }
 
-   protected KeyListener newSaveListener(java.util.function.Consumer<JTextField> onSave) {
+   protected KeyListener newSaveListener(java.util.function.Consumer<JTextComponent> onSave) {
       return new java.awt.event.KeyAdapter() {
          @Override
          public void keyPressed(java.awt.event.KeyEvent keyEvent) {
             if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-               SwingUtilities.invokeLater(() -> onSave.accept((JTextField) keyEvent.getComponent()));
+               SwingUtilities.invokeLater(() -> onSave.accept((JTextComponent) keyEvent.getComponent()));
             }
          }
       };
    }
 
-   protected KeyListener newSaveListenerTransactional(java.util.function.Consumer<JTextField> onSave) {
+   protected KeyListener newSaveListenerTransactional(java.util.function.Consumer<JTextComponent> onSave) {
       return new java.awt.event.KeyAdapter() {
          @Override
          public void keyPressed(java.awt.event.KeyEvent keyEvent) {
             if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_S) {
-               appModel().doLaterInTransaction(tx -> onSave.accept((JTextField) keyEvent.getComponent()));
+               appModel().doLaterInTransaction(tx -> onSave.accept((JTextComponent) keyEvent.getComponent()));
             }
          }
       };

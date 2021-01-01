@@ -191,7 +191,7 @@ public class STAppPresentationModel {
       return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
    }
 
-   private void aggregate(nextgen.model.STTemplate parentTemplate, java.util.List<nextgen.model.STTemplate> templates) {
+   public void aggregate(nextgen.model.STTemplate parentTemplate, java.util.List<nextgen.model.STTemplate> templates) {
       templates.add(parentTemplate);
       parentTemplate.getChildren().forEach(childTemplate -> aggregate(childTemplate, templates));
    }
@@ -207,7 +207,7 @@ public class STAppPresentationModel {
       return models;
    }
 
-   private java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STModel stModel) {
+   public java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STModel stModel) {
       java.util.Set<nextgen.model.STModel> models = new java.util.LinkedHashSet<>();
 
       stModel.getArguments().forEach(stArgument -> {
@@ -276,7 +276,7 @@ public class STAppPresentationModel {
       return createCompletionProvider(stGroupAction.getIncomingActionsSTGroupModel().findFirst().get());
    }
 
-   private org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupModel stGroupModel) {
+   public org.fife.ui.autocomplete.CompletionProvider createCompletionProvider(nextgen.model.STGroupModel stGroupModel) {
 
       org.fife.ui.autocomplete.DefaultCompletionProvider provider = new org.fife.ui.autocomplete.DefaultCompletionProvider();
 
@@ -614,7 +614,23 @@ public class STAppPresentationModel {
    }
 
    public static String getSTModelName(nextgen.model.STModel stModel, String defaultValue) {
-      return getSTModelValue(stModel, "name", defaultValue);
+
+      final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
+      final boolean hasLabelParameter = stTemplate.getLabelParameter() != null;
+
+      final java.util.Optional<nextgen.model.STParameter> foundParameter = stTemplate
+            .getParameters()
+            .filter(stParameter -> (hasLabelParameter && stTemplate.getLabelParameter().equals(stParameter)))
+            .findAny();
+      if (foundParameter.isEmpty()) return getSTModelValue(stModel, "name", defaultValue);
+
+      return stModel
+            .getArguments()
+            .filter(stArgument -> stArgument.getStParameter().equals(foundParameter.get()))
+            .filter(stArgument -> stArgument.getValue() != null)
+            .map(stArgument -> stArgument.getValue().getValue())
+            .findFirst()
+            .orElse(defaultValue);
    }
 
    public static String getSTModelPackage(nextgen.model.STModel stModel) {
@@ -663,12 +679,12 @@ public class STAppPresentationModel {
             .orElse(defaultValue);
    }
 
-   public nextgen.model.STGroupModel getSTGroup(nextgen.model.STTemplate stTemplate) {
+   public static nextgen.model.STGroupModel getSTGroup(nextgen.model.STTemplate stTemplate) {
       final java.util.Optional<nextgen.model.STGroupModel> stGroupModel = stTemplate.getIncomingTemplatesSTGroupModel().findAny();
       if (stGroupModel.isPresent()) return stGroupModel.get();
 
       final java.util.Optional<nextgen.model.STTemplate> parent = stTemplate.getIncomingChildrenSTTemplate().findAny();
-      return parent.map(this::getSTGroup).orElse(null);
+      return parent.map(STAppPresentationModel::getSTGroup).orElse(null);
    }
 
    public boolean isBoolean(nextgen.model.STParameter stParameter) {
@@ -976,7 +992,7 @@ public class STAppPresentationModel {
       addArgument(stModel, stParameter, value);
    }
 
-   private boolean isSameArgument(STModel stModel, STParameter stParameter, String value) {
+   public boolean isSameArgument(STModel stModel, STParameter stParameter, String value) {
       return getSTParameters(stModel)
             .filter(parameterArguments -> parameterArguments.parameter().equals(stParameter))
             .map(parameterArguments -> parameterArguments.arguments().stream().findAny())
@@ -1215,6 +1231,27 @@ public class STAppPresentationModel {
          }
 
       });
+   }
+
+   public static Comparator<STModel> grouptemplateNameComparator() {
+      return (m1, m2) -> {
+
+         final STTemplate t1 = m1.getStTemplate();
+         final STTemplate t2 = m2.getStTemplate();
+
+         final STGroupModel g1 = getSTGroup(t1);
+         final STGroupModel g2 = getSTGroup(t2);
+
+         final int groupCompare = g1.getName().compareToIgnoreCase(g2.getName());
+         if (groupCompare != 0) return groupCompare;
+
+         final int templateCompare = t1.getName().compareToIgnoreCase(m2.getStTemplate().getName());
+         if(templateCompare!=0) return templateCompare;
+
+         final String n1 = STAppPresentationModel.getSTModelName(m1, "[no name]");
+         final String n2 = STAppPresentationModel.getSTModelName(m2, "[no name]");
+         return n1.compareToIgnoreCase(n2);
+      };
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {

@@ -3,27 +3,29 @@ package nextgen.swing.table;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class STValueTable extends javax.swing.JTable {
+public class STModelTable extends javax.swing.JTable {
 
 /*
-	0 value	String	
+	1 stTemplate	String	
+	0 stGroup	String	
+	2 name	String	
 */
-	private Consumer<nextgen.model.STValue> selectionListener;
+	private Consumer<nextgen.model.STModel> selectionListener;
 
-	public STValueTable() {
+	public STModelTable() {
 		super(new ResultsTableModel());
 	}
 
-	public STValueTable setSelectionListener(Consumer<nextgen.model.STValue> selectionListener) {
+	public STModelTable setSelectionListener(Consumer<nextgen.model.STModel> selectionListener) {
 		this.selectionListener = selectionListener;
 		return this;
 	}
 
-	public STValueTable setContent(java.util.stream.Stream<nextgen.model.STValue> content) {
+	public STModelTable setContent(java.util.stream.Stream<nextgen.model.STModel> content) {
 		return setContent(content.collect(java.util.stream.Collectors.toList()));
 	}
 
-	public STValueTable setContent(java.util.Collection<nextgen.model.STValue> content) {
+	public STModelTable setContent(java.util.Collection<nextgen.model.STModel> content) {
 
 		final ResultsTableModel tableModel = new ResultsTableModel(content);
 		setModel(tableModel);
@@ -33,8 +35,12 @@ public class STValueTable extends javax.swing.JTable {
 			if (getSelectedRow() != -1 && selectionListener != null) selectionListener.accept(tableModel().getValueAt(getSelectedRow()));
 		});
 
+		getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
+		getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+		getColumnModel().getColumn(1).setCellEditor(new CellEditor());
 		getColumnModel().getColumn(0).setCellEditor(new CellEditor());
+		getColumnModel().getColumn(2).setCellEditor(new CellEditor());
 
 		tableModel.fireTableStructureChanged();
 
@@ -45,12 +51,12 @@ public class STValueTable extends javax.swing.JTable {
 		return tableModel().content.stream();
 	}
 
-	public STValueTable refresh() {
+	public STModelTable refresh() {
 		tableModel().fireTableDataChanged();
 		return this;
 	}
 
-	public STValueTable clear() {
+	public STModelTable clear() {
 		tableModel().content.clear();
 		tableModel().fireTableDataChanged();
 		return this;
@@ -62,17 +68,29 @@ public class STValueTable extends javax.swing.JTable {
 
 	public static final class RowElement {
 
-		public final nextgen.model.STValue model;
-		private String value;
+		public final nextgen.model.STModel model;
+		private String stTemplate;
+		private String stGroup;
+		private String name;
 
-		protected RowElement(nextgen.model.STValue model) {
+		protected RowElement(nextgen.model.STModel model) {
 			this.model = model;
-			value = model.getValue();
+			stTemplate = model.getStTemplate().getName();
+			stGroup = nextgen.swing.STAppPresentationModel.getSTGroup(model.getStTemplate()).getName();
+			name = nextgen.swing.STAppPresentationModel.getSTModelName(model, "[no name]");
 		}
 
-		String getValue() { return value; }
+		String getStTemplate() { return stTemplate; }
 
-		public void setValue(Object value) { this.value = (String)value; }
+		String getStGroup() { return stGroup; }
+
+		String getName() { return name; }
+
+		public void setStTemplate(Object value) { this.stTemplate = (String)value; }
+
+		public void setStGroup(Object value) { this.stGroup = (String)value; }
+
+		public void setName(Object value) { this.name = (String)value; }
 	}
 
 	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
@@ -116,14 +134,16 @@ public class STValueTable extends javax.swing.JTable {
 		ResultsTableModel() {
 		}
 
-		ResultsTableModel(java.util.Collection<nextgen.model.STValue> data) {
-			for (nextgen.model.STValue row : data) content.add(new RowElement(row));
+		ResultsTableModel(java.util.Collection<nextgen.model.STModel> data) {
+			for (nextgen.model.STModel row : data) content.add(new RowElement(row));
 		}
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
+				case 1: return false;
 				case 0: return false;
+				case 2: return false;
 			}
 			return false;
 		}
@@ -131,7 +151,9 @@ public class STValueTable extends javax.swing.JTable {
 		@Override
 		public String getColumnName(int columnIndex) {
 			switch(columnIndex) {
-				case 0: return "value";
+				case 1: return "stTemplate";
+				case 0: return "stGroup";
+				case 2: return "name";
 			}
 			return "";
 		}
@@ -139,7 +161,9 @@ public class STValueTable extends javax.swing.JTable {
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
 			switch(columnIndex) {
+				case 1: return String.class;
 				case 0: return String.class;
+				case 2: return String.class;
 			}
 			return Object.class;
 		}
@@ -147,7 +171,9 @@ public class STValueTable extends javax.swing.JTable {
 		@Override
 		public int findColumn(String columnName) {
 			switch(columnName) {
-				case "value": return 0;
+				case "stTemplate": return 1;
+				case "stGroup": return 0;
+				case "name": return 2;
 			}
 			return 0;
 		}
@@ -159,13 +185,15 @@ public class STValueTable extends javax.swing.JTable {
 
 		@Override
 		public int getColumnCount() {
-			return 1;
+			return 3;
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-				case 0: return content.get(rowIndex).getValue();
+				case 1: return content.get(rowIndex).getStTemplate();
+				case 0: return content.get(rowIndex).getStGroup();
+				case 2: return content.get(rowIndex).getName();
 			}
 			return null;
 		}
@@ -173,11 +201,13 @@ public class STValueTable extends javax.swing.JTable {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
+				case 1: break;
 				case 0: break;
+				case 2: break;
 			}
 		}
 
-		private nextgen.model.STValue getValueAt(int row) {
+		private nextgen.model.STModel getValueAt(int row) {
 			return content.get(row).model;
 		}
 	}

@@ -9,18 +9,16 @@ import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static nextgen.utils.SwingUtil.*;
-
 public class STModelEditorText extends BaseEditor<STModel> {
 
-   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = newRSyntaxTextArea(20, 80);
+   private final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtEditor = ComponentFactory.newRSyntaxTextArea(20, 80);
 
    public STModelEditorText() {
 
       txtEditor.setEditable(false);
       txtEditor.addKeyListener(getEditorKeyListener());
 
-      add(newRTextScrollPane(txtEditor), java.awt.BorderLayout.CENTER);
+      add(ComponentFactory.newRTextScrollPane(txtEditor), java.awt.BorderLayout.CENTER);
 
       addComponentListener(new java.awt.event.ComponentAdapter() {
          @Override

@@ -16,9 +16,14 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 		editors.add("Form", form);
 		add(editors, BorderLayout.CENTER);
 
-		form.setModel(model);
+		form.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 
 	}
+
+	@Override
+   protected void tryToSave() {
+      form.onSave(model);
+   }
 
 	@Override
 	public boolean equals(Object o) {
