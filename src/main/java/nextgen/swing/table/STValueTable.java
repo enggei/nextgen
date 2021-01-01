@@ -85,13 +85,13 @@ public class STValueTable extends javax.swing.JTable {
 	private final class CellRenderer extends javax.swing.JTextField implements javax.swing.table.TableCellRenderer {
 
 		CellRenderer() {
-			super("", 15);
+			super("");
+			setBackground(Color.RED);
 		}
 
 		@Override
 		public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			setText(((RowElement) value).toString());
-			setCaretPosition(0);
 			return this;
 		}
 	}

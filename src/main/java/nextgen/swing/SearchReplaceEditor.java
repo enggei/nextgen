@@ -18,13 +18,13 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
       jScrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
       add(new SearchForm()
-            .setLblsearch(newLabel("Search"))
-            .setTxtsearch(txtSearch)
-            .setBtnsearch(btnSearch)
-            .setLblreplace(newLabel("Replace with"))
-            .setTxtreplace(txtReplace)
-            .setBtnreplace(btnReplace)
-            .setScrresult(jScrollPane), java.awt.BorderLayout.CENTER);
+            .setSearch(newLabel("Search"))
+            .setSearch(txtSearch)
+            .setSearch(btnSearch)
+            .setReplace(newLabel("Replace with"))
+            .setReplace(txtReplace)
+            .setReplace(btnReplace)
+            .setResult(jScrollPane), java.awt.BorderLayout.CENTER);
 
       txtSearch.addMouseListener(getSearchFieldMouseListener(txtSearch));
       txtReplace.addMouseListener(getSearchFieldMouseListener(txtReplace));
