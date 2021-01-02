@@ -121,7 +121,7 @@ public class ComponentFactory {
 
       component.setTabSize(3);
       component.setHighlightCurrentLine(false);
-//      component.setFont(UIManager.getFont("TextField.font"));
+      component.setFont(new Font("InputMono", Font.PLAIN, 12));
       component.setSelectionColor(Color.decode("#2b8cbe"));
 //      component.setBackground(Color.DARK_GRAY);
 //      component.setForeground(UIManager.getColor("TextField.foreground"));

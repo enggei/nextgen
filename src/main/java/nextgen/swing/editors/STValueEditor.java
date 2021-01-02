@@ -1,15 +1,15 @@
 package nextgen.swing.editors;
 
-import nextgen.model.STValue;
+import nextgen.swing.ComponentFactory;
 
 import java.awt.*;
+import java.util.UUID;
 
 public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValue> {
 
-	public String uuid;
+	private String uuid = UUID.randomUUID().toString();
 
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
-	private final nextgen.swing.forms.STValueForm form = new nextgen.swing.forms.STValueForm();
 	private final nextgen.swing.forms.TextAreaCrudForm editor = new nextgen.swing.forms.TextAreaCrudForm();
 
 	public STValueEditor() {
@@ -17,22 +17,19 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 	}
 
 	public STValueEditor(nextgen.model.STValue model) {
-		super();
+		super(model);
 		setModel(model);
 	}
 
 	@Override
-	public void setModel(STValue model) {
+	public void setModel(nextgen.model.STValue model) {
 		super.setModel(model);
 
-		this.uuid = model.getUuid();
-
-		editors.add("Form", form);
-		editors.add("Editor", editor);
+		editors.add("Editor", ComponentFactory.newJScrollPane(editor));
 		add(editors, BorderLayout.CENTER);
 
-		form.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 		editor.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+
 	}
 
 	@Override
@@ -43,7 +40,6 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 		appModel().doInTransaction(transaction -> {
 			if (!model.getType().equals(nextgen.model.STValueType.PRIMITIVE)) return;
 
-			form.onSave(model);
 			editor.onSave(model);
 
 			nextgen.events.STValueChanged.post(model);

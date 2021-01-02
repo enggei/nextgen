@@ -18,8 +18,8 @@ public class STTemplateEditor extends AbstractEditor {
    private final STEditorCommandPanel commandPanel = new STEditorCommandPanel();
    private final STEditorInfoPanel infoPanel;
 
-   private final Color uneditedColor = UIManager.getColor("Panel.background");
-   private final Color editedColor = UIManager.getColor("Panel.background").brighter();
+   private final Color uneditedColor = txtEditor.getBackground();
+   private final Color editedColor = txtEditor.getBackground().brighter();
    private final Color errorColor = Color.decode("#e66101");
    private final Border defaultBorder = txtEditor.getBorder();
 

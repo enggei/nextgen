@@ -68,7 +68,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
          private void addSTValues(nextgen.model.STModel stModel, java.util.List<STValue> stValues) {
 
-            stModel.getArguments()
+            stModel.getArgumentsSorted()
                   .map(nextgen.model.STArgument::getValue)
                   .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)
@@ -77,7 +77,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                   .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                   .forEach(stValues::add);
 
-            stModel.getArguments()
+            stModel.getArgumentsSorted()
                   .forEach(stArgument -> stValues.addAll(stArgument.getKeyValues()
                         .map(nextgen.model.STArgumentKV::getValue)
                         .filter(java.util.Objects::nonNull)
@@ -87,7 +87,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                         .filter(stValue -> stValue.getValue().contains(txtSearch.getText()))
                         .collect(java.util.stream.Collectors.toList())));
 
-            stModel.getArguments()
+            stModel.getArgumentsSorted()
                   .forEach(stArgument -> stArgument.getKeyValues()
                         .map(nextgen.model.STArgumentKV::getValue)
                         .filter(java.util.Objects::nonNull)
@@ -96,7 +96,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
                         .filter(stValue -> stValue.getStModel() != null)
                         .forEach(stValue -> addSTValues(stValue.getStModel(), stValues)));
 
-            stModel.getArguments()
+            stModel.getArgumentsSorted()
                   .map(nextgen.model.STArgument::getValue)
                   .filter(java.util.Objects::nonNull)
                   .filter(stValue -> stValue.getType() != null)

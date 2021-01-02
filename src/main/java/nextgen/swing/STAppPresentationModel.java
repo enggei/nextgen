@@ -185,13 +185,13 @@ public class STAppPresentationModel {
       nextgen.events.NewSTGroupTemplate.post(stTemplate, stGroup);
    }
 
-   public java.util.stream.Stream<nextgen.model.STTemplate> aggregateTemplates(nextgen.model.STGroupModel stGroup) {
+   public static java.util.stream.Stream<nextgen.model.STTemplate> aggregateTemplates(nextgen.model.STGroupModel stGroup) {
       final List<STTemplate> templates = new java.util.ArrayList<>();
       stGroup.getTemplates().forEach(stTemplate -> aggregate(stTemplate, templates));
       return templates.stream().sorted((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
    }
 
-   public void aggregate(nextgen.model.STTemplate parentTemplate, java.util.List<nextgen.model.STTemplate> templates) {
+   public static void aggregate(nextgen.model.STTemplate parentTemplate, java.util.List<nextgen.model.STTemplate> templates) {
       templates.add(parentTemplate);
       parentTemplate.getChildren().forEach(childTemplate -> aggregate(childTemplate, templates));
    }
@@ -336,46 +336,46 @@ public class STAppPresentationModel {
       nextgen.events.STGroupFileDeleted.post(uuid);
    }
 
-   public void delete(nextgen.model.STArgument stArgument) {
+   public static void delete(nextgen.model.STArgument stArgument) {
       stArgument.getKeyValues().forEach(nextgen.model.STArgumentKV::delete);
       stArgument.delete();
    }
 
-   public void delete(nextgen.model.STModel stModel) {
+   public static void delete(nextgen.model.STModel stModel) {
       final String uuid = stModel.getUuid();
       stModel.delete();
       nextgen.events.STModelDeleted.post(uuid);
    }
 
-   public void delete(nextgen.model.STTemplate stTemplate) {
+   public static void delete(nextgen.model.STTemplate stTemplate) {
       final String uuid = stTemplate.getUuid();
       stTemplate.delete();
       nextgen.events.STTemplateDeleted.post(uuid);
    }
 
-   public void delete(nextgen.model.STValue stValue) {
+   public static void delete(nextgen.model.STValue stValue) {
       final String uuid = stValue.getUuid();
       stValue.delete();
       nextgen.events.STValueDeleted.post(uuid);
    }
 
-   public void detach(nextgen.model.STInterface stInterface, nextgen.model.STGroupModel stGroup) {
+   public static void detach(nextgen.model.STInterface stInterface, nextgen.model.STGroupModel stGroup) {
       stGroup.removeInterfaces(stInterface);
       nextgen.events.STInterfaceDeleted.post(stInterface.getUuid());
    }
 
-   public void detach(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument) {
+   public static void detach(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument) {
       stModel.removeArguments(stArgument);
       final String uuid = stArgument.getUuid();
       delete(stArgument);
       nextgen.events.STArgumentDeleted.post(stModel, uuid);
    }
 
-   public void detach(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
+   public static void detach(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
       findAllSTArgument(stModel, stParameter).forEach(argument -> detach(stModel, argument));
    }
 
-   private void detach(nextgen.model.STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
+   private static void detach(nextgen.model.STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
       final Optional<STArgumentKV> existing = stArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(stParameterKey)).findAny();
       if (existing.isPresent()) {
          final String uuid = existing.get().getUuid();
@@ -393,7 +393,7 @@ public class STAppPresentationModel {
       SwingUtilities.invokeLater(() -> doInTransaction(consumer));
    }
 
-   public java.util.Optional<nextgen.model.STParameterKey> findSTParameterKey(nextgen.model.STParameter stParameter, String kvName) {
+   public static java.util.Optional<nextgen.model.STParameterKey> findSTParameterKey(nextgen.model.STParameter stParameter, String kvName) {
       return stParameter
             .getKeys()
             .filter(stParameterKey -> stParameterKey.getName().equals(kvName))
@@ -434,12 +434,12 @@ public class STAppPresentationModel {
       return defaultValue.get();
    }
 
-   public java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
+   public static java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
       final java.util.List<nextgen.model.STProject> collect = stModel.getIncomingModelsSTProject().collect(java.util.stream.Collectors.toList());
       return Optional.ofNullable(collect.size() == 0 ? null : collect.get(0));
    }
 
-   public java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String name, nextgen.model.STGroupModel stGroupModel) {
+   public static java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String name, nextgen.model.STGroupModel stGroupModel) {
       final Set<STTemplate> set = new LinkedHashSet<>();
       aggregateTemplates(stGroupModel)
             .forEach(stTemplate -> stTemplate.getImplements()
@@ -449,11 +449,11 @@ public class STAppPresentationModel {
       return set;
    }
 
-   public nextgen.model.STEnum findSTEnumByName(String enumName, nextgen.model.STGroupModel stGroupModel) {
+   public static nextgen.model.STEnum findSTEnumByName(String enumName, nextgen.model.STGroupModel stGroupModel) {
       return stGroupModel.getEnums().filter(stEnum -> stEnum.getName().equals(enumName)).findFirst().orElse(null);
    }
 
-   public java.util.Optional<nextgen.model.STTemplate> findFirstTemplateInArguments(STModel stModel, nextgen.model.STParameter stParameter) {
+   public static java.util.Optional<nextgen.model.STTemplate> findFirstTemplateInArguments(STModel stModel, nextgen.model.STParameter stParameter) {
       return stModel.getArgumentsSorted()
             .filter(stArgument -> stArgument.getStParameter().equals(stParameter))
             .map(STArgument::getValue)
@@ -464,7 +464,7 @@ public class STAppPresentationModel {
             .findFirst();
    }
 
-   public java.util.Optional<nextgen.model.STTemplate> findSTTemplateFromArgumentType(String argumentType, nextgen.model.STGroupModel stGroupModel) {
+   public static java.util.Optional<nextgen.model.STTemplate> findSTTemplateFromArgumentType(String argumentType, nextgen.model.STGroupModel stGroupModel) {
       return aggregateTemplates(stGroupModel)
             .filter(candidate -> candidate.getName().equalsIgnoreCase(argumentType))
             .findAny();
@@ -474,15 +474,15 @@ public class STAppPresentationModel {
       return db.findSTGroupModelByName(name);
    }
 
-   public java.util.Optional<nextgen.model.STArgumentKV> findSTArgumentKV(nextgen.model.STArgument otherModelArgument, nextgen.model.STParameterKey otherModelKey) {
+   public static java.util.Optional<nextgen.model.STArgumentKV> findSTArgumentKV(nextgen.model.STArgument otherModelArgument, nextgen.model.STParameterKey otherModelKey) {
       return otherModelArgument.getKeyValues().filter(stArgumentKV -> stArgumentKV.getStParameterKey().equals(otherModelKey)).findAny();
    }
 
-   public java.util.Optional<nextgen.model.STArgument> findFirstSTArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
+   public static java.util.Optional<nextgen.model.STArgument> findFirstSTArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
       return stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter)).findFirst();
    }
 
-   public java.util.List<nextgen.model.STArgument> findAllSTArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
+   public static java.util.List<nextgen.model.STArgument> findAllSTArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
       return stModel.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter)).collect(java.util.stream.Collectors.toList());
    }
 
@@ -687,11 +687,11 @@ public class STAppPresentationModel {
       return parent.map(STAppPresentationModel::getSTGroup).orElse(null);
    }
 
-   public boolean isBoolean(nextgen.model.STParameter stParameter) {
+   public static boolean isBoolean(nextgen.model.STParameter stParameter) {
       return stParameter.getName().startsWith("is") || stParameter.getName().startsWith("has");
    }
 
-   public boolean isBoolean(nextgen.model.STParameterKey stParameterKey) {
+   public static boolean isBoolean(nextgen.model.STParameterKey stParameterKey) {
       return stParameterKey.getName().startsWith("is") || stParameterKey.getName().startsWith("has");
    }
 
@@ -1196,7 +1196,7 @@ public class STAppPresentationModel {
       return asCollection(getSTEnum(stEnumValue));
    }
 
-   public Stream<ParameterArguments> getSTParameters(STModel model) {
+   public static Stream<ParameterArguments> getSTParameters(STModel model) {
 
       final List<ParameterArguments> result = new ArrayList<>();
       model.getStTemplate().getParametersSorted().forEach(stParameter -> {

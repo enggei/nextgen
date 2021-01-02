@@ -50,10 +50,16 @@ public class STModelEditorText extends BaseEditor<STModel> {
 
    private void addToMenu(JMenu menu, STModel stModel) {
 
-      menu.add(newAction("Open", actionEvent -> appModel().doLaterInTransaction(tx -> {
-         nextgen.events.STModelSelected.post(stModel);
-         ModelNavigatorSTModelTreeNodeClicked.post(stModel);
-      })));
+      if (!stModel.equals(getModel())) {
+
+         final String stModelName = STAppPresentationModel.getSTModelName(stModel);
+         if (stModelName != null) menu.add(ComponentFactory.newJLabel(stModelName));
+
+         menu.add(newAction("Open", actionEvent -> appModel().doLaterInTransaction(tx -> {
+            nextgen.events.STModelSelected.post(stModel);
+            ModelNavigatorSTModelTreeNodeClicked.post(stModel);
+         })));
+      }
 
       appModel().getSTParameters(stModel).forEach(parameterArguments -> {
 
