@@ -138,7 +138,7 @@ public class ~name~ {
 		final String root = args.length <= 0 ? "./src/main/java" : args[0];
 		~parameters:{it|final String ~it.name~ = args.length <= ~i~ ? ~if(it.defaultValue)~~it.defaultValue~~else~"./src/main/java"~endif~ : args[~i~];};separator="\n"~
 		
-		final MetaDomain metaDomain = newMetaDomain();
+		final MetaDomain metaDomain = nextgenDomain();
 		
 ~transforms:{it|
 		final ~it.type~ ~it.type;format="lowFirst"~ = new ~it.name~(~parameters:{it|~it.name~};separator=", "~).transform(metaDomain);~if(it.writeJavaFile)~
@@ -147,9 +147,9 @@ public class ~name~ {
    }	
 }  >>
 
-DomainDeclaration(entities,properties,name) ::= <<private static ~name;format="capitalize"~ new~name;format="capitalize"~() {
+DomainDeclaration(entities,properties,name) ::= <<private static MetaDomain new~name;format="capitalize"~() {
 
-	final ~name;format="capitalize"~Factory domain = new ~name;format="capitalize"~FactoryImpl();
+	final MetaDomainFactory domain = new MetaDomainFactoryImpl();
 	domain.setname("~name;format="capitalize"~");
 	
 	~entities:{it|~it~};separator="\n\n"~
@@ -215,6 +215,8 @@ TemplateTransformerImpl(packageName,onComplete,onEntity,onProperty,onDomain,init
 
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
+
+import java.util.Optional;
 
 public class ~name~ extends TemplateDomainTransformer<~T~> {
 

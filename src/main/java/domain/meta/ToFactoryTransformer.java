@@ -3,6 +3,8 @@ package domain.meta;
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
+import java.util.Optional;
+
 public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.templates.domain.ToFactory> {
 
 	final nextgen.templates.domain.ToFactory result = nextgen.templates.domain.DomainST.newToFactory();

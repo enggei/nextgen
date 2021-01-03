@@ -424,7 +424,7 @@ public class DomainProcessor {
 				"		final String root = args.length <= 0 ? \"./src/main/java\" : args[0];\n" + 
 				"		~parameters:{it|final String ~it.name~ = args.length <= ~i~ ? ~if(it.defaultValue)~~it.defaultValue~~else~\"./src/main/java\"~endif~ : args[~i~];};separator=\"\\n\"~\n" + 
 				"		\n" + 
-				"		final MetaDomain metaDomain = newMetaDomain();\n" + 
+				"		final MetaDomain metaDomain = nextgenDomain();\n" + 
 				"		\n" + 
 				"~transforms:{it|\n" + 
 				"		final ~it.type~ ~it.type;format=\"lowFirst\"~ = new ~it.name~(~parameters:{it|~it.name~};separator=\", \"~).transform(metaDomain);~if(it.writeJavaFile)~\n" + 

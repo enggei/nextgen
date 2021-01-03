@@ -360,6 +360,8 @@ public class TemplateTransformerImpl {
 				"import domain.DomainProcessor.*;\n" + 
 				"import nextgen.templates.domain.*;\n" + 
 				"\n" + 
+				"import java.util.Optional;\n" + 
+				"\n" + 
 				"public class ~name~ extends TemplateDomainTransformer<~T~> {\n" + 
 				"\n" + 
 				"	final ~T~ result = ~init~;\n" + 

@@ -3,6 +3,8 @@ package domain.meta;
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
+import java.util.Optional;
+
 public class InterfaceImpl extends TemplateDomainTransformer<DefaultFactoryImpl> {
 
 	final DefaultFactoryImpl result = nextgen.templates.domain.DomainST.newDefaultFactoryImpl();
