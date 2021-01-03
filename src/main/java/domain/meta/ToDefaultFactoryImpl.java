@@ -3,14 +3,15 @@ package domain.meta;
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
-import java.util.Optional;
+import java.util.*;
 
-public class InterfaceImpl extends TemplateDomainTransformer<DefaultFactoryImpl> {
+public class ToDefaultFactoryImpl extends TemplateDomainTransformer<DefaultFactoryImpl> {
 
 	final DefaultFactoryImpl result = nextgen.templates.domain.DomainST.newDefaultFactoryImpl();
+
 	String packageName;
 
-	public InterfaceImpl(String packageName) {
+	public ToDefaultFactoryImpl(String packageName) {
 		this.packageName = packageName;
 	}
 
@@ -79,6 +80,8 @@ public class InterfaceImpl extends TemplateDomainTransformer<DefaultFactoryImpl>
 
 	private void addMetaProperty(DefaultEntityImpl result, MetaDomain.MetaProperty metaProperty) {
 
+		if (MetaDomain.Quantifier.ONE.equals(quantifier(metaProperty))) result.addRequiredProperties(type(metaProperty), metaProperty.name());
+		
 		final String type = metaProperty.type().get();
 		final String name = metaProperty.name();
 

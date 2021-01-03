@@ -5,13 +5,14 @@ import nextgen.templates.domain.*;
 
 import java.util.*;
 
-public class Test extends TemplateDomainTransformer<DomainDeclaration> {
+public class ToDomainDeclaration extends TemplateDomainTransformer<DomainDeclaration> {
 
 	final DomainDeclaration result = DomainST.newDomainDeclaration();
-	String packageName;
-	Stack<DomainEntityDeclaration> declarations = new Stack<>();
 
-	public Test(String packageName) {
+	final Stack<DomainEntityDeclaration> declarations = new Stack<>();
+	String packageName;
+
+	public ToDomainDeclaration(String packageName) {
 		this.packageName = packageName;
 	}
 
@@ -27,26 +28,19 @@ public class Test extends TemplateDomainTransformer<DomainDeclaration> {
 
 	@Override
 	protected void onEntity(MetaDomain entity) {
-		final DomainEntityDeclaration entityDeclaration = DomainST.newDomainEntityDeclaration()
-		            .setName(entity.name());
-
-		declarations.push(entityDeclaration);
-
-		entity.properties().forEach(metaProperty -> entityDeclaration.addProperties(typeDeclaration(metaProperty), type(metaProperty), metaProperty.name(), quantifier(metaProperty)));
+		declarations.push(DomainST.newDomainEntityDeclaration().setName(entity.name()));
+		entity.properties().forEach(metaProperty -> declarations.peek().addProperties(typeDeclaration(metaProperty), type(metaProperty), metaProperty.name(), quantifier(metaProperty)));
 	}
 
 	@Override
 	protected DomainDeclaration onComplete() {
-
-		while(!declarations.isEmpty()) {
-			result.addEntities(declarations.pop());
-		}
-
+		while (!declarations.isEmpty()) result.addEntities(declarations.pop());
 		System.out.println(result.toString());
 		return result;
 	}
 
-	private Object quantifier(MetaDomain.MetaProperty metaProperty) {
+	@Override
+	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
 		final Optional<MetaDomain.Quantifier> quantifier = metaProperty.quantifier();
 		if (quantifier.isPresent()) {
 			switch (quantifier.get()) {
@@ -60,15 +54,11 @@ public class Test extends TemplateDomainTransformer<DomainDeclaration> {
 		}
 		return metaProperty.type().isPresent() ? null : "enumerate";
 	}
-
-	private Object type(MetaDomain.MetaProperty metaProperty) {
-		final Optional<String> type = metaProperty.type();
-		return type.orElse(null);
-	}
-
-	private Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+	@Override
+	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
 		final Optional<MetaDomain> typeDeclaration = metaProperty.typeDeclaration();
 		if (typeDeclaration.isPresent()) return typeDeclaration.get().name();
 		return typeDeclaration.orElse(null);
 	}
+
 }

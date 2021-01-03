@@ -7,6 +7,7 @@ public class FactoryEntity {
 
 	private String _name;
 	private Object _type;
+	private java.util.List<java.util.Map<String, Object>> _requiredProperties = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
 
 	FactoryEntity(org.stringtemplate.v4.STGroup stGroup) {
@@ -22,6 +23,7 @@ public class FactoryEntity {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("factoryEntity");
 		st.add("name", _name);
 		st.add("type", _type);
+		for (java.util.Map<String, Object> map : _requiredProperties) st.addAggr("requiredProperties.{name,type}", map.get("name"), map.get("type"));
 		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{methodName,type}", map.get("methodName"), map.get("type"));
 		return st.render().trim();
 	}
@@ -70,6 +72,75 @@ public class FactoryEntity {
 		return this;
 	} 
 
+
+	public FactoryEntity setRequiredProperties(java.util.Collection<FactoryEntity_RequiredProperties> values) {
+			this._requiredProperties.clear();
+			values.stream().map(FactoryEntity_RequiredProperties::asMap).forEach(map -> _requiredProperties.add(map));
+			return this;
+		}
+
+	public FactoryEntity addRequiredProperties(Object _name, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("type", _type);
+		this._requiredProperties.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRequiredProperties() {
+		return this._requiredProperties;
+	}
+
+	public FactoryEntity addRequiredProperties(FactoryEntity_RequiredProperties value) {
+		return addRequiredProperties(value._name, value._type);
+	}
+
+	public java.util.stream.Stream<FactoryEntity_RequiredProperties> streamRequiredProperties() {
+		return this._requiredProperties.stream().map(FactoryEntity_RequiredProperties::new);
+	}
+
+	public java.util.List<Object> getRequiredProperties_Name() {
+		return streamRequiredProperties().map(FactoryEntity_RequiredProperties::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRequiredProperties_Type() {
+		return streamRequiredProperties().map(FactoryEntity_RequiredProperties::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class FactoryEntity_RequiredProperties {
+
+		Object _name;
+		Object _type;
+
+		public FactoryEntity_RequiredProperties(Object _name, Object _type) {
+			this._name = _name;
+			this._type = _type;
+		}
+
+		private FactoryEntity_RequiredProperties(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
+		}
+
+	}  
 
 	public FactoryEntity setProperties(java.util.Collection<FactoryEntity_Properties> values) {
 			this._properties.clear();
@@ -153,7 +224,7 @@ public class FactoryEntity {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "factoryEntity(properties,name,type) ::= <<~type~Builder new~name;format=\"capitalize\"~();\n" + 
+	static final String st = "factoryEntity(requiredProperties,properties,name,type) ::= <<~type~Builder new~name;format=\"capitalize\"~(~requiredProperties:{it|~it.type~ ~it.name~};separator=\", \"~);\n" + 
 				"\n" + 
 				"interface ~type~Builder extends ~type~ {\n" + 
 				"	~properties:{it|~type~Builder ~it.methodName~(~it.type~ element);};separator=\"\\n\"~\n" + 

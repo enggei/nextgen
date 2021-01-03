@@ -52,4 +52,6 @@ public class MetaDomainFactoryImpl implements MetaDomainFactory {
 		public MetaPropertyBuilder settypeDeclaration(MetaDomain element) { typeDeclaration = element; return this; }
 
 	}
+
+
 }

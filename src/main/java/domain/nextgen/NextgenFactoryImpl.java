@@ -18,7 +18,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	public NextgenFactory addgroups(STGroup element) { groups.add(element); return this; }
 
 	@Override 
-	public STProjectBuilder newSTProject() { return new STProjectBuilderImpl(); }
+	public STProjectBuilder newSTProject(String name, String root) { return new STProjectBuilderImpl(name, root); }
 
 	public class STProjectBuilderImpl implements STProjectBuilder {
 
@@ -26,6 +26,11 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private String root;
 		private final java.util.List<STModel> models =  new java.util.ArrayList<>();
 		private final java.util.List<STValue> values =  new java.util.ArrayList<>();
+
+		STProjectBuilderImpl(String name, String root) {
+			this.name = name;
+			this.root = root;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -54,13 +59,17 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STModelBuilder newSTModel() { return new STModelBuilderImpl(); }
+	public STModelBuilder newSTModel(STTemplate stTemplate) { return new STModelBuilderImpl(stTemplate); }
 
 	public class STModelBuilderImpl implements STModelBuilder {
 
 		private STTemplate stTemplate;
 		private final java.util.List<STFile> files =  new java.util.ArrayList<>();
 		private final java.util.List<STArgument> arguments =  new java.util.ArrayList<>();
+
+		STModelBuilderImpl(STTemplate stTemplate) {
+			this.stTemplate = stTemplate;
+		}
 
 		@Override
 		public STTemplate stTemplate() { return stTemplate; }
@@ -83,13 +92,19 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STFileBuilder newSTFile() { return new STFileBuilderImpl(); }
+	public STFileBuilder newSTFile(STValue type, STValue packageName, STValue path) { return new STFileBuilderImpl(type, packageName, path); }
 
 	public class STFileBuilderImpl implements STFileBuilder {
 
 		private STValue type;
 		private STValue packageName;
 		private STValue path;
+
+		STFileBuilderImpl(STValue type, STValue packageName, STValue path) {
+			this.type = type;
+			this.packageName = packageName;
+			this.path = path;
+		}
 
 		@Override
 		public STValue type() { return type; }
@@ -112,13 +127,18 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STArgumentBuilder newSTArgument() { return new STArgumentBuilderImpl(); }
+	public STArgumentBuilder newSTArgument(STParameter stParameter, STValue value) { return new STArgumentBuilderImpl(stParameter, value); }
 
 	public class STArgumentBuilderImpl implements STArgumentBuilder {
 
 		private STParameter stParameter;
 		private STValue value;
 		private final java.util.List<STArgumentKV> keyValues =  new java.util.ArrayList<>();
+
+		STArgumentBuilderImpl(STParameter stParameter, STValue value) {
+			this.stParameter = stParameter;
+			this.value = value;
+		}
 
 		@Override
 		public STParameter stParameter() { return stParameter; }
@@ -141,12 +161,17 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STArgumentKVBuilder newSTArgumentKV() { return new STArgumentKVBuilderImpl(); }
+	public STArgumentKVBuilder newSTArgumentKV(STParameterKey stParameterKey, STValue values) { return new STArgumentKVBuilderImpl(stParameterKey, values); }
 
 	public class STArgumentKVBuilderImpl implements STArgumentKVBuilder {
 
 		private STParameterKey stParameterKey;
 		private STValue values;
+
+		STArgumentKVBuilderImpl(STParameterKey stParameterKey, STValue values) {
+			this.stParameterKey = stParameterKey;
+			this.values = values;
+		}
 
 		@Override
 		public STParameterKey stParameterKey() { return stParameterKey; }
@@ -163,7 +188,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STValueBuilder newSTValue() { return new STValueBuilderImpl(); }
+	public STValueBuilder newSTValue(STValueType type) { return new STValueBuilderImpl(type); }
 
 	public class STValueBuilderImpl implements STValueBuilder {
 
@@ -171,6 +196,10 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private String value;
 		private STModel stModel;
 		private STEnumValue stEnum;
+
+		STValueBuilderImpl(STValueType type) {
+			this.type = type;
+		}
 
 		@Override
 		public STValueType type() { return type; }
@@ -199,7 +228,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STGroupBuilder newSTGroup() { return new STGroupBuilderImpl(); }
+	public STGroupBuilder newSTGroup(String name) { return new STGroupBuilderImpl(name); }
 
 	public class STGroupBuilderImpl implements STGroupBuilder {
 
@@ -209,6 +238,10 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private final java.util.List<STInterface> interfaces =  new java.util.ArrayList<>();
 		private final java.util.List<STEnum> enums =  new java.util.ArrayList<>();
 		private final java.util.List<STAction> actions =  new java.util.ArrayList<>();
+
+		STGroupBuilderImpl(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -249,12 +282,17 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STGroupFileBuilder newSTGroupFile() { return new STGroupFileBuilderImpl(); }
+	public STGroupFileBuilder newSTGroupFile(STValue packageName, STValue path) { return new STGroupFileBuilderImpl(packageName, path); }
 
 	public class STGroupFileBuilderImpl implements STGroupFileBuilder {
 
 		private STValue packageName;
 		private STValue path;
+
+		STGroupFileBuilderImpl(STValue packageName, STValue path) {
+			this.packageName = packageName;
+			this.path = path;
+		}
 
 		@Override
 		public STValue packageName() { return packageName; }
@@ -271,7 +309,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STTemplateBuilder newSTTemplate() { return new STTemplateBuilderImpl(); }
+	public STTemplateBuilder newSTTemplate(String name, String text) { return new STTemplateBuilderImpl(name, text); }
 
 	public class STTemplateBuilderImpl implements STTemplateBuilder {
 
@@ -280,6 +318,11 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private final java.util.List<STInterface> interfaces =  new java.util.ArrayList<>();
 		private final java.util.List<STParameter> parameter =  new java.util.ArrayList<>();
 		private final java.util.List<STTemplate> children =  new java.util.ArrayList<>();
+
+		STTemplateBuilderImpl(String name, String text) {
+			this.name = name;
+			this.text = text;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -314,7 +357,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STParameterBuilder newSTParameter() { return new STParameterBuilderImpl(); }
+	public STParameterBuilder newSTParameter(String name, STParameterType type, String argumentType) { return new STParameterBuilderImpl(name, type, argumentType); }
 
 	public class STParameterBuilderImpl implements STParameterBuilder {
 
@@ -322,6 +365,12 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private STParameterType type;
 		private final java.util.List<STParameterKey> keys =  new java.util.ArrayList<>();
 		private String argumentType;
+
+		STParameterBuilderImpl(String name, STParameterType type, String argumentType) {
+			this.name = name;
+			this.type = type;
+			this.argumentType = argumentType;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -350,12 +399,17 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STParameterKeyBuilder newSTParameterKey() { return new STParameterKeyBuilderImpl(); }
+	public STParameterKeyBuilder newSTParameterKey(String name, STInterface argumentType) { return new STParameterKeyBuilderImpl(name, argumentType); }
 
 	public class STParameterKeyBuilderImpl implements STParameterKeyBuilder {
 
 		private String name;
 		private STInterface argumentType;
+
+		STParameterKeyBuilderImpl(String name, STInterface argumentType) {
+			this.name = name;
+			this.argumentType = argumentType;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -372,11 +426,15 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STInterfaceBuilder newSTInterface() { return new STInterfaceBuilderImpl(); }
+	public STInterfaceBuilder newSTInterface(String name) { return new STInterfaceBuilderImpl(name); }
 
 	public class STInterfaceBuilderImpl implements STInterfaceBuilder {
 
 		private String name;
+
+		STInterfaceBuilderImpl(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -387,12 +445,16 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STEnumBuilder newSTEnum() { return new STEnumBuilderImpl(); }
+	public STEnumBuilder newSTEnum(String name) { return new STEnumBuilderImpl(name); }
 
 	public class STEnumBuilderImpl implements STEnumBuilder {
 
 		private String name;
 		private final java.util.List<STEnumValue> values =  new java.util.ArrayList<>();
+
+		STEnumBuilderImpl(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -409,12 +471,17 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STEnumValueBuilder newSTEnumValue() { return new STEnumValueBuilderImpl(); }
+	public STEnumValueBuilder newSTEnumValue(String name, String lexical) { return new STEnumValueBuilderImpl(name, lexical); }
 
 	public class STEnumValueBuilderImpl implements STEnumValueBuilder {
 
 		private String name;
 		private String lexical;
+
+		STEnumValueBuilderImpl(String name, String lexical) {
+			this.name = name;
+			this.lexical = lexical;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -431,7 +498,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	}
 
 	@Override 
-	public STActionBuilder newSTAction() { return new STActionBuilderImpl(); }
+	public STActionBuilder newSTAction(String name) { return new STActionBuilderImpl(name); }
 
 	public class STActionBuilderImpl implements STActionBuilder {
 
@@ -439,6 +506,10 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		private final java.util.List<String> statements =  new java.util.ArrayList<>();
 		private final java.util.List<String> imports =  new java.util.ArrayList<>();
 		private final java.util.List<String> methods =  new java.util.ArrayList<>();
+
+		STActionBuilderImpl(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public String name() { return name; }

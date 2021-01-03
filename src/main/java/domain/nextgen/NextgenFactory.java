@@ -5,7 +5,7 @@ public interface NextgenFactory extends Nextgen {
 	NextgenFactory addprojects(STProject value);
 	NextgenFactory addgroups(STGroup value);
 
-	STProjectBuilder newSTProject();
+	STProjectBuilder newSTProject(String name, String root);
 
 	interface STProjectBuilder extends STProject {
 		STProjectBuilder setname(String element);
@@ -14,7 +14,7 @@ public interface NextgenFactory extends Nextgen {
 		STProjectBuilder addvalues(STValue element);
 	}
 
-	STModelBuilder newSTModel();
+	STModelBuilder newSTModel(STTemplate stTemplate);
 
 	interface STModelBuilder extends STModel {
 		STModelBuilder setstTemplate(STTemplate element);
@@ -22,7 +22,7 @@ public interface NextgenFactory extends Nextgen {
 		STModelBuilder addarguments(STArgument element);
 	}
 
-	STFileBuilder newSTFile();
+	STFileBuilder newSTFile(STValue type, STValue packageName, STValue path);
 
 	interface STFileBuilder extends STFile {
 		STFileBuilder settype(STValue element);
@@ -30,7 +30,7 @@ public interface NextgenFactory extends Nextgen {
 		STFileBuilder setpath(STValue element);
 	}
 
-	STArgumentBuilder newSTArgument();
+	STArgumentBuilder newSTArgument(STParameter stParameter, STValue value);
 
 	interface STArgumentBuilder extends STArgument {
 		STArgumentBuilder setstParameter(STParameter element);
@@ -38,14 +38,14 @@ public interface NextgenFactory extends Nextgen {
 		STArgumentBuilder addkeyValues(STArgumentKV element);
 	}
 
-	STArgumentKVBuilder newSTArgumentKV();
+	STArgumentKVBuilder newSTArgumentKV(STParameterKey stParameterKey, STValue values);
 
 	interface STArgumentKVBuilder extends STArgumentKV {
 		STArgumentKVBuilder setstParameterKey(STParameterKey element);
 		STArgumentKVBuilder setvalues(STValue element);
 	}
 
-	STValueBuilder newSTValue();
+	STValueBuilder newSTValue(STValueType type);
 
 	interface STValueBuilder extends STValue {
 		STValueBuilder settype(STValueType element);
@@ -54,7 +54,7 @@ public interface NextgenFactory extends Nextgen {
 		STValueBuilder setstEnum(STEnumValue element);
 	}
 
-	STGroupBuilder newSTGroup();
+	STGroupBuilder newSTGroup(String name);
 
 	interface STGroupBuilder extends STGroup {
 		STGroupBuilder setname(String element);
@@ -65,14 +65,14 @@ public interface NextgenFactory extends Nextgen {
 		STGroupBuilder addactions(STAction element);
 	}
 
-	STGroupFileBuilder newSTGroupFile();
+	STGroupFileBuilder newSTGroupFile(STValue packageName, STValue path);
 
 	interface STGroupFileBuilder extends STGroupFile {
 		STGroupFileBuilder setpackageName(STValue element);
 		STGroupFileBuilder setpath(STValue element);
 	}
 
-	STTemplateBuilder newSTTemplate();
+	STTemplateBuilder newSTTemplate(String name, String text);
 
 	interface STTemplateBuilder extends STTemplate {
 		STTemplateBuilder setname(String element);
@@ -82,7 +82,7 @@ public interface NextgenFactory extends Nextgen {
 		STTemplateBuilder addchildren(STTemplate element);
 	}
 
-	STParameterBuilder newSTParameter();
+	STParameterBuilder newSTParameter(String name, STParameterType type, String argumentType);
 
 	interface STParameterBuilder extends STParameter {
 		STParameterBuilder setname(String element);
@@ -91,34 +91,34 @@ public interface NextgenFactory extends Nextgen {
 		STParameterBuilder setargumentType(String element);
 	}
 
-	STParameterKeyBuilder newSTParameterKey();
+	STParameterKeyBuilder newSTParameterKey(String name, STInterface argumentType);
 
 	interface STParameterKeyBuilder extends STParameterKey {
 		STParameterKeyBuilder setname(String element);
 		STParameterKeyBuilder setargumentType(STInterface element);
 	}
 
-	STInterfaceBuilder newSTInterface();
+	STInterfaceBuilder newSTInterface(String name);
 
 	interface STInterfaceBuilder extends STInterface {
 		STInterfaceBuilder setname(String element);
 	}
 
-	STEnumBuilder newSTEnum();
+	STEnumBuilder newSTEnum(String name);
 
 	interface STEnumBuilder extends STEnum {
 		STEnumBuilder setname(String element);
 		STEnumBuilder addvalues(STEnumValue element);
 	}
 
-	STEnumValueBuilder newSTEnumValue();
+	STEnumValueBuilder newSTEnumValue(String name, String lexical);
 
 	interface STEnumValueBuilder extends STEnumValue {
 		STEnumValueBuilder setname(String element);
 		STEnumValueBuilder setlexical(String element);
 	}
 
-	STActionBuilder newSTAction();
+	STActionBuilder newSTAction(String name);
 
 	interface STActionBuilder extends STAction {
 		STActionBuilder setname(String element);

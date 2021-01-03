@@ -191,6 +191,22 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());
 	}
 
+	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
+		return metaProperty.quantifier().orElse(null);
+	}
+	
+	protected Object name(MetaDomain.MetaProperty metaProperty) {
+		return metaProperty.name();
+	}
+	
+	protected Object type(MetaDomain.MetaProperty metaProperty) {
+		return metaProperty.type().orElse(null);
+	}
+	
+	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+		return metaProperty.typeDeclaration().orElse(null);
+	}
+
 	Set<MetaDomain> getEntities(MetaDomain domain) {
 		final LinkedHashSet<MetaDomain> set = new LinkedHashSet<>();
 
@@ -211,16 +227,18 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 	}
 }  >>
 
-TemplateTransformerImpl(packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;
+TemplateTransformerImpl(mapName,mapTypeDeclaration,mapType,mapQuantifier,fields,packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;
 
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
-import java.util.Optional;
+import java.util.*;
 
 public class ~name~ extends TemplateDomainTransformer<~T~> {
 
 	final ~T~ result = ~init~;
+	
+	~fields:{it|final ~it.type~ ~it.name~ = ~it.init~;};separator="\n"~
 	~properties:{it|~it.type~ ~it.name~;};separator="\n"~
 	
 	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=", "~) {
@@ -247,6 +265,31 @@ public class ~name~ extends TemplateDomainTransformer<~T~> {
 		~onComplete:{it|~it~};separator="\n"~
 		return result;
 	}
+
+~if(mapQuantifier)~
+	@Override
+	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
+		~mapQuantifier:{it|~it~}~
+	}
+~endif~
+~if(mapName)~
+	@Override
+	protected Object name(MetaDomain.MetaProperty metaProperty) {
+		~mapName:{it|~it~}~
+	}
+~endif~
+~if(mapType)~
+	@Override
+	protected Object type(MetaDomain.MetaProperty metaProperty) {
+		~mapType:{it|~it~}~
+	}
+~endif~
+~if(mapTypeDeclaration)~
+	@Override
+	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+		~mapTypeDeclaration:{it|~it~}~
+	}
+~endif~
 
 	~methods:{it|~it~};separator="\n\n"~
 }  >>
@@ -277,12 +320,16 @@ public class ~name~ implements ~factory~ {
 	~entities:{it|~it~};separator="\n\n"~
 }  >>
 
-defaultEntityImpl(properties,type,name) ::= <<@Override 
-public ~type~Builder new~name;format="capitalize"~() { return new ~type~BuilderImpl(); }
+defaultEntityImpl(requiredProperties,properties,type,name) ::= <<@Override 
+public ~type~Builder new~name;format="capitalize"~(~requiredProperties:{it|~it.type~ ~it.name~};separator=", "~) { return new ~type~BuilderImpl(~requiredProperties:{it|~it.name~};separator=", "~); }
 
 public class ~type~BuilderImpl implements ~type~Builder {
 
 	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+	~type~BuilderImpl(~requiredProperties:{it|~it.type~ ~it.name~};separator=", "~) {
+		~requiredProperties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
 
 ~properties:{it|
 	@Override
@@ -293,7 +340,7 @@ public class ~type~BuilderImpl implements ~type~Builder {
 };separator="\n"~
 }  >>
 
-factoryEntity(properties,name,type) ::= <<~type~Builder new~name;format="capitalize"~();
+factoryEntity(requiredProperties,properties,name,type) ::= <<~type~Builder new~name;format="capitalize"~(~requiredProperties:{it|~it.type~ ~it.name~};separator=", "~);
 
 interface ~type~Builder extends ~type~ {
 	~properties:{it|~type~Builder ~it.methodName~(~it.type~ element);};separator="\n"~

@@ -32,103 +32,66 @@ public class DomainProcessor {
    	return domain;
    }
 
-	private static MetaDomain newNextgen() {
-
-		final MetaDomainFactory domain = new MetaDomainFactoryImpl();
-		domain.setname("Nextgen");
-
-		final MetaDomainFactory STAction = newDomain("STAction")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(many(domain, "statements", "String"))
-				.addproperties(many(domain, "imports", "String"))
-				.addproperties(many(domain, "methods", "String"));
-
-		final MetaDomainFactory STEnumValue = newDomain("STEnumValue")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(single(domain, "lexical", "String"));
-
-		final MetaDomainFactory STEnum = newDomain("STEnum")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(many(domain, "values", "STEnumValue", STEnumValue));
-
-		final MetaDomainFactory STInterface = newDomain("STInterface")
-				.addproperties(single(domain, "name", "String"));
-
-		final MetaDomainFactory STParameterKey = newDomain("STParameterKey")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(single(domain, "argumentType", "STInterface"));
-
-		final MetaDomainFactory STParameterType = newDomain("STParameterType")
-				.addproperties(enumerate(domain, "SINGLE"))
-				.addproperties(enumerate(domain, "LIST"))
-				.addproperties(enumerate(domain, "KVLIST"));
-
-		final MetaDomainFactory STParameter = newDomain("STParameter")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(single(domain, "type", "STParameterType", STParameterType))
-				.addproperties(many(domain, "keys", "STParameterKey", STParameterKey))
-				.addproperties(single(domain, "argumentType", "String"));
-
-		final MetaDomainFactory STTemplate = newDomain("STTemplate")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(single(domain, "text", "String"))
-				.addproperties(many(domain, "interfaces", "STInterface"))
-				.addproperties(many(domain, "parameter", "STParameter", STParameter))
-				.addproperties(many(domain, "children", "STTemplate"));
-
-		final MetaDomainFactory STGroupFile = newDomain("STGroupFile")
-				.addproperties(single(domain, "packageName", "STValue"))
-				.addproperties(single(domain, "path", "STValue"));
-
-		final MetaDomainFactory STGroup = newDomain("STGroup")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(many(domain, "files", "STGroupFile", STGroupFile))
-				.addproperties(many(domain, "templates", "STTemplate", STTemplate))
-				.addproperties(many(domain, "interfaces", "STInterface", STInterface))
-				.addproperties(many(domain, "enums", "STEnum", STEnum))
-				.addproperties(many(domain, "actions", "STAction", STAction));
-
-		final MetaDomainFactory STValueType = newDomain("STValueType")
-				.addproperties(enumerate(domain, "STMODEL"))
-				.addproperties(enumerate(domain, "PRIMITIVE"))
-				.addproperties(enumerate(domain, "ENUM"));
-
-		final MetaDomainFactory STValue = newDomain("STValue")
-				.addproperties(single(domain, "type", "STValueType", STValueType))
-				.addproperties(optional(domain, "value", "String"))
-				.addproperties(optional(domain, "stModel", "STModel"))
-				.addproperties(optional(domain, "stEnum", "STEnumValue"));
-
-		final MetaDomainFactory STArgumentKV = newDomain("STArgumentKV")
-				.addproperties(single(domain, "stParameterKey", "STParameterKey"))
-				.addproperties(single(domain, "values", "STValue"));
-
-		final MetaDomainFactory STArgument = newDomain("STArgument")
-				.addproperties(single(domain, "stParameter", "STParameter"))
-				.addproperties(single(domain, "value", "STValue"))
-				.addproperties(many(domain, "keyValues", "STArgumentKV", STArgumentKV));
-
-		final MetaDomainFactory STFile = newDomain("STFile")
-				.addproperties(single(domain, "type", "STValue"))
-				.addproperties(single(domain, "packageName", "STValue"))
-				.addproperties(single(domain, "path", "STValue"));
-
-		final MetaDomainFactory STModel = newDomain("STModel")
-				.addproperties(single(domain, "stTemplate", "STTemplate"))
-				.addproperties(many(domain, "files", "STFile", STFile))
-				.addproperties(many(domain, "arguments", "STArgument", STArgument));
-
-		final MetaDomainFactory STProject = newDomain("STProject")
-				.addproperties(single(domain, "name", "String"))
-				.addproperties(single(domain, "root", "String"))
-				.addproperties(many(domain, "models", "STModel", STModel))
-				.addproperties(many(domain, "values", "STValue", STValue));
-
-		domain.addproperties(many(domain, "projects", "STProject", STProject));
-		domain.addproperties(many(domain, "groups", "STGroup", STGroup));
-
-		return domain;
-	}
+   private static MetaDomain nextgenDomain() {
+      final MetaDomainFactory domain = new MetaDomainFactoryImpl()
+            .setname("Nextgen");
+      return domain
+            .addproperties(many(domain, "projects", "STProject", newDomain("STProject")
+                  .addproperties(single(domain, "name", "String"))
+                  .addproperties(single(domain, "root", "String"))
+                  .addproperties(many(domain, "models", "STModel", newDomain("STModel")
+                        .addproperties(single(domain, "stTemplate", "STTemplate"))
+                        .addproperties(many(domain, "files", "STFile", newDomain("STFile")
+                              .addproperties(single(domain, "type", "STValue"))
+                              .addproperties(single(domain, "packageName", "STValue"))
+                              .addproperties(single(domain, "path", "STValue"))))
+                        .addproperties(many(domain, "arguments", "STArgument", newDomain("STArgument")
+                              .addproperties(single(domain, "stParameter", "STParameter"))
+                              .addproperties(single(domain, "value", "STValue"))
+                              .addproperties(many(domain, "keyValues", "STArgumentKV", newDomain("STArgumentKV")
+                                    .addproperties(single(domain, "stParameterKey", "STParameterKey"))
+                                    .addproperties(single(domain, "values", "STValue"))))))))
+                  .addproperties(many(domain, "values", "STValue", newDomain("STValue")
+                        .addproperties(single(domain, "type", "STValueType", newDomain("STValueType")
+                              .addproperties(enumerate(domain, "STMODEL"))
+                              .addproperties(enumerate(domain, "PRIMITIVE"))
+                              .addproperties(enumerate(domain, "ENUM"))))
+                        .addproperties(optional(domain, "value", "String"))
+                        .addproperties(optional(domain, "stModel", "STModel"))
+                        .addproperties(optional(domain, "stEnum", "STEnumValue"))))))
+            .addproperties(many(domain, "groups", "STGroup", newDomain("STGroup")
+                  .addproperties(single(domain, "name", "String"))
+                  .addproperties(many(domain, "files", "STGroupFile", newDomain("STGroupFile")
+                        .addproperties(single(domain, "packageName", "STValue"))
+                        .addproperties(single(domain, "path", "STValue"))))
+                  .addproperties(many(domain, "templates", "STTemplate", newDomain("STTemplate")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(single(domain, "text", "String"))
+                        .addproperties(many(domain, "interfaces", "STInterface"))
+                        .addproperties(many(domain, "parameter", "STParameter", newDomain("STParameter")
+                              .addproperties(single(domain, "name", "String"))
+                              .addproperties(single(domain, "type", "STParameterType", newDomain("STParameterType")
+                                    .addproperties(enumerate(domain, "SINGLE"))
+                                    .addproperties(enumerate(domain, "LIST"))
+                                    .addproperties(enumerate(domain, "KVLIST"))))
+                              .addproperties(many(domain, "keys", "STParameterKey", newDomain("STParameterKey")
+                                    .addproperties(single(domain, "name", "String"))
+                                    .addproperties(single(domain, "argumentType", "STInterface"))))
+                              .addproperties(single(domain, "argumentType", "String"))))
+                        .addproperties(many(domain, "children", "STTemplate"))))
+                  .addproperties(many(domain, "interfaces", "STInterface", newDomain("STInterface")
+                        .addproperties(single(domain, "name", "String"))))
+                  .addproperties(many(domain, "enums", "STEnum", newDomain("STEnum")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(many(domain, "values", "STEnumValue", newDomain("STEnumValue")
+                              .addproperties(single(domain, "name", "String"))
+                              .addproperties(single(domain, "lexical", "String"))))))
+                  .addproperties(many(domain, "actions", "STAction", newDomain("STAction")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(many(domain, "statements", "String"))
+                        .addproperties(many(domain, "imports", "String"))
+                        .addproperties(many(domain, "methods", "String"))))));
+   }
 
 	private static MetaDomainFactory newDomain(String name) {
       return new MetaDomainFactoryImpl().setname(name);
@@ -209,6 +172,22 @@ public class DomainProcessor {
    		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());
    	}
 
+   	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
+   		return metaProperty.quantifier().orElse(null);
+   	}
+
+   	protected Object name(MetaDomain.MetaProperty metaProperty) {
+   		return metaProperty.name();
+   	}
+
+   	protected Object type(MetaDomain.MetaProperty metaProperty) {
+   		return metaProperty.type().orElse(null);
+   	}
+
+   	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+   		return metaProperty.typeDeclaration().orElse(null);
+   	}
+
    	Set<MetaDomain> getEntities(MetaDomain domain) {
    		final LinkedHashSet<MetaDomain> set = new LinkedHashSet<>();
 
@@ -234,7 +213,7 @@ public class DomainProcessor {
 		final String root = args.length <= 0 ? "./src/main/java" : args[0];
 		final String packageName = args.length <= 1 ? "domain.nextgen" : args[1];
 
-		final MetaDomain metaDomain = newNextgen();
+		final MetaDomain metaDomain = nextgenDomain();
 
 		final ToInterfaces toInterfaces = new ToInterfacesTransformer(packageName).transform(metaDomain);
 		STGenerator.writeJavaFile(toInterfaces, toInterfaces.getPackageName().toString(), toInterfaces.getName(), root);
@@ -242,9 +221,9 @@ public class DomainProcessor {
 		final ToFactory toFactory = new ToFactoryTransformer(packageName).transform(metaDomain);
 		STGenerator.writeJavaFile(toFactory, toFactory.getPackageName().toString(), toFactory.getName(), root);
 
-		final DefaultFactoryImpl defaultFactoryImpl = new InterfaceImpl(packageName).transform(metaDomain);
+		final DefaultFactoryImpl defaultFactoryImpl = new ToDefaultFactoryImpl(packageName).transform(metaDomain);
 		STGenerator.writeJavaFile(defaultFactoryImpl, defaultFactoryImpl.getPackageName().toString(), defaultFactoryImpl.getName(), root);
 
-		final DomainDeclaration domainDeclaration = new Test(packageName).transform(metaDomain);
+		final DomainDeclaration domainDeclaration = new ToDomainDeclaration(packageName).transform(metaDomain);
    }	
 }

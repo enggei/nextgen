@@ -3,11 +3,12 @@ package domain.meta;
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
-import java.util.Optional;
+import java.util.*;
 
 public class ToInterfacesTransformer extends TemplateDomainTransformer<ToInterfaces> {
 
 	final ToInterfaces result = DomainST.newToInterfaces();
+
 	String packageName;
 
 	public ToInterfacesTransformer(String packageName) {

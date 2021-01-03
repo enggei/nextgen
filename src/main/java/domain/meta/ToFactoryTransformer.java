@@ -3,11 +3,12 @@ package domain.meta;
 import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
 
-import java.util.Optional;
+import java.util.*;
 
 public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.templates.domain.ToFactory> {
 
 	final nextgen.templates.domain.ToFactory result = nextgen.templates.domain.DomainST.newToFactory();
+
 	String packageName;
 
 	public ToFactoryTransformer(String packageName) {
@@ -23,7 +24,7 @@ public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.temp
 
 	@Override
 	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
-		result.addProperties(metaProperty.type().get(), methodName(metaProperty));
+		result.addProperties(metaProperty.type().get(), name(metaProperty));
 	}
 
 	@Override
@@ -35,7 +36,10 @@ public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.temp
 
 		   entity.properties()
 		         .filter(metaProperty -> metaProperty.type().isPresent())
-		         .forEach(metaProperty -> factoryEntity.addProperties(methodName(metaProperty), metaProperty.type().get()));
+		         .forEach(metaProperty -> {
+		            factoryEntity.addProperties(name(metaProperty), type(metaProperty));
+		            if (MetaDomain.Quantifier.ONE.equals(quantifier(metaProperty))) factoryEntity.addRequiredProperties(metaProperty.name(), type(metaProperty));
+		         });
 
 		   result.addEntities(factoryEntity);
 		}
@@ -46,17 +50,17 @@ public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.temp
 		return result;
 	}
 
-	private Object methodName(MetaDomain.MetaProperty metaProperty) {
+	@Override
+	protected Object name(MetaDomain.MetaProperty metaProperty) {
+		if (metaProperty.quantifier().isEmpty()) return "set" + metaProperty.type().get();
 
-	   if (metaProperty.quantifier().isEmpty()) return "set" + metaProperty.type().get();
-
-	   switch (metaProperty.quantifier().get()) {
-	      case MANY:
-	         return "add" + metaProperty.name();
-	      case OPTIONAL:
-	         return "set" + metaProperty.name();
-	      default:
-	         return "set" + metaProperty.name();
-	   }
+		switch (metaProperty.quantifier().get()) {
+			case MANY:
+				return "add" + metaProperty.name();
+			case OPTIONAL:
+				return "set" + metaProperty.name();
+			default:
+				return "set" + metaProperty.name();
+		}
 	}
 }

@@ -65,6 +65,22 @@ public class TemplateTransformer {
 				"		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());\n" + 
 				"	}\n" + 
 				"\n" + 
+				"	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"		return metaProperty.quantifier().orElse(null);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	protected Object name(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"		return metaProperty.name();\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	protected Object type(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"		return metaProperty.type().orElse(null);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"		return metaProperty.typeDeclaration().orElse(null);\n" + 
+				"	}\n" + 
+				"\n" + 
 				"	Set<MetaDomain> getEntities(MetaDomain domain) {\n" + 
 				"		final LinkedHashSet<MetaDomain> set = new LinkedHashSet<>();\n" + 
 				"\n" + 
