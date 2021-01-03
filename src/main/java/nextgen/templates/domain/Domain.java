@@ -158,8 +158,8 @@ public class Domain {
 	}
 
 	static final String st = "Domain(properties,name) ::= <<~name~\n" + 
-				"    ~properties:{it|~it.name~	~it.quantifier~	~it.type~~if(it.decl)~\n" + 
+				"	~properties:{it|~it.name~	~it.quantifier~	~it.type~~if(it.decl)~\n" + 
 				"    \n" + 
-				"~it.decl~\n" + 
+				"	~it.decl~\n" + 
 				"~endif~};separator=\"\\n\"~ >>";
 }  

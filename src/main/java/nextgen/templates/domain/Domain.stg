@@ -1,10 +1,313 @@
 delimiters "~","~"
 
 Domain(properties,name) ::= <<~name~
-    ~properties:{it|~it.name~	~it.quantifier~	~it.type~~if(it.decl)~
+	~properties:{it|~it.name~	~it.quantifier~	~it.type~~if(it.decl)~
     
-~it.decl~
+	~it.decl~
 ~endif~};separator="\n"~  >>
+
+DomainProcessor(domains,transformers,packageName,name) ::= <<package ~packageName~;
+
+import domain.meta.*;
+import nextgen.st.STGenerator;
+import nextgen.templates.domain.*;
+
+import java.util.*;
+
+import static domain.meta.MetaDomain.Quantifier.*;
+
+public class ~name~ {
+
+   public static void main(String[] args) {
+
+      final String root = "/home/goe/projects/nextgen/src/main/java";
+
+      write(newMetaDomain(), "domain.meta", root);
+      write(nextgenDomain(), "domain.nextgen", root);
+   }
+
+	~domains:{it|~it~};separator="\n\n"~
+   
+   private static MetaDomain nextgenDomain() {
+      final MetaDomainFactory domain = new MetaDomainFactoryImpl()
+            .setname("Nextgen");
+      return domain
+            .addproperties(many(domain, "projects", "STProject", newDomain("STProject")
+                  .addproperties(single(domain, "name", "String"))
+                  .addproperties(single(domain, "root", "String"))
+                  .addproperties(many(domain, "models", "STModel", newDomain("STModel")
+                        .addproperties(single(domain, "stTemplate", "STTemplate"))
+                        .addproperties(many(domain, "files", "STFile", newDomain("STFile")
+                              .addproperties(single(domain, "type", "STValue"))
+                              .addproperties(single(domain, "packageName", "STValue"))
+                              .addproperties(single(domain, "path", "STValue"))))
+                        .addproperties(many(domain, "arguments", "STArgument", newDomain("STArgument")
+                              .addproperties(single(domain, "stParameter", "STParameter"))
+                              .addproperties(single(domain, "value", "STValue"))
+                              .addproperties(many(domain, "keyValues", "STArgumentKV", newDomain("STArgumentKV")
+                                    .addproperties(single(domain, "stParameterKey", "STParameterKey"))
+                                    .addproperties(single(domain, "values", "STValue"))))))))
+                  .addproperties(many(domain, "values", "STValue", newDomain("STValue")
+                        .addproperties(single(domain, "type", "STValueType", newDomain("STValueType")
+                              .addproperties(enumerate(domain, "STMODEL"))
+                              .addproperties(enumerate(domain, "PRIMITIVE"))
+                              .addproperties(enumerate(domain, "ENUM"))))
+                        .addproperties(optional(domain, "value", "String"))
+                        .addproperties(optional(domain, "stModel", "STModel"))
+                        .addproperties(optional(domain, "stEnum", "STEnumValue"))))))
+            .addproperties(many(domain, "groups", "STGroup", newDomain("STGroup")
+                  .addproperties(single(domain, "name", "String"))
+                  .addproperties(many(domain, "files", "STGroupFile", newDomain("STGroupFile")
+                        .addproperties(single(domain, "packageName", "STValue"))
+                        .addproperties(single(domain, "path", "STValue"))))
+                  .addproperties(many(domain, "templates", "STTemplate", newDomain("STTemplate")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(single(domain, "text", "String"))
+                        .addproperties(many(domain, "interfaces", "STInterface"))
+                        .addproperties(many(domain, "parameter", "STParameter", newDomain("STParameter")
+                              .addproperties(single(domain, "name", "String"))
+                              .addproperties(single(domain, "type", "STParameterType", newDomain("STParameterType")
+                                    .addproperties(enumerate(domain, "SINGLE"))
+                                    .addproperties(enumerate(domain, "LIST"))
+                                    .addproperties(enumerate(domain, "KVLIST"))))
+                              .addproperties(many(domain, "keys", "STParameterKey", newDomain("STParameterKey")
+                                    .addproperties(single(domain, "name", "String"))
+                                    .addproperties(single(domain, "argumentType", "STInterface"))))
+                              .addproperties(single(domain, "argumentType", "String"))))
+                        .addproperties(many(domain, "children", "STTemplate"))))
+                  .addproperties(many(domain, "interfaces", "STInterface", newDomain("STInterface")
+                        .addproperties(single(domain, "name", "String"))))
+                  .addproperties(many(domain, "enums", "STEnum", newDomain("STEnum")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(many(domain, "values", "STEnumValue", newDomain("STEnumValue")
+                              .addproperties(single(domain, "name", "String"))
+                              .addproperties(single(domain, "lexical", "String"))))))
+                  .addproperties(many(domain, "actions", "STAction", newDomain("STAction")
+                        .addproperties(single(domain, "name", "String"))
+                        .addproperties(many(domain, "statements", "String"))
+                        .addproperties(many(domain, "imports", "String"))
+                        .addproperties(many(domain, "methods", "String"))))));
+   }
+
+	private static MetaDomainFactory newDomain(String name) {
+      return new MetaDomainFactoryImpl().setname(name);
+   }
+   
+   private static MetaDomain.MetaProperty enumerate(MetaDomainFactory domain, String value) {
+      return domain.newMetaProperty()
+            .setname(value);
+   }
+
+   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+      return domain.newMetaProperty()
+            .setname(name)
+            .setquantifier(MANY)
+            .settype(type)
+            .settypeDeclaration(typeDeclaration);
+   }
+
+   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type) {
+      return many(domain, name, type, null);
+   }
+
+   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+      return domain.newMetaProperty()
+            .setname(name)
+            .setquantifier(ONE)
+            .settype(type)
+            .settypeDeclaration(typeDeclaration);
+   }
+
+   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type) {
+      return single(domain, name, type, null);
+   }
+
+   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+      return domain.newMetaProperty()
+            .setname(name)
+            .setquantifier(OPTIONAL)
+            .settype(type)
+            .settypeDeclaration(typeDeclaration);
+   }
+
+   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type) {
+      return optional(domain, name, type, null);
+   }
+
+   interface DomainTransformer<T> {
+
+      T transform(MetaDomain domain);
+   }
+
+   ~TemplateTransformer()~
+
+	~transformers:{it|~it~};separator="\n\n"~    
+
+   private static void write(MetaDomain domain, String packageName, String root) {
+
+      final ToInterfaces toInterfaces = new ToInterfacesTransformer(packageName).transform(domain);
+      STGenerator.writeJavaFile(toInterfaces, toInterfaces.getPackageName().toString(), toInterfaces.getName(), root);
+
+      final ToFactory toFactory = new ToFactoryTransformer(packageName).transform(domain);
+      STGenerator.writeJavaFile(toFactory, toFactory.getPackageName().toString(), toFactory.getName(), root);
+
+      final nextgen.templates.domain.DefaultFactoryImpl toFactoryImpl = new InterfaceImpl(packageName).transform(domain);
+      STGenerator.writeJavaFile(toFactoryImpl, toFactoryImpl.getPackageName().toString(), toFactoryImpl.getName(), root);
+   }
+}  >>
+
+DomainDeclaration(entities,properties,name) ::= <<private static ~name;format="capitalize"~ new~name;format="capitalize"~() {
+
+	final ~name;format="capitalize"~Factory domain = new ~name;format="capitalize"~FactoryImpl();
+	domain.setname("~name;format="capitalize"~");
+	
+	~entities:{it|~it~};separator="\n\n"~
+	
+	final MetaDomainFactory metaProperty = newDomain("MetaProperty")
+			.addproperties(single(domain, "name", "String"))
+			.addproperties(optional(domain, "quantifier", "Quantifier", quantifier))
+			.addproperties(optional(domain, "type", "String"))
+			.addproperties(optional(domain, "typeDeclaration", domain.name()));
+
+	~properties:{it|domain.addproperties(~it.quantifier~(domain, "~it.name~"~if(it.type)~, "~it.type~"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator="\n"~
+	
+	return domain;
+}  >>
+
+DomainEntityDeclaration(properties,name) ::= <<final MetaDomainFactory ~name~ = newDomain("~name~")
+	~properties:{it|.addproperties(~it.quantifier~(domain, "~it.name~"~if(it.type)~, "~it.type~"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator="\n"~
+;  >>
+
+TemplateTransformer() ::= <<public static abstract class TemplateDomainTransformer<T> implements DomainTransformer<T> {
+
+	@Override
+	public T transform(MetaDomain domain) {
+
+		onDomain(domain);
+
+		domain.properties()
+				.filter(metaProperty -> metaProperty.type().isPresent())
+				.forEach(this::onProperty);
+
+		final Set<MetaDomain> entities = getEntities(domain);
+		for (MetaDomain entity : entities) onEntity(entity);
+
+		return onComplete();
+	}
+
+	abstract void onDomain(MetaDomain domain);
+
+	abstract void onProperty(MetaDomain.MetaProperty metaProperty);
+
+	abstract void onEntity(MetaDomain entity);
+
+	abstract T onComplete();
+
+
+	boolean isInterface(MetaDomain entity) {
+		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());
+	}
+
+	Set<MetaDomain> getEntities(MetaDomain domain) {
+		final LinkedHashSet<MetaDomain> set = new LinkedHashSet<>();
+
+		domain.properties()
+				.filter(metaProperty -> metaProperty.typeDeclaration().isPresent())
+				.map(metaProperty -> metaProperty.typeDeclaration().get())
+				.forEach(metaDomain -> addEntity(metaDomain, set));
+
+		return set;
+	}
+
+	private void addEntity(MetaDomain domain, LinkedHashSet<MetaDomain> set) {
+		set.add(domain);
+		domain.properties()
+				.filter(metaProperty -> metaProperty.typeDeclaration().isPresent())
+				.map(metaProperty -> metaProperty.typeDeclaration().get())
+				.forEach(metaDomain -> addEntity(metaDomain, set));
+	}
+}  >>
+
+TemplateTransformerImpl(onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<public static class ~name~ extends TemplateDomainTransformer<~T~> {
+
+	final ~T~ result = ~init~;
+	~properties:{it|~it.type~ ~it.name~;};separator="\n"~
+	
+	~name~(~properties:{it|~it.type~ ~it.name~};separator=", "~) {
+		~properties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+	@Override
+	void onDomain(MetaDomain domain) {
+		~onDomain:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	void onProperty(MetaDomain.MetaProperty metaProperty) {
+		~onProperty:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	void onEntity(MetaDomain entity) {
+		~onEntity:{it|~it~};separator="\n"~
+	}
+
+	@Override
+	~T~ onComplete() {
+		~onComplete:{it|~it~};separator="\n"~
+		return result;
+	}
+
+	~methods:{it|~it~};separator="\n\n"~
+}  >>
+
+toFactory(domain,properties,entities,name,packageName) ::= <<package ~packageName~;
+
+public interface ~name~ extends ~domain~ {
+	
+	~properties:{it|~name~ ~it.name~(~it.type~ value);};separator="\n"~
+	
+	~entities:{it|~it~};separator="\n\n"~
+	
+}  >>
+
+defaultFactoryImpl(properties,entities,factory,name,packageName) ::= <<package ~packageName~;
+
+public class ~name~ implements ~factory~ {
+
+	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+~properties:{it|
+	@Override
+	public ~it.type~ ~it.name~() { return ~it.getter~; ~eom()~
+
+	@Override
+	public ~factory~ ~it.methodName~(~it.element~ element) { ~it.assign~; return this; ~eom()~
+};separator="\n"~
+	~entities:{it|~it~};separator="\n\n"~
+}  >>
+
+defaultEntityImpl(properties,type,name) ::= <<@Override 
+public ~type~Builder new~name;format="capitalize"~() { return new ~type~BuilderImpl(); }
+
+public class ~type~BuilderImpl implements ~type~Builder {
+
+	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+~properties:{it|
+	@Override
+	public ~it.type~ ~it.name~() { return ~it.getter~; ~eom()~
+	
+	@Override 
+	public ~type~Builder ~it.methodName~(~it.element~ element) { ~it.assign~; return this; ~eom()~
+};separator="\n"~
+}  >>
+
+factoryEntity(properties,name,type) ::= <<~type~Builder new~name;format="capitalize"~();
+
+interface ~type~Builder extends ~type~ {
+	~properties:{it|~type~Builder ~it.methodName~(~it.type~ element);};separator="\n"~
+}  >>
 
 toForm(properties,packageName,name) ::= <<~if(packageName)~package ~packageName~;
 ~endif~
@@ -16,13 +319,25 @@ public class ~name~ extends javax.swing.JPanel {
 ~it.decl~~endif~};separator="\n"~
 }  >>
 
-toInterfaces(name,packageName,properties) ::= <<~if(packageName)~package ~packageName~;
-~endif~
-public interface ~name~ {
+toInterfaces(properties,domains,name,packageName) ::= <<~if(packageName)~package ~packageName~;
 
-	~properties:{it|~if(it.decl)~~else~~it.type~ get~it.name;format="capitalize"~();~endif~};separator="\n"~
+public ~endif~interface ~name~ {
+
+	~properties:{it|~it.type~ ~it.name~();};separator="\n"~
 	
-	~properties:{it|~if(it.decl)~~it.decl~~endif~};separator="\n"~
+	~domains:{it|~it~};separator="\n\n"~
+}  >>
+
+toEnum(properties,name) ::= <<enum ~name~ {
+	
+	~properties:{it|~it.name;format="capitalize"~};separator=",\n"~
+	
+}  >>
+
+toInterface(properties,name) ::= <<interface ~name~ {
+	
+	~properties:{it|~it.type~ ~it.name~();};separator="\n"~
+	
 }  >>
 
 eom() ::= "}"

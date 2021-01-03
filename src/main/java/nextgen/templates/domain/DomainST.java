@@ -6,8 +6,19 @@ public class DomainST {
 	.append("eom() ::= \"}\"\n")
 	.append("gt() ::= \">\"\n")
 	.append(Domain.st + "\n")
+	.append(DomainProcessor.st + "\n")
+	.append(DomainDeclaration.st + "\n")
+	.append(DomainEntityDeclaration.st + "\n")
+	.append(TemplateTransformer.st + "\n")
+	.append(TemplateTransformerImpl.st + "\n")
+	.append(ToFactory.st + "\n")
+	.append(DefaultFactoryImpl.st + "\n")
+	.append(DefaultEntityImpl.st + "\n")
+	.append(FactoryEntity.st + "\n")
 	.append(ToForm.st + "\n")
 	.append(ToInterfaces.st + "\n")
+	.append(ToEnum.st + "\n")
+	.append(ToInterface.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -48,12 +59,56 @@ public class DomainST {
 		return new Domain(stGroup);
 	}  
 
+	public static DomainProcessor newDomainProcessor() {
+		return new DomainProcessor(stGroup);
+	}  
+
+	public static DomainDeclaration newDomainDeclaration() {
+		return new DomainDeclaration(stGroup);
+	}  
+
+	public static DomainEntityDeclaration newDomainEntityDeclaration() {
+		return new DomainEntityDeclaration(stGroup);
+	}  
+
+	public static TemplateTransformer newTemplateTransformer() {
+		return new TemplateTransformer(stGroup);
+	}  
+
+	public static TemplateTransformerImpl newTemplateTransformerImpl() {
+		return new TemplateTransformerImpl(stGroup);
+	}  
+
+	public static ToFactory newToFactory() {
+		return new ToFactory(stGroup);
+	}  
+
+	public static DefaultFactoryImpl newDefaultFactoryImpl() {
+		return new DefaultFactoryImpl(stGroup);
+	}  
+
+	public static DefaultEntityImpl newDefaultEntityImpl() {
+		return new DefaultEntityImpl(stGroup);
+	}  
+
+	public static FactoryEntity newFactoryEntity() {
+		return new FactoryEntity(stGroup);
+	}  
+
 	public static ToForm newToForm() {
 		return new ToForm(stGroup);
 	}  
 
 	public static ToInterfaces newToInterfaces() {
 		return new ToInterfaces(stGroup);
+	}  
+
+	public static ToEnum newToEnum() {
+		return new ToEnum(stGroup);
+	}  
+
+	public static ToInterface newToInterface() {
+		return new ToInterface(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
