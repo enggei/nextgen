@@ -5,6 +5,7 @@ public class TemplateTransformerImpl {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _packageName;
 	private Object _init;
 	private Object _T;
 	private String _name;
@@ -26,6 +27,7 @@ public class TemplateTransformerImpl {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TemplateTransformerImpl");
+		st.add("packageName", _packageName);
 		st.add("init", _init);
 		st.add("T", _T);
 		st.add("name", _name);
@@ -37,6 +39,28 @@ public class TemplateTransformerImpl {
 		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public TemplateTransformerImpl setPackageName(Object value) {
+		this._packageName = value;
+		return this;
+	}
+
+	public Object getPackageName() {
+		return this._packageName;
+	}
+
+	public Object getPackageName(Object defaultValue) {
+		return this._packageName == null ? defaultValue : this._packageName;
+	}
+
+	public boolean hasPackageName() {
+		return this._packageName != null;
+	}
+
+	public TemplateTransformerImpl removePackageName() {
+		this._packageName = null;
+		return this;
+	} 
 
 	public TemplateTransformerImpl setInit(Object value) {
 		this._init = value;
@@ -331,32 +355,37 @@ public class TemplateTransformerImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TemplateTransformerImpl(onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<public static class ~name~ extends TemplateDomainTransformer<~T~> {\n" + 
+	static final String st = "TemplateTransformerImpl(packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;\n" + 
+				"\n" + 
+				"import domain.DomainProcessor.*;\n" + 
+				"import nextgen.templates.domain.*;\n" + 
+				"\n" + 
+				"public class ~name~ extends TemplateDomainTransformer<~T~> {\n" + 
 				"\n" + 
 				"	final ~T~ result = ~init~;\n" + 
 				"	~properties:{it|~it.type~ ~it.name~;};separator=\"\\n\"~\n" + 
 				"	\n" + 
-				"	~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	void onDomain(MetaDomain domain) {\n" + 
+				"	protected void onDomain(MetaDomain domain) {\n" + 
 				"		~onDomain:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	void onProperty(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	protected void onProperty(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~onProperty:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	void onEntity(MetaDomain entity) {\n" + 
+				"	protected void onEntity(MetaDomain entity) {\n" + 
 				"		~onEntity:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	~T~ onComplete() {\n" + 
+				"	protected ~T~ onComplete() {\n" + 
 				"		~onComplete:{it|~it~};separator=\"\\n\"~\n" + 
 				"		return result;\n" + 
 				"	}\n" + 

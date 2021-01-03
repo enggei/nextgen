@@ -6,7 +6,7 @@ Domain(properties,name) ::= <<~name~
 	~it.decl~
 ~endif~};separator="\n"~  >>
 
-DomainProcessor(domains,transformers,packageName,name) ::= <<package ~packageName~;
+DomainProcessor(i,transforms,parameters,domains,packageName,name) ::= <<package ~packageName~;
 
 import domain.meta.*;
 import nextgen.st.STGenerator;
@@ -18,15 +18,7 @@ import static domain.meta.MetaDomain.Quantifier.*;
 
 public class ~name~ {
 
-   public static void main(String[] args) {
-
-      final String root = "/home/goe/projects/nextgen/src/main/java";
-
-      write(newMetaDomain(), "domain.meta", root);
-      write(nextgenDomain(), "domain.nextgen", root);
-   }
-
-	~domains:{it|~it~};separator="\n\n"~
+   ~domains:{it|~it~};separator="\n\n"~
    
    private static MetaDomain nextgenDomain() {
       final MetaDomainFactory domain = new MetaDomainFactoryImpl()
@@ -141,19 +133,18 @@ public class ~name~ {
 
    ~TemplateTransformer()~
 
-	~transformers:{it|~it~};separator="\n\n"~    
+   public static void main(String[] args) {
 
-   private static void write(MetaDomain domain, String packageName, String root) {
-
-      final ToInterfaces toInterfaces = new ToInterfacesTransformer(packageName).transform(domain);
-      STGenerator.writeJavaFile(toInterfaces, toInterfaces.getPackageName().toString(), toInterfaces.getName(), root);
-
-      final ToFactory toFactory = new ToFactoryTransformer(packageName).transform(domain);
-      STGenerator.writeJavaFile(toFactory, toFactory.getPackageName().toString(), toFactory.getName(), root);
-
-      final nextgen.templates.domain.DefaultFactoryImpl toFactoryImpl = new InterfaceImpl(packageName).transform(domain);
-      STGenerator.writeJavaFile(toFactoryImpl, toFactoryImpl.getPackageName().toString(), toFactoryImpl.getName(), root);
-   }
+		final String root = args.length <= 0 ? "./src/main/java" : args[0];
+		~parameters:{it|final String ~it.name~ = args.length <= ~i~ ? ~if(it.defaultValue)~~it.defaultValue~~else~"./src/main/java"~endif~ : args[~i~];};separator="\n"~
+		
+		final MetaDomain metaDomain = newMetaDomain();
+		
+~transforms:{it|
+		final ~it.type~ ~it.type;format="lowFirst"~ = new ~it.name~(~parameters:{it|~it.name~};separator=", "~).transform(metaDomain);~if(it.writeJavaFile)~
+		STGenerator.writeJavaFile(~it.type;format="lowFirst"~, ~it.type;format="lowFirst"~.getPackageName().toString(), ~it.type;format="lowFirst"~.getName(), root);
+~endif~};separator="\n"~
+   }	
 }  >>
 
 DomainDeclaration(entities,properties,name) ::= <<private static ~name;format="capitalize"~ new~name;format="capitalize"~() {
@@ -162,12 +153,6 @@ DomainDeclaration(entities,properties,name) ::= <<private static ~name;format="c
 	domain.setname("~name;format="capitalize"~");
 	
 	~entities:{it|~it~};separator="\n\n"~
-	
-	final MetaDomainFactory metaProperty = newDomain("MetaProperty")
-			.addproperties(single(domain, "name", "String"))
-			.addproperties(optional(domain, "quantifier", "Quantifier", quantifier))
-			.addproperties(optional(domain, "type", "String"))
-			.addproperties(optional(domain, "typeDeclaration", domain.name()));
 
 	~properties:{it|domain.addproperties(~it.quantifier~(domain, "~it.name~"~if(it.type)~, "~it.type~"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator="\n"~
 	
@@ -175,8 +160,7 @@ DomainDeclaration(entities,properties,name) ::= <<private static ~name;format="c
 }  >>
 
 DomainEntityDeclaration(properties,name) ::= <<final MetaDomainFactory ~name~ = newDomain("~name~")
-	~properties:{it|.addproperties(~it.quantifier~(domain, "~it.name~"~if(it.type)~, "~it.type~"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator="\n"~
-;  >>
+		~properties:{it|.addproperties(~it.quantifier~(domain, "~it.name~"~if(it.type)~, "~it.type~"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~))};separator="\n"~;  >>
 
 TemplateTransformer() ::= <<public static abstract class TemplateDomainTransformer<T> implements DomainTransformer<T> {
 
@@ -195,16 +179,15 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 		return onComplete();
 	}
 
-	abstract void onDomain(MetaDomain domain);
+	protected abstract void onDomain(MetaDomain domain);
 
-	abstract void onProperty(MetaDomain.MetaProperty metaProperty);
+	protected abstract void onProperty(MetaDomain.MetaProperty metaProperty);
 
-	abstract void onEntity(MetaDomain entity);
+	protected abstract void onEntity(MetaDomain entity);
 
-	abstract T onComplete();
+	protected abstract T onComplete();
 
-
-	boolean isInterface(MetaDomain entity) {
+	protected boolean isInterface(MetaDomain entity) {
 		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());
 	}
 
@@ -228,32 +211,37 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 	}
 }  >>
 
-TemplateTransformerImpl(onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<public static class ~name~ extends TemplateDomainTransformer<~T~> {
+TemplateTransformerImpl(packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;
+
+import domain.DomainProcessor.*;
+import nextgen.templates.domain.*;
+
+public class ~name~ extends TemplateDomainTransformer<~T~> {
 
 	final ~T~ result = ~init~;
 	~properties:{it|~it.type~ ~it.name~;};separator="\n"~
 	
-	~name~(~properties:{it|~it.type~ ~it.name~};separator=", "~) {
+	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=", "~) {
 		~properties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
 	@Override
-	void onDomain(MetaDomain domain) {
+	protected void onDomain(MetaDomain domain) {
 		~onDomain:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	void onProperty(MetaDomain.MetaProperty metaProperty) {
+	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
 		~onProperty:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	void onEntity(MetaDomain entity) {
+	protected void onEntity(MetaDomain entity) {
 		~onEntity:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	~T~ onComplete() {
+	protected ~T~ onComplete() {
 		~onComplete:{it|~it~};separator="\n"~
 		return result;
 	}

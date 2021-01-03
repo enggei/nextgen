@@ -158,6 +158,5 @@ public class DomainEntityDeclaration {
 	}
 
 	static final String st = "DomainEntityDeclaration(properties,name) ::= <<final MetaDomainFactory ~name~ = newDomain(\"~name~\")\n" + 
-				"	~properties:{it|.addproperties(~it.quantifier~(domain, \"~it.name~\"~if(it.type)~, \"~it.type~\"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator=\"\\n\"~\n" + 
-				"; >>";
+				"		~properties:{it|.addproperties(~it.quantifier~(domain, \"~it.name~\"~if(it.type)~, \"~it.type~\"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~))};separator=\"\\n\"~; >>";
 }  

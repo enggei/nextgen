@@ -193,12 +193,6 @@ public class DomainDeclaration {
 				"	domain.setname(\"~name;format=\"capitalize\"~\");\n" + 
 				"	\n" + 
 				"	~entities:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
-				"	final MetaDomainFactory metaProperty = newDomain(\"MetaProperty\")\n" + 
-				"			.addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"			.addproperties(optional(domain, \"quantifier\", \"Quantifier\", quantifier))\n" + 
-				"			.addproperties(optional(domain, \"type\", \"String\"))\n" + 
-				"			.addproperties(optional(domain, \"typeDeclaration\", domain.name()));\n" + 
 				"\n" + 
 				"	~properties:{it|domain.addproperties(~it.quantifier~(domain, \"~it.name~\"~if(it.type)~, \"~it.type~\"~if(it.typeDeclaration)~, ~it.typeDeclaration~~endif~~endif~));};separator=\"\\n\"~\n" + 
 				"	\n" + 

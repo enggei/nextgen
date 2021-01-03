@@ -208,6 +208,6 @@ public class DomainProcessor {
 		final DefaultFactoryImpl defaultFactoryImpl = new InterfaceImpl(packageName).transform(metaDomain);
 		STGenerator.writeJavaFile(defaultFactoryImpl, defaultFactoryImpl.getPackageName().toString(), defaultFactoryImpl.getName(), root);
 
-		final StringBuilder stringBuilder = new Test(packageName).transform(metaDomain);
+		final DomainDeclaration domainDeclaration = new Test(packageName).transform(metaDomain);
    }	
 }
