@@ -53,15 +53,15 @@ public class TemplateTransformer {
 				"		return onComplete();\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	protected abstract void onDomain(MetaDomain domain);\n" + 
+				"	public abstract void onDomain(MetaDomain domain);\n" + 
 				"\n" + 
-				"	protected abstract void onProperty(MetaDomain.MetaProperty metaProperty);\n" + 
+				"	public abstract void onProperty(MetaDomain.MetaProperty metaProperty);\n" + 
 				"\n" + 
-				"	protected abstract void onEntity(MetaDomain entity);\n" + 
+				"	public abstract void onEntity(MetaDomain entity);\n" + 
 				"\n" + 
-				"	protected abstract T onComplete();\n" + 
+				"	public abstract T onComplete();\n" + 
 				"\n" + 
-				"	protected boolean isInterface(MetaDomain entity) {\n" + 
+				"	public boolean isInterface(MetaDomain entity) {\n" + 
 				"		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());\n" + 
 				"	}\n" + 
 				"\n" + 

@@ -1,9 +1,8 @@
 package domain.meta;
 
-import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
-
 import java.util.*;
+import static domain.DomainProcessor.*;
 
 public class ToInterfacesTransformer extends TemplateDomainTransformer<ToInterfaces> {
 
@@ -16,18 +15,18 @@ public class ToInterfacesTransformer extends TemplateDomainTransformer<ToInterfa
 	}
 
 	@Override
-	protected void onDomain(MetaDomain domain) {
+	public void onDomain(MetaDomain domain) {
 		result.setName(domain.name());
 		result.setPackageName(packageName);
 	}
 
 	@Override
-	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
+	public void onProperty(MetaDomain.MetaProperty metaProperty) {
 		result.addProperties(getType(metaProperty), metaProperty.name());
 	}
 
 	@Override
-	protected void onEntity(MetaDomain entity) {
+	public void onEntity(MetaDomain entity) {
 		if (isInterface(entity)) {
 
 			final ToInterface factoryEntity = DomainST.newToInterface();
@@ -46,7 +45,7 @@ public class ToInterfacesTransformer extends TemplateDomainTransformer<ToInterfa
 	}
 
 	@Override
-	protected ToInterfaces onComplete() {
+	public ToInterfaces onComplete() {
 		return result;
 	}
 

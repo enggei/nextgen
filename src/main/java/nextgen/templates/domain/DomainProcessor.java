@@ -305,112 +305,49 @@ public class DomainProcessor {
 				"public class ~name~ {\n" + 
 				"\n" + 
 				"   ~domains:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"   \n" + 
-				"   private static MetaDomain nextgenDomain() {\n" + 
-				"      final MetaDomainFactory domain = new MetaDomainFactoryImpl()\n" + 
-				"            .setname(\"Nextgen\");\n" + 
-				"      return domain\n" + 
-				"            .addproperties(many(domain, \"projects\", \"STProject\", newDomain(\"STProject\")\n" + 
-				"                  .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                  .addproperties(single(domain, \"root\", \"String\"))\n" + 
-				"                  .addproperties(many(domain, \"models\", \"STModel\", newDomain(\"STModel\")\n" + 
-				"                        .addproperties(single(domain, \"stTemplate\", \"STTemplate\"))\n" + 
-				"                        .addproperties(many(domain, \"files\", \"STFile\", newDomain(\"STFile\")\n" + 
-				"                              .addproperties(single(domain, \"type\", \"STValue\"))\n" + 
-				"                              .addproperties(single(domain, \"packageName\", \"STValue\"))\n" + 
-				"                              .addproperties(single(domain, \"path\", \"STValue\"))))\n" + 
-				"                        .addproperties(many(domain, \"arguments\", \"STArgument\", newDomain(\"STArgument\")\n" + 
-				"                              .addproperties(single(domain, \"stParameter\", \"STParameter\"))\n" + 
-				"                              .addproperties(single(domain, \"value\", \"STValue\"))\n" + 
-				"                              .addproperties(many(domain, \"keyValues\", \"STArgumentKV\", newDomain(\"STArgumentKV\")\n" + 
-				"                                    .addproperties(single(domain, \"stParameterKey\", \"STParameterKey\"))\n" + 
-				"                                    .addproperties(single(domain, \"values\", \"STValue\"))))))))\n" + 
-				"                  .addproperties(many(domain, \"values\", \"STValue\", newDomain(\"STValue\")\n" + 
-				"                        .addproperties(single(domain, \"type\", \"STValueType\", newDomain(\"STValueType\")\n" + 
-				"                              .addproperties(enumerate(domain, \"STMODEL\"))\n" + 
-				"                              .addproperties(enumerate(domain, \"PRIMITIVE\"))\n" + 
-				"                              .addproperties(enumerate(domain, \"ENUM\"))))\n" + 
-				"                        .addproperties(optional(domain, \"value\", \"String\"))\n" + 
-				"                        .addproperties(optional(domain, \"stModel\", \"STModel\"))\n" + 
-				"                        .addproperties(optional(domain, \"stEnum\", \"STEnumValue\"))))))\n" + 
-				"            .addproperties(many(domain, \"groups\", \"STGroup\", newDomain(\"STGroup\")\n" + 
-				"                  .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                  .addproperties(many(domain, \"files\", \"STGroupFile\", newDomain(\"STGroupFile\")\n" + 
-				"                        .addproperties(single(domain, \"packageName\", \"STValue\"))\n" + 
-				"                        .addproperties(single(domain, \"path\", \"STValue\"))))\n" + 
-				"                  .addproperties(many(domain, \"templates\", \"STTemplate\", newDomain(\"STTemplate\")\n" + 
-				"                        .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                        .addproperties(single(domain, \"text\", \"String\"))\n" + 
-				"                        .addproperties(many(domain, \"interfaces\", \"STInterface\"))\n" + 
-				"                        .addproperties(many(domain, \"parameter\", \"STParameter\", newDomain(\"STParameter\")\n" + 
-				"                              .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                              .addproperties(single(domain, \"type\", \"STParameterType\", newDomain(\"STParameterType\")\n" + 
-				"                                    .addproperties(enumerate(domain, \"SINGLE\"))\n" + 
-				"                                    .addproperties(enumerate(domain, \"LIST\"))\n" + 
-				"                                    .addproperties(enumerate(domain, \"KVLIST\"))))\n" + 
-				"                              .addproperties(many(domain, \"keys\", \"STParameterKey\", newDomain(\"STParameterKey\")\n" + 
-				"                                    .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                                    .addproperties(single(domain, \"argumentType\", \"STInterface\"))))\n" + 
-				"                              .addproperties(single(domain, \"argumentType\", \"String\"))))\n" + 
-				"                        .addproperties(many(domain, \"children\", \"STTemplate\"))))\n" + 
-				"                  .addproperties(many(domain, \"interfaces\", \"STInterface\", newDomain(\"STInterface\")\n" + 
-				"                        .addproperties(single(domain, \"name\", \"String\"))))\n" + 
-				"                  .addproperties(many(domain, \"enums\", \"STEnum\", newDomain(\"STEnum\")\n" + 
-				"                        .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                        .addproperties(many(domain, \"values\", \"STEnumValue\", newDomain(\"STEnumValue\")\n" + 
-				"                              .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                              .addproperties(single(domain, \"lexical\", \"String\"))))))\n" + 
-				"                  .addproperties(many(domain, \"actions\", \"STAction\", newDomain(\"STAction\")\n" + 
-				"                        .addproperties(single(domain, \"name\", \"String\"))\n" + 
-				"                        .addproperties(many(domain, \"statements\", \"String\"))\n" + 
-				"                        .addproperties(many(domain, \"imports\", \"String\"))\n" + 
-				"                        .addproperties(many(domain, \"methods\", \"String\"))))));\n" + 
-				"   }\n" + 
 				"\n" + 
-				"	private static MetaDomainFactory newDomain(String name) {\n" + 
-				"      return new MetaDomainFactoryImpl().setname(name);\n" + 
-				"   }\n" + 
-				"   \n" + 
-				"   private static MetaDomain.MetaProperty enumerate(MetaDomainFactory domain, String value) {\n" + 
-				"      return domain.newMetaProperty()\n" + 
-				"            .setname(value);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
-				"      return domain.newMetaProperty()\n" + 
-				"            .setname(name)\n" + 
-				"            .setquantifier(MANY)\n" + 
-				"            .settype(type)\n" + 
-				"            .settypeDeclaration(typeDeclaration);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type) {\n" + 
-				"      return many(domain, name, type, null);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
-				"      return domain.newMetaProperty()\n" + 
-				"            .setname(name)\n" + 
-				"            .setquantifier(ONE)\n" + 
-				"            .settype(type)\n" + 
-				"            .settypeDeclaration(typeDeclaration);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type) {\n" + 
-				"      return single(domain, name, type, null);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
-				"      return domain.newMetaProperty()\n" + 
-				"            .setname(name)\n" + 
-				"            .setquantifier(OPTIONAL)\n" + 
-				"            .settype(type)\n" + 
-				"            .settypeDeclaration(typeDeclaration);\n" + 
-				"   }\n" + 
-				"\n" + 
-				"   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type) {\n" + 
-				"      return optional(domain, name, type, null);\n" + 
-				"   }\n" + 
+				"	public static MetaDomainFactory newDomain(String name) {\n" + 
+				"		return new MetaDomainFactoryImpl(name);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomain.MetaProperty enumerate(MetaDomainFactory domain, String value) {\n" + 
+				"		return domain.newMetaProperty(value);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
+				"		return domain.newMetaProperty(name)\n" + 
+				"				.setquantifier(MANY)\n" + 
+				"				.settype(type)\n" + 
+				"				.settypeDeclaration(typeDeclaration);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type) {\n" + 
+				"		return many(domain, name, type, null);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
+				"		return domain.newMetaProperty(name)\n" + 
+				"				.setname(name)\n" + 
+				"				.setquantifier(ONE)\n" + 
+				"				.settype(type)\n" + 
+				"				.settypeDeclaration(typeDeclaration);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type) {\n" + 
+				"		return single(domain, name, type, null);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {\n" + 
+				"		return domain.newMetaProperty(name)\n" + 
+				"				.setname(name)\n" + 
+				"				.setquantifier(OPTIONAL)\n" + 
+				"				.settype(type)\n" + 
+				"				.settypeDeclaration(typeDeclaration);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type) {\n" + 
+				"		return optional(domain, name, type, null);\n" + 
+				"	}\n" + 
 				"\n" + 
 				"   interface DomainTransformer<T> {\n" + 
 				"\n" + 

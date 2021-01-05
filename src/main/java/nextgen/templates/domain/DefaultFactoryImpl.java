@@ -8,7 +8,9 @@ public class DefaultFactoryImpl {
 	private Object _factory;
 	private String _name;
 	private Object _packageName;
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _requiredProperties = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
 
 	DefaultFactoryImpl(org.stringtemplate.v4.STGroup stGroup) {
@@ -25,7 +27,9 @@ public class DefaultFactoryImpl {
 		st.add("factory", _factory);
 		st.add("name", _name);
 		st.add("packageName", _packageName);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _entities) st.add("entities", o);
+		for (java.util.Map<String, Object> map : _requiredProperties) st.addAggr("requiredProperties.{name,type}", map.get("name"), map.get("type"));
 		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{init,getter,impl,assign,element,methodName,name,type}", map.get("init"), map.get("getter"), map.get("impl"), map.get("assign"), map.get("element"), map.get("methodName"), map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
@@ -96,6 +100,35 @@ public class DefaultFactoryImpl {
 		return this;
 	} 
 
+	public DefaultFactoryImpl addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public DefaultFactoryImpl setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public DefaultFactoryImpl setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public DefaultFactoryImpl removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public DefaultFactoryImpl removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
+	} 
+
 	public DefaultFactoryImpl addEntities(Object value) {
 		this._entities.add(value);
 		return this;
@@ -124,6 +157,75 @@ public class DefaultFactoryImpl {
 	public java.util.List<Object> getEntities() {
 		return this._entities;
 	} 
+
+	public DefaultFactoryImpl setRequiredProperties(java.util.Collection<DefaultFactoryImpl_RequiredProperties> values) {
+			this._requiredProperties.clear();
+			values.stream().map(DefaultFactoryImpl_RequiredProperties::asMap).forEach(map -> _requiredProperties.add(map));
+			return this;
+		}
+
+	public DefaultFactoryImpl addRequiredProperties(Object _name, Object _type) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("name", _name);
+		map.put("type", _type);
+		this._requiredProperties.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getRequiredProperties() {
+		return this._requiredProperties;
+	}
+
+	public DefaultFactoryImpl addRequiredProperties(DefaultFactoryImpl_RequiredProperties value) {
+		return addRequiredProperties(value._name, value._type);
+	}
+
+	public java.util.stream.Stream<DefaultFactoryImpl_RequiredProperties> streamRequiredProperties() {
+		return this._requiredProperties.stream().map(DefaultFactoryImpl_RequiredProperties::new);
+	}
+
+	public java.util.List<Object> getRequiredProperties_Name() {
+		return streamRequiredProperties().map(DefaultFactoryImpl_RequiredProperties::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getRequiredProperties_Type() {
+		return streamRequiredProperties().map(DefaultFactoryImpl_RequiredProperties::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class DefaultFactoryImpl_RequiredProperties {
+
+		Object _name;
+		Object _type;
+
+		public DefaultFactoryImpl_RequiredProperties(Object _name, Object _type) {
+			this._name = _name;
+			this._type = _type;
+		}
+
+		private DefaultFactoryImpl_RequiredProperties(java.util.Map<String, Object> map) {
+			this._name = (Object) map.get("name");
+			this._type = (Object) map.get("type");
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
+		}
+
+	}  
 
 	public DefaultFactoryImpl setProperties(java.util.Collection<DefaultFactoryImpl_Properties> values) {
 			this._properties.clear();
@@ -291,12 +393,20 @@ public class DefaultFactoryImpl {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "defaultFactoryImpl(properties,entities,factory,name,packageName) ::= <<package ~packageName~;\n" + 
+	static final String st = "defaultFactoryImpl(methods,requiredProperties,properties,entities,factory,name,packageName) ::= <<package ~packageName~;\n" + 
+				"\n" + 
+				"import domain.meta.*;\n" + 
+				"\n" + 
+				"import static domain.DomainProcessor.*;\n" + 
 				"\n" + 
 				"public class ~name~ implements ~factory~ {\n" + 
 				"\n" + 
-				"	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+				"	~properties:{it|~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
+				"	public ~name~(~requiredProperties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		~requiredProperties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+				"	}\n" + 
+				"	\n" + 
 				"~properties:{it|\n" + 
 				"	@Override\n" + 
 				"	public ~it.type~ ~it.name~() { return ~it.getter~; ~eom()~\n" + 
@@ -305,5 +415,7 @@ public class DefaultFactoryImpl {
 				"	public ~factory~ ~it.methodName~(~it.element~ element) { ~it.assign~; return this; ~eom()~\n" + 
 				"};separator=\"\\n\"~\n" + 
 				"	~entities:{it|~it~};separator=\"\\n\\n\"~\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

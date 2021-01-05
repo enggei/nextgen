@@ -5,7 +5,7 @@ public interface MetaDomainFactory extends MetaDomain {
 	MetaDomainFactory setname(String value);
 	MetaDomainFactory addproperties(MetaProperty value);
 
-	MetaPropertyBuilder newMetaProperty();
+	MetaPropertyBuilder newMetaProperty(String name);
 
 	interface MetaPropertyBuilder extends MetaProperty {
 		MetaPropertyBuilder setname(String element);

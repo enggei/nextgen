@@ -21,6 +21,4 @@ public interface MetaDomain {
 		OPTIONAL
 
 	}
-
-
 }

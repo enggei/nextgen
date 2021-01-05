@@ -19,112 +19,49 @@ import static domain.meta.MetaDomain.Quantifier.*;
 public class ~name~ {
 
    ~domains:{it|~it~};separator="\n\n"~
-   
-   private static MetaDomain nextgenDomain() {
-      final MetaDomainFactory domain = new MetaDomainFactoryImpl()
-            .setname("Nextgen");
-      return domain
-            .addproperties(many(domain, "projects", "STProject", newDomain("STProject")
-                  .addproperties(single(domain, "name", "String"))
-                  .addproperties(single(domain, "root", "String"))
-                  .addproperties(many(domain, "models", "STModel", newDomain("STModel")
-                        .addproperties(single(domain, "stTemplate", "STTemplate"))
-                        .addproperties(many(domain, "files", "STFile", newDomain("STFile")
-                              .addproperties(single(domain, "type", "STValue"))
-                              .addproperties(single(domain, "packageName", "STValue"))
-                              .addproperties(single(domain, "path", "STValue"))))
-                        .addproperties(many(domain, "arguments", "STArgument", newDomain("STArgument")
-                              .addproperties(single(domain, "stParameter", "STParameter"))
-                              .addproperties(single(domain, "value", "STValue"))
-                              .addproperties(many(domain, "keyValues", "STArgumentKV", newDomain("STArgumentKV")
-                                    .addproperties(single(domain, "stParameterKey", "STParameterKey"))
-                                    .addproperties(single(domain, "values", "STValue"))))))))
-                  .addproperties(many(domain, "values", "STValue", newDomain("STValue")
-                        .addproperties(single(domain, "type", "STValueType", newDomain("STValueType")
-                              .addproperties(enumerate(domain, "STMODEL"))
-                              .addproperties(enumerate(domain, "PRIMITIVE"))
-                              .addproperties(enumerate(domain, "ENUM"))))
-                        .addproperties(optional(domain, "value", "String"))
-                        .addproperties(optional(domain, "stModel", "STModel"))
-                        .addproperties(optional(domain, "stEnum", "STEnumValue"))))))
-            .addproperties(many(domain, "groups", "STGroup", newDomain("STGroup")
-                  .addproperties(single(domain, "name", "String"))
-                  .addproperties(many(domain, "files", "STGroupFile", newDomain("STGroupFile")
-                        .addproperties(single(domain, "packageName", "STValue"))
-                        .addproperties(single(domain, "path", "STValue"))))
-                  .addproperties(many(domain, "templates", "STTemplate", newDomain("STTemplate")
-                        .addproperties(single(domain, "name", "String"))
-                        .addproperties(single(domain, "text", "String"))
-                        .addproperties(many(domain, "interfaces", "STInterface"))
-                        .addproperties(many(domain, "parameter", "STParameter", newDomain("STParameter")
-                              .addproperties(single(domain, "name", "String"))
-                              .addproperties(single(domain, "type", "STParameterType", newDomain("STParameterType")
-                                    .addproperties(enumerate(domain, "SINGLE"))
-                                    .addproperties(enumerate(domain, "LIST"))
-                                    .addproperties(enumerate(domain, "KVLIST"))))
-                              .addproperties(many(domain, "keys", "STParameterKey", newDomain("STParameterKey")
-                                    .addproperties(single(domain, "name", "String"))
-                                    .addproperties(single(domain, "argumentType", "STInterface"))))
-                              .addproperties(single(domain, "argumentType", "String"))))
-                        .addproperties(many(domain, "children", "STTemplate"))))
-                  .addproperties(many(domain, "interfaces", "STInterface", newDomain("STInterface")
-                        .addproperties(single(domain, "name", "String"))))
-                  .addproperties(many(domain, "enums", "STEnum", newDomain("STEnum")
-                        .addproperties(single(domain, "name", "String"))
-                        .addproperties(many(domain, "values", "STEnumValue", newDomain("STEnumValue")
-                              .addproperties(single(domain, "name", "String"))
-                              .addproperties(single(domain, "lexical", "String"))))))
-                  .addproperties(many(domain, "actions", "STAction", newDomain("STAction")
-                        .addproperties(single(domain, "name", "String"))
-                        .addproperties(many(domain, "statements", "String"))
-                        .addproperties(many(domain, "imports", "String"))
-                        .addproperties(many(domain, "methods", "String"))))));
-   }
 
-	private static MetaDomainFactory newDomain(String name) {
-      return new MetaDomainFactoryImpl().setname(name);
-   }
-   
-   private static MetaDomain.MetaProperty enumerate(MetaDomainFactory domain, String value) {
-      return domain.newMetaProperty()
-            .setname(value);
-   }
-
-   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
-      return domain.newMetaProperty()
-            .setname(name)
-            .setquantifier(MANY)
-            .settype(type)
-            .settypeDeclaration(typeDeclaration);
-   }
-
-   private static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type) {
-      return many(domain, name, type, null);
-   }
-
-   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
-      return domain.newMetaProperty()
-            .setname(name)
-            .setquantifier(ONE)
-            .settype(type)
-            .settypeDeclaration(typeDeclaration);
-   }
-
-   private static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type) {
-      return single(domain, name, type, null);
-   }
-
-   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
-      return domain.newMetaProperty()
-            .setname(name)
-            .setquantifier(OPTIONAL)
-            .settype(type)
-            .settypeDeclaration(typeDeclaration);
-   }
-
-   private static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type) {
-      return optional(domain, name, type, null);
-   }
+	public static MetaDomainFactory newDomain(String name) {
+		return new MetaDomainFactoryImpl(name);
+	}
+	
+	public static MetaDomain.MetaProperty enumerate(MetaDomainFactory domain, String value) {
+		return domain.newMetaProperty(value);
+	}
+	
+	public static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+		return domain.newMetaProperty(name)
+				.setquantifier(MANY)
+				.settype(type)
+				.settypeDeclaration(typeDeclaration);
+	}
+	
+	public static MetaDomainFactory.MetaPropertyBuilder many(MetaDomainFactory domain, String name, String type) {
+		return many(domain, name, type, null);
+	}
+	
+	public static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+		return domain.newMetaProperty(name)
+				.setname(name)
+				.setquantifier(ONE)
+				.settype(type)
+				.settypeDeclaration(typeDeclaration);
+	}
+	
+	public static MetaDomain.MetaProperty single(MetaDomainFactory domain, String name, String type) {
+		return single(domain, name, type, null);
+	}
+	
+	public static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type, MetaDomain typeDeclaration) {
+		return domain.newMetaProperty(name)
+				.setname(name)
+				.setquantifier(OPTIONAL)
+				.settype(type)
+				.settypeDeclaration(typeDeclaration);
+	}
+	
+	public static MetaDomain.MetaProperty optional(MetaDomainFactory domain, String name, String type) {
+		return optional(domain, name, type, null);
+	}
 
    interface DomainTransformer<T> {
 
@@ -147,10 +84,9 @@ public class ~name~ {
    }	
 }  >>
 
-DomainDeclaration(entities,properties,name) ::= <<private static MetaDomain new~name;format="capitalize"~() {
+DomainDeclaration(entities,properties,name) ::= <<public static MetaDomain new~name;format="capitalize"~() {
 
-	final MetaDomainFactory domain = new MetaDomainFactoryImpl();
-	domain.setname("~name;format="capitalize"~");
+	final MetaDomainFactory domain = new MetaDomainFactoryImpl("~name;format="capitalize"~");
 	
 	~entities:{it|~it~};separator="\n\n"~
 
@@ -179,15 +115,15 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 		return onComplete();
 	}
 
-	protected abstract void onDomain(MetaDomain domain);
+	public abstract void onDomain(MetaDomain domain);
 
-	protected abstract void onProperty(MetaDomain.MetaProperty metaProperty);
+	public abstract void onProperty(MetaDomain.MetaProperty metaProperty);
 
-	protected abstract void onEntity(MetaDomain entity);
+	public abstract void onEntity(MetaDomain entity);
 
-	protected abstract T onComplete();
+	public abstract T onComplete();
 
-	protected boolean isInterface(MetaDomain entity) {
+	public boolean isInterface(MetaDomain entity) {
 		return entity.properties().anyMatch(metaProperty -> metaProperty.quantifier().isPresent());
 	}
 
@@ -229,10 +165,9 @@ TemplateTransformer() ::= <<public static abstract class TemplateDomainTransform
 
 TemplateTransformerImpl(mapName,mapTypeDeclaration,mapType,mapQuantifier,fields,packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;
 
-import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
-
 import java.util.*;
+import static domain.DomainProcessor.*;
 
 public class ~name~ extends TemplateDomainTransformer<~T~> {
 
@@ -246,47 +181,47 @@ public class ~name~ extends TemplateDomainTransformer<~T~> {
 	}
 
 	@Override
-	protected void onDomain(MetaDomain domain) {
+	public void onDomain(MetaDomain domain) {
 		~onDomain:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
+	public void onProperty(MetaDomain.MetaProperty metaProperty) {
 		~onProperty:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	protected void onEntity(MetaDomain entity) {
+	public void onEntity(MetaDomain entity) {
 		~onEntity:{it|~it~};separator="\n"~
 	}
 
 	@Override
-	protected ~T~ onComplete() {
+	public ~T~ onComplete() {
 		~onComplete:{it|~it~};separator="\n"~
 		return result;
 	}
 
 ~if(mapQuantifier)~
 	@Override
-	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
+	public Object quantifier(MetaDomain.MetaProperty metaProperty) {
 		~mapQuantifier:{it|~it~}~
 	}
 ~endif~
 ~if(mapName)~
 	@Override
-	protected Object name(MetaDomain.MetaProperty metaProperty) {
+	public Object name(MetaDomain.MetaProperty metaProperty) {
 		~mapName:{it|~it~}~
 	}
 ~endif~
 ~if(mapType)~
 	@Override
-	protected Object type(MetaDomain.MetaProperty metaProperty) {
+	public Object type(MetaDomain.MetaProperty metaProperty) {
 		~mapType:{it|~it~}~
 	}
 ~endif~
 ~if(mapTypeDeclaration)~
 	@Override
-	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+	public Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
 		~mapTypeDeclaration:{it|~it~}~
 	}
 ~endif~
@@ -294,22 +229,31 @@ public class ~name~ extends TemplateDomainTransformer<~T~> {
 	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-toFactory(domain,properties,entities,name,packageName) ::= <<package ~packageName~;
+toFactory(methods,domain,properties,entities,name,packageName) ::= <<package ~packageName~;
 
 public interface ~name~ extends ~domain~ {
 	
 	~properties:{it|~name~ ~it.name~(~it.type~ value);};separator="\n"~
 	
 	~entities:{it|~it~};separator="\n\n"~
-	
+
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-defaultFactoryImpl(properties,entities,factory,name,packageName) ::= <<package ~packageName~;
+defaultFactoryImpl(methods,requiredProperties,properties,entities,factory,name,packageName) ::= <<package ~packageName~;
+
+import domain.meta.*;
+
+import static domain.DomainProcessor.*;
 
 public class ~name~ implements ~factory~ {
 
-	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+	~properties:{it|~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
+	public ~name~(~requiredProperties:{it|~it.type~ ~it.name~};separator=", "~) {
+		~requiredProperties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+	
 ~properties:{it|
 	@Override
 	public ~it.type~ ~it.name~() { return ~it.getter~; ~eom()~
@@ -318,12 +262,14 @@ public class ~name~ implements ~factory~ {
 	public ~factory~ ~it.methodName~(~it.element~ element) { ~it.assign~; return this; ~eom()~
 };separator="\n"~
 	~entities:{it|~it~};separator="\n\n"~
+
+	~methods:{it|~it~};separator="\n\n"~
 }  >>
 
 defaultEntityImpl(requiredProperties,properties,type,name) ::= <<@Override 
 public ~type~Builder new~name;format="capitalize"~(~requiredProperties:{it|~it.type~ ~it.name~};separator=", "~) { return new ~type~BuilderImpl(~requiredProperties:{it|~it.name~};separator=", "~); }
 
-public class ~type~BuilderImpl implements ~type~Builder {
+public static final class ~type~BuilderImpl implements ~type~Builder {
 
 	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 

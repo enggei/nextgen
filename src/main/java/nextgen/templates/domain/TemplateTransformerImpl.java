@@ -566,10 +566,9 @@ public class TemplateTransformerImpl {
 
 	static final String st = "TemplateTransformerImpl(mapName,mapTypeDeclaration,mapType,mapQuantifier,fields,packageName,onComplete,onEntity,onProperty,onDomain,init,properties,methods,T,name) ::= <<package ~packageName~;\n" + 
 				"\n" + 
-				"import domain.DomainProcessor.*;\n" + 
 				"import nextgen.templates.domain.*;\n" + 
-				"\n" + 
 				"import java.util.*;\n" + 
+				"import static domain.DomainProcessor.*;\n" + 
 				"\n" + 
 				"public class ~name~ extends TemplateDomainTransformer<~T~> {\n" + 
 				"\n" + 
@@ -583,47 +582,47 @@ public class TemplateTransformerImpl {
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	protected void onDomain(MetaDomain domain) {\n" + 
+				"	public void onDomain(MetaDomain domain) {\n" + 
 				"		~onDomain:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	protected void onProperty(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	public void onProperty(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~onProperty:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	protected void onEntity(MetaDomain entity) {\n" + 
+				"	public void onEntity(MetaDomain entity) {\n" + 
 				"		~onEntity:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	@Override\n" + 
-				"	protected ~T~ onComplete() {\n" + 
+				"	public ~T~ onComplete() {\n" + 
 				"		~onComplete:{it|~it~};separator=\"\\n\"~\n" + 
 				"		return result;\n" + 
 				"	}\n" + 
 				"\n" + 
 				"~if(mapQuantifier)~\n" + 
 				"	@Override\n" + 
-				"	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	public Object quantifier(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~mapQuantifier:{it|~it~}~\n" + 
 				"	}\n" + 
 				"~endif~\n" + 
 				"~if(mapName)~\n" + 
 				"	@Override\n" + 
-				"	protected Object name(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	public Object name(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~mapName:{it|~it~}~\n" + 
 				"	}\n" + 
 				"~endif~\n" + 
 				"~if(mapType)~\n" + 
 				"	@Override\n" + 
-				"	protected Object type(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	public Object type(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~mapType:{it|~it~}~\n" + 
 				"	}\n" + 
 				"~endif~\n" + 
 				"~if(mapTypeDeclaration)~\n" + 
 				"	@Override\n" + 
-				"	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {\n" + 
+				"	public Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {\n" + 
 				"		~mapTypeDeclaration:{it|~it~}~\n" + 
 				"	}\n" + 
 				"~endif~\n" + 

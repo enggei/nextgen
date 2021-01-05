@@ -5,6 +5,7 @@ public class RouteHandler {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _arguments;
 	private Object _name;
 	private java.util.List<java.util.Map<String, Object>> _params = new java.util.ArrayList<>();
 
@@ -19,10 +20,33 @@ public class RouteHandler {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("RouteHandler");
+		st.add("arguments", _arguments);
 		st.add("name", _name);
 		for (java.util.Map<String, Object> map : _params) st.addAggr("params.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public RouteHandler setArguments(Object value) {
+		this._arguments = value;
+		return this;
+	}
+
+	public Object getArguments() {
+		return this._arguments;
+	}
+
+	public Object getArguments(Object defaultValue) {
+		return this._arguments == null ? defaultValue : this._arguments;
+	}
+
+	public boolean hasArguments() {
+		return this._arguments != null;
+	}
+
+	public RouteHandler removeArguments() {
+		this._arguments = null;
+		return this;
+	} 
 
 	public RouteHandler setName(Object value) {
 		this._name = value;
@@ -129,10 +153,10 @@ public class RouteHandler {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "RouteHandler(name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
+	static final String st = "RouteHandler(arguments,name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=\",\"~~endif~) {\n" + 
 				"	debug(\"~name~\", routingContext);\n" + 
 				"\n" + 
-				"	vertx.eventBus().request(\"~name~\", routingContext.getBody(), (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {\n" + 
+				"	vertx.eventBus().request(\"~name~\", ~if(arguments)~~arguments~~else~routingContext.getBody()~endif~, (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {\n" + 
 				"		if (reply.succeeded()) {\n" + 
 				"			sendHtmlResponse(routingContext, OK, new ~name;format=\"capitalize\"~Page(reply.result().body()).toString());	\n" + 
 				"		} else {\n" + 

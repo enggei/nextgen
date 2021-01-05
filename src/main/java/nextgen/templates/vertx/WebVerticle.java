@@ -442,7 +442,7 @@ public class WebVerticle {
 				"		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));\n" + 
 				"		router.post(\"/login\").handler(routingContext -> login(routingContext, auth));\n" + 
 				"		router.route(\"/secure/*\").handler(JWTAuthHandler.create(auth, \"/login\"));\n" + 
-				"		~routes:{it|router.~it.action~(\"/~it.url~\")~if(it.order)~.order(~it.order~)~endif~.handler(this::~it.handler~);};separator=\"\\n\"~\n" + 
+				"		~routes:{it|router.~it.action~(~it.url~)~if(it.order)~.order(~it.order~)~endif~.handler(this::~it.handler~);};separator=\"\\n\"~\n" + 
 				"		\n" + 
 				"		final HttpServerOptions serverOptions = new HttpServerOptions();\n" + 
 				"\n" + 

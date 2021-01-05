@@ -1,9 +1,8 @@
 package domain.meta;
 
-import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
-
 import java.util.*;
+import static domain.DomainProcessor.*;
 
 public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.templates.domain.ToFactory> {
 
@@ -16,19 +15,19 @@ public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.temp
 	}
 
 	@Override
-	protected void onDomain(MetaDomain domain) {
+	public void onDomain(MetaDomain domain) {
 		result.setName(domain.name() + "Factory");
 		result.setPackageName(packageName);
 		result.setDomain(domain.name());
 	}
 
 	@Override
-	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
+	public void onProperty(MetaDomain.MetaProperty metaProperty) {
 		result.addProperties(metaProperty.type().get(), name(metaProperty));
 	}
 
 	@Override
-	protected void onEntity(MetaDomain entity) {
+	public void onEntity(MetaDomain entity) {
 		if (isInterface(entity)) {
 		   final FactoryEntity factoryEntity = DomainST.newFactoryEntity();
 		   factoryEntity.setName(entity.name());
@@ -46,12 +45,12 @@ public class ToFactoryTransformer extends TemplateDomainTransformer<nextgen.temp
 	}
 
 	@Override
-	protected nextgen.templates.domain.ToFactory onComplete() {
+	public nextgen.templates.domain.ToFactory onComplete() {
 		return result;
 	}
 
 	@Override
-	protected Object name(MetaDomain.MetaProperty metaProperty) {
+	public Object name(MetaDomain.MetaProperty metaProperty) {
 		if (metaProperty.quantifier().isEmpty()) return "set" + metaProperty.type().get();
 
 		switch (metaProperty.quantifier().get()) {

@@ -1,9 +1,16 @@
 package domain.nextgen;
 
+import domain.meta.*;
+
+import static domain.DomainProcessor.*;
+
 public class NextgenFactoryImpl implements NextgenFactory {
 
-	private final java.util.List<STProject> projects =  new java.util.ArrayList<>();
-	private final java.util.List<STGroup> groups =  new java.util.ArrayList<>();
+	 final java.util.List<STProject> projects =  new java.util.ArrayList<>();
+	 final java.util.List<STGroup> groups =  new java.util.ArrayList<>();
+
+	public NextgenFactoryImpl() {
+	}
 
 	@Override
 	public java.util.stream.Stream<STProject> projects() { return projects.stream(); }
@@ -20,7 +27,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STProjectBuilder newSTProject(String name, String root) { return new STProjectBuilderImpl(name, root); }
 
-	public class STProjectBuilderImpl implements STProjectBuilder {
+	public static final class STProjectBuilderImpl implements STProjectBuilder {
 
 		private String name;
 		private String root;
@@ -61,7 +68,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STModelBuilder newSTModel(STTemplate stTemplate) { return new STModelBuilderImpl(stTemplate); }
 
-	public class STModelBuilderImpl implements STModelBuilder {
+	public static final class STModelBuilderImpl implements STModelBuilder {
 
 		private STTemplate stTemplate;
 		private final java.util.List<STFile> files =  new java.util.ArrayList<>();
@@ -94,7 +101,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STFileBuilder newSTFile(STValue type, STValue packageName, STValue path) { return new STFileBuilderImpl(type, packageName, path); }
 
-	public class STFileBuilderImpl implements STFileBuilder {
+	public static final class STFileBuilderImpl implements STFileBuilder {
 
 		private STValue type;
 		private STValue packageName;
@@ -129,7 +136,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STArgumentBuilder newSTArgument(STParameter stParameter, STValue value) { return new STArgumentBuilderImpl(stParameter, value); }
 
-	public class STArgumentBuilderImpl implements STArgumentBuilder {
+	public static final class STArgumentBuilderImpl implements STArgumentBuilder {
 
 		private STParameter stParameter;
 		private STValue value;
@@ -163,7 +170,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STArgumentKVBuilder newSTArgumentKV(STParameterKey stParameterKey, STValue values) { return new STArgumentKVBuilderImpl(stParameterKey, values); }
 
-	public class STArgumentKVBuilderImpl implements STArgumentKVBuilder {
+	public static final class STArgumentKVBuilderImpl implements STArgumentKVBuilder {
 
 		private STParameterKey stParameterKey;
 		private STValue values;
@@ -190,7 +197,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STValueBuilder newSTValue(STValueType type) { return new STValueBuilderImpl(type); }
 
-	public class STValueBuilderImpl implements STValueBuilder {
+	public static final class STValueBuilderImpl implements STValueBuilder {
 
 		private STValueType type;
 		private String value;
@@ -230,7 +237,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STGroupBuilder newSTGroup(String name) { return new STGroupBuilderImpl(name); }
 
-	public class STGroupBuilderImpl implements STGroupBuilder {
+	public static final class STGroupBuilderImpl implements STGroupBuilder {
 
 		private String name;
 		private final java.util.List<STGroupFile> files =  new java.util.ArrayList<>();
@@ -284,7 +291,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STGroupFileBuilder newSTGroupFile(STValue packageName, STValue path) { return new STGroupFileBuilderImpl(packageName, path); }
 
-	public class STGroupFileBuilderImpl implements STGroupFileBuilder {
+	public static final class STGroupFileBuilderImpl implements STGroupFileBuilder {
 
 		private STValue packageName;
 		private STValue path;
@@ -311,7 +318,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STTemplateBuilder newSTTemplate(String name, String text) { return new STTemplateBuilderImpl(name, text); }
 
-	public class STTemplateBuilderImpl implements STTemplateBuilder {
+	public static final class STTemplateBuilderImpl implements STTemplateBuilder {
 
 		private String name;
 		private String text;
@@ -359,7 +366,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STParameterBuilder newSTParameter(String name, STParameterType type, String argumentType) { return new STParameterBuilderImpl(name, type, argumentType); }
 
-	public class STParameterBuilderImpl implements STParameterBuilder {
+	public static final class STParameterBuilderImpl implements STParameterBuilder {
 
 		private String name;
 		private STParameterType type;
@@ -401,7 +408,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STParameterKeyBuilder newSTParameterKey(String name, STInterface argumentType) { return new STParameterKeyBuilderImpl(name, argumentType); }
 
-	public class STParameterKeyBuilderImpl implements STParameterKeyBuilder {
+	public static final class STParameterKeyBuilderImpl implements STParameterKeyBuilder {
 
 		private String name;
 		private STInterface argumentType;
@@ -428,7 +435,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STInterfaceBuilder newSTInterface(String name) { return new STInterfaceBuilderImpl(name); }
 
-	public class STInterfaceBuilderImpl implements STInterfaceBuilder {
+	public static final class STInterfaceBuilderImpl implements STInterfaceBuilder {
 
 		private String name;
 
@@ -447,7 +454,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STEnumBuilder newSTEnum(String name) { return new STEnumBuilderImpl(name); }
 
-	public class STEnumBuilderImpl implements STEnumBuilder {
+	public static final class STEnumBuilderImpl implements STEnumBuilder {
 
 		private String name;
 		private final java.util.List<STEnumValue> values =  new java.util.ArrayList<>();
@@ -473,7 +480,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STEnumValueBuilder newSTEnumValue(String name, String lexical) { return new STEnumValueBuilderImpl(name, lexical); }
 
-	public class STEnumValueBuilderImpl implements STEnumValueBuilder {
+	public static final class STEnumValueBuilderImpl implements STEnumValueBuilder {
 
 		private String name;
 		private String lexical;
@@ -500,7 +507,7 @@ public class NextgenFactoryImpl implements NextgenFactory {
 	@Override 
 	public STActionBuilder newSTAction(String name) { return new STActionBuilderImpl(name); }
 
-	public class STActionBuilderImpl implements STActionBuilder {
+	public static final class STActionBuilderImpl implements STActionBuilder {
 
 		private String name;
 		private final java.util.List<String> statements =  new java.util.ArrayList<>();
@@ -535,5 +542,102 @@ public class NextgenFactoryImpl implements NextgenFactory {
 		@Override 
 		public STActionBuilder addmethods(String element) { methods.add(element); return this; }
 
+	}
+
+	private static MetaDomain newNextgen() {
+
+		final MetaDomainFactory domain = new MetaDomainFactoryImpl("Nextgen");
+
+		final MetaDomainFactory STAction = newDomain("STAction")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(many(domain, "statements", "String"))
+				.addproperties(many(domain, "imports", "String"))
+				.addproperties(many(domain, "methods", "String"));
+
+		final MetaDomainFactory STEnumValue = newDomain("STEnumValue")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(single(domain, "lexical", "String"));
+
+		final MetaDomainFactory STEnum = newDomain("STEnum")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(many(domain, "values", "STEnumValue", STEnumValue));
+
+		final MetaDomainFactory STInterface = newDomain("STInterface")
+				.addproperties(single(domain, "name", "String"));
+
+		final MetaDomainFactory STParameterKey = newDomain("STParameterKey")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(single(domain, "argumentType", "STInterface"));
+
+		final MetaDomainFactory STParameterType = newDomain("STParameterType")
+				.addproperties(enumerate(domain, "SINGLE"))
+				.addproperties(enumerate(domain, "LIST"))
+				.addproperties(enumerate(domain, "KVLIST"));
+
+		final MetaDomainFactory STParameter = newDomain("STParameter")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(single(domain, "type", "STParameterType", STParameterType))
+				.addproperties(many(domain, "keys", "STParameterKey", STParameterKey))
+				.addproperties(single(domain, "argumentType", "String"));
+
+		final MetaDomainFactory STTemplate = newDomain("STTemplate")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(single(domain, "text", "String"))
+				.addproperties(many(domain, "interfaces", "STInterface"))
+				.addproperties(many(domain, "parameter", "STParameter", STParameter))
+				.addproperties(many(domain, "children", "STTemplate"));
+
+		final MetaDomainFactory STGroupFile = newDomain("STGroupFile")
+				.addproperties(single(domain, "packageName", "STValue"))
+				.addproperties(single(domain, "path", "STValue"));
+
+		final MetaDomainFactory STGroup = newDomain("STGroup")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(many(domain, "files", "STGroupFile", STGroupFile))
+				.addproperties(many(domain, "templates", "STTemplate", STTemplate))
+				.addproperties(many(domain, "interfaces", "STInterface", STInterface))
+				.addproperties(many(domain, "enums", "STEnum", STEnum))
+				.addproperties(many(domain, "actions", "STAction", STAction));
+
+		final MetaDomainFactory STValueType = newDomain("STValueType")
+				.addproperties(enumerate(domain, "STMODEL"))
+				.addproperties(enumerate(domain, "PRIMITIVE"))
+				.addproperties(enumerate(domain, "ENUM"));
+
+		final MetaDomainFactory STValue = newDomain("STValue")
+				.addproperties(single(domain, "type", "STValueType", STValueType))
+				.addproperties(optional(domain, "value", "String"))
+				.addproperties(optional(domain, "stModel", "STModel"))
+				.addproperties(optional(domain, "stEnum", "STEnumValue"));
+
+		final MetaDomainFactory STArgumentKV = newDomain("STArgumentKV")
+				.addproperties(single(domain, "stParameterKey", "STParameterKey"))
+				.addproperties(single(domain, "values", "STValue"));
+
+		final MetaDomainFactory STArgument = newDomain("STArgument")
+				.addproperties(single(domain, "stParameter", "STParameter"))
+				.addproperties(single(domain, "value", "STValue"))
+				.addproperties(many(domain, "keyValues", "STArgumentKV", STArgumentKV));
+
+		final MetaDomainFactory STFile = newDomain("STFile")
+				.addproperties(single(domain, "type", "STValue"))
+				.addproperties(single(domain, "packageName", "STValue"))
+				.addproperties(single(domain, "path", "STValue"));
+
+		final MetaDomainFactory STModel = newDomain("STModel")
+				.addproperties(single(domain, "stTemplate", "STTemplate"))
+				.addproperties(many(domain, "files", "STFile", STFile))
+				.addproperties(many(domain, "arguments", "STArgument", STArgument));
+
+		final MetaDomainFactory STProject = newDomain("STProject")
+				.addproperties(single(domain, "name", "String"))
+				.addproperties(single(domain, "root", "String"))
+				.addproperties(many(domain, "models", "STModel", STModel))
+				.addproperties(many(domain, "values", "STValue", STValue));
+
+		domain.addproperties(many(domain, "projects", "STProject", STProject));
+		domain.addproperties(many(domain, "groups", "STGroup", STGroup));
+
+		return domain;
 	}
 }

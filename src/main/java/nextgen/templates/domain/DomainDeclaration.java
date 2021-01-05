@@ -187,10 +187,9 @@ public class DomainDeclaration {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainDeclaration(entities,properties,name) ::= <<private static MetaDomain new~name;format=\"capitalize\"~() {\n" + 
+	static final String st = "DomainDeclaration(entities,properties,name) ::= <<public static MetaDomain new~name;format=\"capitalize\"~() {\n" + 
 				"\n" + 
-				"	final MetaDomainFactory domain = new MetaDomainFactoryImpl();\n" + 
-				"	domain.setname(\"~name;format=\"capitalize\"~\");\n" + 
+				"	final MetaDomainFactory domain = new MetaDomainFactoryImpl(\"~name;format=\"capitalize\"~\");\n" + 
 				"	\n" + 
 				"	~entities:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 

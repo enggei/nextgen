@@ -311,7 +311,7 @@ public class DefaultEntityImpl {
 	static final String st = "defaultEntityImpl(requiredProperties,properties,type,name) ::= <<@Override \n" + 
 				"public ~type~Builder new~name;format=\"capitalize\"~(~requiredProperties:{it|~it.type~ ~it.name~};separator=\", \"~) { return new ~type~BuilderImpl(~requiredProperties:{it|~it.name~};separator=\", \"~); }\n" + 
 				"\n" + 
-				"public class ~type~BuilderImpl implements ~type~Builder {\n" + 
+				"public static final class ~type~BuilderImpl implements ~type~Builder {\n" + 
 				"\n" + 
 				"	~properties:{it| private~if(it.init)~ final~endif~ ~it.impl~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 

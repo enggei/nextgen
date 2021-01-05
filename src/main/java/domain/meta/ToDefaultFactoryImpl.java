@@ -1,29 +1,35 @@
 package domain.meta;
 
-import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
-
 import java.util.*;
+import static domain.DomainProcessor.*;
 
 public class ToDefaultFactoryImpl extends TemplateDomainTransformer<DefaultFactoryImpl> {
 
 	final DefaultFactoryImpl result = nextgen.templates.domain.DomainST.newDefaultFactoryImpl();
 
 	String packageName;
+	ToDomainDeclaration toDomainDeclaration;
 
-	public ToDefaultFactoryImpl(String packageName) {
+	public ToDefaultFactoryImpl(String packageName, ToDomainDeclaration toDomainDeclaration) {
 		this.packageName = packageName;
+		this.toDomainDeclaration = toDomainDeclaration;
 	}
 
 	@Override
-	protected void onDomain(MetaDomain domain) {
+	public void onDomain(MetaDomain domain) {
+		toDomainDeclaration.onDomain(domain);
 		result.setPackageName(packageName);
 		result.setName(domain.name() + "FactoryImpl");
 		result.setFactory(domain.name() + "Factory");
 	}
 
 	@Override
-	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
+	public void onProperty(MetaDomain.MetaProperty metaProperty) {
+		toDomainDeclaration.onProperty(metaProperty);
+
+		if (MetaDomain.Quantifier.ONE.equals(quantifier(metaProperty))) result.addRequiredProperties(metaProperty.name(), type(metaProperty));
+
 		final String type = metaProperty.type().get();
 		final String name = metaProperty.name();
 
@@ -59,7 +65,9 @@ public class ToDefaultFactoryImpl extends TemplateDomainTransformer<DefaultFacto
 	}
 
 	@Override
-	protected void onEntity(MetaDomain entity) {
+	public void onEntity(MetaDomain entity) {
+		toDomainDeclaration.onEntity(entity);
+
 		if (isInterface(entity)) {
 		   final DefaultEntityImpl factoryEntity = DomainST.newDefaultEntityImpl();
 		   factoryEntity.setName(entity.name());
@@ -74,7 +82,9 @@ public class ToDefaultFactoryImpl extends TemplateDomainTransformer<DefaultFacto
 	}
 
 	@Override
-	protected DefaultFactoryImpl onComplete() {
+	public DefaultFactoryImpl onComplete() {
+		toDomainDeclaration.onComplete();
+		result.addMethods(toDomainDeclaration.result);
 		return result;
 	}
 

@@ -7,6 +7,7 @@ public class VertxST {
 	.append("gt() ::= \">\"\n")
 	.append(DomainVerticle.st + "\n")
 	.append(DomainAction.st + "\n")
+	.append(DomainActionHandler.st + "\n")
 	.append(JsonFactory.st + "\n")
 	.append(JsonModel.st + "\n")
 	.append(ManyAccessor.st + "\n")
@@ -71,6 +72,10 @@ public class VertxST {
 
 	public static DomainAction newDomainAction() {
 		return new DomainAction(stGroup);
+	}  
+
+	public static DomainActionHandler newDomainActionHandler() {
+		return new DomainActionHandler(stGroup);
 	}  
 
 	public static JsonFactory newJsonFactory() {

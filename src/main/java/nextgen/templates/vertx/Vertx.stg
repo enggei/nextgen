@@ -5,8 +5,8 @@ DomainVerticle(messages,name,imports,packageName) ::= <<package ~packageName~;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonObject;
-~imports:{it|~it~};separator="\n"~
+
+~imports:{it|import ~it~;};separator="\n"~
 
 public class ~name;format="capitalize"~ extends AbstractVerticle {
 
@@ -46,20 +46,35 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 	}
 }  >>
 
-DomainAction(statements,params,name) ::= <<private void ~name~(Message<io.vertx.core.buffer.Buffer> message) {
+DomainActionHandler(statements,replyName,replyTitle,model,name,packageName) ::= <<package ~packageName~;
+
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.Message;
+import munster.domain.*;
+import munster.models.*;
+
+import static java.util.Comparator.*;
+
+public class ~name~ {
+
+   final ~model~ reply = new ~model~();
+
+   public ~name~(Domain domain) {
+
+      reply.setName(~replyName~);
+      reply.setTitle(~replyTitle~);
+
+      ~statements:{it|~it~};separator="\n"~
+   }
+
+   public void reply(Message<Buffer> message) {
+      message.reply(reply.toBuffer());
+   }
+}  >>
+
+DomainAction(name) ::= <<private void ~name~(Message<io.vertx.core.buffer.Buffer> message) {
 	debug("~name~", message);
-~if(params)~
-	final JsonObject body = message.body();
-	~params:{it|final ~it.type~ ~it.name~ = body.get~it.type~("~it.name~");};separator="\n"~
-~endif~
-	
-	doInTransaction(transaction -> {
-		final JsonObject reply = new JsonObject();
-		~statements:{it|~it~};separator="\n"~
-		message.reply(reply.toBuffer());
-	}, throwable -> {
-		message.fail(500, throwable.getMessage());
-	});
+	doInTransaction(transaction -> new ~name;format="capitalize"~Handler(new Domain(db)).reply(message), throwable -> message.fail(500, throwable.getMessage()));
 }  >>
 
 Entities() ::= << >>
@@ -402,10 +417,10 @@ public ~className;format="capitalize"~ clear~name;format="capitalize"~() {
 	return this;
 }  >>
 
-Page(name,packageName) ::= <<package ~packageName~;
+Page(model,body,name,packageName) ::= <<package ~packageName~;
 
 import io.vertx.core.buffer.Buffer;
-import munster.models.HomePageModel;
+import munster.models.~model~;
 import ui.materialdesignlight.Page;
 
 public class ~name~ extends BasePage {
@@ -414,10 +429,10 @@ public class ~name~ extends BasePage {
 
 	public ~name~(Buffer buffer) {
 		
-		final HomePageModel model = new HomePageModel(buffer);
+		final ~model~ model = new ~model~(buffer);
 		final Page page = newStandardPage(model);
 
-		model.cardModelStream().forEach(item -> page.addBody(newCard(item)));
+		~body:{it|~it~};separator="\n"~
 
 		render = page.toString().trim();
 	}
@@ -557,7 +572,7 @@ public class ~name;format="capitalize"~ extends AbstractVerticle {
 		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
 		router.post("/login").handler(routingContext -> login(routingContext, auth));
 		router.route("/secure/*").handler(JWTAuthHandler.create(auth, "/login"));
-		~routes:{it|router.~it.action~("/~it.url~")~if(it.order)~.order(~it.order~)~endif~.handler(this::~it.handler~);};separator="\n"~
+		~routes:{it|router.~it.action~(~it.url~)~if(it.order)~.order(~it.order~)~endif~.handler(this::~it.handler~);};separator="\n"~
 		
 		final HttpServerOptions serverOptions = new HttpServerOptions();
 
@@ -753,10 +768,10 @@ RQString(defaultValue,name) ::= <<static String get~name;format="capitalize"~(Js
 	return item.getString("~name~","~defaultValue~");
 }  >>
 
-RouteHandler(name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
+RouteHandler(arguments,name,params) ::= <<private void ~name~(RoutingContext routingContext~if(params)~, ~params:{it|~it.type~ ~it.name~};separator=","~~endif~) {
 	debug("~name~", routingContext);
 
-	vertx.eventBus().request("~name~", routingContext.getBody(), (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {
+	vertx.eventBus().request("~name~", ~if(arguments)~~arguments~~else~routingContext.getBody()~endif~, (Handler<AsyncResult<Message<Buffer~gt()~~gt()~>) reply -> {
 		if (reply.succeeded()) {
 			sendHtmlResponse(routingContext, OK, new ~name;format="capitalize"~Page(reply.result().body()).toString());	
 		} else {

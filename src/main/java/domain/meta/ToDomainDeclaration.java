@@ -1,9 +1,8 @@
 package domain.meta;
 
-import domain.DomainProcessor.*;
 import nextgen.templates.domain.*;
-
 import java.util.*;
+import static domain.DomainProcessor.*;
 
 public class ToDomainDeclaration extends TemplateDomainTransformer<DomainDeclaration> {
 
@@ -17,30 +16,29 @@ public class ToDomainDeclaration extends TemplateDomainTransformer<DomainDeclara
 	}
 
 	@Override
-	protected void onDomain(MetaDomain domain) {
+	public void onDomain(MetaDomain domain) {
 		result.setName(domain.name());
 	}
 
 	@Override
-	protected void onProperty(MetaDomain.MetaProperty metaProperty) {
+	public void onProperty(MetaDomain.MetaProperty metaProperty) {
 		result.addProperties(quantifier(metaProperty), type(metaProperty), metaProperty.name(), typeDeclaration(metaProperty));
 	}
 
 	@Override
-	protected void onEntity(MetaDomain entity) {
+	public void onEntity(MetaDomain entity) {
 		declarations.push(DomainST.newDomainEntityDeclaration().setName(entity.name()));
 		entity.properties().forEach(metaProperty -> declarations.peek().addProperties(typeDeclaration(metaProperty), type(metaProperty), metaProperty.name(), quantifier(metaProperty)));
 	}
 
 	@Override
-	protected DomainDeclaration onComplete() {
+	public DomainDeclaration onComplete() {
 		while (!declarations.isEmpty()) result.addEntities(declarations.pop());
-		System.out.println(result.toString());
 		return result;
 	}
 
 	@Override
-	protected Object quantifier(MetaDomain.MetaProperty metaProperty) {
+	public Object quantifier(MetaDomain.MetaProperty metaProperty) {
 		final Optional<MetaDomain.Quantifier> quantifier = metaProperty.quantifier();
 		if (quantifier.isPresent()) {
 			switch (quantifier.get()) {
@@ -55,7 +53,7 @@ public class ToDomainDeclaration extends TemplateDomainTransformer<DomainDeclara
 		return metaProperty.type().isPresent() ? null : "enumerate";
 	}
 	@Override
-	protected Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
+	public Object typeDeclaration(MetaDomain.MetaProperty metaProperty) {
 		final Optional<MetaDomain> typeDeclaration = metaProperty.typeDeclaration();
 		if (typeDeclaration.isPresent()) return typeDeclaration.get().name();
 		return typeDeclaration.orElse(null);

@@ -202,8 +202,8 @@ public class DomainVerticle {
 				"import io.vertx.core.AbstractVerticle;\n" + 
 				"import io.vertx.core.Promise;\n" + 
 				"import io.vertx.core.eventbus.Message;\n" + 
-				"import io.vertx.core.json.JsonObject;\n" + 
-				"~imports:{it|~it~};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name;format=\"capitalize\"~ extends AbstractVerticle {\n" + 
 				"\n" + 

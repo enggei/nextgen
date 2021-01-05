@@ -8,6 +8,7 @@ public class ToFactory {
 	private Object _domain;
 	private String _name;
 	private Object _packageName;
+	private java.util.List<Object> _methods = new java.util.ArrayList<>();
 	private java.util.List<Object> _entities = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _properties = new java.util.ArrayList<>();
 
@@ -25,6 +26,7 @@ public class ToFactory {
 		st.add("domain", _domain);
 		st.add("name", _name);
 		st.add("packageName", _packageName);
+		for (Object o : _methods) st.add("methods", o);
 		for (Object o : _entities) st.add("entities", o);
 		for (java.util.Map<String, Object> map : _properties) st.addAggr("properties.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
@@ -94,6 +96,35 @@ public class ToFactory {
 	public ToFactory removePackageName() {
 		this._packageName = null;
 		return this;
+	} 
+
+	public ToFactory addMethods(Object value) {
+		this._methods.add(value);
+		return this;
+	}
+
+	public ToFactory setMethods(Object[] value) {
+		this._methods.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public ToFactory setMethods(java.util.Collection<Object> values) {
+		this._methods.addAll(values);
+		return this;
+	}
+
+	public ToFactory removeMethods(Object value) {
+		this._methods.remove(value);
+		return this;
+	}
+
+	public ToFactory removeMethods(int index) {
+		this._methods.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getMethods() {
+		return this._methods;
 	} 
 
 	public ToFactory addEntities(Object value) {
@@ -207,13 +238,14 @@ public class ToFactory {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "toFactory(domain,properties,entities,name,packageName) ::= <<package ~packageName~;\n" + 
+	static final String st = "toFactory(methods,domain,properties,entities,name,packageName) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"public interface ~name~ extends ~domain~ {\n" + 
 				"	\n" + 
 				"	~properties:{it|~name~ ~it.name~(~it.type~ value);};separator=\"\\n\"~\n" + 
 				"	\n" + 
 				"	~entities:{it|~it~};separator=\"\\n\\n\"~\n" + 
-				"	\n" + 
+				"\n" + 
+				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"} >>";
 }  

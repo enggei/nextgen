@@ -2,8 +2,12 @@ package domain.meta;
 
 public class MetaDomainFactoryImpl implements MetaDomainFactory {
 
-	private String name;
-	private final java.util.List<MetaProperty> properties =  new java.util.ArrayList<>();
+	 String name;
+	 final java.util.List<MetaProperty> properties =  new java.util.ArrayList<>();
+
+	public MetaDomainFactoryImpl(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public String name() { return name; }
@@ -18,7 +22,7 @@ public class MetaDomainFactoryImpl implements MetaDomainFactory {
 	public MetaDomainFactory addproperties(MetaProperty element) { properties.add(element); return this; }
 
 	@Override 
-	public MetaPropertyBuilder newMetaProperty() { return new MetaPropertyBuilderImpl(); }
+	public MetaPropertyBuilder newMetaProperty(String name) { return new MetaPropertyBuilderImpl(name); }
 
 	public class MetaPropertyBuilderImpl implements MetaPropertyBuilder {
 
@@ -26,6 +30,10 @@ public class MetaDomainFactoryImpl implements MetaDomainFactory {
 		private Quantifier quantifier;
 		private String type;
 		private MetaDomain typeDeclaration;
+
+		MetaPropertyBuilderImpl(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public String name() { return name; }
@@ -52,6 +60,4 @@ public class MetaDomainFactoryImpl implements MetaDomainFactory {
 		public MetaPropertyBuilder settypeDeclaration(MetaDomain element) { typeDeclaration = element; return this; }
 
 	}
-
-
 }
