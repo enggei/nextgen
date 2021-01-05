@@ -1,5 +1,7 @@
 package nextgen.swing.forms;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import javax.swing.*;
 
 import static nextgen.swing.ComponentFactory.*;
@@ -57,9 +59,14 @@ public class TextAreaCrudForm extends JPanel {
 
 
 	public void setModel(nextgen.model.STValue model, java.awt.event.KeyListener keyListener) {
-		final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = newRSyntaxTextArea(model.getValue(), keyListener);
-		setTextArea(component);
-		component.setEditable(model.getType().equals(nextgen.model.STValueType.PRIMITIVE));
+		if(this.textArea_JComponent ==null) {
+			final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = newRSyntaxTextArea(model.getValue(), keyListener);
+			setTextArea(component);
+			component.setEditable(model.getType().equals(nextgen.model.STValueType.PRIMITIVE));
+		} else {
+			org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = (RSyntaxTextArea) this.textArea_JComponent;
+			component.setText(model.getValue());
+		}
 	}
 
 	public void onSave(nextgen.model.STValue model) {

@@ -1,13 +1,10 @@
 package nextgen.swing.editors;
 
-import nextgen.swing.ComponentFactory;
-
 import java.awt.*;
-import java.util.UUID;
 
 public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValue> {
 
-	private String uuid = UUID.randomUUID().toString();
+	private String uuid;
 
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
 	private final nextgen.swing.forms.TextAreaCrudForm editor = new nextgen.swing.forms.TextAreaCrudForm();
@@ -25,11 +22,15 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 	public void setModel(nextgen.model.STValue model) {
 		super.setModel(model);
 
-		editors.add("Editor", ComponentFactory.newJScrollPane(editor));
-		add(editors, BorderLayout.CENTER);
+		this.uuid = model.getUuid();
+
+		if (getComponentCount() == 0) {
+		   editors.add("Editor", editor);
+			add(editors, BorderLayout.CENTER);
+		   invalidate();
+		}
 
 		editor.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-
 	}
 
 	@Override
@@ -38,19 +39,8 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 		if (model == null) return;
 
 		appModel().doInTransaction(transaction -> {
-			if (!model.getType().equals(nextgen.model.STValueType.PRIMITIVE)) return;
-
 			editor.onSave(model);
-
-			nextgen.events.STValueChanged.post(model);
-
-			model.getIncomingValueSTArgument().findFirst().ifPresent(stArgument -> stArgument.getIncomingArgumentsSTModel().findAny().ifPresent(stModel -> {
-				final nextgen.model.STParameter stParameter = stArgument.getStParameter();
-				if ("name".equals(stParameter.getName())) nextgen.events.STModelChanged.post(stModel);
-			}));
 		});
-
-
 	}
 
 	@Override
