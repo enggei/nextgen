@@ -12,7 +12,8 @@ public class SetSTValueFromClipboard extends TransactionAction {
    private final STValue stValue;
 
 	public SetSTValueFromClipboard(STValue stValue) {
-		super("FROM");
+		super("");
+		setIcon("cb-get");
 		this.stValue = stValue;
 	}
 

@@ -12,7 +12,8 @@ public class STValueToClipboard extends TransactionAction {
    private final STValue stValue;
 
 	public STValueToClipboard(STValue stValue) {
-		super("TO");
+		super("");
+		setIcon("cb-set");
 		this.stValue = stValue;
 	}
 

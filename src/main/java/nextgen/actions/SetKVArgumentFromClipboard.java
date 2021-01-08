@@ -14,7 +14,8 @@ public class SetKVArgumentFromClipboard extends TransactionAction {
    private final STParameterKey stParameterKey;
 
 	public SetKVArgumentFromClipboard(STModel stModel, STArgument stArgument, STParameterKey stParameterKey) {
-		super("FROM");
+		super("Set " + stParameterKey.getName() + " from Clipboard");
+		setIcon("cb-get");
 		this.stModel = stModel;
 		this.stArgument = stArgument;
 		this.stParameterKey = stParameterKey;

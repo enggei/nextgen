@@ -12,7 +12,8 @@ public class STModelToClipboard extends TransactionAction {
    private final STModel stModel;
 
 	public STModelToClipboard(STModel stModel) {
-		super("TO");
+		super("");
+		setIcon("cb-set");
 		this.stModel = stModel;
 	}
 

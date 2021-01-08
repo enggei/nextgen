@@ -13,7 +13,8 @@ public class SetArgumentFromClipboard extends TransactionAction {
    private final STParameter stParameter;
 
 	public SetArgumentFromClipboard(STModel stModel, STParameter stParameter) {
-		super("FROM");
+		super("");
+		setIcon("cb-get");
 		this.stModel = stModel;
 		this.stParameter = stParameter;
 	}

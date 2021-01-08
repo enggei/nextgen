@@ -12,6 +12,12 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       super(name);
    }
 
+   public TransactionAction setIcon(String icon) {
+      putValue(Action.NAME,null);
+      putValue(Action.SMALL_ICON,appModel().loadIcon(icon));
+      return this;
+   }
+
    public TransactionAction setName(String name) {
       putValue(Action.NAME, name);
       return this;

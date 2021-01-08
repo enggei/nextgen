@@ -26,7 +26,7 @@ public class AddChildrenToTemplate extends TransactionAction {
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("AddChildrenToTemplate" + " stGroup" + " stTemplate" + " children" + " owner");
 
-      confirm(owner, "Sure to move", unused -> {
+      confirm(owner, "Sure ?", unused -> {
          appModel().aggregateTemplates(stGroup).forEach(stGroupTemplate -> {
             for (STTemplate child : children) {
                stGroupTemplate.removeChildren(child);

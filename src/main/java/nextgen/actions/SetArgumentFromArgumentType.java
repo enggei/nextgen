@@ -26,7 +26,7 @@ public class SetArgumentFromArgumentType extends TransactionAction {
 
       final String argumentType = stParameter.getArgumentType();
 
-      final boolean argumentIsDefault = argumentType.equals("Object") || argumentType.equals("String");
+      final boolean argumentIsDefault = argumentType == null || argumentType.equals("Object") || argumentType.equals("String");
       if (argumentIsDefault) {
       	final java.util.Optional<STTemplate> stTemplate = appModel().findFirstTemplateInArguments(stModel, stParameter);
       	if (stTemplate.isPresent())
