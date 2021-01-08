@@ -115,7 +115,7 @@ public class DomainRelation {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entity"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
-	public DomainRelation setName( dst) { 
+	public DomainRelation setName(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
 		if (relationship != null)  { 
 			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
@@ -126,9 +126,9 @@ public class DomainRelation {
 		return this;
 	}
 
-	public  getName() { 
+	public STValue getName() { 
 		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
-		return relationship == null ? null : new (relationship.getOtherNode(node));
+		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
 	}
 
 	public DomainRelation removeName() { 

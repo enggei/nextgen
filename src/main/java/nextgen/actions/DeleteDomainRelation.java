@@ -22,7 +22,7 @@ public class DeleteDomainRelation extends TransactionAction {
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("DeleteDomainRelation" + " domainRelation" + " owner");
 
-      confirm(owner, "Delete", unused -> appModel().delete(domainProperty));
+      confirm(owner, "Delete", unused -> appModel().delete(domainRelation));
    }
 
 }
