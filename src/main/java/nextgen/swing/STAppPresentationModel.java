@@ -33,6 +33,37 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
+   public void replaceAllSTValues(STModel thisModel, String existingValue, String newValue) {
+      getSTParameters(thisModel).forEach(parameterArguments -> {
+         switch (parameterArguments.parameter().getType()) {
+            case SINGLE:
+               if (parameterArguments.arguments().isEmpty()) break;
+               replaceAllSTValues(thisModel, existingValue, newValue, parameterArguments.parameter(), parameterArguments.arguments().iterator().next().getValue());
+               break;
+            case LIST:
+               parameterArguments.arguments().forEach(stArgument -> replaceAllSTValues(thisModel, existingValue, newValue, parameterArguments.parameter(), stArgument.getValue()));
+               break;
+            case KVLIST:
+               parameterArguments.arguments().forEach(stArgument -> stArgument.getKeyValues()
+                     .forEach(stArgumentKV -> replaceAllSTValues(thisModel, existingValue, newValue, parameterArguments.parameter(), stArgumentKV.getValue())));
+               break;
+         }
+      });
+   }
+
+   private void replaceAllSTValues(STModel thisModel, String existingValue, String newValue, STParameter stParameter, STValue stValue) {
+      switch (stValue.getType()) {
+         case STMODEL:
+            replaceAllSTValues(stValue.getStModel(), existingValue, newValue);
+            break;
+         case PRIMITIVE:
+            if (stValue.getValue().equals(existingValue)) setArgument(thisModel, stParameter, newValue);
+            break;
+         case ENUM:
+            break;
+      }
+   }
+
    public void addSTParameter(nextgen.model.STTemplate model, nextgen.model.parser.ParsedSTParameter parsedSTParameter) {
       final nextgen.model.STParameter stParameter = db.newSTParameter()
             .setName(parsedSTParameter.getName())

@@ -27,13 +27,17 @@ public class CopyInto extends TransactionAction {
       final String thisName = nextgen.swing.STAppPresentationModel.getSTModelName(thisModel, null);
       final String otherName = nextgen.swing.STAppPresentationModel.getSTModelName(otherModel, null);
 
-      if (otherName != null && thisName == null) 
+      if (otherName != null && thisName == null)
          inputName(owner, otherName, s -> nextgen.swing.STAppPresentationModel.getSTParameters(thisModel)
                .filter(parameterArguments -> parameterArguments.parameter().getName().equals("name"))
                .findAny()
-               .ifPresent(parameterArguments -> appModel().setArgument(thisModel, parameterArguments.parameter(), s)));
-
-      appModel().copyInto(thisModel, otherModel);
+               .ifPresent(parameterArguments -> {
+                  appModel().setArgument(thisModel, parameterArguments.parameter(), s);
+                  appModel().copyInto(thisModel, otherModel);
+                  appModel().replaceAllSTValues(thisModel, otherName, s);
+               }));
+      else
+         appModel().copyInto(thisModel, otherModel);
    }
 
 }
