@@ -4,7 +4,6 @@ import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import nextgen.swing.*;
-import nextgen.templates.javaswing.App;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -351,7 +350,7 @@ public class SwingUtil {
 
    public static void showInputDialog(String message, Component owner, Dimension dimension, String startValue, Consumer<String> onConfirm) {
 
-      final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea();
+      final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(10, 30);
       rSyntaxTextArea.setText(startValue == null ? "" : startValue);
 
       final JPanel content = nextgen.swing.ComponentFactory.newJPanel(new BorderLayout());
@@ -828,9 +827,10 @@ public class SwingUtil {
 //      return textArea;
 //   }
 //
-//   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
-//      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
-//   }
+
+   public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
+      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+   }
 
    public static org.fife.ui.rsyntaxtextarea.RSyntaxTextArea decorate(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea) {
 

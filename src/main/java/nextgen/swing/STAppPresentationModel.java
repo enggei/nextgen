@@ -126,14 +126,14 @@ public class STAppPresentationModel {
 
    public void addSTFile(nextgen.model.STModel thisModel, nextgen.model.STFile otherFile) {
 
+      final String thisName = getSTModelName(thisModel, null);
+
       final nextgen.model.STFile thisFile = db.newSTFile()
-            .setName(newSTValue(otherFile.getName()))
+            .setName(newSTValue(thisName == null ? otherFile.getName() : newSTValue(thisName)))
             .setType(db.findOrCreateSTValueByValue(otherFile.getType().getValue()))
             .setPath(newSTValue(otherFile.getPath()))
             .setPackageName(newSTValue(otherFile.getPackageName()));
 
-      final String thisName = getSTModelName(thisModel, null);
-      if (thisName != null) thisFile.setName(newSTValue(thisName));
       thisModel.addFiles(thisFile);
       nextgen.events.NewFileSink.post(thisModel, thisFile);
    }
@@ -1246,7 +1246,7 @@ public class STAppPresentationModel {
          if (groupCompare != 0) return groupCompare;
 
          final int templateCompare = t1.getName().compareToIgnoreCase(m2.getStTemplate().getName());
-         if(templateCompare!=0) return templateCompare;
+         if (templateCompare != 0) return templateCompare;
 
          final String n1 = STAppPresentationModel.getSTModelName(m1, "[no name]");
          final String n2 = STAppPresentationModel.getSTModelName(m2, "[no name]");

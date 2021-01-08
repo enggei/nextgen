@@ -1,7 +1,5 @@
 package nextgen.swing.forms;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import javax.swing.*;
 
 import static nextgen.swing.ComponentFactory.*;
@@ -21,6 +19,11 @@ public class TextAreaCrudForm extends JPanel {
 		return textArea_JComponent;
 	}
 
+	public <T extends JComponent> T getTextAreaJComponent(java.util.function.Supplier<T> supplier) {
+		if (this.textArea_JComponent == null) setTextArea(supplier.get());
+   	return (T) this.textArea_JComponent;
+	}
+
 	public TextAreaCrudForm setTextArea(JComponent component) {
 		if (component == null) return this;
 		add(this.textArea_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 4, 1, "FILL, CENTER"));
@@ -29,6 +32,11 @@ public class TextAreaCrudForm extends JPanel {
 
 	public JButton getDeleteJButton() {
 		return delete_JButton;
+	}
+
+	public <T extends JButton> T getDeleteJButton(java.util.function.Supplier<T> supplier) {
+		if (this.delete_JButton == null) setDelete(supplier.get());
+   	return (T) this.delete_JButton;
 	}
 
 	public TextAreaCrudForm setDelete(JButton component) {
@@ -41,6 +49,11 @@ public class TextAreaCrudForm extends JPanel {
 		return toClipboard_JButton;
 	}
 
+	public <T extends JButton> T getToClipboardJButton(java.util.function.Supplier<T> supplier) {
+		if (this.toClipboard_JButton == null) setToClipboard(supplier.get());
+   	return (T) this.toClipboard_JButton;
+	}
+
 	public TextAreaCrudForm setToClipboard(JButton component) {
 		if (component == null) return this;
 		add(this.toClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(3, 2, 1, 1, "FILL, FILL"));
@@ -51,6 +64,11 @@ public class TextAreaCrudForm extends JPanel {
 		return fromClipboard_JButton;
 	}
 
+	public <T extends JButton> T getFromClipboardJButton(java.util.function.Supplier<T> supplier) {
+		if (this.fromClipboard_JButton == null) setFromClipboard(supplier.get());
+   	return (T) this.fromClipboard_JButton;
+	}
+
 	public TextAreaCrudForm setFromClipboard(JButton component) {
 		if (component == null) return this;
 		add(this.fromClipboard_JButton = component, new com.jgoodies.forms.layout.CellConstraints().xywh(4, 2, 1, 1, "FILL, FILL"));
@@ -59,18 +77,13 @@ public class TextAreaCrudForm extends JPanel {
 
 
 	public void setModel(nextgen.model.STValue model, java.awt.event.KeyListener keyListener) {
-		if(this.textArea_JComponent ==null) {
-			final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = newRSyntaxTextArea(model.getValue(), keyListener);
-			setTextArea(component);
-			component.setEditable(model.getType().equals(nextgen.model.STValueType.PRIMITIVE));
-		} else {
-			org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = (RSyntaxTextArea) this.textArea_JComponent;
-			component.setText(model.getValue());
-		}
+		final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea component = getTextAreaJComponent(() -> newRSyntaxTextArea(keyListener));
+		component.setText(model.getValue());
+		component.setEditable(model.getType().equals(nextgen.model.STValueType.PRIMITIVE));
 	}
 
 	public void onSave(nextgen.model.STValue model) {
-		model.setValue(((JTextArea)this.textArea_JComponent).getText().trim());
+		model.setValue(((org.fife.ui.rsyntaxtextarea.RSyntaxTextArea)this.textArea_JComponent).getText().trim());
 	}
 
 	/*

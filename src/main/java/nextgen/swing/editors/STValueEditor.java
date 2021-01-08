@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValue> {
 
-	private String uuid;
+	private String uuid = java.util.UUID.randomUUID().toString();
 
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
 	private final nextgen.swing.forms.TextAreaCrudForm editor = new nextgen.swing.forms.TextAreaCrudForm();
@@ -35,12 +35,8 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 
 	@Override
 	protected void tryToSave() {
-
 		if (model == null) return;
-
-		appModel().doInTransaction(transaction -> {
-			editor.onSave(model);
-		});
+		appModel().doInTransaction(transaction -> editor.onSave(model));
 	}
 
 	@Override

@@ -20,6 +20,26 @@ public class ComponentFactory {
 
    public static void applyLaf() {
       LafManager.install(theme);
+      UIManager.put("Icons.CheckBox.activeFillColor", Color.DARK_GRAY);
+      UIManager.put("Icons.CheckBox.activeBorderColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelected.selectedFillColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelected.selectedBorderColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelected.selectionSelectedColor", Color.WHITE);
+      UIManager.put("Icons.RadioButton.activeFillColor", Color.WHITE);
+      UIManager.put("Icons.RadioButton.activeBorderColor", Color.WHITE);
+      UIManager.put("Icons.RadioButtonSelected.selectedFillColor", Color.WHITE);
+      UIManager.put("Icons.RadioButtonSelected.selectedBorderColor", Color.WHITE);
+      UIManager.put("Icons.RadioButtonSelected.selectionSelectedColor", Color.WHITE);
+
+      UIManager.put("Icons.CheckBoxFocused.activeFillColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxFocused.focusBorderColor", Color.WHITE);
+//      UIManager.put("Icons.CheckBoxFocused.glowOpacity", Color.WHITE);
+//      UIManager.put("Icons.CheckBoxFocused.glowFocus", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelectedFocused.selectedFillColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelectedFocused.focusSelectedBorderColor", Color.WHITE);
+//      UIManager.put("Icons.CheckBoxSelectedFocused.glowOpacity", Color.WHITE);
+//      UIManager.put("Icons.CheckBoxSelectedFocused.glowFocus", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelectedFocused.selectionFocusSelectedColor", Color.WHITE);
    }
 
    // components
@@ -140,16 +160,14 @@ public class ComponentFactory {
 
    public static RTextScrollPane decorate(RTextScrollPane component) {
       baseDecorate(component);
-//      component.setBackground(Color.DARK_GRAY);
-      component.getGutter().setBackground(component.getBackground());
-      component.getGutter().setForeground(Color.WHITE);
+//      component.getGutter().setBackground(component.getBackground());
+//      component.getGutter().setForeground(Color.WHITE);
       //component.getGutter().setFont(UIManager.getFont("TextField.font").deriveFont(29f));
       return component;
    }
 
    public static javax.swing.JButton decorate(javax.swing.JButton component) {
       baseDecorate(component);
-      component.setBackground(Color.DARK_GRAY);
       return component;
    }
 
@@ -204,11 +222,8 @@ public class ComponentFactory {
    }
 
    private static JComponent baseDecorate(JComponent component) {
-//      component.setFont(font);
       return component;
    }
-
-   // convenience methods
 
    public static javax.swing.JLabel newJLabel(String text) {
       final javax.swing.JLabel component = newJLabel();
@@ -234,6 +249,13 @@ public class ComponentFactory {
       return component;
    }
 
+   public static javax.swing.JButton newJButton(javax.swing.Action action, String tooltip) {
+      final javax.swing.JButton component = newJButton();
+      component.setAction(action);
+      component.setToolTipText(tooltip);
+      return component;
+   }
+
    public static javax.swing.JTextArea newJTextArea(int cols, int rows) {
       final javax.swing.JTextArea component = newJTextArea();
       component.setColumns(cols);
@@ -243,6 +265,12 @@ public class ComponentFactory {
 
    public static javax.swing.JToggleButton newJToggleButton(String text) {
       final javax.swing.JToggleButton component = newJToggleButton();
+      component.setText(text);
+      return component;
+   }
+
+   public static javax.swing.JRadioButton newJRadioButton(String text) {
+      final javax.swing.JRadioButton component = newJRadioButton();
       component.setText(text);
       return component;
    }
@@ -259,9 +287,10 @@ public class ComponentFactory {
       return component;
    }
 
-   public static javax.swing.JRadioButton newJRadioButton(String text) {
-      final javax.swing.JRadioButton component = newJRadioButton();
+   public static javax.swing.JCheckBox newJCheckBox(String text, boolean selected) {
+      final javax.swing.JCheckBox component = newJCheckBox();
       component.setText(text);
+      component.setSelected(selected);
       return component;
    }
 
@@ -269,6 +298,14 @@ public class ComponentFactory {
       final javax.swing.JTextField component = newJTextField();
       component.setText(text);
       component.setColumns(15);
+      return component;
+   }
+
+   public static javax.swing.JTextField newJTextField(String text, String tooltip) {
+      final javax.swing.JTextField component = newJTextField();
+      component.setText(text);
+      component.setColumns(15);
+      component.setToolTipText(tooltip);
       return component;
    }
 
@@ -328,6 +365,12 @@ public class ComponentFactory {
       final RSyntaxTextArea component = newRSyntaxTextArea();
       component.setText(text);
       component.setCaretPosition(0);
+      return component;
+   }
+
+   public static RSyntaxTextArea newRSyntaxTextArea(KeyListener keyListener) {
+      final RSyntaxTextArea component = newRSyntaxTextArea();
+      component.addKeyListener(keyListener);
       return component;
    }
 

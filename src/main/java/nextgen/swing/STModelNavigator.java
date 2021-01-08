@@ -897,7 +897,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel)));
+				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, workspace)));
 				actions.add(new RunInTerminal(getModel(), workspace));
 				actions.add(new STModelToClipboard(getModel()));
 				actions.add(new GenerateSTModel(getModel()));
@@ -1170,7 +1170,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel)));
+				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, workspace)));
 				actions.add(new RunInTerminal(getModel(), workspace));
 				actions.add(new AsBuilderCode(getModel()));
 				actions.add(new CopyModel(getModel()));

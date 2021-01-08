@@ -36,6 +36,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
    }
 
+   protected void input(javax.swing.JComponent owner, String message, String defaultValue, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
    protected void inputName(javax.swing.JComponent owner, String defaultValue, java.util.function.Consumer<String> consumer) {
       nextgen.utils.SwingUtil.showInputDialog("Name", owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
    }

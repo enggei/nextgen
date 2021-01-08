@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STProject> {
 
-	private String uuid;
+	private String uuid = java.util.UUID.randomUUID().toString();
 
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
 	private final nextgen.swing.forms.STProjectForm form = new nextgen.swing.forms.STProjectForm();
@@ -35,12 +35,8 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 
 	@Override
 	protected void tryToSave() {
-
 		if (model == null) return;
-
-		appModel().doInTransaction(transaction -> {
-			form.onSave(model);
-		});
+		appModel().doInTransaction(transaction -> form.onSave(model));
 	}
 
 	@Override

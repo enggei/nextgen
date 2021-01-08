@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import nextgen.events.*;
 import nextgen.model.*;
-import nextgen.swing.editors.STValueEditor;
 
 public class STWorkspace extends JTabbedPane {
 
@@ -21,6 +20,7 @@ public class STWorkspace extends JTabbedPane {
 		setPreferredSize(new Dimension(600, 600));
 		setMinimumSize(new Dimension(100, 100));
 		getCanvas();
+		getTextProcessor();
 		templateNavigator = new STTemplateNavigator(this);
 		modelNavigator = new STModelNavigator(this);
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
@@ -106,7 +106,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onModelNavigatorSTValueTreeNodeClicked(ModelNavigatorSTValueTreeNodeClicked event) {
-		final STValueEditor stValueEditor = getSTValueEditor();
+		final nextgen.swing.editors.STValueEditor stValueEditor = getSTValueEditor();
 		stValueEditor.setModel(event.stValue);
 		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));
 	}
@@ -246,10 +246,10 @@ public class STWorkspace extends JTabbedPane {
 		}
 	}
 
-	public STValueEditor getSTValueEditor() {
-		return (STValueEditor) find(component -> component instanceof STValueEditor)
+	public nextgen.swing.editors.STValueEditor getSTValueEditor() {
+		return (nextgen.swing.editors.STValueEditor) find(component -> component instanceof nextgen.swing.editors.STValueEditor)
 				.orElseGet(() -> {
-					final STValueEditor component = new STValueEditor();
+					final nextgen.swing.editors.STValueEditor component = new nextgen.swing.editors.STValueEditor();
 					addPane("STValue", component);
 					return component;
 				});
@@ -258,7 +258,7 @@ public class STWorkspace extends JTabbedPane {
 	public void removeSTValueEditor() {
 	   for (int i = 0; i < getTabCount(); i++) {
 	      final Component tabComponentAt = getComponentAt(i);
-	      if (tabComponentAt instanceof STValueEditor) {
+	      if (tabComponentAt instanceof nextgen.swing.editors.STValueEditor) {
 	      	int componentIndex = i;
 				SwingUtilities.invokeLater(() -> remove(componentIndex));
 			}
@@ -382,6 +382,25 @@ public class STWorkspace extends JTabbedPane {
 		      SwingUtilities.invokeLater(() -> remove(componentIndex));
 		   }
 		}
+	}
+
+	public TextProcessingPanel getTextProcessor() {
+		return (TextProcessingPanel) find(component -> component instanceof TextProcessingPanel)
+				.orElseGet(() -> {
+					final TextProcessingPanel component = new TextProcessingPanel();
+					addPane("TextProcessor", component);
+					return component;
+				});
+	}
+
+	public void removeTextProcessor() {
+	   for (int i = 0; i < getTabCount(); i++) {
+	      final Component tabComponentAt = getComponentAt(i);
+	      if (tabComponentAt instanceof TextProcessingPanel) {
+	      	int componentIndex = i;
+				SwingUtilities.invokeLater(() -> remove(componentIndex));
+			}
+	   }
 	}
 
 	private nextgen.swing.STAppPresentationModel appModel() {
