@@ -13,6 +13,7 @@ public class WriteSTGroupAction extends TransactionAction {
 
 	public WriteSTGroupAction(STGroupAction action) {
 		super("Generate Source");
+		setIcon("gen");
 		this.action = action;
 	}
 

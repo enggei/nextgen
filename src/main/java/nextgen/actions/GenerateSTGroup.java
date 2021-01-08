@@ -14,6 +14,7 @@ public class GenerateSTGroup extends TransactionAction {
 
 	public GenerateSTGroup(JComponent owner, STGroupModel stGroup) {
 		super("Generate STGroup");
+		setIcon("gen");
 		this.owner = owner;
 		this.stGroup = stGroup;
 	}

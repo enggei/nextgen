@@ -2,21 +2,21 @@ A different type of texteditor for developers.
 
 
 Domain
-    name            1   String
+    name            1   STValue
     roots           *   DomainEntity
     properties      *   DomainProperty
 
     DomainEntity
-        name            1   String
+        name            1   STValue
         relations       *   DomainRelation
         properties      *   DomainProperty
 
     DomainProperty
-        name            1   String
-        value           1   Object
+        name            1   STValue
+        value           1   STValue
 
         DomainRelation
-            name            1   String
+            name            1   STValue
             entity          1   DomainEntity
             properties      *   DomainProperty
 

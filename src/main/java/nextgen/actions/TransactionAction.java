@@ -13,7 +13,6 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
    }
 
    public TransactionAction setIcon(String icon) {
-      putValue(Action.NAME,null);
       putValue(Action.SMALL_ICON,appModel().loadIcon(icon));
       return this;
    }

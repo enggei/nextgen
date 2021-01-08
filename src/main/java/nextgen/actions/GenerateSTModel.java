@@ -13,6 +13,7 @@ public class GenerateSTModel extends TransactionAction {
 
 	public GenerateSTModel(STModel stModel) {
 		super("Generate");
+		setIcon("gen");
 		this.stModel = stModel;
 	}
 

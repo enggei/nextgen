@@ -3,27 +3,30 @@ package nextgen.swing.canvas;
 public class Layout {
 
 	private final org.neo4j.graphdb.Node node;
+	private final String uuid;
 
 	public Layout(org.neo4j.graphdb.Node node) { 
 		this.node = node;
-		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", java.util.UUID.randomUUID().toString());
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
+		else this.uuid = node.getProperty("uuid").toString();
 	}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
 	}
 
+
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final Layout other = (Layout) o;
-		return node.equals(other.node);
+		return uuid.equals(other.uuid);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(node);
+		return uuid.hashCode();
 	}
 
 	private static final String _uuid = "uuid";
@@ -32,7 +35,7 @@ public class Layout {
 		if (value == null) {
 			removeUuid(); 
 		} else {
-		 	node.setProperty(_uuid, value);
+			node.setProperty(_uuid, value);
 		}
 		return this;
 	}
@@ -55,7 +58,6 @@ public class Layout {
 		node.removeProperty(_uuid);
 		return this;
 	}
-
 	private static final org.neo4j.graphdb.RelationshipType _nodes = org.neo4j.graphdb.RelationshipType.withName("nodes");
 
 	public Layout addNodes(LayoutNode dst) { 
@@ -134,6 +136,12 @@ public class Layout {
 			out.append(")");
 		});
 		return out.toString().trim();
+	}
+
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();	
 	}
 
 

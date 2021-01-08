@@ -1,6 +1,8 @@
 package nextgen.swing;
 
+import nextgen.events.*;
 import nextgen.model.*;
+import nextgen.model.DomainRelation;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
@@ -8,8 +10,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 public class STAppPresentationModel {
@@ -17,6 +18,7 @@ public class STAppPresentationModel {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
 
    public final STModelDB db;
+   public final DomainDB domainDB;
 
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
@@ -28,6 +30,7 @@ public class STAppPresentationModel {
 
    public STAppPresentationModel() {
       this.db = new STModelDB(AppModel.getInstance().getDbDir());
+      this.domainDB = new DomainDB(this.db.getDatabaseService());
       this.chronicle = new nextgen.utils.NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
       this.stRenderer = new nextgen.st.STRenderer();
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
@@ -241,14 +244,14 @@ public class STAppPresentationModel {
    public java.util.Set<nextgen.model.STModel> aggregateModels(nextgen.model.STModel stModel) {
       java.util.Set<nextgen.model.STModel> models = new java.util.LinkedHashSet<>();
 
-      stModel.getArguments().forEach(stArgument -> {
-         final nextgen.model.STValue value = stArgument.getValue();
-         if (value == null) return;
-
-         if (nextgen.model.STValueType.STMODEL.equals(value.getType())) {
-            final nextgen.model.STModel valueSTModel = value.getStModel();
-            models.add(valueSTModel);
-            models.addAll(aggregateModels(valueSTModel));
+      getSTParameters(stModel).forEach(parameterArguments -> {
+         for (STArgument stArgument : parameterArguments.arguments()) {
+            final STValue value = stArgument.getValue();
+            if (nextgen.model.STValueType.STMODEL.equals(value.getType())) {
+               final nextgen.model.STModel valueSTModel = value.getStModel();
+               models.add(valueSTModel);
+               models.addAll(aggregateModels(valueSTModel));
+            }
          }
       });
 
@@ -1233,11 +1236,26 @@ public class STAppPresentationModel {
       model.getStTemplate().getParametersSorted().forEach(stParameter -> {
          final ParameterArguments stModelArguments = new ParameterArguments();
          stModelArguments.setParameter(stParameter);
-         model.getArgumentsSorted().filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> stModelArguments.arguments().add(stArgument));
+         model.getArgumentsSorted().filter(nullArgumentFilter()).filter(stArgument -> stArgument.getStParameter().equals(stParameter)).forEach(stArgument -> stModelArguments.arguments().add(stArgument));
          result.add(stModelArguments);
       });
 
       return result.stream();
+   }
+
+   private static Predicate<? super STArgument> nullArgumentFilter() {
+      return (Predicate<STArgument>) stArgument -> {
+         final STValue stValue = stArgument.getValue();
+         if (stValue == null) return false;
+         switch (stValue.getType()) {
+            case STMODEL:
+               return stValue.getStModel() != null;
+            case PRIMITIVE:
+               return stValue.getValue() != null;
+            default:
+               return true;
+         }
+      };
    }
 
    public void reorder(STModel model, STArgument one, STArgument two) {
@@ -1283,6 +1301,71 @@ public class STAppPresentationModel {
          final String n2 = STAppPresentationModel.getSTModelName(m2, "[no name]");
          return n1.compareToIgnoreCase(n2);
       };
+   }
+
+   public void addDomain(STProject project, String domainName) {
+      final Domain domain = newDomain(domainName);
+      NewDomain.post(domain);
+      project.addDomains(domain);
+      NewSTProjectDomain.post(domain, project);
+   }
+
+   public Domain newDomain(String domainName) {
+      return domainDB.newDomain()
+            .setName(newSTValue(domainName));
+   }
+
+   public void addDomainProperty(Domain domain, String name, String value) {
+
+      final DomainProperty domainProperty = domainDB.newDomainProperty()
+            .setName(newSTValue(name))
+            .setValue(newSTValue(value));
+
+      domain.addProperties(domainProperty);
+      NewDomainDomainProperty.post(domain, domainProperty);
+   }
+
+   public void addDomainEntity(Domain domain, String name) {
+
+      final DomainEntity domainEntity = domainDB.newDomainEntity()
+            .setName(newSTValue(name));
+      domain.addRoots(domainEntity);
+
+      NewDomainDomainEntity.post(domainEntity, domain);
+   }
+
+   public void addEntityProperty(DomainEntity domainEntity, String name, String value) {
+
+      final DomainProperty domainProperty = domainDB.newDomainProperty()
+            .setName(newSTValue(name))
+            .setValue(newSTValue(value));
+
+      domainEntity.addProperties(domainProperty);
+      NewDomainEntityDomainProperty.post(domainEntity, domainProperty);
+   }
+
+   public void delete(Domain domain) {
+      final String uuid = domain.getUuid();
+      domain.delete();
+      nextgen.events.STTemplateDeleted.post(uuid);
+   }
+
+   public void delete(DomainEntity domainEntity) {
+      final String uuid = domainEntity.getUuid();
+      domainEntity.delete();
+      DomainEntityDeleted.post(uuid);
+   }
+
+   public void delete(DomainProperty domainProperty) {
+      final String uuid = domainProperty.getUuid();
+      domainProperty.delete();
+      DomainPropertyDeleted.post(uuid);
+   }
+
+   public void delete(DomainRelation domainRelation) {
+      final String uuid = domainRelation.getUuid();
+      domainRelation.delete();
+      DomainRelationDeleted.post(uuid);
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {

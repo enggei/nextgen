@@ -176,6 +176,35 @@ public class STProject {
 		return this;
 	}
 
+	private static final org.neo4j.graphdb.RelationshipType _domains = org.neo4j.graphdb.RelationshipType.withName("domains");
+
+	public STProject addDomains(Domain dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _domains).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _domains);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<Domain> getDomains() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _domains).spliterator(), false).map((relationship) -> new Domain(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<Domain> getDomainsSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _domains).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new Domain(relationship.getOtherNode(node)));
+	}
+
+	public STProject removeDomains(Domain dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _domains).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public STProject removeAllDomains() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _domains).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();
@@ -195,6 +224,12 @@ public class STProject {
 			out.append(")");
 		});
 		return out.toString().trim();
+	}
+
+	public void delete() {
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
+		node.delete();	
 	}
 
 

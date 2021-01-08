@@ -13,6 +13,7 @@ public class WriteSTFile extends TransactionAction {
 
 	public WriteSTFile(STFile stFile) {
 		super("Generate");
+		setIcon("gen");
 		this.stFile = stFile;
 	}
 

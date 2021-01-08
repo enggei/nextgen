@@ -7,21 +7,22 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class GenerateAllSTGroups extends TransactionAction {
+public class DeleteDomainEntity extends TransactionAction {
 
+   private final nextgen.model.DomainEntity domainEntity;
    private final JComponent owner;
 
-	public GenerateAllSTGroups(JComponent owner) {
-		super("Generate all");
-		setIcon("gen");
+	public DeleteDomainEntity(nextgen.model.DomainEntity domainEntity, JComponent owner) {
+		super("DEL");
+		this.domainEntity = domainEntity;
 		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
-   	log.info("GenerateAllSTGroups" + " owner");
+   	log.info("DeleteDomainEntity" + " domainEntity" + " owner");
 
-      appModel().getAllSTGroups().forEach(stGroupModel -> new GenerateSTGroup(owner, stGroupModel).actionPerformed(actionEvent, transaction));
+      confirm(owner, "Delete", unused -> appModel().delete(domainEntity));
    }
 
 }

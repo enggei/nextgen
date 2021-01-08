@@ -82,17 +82,17 @@ public class DomainDB {
 		return db.findNodes(DomainLabel).stream().map(this::newDomain);
 	}
 
-	public Domain findDomainByName(String value) {
+	public Domain findDomainByName(STValue value) {
 		final org.neo4j.graphdb.Node node = db.findNodes(DomainLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newDomain(node);
 	}
 
-	public Domain findOrCreateDomainByName(String value) {
+	public Domain findOrCreateDomainByName(STValue value) {
 		final Domain existing = findDomainByName(value);
 		return existing == null ? newDomain().setName(value) : existing;
 	}
 
-	public java.util.stream.Stream<Domain> findAllDomainByName(String value) {
+	public java.util.stream.Stream<Domain> findAllDomainByName(STValue value) {
 		return db.findNodes(DomainLabel, "name", value).stream().map(this::newDomain);
 	}
 
