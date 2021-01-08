@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static javax.swing.JOptionPane.*;
 
@@ -514,6 +515,9 @@ public class SwingUtil {
    }
 
    @SuppressWarnings("unchecked")
+   public static <T> JComboBox<T> newComboBox(T[] enumValues, T selected) {
+      return newComboBox(Arrays.stream(enumValues).collect(Collectors.toList()), selected);
+   }
    public static <T> JComboBox<T> newComboBox(Collection<T> enumValues, T selected) {
       final T[] values = (T[]) new Object[enumValues.size()];
       int index = 0;

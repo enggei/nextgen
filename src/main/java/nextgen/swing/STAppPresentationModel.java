@@ -11,7 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 public class STAppPresentationModel {
 
@@ -1325,13 +1325,15 @@ public class STAppPresentationModel {
       NewDomainDomainProperty.post(domain, domainProperty);
    }
 
-   public void addDomainEntity(Domain domain, String name) {
+   public DomainEntity addDomainEntity(Domain domain, String name) {
 
       final DomainEntity domainEntity = domainDB.newDomainEntity()
             .setName(newSTValue(name));
       domain.addRoots(domainEntity);
 
       NewDomainDomainEntity.post(domainEntity, domain);
+
+      return domainEntity;
    }
 
    public void addEntityProperty(DomainEntity domainEntity, String name, String value) {
@@ -1347,7 +1349,7 @@ public class STAppPresentationModel {
    public void delete(Domain domain) {
       final String uuid = domain.getUuid();
       domain.delete();
-      nextgen.events.STTemplateDeleted.post(uuid);
+      nextgen.events.DomainDeleted.post(uuid);
    }
 
    public void delete(DomainEntity domainEntity) {
@@ -1366,6 +1368,61 @@ public class STAppPresentationModel {
       final String uuid = domainRelation.getUuid();
       domainRelation.delete();
       DomainRelationDeleted.post(uuid);
+   }
+
+   public void setName(Domain domain, String name) {
+      domain.setName(newSTValue(name));
+      DomainChanged.post(domain);
+   }
+
+   public void addDomainRelation(DomainEntity domainEntity, String relationName, DomainRelationType relationType, String entityName) {
+
+      final Domain domain = findDomainFor(domainEntity);
+      final DomainEntity entity = findDomainEntity(domain, entityName).orElse(domainDB.newDomainEntity().setName(newSTValue(entityName)));
+
+      final DomainRelation domainRelation = domainDB.newDomainRelation()
+            .setName(newSTValue(relationName))
+            .setEntity(entity)
+            .setType(relationType);
+
+      domainEntity.addRelations(domainRelation);
+      NewDomainEntityDomainRelation.post(domainEntity, domainRelation);
+   }
+
+   private Optional<DomainEntity> findDomainEntity(Domain domain, String entityName) {
+
+      final List<DomainEntity> entityList = domain.getRoots().collect(Collectors.toList());
+      for (DomainEntity domainEntity : entityList) {
+         final Optional<DomainEntity> found = findDomainEntity(domainEntity, entityName);
+         if (found.isPresent()) return found;
+      }
+
+      return Optional.empty();
+   }
+
+   private Optional<DomainEntity> findDomainEntity(DomainEntity domainEntity, String entityName) {
+
+      if (domainEntity == null) return Optional.empty();
+
+      if (entityName.equals(render(domainEntity.getName()))) return Optional.of(domainEntity);
+
+      final List<DomainRelation> relationList = domainEntity.getRelations().collect(Collectors.toList());
+      for (DomainRelation domainRelation : relationList) {
+         final Optional<DomainEntity> found = findDomainEntity(domainRelation.getEntity(), entityName);
+         if (found.isPresent()) return found;
+      }
+
+      return Optional.empty();
+   }
+
+   private Domain findDomainFor(DomainEntity domainEntity) {
+      if (domainEntity.getIncomingDomain() != null) return domainEntity.getIncomingDomain();
+      return findDomainFor(domainEntity.getIncomingRelation());
+   }
+
+   private Domain findDomainFor(DomainRelation domainRelation) {
+      if (domainRelation.getIncomingEntity() != null) return findDomainFor(domainRelation.getIncomingEntity());
+      return null;
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {

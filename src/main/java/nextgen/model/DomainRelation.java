@@ -143,6 +143,39 @@ public class DomainRelation {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public DomainEntity getIncomingEntity() { 
+		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("relations"), org.neo4j.graphdb.Direction.INCOMING);
+		return relationship == null ? null : new DomainEntity(relationship.getOtherNode(node));
+	}
+
+	public DomainRelation setType(nextgen.model.DomainRelationType value) {
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty("type", value.name());
+		} 
+		return this;
+	}
+
+	public nextgen.model.DomainRelationType getType() { 
+		if (node.hasProperty("type")) return nextgen.model.DomainRelationType.valueOf((java.lang.String) node.getProperty("type"));
+		return null;
+	}
+
+	public nextgen.model.DomainRelationType getType(nextgen.model.DomainRelationType defaultValue) { 
+		if (node.hasProperty("type")) return nextgen.model.DomainRelationType.valueOf((java.lang.String) node.getProperty("type"));
+		return defaultValue;
+	}
+
+	public boolean hasType() { 
+		return node.hasProperty("type");
+	}
+
+	public DomainRelation removeType() { 
+		node.removeProperty("type");
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();

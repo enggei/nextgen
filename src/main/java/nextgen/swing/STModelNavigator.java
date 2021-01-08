@@ -191,6 +191,24 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onDomainChanged(nextgen.events.DomainChanged event) {
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.value))
+				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainDomainEntity(nextgen.events.NewDomainDomainEntity event) {
+		findDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainEntityTreeNode(event.domainEntity)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainEntityDomainRelation(nextgen.events.NewDomainEntityDomainRelation event) {
+		findDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.domainEntity))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new DomainRelationTreeNode(event.domainRelation)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileChanged(nextgen.events.STFileChanged event) {
 		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile))
 				.ifPresent(STModelNavigator.STFileSinkTreeNode::nodeChanged);
@@ -526,7 +544,7 @@ public class STModelNavigator extends JPanel {
 				actions.add(new AddDomainPropertyToDomain(getModel(), workspace));
 				actions.add(new AddDomainEntities(getModel(), workspace));
 				actions.add(new DeleteDomain(getModel(), workspace));
-				actions.add(new DeleteDomain(getModel(), workspace));
+				actions.add(new SetDomainName(getModel(), workspace));
 			});
 
 			return actions;
@@ -574,7 +592,7 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 
-			setLabel(model.toString());
+			setLabel(appModel().render(getModel().getName()) + " = " +appModel().render( getModel().getValue(), 30));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -586,7 +604,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(getModel().toString());
+			setLabel(appModel().render(getModel().getName()) + " = " +appModel().render( getModel().getValue(), 30));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -641,13 +659,15 @@ public class STModelNavigator extends JPanel {
 		private String uuid;
 
 		DomainEntityTreeNode(nextgen.model.DomainEntity model) {
-			super(model, null);
+			super(model, appModel().loadIcon("sq-purple"));
 
 
-			setLabel(model.toString());
+			setLabel(appModel().render(getModel().getName()));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			model.getPropertiesSorted().forEach(domainProperty -> add(new STModelNavigator.DomainPropertyTreeNode(domainProperty)));
+			model.getRelationsSorted().forEach(domainRelation -> add(new STModelNavigator.DomainRelationTreeNode(domainRelation)));
 		}
 
 		DomainEntityTreeNode thisNode() {
@@ -656,7 +676,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(getModel().toString());
+			setLabel(appModel().render(getModel().getName()));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -667,6 +687,8 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				actions.add(new AddDomainPropertyToEntity(getModel(), workspace));
+				actions.add(new DeleteDomainEntity(getModel(), workspace));
+				actions.add(new AddDomainRelation(getModel(), workspace));
 			});
 
 			return actions;
@@ -714,10 +736,11 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 
-			setLabel(model.toString());
+			setLabel(appModel().render(getModel().getName()));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
+			if (model.getEntity() != null) add(new STModelNavigator.DomainEntityTreeNode(model.getEntity()));
 		}
 
 		DomainRelationTreeNode thisNode() {
@@ -726,7 +749,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(getModel().toString());
+			setLabel(appModel().render(getModel().getName()));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -736,6 +759,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new SetDomainRelationType(getModel(), workspace));
 				actions.add(new DeleteDomainRelation(getModel(), workspace));
 			});
 

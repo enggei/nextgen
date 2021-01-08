@@ -36,11 +36,11 @@ public class AddDomainPropertyToEntity extends TransactionAction {
          inputPanel.add(field);
       }
 
-      showDialog(owner, inputPanel, "Entities", jDialog -> {
+      showDialog(owner, inputPanel, "Properties", jDialog -> {
 
          for (int i = 0; i < fields.size(); i += 2) {
             JTextField txtName = fields.get(i);
-            JTextField txtValue = fields.get(i);
+            JTextField txtValue = fields.get(i + 1);
 
             final String name = txtName.getText().trim();
             if (name.length() == 0) continue;

@@ -53,6 +53,10 @@ public abstract class TransactionAction extends javax.swing.AbstractAction {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }
 
+   protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, T selectedValue, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values,selectedValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
    protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
       nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
    }

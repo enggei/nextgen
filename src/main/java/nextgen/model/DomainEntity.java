@@ -144,6 +144,16 @@ public class DomainEntity {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
+	public Domain getIncomingDomain() { 
+		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("roots"), org.neo4j.graphdb.Direction.INCOMING);
+		return relationship == null ? null : new Domain(relationship.getOtherNode(node));
+	}
+
+	public DomainRelation getIncomingRelation() { 
+		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entity"), org.neo4j.graphdb.Direction.INCOMING);
+		return relationship == null ? null : new DomainRelation(relationship.getOtherNode(node));
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();
