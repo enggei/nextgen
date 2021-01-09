@@ -58,6 +58,64 @@ public class DomainRelation {
 		node.removeProperty(_uuid);
 		return this;
 	}
+	public DomainRelation setDst(DomainEntity dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getDstRelation();
+		if (relationship != null)  { 
+			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
+			relationship.delete();
+		}
+		if (dst == null) return this;
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("dst"));
+		return this;
+	}
+
+	public DomainEntity getDst() { 
+		final org.neo4j.graphdb.Relationship relationship = getDstRelation();
+		return relationship == null ? null : new DomainEntity(relationship.getOtherNode(node));
+	}
+
+	public DomainRelation removeDst() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getDstRelation());
+		existing.ifPresent(relationship -> {
+			relationship.delete();
+		});
+		return this;
+	}
+
+	public org.neo4j.graphdb.Relationship getDstRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("dst"), org.neo4j.graphdb.Direction.OUTGOING);
+	}
+
+	private static final String _name = "name";
+
+	public DomainRelation setName(String value) { 
+		if (value == null) {
+			removeName(); 
+		} else {
+		 	node.setProperty(_name, value);
+		}
+		return this;
+	}
+
+	public String getName() { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return null;
+	}
+
+	public String getName(String defaultValue) { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return defaultValue;
+	}
+
+	public boolean hasName() { 
+		return node.hasProperty(_name);
+	}
+
+	public DomainRelation removeName() { 
+		node.removeProperty(_name);
+		return this;
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _properties = org.neo4j.graphdb.RelationshipType.withName("properties");
 
 	public DomainRelation addProperties(DomainProperty dst) { 
@@ -87,65 +145,32 @@ public class DomainRelation {
 		return this;
 	}
 
-	public DomainRelation setEntity(DomainEntity dst) { 
-		final org.neo4j.graphdb.Relationship relationship = getEntityRelation();
+	public DomainRelation setSrc(DomainEntity dst) { 
+		final org.neo4j.graphdb.Relationship relationship = getSrcRelation();
 		if (relationship != null)  { 
 			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
 			relationship.delete();
 		}
 		if (dst == null) return this;
-		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("entity"));
+		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("src"));
 		return this;
 	}
 
-	public DomainEntity getEntity() { 
-		final org.neo4j.graphdb.Relationship relationship = getEntityRelation();
+	public DomainEntity getSrc() { 
+		final org.neo4j.graphdb.Relationship relationship = getSrcRelation();
 		return relationship == null ? null : new DomainEntity(relationship.getOtherNode(node));
 	}
 
-	public DomainRelation removeEntity() { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getEntityRelation());
+	public DomainRelation removeSrc() { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getSrcRelation());
 		existing.ifPresent(relationship -> {
 			relationship.delete();
 		});
 		return this;
 	}
 
-	public org.neo4j.graphdb.Relationship getEntityRelation() { 
-		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entity"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
-
-	public DomainRelation setName(STValue dst) { 
-		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
-		if (relationship != null)  { 
-			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
-			relationship.delete();
-		}
-		if (dst == null) return this;
-		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("name"));
-		return this;
-	}
-
-	public STValue getName() { 
-		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
-		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
-	}
-
-	public DomainRelation removeName() { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getNameRelation());
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
-		return this;
-	}
-
-	public org.neo4j.graphdb.Relationship getNameRelation() { 
-		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
-
-	public DomainEntity getIncomingEntity() { 
-		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("relations"), org.neo4j.graphdb.Direction.INCOMING);
-		return relationship == null ? null : new DomainEntity(relationship.getOtherNode(node));
+	public org.neo4j.graphdb.Relationship getSrcRelation() { 
+		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("src"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public DomainRelation setType(nextgen.model.DomainRelationType value) {

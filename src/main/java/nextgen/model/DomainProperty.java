@@ -58,32 +58,34 @@ public class DomainProperty {
 		node.removeProperty(_uuid);
 		return this;
 	}
-	public DomainProperty setName(STValue dst) { 
-		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
-		if (relationship != null)  { 
-			if (dst != null && relationship.getOtherNode(node).equals(dst.getNode())) return this;
-			relationship.delete();
+	private static final String _name = "name";
+
+	public DomainProperty setName(String value) { 
+		if (value == null) {
+			removeName(); 
+		} else {
+		 	node.setProperty(_name, value);
 		}
-		if (dst == null) return this;
-		node.createRelationshipTo(dst.getNode(), org.neo4j.graphdb.RelationshipType.withName("name"));
 		return this;
 	}
 
-	public STValue getName() { 
-		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
-		return relationship == null ? null : new STValue(relationship.getOtherNode(node));
+	public String getName() { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return null;
+	}
+
+	public String getName(String defaultValue) { 
+		if (node.hasProperty(_name)) return (String) node.getProperty(_name);
+		return defaultValue;
+	}
+
+	public boolean hasName() { 
+		return node.hasProperty(_name);
 	}
 
 	public DomainProperty removeName() { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.Optional.ofNullable(getNameRelation());
-		existing.ifPresent(relationship -> {
-			relationship.delete();
-		});
+		node.removeProperty(_name);
 		return this;
-	}
-
-	public org.neo4j.graphdb.Relationship getNameRelation() { 
-		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
 	}
 
 	public DomainProperty setValue(STValue dst) { 

@@ -14,11 +14,21 @@ public class DomainDB {
 
 	public DomainDB(org.neo4j.graphdb.GraphDatabaseService db) { 
 		this.db = db;
+		cleanup();
 	}
 
 	public org.neo4j.graphdb.GraphDatabaseService getDatabaseService() { 
 		return this.db;
 	}
+
+	private void cleanup() {
+      doInTransaction(transaction -> {
+         //findAllDomainProperty().forEach(DomainProperty::delete);
+         //findAllDomainRelation().forEach(DomainRelation::delete);
+         //findAllDomainEntity().forEach(DomainEntity::delete);
+         //findAllDomain().forEach(Domain::delete);
+      });
+   }
 
 	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action) { 
 		doInTransaction(action, java.lang.Throwable::printStackTrace);
@@ -82,17 +92,17 @@ public class DomainDB {
 		return db.findNodes(DomainLabel).stream().map(this::newDomain);
 	}
 
-	public Domain findDomainByName(STValue value) {
+	public Domain findDomainByName(String value) {
 		final org.neo4j.graphdb.Node node = db.findNodes(DomainLabel, "name", value).stream().findFirst().orElse(null);
 		return node == null ? null : newDomain(node);
 	}
 
-	public Domain findOrCreateDomainByName(STValue value) {
+	public Domain findOrCreateDomainByName(String value) {
 		final Domain existing = findDomainByName(value);
 		return existing == null ? newDomain().setName(value) : existing;
 	}
 
-	public java.util.stream.Stream<Domain> findAllDomainByName(STValue value) {
+	public java.util.stream.Stream<Domain> findAllDomainByName(String value) {
 		return db.findNodes(DomainLabel, "name", value).stream().map(this::newDomain);
 	}
 

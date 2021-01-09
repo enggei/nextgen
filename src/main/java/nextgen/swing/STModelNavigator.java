@@ -517,12 +517,12 @@ public class STModelNavigator extends JPanel {
 			super(model, appModel().loadIcon("sq-pink"));
 
 
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
 			model.getPropertiesSorted().forEach(domainProperty -> add(new STModelNavigator.DomainPropertyTreeNode(domainProperty)));
-			model.getRootsSorted().forEach(domainEntity -> add(new STModelNavigator.DomainEntityTreeNode(domainEntity)));
+			model.getEntities().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName())).forEach(domainEntity -> add(new STModelNavigator.DomainEntityTreeNode(domainEntity)));
 		}
 
 		DomainTreeNode thisNode() {
@@ -531,7 +531,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -592,7 +592,7 @@ public class STModelNavigator extends JPanel {
 			super(model, null);
 
 
-			setLabel(appModel().render(getModel().getName()) + " = " +appModel().render( getModel().getValue(), 30));
+			setLabel(getModel().getName() + " = " + appModel().render(getModel().getValue(), 30));
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
@@ -604,7 +604,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().render(getModel().getName()) + " = " +appModel().render( getModel().getValue(), 30));
+			setLabel(getModel().getName() + " = " + appModel().render(getModel().getValue(), 30));
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -662,12 +662,14 @@ public class STModelNavigator extends JPanel {
 			super(model, appModel().loadIcon("sq-purple"));
 
 
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
 			model.getPropertiesSorted().forEach(domainProperty -> add(new STModelNavigator.DomainPropertyTreeNode(domainProperty)));
-			model.getRelationsSorted().forEach(domainRelation -> add(new STModelNavigator.DomainRelationTreeNode(domainRelation)));
+			model.getIncomingDomain().getRelations()
+					.filter(domainRelation -> domainRelation.getSrc().equals(getModel()))
+					.forEach(domainRelation -> add(new DomainRelationTreeNode(domainRelation)));
 		}
 
 		DomainEntityTreeNode thisNode() {
@@ -676,7 +678,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -733,14 +735,15 @@ public class STModelNavigator extends JPanel {
 		private String uuid;
 
 		DomainRelationTreeNode(nextgen.model.DomainRelation model) {
-			super(model, null);
+			super(model, appModel().loadIcon("rel"));
 
 
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			if (model.getEntity() != null) add(new STModelNavigator.DomainEntityTreeNode(model.getEntity()));
+			model.getPropertiesSorted().forEach(domainProperty -> add(new STModelNavigator.DomainPropertyTreeNode(domainProperty)));
+			add(new BaseTreeNode<>(getModel().getDst().getName(), null));
 		}
 
 		DomainRelationTreeNode thisNode() {
@@ -749,7 +752,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(appModel().render(getModel().getName()));
+			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
