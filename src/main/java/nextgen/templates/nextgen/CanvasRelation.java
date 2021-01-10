@@ -160,6 +160,12 @@ public class CanvasRelation {
 		return this._rightClickStatements;
 	} 
 
+	public CanvasRelation setFields(java.util.Collection<CanvasRelation_Fields> values) {
+			this._fields.clear();
+			values.stream().map(CanvasRelation_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
+
 	public CanvasRelation addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -213,7 +219,21 @@ public class CanvasRelation {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public CanvasRelation setRightClickActions(java.util.Collection<CanvasRelation_RightClickActions> values) {
+			this._rightClickActions.clear();
+			values.stream().map(CanvasRelation_RightClickActions::asMap).forEach(map -> _rightClickActions.add(map));
+			return this;
+		}
 
 	public CanvasRelation addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -255,7 +275,20 @@ public class CanvasRelation {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public CanvasRelation setKeyPressActions(java.util.Collection<CanvasRelation_KeyPressActions> values) {
+			this._keyPressActions.clear();
+			values.stream().map(CanvasRelation_KeyPressActions::asMap).forEach(map -> _keyPressActions.add(map));
+			return this;
+		}
 
 	public CanvasRelation addKeyPressActions(Object _name, Object _key) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -308,6 +341,14 @@ public class CanvasRelation {
 
 		public Object getKey() {
 			return this._key;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("key", _key);
+			return map;
 		}
 
 	}  

@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetArgumentToTrue extends TransactionAction {
+public class SetArgumentToTrue extends nextgen.actions.TransactionAction {
 
    private final STModel stModel;
    private final STParameter stParameter;

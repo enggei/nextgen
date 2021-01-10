@@ -88,35 +88,6 @@ public class DomainEntity {
 		return this;
 	}
 
-	private static final org.neo4j.graphdb.RelationshipType _properties = org.neo4j.graphdb.RelationshipType.withName("properties");
-
-	public DomainEntity addProperties(DomainProperty dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _properties);
-		relationship.setProperty("_t", System.nanoTime());
-		return this;
-	}
-
-	public java.util.stream.Stream<DomainProperty> getProperties() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).map((relationship) -> new DomainProperty(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<DomainProperty> getPropertiesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new DomainProperty(relationship.getOtherNode(node)));
-	}
-
-	public DomainEntity removeProperties(DomainProperty dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	public DomainEntity removeAllProperties() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
 	public Domain getIncomingDomain() { 
 		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entities"), org.neo4j.graphdb.Direction.INCOMING);
 		return relationship == null ? null : new Domain(relationship.getOtherNode(node));

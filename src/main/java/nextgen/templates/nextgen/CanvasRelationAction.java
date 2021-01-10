@@ -101,6 +101,12 @@ public class CanvasRelationAction {
 		return this._statements;
 	} 
 
+	public CanvasRelationAction setFields(java.util.Collection<CanvasRelationAction_Fields> values) {
+			this._fields.clear();
+			values.stream().map(CanvasRelationAction_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
+
 	public CanvasRelationAction addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -152,6 +158,14 @@ public class CanvasRelationAction {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

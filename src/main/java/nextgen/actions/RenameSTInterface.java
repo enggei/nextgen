@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class RenameSTInterface extends TransactionAction {
+public class RenameSTInterface extends nextgen.actions.TransactionAction {
 
    private final STInterface stInterface;
    private final STGroupModel stGroup;

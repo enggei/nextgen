@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class RunAction extends TransactionAction {
+public class RunAction extends nextgen.actions.TransactionAction {
 
    private final STGroupAction action;
    private final JComponent owner;
@@ -45,7 +45,7 @@ public class RunAction extends TransactionAction {
                .setPackageName(packageName)
                .setName(action.getName())
                .setTitle(action.getName())
-               .addFields("owner", "JComponent")
+               .addFields("owner", "javax.swing.JComponent")
                .setImports(imports == null ? new Object[0] : imports.split("\n"))
                .addStatements(appModel().render(action.getStatements()))
                .addMethods(appModel().render(action.getMethods()));

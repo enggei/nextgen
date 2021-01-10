@@ -5,6 +5,7 @@ public class TransactionAction {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _icon;
 	private Object _titleExpression;
 	private String _name;
 	private Object _title;
@@ -26,6 +27,7 @@ public class TransactionAction {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("TransactionAction");
+		st.add("icon", _icon);
 		st.add("titleExpression", _titleExpression);
 		st.add("name", _name);
 		st.add("title", _title);
@@ -37,6 +39,28 @@ public class TransactionAction {
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type}", map.get("name"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public TransactionAction setIcon(Object value) {
+		this._icon = value;
+		return this;
+	}
+
+	public Object getIcon() {
+		return this._icon;
+	}
+
+	public Object getIcon(Object defaultValue) {
+		return this._icon == null ? defaultValue : this._icon;
+	}
+
+	public boolean hasIcon() {
+		return this._icon != null;
+	}
+
+	public TransactionAction removeIcon() {
+		this._icon = null;
+		return this;
+	} 
 
 	public TransactionAction setTitleExpression(Object value) {
 		this._titleExpression = value;
@@ -213,6 +237,12 @@ public class TransactionAction {
 		return this._imports;
 	} 
 
+	public TransactionAction setStaticFields(java.util.Collection<TransactionAction_StaticFields> values) {
+			this._staticFields.clear();
+			values.stream().map(TransactionAction_StaticFields::asMap).forEach(map -> _staticFields.add(map));
+			return this;
+		}
+
 	public TransactionAction addStaticFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -279,7 +309,22 @@ public class TransactionAction {
 			return this._init;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			map.put("init", _init);
+			return map;
+		}
+
 	}  
+
+	public TransactionAction setFields(java.util.Collection<TransactionAction_Fields> values) {
+			this._fields.clear();
+			values.stream().map(TransactionAction_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
 
 	public TransactionAction addFields(Object _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -334,6 +379,14 @@ public class TransactionAction {
 			return this._type;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
+		}
+
 	}  
 
 	@Override
@@ -349,12 +402,19 @@ public class TransactionAction {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "TransactionAction(methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
+	static final String st = "TransactionAction(icon,methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;\n" + 
 				"\n" + 
 				"~if(imports)~\n" + 
 				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"~endif~\n" + 
+				"import static nextgen.utils.SwingUtil.*;\n" + 
+				"import static nextgen.swing.ComponentFactory.*;\n" + 
+				"import nextgen.model.*;\n" + 
+				"import javax.swing.*;\n" + 
+				"import org.neo4j.graphdb.Transaction;\n" + 
+				"import java.awt.event.ActionEvent;\n" + 
+				"\n" + 
 				"public class ~name~ extends nextgen.actions.TransactionAction {\n" + 
 				"~if(staticFields)~\n" + 
 				"   \n" + 
@@ -367,6 +427,7 @@ public class TransactionAction {
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(\"~title~\");\n" + 
+				"		~if(icon)~setIcon(\"~icon~\");~endif~\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -374,6 +435,15 @@ public class TransactionAction {
 				"\n" + 
 				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
 				"		super(~titleExpression~);\n" + 
+				"		~if(icon)~setIcon(\"~icon~\");~endif~\n" + 
+				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+				"	}\n" + 
+				"\n" + 
+				"~elseif(icon)~\n" + 
+				"\n" + 
+				"	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+				"		super(\"\");\n" + 
+				"		setIcon(\"~icon~\");\n" + 
 				"		~fields:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"\n" + 
@@ -386,7 +456,7 @@ public class TransactionAction {
 				"\n" + 
 				"~endif~\n" + 
 				"   @Override\n" + 
-				"   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {\n" + 
+				"   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {\n" + 
 				"   	log.info(\"~name~\"~fields:{it|  + \" ~it.name~\"}~);\n" + 
 				"   	\n" + 
 				"      ~statements:{it|~it~};separator=\"\\n\"~\n" + 

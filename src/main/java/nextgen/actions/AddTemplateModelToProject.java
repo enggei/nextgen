@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AddTemplateModelToProject extends TransactionAction {
+public class AddTemplateModelToProject extends nextgen.actions.TransactionAction {
 
    private final STTemplate stTemplate;
    private final STProject project;

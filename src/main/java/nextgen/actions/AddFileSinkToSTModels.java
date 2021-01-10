@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AddFileSinkToSTModels extends TransactionAction {
+public class AddFileSinkToSTModels extends nextgen.actions.TransactionAction {
 
    private final STTemplate stTemplate;
    private final java.util.List<STModel> stModels;

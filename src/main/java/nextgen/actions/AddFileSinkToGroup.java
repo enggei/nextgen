@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AddFileSinkToGroup extends TransactionAction {
+public class AddFileSinkToGroup extends nextgen.actions.TransactionAction {
 
    private final STGroupModel stGroup;
 

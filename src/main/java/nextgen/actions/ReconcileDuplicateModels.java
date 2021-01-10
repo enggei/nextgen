@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class ReconcileDuplicateModels extends TransactionAction {
+public class ReconcileDuplicateModels extends nextgen.actions.TransactionAction {
 
 
 	public ReconcileDuplicateModels() {

@@ -125,6 +125,12 @@ public class STModelEditor {
 		return this._statements;
 	} 
 
+	public STModelEditor setProperties(java.util.Collection<STModelEditor_Properties> values) {
+			this._properties.clear();
+			values.stream().map(STModelEditor_Properties::asMap).forEach(map -> _properties.add(map));
+			return this;
+		}
+
 	public STModelEditor addProperties(Object _component, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("component", _component);
@@ -176,6 +182,14 @@ public class STModelEditor {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("component", _component);
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

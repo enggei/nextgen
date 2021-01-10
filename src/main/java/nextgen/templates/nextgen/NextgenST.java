@@ -17,12 +17,16 @@ public class NextgenST {
 	.append(CanvasAction.st + "\n")
 	.append(DomainFacade.st + "\n")
 	.append(EntityConstraints.st + "\n")
+	.append(DomainVisitor.st + "\n")
+	.append(DomainVisitorInterface.st + "\n")
+	.append(Editor.st + "\n")
 	.append(STModelEditor.st + "\n")
 	.append(STTemplateEditor.st + "\n")
 	.append(STWorkspace.st + "\n")
 	.append(FindEditor.st + "\n")
 	.append(FindSingletonComponent.st + "\n")
 	.append(TransactionAction.st + "\n")
+	.append(BaseTransactionAction.st + "\n")
 	.append(TreeNavigator.st + "\n")
 	.append(BaseTreeNode.st + "\n")
 	.append(EventSubscription.st + "\n")
@@ -112,6 +116,18 @@ public class NextgenST {
 		return new EntityConstraints(stGroup);
 	}  
 
+	public static DomainVisitor newDomainVisitor() {
+		return new DomainVisitor(stGroup);
+	}  
+
+	public static DomainVisitorInterface newDomainVisitorInterface() {
+		return new DomainVisitorInterface(stGroup);
+	}  
+
+	public static Editor newEditor() {
+		return new Editor(stGroup);
+	}  
+
 	public static STModelEditor newSTModelEditor() {
 		return new STModelEditor(stGroup);
 	}  
@@ -134,6 +150,10 @@ public class NextgenST {
 
 	public static TransactionAction newTransactionAction() {
 		return new TransactionAction(stGroup);
+	}  
+
+	public static BaseTransactionAction newBaseTransactionAction() {
+		return new BaseTransactionAction(stGroup);
 	}  
 
 	public static TreeNavigator newTreeNavigator() {

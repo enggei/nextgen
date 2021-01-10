@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class CopyInto extends TransactionAction {
+public class CopyInto extends nextgen.actions.TransactionAction {
 
    private final STModel thisModel;
    private final STModel otherModel;

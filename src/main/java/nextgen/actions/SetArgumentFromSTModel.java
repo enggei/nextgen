@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetArgumentFromSTModel extends TransactionAction {
+public class SetArgumentFromSTModel extends nextgen.actions.TransactionAction {
 
    private final STModel stModel;
    private final STParameter stParameter;

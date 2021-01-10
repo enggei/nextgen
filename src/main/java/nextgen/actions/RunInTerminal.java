@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class RunInTerminal extends TransactionAction {
+public class RunInTerminal extends nextgen.actions.TransactionAction {
 
    private final STModel stModel;
    private final JComponent owner;

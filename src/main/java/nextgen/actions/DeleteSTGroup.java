@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class DeleteSTGroup extends TransactionAction {
+public class DeleteSTGroup extends nextgen.actions.TransactionAction {
 
    private final STGroupModel stGroup;
    private final JComponent owner;

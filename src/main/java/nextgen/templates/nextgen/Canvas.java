@@ -293,6 +293,12 @@ public class Canvas {
 		return this._methods;
 	} 
 
+	public Canvas setRightClickActions(java.util.Collection<Canvas_RightClickActions> values) {
+			this._rightClickActions.clear();
+			values.stream().map(Canvas_RightClickActions::asMap).forEach(map -> _rightClickActions.add(map));
+			return this;
+		}
+
 	public Canvas addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -333,7 +339,20 @@ public class Canvas {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public Canvas setKeyPressActions(java.util.Collection<Canvas_KeyPressActions> values) {
+			this._keyPressActions.clear();
+			values.stream().map(Canvas_KeyPressActions::asMap).forEach(map -> _keyPressActions.add(map));
+			return this;
+		}
 
 	public Canvas addKeyPressActions(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -388,7 +407,21 @@ public class Canvas {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("key", _key);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public Canvas setFields(java.util.Collection<Canvas_Fields> values) {
+			this._fields.clear();
+			values.stream().map(Canvas_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
 
 	public Canvas addFields(Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -443,7 +476,21 @@ public class Canvas {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public Canvas setFinalFields(java.util.Collection<Canvas_FinalFields> values) {
+			this._finalFields.clear();
+			values.stream().map(Canvas_FinalFields::asMap).forEach(map -> _finalFields.add(map));
+			return this;
+		}
 
 	public Canvas addFinalFields(Object _init, Object _type, String _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -509,6 +556,15 @@ public class Canvas {
 
 		public String getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("init", _init);
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

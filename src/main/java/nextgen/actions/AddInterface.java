@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AddInterface extends TransactionAction {
+public class AddInterface extends nextgen.actions.TransactionAction {
 
    private final java.util.Set<STTemplate> children;
    private final JComponent owner;

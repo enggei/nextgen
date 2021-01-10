@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class NewProject extends TransactionAction {
+public class NewProject extends nextgen.actions.TransactionAction {
 
    private final JComponent owner;
 

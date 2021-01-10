@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class UndoDBTransaction extends TransactionAction {
+public class UndoDBTransaction extends nextgen.actions.TransactionAction {
 
 
 	public UndoDBTransaction() {

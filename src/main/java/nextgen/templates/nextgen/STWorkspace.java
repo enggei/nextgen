@@ -5,8 +5,11 @@ public class STWorkspace {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
+	private Object _height;
+	private Object _width;
 	private Object _name;
 	private Object _packageName;
+	private java.util.List<Object> _imports = new java.util.ArrayList<>();
 	private java.util.List<Object> _constructorParameters = new java.util.ArrayList<>();
 	private java.util.List<Object> _componentMethods = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
@@ -23,14 +26,61 @@ public class STWorkspace {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("STWorkspace");
+		st.add("height", _height);
+		st.add("width", _width);
 		st.add("name", _name);
 		st.add("packageName", _packageName);
+		for (Object o : _imports) st.add("imports", o);
 		for (Object o : _constructorParameters) st.add("constructorParameters", o);
 		for (Object o : _componentMethods) st.add("componentMethods", o);
 		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,init,type}", map.get("name"), map.get("init"), map.get("type"));
 		return st.render().trim();
 	}
+
+	public STWorkspace setHeight(Object value) {
+		this._height = value;
+		return this;
+	}
+
+	public Object getHeight() {
+		return this._height;
+	}
+
+	public Object getHeight(Object defaultValue) {
+		return this._height == null ? defaultValue : this._height;
+	}
+
+	public boolean hasHeight() {
+		return this._height != null;
+	}
+
+	public STWorkspace removeHeight() {
+		this._height = null;
+		return this;
+	} 
+
+	public STWorkspace setWidth(Object value) {
+		this._width = value;
+		return this;
+	}
+
+	public Object getWidth() {
+		return this._width;
+	}
+
+	public Object getWidth(Object defaultValue) {
+		return this._width == null ? defaultValue : this._width;
+	}
+
+	public boolean hasWidth() {
+		return this._width != null;
+	}
+
+	public STWorkspace removeWidth() {
+		this._width = null;
+		return this;
+	} 
 
 	public STWorkspace setName(Object value) {
 		this._name = value;
@@ -74,6 +124,35 @@ public class STWorkspace {
 	public STWorkspace removePackageName() {
 		this._packageName = null;
 		return this;
+	} 
+
+	public STWorkspace addImports(Object value) {
+		this._imports.add(value);
+		return this;
+	}
+
+	public STWorkspace setImports(Object[] value) {
+		this._imports.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public STWorkspace setImports(java.util.Collection<Object> values) {
+		this._imports.addAll(values);
+		return this;
+	}
+
+	public STWorkspace removeImports(Object value) {
+		this._imports.remove(value);
+		return this;
+	}
+
+	public STWorkspace removeImports(int index) {
+		this._imports.remove(index);
+		return this;
+	}
+
+	public java.util.List<Object> getImports() {
+		return this._imports;
 	} 
 
 	public STWorkspace addConstructorParameters(Object value) {
@@ -163,6 +242,12 @@ public class STWorkspace {
 		return this._methods;
 	} 
 
+	public STWorkspace setFields(java.util.Collection<STWorkspace_Fields> values) {
+			this._fields.clear();
+			values.stream().map(STWorkspace_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
+
 	public STWorkspace addFields(Object _name, Object _init, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -229,6 +314,15 @@ public class STWorkspace {
 			return this._type;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("init", _init);
+			map.put("type", _type);
+			return map;
+		}
+
 	}  
 
 	@Override
@@ -244,7 +338,7 @@ public class STWorkspace {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "STWorkspace(name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;\n" + 
+	static final String st = "STWorkspace(height,width,imports,name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;\n" + 
 				"\n" + 
 				"import javax.swing.*;\n" + 
 				"import java.awt.*;\n" + 
@@ -253,6 +347,7 @@ public class STWorkspace {
 				"import java.awt.event.MouseEvent;\n" + 
 				"import java.util.Optional;\n" + 
 				"import java.util.function.Predicate;\n" + 
+				"~imports:{it|import ~it~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"public class ~name~ extends JTabbedPane {\n" + 
 				"\n" + 
@@ -260,7 +355,7 @@ public class STWorkspace {
 				"	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name~() {\n" + 
-				"		setPreferredSize(new Dimension(1200, 1024));\n" + 
+				"		setPreferredSize(new Dimension(~width~, ~height~));\n" + 
 				"		setMinimumSize(new Dimension(100, 100));\n" + 
 				"		~constructorParameters:{it|~it~};separator=\"\\n\"~\n" + 
 				"	}\n" + 
@@ -290,8 +385,8 @@ public class STWorkspace {
 				"	private void addPane(String title, JComponent component) {\n" + 
 				"		addTab(title, component);\n" + 
 				"		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);\n" + 
-				"      tabComponents.put(component, tabComponent);\n" + 
-				"      setTabComponentAt(indexOfComponent(component), tabComponent);\n" + 
+				"		tabComponents.put(component, tabComponent);\n" + 
+				"		setTabComponentAt(indexOfComponent(component), tabComponent);\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	class ButtonTabComponent extends JPanel {\n" + 
@@ -302,7 +397,7 @@ public class STWorkspace {
 				"			super(new FlowLayout(FlowLayout.LEFT, 0, 0));\n" + 
 				"			setOpaque(false);\n" + 
 				"\n" + 
-				"			this.label = new JLabel(title);\n" + 
+				"			this.label = nextgen.swing.ComponentFactory.newJLabel(title);\n" + 
 				"			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));\n" + 
 				"			add(label);\n" + 
 				"\n" + 

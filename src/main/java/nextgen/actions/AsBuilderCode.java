@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AsBuilderCode extends TransactionAction {
+public class AsBuilderCode extends nextgen.actions.TransactionAction {
 
    private final STModel stModel;
 

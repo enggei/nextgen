@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AddValueToProject extends TransactionAction {
+public class AddValueToProject extends nextgen.actions.TransactionAction {
 
    private final STProject project;
    private final STValue stValue;

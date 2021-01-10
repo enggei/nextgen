@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetSTValueFromInput extends TransactionAction {
+public class SetSTValueFromInput extends nextgen.actions.TransactionAction {
 
    private final STValue stValue;
    private final JComponent owner;

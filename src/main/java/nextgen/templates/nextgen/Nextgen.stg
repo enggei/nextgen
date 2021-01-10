@@ -1844,6 +1844,113 @@ public static String delete(~entity~ entity) {
 	return entity.getUuid();
 }  >>
 
+DomainVisitor() ::= <<final java.util.List<DomainEntity> entities = domain.getEntitiesSorted().collect(java.util.stream.Collectors.toList());
+final java.util.List<DomainRelation> relations = domain.getRelationsSorted().collect(java.util.stream.Collectors.toList());
+
+onDomain(domain.getName());
+
+for (DomainEntity entity : entities)
+	onEntity(entity);
+
+for (DomainRelation relation : relations)
+	onRelation(relation);
+
+onComplete();  >>
+
+DomainVisitorInterface(onComplete,onRelation,onEntity,onDomain) ::= <<public void onDomain(String name) {
+	System.out.println("on domain " + name);
+	~onDomain:{it|~it~};separator="\n"~
+}
+
+public void onEntity(DomainEntity entity) {
+	System.out.println("\ton entity " + entity.getName());
+	~onEntity:{it|~it~};separator="\n"~
+}
+
+public void onRelation(DomainRelation relation) {
+	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc() + " " + relation.getType() + " " + relation.getDst());
+	~onRelation:{it|~it~};separator="\n"~
+}
+
+public void onComplete() {
+	System.out.println();
+	~onComplete:{it|~it~};separator="\n"~
+}  >>
+
+Editor(editors,events,modelType,name,packageName) ::= <<package ~packageName~;
+
+import java.awt.*;
+
+public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
+
+	private String uuid = java.util.UUID.randomUUID().toString();
+
+	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
+	~editors:{it|private final ~it.type~ ~it.name~ = new ~it.type~();};separator="\n"~
+
+	public ~name~() {
+		super();
+		~if(events)~org.greenrobot.eventbus.EventBus.getDefault().register(this);~endif~
+	}
+	
+	public ~name~(~modelType~ model) {
+		super(model);
+		setModel(model);
+		~if(events)~org.greenrobot.eventbus.EventBus.getDefault().register(this);~endif~
+	}
+
+	@Override
+	public void setModel(~modelType~ model) {
+		super.setModel(model);
+
+		this.uuid = model.getUuid();
+
+		if (getComponentCount() == 0) {
+		   ~editors:{it|editors.add("~it.name;format="capitalize"~", ~it.name~);};separator="\n"~
+			add(editors, BorderLayout.CENTER);
+		   invalidate();
+		}
+
+		~editors:{it|~it.name~.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));};separator="\n"~
+	}
+	
+	@Override
+	protected void tryToSave() {
+		if (model == null) return;
+		appModel().doInTransaction(transaction -> ~editors:{it|~it.name~.onSave(model)};separator="\n"~);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		~name~ that = (~name~) o;
+		return uuid.equals(that.uuid);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(uuid);
+	}
+
+	@Override
+	public String toString() {
+		return uuid;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+~events:{it|
+	@org.greenrobot.eventbus.Subscribe()
+	public void on~it.type~(~it.type~ event) {
+		if (~it.predicate~) {
+			~editors:{it|~it.name~.setModel(~it.setModel~);};separator="\n"~
+		~eom()~
+	~eom()~
+};separator="\n\n"~
+}  >>
+
 STModelEditor(model,statements,properties,name,packageName) ::= <<package ~packageName~;
 
 public class ~name~ extends nextgen.swing.AbstractEditor {
@@ -2185,7 +2292,7 @@ public class ~name~ extends javax.swing.JPanel {
 	}
 }  >>
 
-STWorkspace(name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;
+STWorkspace(height,width,imports,name,packageName,constructorParameters,fields,componentMethods,methods) ::= <<package ~packageName~;
 
 import javax.swing.*;
 import java.awt.*;
@@ -2194,6 +2301,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 import java.util.function.Predicate;
+~imports:{it|import ~it~;};separator="\n"~
 
 public class ~name~ extends JTabbedPane {
 
@@ -2201,7 +2309,7 @@ public class ~name~ extends JTabbedPane {
 	~fields:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
 	public ~name~() {
-		setPreferredSize(new Dimension(1200, 1024));
+		setPreferredSize(new Dimension(~width~, ~height~));
 		setMinimumSize(new Dimension(100, 100));
 		~constructorParameters:{it|~it~};separator="\n"~
 	}
@@ -2231,8 +2339,8 @@ public class ~name~ extends JTabbedPane {
 	private void addPane(String title, JComponent component) {
 		addTab(title, component);
 		final nextgen.swing.STWorkspace.ButtonTabComponent tabComponent = new nextgen.swing.STWorkspace.ButtonTabComponent(this, title, component);
-      tabComponents.put(component, tabComponent);
-      setTabComponentAt(indexOfComponent(component), tabComponent);
+		tabComponents.put(component, tabComponent);
+		setTabComponentAt(indexOfComponent(component), tabComponent);
 	}
 
 	class ButtonTabComponent extends JPanel {
@@ -2243,7 +2351,7 @@ public class ~name~ extends JTabbedPane {
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			setOpaque(false);
 
-			this.label = new JLabel(title);
+			this.label = nextgen.swing.ComponentFactory.newJLabel(title);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			add(label);
 
@@ -2312,7 +2420,7 @@ public class ~name~ extends JTabbedPane {
 	}
 }  >>
 
-findEditor(componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format="capitalize"~(~modelType~ model) {
+findEditor(arguments,componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format="capitalize"~(~modelType~ model~if(arguments)~,~arguments:{it|~it.type~ ~it.name~};separator=", "~~endif~) {
 	for (int i = 0; i < getTabCount(); i++) {
 		final Component tabComponentAt = getComponentAt(i);
 		if (tabComponentAt instanceof ~componentType~ && (((~componentType~) tabComponentAt).getModel().equals(model))) {
@@ -2322,7 +2430,7 @@ findEditor(componentType,componentName,titleExpression,modelType) ::= <<public ~
 		}
 	}
 
-	final ~componentType~ component = new ~componentType~(model);
+	final ~componentType~ component = new ~componentType~(model~if(arguments)~,~arguments:{it|~it.name~};separator=", "~~endif~);
 	addPane(~titleExpression~, component);
 	setSelectedComponent(component);
 	return component;
@@ -2356,12 +2464,19 @@ public void remove~name;format="capitalize"~() {
    }
 }  >>
 
-TransactionAction(methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
+TransactionAction(icon,methods,statements,titleExpression,name,title,staticFields,fields,packageName,imports) ::= <<package ~if(packageName)~~packageName~~else~nextgen.actions~endif~;
 
 ~if(imports)~
 ~imports:{it|import ~it~;};separator="\n"~
 
 ~endif~
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
+
 public class ~name~ extends nextgen.actions.TransactionAction {
 ~if(staticFields)~
    
@@ -2374,6 +2489,7 @@ public class ~name~ extends nextgen.actions.TransactionAction {
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super("~title~");
+		~if(icon)~setIcon("~icon~");~endif~
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
@@ -2381,6 +2497,15 @@ public class ~name~ extends nextgen.actions.TransactionAction {
 
 	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
 		super(~titleExpression~);
+		~if(icon)~setIcon("~icon~");~endif~
+		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+~elseif(icon)~
+
+	public ~name~(~fields:{it|~it.type~ ~it.name~};separator=", "~) {
+		super("");
+		setIcon("~icon~");
 		~fields:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
@@ -2393,7 +2518,7 @@ public class ~name~ extends nextgen.actions.TransactionAction {
 
 ~endif~
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("~name~"~fields:{it|  + " ~it.name~"}~);
    	
       ~statements:{it|~it~};separator="\n"~
@@ -2402,7 +2527,153 @@ public class ~name~ extends nextgen.actions.TransactionAction {
    ~methods:{it|~it~};separator="\n\n"~
 }  >>
 
-TreeNavigator(imports,packageName,fields,name,methods,treeNodes,constructorStatements,preferredHeight,preferredWidth,treeModelConstructorStatements,rootNodeExpression,baseTreeNode,events,unhandledNodeSelectedStatements,treeNodesSelected) ::= <<package ~packageName~;
+BaseTransactionAction(name,packageName) ::= <<package ~packageName~;
+
+import javax.swing.*;
+
+import static nextgen.utils.SwingUtil.printStackTrace;
+
+public abstract class ~name~ extends javax.swing.AbstractAction {
+
+   protected final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(~name~.class);
+
+   protected ~name~(String name) {
+      super(name);
+   }
+
+   public ~name~ setIcon(String icon) {
+      putValue(Action.SMALL_ICON,appModel().loadIcon(icon));
+      return this;
+   }
+
+   public ~name~ setName(String name) {
+      putValue(Action.NAME, name);
+      return this;
+   }
+
+   @Override
+   public void actionPerformed(java.awt.event.ActionEvent e) {
+      javax.swing.SwingUtilities.invokeLater(() -> appModel().doInTransaction(transaction -> actionPerformed(e, transaction)));
+   }
+
+   protected abstract void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction);
+
+   protected nextgen.swing.STAppPresentationModel appModel() {
+      return nextgen.swing.AppModel.getInstance().getSTAppPresentationModel();
+   }
+
+   protected void confirm(javax.swing.JComponent owner, String description, java.util.function.Consumer<Void> onConfirm) {
+      nextgen.utils.SwingUtil.confirm(owner, description).ifPresent(aBoolean -> onConfirm.accept(null));
+   }
+
+   protected void input(javax.swing.JComponent owner, String message, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+   protected void input(javax.swing.JComponent owner, String message, String defaultValue, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog(message, owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+   protected void inputName(javax.swing.JComponent owner, String defaultValue, java.util.function.Consumer<String> consumer) {
+      nextgen.utils.SwingUtil.showInputDialog("Name", owner, defaultValue, inputValue -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(inputValue)));
+   }
+
+   protected <T> void select(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
+   protected <T> void selectAndRender(javax.swing.JComponent owner, java.util.Collection<T> values, java.util.function.Function<T, String> renderer, T defaultValue, java.util.function.Consumer<T> consumer) {
+      nextgen.utils.SwingUtil.showSelectDialog("Select", owner, values, renderer, defaultValue, selected -> appModel().doLaterInTransaction(transaction1 -> consumer.accept(selected)));
+   }
+
+   protected void openFile(javax.swing.JComponent owner, java.util.function.Consumer<java.io.File> consumer) {
+      nextgen.utils.SwingUtil.showOpenFile(owner, appModel().getLastDir()).ifPresent(consumer);
+   }
+
+   protected javax.swing.JDialog newDialog(javax.swing.JComponent owner, String title) {
+      return new javax.swing.JDialog((java.awt.Frame) javax.swing.SwingUtilities.getAncestorOfClass(javax.swing.JFrame.class, owner), title, true);
+   }
+
+   protected javax.swing.JTextField newTextField() {
+      return newTextField("", 30);
+   }
+
+   protected javax.swing.JTextField newTextField(int columns) {
+      return newTextField("", columns);
+   }
+
+   protected javax.swing.JTextField newTextField(String text, int columns) {
+      return newTextField(text, columns, new String[0], -1);
+   }
+
+   protected javax.swing.JTextField newTextField(int columns, String[] options) {
+      return newTextField("", columns, options, 0);
+   }
+
+   protected javax.swing.JTextField newTextField(String text, int columns, java.util.List<String> options, int startIndex) {
+      return newTextField(text, columns, options.toArray(new String[options.size()]), startIndex);
+   }
+
+   protected javax.swing.JTextField newTextField(String text, int columns, String[] options, int startIndex) {
+      return nextgen.utils.SwingUtil.newTextField(text, columns, options, startIndex);
+   }
+
+   protected javax.swing.JLabel newLabel(String name) {
+      return nextgen.swing.ComponentFactory.newJLabel(name);
+   }
+
+   protected javax.swing.JButton newButton(String name, java.util.function.Consumer<org.neo4j.graphdb.Transaction> onClick) {
+      return nextgen.swing.ComponentFactory.newJButton(appModel().new~name~(name, onClick));
+   }
+
+   protected void showDialog(javax.swing.JComponent owner, javax.swing.JComponent component, String title, java.util.function.Consumer<javax.swing.JDialog> saveAction) {
+      final javax.swing.JDialog dialog = newDialog(owner, title);
+      dialog.add(component, java.awt.BorderLayout.CENTER);
+      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog)));
+   }
+
+   protected nextgen.swing.SelectOrAddSTModelValue getSelectOrAddSTModelValue(nextgen.model.STTemplate stTemplate, java.util.List<nextgen.model.STModel> stModelList) {
+      return new nextgen.swing.SelectOrAddSTModelValue(stTemplate, stModelList);
+   }
+
+   protected <T> void showEditor(javax.swing.JComponent owner, nextgen.swing.BaseEditor<T> baseEditor, java.util.function.BiConsumer<javax.swing.JDialog, T> saveAction) {
+      final javax.swing.JDialog dialog = newDialog(owner, baseEditor.title());
+      dialog.add(baseEditor, java.awt.BorderLayout.CENTER);
+      nextgen.utils.SwingUtil.showDialog(owner, dialog, newButton("Save", transaction -> saveAction.accept(dialog, baseEditor.getModel())));
+   }
+
+   protected void showError(javax.swing.JComponent owner, Throwable throwable) {
+      showError(owner, printStackTrace(throwable));
+   }
+
+   protected void showError(javax.swing.JComponent owner, String errors) {
+      final javax.swing.JPanel panel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.BorderLayout());
+      final javax.swing.JTextArea textArea = nextgen.swing.ComponentFactory.newJTextArea(errors);
+      textArea.setEditable(false);
+      final javax.swing.JScrollPane content = nextgen.swing.ComponentFactory.newJScrollPane(textArea);
+      final java.awt.Dimension dimension = new java.awt.Dimension(1024, 800);
+      content.setMaximumSize(dimension);
+      content.setPreferredSize(dimension);
+      content.setMinimumSize(dimension);
+      content.setSize(dimension);
+      panel.add(content, java.awt.BorderLayout.CENTER);
+      javax.swing.JOptionPane.showMessageDialog(owner, panel, "Errors", javax.swing.JOptionPane.ERROR_MESSAGE);
+   }
+
+   protected void close(javax.swing.JDialog dialog) {
+      javax.swing.SwingUtilities.invokeLater(dialog::dispose);
+   }
+
+   protected void toClipboard(Object value) {
+      nextgen.utils.SwingUtil.toClipboard(value.toString());
+   }
+
+   protected String fromClipboard() {
+      return nextgen.utils.SwingUtil.fromClipboard();
+   }
+}  >>
+
+TreeNavigator(imports,packageName,preferredHeight,preferredWidth,methods,treeNodes,baseTreeNode,events,treeModelConstructorStatements,fields,name,rootNodeExpression,unhandledNodeSelectedStatements,treeNodesSelected,constructorStatements) ::= <<package ~packageName~;
 
 ~imports:{it|~it~;};separator="\n"~
 
@@ -2443,7 +2714,7 @@ public class ~name~ extends JPanel {
 	private final class ~name~CellRenderer extends DefaultTreeCellRenderer {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-			ComponentFactory.decorate(this);
+			
 			final BaseTreeNode<?> node = (BaseTreeNode<?>) value;
 			final ImageIcon icon = node.getIcon();
 			setIcon(icon);
@@ -2451,7 +2722,7 @@ public class ~name~ extends JPanel {
 			setClosedIcon(icon);
 			setLeafIcon(icon);
 			setToolTipText(node.getTooltip());
-			return super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus);
+			return ComponentFactory.decorate(super.getTreeCellRendererComponent(tree, node.getLabel(), sel, expanded, leaf, row, hasFocus));
 		}
 	}
 
@@ -2600,7 +2871,7 @@ public class ~name~ extends JPanel {
 				}
 			}
 
-			for (nextgen.swing.STModelNavigator.BaseTreeNode<?> childAt : children) {
+			for (BaseTreeNode<?> childAt : children) {
 				final Optional<T> node = find(childAt, predicate);
 				if (node.isPresent()) return node;
 			}

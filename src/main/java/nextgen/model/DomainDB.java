@@ -72,6 +72,26 @@ public class DomainDB {
 		return returnValue;
 	}
 
+	private static final org.neo4j.graphdb.Label DomainVisitorLabel = org.neo4j.graphdb.Label.label("DomainVisitor");
+
+	public static boolean isDomainVisitor(org.neo4j.graphdb.Node node) {
+		return node != null && node.hasLabel(DomainVisitorLabel);
+	}
+
+	public DomainVisitor newDomainVisitor() { 
+		DomainVisitor newInstance = newDomainVisitor(db.createNode(DomainVisitorLabel));
+		newInstance.setUuid(java.util.UUID.randomUUID().toString());
+		return newInstance;
+	}
+
+	public DomainVisitor newDomainVisitor(org.neo4j.graphdb.Node node) { 
+		return new DomainVisitor(node);
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitor() { 
+		return db.findNodes(DomainVisitorLabel).stream().map(this::newDomainVisitor);
+	}
+
 	private static final org.neo4j.graphdb.Label DomainLabel = org.neo4j.graphdb.Label.label("Domain");
 
 	public static boolean isDomain(org.neo4j.graphdb.Node node) {
@@ -138,26 +158,6 @@ public class DomainDB {
 
 	public java.util.stream.Stream<DomainEntity> findAllDomainEntity() { 
 		return db.findNodes(DomainEntityLabel).stream().map(this::newDomainEntity);
-	}
-
-	private static final org.neo4j.graphdb.Label DomainPropertyLabel = org.neo4j.graphdb.Label.label("DomainProperty");
-
-	public static boolean isDomainProperty(org.neo4j.graphdb.Node node) {
-		return node != null && node.hasLabel(DomainPropertyLabel);
-	}
-
-	public DomainProperty newDomainProperty() { 
-		DomainProperty newInstance = newDomainProperty(db.createNode(DomainPropertyLabel));
-		newInstance.setUuid(java.util.UUID.randomUUID().toString());
-		return newInstance;
-	}
-
-	public DomainProperty newDomainProperty(org.neo4j.graphdb.Node node) { 
-		return new DomainProperty(node);
-	}
-
-	public java.util.stream.Stream<DomainProperty> findAllDomainProperty() { 
-		return db.findNodes(DomainPropertyLabel).stream().map(this::newDomainProperty);
 	}
 
 	private static final org.neo4j.graphdb.Label DomainRelationLabel = org.neo4j.graphdb.Label.label("DomainRelation");

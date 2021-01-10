@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetDomainRelationType extends TransactionAction {
+public class SetDomainRelationType extends nextgen.actions.TransactionAction {
 
    private final DomainRelation domainRelation;
    private final JComponent owner;

@@ -9,6 +9,7 @@ public class FindEditor {
 	private Object _componentName;
 	private Object _titleExpression;
 	private Object _modelType;
+	private java.util.List<java.util.Map<String, Object>> _arguments = new java.util.ArrayList<>();
 
 	FindEditor(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -25,6 +26,7 @@ public class FindEditor {
 		st.add("componentName", _componentName);
 		st.add("titleExpression", _titleExpression);
 		st.add("modelType", _modelType);
+		for (java.util.Map<String, Object> map : _arguments) st.addAggr("arguments.{type,name}", map.get("type"), map.get("name"));
 		return st.render().trim();
 	}
 
@@ -117,6 +119,74 @@ public class FindEditor {
 	} 
 
 
+	public FindEditor setArguments(java.util.Collection<FindEditor_Arguments> values) {
+			this._arguments.clear();
+			values.stream().map(FindEditor_Arguments::asMap).forEach(map -> _arguments.add(map));
+			return this;
+		}
+
+	public FindEditor addArguments(Object _type, Object _name) {
+		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("type", _type);
+		map.put("name", _name);
+		this._arguments.add(map);
+		return this;
+	}
+
+	public java.util.List<java.util.Map<String, Object>> getArguments() {
+		return this._arguments;
+	}
+
+	public FindEditor addArguments(FindEditor_Arguments value) {
+		return addArguments(value._type, value._name);
+	}
+
+	public java.util.stream.Stream<FindEditor_Arguments> streamArguments() {
+		return this._arguments.stream().map(FindEditor_Arguments::new);
+	}
+
+	public java.util.List<Object> getArguments_Type() {
+		return streamArguments().map(FindEditor_Arguments::getType).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public java.util.List<Object> getArguments_Name() {
+		return streamArguments().map(FindEditor_Arguments::getName).collect(java.util.stream.Collectors.toList());
+	}
+
+
+	public static final class FindEditor_Arguments {
+
+		Object _type;
+		Object _name;
+
+		public FindEditor_Arguments(Object _type, Object _name) {
+			this._type = _type;
+			this._name = _name;
+		}
+
+		private FindEditor_Arguments(java.util.Map<String, Object> map) {
+			this._type = (Object) map.get("type");
+			this._name = (Object) map.get("name");
+		}
+
+		public Object getType() {
+			return this._type;
+		}
+
+		public Object getName() {
+			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
+		}
+
+	}  
 
 	@Override
 	public boolean equals(Object o) {
@@ -131,7 +201,7 @@ public class FindEditor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "findEditor(componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format=\"capitalize\"~(~modelType~ model) {\n" + 
+	static final String st = "findEditor(arguments,componentType,componentName,titleExpression,modelType) ::= <<public ~componentType~ get~componentName;format=\"capitalize\"~(~modelType~ model~if(arguments)~,~arguments:{it|~it.type~ ~it.name~};separator=\", \"~~endif~) {\n" + 
 				"	for (int i = 0; i < getTabCount(); i++) {\n" + 
 				"		final Component tabComponentAt = getComponentAt(i);\n" + 
 				"		if (tabComponentAt instanceof ~componentType~ && (((~componentType~) tabComponentAt).getModel().equals(model))) {\n" + 
@@ -141,7 +211,7 @@ public class FindEditor {
 				"		}\n" + 
 				"	}\n" + 
 				"\n" + 
-				"	final ~componentType~ component = new ~componentType~(model);\n" + 
+				"	final ~componentType~ component = new ~componentType~(model~if(arguments)~,~arguments:{it|~it.name~};separator=\", \"~~endif~);\n" + 
 				"	addPane(~titleExpression~, component);\n" + 
 				"	setSelectedComponent(component);\n" + 
 				"	return component;\n" + 

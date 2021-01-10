@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetSTProjectRoot extends TransactionAction {
+public class SetSTProjectRoot extends nextgen.actions.TransactionAction {
 
    private final STProject stProject;
    private final JComponent owner;

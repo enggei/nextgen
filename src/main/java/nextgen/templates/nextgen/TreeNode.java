@@ -325,6 +325,12 @@ public class TreeNode {
 		return this._selectionStatements;
 	} 
 
+	public TreeNode setPrivateFields(java.util.Collection<TreeNode_PrivateFields> values) {
+			this._privateFields.clear();
+			values.stream().map(TreeNode_PrivateFields::asMap).forEach(map -> _privateFields.add(map));
+			return this;
+		}
+
 	public TreeNode addPrivateFields(Object _type, Object _name, Object _init) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -391,7 +397,22 @@ public class TreeNode {
 			return this._init;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			map.put("init", _init);
+			return map;
+		}
+
 	}  
+
+	public TreeNode setFields(java.util.Collection<TreeNode_Fields> values) {
+			this._fields.clear();
+			values.stream().map(TreeNode_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
 
 	public TreeNode addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -446,7 +467,21 @@ public class TreeNode {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public TreeNode setParameters(java.util.Collection<TreeNode_Parameters> values) {
+			this._parameters.clear();
+			values.stream().map(TreeNode_Parameters::asMap).forEach(map -> _parameters.add(map));
+			return this;
+		}
 
 	public TreeNode addParameters(String _name, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -499,6 +534,14 @@ public class TreeNode {
 
 		public Object getType() {
 			return this._type;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("type", _type);
+			return map;
 		}
 
 	}  

@@ -149,6 +149,12 @@ public class CanvasNodeAction {
 		return this._statements;
 	} 
 
+	public CanvasNodeAction setFields(java.util.Collection<CanvasNodeAction_Fields> values) {
+			this._fields.clear();
+			values.stream().map(CanvasNodeAction_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
+
 	public CanvasNodeAction addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("type", _type);
@@ -200,6 +206,14 @@ public class CanvasNodeAction {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

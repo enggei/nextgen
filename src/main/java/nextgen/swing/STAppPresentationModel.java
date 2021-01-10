@@ -1316,15 +1316,6 @@ public class STAppPresentationModel {
             .setName(domainName);
    }
 
-   public void addDomainProperty(Domain domain, String name, String value) {
-
-      final DomainProperty domainProperty = domainDB.newDomainProperty()
-            .setName(name)
-            .setValue(newSTValue(value));
-
-      domain.addProperties(domainProperty);
-      NewDomainDomainProperty.post(domain, domainProperty);
-   }
 
    public DomainEntity addDomainEntity(Domain domain, String name) {
 
@@ -1336,14 +1327,24 @@ public class STAppPresentationModel {
       return domainEntity;
    }
 
-   public void addEntityProperty(DomainEntity domainEntity, String name, String value) {
+   public DomainRelation addDomainRelation(DomainEntity domainEntity, String relationName, DomainRelationType relationType, String entityName) {
 
-      final DomainProperty domainProperty = domainDB.newDomainProperty()
-            .setName(name)
-            .setValue(newSTValue(value));
+      final Domain domain = domainEntity.getIncomingDomain();
+      final DomainEntity entity = findDomainEntity(domain, entityName).orElseGet(() -> addDomainEntity(domain, entityName));
+      final DomainRelation domainRelation = domainDB.newDomainRelation()
+            .setName(relationName)
+            .setSrc(domainEntity)
+            .setDst(entity)
+            .setType(relationType);
 
-      domainEntity.addProperties(domainProperty);
-      NewDomainEntityDomainProperty.post(domainEntity, domainProperty);
+      domain.addRelations(domainRelation);
+      NewDomainEntityDomainRelation.post(domainEntity, domainRelation);
+
+      return domainRelation;
+   }
+
+   private Optional<DomainEntity> findDomainEntity(Domain domain, String entityName) {
+      return domain.getEntities().filter(domainEntity -> domainEntity.getName().equalsIgnoreCase(entityName)).findFirst();
    }
 
    public void delete(Domain domain) {
@@ -1358,12 +1359,6 @@ public class STAppPresentationModel {
       DomainEntityDeleted.post(uuid);
    }
 
-   public void delete(DomainProperty domainProperty) {
-      final String uuid = domainProperty.getUuid();
-      domainProperty.delete();
-      DomainPropertyDeleted.post(uuid);
-   }
-
    public void delete(DomainRelation domainRelation) {
       final String uuid = domainRelation.getUuid();
       domainRelation.delete();
@@ -1375,29 +1370,11 @@ public class STAppPresentationModel {
       DomainChanged.post(domain);
    }
 
-   public void addDomainRelation(DomainEntity domainEntity, String relationName, DomainRelationType relationType, String entityName) {
+   public void addDomainVisitor(Domain domain, String visitorName) {
 
-      final Domain domain = domainEntity.getIncomingDomain();
+      final DomainVisitor domainVisitor = domainDB.newDomainVisitor().setName(visitorName);
+      domain.addVisitors(domainVisitor);
 
-      final DomainEntity entity = findDomainEntity(domain, entityName)
-            .orElseGet(() -> {
-               final DomainEntity newEntity = domainDB.newDomainEntity().setName(entityName);
-               domain.addEntities(newEntity);
-               return newEntity;
-            });
-
-      final DomainRelation domainRelation = domainDB.newDomainRelation()
-            .setName(relationName)
-            .setSrc(domainEntity)
-            .setDst(entity)
-            .setType(relationType);
-
-      domain.addRelations(domainRelation);
-      NewDomainEntityDomainRelation.post(domainEntity, domainRelation);
-   }
-
-   private Optional<DomainEntity> findDomainEntity(Domain domain, String entityName) {
-      return domain.getEntities().filter(domainEntity -> domainEntity.getName().equalsIgnoreCase(entityName)).findFirst();
    }
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {

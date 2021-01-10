@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class ReplaceAllSTValues extends TransactionAction {
+public class ReplaceAllSTValues extends nextgen.actions.TransactionAction {
 
    private final STModel thisModel;
    private final JComponent owner;

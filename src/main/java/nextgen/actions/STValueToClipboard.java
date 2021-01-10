@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class STValueToClipboard extends TransactionAction {
+public class STValueToClipboard extends nextgen.actions.TransactionAction {
 
    private final STValue stValue;
 

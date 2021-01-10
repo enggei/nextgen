@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class DeleteDomainRelation extends TransactionAction {
+public class DeleteDomainRelation extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.DomainRelation domainRelation;
    private final JComponent owner;

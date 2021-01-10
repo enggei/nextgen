@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class DeleteKV extends TransactionAction {
+public class DeleteKV extends nextgen.actions.TransactionAction {
 
    private final STArgumentKV argumentKV;
    private final JComponent owner;

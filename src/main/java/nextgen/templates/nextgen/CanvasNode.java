@@ -308,6 +308,12 @@ public class CanvasNode {
 		return this._addedToCanvasStatements;
 	} 
 
+	public CanvasNode setKeyPressActions(java.util.Collection<CanvasNode_KeyPressActions> values) {
+			this._keyPressActions.clear();
+			values.stream().map(CanvasNode_KeyPressActions::asMap).forEach(map -> _keyPressActions.add(map));
+			return this;
+		}
+
 	public CanvasNode addKeyPressActions(Object _key, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("key", _key);
@@ -361,7 +367,21 @@ public class CanvasNode {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("key", _key);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public CanvasNode setRightClickActions(java.util.Collection<CanvasNode_RightClickActions> values) {
+			this._rightClickActions.clear();
+			values.stream().map(CanvasNode_RightClickActions::asMap).forEach(map -> _rightClickActions.add(map));
+			return this;
+		}
 
 	public CanvasNode addRightClickActions(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -403,7 +423,20 @@ public class CanvasNode {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public CanvasNode setFields(java.util.Collection<CanvasNode_Fields> values) {
+			this._fields.clear();
+			values.stream().map(CanvasNode_Fields::asMap).forEach(map -> _fields.add(map));
+			return this;
+		}
 
 	public CanvasNode addFields(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -456,6 +489,14 @@ public class CanvasNode {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class GenerateSTGroupFromFile extends TransactionAction {
+public class GenerateSTGroupFromFile extends nextgen.actions.TransactionAction {
 
    private final STGroupFile stGroupFile;
    private final JComponent owner;

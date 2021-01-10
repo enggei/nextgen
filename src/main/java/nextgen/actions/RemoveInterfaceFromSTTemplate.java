@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class RemoveInterfaceFromSTTemplate extends TransactionAction {
+public class RemoveInterfaceFromSTTemplate extends nextgen.actions.TransactionAction {
 
    private final STGroupModel stGroup;
    private final STTemplate stTemplate;

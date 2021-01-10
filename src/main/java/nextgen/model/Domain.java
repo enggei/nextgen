@@ -117,6 +117,35 @@ public class Domain {
 		return this;
 	}
 
+	private static final org.neo4j.graphdb.RelationshipType _visitors = org.neo4j.graphdb.RelationshipType.withName("visitors");
+
+	public Domain addVisitors(DomainVisitor dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _visitors).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _visitors);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> getVisitors() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _visitors).spliterator(), false).map((relationship) -> new DomainVisitor(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<DomainVisitor> getVisitorsSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _visitors).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new DomainVisitor(relationship.getOtherNode(node)));
+	}
+
+	public Domain removeVisitors(DomainVisitor dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _visitors).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public Domain removeAllVisitors() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _visitors).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
 	private static final org.neo4j.graphdb.RelationshipType _entities = org.neo4j.graphdb.RelationshipType.withName("entities");
 
 	public Domain addEntities(DomainEntity dst) { 
@@ -143,35 +172,6 @@ public class Domain {
 
 	public Domain removeAllEntities() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _entities).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	private static final org.neo4j.graphdb.RelationshipType _properties = org.neo4j.graphdb.RelationshipType.withName("properties");
-
-	public Domain addProperties(DomainProperty dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _properties);
-		relationship.setProperty("_t", System.nanoTime());
-		return this;
-	}
-
-	public java.util.stream.Stream<DomainProperty> getProperties() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).map((relationship) -> new DomainProperty(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<DomainProperty> getPropertiesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new DomainProperty(relationship.getOtherNode(node)));
-	}
-
-	public Domain removeProperties(DomainProperty dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	public Domain removeAllProperties() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _properties).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 

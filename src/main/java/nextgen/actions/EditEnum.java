@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class EditEnum extends TransactionAction {
+public class EditEnum extends nextgen.actions.TransactionAction {
 
    private final STEnum stEnum;
    private final JComponent owner;

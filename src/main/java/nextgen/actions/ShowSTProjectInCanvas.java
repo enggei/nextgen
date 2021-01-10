@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class ShowSTProjectInCanvas extends TransactionAction {
+public class ShowSTProjectInCanvas extends nextgen.actions.TransactionAction {
 
    private final STProject stProject;
 

@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class AsBuilderCodes extends TransactionAction {
+public class AsBuilderCodes extends nextgen.actions.TransactionAction {
 
    private final STTemplate stTemplate;
    private final java.util.List<STModel> stModels;

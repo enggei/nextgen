@@ -7,7 +7,7 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class GetSTTemplateUUID extends TransactionAction {
+public class GetSTTemplateUUID extends nextgen.actions.TransactionAction {
 
    private final STTemplate stTemplate;
 
