@@ -35,7 +35,7 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
 
    private nextgen.templates.nextgen.TransactionAction asSource() {
 
-         final java.util.concurrent.atomic.AtomicReference<nextgen.templates.nextgen.TransactionAction> reference = new java.util.concurrent.atomic.AtomicReference<>();
+      final java.util.concurrent.atomic.AtomicReference<nextgen.templates.nextgen.TransactionAction> reference = new java.util.concurrent.atomic.AtomicReference<>();
 
       final String packageName = appModel().getSourceOutputPackage() + "." + visitor.getName().toLowerCase();
 

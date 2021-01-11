@@ -36,6 +36,11 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onModelNavigatorDomainVisitorTreeNodeClicked(ModelNavigatorDomainVisitorTreeNodeClicked event) {
+		getDomainVisitorEditor(event.domainVisitor);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onTemplateNavigatorSTActionTreeNodeClicked(TemplateNavigatorSTGroupActionTreeNodeClicked event) {
 		getSTGroupActionEditor(event.action);
 	}
@@ -126,6 +131,31 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	// components
+
+	public nextgen.swing.editors.DomainVisitorEditor getDomainVisitorEditor(nextgen.model.DomainVisitor model) {
+		for (int i = 0; i < getTabCount(); i++) {
+			final Component tabComponentAt = getComponentAt(i);
+			if (tabComponentAt instanceof nextgen.swing.editors.DomainVisitorEditor && (((nextgen.swing.editors.DomainVisitorEditor) tabComponentAt).getModel().equals(model))) {
+				final nextgen.swing.editors.DomainVisitorEditor component = (nextgen.swing.editors.DomainVisitorEditor) tabComponentAt;
+				setSelectedComponent(component);
+				return component;
+			}
+		}
+
+		final nextgen.swing.editors.DomainVisitorEditor component = new nextgen.swing.editors.DomainVisitorEditor(model);
+		addPane(model.getName(), component);
+		setSelectedComponent(component);
+		return component;
+	}
+
+	public void removeDomainVisitorEditor(String uuid) {
+		for (int i = 0; i < getTabCount(); i++) {
+		   if (getComponentAt(i) instanceof nextgen.swing.editors.DomainVisitorEditor && (((nextgen.swing.editors.DomainVisitorEditor) getComponentAt(i)).getUuid().equals(uuid))) {
+		      int componentIndex = i;
+		      SwingUtilities.invokeLater(() -> remove(componentIndex));
+		   }
+		}
+	}
 
 	public STGroupActionEditor getSTGroupActionEditor(STGroupAction model) {
 		for (int i = 0; i < getTabCount(); i++) {

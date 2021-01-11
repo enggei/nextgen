@@ -87,7 +87,9 @@ public class STModelNavigator extends JPanel {
 				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 				appModel().doLaterInTransaction(transaction -> {
-					if (isSTProjectTreeNode(lastPathComponent)) 
+					if (isDomainVisitorTreeNode(lastPathComponent)) 
+						onDomainVisitorTreeNodeSelected((DomainVisitorTreeNode) lastPathComponent);
+					else if (isSTProjectTreeNode(lastPathComponent)) 
 						onSTProjectTreeNodeSelected((STProjectTreeNode) lastPathComponent);
 					else if (isRootNode(lastPathComponent)) 
 						onRootNodeSelected((RootNode) lastPathComponent);
@@ -623,6 +625,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onDomainVisitorTreeNodeSelected(DomainVisitorTreeNode selectedNode) {
+		nextgen.events.ModelNavigatorDomainVisitorTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// DomainTreeNode

@@ -4,8 +4,6 @@ import java.awt.*;
 
 public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STProject> {
 
-	private String uuid = java.util.UUID.randomUUID().toString();
-
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
 	private final nextgen.swing.forms.STProjectForm form = new nextgen.swing.forms.STProjectForm();
 
@@ -14,7 +12,7 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 	}
 
 	public STProjectEditor(nextgen.model.STProject model) {
-		super(model);
+		super(model, model.getUuid());
 		setModel(model);
 	}
 
@@ -37,27 +35,5 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 	protected void tryToSave() {
 		if (model == null) return;
 		appModel().doInTransaction(transaction -> form.onSave(model));
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		STProjectEditor that = (STProjectEditor) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
-	public String toString() {
-		return uuid;
-	}
-
-	public String getUuid() {
-		return uuid;
 	}
 }

@@ -23,6 +23,11 @@ public class STProjectForm extends JPanel {
 		return name_JLabel;
 	}
 
+	public <T extends JLabel> T getNameJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.name_JLabel == null) setName(supplier.get());
+   	return (T) this.name_JLabel;
+	}
+
 	public STProjectForm setName(JLabel component) {
 		if (component == null) return this;
 		add(this.name_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
@@ -31,6 +36,11 @@ public class STProjectForm extends JPanel {
 
 	public JTextField getNameJTextField() {
 		return name_JTextField;
+	}
+
+	public <T extends JTextField> T getNameJTextField(java.util.function.Supplier<T> supplier) {
+		if (this.name_JTextField == null) setName(supplier.get());
+   	return (T) this.name_JTextField;
 	}
 
 	public STProjectForm setName(JTextField component) {
@@ -43,6 +53,11 @@ public class STProjectForm extends JPanel {
 		return root_JLabel;
 	}
 
+	public <T extends JLabel> T getRootJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.root_JLabel == null) setRoot(supplier.get());
+   	return (T) this.root_JLabel;
+	}
+
 	public STProjectForm setRoot(JLabel component) {
 		if (component == null) return this;
 		add(this.root_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
@@ -51,6 +66,11 @@ public class STProjectForm extends JPanel {
 
 	public JTextField getRootJTextField() {
 		return root_JTextField;
+	}
+
+	public <T extends JTextField> T getRootJTextField(java.util.function.Supplier<T> supplier) {
+		if (this.root_JTextField == null) setRoot(supplier.get());
+   	return (T) this.root_JTextField;
 	}
 
 	public STProjectForm setRoot(JTextField component) {
@@ -63,6 +83,11 @@ public class STProjectForm extends JPanel {
 		return values_JLabel;
 	}
 
+	public <T extends JLabel> T getValuesJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.values_JLabel == null) setValues(supplier.get());
+   	return (T) this.values_JLabel;
+	}
+
 	public STProjectForm setValues(JLabel component) {
 		if (component == null) return this;
 		add(this.values_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 3, 1, 1, "CENTER, CENTER"));
@@ -71,6 +96,11 @@ public class STProjectForm extends JPanel {
 
 	public JComponent getValuesJComponent() {
 		return values_JComponent;
+	}
+
+	public <T extends JComponent> T getValuesJComponent(java.util.function.Supplier<T> supplier) {
+		if (this.values_JComponent == null) setValues(supplier.get());
+   	return (T) this.values_JComponent;
 	}
 
 	public STProjectForm setValues(JComponent component) {
@@ -83,6 +113,11 @@ public class STProjectForm extends JPanel {
 		return models_JLabel;
 	}
 
+	public <T extends JLabel> T getModelsJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.models_JLabel == null) setModels(supplier.get());
+   	return (T) this.models_JLabel;
+	}
+
 	public STProjectForm setModels(JLabel component) {
 		if (component == null) return this;
 		add(this.models_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 5, 1, 1, "CENTER, CENTER"));
@@ -91,6 +126,11 @@ public class STProjectForm extends JPanel {
 
 	public JComponent getModelsJComponent() {
 		return models_JComponent;
+	}
+
+	public <T extends JComponent> T getModelsJComponent(java.util.function.Supplier<T> supplier) {
+		if (this.models_JComponent == null) setModels(supplier.get());
+   	return (T) this.models_JComponent;
 	}
 
 	public STProjectForm setModels(JComponent component) {

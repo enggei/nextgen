@@ -38,6 +38,7 @@ public class Neo4JEmbeddedVisitor extends nextgen.actions.TransactionAction {
 
    public void onDomain(String name) {
    	System.out.println("on domain " + name);
+   	System.out.println("onDomain");
    }
 
    public void onEntity(DomainEntity entity) {
@@ -45,7 +46,7 @@ public class Neo4JEmbeddedVisitor extends nextgen.actions.TransactionAction {
    }
 
    public void onRelation(DomainRelation relation) {
-   	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc() + " " + relation.getType() + " " + relation.getDst());
+   	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc().getName() + " " + relation.getType() + " " + relation.getDst().getName());
    }
 
    public void onComplete() {

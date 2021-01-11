@@ -1868,7 +1868,7 @@ public void onEntity(DomainEntity entity) {
 }
 
 public void onRelation(DomainRelation relation) {
-	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc() + " " + relation.getType() + " " + relation.getDst());
+	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc().getName() + " " + relation.getType() + " " + relation.getDst().getName());
 	~onRelation:{it|~it~};separator="\n"~
 }
 
