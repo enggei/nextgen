@@ -1857,7 +1857,11 @@ for (DomainRelation relation : relations)
 
 onComplete();  >>
 
-DomainVisitorInterface(onComplete,onRelation,onEntity,onDomain) ::= <<public void onDomain(String name) {
+DomainVisitorInterface(fields,onComplete,onRelation,onEntity,onDomain) ::= <<~fields:{it|~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+nextgen.model.STGroupModel java;
+
+public void onDomain(String name) {
 	System.out.println("on domain " + name);
 	~onDomain:{it|~it~};separator="\n"~
 }
@@ -1883,8 +1887,6 @@ import java.awt.*;
 
 public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 
-	private String uuid = java.util.UUID.randomUUID().toString();
-
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
 	~editors:{it|private final ~it.type~ ~it.name~ = new ~it.type~();};separator="\n"~
 
@@ -1894,7 +1896,7 @@ public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 	}
 	
 	public ~name~(~modelType~ model) {
-		super(model);
+		super(model, model.getUuid());
 		setModel(model);
 		~if(events)~org.greenrobot.eventbus.EventBus.getDefault().register(this);~endif~
 	}
@@ -1918,28 +1920,6 @@ public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 	protected void tryToSave() {
 		if (model == null) return;
 		appModel().doInTransaction(transaction -> ~editors:{it|~it.name~.onSave(model)};separator="\n"~);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		~name~ that = (~name~) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return java.util.Objects.hash(uuid);
-	}
-
-	@Override
-	public String toString() {
-		return uuid;
-	}
-
-	public String getUuid() {
-		return uuid;
 	}
 ~events:{it|
 	@org.greenrobot.eventbus.Subscribe()
@@ -2476,6 +2456,7 @@ import nextgen.model.*;
 import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
+import java.util.stream.Collectors;
 
 public class ~name~ extends nextgen.actions.TransactionAction {
 ~if(staticFields)~

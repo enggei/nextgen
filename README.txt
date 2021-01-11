@@ -133,3 +133,13 @@ Subrules are just in-lined rules wrapped in parentheses. We can mark
 subrules as optional ( ? ) and as zero-or-more ( * ) or one-or-more ( + ) loops to
 recognize the enclosed grammar fragments multiple times (Extended Backus-
 Naur-Format [EBNF]).
+
+
+stream()        sequence
+filter(f)       predicates/choice
+map()           transform
+forEach(c)      apply
+
+
+stream().filter(f)
+

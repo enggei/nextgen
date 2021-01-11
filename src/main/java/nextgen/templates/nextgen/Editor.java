@@ -268,8 +268,6 @@ public class Editor {
 				"\n" + 
 				"public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {\n" + 
 				"\n" + 
-				"	private String uuid = java.util.UUID.randomUUID().toString();\n" + 
-				"\n" + 
 				"	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();\n" + 
 				"	~editors:{it|private final ~it.type~ ~it.name~ = new ~it.type~();};separator=\"\\n\"~\n" + 
 				"\n" + 
@@ -279,7 +277,7 @@ public class Editor {
 				"	}\n" + 
 				"	\n" + 
 				"	public ~name~(~modelType~ model) {\n" + 
-				"		super(model);\n" + 
+				"		super(model, model.getUuid());\n" + 
 				"		setModel(model);\n" + 
 				"		~if(events)~org.greenrobot.eventbus.EventBus.getDefault().register(this);~endif~\n" + 
 				"	}\n" + 
@@ -303,28 +301,6 @@ public class Editor {
 				"	protected void tryToSave() {\n" + 
 				"		if (model == null) return;\n" + 
 				"		appModel().doInTransaction(transaction -> ~editors:{it|~it.name~.onSave(model)};separator=\"\\n\"~);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@Override\n" + 
-				"	public boolean equals(Object o) {\n" + 
-				"		if (this == o) return true;\n" + 
-				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
-				"		~name~ that = (~name~) o;\n" + 
-				"		return uuid.equals(that.uuid);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@Override\n" + 
-				"	public int hashCode() {\n" + 
-				"		return java.util.Objects.hash(uuid);\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	@Override\n" + 
-				"	public String toString() {\n" + 
-				"		return uuid;\n" + 
-				"	}\n" + 
-				"\n" + 
-				"	public String getUuid() {\n" + 
-				"		return uuid;\n" + 
 				"	}\n" + 
 				"~events:{it|\n" + 
 				"	@org.greenrobot.eventbus.Subscribe()\n" + 

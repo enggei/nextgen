@@ -124,6 +124,36 @@ public class STAppPresentationModel {
       notifyIfLabel(stModel, stParameter);
    }
 
+   public void addKVArgument(STModel stModel, String parameterName, String... kvs) {
+      stModel.getStTemplate()
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
+            .findAny()
+            .ifPresent(stParameter -> {
+
+               final nextgen.model.STArgument stArgument = db.newSTArgument()
+                     .setStParameter(stParameter);
+
+               java.util.Collection<nextgen.model.STArgumentKV> stKV = new java.util.ArrayList<>();
+               for (int i = 0; i < kvs.length; i += 2) {
+                  String k = kvs[i];
+                  String v = kvs[i + 1];
+                  stParameter.getKeys()
+                        .filter(stParameterKey -> stParameterKey.getName().equals(k))
+                        .findFirst()
+                        .ifPresent(stParameterKey -> {
+                           final nextgen.model.STArgumentKV newSTArgumentKV = newSTArgumentKV(stParameterKey, newSTValue(v));
+                           stArgument.addKeyValues(newSTArgumentKV);
+                           stKV.add(newSTArgumentKV);
+                        });
+               }
+               stModel.addArguments(stArgument);
+
+               nextgen.events.NewSTKVArgument.post(stModel, stParameter, stArgument, stKV);
+               notifyIfLabel(stModel, stParameter);
+            });
+   }
+
    public void addArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
       addArgument(stModel, stParameter, newSTValue(value));
    }
@@ -146,6 +176,20 @@ public class STAppPresentationModel {
       nextgen.events.NewSTArgument.post(stArgument, stModel, stParameter, value);
 
       notifyIfLabel(stModel, stParameter);
+   }
+
+   public void addArgument(STModel stModel, String parameterName, String value) {
+      addArgument(stModel, parameterName, newSTValue(value));
+   }
+
+   public void addArgument(STModel stModel, String parameterName, STValue value) {
+      stModel.getStTemplate()
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(parameterName))
+            .findAny()
+            .ifPresent(stParameter -> {
+               addArgument(stModel, stParameter, value);
+            });
    }
 
    public void addSTModel(nextgen.model.STProject stProject, nextgen.model.STModel stModel) {
@@ -1025,6 +1069,18 @@ public class STAppPresentationModel {
       if (isSameArgument(stModel, stParameter, value)) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
+   }
+
+   public void setArgument(nextgen.model.STModel stModel, String name, String value) {
+      setArgument(stModel, name, newSTValue(value));
+   }
+
+   public void setArgument(nextgen.model.STModel stModel, String name, STValue value) {
+      stModel.getStTemplate()
+            .getParameters()
+            .filter(stParameter -> stParameter.getName().equals(name))
+            .findFirst()
+            .ifPresent(stParameter -> setArgument(stModel, stParameter, value));
    }
 
    public boolean isSameArgument(STModel stModel, STParameter stParameter, String value) {

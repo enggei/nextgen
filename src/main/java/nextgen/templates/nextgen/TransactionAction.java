@@ -414,6 +414,7 @@ public class TransactionAction {
 				"import javax.swing.*;\n" + 
 				"import org.neo4j.graphdb.Transaction;\n" + 
 				"import java.awt.event.ActionEvent;\n" + 
+				"import java.util.stream.Collectors;\n" + 
 				"\n" + 
 				"public class ~name~ extends nextgen.actions.TransactionAction {\n" + 
 				"~if(staticFields)~\n" + 

@@ -14,9 +14,11 @@ public class DomainVisitorForm extends JPanel {
 	JComponent onEntity_JComponent;
 	JComponent onRelation_JComponent;
 	JComponent onComplete_JComponent;
+	JLabel fields_JLabel;
+	JComponent fields_JComponent;
 
 	public DomainVisitorForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("center:pref:none, center:pref:grow", "center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3)"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("center:pref:none, center:pref:grow", "center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.5)"));
 	}
 
 	public <T extends JLabel> T getOnDomainJLabel() {
@@ -139,6 +141,36 @@ public class DomainVisitorForm extends JPanel {
 		return this;
 	}
 
+	public <T extends JLabel> T getFieldsJLabel() {
+		return (T) fields_JLabel;
+	}
+
+	public <T extends JLabel> T getFieldsJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.fields_JLabel == null) setFields(supplier.get());
+   	return (T) this.fields_JLabel;
+	}
+
+	public DomainVisitorForm setFields(JLabel component) {
+		if (component == null) return this;
+		add(this.fields_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 5, 1, 1, "LEFT, TOP"));
+		return this;
+	}
+
+	public <T extends JComponent> T getFieldsJComponent() {
+		return (T) fields_JComponent;
+	}
+
+	public <T extends JComponent> T getFieldsJComponent(java.util.function.Supplier<T> supplier) {
+		if (this.fields_JComponent == null) setFields(supplier.get());
+   	return (T) this.fields_JComponent;
+	}
+
+	public DomainVisitorForm setFields(JComponent component) {
+		if (component == null) return this;
+		add(this.fields_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
+		return this;
+	}
+
 
 	public void setModel(nextgen.model.DomainVisitor model, java.awt.event.KeyListener keyListener) {
 		final StringBuilder onDomain = new StringBuilder();
@@ -154,27 +186,34 @@ public class DomainVisitorForm extends JPanel {
 		setOnRelation(newJLabel("On Relation"));
 		setOnRelation(newRSyntaxTextArea(onRelation.toString(), keyListener));
 		final StringBuilder onComplete = new StringBuilder();
-		model.getOnEntitySorted().forEach(s -> onComplete.append(s).append("\n"));
+		model.getOnCompleteSorted().forEach(s -> onComplete.append(s).append("\n"));
 		setOnComplete(newJLabel("On Complete"));
 		setOnComplete(newRSyntaxTextArea(onComplete.toString(), keyListener));
+
+		final StringBuilder fields = new StringBuilder();
+		model.getFields().forEach(s -> fields.append(s).append("\n"));
+		setFields(newJLabel("Fields"));
+		setFields(newRSyntaxTextArea(fields.toString(), keyListener));
 	}
 
 	public void onSave(nextgen.model.DomainVisitor model) {
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onDomain = getOnDomainJComponent();
 		java.util.Arrays.stream(onDomain.getText().split("\r\n")).forEach(model::addOnDomain);
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onEntity = getOnEntityJComponent();
-		java.util.Arrays.stream(onEntity.getText().split("\r\n")).forEach(model::addOnDomain);
+		java.util.Arrays.stream(onEntity.getText().split("\r\n")).forEach(model::addOnEntity);
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onRelation = getOnRelationJComponent();
-		java.util.Arrays.stream(onRelation.getText().split("\r\n")).forEach(model::addOnDomain);
+		java.util.Arrays.stream(onRelation.getText().split("\r\n")).forEach(model::addOnRelation);
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onComplete = getOnCompleteJComponent();
-		java.util.Arrays.stream(onComplete.getText().split("\r\n")).forEach(model::addOnDomain);
+		java.util.Arrays.stream(onComplete.getText().split("\r\n")).forEach(model::addOnComplete);
+		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea fields = getFieldsJComponent();
+		java.util.Arrays.stream(fields.getText().split("\r\n")).forEach(model::addFields);
 	}
 
 	/*
 
 	 columns 	2	"center:pref:none, center:pref:grow"
 
-	 rows 		4 	"center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3)"
+	 rows 		5 	"center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.5)"
 
 	 col 2 1 CENTER pref none
 	 col 3 1 CENTER pref grow
@@ -182,6 +221,7 @@ public class DomainVisitorForm extends JPanel {
 	 row 1 3 CENTER pref grow(.3)
 	 row 1 4 CENTER pref grow(.3)
 	 row 1 5 CENTER pref grow(.3)
+	 row 1 6 CENTER pref grow(.5)
 	 cell 2 2 1 1 LEFT TOP Label onDomain
 	 cell 2 3 1 1 LEFT TOP Label onEntity
 	 cell 2 4 1 1 LEFT TOP Label onRelation
@@ -190,6 +230,8 @@ public class DomainVisitorForm extends JPanel {
 	 cell 3 3 1 1 FILL FILL Component onEntity
 	 cell 3 4 1 1 FILL FILL Component onRelation
 	 cell 3 5 1 1 FILL FILL Component onComplete
+	 cell 2 6 1 1 LEFT TOP Label fields
+	 cell 3 6 1 1 FILL FILL Component fields
 
 	*/	
 }

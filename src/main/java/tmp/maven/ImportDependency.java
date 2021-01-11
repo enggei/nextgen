@@ -2,17 +2,24 @@ package tmp.maven;
 
 import javax.swing.JComponent;
 
+import static nextgen.utils.SwingUtil.*;
+import static nextgen.swing.ComponentFactory.*;
+import nextgen.model.*;
+import javax.swing.*;
+import org.neo4j.graphdb.Transaction;
+import java.awt.event.ActionEvent;
+
 public class ImportDependency extends nextgen.actions.TransactionAction {
 
-   private final JComponent owner;
+   private final javax.swing.JComponent owner;
 
-	public ImportDependency(JComponent owner) {
+	public ImportDependency(javax.swing.JComponent owner) {
 		super("ImportDependency");
 		this.owner = owner;
 	}
 
    @Override
-   protected void actionPerformed(java.awt.event.ActionEvent actionEvent, org.neo4j.graphdb.Transaction transaction) {
+   protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("ImportDependency" + " owner");
 
       input(owner, "Dependency", xml -> {
