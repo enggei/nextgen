@@ -14,8 +14,8 @@ public class DomainVisitorForm extends JPanel {
 	JComponent onEntity_JComponent;
 	JComponent onRelation_JComponent;
 	JComponent onComplete_JComponent;
-	JLabel fields_JLabel;
-	JComponent fields_JComponent;
+	JLabel templates_JLabel;
+	JComponent templates_JComponent;
 
 	public DomainVisitorForm() {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("center:pref:none, center:pref:grow", "center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.5)"));
@@ -141,59 +141,62 @@ public class DomainVisitorForm extends JPanel {
 		return this;
 	}
 
-	public <T extends JLabel> T getFieldsJLabel() {
-		return (T) fields_JLabel;
+	public <T extends JLabel> T getTemplatesJLabel() {
+		return (T) templates_JLabel;
 	}
 
-	public <T extends JLabel> T getFieldsJLabel(java.util.function.Supplier<T> supplier) {
-		if (this.fields_JLabel == null) setFields(supplier.get());
-   	return (T) this.fields_JLabel;
+	public <T extends JLabel> T getTemplatesJLabel(java.util.function.Supplier<T> supplier) {
+		if (this.templates_JLabel == null) setTemplates(supplier.get());
+   	return (T) this.templates_JLabel;
 	}
 
-	public DomainVisitorForm setFields(JLabel component) {
+	public DomainVisitorForm setTemplates(JLabel component) {
 		if (component == null) return this;
-		add(this.fields_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 5, 1, 1, "LEFT, TOP"));
+		add(this.templates_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 5, 1, 1, "LEFT, TOP"));
 		return this;
 	}
 
-	public <T extends JComponent> T getFieldsJComponent() {
-		return (T) fields_JComponent;
+	public <T extends JComponent> T getTemplatesJComponent() {
+		return (T) templates_JComponent;
 	}
 
-	public <T extends JComponent> T getFieldsJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.fields_JComponent == null) setFields(supplier.get());
-   	return (T) this.fields_JComponent;
+	public <T extends JComponent> T getTemplatesJComponent(java.util.function.Supplier<T> supplier) {
+		if (this.templates_JComponent == null) setTemplates(supplier.get());
+   	return (T) this.templates_JComponent;
 	}
 
-	public DomainVisitorForm setFields(JComponent component) {
+	public DomainVisitorForm setTemplates(JComponent component) {
 		if (component == null) return this;
-		add(this.fields_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
+		add(this.templates_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 
-	public void setModel(nextgen.model.DomainVisitor model, java.awt.event.KeyListener keyListener) {
+	public void setModel(nextgen.model.DomainVisitor model) {
 		final StringBuilder onDomain = new StringBuilder();
 		model.getOnDomainSorted().forEach(s -> onDomain.append(s).append("\n"));
-		setOnDomain(newJLabel("On Domain"));
-		setOnDomain(newRSyntaxTextArea(onDomain.toString(), keyListener));
+		getOnDomainJLabel(() -> newJLabel("On Domain"));
+		getOnDomainJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onDomain.toString());
+
 		final StringBuilder onEntity = new StringBuilder();
 		model.getOnEntitySorted().forEach(s -> onEntity.append(s).append("\n"));
-		setOnEntity(newJLabel("On Entity"));
-		setOnEntity(newRSyntaxTextArea(onEntity.toString(), keyListener));
+		getOnEntityJLabel(() -> newJLabel("On Entity"));
+		getOnEntityJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onEntity.toString());
+
 		final StringBuilder onRelation = new StringBuilder();
 		model.getOnRelationSorted().forEach(s -> onRelation.append(s).append("\n"));
-		setOnRelation(newJLabel("On Relation"));
-		setOnRelation(newRSyntaxTextArea(onRelation.toString(), keyListener));
+		getOnRelationJLabel(() -> newJLabel("On Relation"));
+		getOnRelationJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onRelation.toString());
+
 		final StringBuilder onComplete = new StringBuilder();
 		model.getOnCompleteSorted().forEach(s -> onComplete.append(s).append("\n"));
-		setOnComplete(newJLabel("On Complete"));
-		setOnComplete(newRSyntaxTextArea(onComplete.toString(), keyListener));
+		getOnCompleteJLabel(() -> newJLabel("On Complete"));
+		getOnCompleteJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onComplete.toString());
 
-		final StringBuilder fields = new StringBuilder();
-		model.getFields().forEach(s -> fields.append(s).append("\n"));
-		setFields(newJLabel("Fields"));
-		setFields(newRSyntaxTextArea(fields.toString(), keyListener));
+		final StringBuilder templates = new StringBuilder();
+		model.getTemplates().sorted(java.util.Comparator.comparing(nextgen.model.STTemplate::getName)).forEach(s -> templates.append(s.getName()).append("\n"));
+		getTemplatesJLabel(() -> newJLabel("Templates"));
+		getTemplatesJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(templates.toString());
 	}
 
 	public void onSave(nextgen.model.DomainVisitor model) {
@@ -214,7 +217,7 @@ public class DomainVisitorForm extends JPanel {
 		java.util.Arrays.stream(onComplete.getText().split("[\r\n]")).forEach(model::addOnComplete);
 
 		model.removeAllFields();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea fields = getFieldsJComponent();
+		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea fields = getTemplatesJComponent();
 		java.util.Arrays.stream(fields.getText().split("[\r\n]")).forEach(model::addFields);
 	}
 
@@ -239,8 +242,8 @@ public class DomainVisitorForm extends JPanel {
 	 cell 3 3 1 1 FILL FILL Component onEntity
 	 cell 3 4 1 1 FILL FILL Component onRelation
 	 cell 3 5 1 1 FILL FILL Component onComplete
-	 cell 2 6 1 1 LEFT TOP Label fields
-	 cell 3 6 1 1 FILL FILL Component fields
+	 cell 2 6 1 1 LEFT TOP Label templates
+	 cell 3 6 1 1 FILL FILL Component templates
 
 	*/	
 }

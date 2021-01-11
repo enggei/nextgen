@@ -1435,6 +1435,11 @@ public class STAppPresentationModel {
 
    }
 
+   public void add(nextgen.model.DomainVisitor domainVisitor, nextgen.model.STTemplate stTemplate) {
+      domainVisitor.addTemplates(stTemplate);
+      nextgen.events.DomainVisitorSTTemplateAdded.post(domainVisitor, stTemplate);
+   }
+
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 
       private final nextgen.model.STParameter stParameter;

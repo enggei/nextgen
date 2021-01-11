@@ -2,7 +2,6 @@ package nextgen.swing;
 
 import nextgen.events.STValueSelected;
 import nextgen.model.STValue;
-import nextgen.swing.forms.SearchForm;
 import nextgen.swing.table.STValueTable;
 
 public abstract class SearchReplaceEditor extends AbstractEditor {
@@ -20,7 +19,7 @@ public abstract class SearchReplaceEditor extends AbstractEditor {
 
       results.setSelectionListener(STValueSelected::post);
 
-      add(new SearchForm()
+      add(new nextgen.swing.forms.SearchReplaceForm()
             .setSearch(newLabel("Search"))
             .setSearch(txtSearch)
             .setSearch(btnSearch)

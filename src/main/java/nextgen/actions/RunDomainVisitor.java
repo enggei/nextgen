@@ -44,10 +44,10 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    		final String[] f = s.split("[ ]");
    		appModel().addKVArgument(visitorInterface, "fields", "name", f[1], "type", f[0], "init", f.length == 2 ? null : f[2]);
    	});
-   	visitor.getOnDomain().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onDomain", s));
-   	visitor.getOnEntity().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onEntity", s));
-   	visitor.getOnRelation().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onRelation", s));
-   	visitor.getOnComplete().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onComplete", s));
+   	visitor.getOnDomainSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onDomain", s));
+   	visitor.getOnEntitySorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onEntity", s));
+   	visitor.getOnRelationSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onRelation", s));
+   	visitor.getOnCompleteSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onComplete", s));
 
    	nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));
    	appModel().setArgument(transactionAction, "packageName", packageName);

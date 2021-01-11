@@ -91,32 +91,32 @@ public class DomainVisitor {
 		return this;
 	}
 
-	private static final org.neo4j.graphdb.RelationshipType _groups = org.neo4j.graphdb.RelationshipType.withName("groups");
+	private static final org.neo4j.graphdb.RelationshipType _templates = org.neo4j.graphdb.RelationshipType.withName("templates");
 
-	public DomainVisitor addGroups(nextgen.model.STGroupModel dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _groups).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+	public DomainVisitor addTemplates(nextgen.model.STTemplate dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _groups);
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _templates);
 		relationship.setProperty("_t", System.nanoTime());
 		return this;
 	}
 
-	public java.util.stream.Stream<nextgen.model.STGroupModel> getGroups() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _groups).spliterator(), false).map((relationship) -> new nextgen.model.STGroupModel(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<nextgen.model.STTemplate> getTemplates() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).map((relationship) -> new nextgen.model.STTemplate(relationship.getOtherNode(node)));
 	}
 
-	public java.util.stream.Stream<nextgen.model.STGroupModel> getGroupsSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _groups).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new nextgen.model.STGroupModel(relationship.getOtherNode(node)));
+	public java.util.stream.Stream<nextgen.model.STTemplate> getTemplatesSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new nextgen.model.STTemplate(relationship.getOtherNode(node)));
 	}
 
-	public DomainVisitor removeGroups(nextgen.model.STGroupModel dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _groups).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+	public DomainVisitor removeTemplates(nextgen.model.STTemplate dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
 		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 
-	public DomainVisitor removeAllGroups() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _groups).forEach(org.neo4j.graphdb.Relationship::delete);
+	public DomainVisitor removeAllTemplates() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
 	}
 

@@ -37,27 +37,75 @@ public class Neo4JEmbeddedVisitor extends nextgen.actions.TransactionAction {
       onComplete();
    }
 
-   nextgen.model.STTemplate neoFactoryTemplate = appModel().db.findSTTemplateByUuid("041dcc81-91db-41c1-bacd-ac90f635b371");
-   nextgen.model.STModel neoFactory = appModel().newSTModel(neoFactoryTemplate);
-
-   nextgen.model.STGroupModel java;
+   final java.util.Map<String, java.util.Map<String, STModel>> stModels = new java.util.HashMap<>();
 
    public void onDomain(String name) {
-   	System.out.println("on domain " + name);
-   	appModel().setArgument(neoFactory, "name", name);
-   	System.out.println("onDomain");
+   	STModel neoFactory = newModel("neoFactory", "041dcc81-91db-41c1-bacd-ac90f635b371");
+   	set(neoFactory, "name", name);
+   	set(neoFactory, "package", "tmp");
    }
 
    public void onEntity(DomainEntity entity) {
-   	System.out.println("\ton entity " + entity.getName());
+   	final String entityName = entity.getName();
+   	final String entityUuid = entity.getUuid();
+   	STModel nodeWrapper = newModel(entity, "nodeWrapper", "bbe1e861-a07d-4516-ac58-76059fd89ed4");
+   	STModel neoFactoryAccessors = newModel(entity, "neoFactoryAccessors", "75d8bdac-df70-443b-8b8a-ce3456b1aae1");
    }
 
    public void onRelation(DomainRelation relation) {
-   	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc().getName() + " " + relation.getType() + " " + relation.getDst().getName());
+   	final String relationName = relation.getName();
+   	final nextgen.model.DomainRelationType relationType = relation.getType();
+   	final nextgen.model.DomainEntity src = relation.getSrc();
+   	final String srcName = src.getName();
+   	final String srcUuid = src.getUuid();
+   	final nextgen.model.DomainEntity dst = relation.getDst();
+   	final String dstName = dst.getName();
+   	final String dstUuid = dst.getUuid();
+
+   	System.out.println("\ton relation " + relationName + " " + srcName + " " + relationType + " " + dstName);
+   	STModel srcnodeWrapper = get(src, "nodeWrapper");
+   	STModel dstnodeWrapper = get(dst, "nodeWrapper");
    }
 
    public void onComplete() {
-   	System.out.println();
-   	System.out.println(appModel().render(neoFactory));
+   	writeModel("neoFactory");
+   }
+
+   // utility methods
+   private nextgen.model.STModel newModel(String uuid) {
+   	return appModel().newSTModel(appModel().db.findSTTemplateByUuid(uuid));
+   }
+
+   private nextgen.model.STModel newModel(String key, String uuid) {
+   	stModels.putIfAbsent(key, new java.util.TreeMap<>());
+   	stModels.get(key).put(key, newModel(uuid));
+   	return stModels.get(key).get(key);
+   }
+
+   private nextgen.model.STModel newModel(DomainEntity entity, String key, String uuid) {
+   	stModels.putIfAbsent(entity.getUuid(), new java.util.TreeMap<>());
+   	stModels.get(entity.getUuid()).put(key, newModel(uuid));
+   	return stModels.get(entity.getUuid()).get(key);
+   }
+
+   private void set(nextgen.model.STModel stModel, String parameterName, String value) {
+   	appModel().setArgument(stModel, parameterName, value);
+   }
+
+   private nextgen.model.STModel get(nextgen.model.DomainEntity domainEntity, String key) {
+   	return stModels.get(domainEntity.getUuid()).get(key);
+   }
+
+   private void add(nextgen.model.STModel stModel, String parameterName, String value) {
+   	appModel().addArgument(stModel, parameterName, value);
+   }
+
+   private void writeModel(String key) {
+   	write(stModels.get(key).get(key));
+   }
+
+   private void write(STModel stModel) {
+   	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
+   	nextgen.st.STGenerator.writeJavaFile(appModel().render(stModel), nextgen.swing.STAppPresentationModel.getSTModelPackage(stModel), nextgen.swing.STAppPresentationModel.getSTModelName(stModel), file);
    }
 }
