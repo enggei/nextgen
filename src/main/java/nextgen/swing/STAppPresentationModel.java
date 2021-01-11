@@ -179,10 +179,12 @@ public class STAppPresentationModel {
    }
 
    public void addArgument(STModel stModel, String parameterName, String value) {
+      if (value == null || value.trim().length() == 0) return;
       addArgument(stModel, parameterName, newSTValue(value));
    }
 
    public void addArgument(STModel stModel, String parameterName, STValue value) {
+      if (value == null) return;
       stModel.getStTemplate()
             .getParameters()
             .filter(stParameter -> stParameter.getName().equals(parameterName))

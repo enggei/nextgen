@@ -197,16 +197,25 @@ public class DomainVisitorForm extends JPanel {
 	}
 
 	public void onSave(nextgen.model.DomainVisitor model) {
+		model.removeAllOnDomain();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onDomain = getOnDomainJComponent();
-		java.util.Arrays.stream(onDomain.getText().split("\r\n")).forEach(model::addOnDomain);
+		java.util.Arrays.stream(onDomain.getText().split("[\r\n]")).forEach(model::addOnDomain);
+
+		model.removeAllOnEntity();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onEntity = getOnEntityJComponent();
-		java.util.Arrays.stream(onEntity.getText().split("\r\n")).forEach(model::addOnEntity);
+		java.util.Arrays.stream(onEntity.getText().split("[\r\n]")).forEach(model::addOnEntity);
+
+		model.removeAllOnRelation();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onRelation = getOnRelationJComponent();
-		java.util.Arrays.stream(onRelation.getText().split("\r\n")).forEach(model::addOnRelation);
+		java.util.Arrays.stream(onRelation.getText().split("[\r\n]")).forEach(model::addOnRelation);
+
+		model.removeAllOnComplete();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onComplete = getOnCompleteJComponent();
-		java.util.Arrays.stream(onComplete.getText().split("\r\n")).forEach(model::addOnComplete);
+		java.util.Arrays.stream(onComplete.getText().split("[\r\n]")).forEach(model::addOnComplete);
+
+		model.removeAllFields();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea fields = getFieldsJComponent();
-		java.util.Arrays.stream(fields.getText().split("\r\n")).forEach(model::addFields);
+		java.util.Arrays.stream(fields.getText().split("[\r\n]")).forEach(model::addFields);
 	}
 
 	/*
