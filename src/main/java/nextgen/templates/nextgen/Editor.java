@@ -25,7 +25,7 @@ public class Editor {
 		st.add("modelType", _modelType);
 		st.add("name", _name);
 		st.add("packageName", _packageName);
-		for (java.util.Map<String, Object> map : _editors) st.addAggr("editors.{setModel,type,name}", map.get("setModel"), map.get("type"), map.get("name"));
+		for (java.util.Map<String, Object> map : _editors) st.addAggr("editors.{setModelInit,setModel,type,name}", map.get("setModelInit"), map.get("setModel"), map.get("type"), map.get("name"));
 		for (java.util.Map<String, Object> map : _events) st.addAggr("events.{predicate,type}", map.get("predicate"), map.get("type"));
 		return st.render().trim();
 	}
@@ -103,8 +103,9 @@ public class Editor {
 			return this;
 		}
 
-	public Editor addEditors(Object _setModel, Object _type, Object _name) {
+	public Editor addEditors(Object _setModelInit, Object _setModel, Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
+		map.put("setModelInit", _setModelInit);
 		map.put("setModel", _setModel);
 		map.put("type", _type);
 		map.put("name", _name);
@@ -117,12 +118,17 @@ public class Editor {
 	}
 
 	public Editor addEditors(Editor_Editors value) {
-		return addEditors(value._setModel, value._type, value._name);
+		return addEditors(value._setModelInit, value._setModel, value._type, value._name);
 	}
 
 	public java.util.stream.Stream<Editor_Editors> streamEditors() {
 		return this._editors.stream().map(Editor_Editors::new);
 	}
+
+	public java.util.List<Object> getEditors_SetModelInit() {
+		return streamEditors().map(Editor_Editors::getSetModelInit).collect(java.util.stream.Collectors.toList());
+	}
+
 
 	public java.util.List<Object> getEditors_SetModel() {
 		return streamEditors().map(Editor_Editors::getSetModel).collect(java.util.stream.Collectors.toList());
@@ -141,20 +147,27 @@ public class Editor {
 
 	public static final class Editor_Editors {
 
+		Object _setModelInit;
 		Object _setModel;
 		Object _type;
 		Object _name;
 
-		public Editor_Editors(Object _setModel, Object _type, Object _name) {
+		public Editor_Editors(Object _setModelInit, Object _setModel, Object _type, Object _name) {
+			this._setModelInit = _setModelInit;
 			this._setModel = _setModel;
 			this._type = _type;
 			this._name = _name;
 		}
 
 		private Editor_Editors(java.util.Map<String, Object> map) {
+			this._setModelInit = (Object) map.get("setModelInit");
 			this._setModel = (Object) map.get("setModel");
 			this._type = (Object) map.get("type");
 			this._name = (Object) map.get("name");
+		}
+
+		public Object getSetModelInit() {
+			return this._setModelInit;
 		}
 
 		public Object getSetModel() {
@@ -172,6 +185,7 @@ public class Editor {
 
 		public java.util.Map<String, Object> asMap() {
 			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("setModelInit", _setModelInit);
 			map.put("setModel", _setModel);
 			map.put("type", _type);
 			map.put("name", _name);
@@ -266,6 +280,8 @@ public class Editor {
 				"\n" + 
 				"import java.awt.*;\n" + 
 				"\n" + 
+				"import nextgen.events.*;\n" + 
+				"\n" + 
 				"public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {\n" + 
 				"\n" + 
 				"	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();\n" + 
@@ -287,14 +303,16 @@ public class Editor {
 				"		super.setModel(model);\n" + 
 				"\n" + 
 				"		this.uuid = model.getUuid();\n" + 
+				"		~editors:{it|~it.name~.setModel(model);};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"		if (getComponentCount() == 0) {\n" + 
-				"		   ~editors:{it|editors.add(\"~it.name;format=\"capitalize\"~\", ~it.name~);};separator=\"\\n\"~\n" + 
+				"~editors:{it|\n" + 
+				"		   editors.add(\"~it.name;format=\"capitalize\"~\", ~it.name~);\n" + 
+				"		   ~it.setModelInit~\n" + 
+				"};separator=\"\\n\"~\n" + 
 				"			add(editors, BorderLayout.CENTER);\n" + 
 				"		   invalidate();\n" + 
 				"		}\n" + 
-				"\n" + 
-				"		~editors:{it|~it.name~.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));};separator=\"\\n\"~\n" + 
 				"	}\n" + 
 				"	\n" + 
 				"	@Override\n" + 
@@ -302,6 +320,7 @@ public class Editor {
 				"		if (model == null) return;\n" + 
 				"		appModel().doInTransaction(transaction -> ~editors:{it|~it.name~.onSave(model)};separator=\"\\n\"~);\n" + 
 				"	}\n" + 
+				"	\n" + 
 				"~events:{it|\n" + 
 				"	@org.greenrobot.eventbus.Subscribe()\n" + 
 				"	public void on~it.type~(~it.type~ event) {\n" + 

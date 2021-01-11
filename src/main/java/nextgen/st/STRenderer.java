@@ -191,6 +191,10 @@ public class STRenderer {
 
       final nextgen.model.STGroupModel stGroupModel = appModel().getSTGroup(stTemplate);
 
+      if(stGroupModel.getDelimiter()==null) {
+         stGroupModel.setDelimiter(nextgen.st.STGenerator.DELIMITER);
+      }
+
       final STCache cache = cacheMap.get(stGroupModel);
       if (cache != null && cache.isValid())
          return cache.getInstanceOf(stTemplate);

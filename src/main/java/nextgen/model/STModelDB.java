@@ -123,6 +123,13 @@ public class STModelDB extends STModelNeoFactory {
 
          deleteUnnusedNodes();
          deleteUnnusedFiles();
+
+
+         findAllSTGroupModel().filter(stGroupModel -> stGroupModel.getDelimiter()==null).forEach(stGroupModel -> {
+            System.out.println(stGroupModel.getUuid() + " " + stGroupModel.getName() + " missing delimiter");
+            stGroupModel.setDelimiter(nextgen.st.STGenerator.DELIMITER);
+         });
+
       });
    }
 

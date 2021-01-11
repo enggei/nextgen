@@ -9,7 +9,7 @@ public class DomainVisitorInterface {
 	private java.util.List<Object> _onRelation = new java.util.ArrayList<>();
 	private java.util.List<Object> _onEntity = new java.util.ArrayList<>();
 	private java.util.List<Object> _onDomain = new java.util.ArrayList<>();
-	private java.util.List<java.util.Map<String, Object>> _fields = new java.util.ArrayList<>();
+	private java.util.List<java.util.Map<String, Object>> _templates = new java.util.ArrayList<>();
 
 	DomainVisitorInterface(org.stringtemplate.v4.STGroup stGroup) {
 		this.stGroup = stGroup;
@@ -26,7 +26,7 @@ public class DomainVisitorInterface {
 		for (Object o : _onRelation) st.add("onRelation", o);
 		for (Object o : _onEntity) st.add("onEntity", o);
 		for (Object o : _onDomain) st.add("onDomain", o);
-		for (java.util.Map<String, Object> map : _fields) st.addAggr("fields.{name,type,init}", map.get("name"), map.get("type"), map.get("init"));
+		for (java.util.Map<String, Object> map : _templates) st.addAggr("templates.{name,uuid}", map.get("name"), map.get("uuid"));
 		return st.render().trim();
 	}
 
@@ -147,84 +147,70 @@ public class DomainVisitorInterface {
 		return this._onDomain;
 	} 
 
-	public DomainVisitorInterface setFields(java.util.Collection<DomainVisitorInterface_Fields> values) {
-			this._fields.clear();
-			values.stream().map(DomainVisitorInterface_Fields::asMap).forEach(map -> _fields.add(map));
+	public DomainVisitorInterface setTemplates(java.util.Collection<DomainVisitorInterface_Templates> values) {
+			this._templates.clear();
+			values.stream().map(DomainVisitorInterface_Templates::asMap).forEach(map -> _templates.add(map));
 			return this;
 		}
 
-	public DomainVisitorInterface addFields(Object _name, Object _type, Object _init) {
+	public DomainVisitorInterface addTemplates(Object _name, Object _uuid) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
-		map.put("type", _type);
-		map.put("init", _init);
-		this._fields.add(map);
+		map.put("uuid", _uuid);
+		this._templates.add(map);
 		return this;
 	}
 
-	public java.util.List<java.util.Map<String, Object>> getFields() {
-		return this._fields;
+	public java.util.List<java.util.Map<String, Object>> getTemplates() {
+		return this._templates;
 	}
 
-	public DomainVisitorInterface addFields(DomainVisitorInterface_Fields value) {
-		return addFields(value._name, value._type, value._init);
+	public DomainVisitorInterface addTemplates(DomainVisitorInterface_Templates value) {
+		return addTemplates(value._name, value._uuid);
 	}
 
-	public java.util.stream.Stream<DomainVisitorInterface_Fields> streamFields() {
-		return this._fields.stream().map(DomainVisitorInterface_Fields::new);
+	public java.util.stream.Stream<DomainVisitorInterface_Templates> streamTemplates() {
+		return this._templates.stream().map(DomainVisitorInterface_Templates::new);
 	}
 
-	public java.util.List<Object> getFields_Name() {
-		return streamFields().map(DomainVisitorInterface_Fields::getName).collect(java.util.stream.Collectors.toList());
-	}
-
-
-	public java.util.List<Object> getFields_Type() {
-		return streamFields().map(DomainVisitorInterface_Fields::getType).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getTemplates_Name() {
+		return streamTemplates().map(DomainVisitorInterface_Templates::getName).collect(java.util.stream.Collectors.toList());
 	}
 
 
-	public java.util.List<Object> getFields_Init() {
-		return streamFields().map(DomainVisitorInterface_Fields::getInit).collect(java.util.stream.Collectors.toList());
+	public java.util.List<Object> getTemplates_Uuid() {
+		return streamTemplates().map(DomainVisitorInterface_Templates::getUuid).collect(java.util.stream.Collectors.toList());
 	}
 
 
-	public static final class DomainVisitorInterface_Fields {
+	public static final class DomainVisitorInterface_Templates {
 
 		Object _name;
-		Object _type;
-		Object _init;
+		Object _uuid;
 
-		public DomainVisitorInterface_Fields(Object _name, Object _type, Object _init) {
+		public DomainVisitorInterface_Templates(Object _name, Object _uuid) {
 			this._name = _name;
-			this._type = _type;
-			this._init = _init;
+			this._uuid = _uuid;
 		}
 
-		private DomainVisitorInterface_Fields(java.util.Map<String, Object> map) {
+		private DomainVisitorInterface_Templates(java.util.Map<String, Object> map) {
 			this._name = (Object) map.get("name");
-			this._type = (Object) map.get("type");
-			this._init = (Object) map.get("init");
+			this._uuid = (Object) map.get("uuid");
 		}
 
 		public Object getName() {
 			return this._name;
 		}
 
-		public Object getType() {
-			return this._type;
-		}
-
-		public Object getInit() {
-			return this._init;
+		public Object getUuid() {
+			return this._uuid;
 		}
 
 
 		public java.util.Map<String, Object> asMap() {
 			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
 			map.put("name", _name);
-			map.put("type", _type);
-			map.put("init", _init);
+			map.put("uuid", _uuid);
 			return map;
 		}
 
@@ -243,27 +229,79 @@ public class DomainVisitorInterface {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVisitorInterface(fields,onComplete,onRelation,onEntity,onDomain) ::= <<~fields:{it|~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-				"\n" + 
-				"nextgen.model.STGroupModel java;\n" + 
+	static final String st = "DomainVisitorInterface(templates,onComplete,onRelation,onEntity,onDomain) ::= <<final java.util.Map<String, java.util.Map<String, STModel>~gt()~ stModels = new java.util.HashMap<>();\n" + 
 				"\n" + 
 				"public void onDomain(String name) {\n" + 
-				"	System.out.println(\"on domain \" + name);\n" + 
 				"	~onDomain:{it|~it~};separator=\"\\n\"~\n" + 
 				"}\n" + 
 				"\n" + 
 				"public void onEntity(DomainEntity entity) {\n" + 
-				"	System.out.println(\"\\ton entity \" + entity.getName());\n" + 
+				"	final String entityName = entity.getName();\n" + 
+				"	final String entityUuid = entity.getUuid();\n" + 
 				"	~onEntity:{it|~it~};separator=\"\\n\"~\n" + 
 				"}\n" + 
 				"\n" + 
 				"public void onRelation(DomainRelation relation) {\n" + 
-				"	System.out.println(\"\\ton relation \" + relation.getName() + \" \" + relation.getSrc().getName() + \" \" + relation.getType() + \" \" + relation.getDst().getName());\n" + 
+				"	final String relationName = relation.getName();\n" + 
+				"	final nextgen.model.DomainRelationType relationType = relation.getType();\n" + 
+				"	final nextgen.model.DomainEntity src = relation.getSrc();\n" + 
+				"	final String srcName = src.getName();\n" + 
+				"	final String srcUuid = src.getUuid();\n" + 
+				"	final nextgen.model.DomainEntity dst = relation.getDst();\n" + 
+				"	final String dstName = dst.getName();\n" + 
+				"	final String dstUuid = dst.getUuid();\n" + 
+				"\n" + 
+				"	System.out.println(\"\\ton relation \" + relationName + \" \" + srcName + \" \" + relationType + \" \" + dstName);\n" + 
 				"	~onRelation:{it|~it~};separator=\"\\n\"~\n" + 
 				"}\n" + 
 				"\n" + 
 				"public void onComplete() {\n" + 
-				"	System.out.println();\n" + 
 				"	~onComplete:{it|~it~};separator=\"\\n\"~\n" + 
+				"}\n" + 
+				"\n" + 
+				"// utility methods\n" + 
+				"~templates:{it|\n" + 
+				"private nextgen.model.STModel new~it.name;format=\"capitalize\"~(String key) {\n" + 
+				"	stModels.putIfAbsent(key, new java.util.LinkedHashMap<>());\n" + 
+				"	stModels.get(key).put(key, appModel().newSTModel(appModel().db.findSTTemplateByUuid(\"~it.uuid~\")));\n" + 
+				"	return stModels.get(key).get(key);\n" + 
+				"~eom()~\n" + 
+				"};separator=\"\\n\"~\n" + 
+				"\n" + 
+				"private nextgen.model.STModel newModel(String uuid) {\n" + 
+				"	return appModel().newSTModel(appModel().db.findSTTemplateByUuid(uuid));\n" + 
+				"}\n" + 
+				"\n" + 
+				"private nextgen.model.STModel newModel(String key, String uuid) {\n" + 
+				"	stModels.putIfAbsent(key, new java.util.TreeMap<>());\n" + 
+				"	stModels.get(key).put(key, newModel(uuid));\n" + 
+				"	return stModels.get(key).get(key);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private nextgen.model.STModel newModel(DomainEntity entity, String key, String uuid) {\n" + 
+				"	stModels.putIfAbsent(entity.getUuid(), new java.util.TreeMap<>());\n" + 
+				"	stModels.get(entity.getUuid()).put(key, newModel(uuid));\n" + 
+				"	return stModels.get(entity.getUuid()).get(key);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private void set(nextgen.model.STModel stModel, String parameterName, String value) {\n" + 
+				"	appModel().setArgument(stModel, parameterName, value);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private nextgen.model.STModel get(nextgen.model.DomainEntity domainEntity, String key) {\n" + 
+				"	return stModels.get(domainEntity.getUuid()).get(key);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private void add(nextgen.model.STModel stModel, String parameterName, String value) {\n" + 
+				"	appModel().addArgument(stModel, parameterName, value);\n" + 
+				"}\n" + 
+				"\n" + 
+				"private void writeModel(String key) {\n" + 
+				"	write(stModels.get(key).get(key));\n" + 
+				"}\n" + 
+				"\n" + 
+				"private void write(STModel stModel) {\n" + 
+				"	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());\n" + 
+				"	nextgen.st.STGenerator.writeJavaFile(appModel().render(stModel), nextgen.swing.STAppPresentationModel.getSTModelPackage(stModel), nextgen.swing.STAppPresentationModel.getSTModelName(stModel), file);\n" + 
 				"} >>";
 }  

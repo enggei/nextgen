@@ -36,8 +36,8 @@ public class DomainVisitor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "DomainVisitor() ::= <<final java.util.List<DomainEntity> entities = domain.getEntitiesSorted().collect(java.util.stream.Collectors.toList());\n" + 
-				"final java.util.List<DomainRelation> relations = domain.getRelationsSorted().collect(java.util.stream.Collectors.toList());\n" + 
+	static final String st = "DomainVisitor() ::= <<final java.util.List<DomainEntity> entities = domain.getEntitiesSorted().collect(Collectors.toList());\n" + 
+				"final java.util.List<DomainRelation> relations = domain.getRelationsSorted().collect(Collectors.toList());\n" + 
 				"\n" + 
 				"onDomain(domain.getName());\n" + 
 				"\n" + 

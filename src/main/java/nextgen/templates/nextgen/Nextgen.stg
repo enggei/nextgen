@@ -1844,8 +1844,8 @@ public static String delete(~entity~ entity) {
 	return entity.getUuid();
 }  >>
 
-DomainVisitor() ::= <<final java.util.List<DomainEntity> entities = domain.getEntitiesSorted().collect(java.util.stream.Collectors.toList());
-final java.util.List<DomainRelation> relations = domain.getRelationsSorted().collect(java.util.stream.Collectors.toList());
+DomainVisitor() ::= <<final java.util.List<DomainEntity> entities = domain.getEntitiesSorted().collect(Collectors.toList());
+final java.util.List<DomainRelation> relations = domain.getRelationsSorted().collect(Collectors.toList());
 
 onDomain(domain.getName());
 
@@ -1857,33 +1857,87 @@ for (DomainRelation relation : relations)
 
 onComplete();  >>
 
-DomainVisitorInterface(fields,onComplete,onRelation,onEntity,onDomain) ::= <<~fields:{it|~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
-
-nextgen.model.STGroupModel java;
+DomainVisitorInterface(templates,onComplete,onRelation,onEntity,onDomain) ::= <<final java.util.Map<String, java.util.Map<String, STModel>~gt()~ stModels = new java.util.HashMap<>();
 
 public void onDomain(String name) {
-	System.out.println("on domain " + name);
 	~onDomain:{it|~it~};separator="\n"~
 }
 
 public void onEntity(DomainEntity entity) {
-	System.out.println("\ton entity " + entity.getName());
+	final String entityName = entity.getName();
+	final String entityUuid = entity.getUuid();
 	~onEntity:{it|~it~};separator="\n"~
 }
 
 public void onRelation(DomainRelation relation) {
-	System.out.println("\ton relation " + relation.getName() + " " + relation.getSrc().getName() + " " + relation.getType() + " " + relation.getDst().getName());
+	final String relationName = relation.getName();
+	final nextgen.model.DomainRelationType relationType = relation.getType();
+	final nextgen.model.DomainEntity src = relation.getSrc();
+	final String srcName = src.getName();
+	final String srcUuid = src.getUuid();
+	final nextgen.model.DomainEntity dst = relation.getDst();
+	final String dstName = dst.getName();
+	final String dstUuid = dst.getUuid();
+
+	System.out.println("\ton relation " + relationName + " " + srcName + " " + relationType + " " + dstName);
 	~onRelation:{it|~it~};separator="\n"~
 }
 
 public void onComplete() {
-	System.out.println();
 	~onComplete:{it|~it~};separator="\n"~
+}
+
+// utility methods
+~templates:{it|
+private nextgen.model.STModel new~it.name;format="capitalize"~(String key) {
+	stModels.putIfAbsent(key, new java.util.LinkedHashMap<>());
+	stModels.get(key).put(key, appModel().newSTModel(appModel().db.findSTTemplateByUuid("~it.uuid~")));
+	return stModels.get(key).get(key);
+~eom()~
+};separator="\n"~
+
+private nextgen.model.STModel newModel(String uuid) {
+	return appModel().newSTModel(appModel().db.findSTTemplateByUuid(uuid));
+}
+
+private nextgen.model.STModel newModel(String key, String uuid) {
+	stModels.putIfAbsent(key, new java.util.TreeMap<>());
+	stModels.get(key).put(key, newModel(uuid));
+	return stModels.get(key).get(key);
+}
+
+private nextgen.model.STModel newModel(DomainEntity entity, String key, String uuid) {
+	stModels.putIfAbsent(entity.getUuid(), new java.util.TreeMap<>());
+	stModels.get(entity.getUuid()).put(key, newModel(uuid));
+	return stModels.get(entity.getUuid()).get(key);
+}
+
+private void set(nextgen.model.STModel stModel, String parameterName, String value) {
+	appModel().setArgument(stModel, parameterName, value);
+}
+
+private nextgen.model.STModel get(nextgen.model.DomainEntity domainEntity, String key) {
+	return stModels.get(domainEntity.getUuid()).get(key);
+}
+
+private void add(nextgen.model.STModel stModel, String parameterName, String value) {
+	appModel().addArgument(stModel, parameterName, value);
+}
+
+private void writeModel(String key) {
+	write(stModels.get(key).get(key));
+}
+
+private void write(STModel stModel) {
+	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
+	nextgen.st.STGenerator.writeJavaFile(appModel().render(stModel), nextgen.swing.STAppPresentationModel.getSTModelPackage(stModel), nextgen.swing.STAppPresentationModel.getSTModelName(stModel), file);
 }  >>
 
 Editor(editors,events,modelType,name,packageName) ::= <<package ~packageName~;
 
 import java.awt.*;
+
+import nextgen.events.*;
 
 public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 
@@ -1906,14 +1960,16 @@ public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 		super.setModel(model);
 
 		this.uuid = model.getUuid();
+		~editors:{it|~it.name~.setModel(model);};separator="\n"~
 
 		if (getComponentCount() == 0) {
-		   ~editors:{it|editors.add("~it.name;format="capitalize"~", ~it.name~);};separator="\n"~
+~editors:{it|
+		   editors.add("~it.name;format="capitalize"~", ~it.name~);
+		   ~it.setModelInit~
+};separator="\n"~
 			add(editors, BorderLayout.CENTER);
 		   invalidate();
 		}
-
-		~editors:{it|~it.name~.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));};separator="\n"~
 	}
 	
 	@Override
@@ -1921,6 +1977,7 @@ public class ~name~ extends nextgen.swing.BaseEditor<~modelType~> {
 		if (model == null) return;
 		appModel().doInTransaction(transaction -> ~editors:{it|~it.name~.onSave(model)};separator="\n"~);
 	}
+	
 ~events:{it|
 	@org.greenrobot.eventbus.Subscribe()
 	public void on~it.type~(~it.type~ event) {

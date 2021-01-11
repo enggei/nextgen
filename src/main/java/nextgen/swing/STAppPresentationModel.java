@@ -822,6 +822,8 @@ public class STAppPresentationModel {
    }
 
    public STModel newSTModel(nextgen.model.STTemplate stTemplate) {
+      if(stTemplate==null || stTemplate.getUuid()==null) throw new RuntimeException("illegal STTemplate. Cannot create STModel.");
+      System.out.println("newSTModel " + stTemplate.getName() + " " + stTemplate.getUuid());
       return db.newSTModel().setStTemplate(stTemplate);
    }
 

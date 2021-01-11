@@ -29,9 +29,15 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 
 		if (getComponentCount() == 0) {
 		   editors.add("DomainVisitorForm", domainVisitorForm);
+		   domainVisitorForm.getOnDomainJComponent().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+		   domainVisitorForm.getOnEntityJComponent().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+		   domainVisitorForm.getOnRelationJComponent().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+		   domainVisitorForm.getOnCompleteJComponent().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+
 		   final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea txtTemplates = domainVisitorForm.getTemplatesJComponent();
 		   txtTemplates.setEditable(false);
 		   txtTemplates.addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+
 		   final javax.swing.JPopupMenu pop = txtTemplates.getPopupMenu();
 		   pop.removeAll();
 		   pop.add(newAction("To Clipboard", actionEvent -> toClipboard(txtTemplates)));
