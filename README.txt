@@ -20,6 +20,7 @@ Domain
             ONE
             MANY
             OPTIONAL
+            ENUM
 
 STProject
 	name		    1	String

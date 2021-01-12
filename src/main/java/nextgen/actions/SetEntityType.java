@@ -10,29 +10,29 @@ import java.util.stream.Collectors;
 
 import org.stringtemplate.v4.*;
 
-public class AddDomainEntities extends nextgen.actions.TransactionAction {
+public class SetEntityType extends nextgen.actions.TransactionAction {
 
-   private final nextgen.model.Domain domain;
+   private final nextgen.model.DomainEntity domainEntity;
    private final JComponent owner;
 
-	public AddDomainEntities(nextgen.model.Domain domain, JComponent owner) {
-		super("Add Entities");
-		this.domain = domain;
+	public SetEntityType(nextgen.model.DomainEntity domainEntity, JComponent owner) {
+		super("Edit");
+		this.domainEntity = domainEntity;
 		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
-   	log.info("AddDomainEntities" + " domain" + " owner");
+   	log.info("SetEntityType" + " domainEntity" + " owner");
 
       final java.util.List<JComponent> components = new java.util.ArrayList<>();
-      for (int i = 0; i < 10; i++) {
-         components.add(newTextField(30));
-         components.add(newComboBox(DomainEntityType.values(), nextgen.model.DomainEntityType.ENTITY));
-         components.add(newTextField(30));
+      for (int i = 0; i < 1; i++) {
+         components.add(newTextField(domainEntity.getName(),30));
+         components.add(newComboBox(DomainEntityType.values(), domainEntity.getType()));
+         components.add(newTextField(domainEntity.getEnums(""),30));
       }
 
-      final JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(10 + 1, 3));
+      final JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(components.size() + 1, 3));
       inputPanel.add(newLabel("Name"));
       inputPanel.add(newLabel("Type"));
       inputPanel.add(newLabel("EnumValues"));
@@ -49,8 +49,12 @@ public class AddDomainEntities extends nextgen.actions.TransactionAction {
 
             final String name = txtName.getText().trim();
             if (name.length() == 0) continue;
-
-            appModel().addDomainEntity(domain, name, (DomainEntityType) cboType.getSelectedItem(), txtEnumValues.getText().trim());
+            
+            domainEntity.setName(name);
+            domainEntity.setType((nextgen.model.DomainEntityType) cboType.getSelectedItem());
+            domainEntity.setEnums(txtEnumValues.getText().trim());
+            
+            nextgen.events.DomainEntityChanged.post(domainEntity);
          }
 
          close(jDialog);

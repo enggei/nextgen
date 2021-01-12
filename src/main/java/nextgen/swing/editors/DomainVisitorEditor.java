@@ -76,9 +76,17 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 	   org.fife.ui.autocomplete.DefaultCompletionProvider provider = new org.fife.ui.autocomplete.DefaultCompletionProvider();
 	   org.fife.ui.rsyntaxtextarea.CodeTemplateManager ctm = org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.getCodeTemplateManager();
 
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "domainName"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "entityType"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "entityEnums"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "entityName"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "relationName"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "srcName"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "dstName"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "relationType"));
+	   
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "swrl"));
 	   ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("swrl", "switch (relationType) {\n" +
-	         "\tcase ENUM:\n" +
-	         "\t\tbreak;\n" +
 	         "\tcase ONE:\n" +
 	         "\t\tbreak;\n" +
 	         "\tcase MANY:\n" +
@@ -87,21 +95,25 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 	         "\t\tbreak;\n" +
 	         "}", ""));
 
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "domainName"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "entityName"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "relationName"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "srcName"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "dstName"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "relationType"));
-	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "swrl"));
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isEnum"));
+	   ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isEnum", "if (nextgen.model.DomainEntityType.ENUM.equals(entityType)) {\n\t", "\n} else {\n}")); 
+	   
+	   provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isSrcEnum"));
+	   ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isSrcEnum", "if (nextgen.model.DomainEntityType.ENUM.equals(srcEntityType)) {\n\t", "\n} else {\n}")); 
+		
+		provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isDstEnum"));
+	   ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isDstEnum", "if (nextgen.model.DomainEntityType.ENUM.equals(dstEntityType)) {\n\t", "\n} else {\n}")); 
 
 	   getModel().getIncomingDomain().getEntities().forEach(domainEntity -> {
 	      final String lowFirst = nextgen.utils.StringUtil.lowFirst(domainEntity.getName());
 	      final String capFirst = nextgen.utils.StringUtil.capitalize(domainEntity.getName());
+	      
 	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isDst" + capFirst));
-	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isSrc" + capFirst));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isDst" + capFirst, "if (dstName.equals(\"" + domainEntity.getName() + "\")) {\n\t", "\n}"));
+	      
+	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isSrc" + capFirst));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isSrc" + capFirst, "if (srcName.equals(\"" + domainEntity.getName() + "\")) {\n\t", "\n}"));
+
 	   });
 
 	   getModel().getTemplates().forEach(stTemplate -> {
@@ -110,6 +122,7 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 
 	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "new" + capFirst));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("new" + capFirst, "STBuilder ", " = new" + capFirst + "();"));
+	      
 	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "new" + capFirst + "Entity"));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("newEntity" + capFirst, "STBuilder ", " = new" + capFirst + "(entity, \"" + lowFirst + "\");"));
 
@@ -119,13 +132,11 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "get" + capFirst + "Entity"));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("get" + capFirst + "Entity", "get(entity, \"" + lowFirst, "\")"));
 
-	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "writeModel(\"" + lowFirst + "\");"));
-
 	      stTemplate.getParameters().sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName())).forEach(stParameter -> {
 	         final String parameterLowFirst = nextgen.utils.StringUtil.lowFirst(stParameter.getName());
 
 	         provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "set" + stParameter.getName()));
-	         ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("set" + stParameter.getName(), "set(\"" + parameterLowFirst + "\", ", ");"));
+	         ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("set" + stParameter.getName(), "set(\"" + stParameter.getName() + "\", ", ");"));
 	      });
 	   });
 

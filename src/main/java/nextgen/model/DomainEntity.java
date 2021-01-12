@@ -8,8 +8,7 @@ public class DomainEntity {
 	public DomainEntity(org.neo4j.graphdb.Node node) { 
 		this.node = node;
 		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
-		else this.uuid = node.getProperty("uuid").toString();
-	}
+		else this.uuid = node.getProperty("uuid").toString();}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
@@ -91,6 +90,64 @@ public class DomainEntity {
 	public Domain getIncomingDomain() { 
 		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entities"), org.neo4j.graphdb.Direction.INCOMING);
 		return relationship == null ? null : new Domain(relationship.getOtherNode(node));
+	}
+
+	public DomainEntity setType(DomainEntityType value) {
+		if (value == null) 
+			removeType(); 
+		else {
+		 	node.setProperty("type", value.name());
+		} 
+		return this;
+	}
+
+	public DomainEntityType getType() { 
+		if (node.hasProperty("type")) return DomainEntityType.valueOf((java.lang.String) node.getProperty("type"));
+		return null;
+	}
+
+	public DomainEntityType getType(DomainEntityType defaultValue) { 
+		if (node.hasProperty("type")) return DomainEntityType.valueOf((java.lang.String) node.getProperty("type"));
+		return defaultValue;
+	}
+
+	public boolean hasType() { 
+		return node.hasProperty("type");
+	}
+
+	public DomainEntity removeType() { 
+		node.removeProperty("type");
+		return this;
+	}
+
+	private static final String _enums = "enums";
+
+	public DomainEntity setEnums(String value) { 
+		if (value == null) {
+			removeEnums(); 
+		} else {
+		 	node.setProperty(_enums, value);
+		}
+		return this;
+	}
+
+	public String getEnums() { 
+		if (node.hasProperty(_enums)) return (String) node.getProperty(_enums);
+		return null;
+	}
+
+	public String getEnums(String defaultValue) { 
+		if (node.hasProperty(_enums)) return (String) node.getProperty(_enums);
+		return defaultValue;
+	}
+
+	public boolean hasEnums() { 
+		return node.hasProperty(_enums);
+	}
+
+	public DomainEntity removeEnums() { 
+		node.removeProperty(_enums);
+		return this;
 	}
 
 	@Override

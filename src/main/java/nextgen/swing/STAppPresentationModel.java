@@ -1397,9 +1397,9 @@ public class STAppPresentationModel {
    }
 
 
-   public DomainEntity addDomainEntity(Domain domain, String name) {
+   public DomainEntity addDomainEntity(Domain domain, String name, DomainEntityType type, String enumValues) {
 
-      final DomainEntity domainEntity = domainDB.newDomainEntity().setName(name);
+      final DomainEntity domainEntity = domainDB.newDomainEntity().setName(name).setType(type).setEnums(enumValues);
 
       domain.addEntities(domainEntity);
       NewDomainDomainEntity.post(domainEntity, domain);
@@ -1410,7 +1410,7 @@ public class STAppPresentationModel {
    public DomainRelation addDomainRelation(DomainEntity domainEntity, String relationName, DomainRelationType relationType, String entityName) {
 
       final Domain domain = domainEntity.getIncomingDomain();
-      final DomainEntity entity = findDomainEntity(domain, entityName).orElseGet(() -> addDomainEntity(domain, entityName));
+      final DomainEntity entity = findDomainEntity(domain, entityName).orElseGet(() -> addDomainEntity(domain, entityName, nextgen.model.DomainEntityType.ENTITY, ""));
       final DomainRelation domainRelation = domainDB.newDomainRelation()
             .setName(relationName)
             .setSrc(domainEntity)
