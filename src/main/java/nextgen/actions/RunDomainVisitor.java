@@ -43,10 +43,11 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    	nextgen.model.STTemplate domainVisitor = appModel().db.findSTTemplateByUuid("95c75764-2aff-4b56-b1db-fa2ffac11872");
    	final nextgen.model.STModel visitorInterface = appModel().newSTModel(domainVisitor);
    	
-   	visitor.getOnDomainSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onDomain", s));
-   	visitor.getOnEntitySorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onEntity", s));
-   	visitor.getOnRelationSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onRelation", s));
-   	visitor.getOnCompleteSorted().filter(s -> s.trim().length() > 0).forEach(s -> appModel().addArgument(visitorInterface, "onComplete", s));
+   	appModel().addArgument(visitorInterface, "onDomain", visitor.getOnDomain());
+   	appModel().addArgument(visitorInterface, "onEntity", visitor.getOnEntity());
+   	appModel().addArgument(visitorInterface, "onRelation", visitor.getOnRelation());
+   	appModel().addArgument(visitorInterface, "onComplete", visitor.getOnComplete());
+   	
    	visitor.getTemplatesSorted().forEach(stTemplate -> appModel().addKVArgument(visitorInterface, "templates", "name", stTemplate.getName(), "uuid", stTemplate.getUuid()));
    	
    	nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));

@@ -233,7 +233,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
       if (render.contains("\n")) {
          final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(render, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, txt.getText().trim()))));
          return new TextAreaCrudForm()
-               .setTextArea(rSyntaxTextArea)
+               .setTextArea(newRTextScrollPane(rSyntaxTextArea))
                .setDelete(getButton(new DeleteSTArgument(stArgument, rSyntaxTextArea)))
                .setFromClipboard(getButton(new SetArgumentFromClipboard(model, stParameter)))
                .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
@@ -260,7 +260,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
       if (render.contains("\n")) {
          final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(render, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, txt.getText().trim()))));
          return new TextAreaCrudForm()
-               .setTextArea(rSyntaxTextArea)
+               .setTextArea(newRTextScrollPane(rSyntaxTextArea))
                .setDelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
                .setFromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))
                .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));

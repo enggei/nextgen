@@ -10,15 +10,15 @@ public class DomainVisitorForm extends JPanel {
 	JLabel onEntity_JLabel;
 	JLabel onRelation_JLabel;
 	JLabel onComplete_JLabel;
-	JComponent onDomain_JComponent;
-	JComponent onEntity_JComponent;
-	JComponent onRelation_JComponent;
-	JComponent onComplete_JComponent;
+	JScrollPane onDomain_JScrollPane;
+	JScrollPane onEntity_JScrollPane;
+	JScrollPane onRelation_JScrollPane;
+	JScrollPane onComplete_JScrollPane;
 	JLabel templates_JLabel;
-	JComponent templates_JComponent;
+	JScrollPane templates_JScrollPane;
 
 	public DomainVisitorForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("center:pref:none, center:pref:grow", "center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.5)"));
+		setLayout(new com.jgoodies.forms.layout.FormLayout("center:pref:none, center:pref:grow", "center:pref:grow(.1), center:pref:grow(.2), center:pref:grow(.5), center:pref:grow(.1), center:pref:none"));
 	}
 
 	public <T extends JLabel> T getOnDomainJLabel() {
@@ -81,63 +81,63 @@ public class DomainVisitorForm extends JPanel {
 		return this;
 	}
 
-	public <T extends JComponent> T getOnDomainJComponent() {
-		return (T) onDomain_JComponent;
+	public <T extends JScrollPane> T getOnDomainJScrollPane() {
+		return (T) onDomain_JScrollPane;
 	}
 
-	public <T extends JComponent> T getOnDomainJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.onDomain_JComponent == null) setOnDomain(supplier.get());
-   	return (T) this.onDomain_JComponent;
+	public <T extends JScrollPane> T getOnDomainJScrollPane(java.util.function.Supplier<T> supplier) {
+		if (this.onDomain_JScrollPane == null) setOnDomain(supplier.get());
+   	return (T) this.onDomain_JScrollPane;
 	}
 
-	public DomainVisitorForm setOnDomain(JComponent component) {
+	public DomainVisitorForm setOnDomain(JScrollPane component) {
 		if (component == null) return this;
-		add(this.onDomain_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(this.onDomain_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public <T extends JComponent> T getOnEntityJComponent() {
-		return (T) onEntity_JComponent;
+	public <T extends JScrollPane> T getOnEntityJScrollPane() {
+		return (T) onEntity_JScrollPane;
 	}
 
-	public <T extends JComponent> T getOnEntityJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.onEntity_JComponent == null) setOnEntity(supplier.get());
-   	return (T) this.onEntity_JComponent;
+	public <T extends JScrollPane> T getOnEntityJScrollPane(java.util.function.Supplier<T> supplier) {
+		if (this.onEntity_JScrollPane == null) setOnEntity(supplier.get());
+   	return (T) this.onEntity_JScrollPane;
 	}
 
-	public DomainVisitorForm setOnEntity(JComponent component) {
+	public DomainVisitorForm setOnEntity(JScrollPane component) {
 		if (component == null) return this;
-		add(this.onEntity_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(this.onEntity_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public <T extends JComponent> T getOnRelationJComponent() {
-		return (T) onRelation_JComponent;
+	public <T extends JScrollPane> T getOnRelationJScrollPane() {
+		return (T) onRelation_JScrollPane;
 	}
 
-	public <T extends JComponent> T getOnRelationJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.onRelation_JComponent == null) setOnRelation(supplier.get());
-   	return (T) this.onRelation_JComponent;
+	public <T extends JScrollPane> T getOnRelationJScrollPane(java.util.function.Supplier<T> supplier) {
+		if (this.onRelation_JScrollPane == null) setOnRelation(supplier.get());
+   	return (T) this.onRelation_JScrollPane;
 	}
 
-	public DomainVisitorForm setOnRelation(JComponent component) {
+	public DomainVisitorForm setOnRelation(JScrollPane component) {
 		if (component == null) return this;
-		add(this.onRelation_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 3, 1, 1, "FILL, FILL"));
+		add(this.onRelation_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 3, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
-	public <T extends JComponent> T getOnCompleteJComponent() {
-		return (T) onComplete_JComponent;
+	public <T extends JScrollPane> T getOnCompleteJScrollPane() {
+		return (T) onComplete_JScrollPane;
 	}
 
-	public <T extends JComponent> T getOnCompleteJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.onComplete_JComponent == null) setOnComplete(supplier.get());
-   	return (T) this.onComplete_JComponent;
+	public <T extends JScrollPane> T getOnCompleteJScrollPane(java.util.function.Supplier<T> supplier) {
+		if (this.onComplete_JScrollPane == null) setOnComplete(supplier.get());
+   	return (T) this.onComplete_JScrollPane;
 	}
 
-	public DomainVisitorForm setOnComplete(JComponent component) {
+	public DomainVisitorForm setOnComplete(JScrollPane component) {
 		if (component == null) return this;
-		add(this.onComplete_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 4, 1, 1, "FILL, FILL"));
+		add(this.onComplete_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 4, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
@@ -156,71 +156,52 @@ public class DomainVisitorForm extends JPanel {
 		return this;
 	}
 
-	public <T extends JComponent> T getTemplatesJComponent() {
-		return (T) templates_JComponent;
+	public <T extends JScrollPane> T getTemplatesJScrollPane() {
+		return (T) templates_JScrollPane;
 	}
 
-	public <T extends JComponent> T getTemplatesJComponent(java.util.function.Supplier<T> supplier) {
-		if (this.templates_JComponent == null) setTemplates(supplier.get());
-   	return (T) this.templates_JComponent;
+	public <T extends JScrollPane> T getTemplatesJScrollPane(java.util.function.Supplier<T> supplier) {
+		if (this.templates_JScrollPane == null) setTemplates(supplier.get());
+   	return (T) this.templates_JScrollPane;
 	}
 
-	public DomainVisitorForm setTemplates(JComponent component) {
+	public DomainVisitorForm setTemplates(JScrollPane component) {
 		if (component == null) return this;
-		add(this.templates_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
+		add(this.templates_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
 		return this;
 	}
 
 
 	public void setModel(nextgen.model.DomainVisitor model) {
-		final StringBuilder onDomain = new StringBuilder();
-		model.getOnDomainSorted().forEach(s -> onDomain.append(s).append("\n"));
 		getOnDomainJLabel(() -> newJLabel("On Domain"));
-		getOnDomainJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onDomain.toString());
+		getOnDomainJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(model.getOnDomain());
 
-		final StringBuilder onEntity = new StringBuilder();
-		model.getOnEntitySorted().forEach(s -> onEntity.append(s).append("\n"));
 		getOnEntityJLabel(() -> newJLabel("On Entity"));
-		getOnEntityJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onEntity.toString());
+		getOnEntityJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(model.getOnEntity());
 
-		final StringBuilder onRelation = new StringBuilder();
-		model.getOnRelationSorted().forEach(s -> onRelation.append(s).append("\n"));
 		getOnRelationJLabel(() -> newJLabel("On Relation"));
-		getOnRelationJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onRelation.toString());
+		getOnRelationJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(model.getOnRelation());
 
-		final StringBuilder onComplete = new StringBuilder();
-		model.getOnCompleteSorted().forEach(s -> onComplete.append(s).append("\n"));
 		getOnCompleteJLabel(() -> newJLabel("On Complete"));
-		getOnCompleteJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onComplete.toString());
+		getOnCompleteJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(model.getOnComplete());
 
 		final StringBuilder templates = new StringBuilder();
 		model.getTemplates().sorted(java.util.Comparator.comparing(nextgen.model.STTemplate::getName)).forEach(s -> {
 			templates.append(s.getUuid()).append(" ").append(s.getName()).append("\n");
-			s.getParameters().sorted((p1,p2) -> p1.getName().compareToIgnoreCase(p2.getName())).forEach(stParameter -> templates.append("\t").append(stParameter.getName()).append(" ").append(stParameter.getType().name()).append("\n"));
+			s.getParameters().sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName())).forEach(stParameter -> templates.append("\t").append(stParameter.getName()).append(" ").append(stParameter.getType().name()).append("\n"));
 		});
 		getTemplatesJLabel(() -> newJLabel("Templates"));
-		getTemplatesJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(templates.toString());
+		getTemplatesJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(templates.toString());
 	}
 
 	public void onSave(nextgen.model.DomainVisitor model) {
-		model.removeAllOnDomain();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onDomain = getOnDomainJComponent();
-		java.util.Arrays.stream(onDomain.getText().split("[\r\n]")).forEach(model::addOnDomain);
-
-		model.removeAllOnEntity();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onEntity = getOnEntityJComponent();
-		java.util.Arrays.stream(onEntity.getText().split("[\r\n]")).forEach(model::addOnEntity);
-
-		model.removeAllOnRelation();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onRelation = getOnRelationJComponent();
-		java.util.Arrays.stream(onRelation.getText().split("[\r\n]")).forEach(model::addOnRelation);
-
-		model.removeAllOnComplete();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea onComplete = getOnCompleteJComponent();
-		java.util.Arrays.stream(onComplete.getText().split("[\r\n]")).forEach(model::addOnComplete);
+		model.setOnDomain(((org.fife.ui.rtextarea.RTextScrollPane) getOnDomainJScrollPane()).getTextArea().getText());
+		model.setOnEntity(((org.fife.ui.rtextarea.RTextScrollPane) getOnEntityJScrollPane()).getTextArea().getText());
+		model.setOnRelation(((org.fife.ui.rtextarea.RTextScrollPane) getOnRelationJScrollPane()).getTextArea().getText());
+		model.setOnComplete(((org.fife.ui.rtextarea.RTextScrollPane) getOnCompleteJScrollPane()).getTextArea().getText());
 
 		model.removeAllFields();
-		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea fields = getTemplatesJComponent();
+		org.fife.ui.rtextarea.RTextArea fields = ((org.fife.ui.rtextarea.RTextScrollPane) getTemplatesJScrollPane()).getTextArea();
 		java.util.Arrays.stream(fields.getText().split("[\r\n]")).forEach(model::addFields);
 	}
 
@@ -228,25 +209,25 @@ public class DomainVisitorForm extends JPanel {
 
 	 columns 	2	"center:pref:none, center:pref:grow"
 
-	 rows 		5 	"center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.3), center:pref:grow(.5)"
+	 rows 		5 	"center:pref:grow(.1), center:pref:grow(.2), center:pref:grow(.5), center:pref:grow(.1), center:pref:none"
 
 	 col 2 1 CENTER pref none
 	 col 3 1 CENTER pref grow
-	 row 1 2 CENTER pref grow(.3)
-	 row 1 3 CENTER pref grow(.3)
-	 row 1 4 CENTER pref grow(.3)
-	 row 1 5 CENTER pref grow(.3)
-	 row 1 6 CENTER pref grow(.5)
+	 row 1 2 CENTER pref grow(.1)
+	 row 1 3 CENTER pref grow(.2)
+	 row 1 4 CENTER pref grow(.5)
+	 row 1 5 CENTER pref grow(.1)
+	 row 1 6 CENTER pref none
 	 cell 2 2 1 1 LEFT TOP Label onDomain
 	 cell 2 3 1 1 LEFT TOP Label onEntity
 	 cell 2 4 1 1 LEFT TOP Label onRelation
 	 cell 2 5 1 1 LEFT TOP Label onComplete
-	 cell 3 2 1 1 FILL FILL Component onDomain
-	 cell 3 3 1 1 FILL FILL Component onEntity
-	 cell 3 4 1 1 FILL FILL Component onRelation
-	 cell 3 5 1 1 FILL FILL Component onComplete
+	 cell 3 2 1 1 FILL FILL ScrollPane onDomain
+	 cell 3 3 1 1 FILL FILL ScrollPane onEntity
+	 cell 3 4 1 1 FILL FILL ScrollPane onRelation
+	 cell 3 5 1 1 FILL FILL ScrollPane onComplete
 	 cell 2 6 1 1 LEFT TOP Label templates
-	 cell 3 6 1 1 FILL FILL Component templates
+	 cell 3 6 1 1 FILL FILL ScrollPane templates
 
 	*/	
 }
