@@ -9,6 +9,7 @@ import org.stringtemplate.v4.STGroup;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static nextgen.swing.STAppPresentationModel.*;
 import static nextgen.templates.java.JavaPatterns.newMethodCallExpression;
 
 public class STRenderer {
@@ -187,15 +188,16 @@ public class STRenderer {
       return null;
    }
 
-   private org.stringtemplate.v4.ST newInstanceOf(nextgen.model.STTemplate stTemplate) {
+   public org.stringtemplate.v4.ST newInstanceOf(nextgen.model.STTemplate stTemplate) {
 
-      final nextgen.model.STGroupModel stGroupModel = appModel().getSTGroup(stTemplate);
+      final nextgen.model.STGroupModel stGroupModel = getSTGroup(stTemplate);
 
-      if(stGroupModel.getDelimiter()==null) {
+      if (stGroupModel.getDelimiter() == null) {
          stGroupModel.setDelimiter(nextgen.st.STGenerator.DELIMITER);
       }
 
       final STCache cache = cacheMap.get(stGroupModel);
+
       if (cache != null && cache.isValid())
          return cache.getInstanceOf(stTemplate);
 

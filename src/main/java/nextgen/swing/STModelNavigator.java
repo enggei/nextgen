@@ -198,6 +198,12 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainVisitor(nextgen.events.NewDomainVisitor event) {
+		findDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain))
+				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainVisitorTreeNode(event.visitor)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onSTValueSelected(nextgen.events.STValueSelected event) {
 		treeModel.find(treeNode -> treeNode.getModel().equals(event.stValue)).ifPresent(treeModel::select);
 	}

@@ -121,6 +121,15 @@ public class STModelDB extends STModelNeoFactory {
          });
 
 
+          findAllSTModel().forEach(stModel -> {
+
+             final java.util.Optional<STProject> stProject = nextgen.swing.STAppPresentationModel.findSTProjectFor(stModel);
+             if(stProject.isEmpty()) {
+               log.error("STModel " + stModel.getUuid() + " " + (stModel.getArguments().count()) + " arguments");
+            }
+         });
+
+
          deleteUnnusedNodes();
          deleteUnnusedFiles();
 

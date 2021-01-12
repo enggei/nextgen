@@ -37,6 +37,14 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
+   public static String getSTName(org.stringtemplate.v4.ST st) {
+      return st.getAttribute("name").toString();
+   }
+
+   public static String getSTPackage(org.stringtemplate.v4.ST st) {
+      return st.getAttribute("package") == null ? st.getAttribute("packageName").toString() : st.getAttribute("package").toString();
+   }
+
    public void replaceAllSTValues(STModel thisModel, String existingValue, String newValue) {
       getSTParameters(thisModel).forEach(parameterArguments -> {
          switch (parameterArguments.parameter().getType()) {
@@ -822,7 +830,7 @@ public class STAppPresentationModel {
    }
 
    public STModel newSTModel(nextgen.model.STTemplate stTemplate) {
-      if(stTemplate==null || stTemplate.getUuid()==null) throw new RuntimeException("illegal STTemplate. Cannot create STModel.");
+      if (stTemplate == null || stTemplate.getUuid() == null) throw new RuntimeException("illegal STTemplate. Cannot create STModel.");
       System.out.println("newSTModel " + stTemplate.getName() + " " + stTemplate.getUuid());
       return db.newSTModel().setStTemplate(stTemplate);
    }
@@ -1065,11 +1073,13 @@ public class STAppPresentationModel {
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STValue value) {
+      if (value == null) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, String value) {
+      if (value == null) return;
       if (isSameArgument(stModel, stParameter, value)) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
@@ -1080,6 +1090,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgument(nextgen.model.STModel stModel, String name, STValue value) {
+      if (value == null) return;
       stModel.getStTemplate()
             .getParameters()
             .filter(stParameter -> stParameter.getName().equals(name))
@@ -1100,16 +1111,19 @@ public class STAppPresentationModel {
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STEnumValue value) {
+      if (value == null) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STTemplate value) {
+      if (value == null) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, value);
    }
 
    public void setArgument(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter, nextgen.model.STModel value) {
+      if (value == null) return;
       detach(stModel, stParameter);
       addArgument(stModel, stParameter, newSTValue(value));
    }
@@ -1120,6 +1134,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STValue value) {
+      if (value == null) return;
       detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, value);
       stArgument.addKeyValues(stArgumentKV);
@@ -1128,6 +1143,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, String value) {
+      if (value == null) return;
       detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
@@ -1137,6 +1153,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STEnumValue value) {
+      if (value == null) return;
       detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
@@ -1146,6 +1163,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STTemplate value) {
+      if (value == null) return;
       detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
@@ -1155,6 +1173,7 @@ public class STAppPresentationModel {
    }
 
    public void setArgumentKV(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument, nextgen.model.STParameterKey stParameterKey, nextgen.model.STModel value) {
+      if (value == null) return;
       detach(stModel, stArgument, stParameterKey);
       final nextgen.model.STValue stValue = newSTValue(value);
       final nextgen.model.STArgumentKV stArgumentKV = newSTArgumentKV(stParameterKey, stValue);
@@ -1164,6 +1183,7 @@ public class STAppPresentationModel {
    }
 
    public void updateSTArgument(STModel stModel, STArgument stArgument, String value) {
+      if (value == null) return;
       final STValue stArgumentValue = stArgument.getValue();
       if (stArgumentValue == null) {
          stArgument.setValue(newSTValue(value));
@@ -1435,6 +1455,7 @@ public class STAppPresentationModel {
       final DomainVisitor domainVisitor = domainDB.newDomainVisitor().setName(visitorName);
       domain.addVisitors(domainVisitor);
 
+      nextgen.events.NewDomainVisitor.post(domain, domainVisitor);
    }
 
    public void add(nextgen.model.DomainVisitor domainVisitor, nextgen.model.STTemplate stTemplate) {

@@ -8,6 +8,8 @@ import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 import java.util.stream.Collectors;
 
+import org.stringtemplate.v4.*;
+
 public class RunDomainVisitor extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.DomainVisitor visitor;

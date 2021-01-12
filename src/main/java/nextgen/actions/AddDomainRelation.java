@@ -6,6 +6,9 @@ import nextgen.model.*;
 import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
+import java.util.stream.Collectors;
+
+import org.stringtemplate.v4.*;
 
 public class AddDomainRelation extends nextgen.actions.TransactionAction {
 
@@ -29,7 +32,7 @@ public class AddDomainRelation extends nextgen.actions.TransactionAction {
          components.add(newComboBox(DomainRelationType.values(), DomainRelationType.ONE));
       }
 
-      final JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(10, 3));
+      final JPanel inputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(10 + 1, 3));
       inputPanel.add(newLabel("Relation"));
       inputPanel.add(newLabel("Type"));
       inputPanel.add(newLabel("Entity"));
@@ -41,10 +44,9 @@ public class AddDomainRelation extends nextgen.actions.TransactionAction {
 
          for (int i = 0; i < components.size(); i += 3) {
             final JTextField txtRelationName = (JTextField) components.get(i);
-            final JComboBox<DomainRelationType> cboType = (JComboBox<DomainRelationType>) components.get(i + 1);
-            final JTextField txtEntityName = (JTextField) components.get(i + 2);
-
-
+            final JTextField txtEntityName = (JTextField) components.get(i + 1);
+            final JComboBox<DomainRelationType> cboType = (JComboBox<DomainRelationType>) components.get(i + 2);
+            
             final String name = txtRelationName.getText().trim();
             if (name.length() == 0) continue;
             final String value = txtEntityName.getText().trim();

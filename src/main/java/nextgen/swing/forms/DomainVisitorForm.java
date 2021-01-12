@@ -194,7 +194,10 @@ public class DomainVisitorForm extends JPanel {
 		getOnCompleteJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(onComplete.toString());
 
 		final StringBuilder templates = new StringBuilder();
-		model.getTemplates().sorted(java.util.Comparator.comparing(nextgen.model.STTemplate::getName)).forEach(s -> templates.append(s.getUuid()).append(" ").append(s.getName()).append("\n"));
+		model.getTemplates().sorted(java.util.Comparator.comparing(nextgen.model.STTemplate::getName)).forEach(s -> {
+			templates.append(s.getUuid()).append(" ").append(s.getName()).append("\n");
+			s.getParameters().sorted((p1,p2) -> p1.getName().compareToIgnoreCase(p2.getName())).forEach(stParameter -> templates.append("\t").append(stParameter.getName()).append(" ").append(stParameter.getType().name()).append("\n"));
+		});
 		getTemplatesJLabel(() -> newJLabel("Templates"));
 		getTemplatesJComponent(nextgen.swing.ComponentFactory::newRSyntaxTextArea).setText(templates.toString());
 	}

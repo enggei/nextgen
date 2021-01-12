@@ -219,7 +219,7 @@ public class STGenerator {
    }
 
    public static STGroup toSTGroup(STGroupModel model) {
-      final STGroupString stGroupString = new STGroupString(model.getName(), toStg(model), model.getDelimiter().charAt(0), model.getDelimiter().charAt(0));
+      final STGroupString stGroupString = new STGroupString(model.getName(), toStg(model), DELIMITERCHAR, DELIMITERCHAR);
       stGroupString.registerRenderer(Object.class, new DefaultAttributeRenderer());
       return stGroupString;
    }
@@ -242,7 +242,7 @@ public class STGenerator {
       final STGroup templateGroup = newTemplateGroup();
 
       final ST stGroupTemplate = templateGroup.getInstanceOf("STGroupTemplate");
-      stGroupTemplate.add("delimiter", model.getDelimiter());
+      stGroupTemplate.add("delimiter", DELIMITER);
 
       model.getTemplates()
             .filter(stTemplate -> !(stTemplate.getName().equals("eom") || stTemplate.getName().equals("gt")))

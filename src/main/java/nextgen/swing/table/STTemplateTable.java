@@ -7,6 +7,7 @@ public class STTemplateTable extends javax.swing.JTable {
 
 /*
 	0 name	String	
+	1 group	String	
 */
 	private Consumer<nextgen.model.STTemplate> selectionListener;
 
@@ -34,7 +35,9 @@ public class STTemplateTable extends javax.swing.JTable {
 		});
 
 		getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
+		getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
 		getColumnModel().getColumn(0).setCellEditor(new CellEditor());
+		getColumnModel().getColumn(1).setCellEditor(new CellEditor());
 
 		tableModel.fireTableStructureChanged();
 
@@ -70,15 +73,21 @@ public class STTemplateTable extends javax.swing.JTable {
 
 		public final nextgen.model.STTemplate model;
 		private String name;
+		private String group;
 
 		protected RowElement(nextgen.model.STTemplate model) {
 			this.model = model;
 			name = model.getName();
+			group = nextgen.swing.STAppPresentationModel.getSTGroup(model).getName();
 		}
 
 		String getName() { return name; }
 
+		String getGroup() { return group; }
+
 		public void setName(Object value) { this.name = (String)value; }
+
+		public void setGroup(Object value) { this.group = (String)value; }
 	}
 
 	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
@@ -130,6 +139,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 				case 0: return false;
+				case 1: return false;
 			}
 			return false;
 		}
@@ -138,6 +148,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public String getColumnName(int columnIndex) {
 			switch(columnIndex) {
 				case 0: return "name";
+				case 1: return "group";
 			}
 			return "";
 		}
@@ -146,6 +157,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public Class<?> getColumnClass(int columnIndex) {
 			switch(columnIndex) {
 				case 0: return String.class;
+				case 1: return String.class;
 			}
 			return Object.class;
 		}
@@ -154,6 +166,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public int findColumn(String columnName) {
 			switch(columnName) {
 				case "name": return 0;
+				case "group": return 1;
 			}
 			return 0;
 		}
@@ -165,13 +178,14 @@ public class STTemplateTable extends javax.swing.JTable {
 
 		@Override
 		public int getColumnCount() {
-			return 1;
+			return 2;
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 				case 0: return content.get(rowIndex).getName();
+				case 1: return content.get(rowIndex).getGroup();
 			}
 			return null;
 		}
@@ -180,6 +194,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 				case 0: break;
+				case 1: break;
 			}
 		}
 
