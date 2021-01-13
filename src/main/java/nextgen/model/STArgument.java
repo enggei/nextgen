@@ -1,27 +1,31 @@
 package nextgen.model;
 
 public class STArgument {
+
 	private final org.neo4j.graphdb.Node node;
+	private final String uuid;
 
 	public STArgument(org.neo4j.graphdb.Node node) { 
 		this.node = node;
-	}
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
+		else this.uuid = node.getProperty("uuid").toString();}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
 	}
+
 
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STArgument other = (STArgument) o;
-		return node.equals(other.node);
+		return uuid.equals(other.uuid);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(node);
+		return uuid.hashCode();
 	}
 
 	private static final String _uuid = "uuid";
@@ -30,7 +34,7 @@ public class STArgument {
 		if (value == null) {
 			removeUuid(); 
 		} else {
-		 	node.setProperty(_uuid, value);
+			node.setProperty(_uuid, value);
 		}
 		return this;
 	}
@@ -53,6 +57,9 @@ public class STArgument {
 		node.removeProperty(_uuid);
 		return this;
 	}
+	public java.util.stream.Stream<STModel> getIncomingArgumentsSTModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
+	}  
 
 	public STArgument setStParameter(STParameter dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getStParameterRelation();
@@ -80,7 +87,7 @@ public class STArgument {
 
 	public org.neo4j.graphdb.Relationship getStParameterRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("stParameter"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
+	}  
 
 	public STArgument setValue(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getValueRelation();
@@ -108,9 +115,9 @@ public class STArgument {
 
 	public org.neo4j.graphdb.Relationship getValueRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("value"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
+	}  
 
-	private static final org.neo4j.graphdb.RelationshipType _keyValues = org.neo4j.graphdb.RelationshipType.withName("keyValues");
+	public static final org.neo4j.graphdb.RelationshipType _keyValues = org.neo4j.graphdb.RelationshipType.withName("keyValues");
 
 	public STArgument addKeyValues(STArgumentKV dst) { 
 		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
@@ -137,11 +144,7 @@ public class STArgument {
 	public STArgument removeAllKeyValues() { 
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _keyValues).forEach(org.neo4j.graphdb.Relationship::delete);
 		return this;
-	}
-
-	public java.util.stream.Stream<STModel> getIncomingArgumentsSTModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("arguments")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
-	}
+	}  
 
 	@Override
 	public String toString() {
@@ -164,26 +167,11 @@ public class STArgument {
 		return out.toString().trim();
 	}
 
-	public io.vertx.core.json.JsonObject toJsonObject() {
-		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		final STParameter _stParameter = getStParameter();
-		if (_stParameter != null) jsonObject.put("stParameter", _stParameter.toJsonObject());
-
-		final STValue _value = getValue();
-		if (_value != null) jsonObject.put("value", _value.toJsonObject());
-
-		final io.vertx.core.json.JsonArray _keyValues = new io.vertx.core.json.JsonArray();
-		getKeyValues().forEach(element -> _keyValues.add(element.toJsonObject()));
-		if (!_keyValues.isEmpty()) jsonObject.put("keyValues", _keyValues);
-
-		return jsonObject;
-	}
-
 	public void delete() {
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.delete();
-
+		node.delete();	
 	}
 
-}
+
+}  

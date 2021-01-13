@@ -3,26 +3,29 @@ package nextgen.model;
 public class STFile {
 
 	private final org.neo4j.graphdb.Node node;
+	private final String uuid;
 
 	public STFile(org.neo4j.graphdb.Node node) { 
 		this.node = node;
-	}
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
+		else this.uuid = node.getProperty("uuid").toString();}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
 	}
+
 
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STFile other = (STFile) o;
-		return node.equals(other.node);
+		return uuid.equals(other.uuid);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(node);
+		return uuid.hashCode();
 	}
 
 	private static final String _uuid = "uuid";
@@ -31,7 +34,7 @@ public class STFile {
 		if (value == null) {
 			removeUuid(); 
 		} else {
-		 	node.setProperty(_uuid, value);
+			node.setProperty(_uuid, value);
 		}
 		return this;
 	}
@@ -54,7 +57,6 @@ public class STFile {
 		node.removeProperty(_uuid);
 		return this;
 	}
-
 	public STFile setName(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getNameRelation();
 		if (relationship != null)  { 
@@ -81,7 +83,11 @@ public class STFile {
 
 	public org.neo4j.graphdb.Relationship getNameRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("name"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
+	}  
+
+	public java.util.stream.Stream<STModel> getIncomingFilesSTModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
+	}  
 
 	public STFile setType(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getTypeRelation();
@@ -109,7 +115,7 @@ public class STFile {
 
 	public org.neo4j.graphdb.Relationship getTypeRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("type"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
+	}  
 
 	public STFile setPackageName(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getPackageNameRelation();
@@ -137,7 +143,7 @@ public class STFile {
 
 	public org.neo4j.graphdb.Relationship getPackageNameRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("packageName"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
+	}  
 
 	public STFile setPath(STValue dst) { 
 		final org.neo4j.graphdb.Relationship relationship = getPathRelation();
@@ -165,11 +171,7 @@ public class STFile {
 
 	public org.neo4j.graphdb.Relationship getPathRelation() { 
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("path"), org.neo4j.graphdb.Direction.OUTGOING);
-	}
-
-	public java.util.stream.Stream<STModel> getIncomingFilesSTModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("files")).spliterator(), false).map((relationship) -> new STModel(relationship.getOtherNode(node)));
-	}
+	}  
 
 	@Override
 	public String toString() {
@@ -192,28 +194,11 @@ public class STFile {
 		return out.toString().trim();
 	}
 
-	public io.vertx.core.json.JsonObject toJsonObject() {
-		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		final STValue _name = getName();
-		if (_name != null) jsonObject.put("name", _name.toJsonObject());
-
-		final STValue _type = getType();
-		if (_type != null) jsonObject.put("type", _type.toJsonObject());
-
-		final STValue _packageName = getPackageName();
-		if (_packageName != null) jsonObject.put("packageName", _packageName.toJsonObject());
-
-		final STValue _path = getPath();
-		if (_path != null) jsonObject.put("path", _path.toJsonObject());
-
-		return jsonObject;
-	}
-
 	public void delete() {
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.delete();
-
+		node.delete();	
 	}
 
-}
+
+}  

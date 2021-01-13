@@ -199,10 +199,6 @@ public class DomainVisitorForm extends JPanel {
 		model.setOnEntity(((org.fife.ui.rtextarea.RTextScrollPane) getOnEntityJScrollPane()).getTextArea().getText());
 		model.setOnRelation(((org.fife.ui.rtextarea.RTextScrollPane) getOnRelationJScrollPane()).getTextArea().getText());
 		model.setOnComplete(((org.fife.ui.rtextarea.RTextScrollPane) getOnCompleteJScrollPane()).getTextArea().getText());
-
-		model.removeAllFields();
-		org.fife.ui.rtextarea.RTextArea fields = ((org.fife.ui.rtextarea.RTextScrollPane) getTemplatesJScrollPane()).getTextArea();
-		java.util.Arrays.stream(fields.getText().split("[\r\n]")).forEach(model::addFields);
 	}
 
 	/*

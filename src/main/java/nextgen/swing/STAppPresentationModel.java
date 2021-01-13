@@ -90,6 +90,13 @@ public class STAppPresentationModel {
       nextgen.events.NewSTParameter.post(stParameter, model);
    }
 
+//   public void notifyIfLabel(STValue stValue) {
+//      final nextgen.model.STArgument stArgument = stValue.getIncomingValueSTArgument();
+//      if(stArgument==null) return;
+//
+//      stArgument.getIncomingArgumentsSTModel().forEach(stModel -> notifyIfLabel(stModel, stArgument));
+//   }
+
    public void notifyIfLabel(STValue stValue) {
       stValue.getIncomingValueSTArgument().forEach(stArgument -> stArgument.getIncomingArgumentsSTModel().forEach(stModel -> notifyIfLabel(stModel, stArgument)));
    }
@@ -1412,7 +1419,7 @@ public class STAppPresentationModel {
 
    public DomainRelation addDomainRelation(DomainEntity domainEntity, String relationName, DomainRelationType relationType, String entityName) {
 
-      final Domain domain = domainEntity.getIncomingDomain();
+      final Domain domain = domainEntity.getIncomingEntitiesDomain().findAny().get();
       final DomainEntity entity = findDomainEntity(domain, entityName).orElseGet(() -> addDomainEntity(domain, entityName, nextgen.model.DomainEntityType.ENTITY, ""));
       final DomainRelation domainRelation = domainDB.newDomainRelation()
             .setName(relationName)

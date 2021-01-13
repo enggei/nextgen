@@ -12,7 +12,7 @@ Domain
 
     DomainRelation
         name            1   String
-        value           1   STValue
+        //value           1   STValue
         src             1   DomainEntity
         dst             1   DomainEntity
         type            1   DomainRelationType

@@ -3,26 +3,29 @@ package nextgen.model;
 public class STInterface {
 
 	private final org.neo4j.graphdb.Node node;
+	private final String uuid;
 
 	public STInterface(org.neo4j.graphdb.Node node) { 
 		this.node = node;
-	}
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
+		else this.uuid = node.getProperty("uuid").toString();}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
 	}
+
 
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STInterface other = (STInterface) o;
-		return node.equals(other.node);
+		return uuid.equals(other.uuid);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(node);
+		return uuid.hashCode();
 	}
 
 	private static final String _uuid = "uuid";
@@ -31,7 +34,7 @@ public class STInterface {
 		if (value == null) {
 			removeUuid(); 
 		} else {
-		 	node.setProperty(_uuid, value);
+			node.setProperty(_uuid, value);
 		}
 		return this;
 	}
@@ -54,8 +57,11 @@ public class STInterface {
 		node.removeProperty(_uuid);
 		return this;
 	}
+	public java.util.stream.Stream<STGroupModel> getIncomingInterfacesSTGroupModel() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("interfaces")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
+	}  
 
-	private static final String _name = "name";
+	public static final String _name = "name";
 
 	public STInterface setName(String value) { 
 		if (value == null) {
@@ -83,11 +89,7 @@ public class STInterface {
 	public STInterface removeName() { 
 		node.removeProperty(_name);
 		return this;
-	}
-
-	public java.util.stream.Stream<STGroupModel> getIncomingInterfacesSTGroupModel() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("interfaces")).spliterator(), false).map((relationship) -> new STGroupModel(relationship.getOtherNode(node)));
-	}
+	}  
 
 	@Override
 	public String toString() {
@@ -110,16 +112,11 @@ public class STInterface {
 		return out.toString().trim();
 	}
 
-	public io.vertx.core.json.JsonObject toJsonObject() {
-		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		return jsonObject;
-	}
-
 	public void delete() {
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.delete();
-
+		node.delete();	
 	}
 
-}
+
+}  

@@ -68,7 +68,6 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 	   textArea.addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 	   textArea.getPopupMenu().removeAll();
 	   textArea.getPopupMenu().add(newAction("To Clipboard", actionEvent -> toClipboard(textArea)));
-	   textArea.getPopupMenu().add(new nextgen.actions.DomainVisitorAssistant(getModel(), textArea));
 
 	   // A BasicCompletion is just a straightforward word completion.
 	   // ShorthandCompletion  don't require the input text to be the same thing as the replacement text.
@@ -104,7 +103,7 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 		provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isDstEnum"));
 	   ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isDstEnum", "if (nextgen.model.DomainEntityType.ENUM.equals(dstEntityType)) {\n\t", "\n} else {\n}")); 
 
-	   getModel().getIncomingDomain().getEntities().forEach(domainEntity -> {
+	   getModel().getIncomingVisitorsDomain().forEach(domain -> domain.getEntities().forEach(domainEntity -> {
 	      final String lowFirst = nextgen.utils.StringUtil.lowFirst(domainEntity.getName());
 	      final String capFirst = nextgen.utils.StringUtil.capitalize(domainEntity.getName());
 	      
@@ -114,7 +113,7 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 	      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, "isSrc" + capFirst));
 	      ctm.addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate("isSrc" + capFirst, "if (srcName.equals(\"" + domainEntity.getName() + "\")) {\n\t", "\n}"));
 
-	   });
+	   }));
 
 	   getModel().getTemplates().forEach(stTemplate -> {
 	      final String lowFirst = nextgen.utils.StringUtil.lowFirst(stTemplate.getName());

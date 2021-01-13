@@ -57,69 +57,11 @@ public class DomainVisitor {
 		node.removeProperty(_uuid);
 		return this;
 	}
-	private static final org.neo4j.graphdb.RelationshipType _fields = org.neo4j.graphdb.RelationshipType.withName("fields");
+	public java.util.stream.Stream<Domain> getIncomingVisitorsDomain() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("visitors")).spliterator(), false).map((relationship) -> new Domain(relationship.getOtherNode(node)));
+	}  
 
-	public DomainVisitor addFields(String dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _fields).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label("String"));
-		newNode.setProperty("value", dst);
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, _fields);
-		relationship.setProperty("_t", System.nanoTime());
-		return this;
-	}
-
-	public java.util.stream.Stream<String> getFields() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _fields).spliterator(), false).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
-	}
-
-	public java.util.stream.Stream<String> getFieldsSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _fields).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
-	}
-
-	public DomainVisitor removeAllFields() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _fields).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	public DomainVisitor removeFields(String value) { 
-		if (value == null) return this;
-		java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _fields).spliterator(), false)
-			.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
-			.forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	private static final org.neo4j.graphdb.RelationshipType _templates = org.neo4j.graphdb.RelationshipType.withName("templates");
-
-	public DomainVisitor addTemplates(nextgen.model.STTemplate dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _templates);
-		relationship.setProperty("_t", System.nanoTime());
-		return this;
-	}
-
-	public java.util.stream.Stream<nextgen.model.STTemplate> getTemplates() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).map((relationship) -> new nextgen.model.STTemplate(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<nextgen.model.STTemplate> getTemplatesSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new nextgen.model.STTemplate(relationship.getOtherNode(node)));
-	}
-
-	public DomainVisitor removeTemplates(nextgen.model.STTemplate dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
-		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	public DomainVisitor removeAllTemplates() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	private static final String _name = "name";
+	public static final String _name = "name";
 
 	public DomainVisitor setName(String value) { 
 		if (value == null) {
@@ -147,47 +89,9 @@ public class DomainVisitor {
 	public DomainVisitor removeName() { 
 		node.removeProperty(_name);
 		return this;
-	}
+	}  
 
-	public Domain getIncomingDomain() { 
-		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("visitors"), org.neo4j.graphdb.Direction.INCOMING);
-		return relationship == null ? null : new Domain(relationship.getOtherNode(node));
-	}
-
-	private static final org.neo4j.graphdb.RelationshipType _imports = org.neo4j.graphdb.RelationshipType.withName("imports");
-
-	public DomainVisitor addImports(String dst) { 
-		final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _imports).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty("value"))).findAny();
-		if (existing.isPresent()) return this;
-		final org.neo4j.graphdb.Node newNode = node.getGraphDatabase().createNode(org.neo4j.graphdb.Label.label("String"));
-		newNode.setProperty("value", dst);
-		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(newNode, _imports);
-		relationship.setProperty("_t", System.nanoTime());
-		return this;
-	}
-
-	public java.util.stream.Stream<String> getImports() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _imports).spliterator(), false).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
-	}
-
-	public java.util.stream.Stream<String> getImportsSorted() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _imports).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> (String) relationship.getOtherNode(node).getProperty("value"));
-	}
-
-	public DomainVisitor removeAllImports() { 
-		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _imports).forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	public DomainVisitor removeImports(String value) { 
-		if (value == null) return this;
-		java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _imports).spliterator(), false)
-			.filter((relationship) -> value.equals(relationship.getOtherNode(node).getProperty("value")))
-			.forEach(org.neo4j.graphdb.Relationship::delete);
-		return this;
-	}
-
-	private static final String _onDomain = "onDomain";
+	public static final String _onDomain = "onDomain";
 
 	public DomainVisitor setOnDomain(String value) { 
 		if (value == null) {
@@ -215,9 +119,9 @@ public class DomainVisitor {
 	public DomainVisitor removeOnDomain() { 
 		node.removeProperty(_onDomain);
 		return this;
-	}
+	}  
 
-	private static final String _onEntity = "onEntity";
+	public static final String _onEntity = "onEntity";
 
 	public DomainVisitor setOnEntity(String value) { 
 		if (value == null) {
@@ -245,9 +149,9 @@ public class DomainVisitor {
 	public DomainVisitor removeOnEntity() { 
 		node.removeProperty(_onEntity);
 		return this;
-	}
+	}  
 
-	private static final String _onRelation = "onRelation";
+	public static final String _onRelation = "onRelation";
 
 	public DomainVisitor setOnRelation(String value) { 
 		if (value == null) {
@@ -275,9 +179,9 @@ public class DomainVisitor {
 	public DomainVisitor removeOnRelation() { 
 		node.removeProperty(_onRelation);
 		return this;
-	}
+	}  
 
-	private static final String _onComplete = "onComplete";
+	public static final String _onComplete = "onComplete";
 
 	public DomainVisitor setOnComplete(String value) { 
 		if (value == null) {
@@ -305,7 +209,36 @@ public class DomainVisitor {
 	public DomainVisitor removeOnComplete() { 
 		node.removeProperty(_onComplete);
 		return this;
+	}  
+
+	public static final org.neo4j.graphdb.RelationshipType _templates = org.neo4j.graphdb.RelationshipType.withName("templates");
+
+	public DomainVisitor addTemplates(STTemplate dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		if (existing.isPresent()) return this;
+		final org.neo4j.graphdb.Relationship relationship = node.createRelationshipTo(dst.getNode(), _templates);
+		relationship.setProperty("_t", System.nanoTime());
+		return this;
 	}
+
+	public java.util.stream.Stream<STTemplate> getTemplates() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
+	public java.util.stream.Stream<STTemplate> getTemplatesSorted() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).sorted(java.util.Comparator.comparing(o -> (Long) o.getProperty("_t"))).map((relationship) -> new STTemplate(relationship.getOtherNode(node)));
+	}
+
+	public DomainVisitor removeTemplates(STTemplate dst) { 
+		final java.util.Optional<org.neo4j.graphdb.Relationship> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).spliterator(), false).filter((r) -> r.getOtherNode(node).equals(dst.getNode())).findAny();
+		existing.ifPresent(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}
+
+	public DomainVisitor removeAllTemplates() { 
+		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _templates).forEach(org.neo4j.graphdb.Relationship::delete);
+		return this;
+	}  
 
 	@Override
 	public String toString() {
@@ -335,4 +268,4 @@ public class DomainVisitor {
 	}
 
 
-}
+}  

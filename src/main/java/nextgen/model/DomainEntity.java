@@ -57,7 +57,11 @@ public class DomainEntity {
 		node.removeProperty(_uuid);
 		return this;
 	}
-	private static final String _name = "name";
+	public java.util.stream.Stream<Domain> getIncomingEntitiesDomain() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("entities")).spliterator(), false).map((relationship) -> new Domain(relationship.getOtherNode(node)));
+	}  
+
+	public static final String _name = "name";
 
 	public DomainEntity setName(String value) { 
 		if (value == null) {
@@ -85,12 +89,7 @@ public class DomainEntity {
 	public DomainEntity removeName() { 
 		node.removeProperty(_name);
 		return this;
-	}
-
-	public Domain getIncomingDomain() { 
-		org.neo4j.graphdb.Relationship relationship = node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("entities"), org.neo4j.graphdb.Direction.INCOMING);
-		return relationship == null ? null : new Domain(relationship.getOtherNode(node));
-	}
+	}  
 
 	public DomainEntity setType(DomainEntityType value) {
 		if (value == null) 
@@ -118,9 +117,9 @@ public class DomainEntity {
 	public DomainEntity removeType() { 
 		node.removeProperty("type");
 		return this;
-	}
+	}  
 
-	private static final String _enums = "enums";
+	public static final String _enums = "enums";
 
 	public DomainEntity setEnums(String value) { 
 		if (value == null) {
@@ -148,7 +147,15 @@ public class DomainEntity {
 	public DomainEntity removeEnums() { 
 		node.removeProperty(_enums);
 		return this;
-	}
+	}  
+
+	public java.util.stream.Stream<DomainRelation> getIncomingSrcDomainRelation() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("src")).spliterator(), false).map((relationship) -> new DomainRelation(relationship.getOtherNode(node)));
+	}  
+
+	public java.util.stream.Stream<DomainRelation> getIncomingDstDomainRelation() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("dst")).spliterator(), false).map((relationship) -> new DomainRelation(relationship.getOtherNode(node)));
+	}  
 
 	@Override
 	public String toString() {
@@ -178,4 +185,4 @@ public class DomainEntity {
 	}
 
 
-}
+}  

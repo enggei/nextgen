@@ -3,26 +3,29 @@ package nextgen.model;
 public class STEnumValue {
 
 	private final org.neo4j.graphdb.Node node;
+	private final String uuid;
 
 	public STEnumValue(org.neo4j.graphdb.Node node) { 
 		this.node = node;
-	}
+		if (!node.hasProperty("uuid")) this.node.setProperty("uuid", this.uuid = java.util.UUID.randomUUID().toString());
+		else this.uuid = node.getProperty("uuid").toString();}
 
 	public org.neo4j.graphdb.Node getNode() { 
 		return this.node;
 	}
+
 
 	@Override
 	public boolean equals(java.lang.Object o) { 
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final STEnumValue other = (STEnumValue) o;
-		return node.equals(other.node);
+		return uuid.equals(other.uuid);
 	}
 
 	@Override
 	public int hashCode() { 
-		return java.util.Objects.hash(node);
+		return uuid.hashCode();
 	}
 
 	private static final String _uuid = "uuid";
@@ -31,7 +34,7 @@ public class STEnumValue {
 		if (value == null) {
 			removeUuid(); 
 		} else {
-		 	node.setProperty(_uuid, value);
+			node.setProperty(_uuid, value);
 		}
 		return this;
 	}
@@ -54,8 +57,15 @@ public class STEnumValue {
 		node.removeProperty(_uuid);
 		return this;
 	}
+	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
+	}  
 
-	private static final String _name = "name";
+	public java.util.stream.Stream<STValue> getIncomingStEnumValueSTValue() { 
+		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stEnumValue")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
+	}  
+
+	public static final String _name = "name";
 
 	public STEnumValue setName(String value) { 
 		if (value == null) {
@@ -83,9 +93,9 @@ public class STEnumValue {
 	public STEnumValue removeName() { 
 		node.removeProperty(_name);
 		return this;
-	}
+	}  
 
-	private static final String _lexical = "lexical";
+	public static final String _lexical = "lexical";
 
 	public STEnumValue setLexical(String value) { 
 		if (value == null) {
@@ -113,15 +123,7 @@ public class STEnumValue {
 	public STEnumValue removeLexical() { 
 		node.removeProperty(_lexical);
 		return this;
-	}
-
-	public java.util.stream.Stream<STValue> getIncomingStEnumValueSTValue() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("stEnumValue")).spliterator(), false).map((relationship) -> new STValue(relationship.getOtherNode(node)));
-	}
-
-	public java.util.stream.Stream<STEnum> getIncomingValuesSTEnum() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("values")).spliterator(), false).map((relationship) -> new STEnum(relationship.getOtherNode(node)));
-	}
+	}  
 
 	@Override
 	public String toString() {
@@ -144,16 +146,11 @@ public class STEnumValue {
 		return out.toString().trim();
 	}
 
-	public io.vertx.core.json.JsonObject toJsonObject() {
-		io.vertx.core.json.JsonObject jsonObject = new io.vertx.core.json.JsonObject();
-		return jsonObject;
-	}
-
 	public void delete() {
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
-		node.delete();
-
+		node.delete();	
 	}
 
-}
+
+}  

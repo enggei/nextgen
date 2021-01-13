@@ -724,9 +724,10 @@ public class STModelNavigator extends JPanel {
 
 			if (model.hasType() && model.hasEnums() && model.getType().equals(nextgen.model.DomainEntityType.ENUM)) add(new StringTreeNode(model.getEnums()));
 
-			model.getIncomingDomain().getRelations()
+
+         model.getIncomingEntitiesDomain().forEach(domain -> domain.getRelations()
 					.filter(domainRelation -> domainRelation.getSrc().equals(getModel()))
-					.forEach(domainRelation -> add(new DomainRelationTreeNode(domainRelation)));
+					.forEach(domainRelation -> add(new DomainRelationTreeNode(domainRelation))));
 		}
 
 		DomainEntityTreeNode thisNode() {
@@ -800,7 +801,6 @@ public class STModelNavigator extends JPanel {
 			this.uuid = model.getUuid();
 
 			add(new StringTreeNode(getModel().getDst().getName()));
-			if (getModel().getValue() != null ) add(new StringTreeNode(appModel().render(getModel().getValue())));
 		}
 
 		DomainRelationTreeNode thisNode() {
