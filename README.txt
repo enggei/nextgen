@@ -8,6 +8,7 @@ Domain
 
     DomainEntity
         name            1   String
+        type            1   DomainEntityType
 
     DomainRelation
         name            1   String
@@ -16,11 +17,15 @@ Domain
         dst             1   DomainEntity
         type            1   DomainRelationType
 
+        DomainEntityType
+            ENUM
+            ENTITY
+
         DomainRelationType
             ONE
             MANY
             OPTIONAL
-            ENUM
+
 
 STProject
 	name		    1	String

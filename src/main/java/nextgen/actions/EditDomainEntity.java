@@ -6,50 +6,92 @@ import nextgen.model.*;
 import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
+import java.util.stream.Collectors;
+
+import org.stringtemplate.v4.*;
 
 public class EditDomainEntity extends nextgen.actions.TransactionAction {
 
    private final nextgen.model.DomainEntity domainEntity;
    private final JComponent owner;
 
-	public EditDomainEntity(String name, nextgen.model.DomainEntity domainEntity, JComponent owner) {
-      super(name);
-      this.domainEntity = domainEntity;
-      this.owner = owner;
-   }
+	public EditDomainEntity(nextgen.model.DomainEntity domainEntity, JComponent owner) {
+		super("Edit");
+		this.domainEntity = domainEntity;
+		this.owner = owner;
+	}
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
    	log.info("EditDomainEntity" + " domainEntity" + " owner");
 
-      final java.util.List<JComponent> relationComponents = new java.util.ArrayList<>();
-      for (int i = 0; i < 10; i++) {
-         relationComponents.add(newTextField(30));
-         relationComponents.add(newTextField(30));
-         relationComponents.add(newComboBox(DomainRelationType.values(), DomainRelationType.ONE));
+      final java.util.List<JComponent> entityComponents = new java.util.ArrayList<>();
+      entityComponents.add(newTextField(domainEntity.getName(), 30));
+      entityComponents.add(newComboBox(DomainEntityType.values(), domainEntity.getType()));
+      entityComponents.add(newTextField(domainEntity.getEnums(""), 30));
+
+      final JPanel entityInputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(2, 3));
+      entityInputPanel.add(newLabel("Name"));
+      entityInputPanel.add(newLabel("Type"));
+      entityInputPanel.add(newLabel("EnumValues"));
+      entityInputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+      for (JComponent component : entityComponents) entityInputPanel.add(component);
+
+      final java.util.List<JComponent> relationsComponents = new java.util.ArrayList<>();
+      final java.util.Map<javax.swing.JTextField, nextgen.model.DomainRelation> fieldDomainRelationMap = new java.util.LinkedHashMap<>();
+      domainEntity.getIncomingDomain().getRelations()
+            .filter(domainRelation -> domainRelation.getSrc().equals(domainEntity))
+            .forEach(domainRelation -> {
+               final javax.swing.JTextField textField = newTextField(domainRelation.getName(), 30);
+               fieldDomainRelationMap.put(textField, domainRelation);
+               relationsComponents.add(textField);
+               relationsComponents.add(newTextField(domainRelation.getDst().getName(), 30));
+               relationsComponents.add(newComboBox(DomainRelationType.values(), domainRelation.getType()));
+            });
+
+      for (int i = 0; i < 2; i++) {
+         relationsComponents.add(newTextField(30));
+         relationsComponents.add(newTextField(30));
+         relationsComponents.add(newComboBox(DomainRelationType.values(), DomainRelationType.ONE));
       }
 
-      final JPanel relationPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(10, 3));
-      relationPanel.add(newLabel("Relation"));
-      relationPanel.add(newLabel("Type"));
-      relationPanel.add(newLabel("Entity"));
-      relationPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-      for (JComponent component : relationComponents) relationPanel.add(component);
+      final JPanel relationInputPanel = nextgen.swing.ComponentFactory.newJPanel(new java.awt.GridLayout(fieldDomainRelationMap.size() + 3, 3));
+      relationInputPanel.add(newLabel("Relation"));
+      relationInputPanel.add(newLabel("Type"));
+      relationInputPanel.add(newLabel("Entity"));
+      relationInputPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+      for (JComponent component : relationsComponents) relationInputPanel.add(component);
 
-      showDialog(owner, relationPanel, "Edit DomainEntity", jDialog -> {
+      final JPanel contentPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+      contentPanel.add(entityInputPanel, java.awt.BorderLayout.NORTH);
+      contentPanel.add(relationInputPanel, java.awt.BorderLayout.CENTER);
 
-         for (int i = 0; i < relationComponents.size(); i += 3) {
-            final JTextField txtRelationName = (JTextField) relationComponents.get(i);
-            final JComboBox<DomainRelationType> cboType = (JComboBox<DomainRelationType>) relationComponents.get(i + 1);
-            final JTextField txtEntityName = (JTextField) relationComponents.get(i + 2);
+      showDialog(owner, contentPanel, "Domain Entity", jDialog -> {
 
+         final JTextField entityName = (JTextField) entityComponents.get(0);
+         final JComboBox<DomainEntityType> entityType = (JComboBox<DomainEntityType>) entityComponents.get(1);
+         final JTextField enumValues = (JTextField) entityComponents.get(2);
 
-            final String name = txtRelationName.getText().trim();
-            if (name.length() == 0) continue;
-            final String value = txtEntityName.getText().trim();
-            if (value.length() == 0) continue;
+         domainEntity.setName(entityName.getText().trim());
+         domainEntity.setType((nextgen.model.DomainEntityType) entityType.getSelectedItem());
+         domainEntity.setEnums(enumValues.getText().trim());
+         nextgen.events.DomainEntityChanged.post(domainEntity);
 
-            appModel().addDomainRelation(domainEntity, name, (DomainRelationType) cboType.getSelectedItem(), value);
+         for (int i = 0; i < relationsComponents.size(); i += 3) {
+            final JTextField relationName = (JTextField) relationsComponents.get(i);
+            final JTextField relationEntityName = (JTextField) relationsComponents.get(i + 1);
+            final JComboBox<DomainRelationType> relationType = (JComboBox<DomainRelationType>) relationsComponents.get(i + 2);
+
+            if (relationName.getText().trim().length() == 0) continue;
+
+            final nextgen.model.DomainRelation domainRelation = fieldDomainRelationMap.get(relationName)
+                  .setName(relationName.getText().trim())
+                  .setType((nextgen.model.DomainRelationType) relationType.getSelectedItem());
+
+            if (!domainRelation.getDst().getName().equals(relationEntityName.getText().trim()))
+               domainRelation.setDst(appModel().addDomainEntity(domainEntity.getIncomingDomain(), relationEntityName.getText().trim(), nextgen.model.DomainEntityType.ENTITY, ""));
+
+            nextgen.events.DomainRelationChanged.post(domainRelation);
          }
 
          close(jDialog);

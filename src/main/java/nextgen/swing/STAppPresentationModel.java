@@ -1399,6 +1399,9 @@ public class STAppPresentationModel {
 
    public DomainEntity addDomainEntity(Domain domain, String name, DomainEntityType type, String enumValues) {
 
+      final java.util.Optional<nextgen.model.DomainEntity> existing = domain.getEntities().filter(domainEntity -> domainEntity.getName().equals(name)).findAny();
+      if(existing.isPresent()) return existing.get();
+
       final DomainEntity domainEntity = domainDB.newDomainEntity().setName(name).setType(type).setEnums(enumValues);
 
       domain.addEntities(domainEntity);

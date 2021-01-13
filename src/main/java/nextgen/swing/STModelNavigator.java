@@ -722,7 +722,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 			this.uuid = model.getUuid();
 
-			if (model.hasType() && model.hasEnums() && model.getType().equals(nextgen.model.DomainEntityType.ENUM)) add(new BaseTreeNode<>(model.getEnums(), appModel().loadIcon("sq-blue")));
+			if (model.hasType() && model.hasEnums() && model.getType().equals(nextgen.model.DomainEntityType.ENUM)) add(new StringTreeNode(model.getEnums()));
 
 			model.getIncomingDomain().getRelations()
 					.filter(domainRelation -> domainRelation.getSrc().equals(getModel()))
@@ -747,7 +747,7 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				actions.add(new DeleteDomainEntity(getModel(), workspace));
 				actions.add(new AddDomainRelation(getModel(), workspace));
-				actions.add(new SetEntityType(getModel(), workspace));
+				actions.add(new EditDomainEntity(getModel(), workspace));
 			});
 
 			return actions;
