@@ -1,7 +1,6 @@
 package nextgen.swing;
 
 import nextgen.actions.*;
-import nextgen.events.ModelNavigatorSTModelTreeNodeClicked;
 import nextgen.model.*;
 
 import javax.swing.*;
@@ -57,7 +56,7 @@ public class STModelEditorText extends BaseEditor<STModel> {
 
          menu.add(newAction("Open", actionEvent -> appModel().doLaterInTransaction(tx -> {
             nextgen.events.STModelSelected.post(stModel);
-            ModelNavigatorSTModelTreeNodeClicked.post(stModel);
+            nextgen.events.STModelTreeNodeClicked.post(stModel);
          })));
       }
 

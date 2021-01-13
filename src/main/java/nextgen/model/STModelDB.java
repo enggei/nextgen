@@ -4,7 +4,7 @@ import org.neo4j.graphdb.Relationship;
 
 import static nextgen.model.STValueType.*;
 
-public class STModelDB extends STModelNeoFactory {
+public class STModelDB extends NextgenDB {
 
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModel.class);
 

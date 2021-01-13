@@ -141,7 +141,7 @@ public class STModelEditor extends BaseEditor<STModel> {
    }
 
    @org.greenrobot.eventbus.Subscribe()
-   public void onModelNavigatorSTModelTreeNodeClicked(nextgen.events.ModelNavigatorSTModelTreeNodeClicked event) {
+   public void onSTModelTreeNodeClicked(nextgen.events.STModelTreeNodeClicked event) {
       if (model.equals(event.stModel)) {
          modelEditorText.setModel(event.stModel);
          modelEditorForm.setModel(event.stModel);

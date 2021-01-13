@@ -694,7 +694,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTProjectTreeNodeSelected(STProjectTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTProjectTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STProjectTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// ModelsTreeNode
@@ -923,7 +923,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTTemplateTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STTemplateTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STModelTreeNode
@@ -1009,7 +1009,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelTreeNodeSelected(STModelTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STFileSinkTreeNode
@@ -1081,7 +1081,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTFileSinkTreeNodeSelected(STFileSinkTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTFileTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STFileTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STParameterTreeNode
@@ -1195,7 +1195,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTParameterTreeNodeSelected(STParameterTreeNode selectedNode) {
-		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(stModelTreeNode -> nextgen.events.ModelNavigatorSTParameterTreeNodeClicked.post(selectedNode.getModel(), stModelTreeNode.getModel()));
+		selectedNode.getParentNode(STModelTreeNode.class).ifPresent(stModelTreeNode -> nextgen.events.STParameterTreeNodeClicked.post(selectedNode.getModel(), stModelTreeNode.getModel()));
 	}
 
 	// STModelArgumentTreeNode
@@ -1281,7 +1281,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelArgumentTreeNodeSelected(STModelArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STValueTreeNode
@@ -1355,7 +1355,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTValueTreeNodeSelected(STValueTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTValueTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STValueTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STValueArgumentTreeNode
@@ -1432,7 +1432,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTValueArgumentTreeNodeSelected(STValueArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTValueTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STValueTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STKVArgumentTreeNode
@@ -1704,7 +1704,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTModelKVArgumentTreeNodeSelected(STModelKVArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTModelTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STModelTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STValueKVArgumentTreeNode
@@ -1780,7 +1780,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTValueKVArgumentTreeNodeSelected(STValueKVArgumentTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTValueTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STValueTreeNodeClicked.post(selectedNode.getModel());
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
