@@ -84,8 +84,11 @@ public class EditDomainEntity extends nextgen.actions.TransactionAction {
 
             if (relationName.getText().trim().length() == 0) continue;
 
-            final nextgen.model.DomainRelation domainRelation = fieldDomainRelationMap.get(relationName)
-                  .setName(relationName.getText().trim())
+            nextgen.model.DomainRelation domainRelation = fieldDomainRelationMap.get(relationName);
+            if (domainRelation == null)
+               domainRelation = appModel().addDomainRelation(domainEntity, relationName.getText().trim(), (nextgen.model.DomainRelationType) relationType.getSelectedItem(), relationEntityName.getText().trim());
+            else
+               domainRelation.setName(relationName.getText().trim())
                   .setType((nextgen.model.DomainRelationType) relationType.getSelectedItem());
 
             if (!domainRelation.getDst().getName().equals(relationEntityName.getText().trim()))
