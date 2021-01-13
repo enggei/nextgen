@@ -6,7 +6,6 @@ import nextgen.model.*;
 import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
-import java.util.stream.Collectors;
 
 public class AddSTTemplateToDomainVisitor extends nextgen.actions.TransactionAction {
 

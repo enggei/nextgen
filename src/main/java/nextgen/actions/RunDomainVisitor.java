@@ -6,9 +6,6 @@ import nextgen.model.*;
 import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
-import java.util.stream.Collectors;
-
-import org.stringtemplate.v4.*;
 
 public class RunDomainVisitor extends nextgen.actions.TransactionAction {
 
@@ -58,8 +55,6 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    	appModel().addKVArgument(transactionAction, "fields", "name", "owner", "type", "javax.swing.JComponent");
    	appModel().addArgument(transactionAction, "statements", appModel().render(appModel().newSTModel(appModel().db.findSTTemplateByUuid("6032fd32-e00e-4f73-b7b7-8a9fe6444514"))));
    	appModel().addArgument(transactionAction, "methods", appModel().render(visitorInterface));
-   	
-//   	visitor.getImports().forEach(s -> appModel().addArgument(transactionAction, "imports", s));
    	
    	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
    	nextgen.st.STGenerator.writeJavaFile(appModel().render(transactionAction), packageName, nextgen.swing.STAppPresentationModel.getSTModelName(transactionAction), file);
