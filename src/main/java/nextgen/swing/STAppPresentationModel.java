@@ -1394,7 +1394,7 @@ public class STAppPresentationModel {
    public void addDomain(STProject project, String domainName) {
       final Domain domain = newDomain(domainName);
       NewDomain.post(domain);
-      project.addDomains(domain);
+      //project.addDomains(domain);
       NewSTProjectDomain.post(domain, project);
    }
 

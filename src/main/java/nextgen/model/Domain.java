@@ -57,10 +57,6 @@ public class Domain {
 		node.removeProperty(_uuid);
 		return this;
 	}
-	public java.util.stream.Stream<STProject> getIncomingDomainsSTProject() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("domains")).spliterator(), false).map((relationship) -> new STProject(relationship.getOtherNode(node)));
-	}  
-
 	public static final String _name = "name";
 
 	public Domain setName(String value) { 

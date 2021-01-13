@@ -36,7 +36,7 @@ public class STWorkspace extends JTabbedPane {
 
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorDomainVisitorTreeNodeClicked(ModelNavigatorDomainVisitorTreeNodeClicked event) {
+	public void onDomainVisitorTreeNodeClicked(DomainVisitorTreeNodeClicked event) {
 		getDomainVisitorEditor(event.domainVisitor);
 	}
 
@@ -46,12 +46,12 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTFileTreeNodeClicked(ModelNavigatorSTFileTreeNodeClicked event) {
+	public void onSTFileTreeNodeClicked(STFileTreeNodeClicked event) {
 		getSTFileEditor(event.stFile);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTProjectTreeNodeClicked(ModelNavigatorSTProjectTreeNodeClicked event) {
+	public void onSTProjectTreeNodeClicked(STProjectTreeNodeClicked event) {
 		getSTProjectEditor(event.stProject);
 	}
 
@@ -60,17 +60,17 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTTemplateTreeNodeClicked(ModelNavigatorSTTemplateTreeNodeClicked event) {
+	public void onSTTemplateTreeNodeClicked(STTemplateTreeNodeClicked event) {
 		getSTTemplatesEditor(event.stTemplate);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTParameterTreeNodeClicked(ModelNavigatorSTParameterTreeNodeClicked event) {
+	public void onSTParameterTreeNodeClicked(STParameterTreeNodeClicked event) {
 		getSTParameterEditor(event.parameter, event.model);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTModelTreeNodeClicked(ModelNavigatorSTModelTreeNodeClicked event) {
+	public void onSTModelTreeNodeClicked(STModelTreeNodeClicked event) {
 		getModelEditor(event.stModel);
 	}
 
@@ -110,7 +110,7 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTValueTreeNodeClicked(ModelNavigatorSTValueTreeNodeClicked event) {
+	public void onSTValueTreeNodeClicked(STValueTreeNodeClicked event) {
 		final nextgen.swing.editors.STValueEditor stValueEditor = getSTValueEditor();
 		stValueEditor.setModel(event.stValue);
 		SwingUtilities.invokeLater(() -> setSelectedComponent(stValueEditor));

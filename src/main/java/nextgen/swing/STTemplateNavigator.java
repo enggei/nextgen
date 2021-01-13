@@ -22,7 +22,7 @@ public class STTemplateNavigator extends JPanel {
 
 		this.workspace = workspace;
 
-		treeModel = new STTemplateNavigatorTreeModel(new RootNode("Templates"));
+		treeModel = new STTemplateNavigatorTreeModel(new RootNode("[]"));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -89,6 +89,14 @@ public class STTemplateNavigator extends JPanel {
 				appModel().doLaterInTransaction(transaction -> {
 					if (isSTGroupActionTreeNode(lastPathComponent)) 
 						onSTGroupActionTreeNodeSelected((STGroupActionTreeNode) lastPathComponent);
+					else if (isDomainEntityTreeNode(lastPathComponent)) 
+						onDomainEntityTreeNodeSelected((DomainEntityTreeNode) lastPathComponent);
+					else if (isDomainRelationTreeNode(lastPathComponent)) 
+						onDomainRelationTreeNodeSelected((DomainRelationTreeNode) lastPathComponent);
+					else if (isDomainTreeNode(lastPathComponent)) 
+						onDomainTreeNodeSelected((DomainTreeNode) lastPathComponent);
+					else if (isDomainVisitorTreeNode(lastPathComponent)) 
+						onDomainVisitorTreeNodeSelected((DomainVisitorTreeNode) lastPathComponent);
 					else if (isSTGroupTreeNode(lastPathComponent)) 
 						onSTGroupTreeNodeSelected((STGroupTreeNode) lastPathComponent);
 					else if (isSTEnumTreeNode(lastPathComponent)) 
@@ -215,7 +223,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onModelNavigatorSTGroupTreeNodeClicked(nextgen.events.ModelNavigatorSTGroupTreeNodeClicked event) {
+	public void onSTGroupTreeNodeClicked(nextgen.events.STGroupTreeNodeClicked event) {
 		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).ifPresent(treeModel::select);
 	}
 
@@ -378,6 +386,427 @@ public class STTemplateNavigator extends JPanel {
 		}
 	}
 
+	// DomainTreeNode
+	public class DomainTreeNode extends BaseTreeNode<nextgen.model.Domain> {
+
+		DomainTreeNode(nextgen.model.Domain model) {
+			super(model, appModel().loadIcon("sq-pinkg"));
+
+
+			setLabel(getModel().getName());
+			this.tooltip = "";
+
+			model.getEntities().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName())).forEach(domainEntity -> add(new DomainEntityTreeNode(domainEntity)));
+			model.getVisitorsSorted().forEach(domainVisitor -> add(new DomainVisitorTreeNode(domainVisitor)));
+		}
+
+		DomainTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isDomainTreeNode(Object treeNode) {
+		return treeNode instanceof DomainTreeNode;
+	}
+
+	private Optional<DomainTreeNode> findDomainTreeNode() {
+		return treeModel.find(DomainTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainTreeNode> findAllDomainTreeNode() {
+		return treeModel.findAll(DomainTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<DomainTreeNode> findDomainTreeNode(java.util.function.Predicate<DomainTreeNode> predicate) {
+		return treeModel.find(DomainTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<DomainTreeNode> findAllDomainTreeNode(java.util.function.Predicate<DomainTreeNode> predicate) {
+		return treeModel.findAll(DomainTreeNode.class, predicate);
+	}
+
+	private Optional<DomainTreeNode> findDomainTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainTreeNode> predicate) {
+		return treeModel.find(parent, DomainTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<DomainTreeNode> getSelectedDomainTreeNodes() {
+		return getSelectedNodes(DomainTreeNode.class);
+	}
+
+	private void onDomainTreeNodeSelected(DomainTreeNode selectedNode) {
+	}
+
+	// TemplatesTreeNode
+	public class TemplatesTreeNode extends BaseTreeNode<String> {
+
+		TemplatesTreeNode(String model) {
+			super(model, appModel().loadIcon("sq-teal"));
+
+
+			setLabel(model.toString());
+			this.tooltip = "";
+
+			appModel().db.findAllSTGroupModel().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(stGroup -> add(new STGroupTreeNode(stGroup)));
+		}
+
+		TemplatesTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().toString());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isTemplatesTreeNode(Object treeNode) {
+		return treeNode instanceof TemplatesTreeNode;
+	}
+
+	private Optional<TemplatesTreeNode> findTemplatesTreeNode() {
+		return treeModel.find(TemplatesTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<TemplatesTreeNode> findAllTemplatesTreeNode() {
+		return treeModel.findAll(TemplatesTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<TemplatesTreeNode> findTemplatesTreeNode(java.util.function.Predicate<TemplatesTreeNode> predicate) {
+		return treeModel.find(TemplatesTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<TemplatesTreeNode> findAllTemplatesTreeNode(java.util.function.Predicate<TemplatesTreeNode> predicate) {
+		return treeModel.findAll(TemplatesTreeNode.class, predicate);
+	}
+
+	private Optional<TemplatesTreeNode> findTemplatesTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<TemplatesTreeNode> predicate) {
+		return treeModel.find(parent, TemplatesTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<TemplatesTreeNode> getSelectedTemplatesTreeNodes() {
+		return getSelectedNodes(TemplatesTreeNode.class);
+	}
+
+	private void onTemplatesTreeNodeSelected(TemplatesTreeNode selectedNode) {
+	}
+
+	// DomainsTreeNode
+	public class DomainsTreeNode extends BaseTreeNode<String> {
+
+		DomainsTreeNode(String model) {
+			super(model, appModel().loadIcon("sq-pink"));
+
+
+			setLabel(model.toString());
+			this.tooltip = "";
+
+			appModel().domainDB.findAllDomain().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(domain -> add(new DomainTreeNode(domain)));
+		}
+
+		DomainsTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().toString());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isDomainsTreeNode(Object treeNode) {
+		return treeNode instanceof DomainsTreeNode;
+	}
+
+	private Optional<DomainsTreeNode> findDomainsTreeNode() {
+		return treeModel.find(DomainsTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainsTreeNode> findAllDomainsTreeNode() {
+		return treeModel.findAll(DomainsTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<DomainsTreeNode> findDomainsTreeNode(java.util.function.Predicate<DomainsTreeNode> predicate) {
+		return treeModel.find(DomainsTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<DomainsTreeNode> findAllDomainsTreeNode(java.util.function.Predicate<DomainsTreeNode> predicate) {
+		return treeModel.findAll(DomainsTreeNode.class, predicate);
+	}
+
+	private Optional<DomainsTreeNode> findDomainsTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainsTreeNode> predicate) {
+		return treeModel.find(parent, DomainsTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<DomainsTreeNode> getSelectedDomainsTreeNodes() {
+		return getSelectedNodes(DomainsTreeNode.class);
+	}
+
+	private void onDomainsTreeNodeSelected(DomainsTreeNode selectedNode) {
+	}
+
+	// DomainEntityTreeNode
+	public class DomainEntityTreeNode extends BaseTreeNode<nextgen.model.DomainEntity> {
+
+		private String uuid;
+
+		DomainEntityTreeNode(nextgen.model.DomainEntity model) {
+			super(model, appModel().loadIcon("sq-purple"));
+
+
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+			if (model.hasType() && model.hasEnums() && model.getType().equals(nextgen.model.DomainEntityType.ENUM)) add(new StringTreeNode(model.getEnums()));
+			model.getIncomingEntitiesDomain().forEach(domain -> domain.getRelations()
+					.filter(domainRelation -> domainRelation.getSrc().equals(getModel()))
+					.forEach(domainRelation -> add(new DomainRelationTreeNode(domainRelation))));
+		}
+
+		DomainEntityTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new DeleteDomainEntity(getModel(), workspace));
+				actions.add(new AddDomainRelation(getModel(), workspace));
+				actions.add(new EditDomainEntity(getModel(), workspace));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isDomainEntityTreeNode(Object treeNode) {
+		return treeNode instanceof DomainEntityTreeNode;
+	}
+
+	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode() {
+		return treeModel.find(DomainEntityTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainEntityTreeNode> findAllDomainEntityTreeNode() {
+		return treeModel.findAll(DomainEntityTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode(java.util.function.Predicate<DomainEntityTreeNode> predicate) {
+		return treeModel.find(DomainEntityTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<DomainEntityTreeNode> findAllDomainEntityTreeNode(java.util.function.Predicate<DomainEntityTreeNode> predicate) {
+		return treeModel.findAll(DomainEntityTreeNode.class, predicate);
+	}
+
+	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainEntityTreeNode> predicate) {
+		return treeModel.find(parent, DomainEntityTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<DomainEntityTreeNode> getSelectedDomainEntityTreeNodes() {
+		return getSelectedNodes(DomainEntityTreeNode.class);
+	}
+
+	private void onDomainEntityTreeNodeSelected(DomainEntityTreeNode selectedNode) {
+	}
+
+	// DomainRelationTreeNode
+	public class DomainRelationTreeNode extends BaseTreeNode<nextgen.model.DomainRelation> {
+
+		private String uuid;
+
+		DomainRelationTreeNode(nextgen.model.DomainRelation model) {
+			super(model, appModel().loadIcon("rel"));
+
+
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+			add(new StringTreeNode(getModel().getDst().getName()));
+		}
+
+		DomainRelationTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new SetDomainRelationType(getModel(), workspace));
+				actions.add(new DeleteDomainRelation(getModel(), workspace));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isDomainRelationTreeNode(Object treeNode) {
+		return treeNode instanceof DomainRelationTreeNode;
+	}
+
+	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode() {
+		return treeModel.find(DomainRelationTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainRelationTreeNode> findAllDomainRelationTreeNode() {
+		return treeModel.findAll(DomainRelationTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode(java.util.function.Predicate<DomainRelationTreeNode> predicate) {
+		return treeModel.find(DomainRelationTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<DomainRelationTreeNode> findAllDomainRelationTreeNode(java.util.function.Predicate<DomainRelationTreeNode> predicate) {
+		return treeModel.findAll(DomainRelationTreeNode.class, predicate);
+	}
+
+	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainRelationTreeNode> predicate) {
+		return treeModel.find(parent, DomainRelationTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<DomainRelationTreeNode> getSelectedDomainRelationTreeNodes() {
+		return getSelectedNodes(DomainRelationTreeNode.class);
+	}
+
+	private void onDomainRelationTreeNodeSelected(DomainRelationTreeNode selectedNode) {
+	}
+
+	// DomainVisitorTreeNode
+	public class DomainVisitorTreeNode extends BaseTreeNode<nextgen.model.DomainVisitor> {
+
+		private String uuid;
+
+		DomainVisitorTreeNode(nextgen.model.DomainVisitor model) {
+			super(model, appModel().loadIcon("vis"));
+
+
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			this.uuid = model.getUuid();
+
+		}
+
+		DomainVisitorTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel().getName());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+				actions.add(new RunDomainVisitor(getModel(), workspace));
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isDomainVisitorTreeNode(Object treeNode) {
+		return treeNode instanceof DomainVisitorTreeNode;
+	}
+
+	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode() {
+		return treeModel.find(DomainVisitorTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode() {
+		return treeModel.findAll(DomainVisitorTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode(java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
+		return treeModel.find(DomainVisitorTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode(java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
+		return treeModel.findAll(DomainVisitorTreeNode.class, predicate);
+	}
+
+	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
+		return treeModel.find(parent, DomainVisitorTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<DomainVisitorTreeNode> getSelectedDomainVisitorTreeNodes() {
+		return getSelectedNodes(DomainVisitorTreeNode.class);
+	}
+
+	private void onDomainVisitorTreeNodeSelected(DomainVisitorTreeNode selectedNode) {
+		nextgen.events.DomainVisitorTreeNodeClicked.post(selectedNode.getModel());
+	}
+
 	// STGroupActionTreeNode
 	public class STGroupActionTreeNode extends BaseTreeNode<nextgen.model.STGroupAction> {
 
@@ -451,6 +880,72 @@ public class STTemplateNavigator extends JPanel {
 		nextgen.events.TemplateNavigatorSTGroupActionTreeNodeClicked.post(selectedNode.getModel());
 	}
 
+	// StringTreeNode
+	public class StringTreeNode extends BaseTreeNode<String> {
+
+		StringTreeNode(String model) {
+			super(model, null);
+
+
+			setLabel(getModel());
+			this.tooltip = "";
+
+		}
+
+		StringTreeNode thisNode() {
+			return this;
+		}
+
+		@Override
+		public void nodeChanged() {
+			setLabel(getModel());
+			this.tooltip = "";
+			super.nodeChanged();
+		}
+
+		@Override
+		protected List<Action> getActions() {
+			final List<Action> actions = super.getActions();
+
+			appModel().doInTransaction(tx -> {
+			});
+
+			return actions;
+		}
+
+	}
+
+	private boolean isStringTreeNode(Object treeNode) {
+		return treeNode instanceof StringTreeNode;
+	}
+
+	private Optional<StringTreeNode> findStringTreeNode() {
+		return treeModel.find(StringTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<StringTreeNode> findAllStringTreeNode() {
+		return treeModel.findAll(StringTreeNode.class, treeNode -> true);
+	}
+
+	private Optional<StringTreeNode> findStringTreeNode(java.util.function.Predicate<StringTreeNode> predicate) {
+		return treeModel.find(StringTreeNode.class, predicate);
+	}
+
+	private java.util.Collection<StringTreeNode> findAllStringTreeNode(java.util.function.Predicate<StringTreeNode> predicate) {
+		return treeModel.findAll(StringTreeNode.class, predicate);
+	}
+
+	private Optional<StringTreeNode> findStringTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<StringTreeNode> predicate) {
+		return treeModel.find(parent, StringTreeNode.class, predicate);
+	}
+
+	private java.util.stream.Stream<StringTreeNode> getSelectedStringTreeNodes() {
+		return getSelectedNodes(StringTreeNode.class);
+	}
+
+	private void onStringTreeNodeSelected(StringTreeNode selectedNode) {
+	}
+
 	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
@@ -461,7 +956,8 @@ public class STTemplateNavigator extends JPanel {
 			setLabel(getModel());
 			this.tooltip = "";
 
-			appModel().db.findAllSTGroupModel().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(stGroup -> add(new STGroupTreeNode(stGroup)));
+			add(new DomainsTreeNode("Domains"));
+			add(new TemplatesTreeNode("Templates"));
 		}
 
 		RootNode thisNode() {

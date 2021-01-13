@@ -87,9 +87,7 @@ public class STModelNavigator extends JPanel {
 				if (!(lastPathComponent instanceof BaseTreeNode<?>)) return;
 
 				appModel().doLaterInTransaction(transaction -> {
-					if (isDomainVisitorTreeNode(lastPathComponent)) 
-						onDomainVisitorTreeNodeSelected((DomainVisitorTreeNode) lastPathComponent);
-					else if (isSTProjectTreeNode(lastPathComponent)) 
+					if (isSTProjectTreeNode(lastPathComponent)) 
 						onSTProjectTreeNodeSelected((STProjectTreeNode) lastPathComponent);
 					else if (isRootNode(lastPathComponent)) 
 						onRootNodeSelected((RootNode) lastPathComponent);
@@ -147,60 +145,9 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onNewSTProjectDomain(nextgen.events.NewSTProjectDomain event) {
-		findSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.stProject))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STModelNavigator.DomainTreeNode(event.domain)));
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onDomainDeleted(nextgen.events.DomainDeleted event) {
-		SwingUtilities.invokeLater(() -> {
-			findDomainTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		});
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onDomainEntityDeleted(nextgen.events.DomainEntityDeleted event) {
-		SwingUtilities.invokeLater(() -> {
-			findDomainEntityTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		});
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onDomainRelationDeleted(nextgen.events.DomainRelationDeleted event) {
-		SwingUtilities.invokeLater(() -> {
-			findDomainRelationTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
-		});
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onDomainChanged(nextgen.events.DomainChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.value))
-				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onNewDomainDomainEntity(nextgen.events.NewDomainDomainEntity event) {
-		findDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainEntityTreeNode(event.domainEntity)));
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onNewDomainEntityDomainRelation(nextgen.events.NewDomainEntityDomainRelation event) {
-		findDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.domainEntity))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrder(treeNode, new DomainRelationTreeNode(event.domainRelation)));
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileChanged(nextgen.events.STFileChanged event) {
 		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile))
 				.ifPresent(STModelNavigator.STFileSinkTreeNode::nodeChanged);
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onNewDomainVisitor(nextgen.events.NewDomainVisitor event) {
-		findDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainVisitorTreeNode(event.visitor)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -563,302 +510,6 @@ public class STModelNavigator extends JPanel {
 	private void onStringTreeNodeSelected(StringTreeNode selectedNode) {
 	}
 
-	// DomainVisitorTreeNode
-	public class DomainVisitorTreeNode extends BaseTreeNode<nextgen.model.DomainVisitor> {
-
-		private String uuid;
-
-		DomainVisitorTreeNode(nextgen.model.DomainVisitor model) {
-			super(model, appModel().loadIcon("vis"));
-
-
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-		}
-
-		DomainVisitorTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-
-			appModel().doInTransaction(tx -> {
-				actions.add(new RunDomainVisitor(getModel(), workspace));
-			});
-
-			return actions;
-		}
-
-	}
-
-	private boolean isDomainVisitorTreeNode(Object treeNode) {
-		return treeNode instanceof DomainVisitorTreeNode;
-	}
-
-	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode() {
-		return treeModel.find(DomainVisitorTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode() {
-		return treeModel.findAll(DomainVisitorTreeNode.class, treeNode -> true);
-	}
-
-	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode(java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
-		return treeModel.find(DomainVisitorTreeNode.class, predicate);
-	}
-
-	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode(java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
-		return treeModel.findAll(DomainVisitorTreeNode.class, predicate);
-	}
-
-	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
-		return treeModel.find(parent, DomainVisitorTreeNode.class, predicate);
-	}
-
-	private java.util.stream.Stream<DomainVisitorTreeNode> getSelectedDomainVisitorTreeNodes() {
-		return getSelectedNodes(DomainVisitorTreeNode.class);
-	}
-
-	private void onDomainVisitorTreeNodeSelected(DomainVisitorTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorDomainVisitorTreeNodeClicked.post(selectedNode.getModel());
-	}
-
-	// DomainTreeNode
-	public class DomainTreeNode extends BaseTreeNode<nextgen.model.Domain> {
-
-		private String uuid;
-
-		DomainTreeNode(nextgen.model.Domain model) {
-			super(model, appModel().loadIcon("sq-pink"));
-
-
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-			model.getEntities().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName())).forEach(domainEntity -> add(new STModelNavigator.DomainEntityTreeNode(domainEntity)));
-			model.getVisitorsSorted().forEach(domainVisitor -> add(new STModelNavigator.DomainVisitorTreeNode(domainVisitor)));
-		}
-
-		DomainTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-
-			appModel().doInTransaction(tx -> {
-				actions.add(new AddDomainVisitor(getModel(), workspace));
-				actions.add(new AddDomainEntities(getModel(), workspace));
-				actions.add(new DeleteDomain(getModel(), workspace));
-				actions.add(new SetDomainName(getModel(), workspace));
-			});
-
-			return actions;
-		}
-
-	}
-
-	private boolean isDomainTreeNode(Object treeNode) {
-		return treeNode instanceof DomainTreeNode;
-	}
-
-	private Optional<DomainTreeNode> findDomainTreeNode() {
-		return treeModel.find(DomainTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<DomainTreeNode> findAllDomainTreeNode() {
-		return treeModel.findAll(DomainTreeNode.class, treeNode -> true);
-	}
-
-	private Optional<DomainTreeNode> findDomainTreeNode(java.util.function.Predicate<DomainTreeNode> predicate) {
-		return treeModel.find(DomainTreeNode.class, predicate);
-	}
-
-	private java.util.Collection<DomainTreeNode> findAllDomainTreeNode(java.util.function.Predicate<DomainTreeNode> predicate) {
-		return treeModel.findAll(DomainTreeNode.class, predicate);
-	}
-
-	private Optional<DomainTreeNode> findDomainTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainTreeNode> predicate) {
-		return treeModel.find(parent, DomainTreeNode.class, predicate);
-	}
-
-	private java.util.stream.Stream<DomainTreeNode> getSelectedDomainTreeNodes() {
-		return getSelectedNodes(DomainTreeNode.class);
-	}
-
-	private void onDomainTreeNodeSelected(DomainTreeNode selectedNode) {
-	}
-
-	// DomainEntityTreeNode
-	public class DomainEntityTreeNode extends BaseTreeNode<nextgen.model.DomainEntity> {
-
-		private String uuid;
-
-		DomainEntityTreeNode(nextgen.model.DomainEntity model) {
-			super(model, appModel().loadIcon("sq-purple"));
-
-
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-			if (model.hasType() && model.hasEnums() && model.getType().equals(nextgen.model.DomainEntityType.ENUM)) add(new StringTreeNode(model.getEnums()));
-
-
-         model.getIncomingEntitiesDomain().forEach(domain -> domain.getRelations()
-					.filter(domainRelation -> domainRelation.getSrc().equals(getModel()))
-					.forEach(domainRelation -> add(new DomainRelationTreeNode(domainRelation))));
-		}
-
-		DomainEntityTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-
-			appModel().doInTransaction(tx -> {
-				actions.add(new DeleteDomainEntity(getModel(), workspace));
-				actions.add(new AddDomainRelation(getModel(), workspace));
-				actions.add(new EditDomainEntity(getModel(), workspace));
-			});
-
-			return actions;
-		}
-
-	}
-
-	private boolean isDomainEntityTreeNode(Object treeNode) {
-		return treeNode instanceof DomainEntityTreeNode;
-	}
-
-	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode() {
-		return treeModel.find(DomainEntityTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<DomainEntityTreeNode> findAllDomainEntityTreeNode() {
-		return treeModel.findAll(DomainEntityTreeNode.class, treeNode -> true);
-	}
-
-	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode(java.util.function.Predicate<DomainEntityTreeNode> predicate) {
-		return treeModel.find(DomainEntityTreeNode.class, predicate);
-	}
-
-	private java.util.Collection<DomainEntityTreeNode> findAllDomainEntityTreeNode(java.util.function.Predicate<DomainEntityTreeNode> predicate) {
-		return treeModel.findAll(DomainEntityTreeNode.class, predicate);
-	}
-
-	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainEntityTreeNode> predicate) {
-		return treeModel.find(parent, DomainEntityTreeNode.class, predicate);
-	}
-
-	private java.util.stream.Stream<DomainEntityTreeNode> getSelectedDomainEntityTreeNodes() {
-		return getSelectedNodes(DomainEntityTreeNode.class);
-	}
-
-	private void onDomainEntityTreeNodeSelected(DomainEntityTreeNode selectedNode) {
-	}
-
-	// DomainRelationTreeNode
-	public class DomainRelationTreeNode extends BaseTreeNode<nextgen.model.DomainRelation> {
-
-		private String uuid;
-
-		DomainRelationTreeNode(nextgen.model.DomainRelation model) {
-			super(model, appModel().loadIcon("rel"));
-
-
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			this.uuid = model.getUuid();
-
-			add(new StringTreeNode(getModel().getDst().getName()));
-		}
-
-		DomainRelationTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel().getName());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-
-			appModel().doInTransaction(tx -> {
-				actions.add(new SetDomainRelationType(getModel(), workspace));
-				actions.add(new DeleteDomainRelation(getModel(), workspace));
-			});
-
-			return actions;
-		}
-
-	}
-
-	private boolean isDomainRelationTreeNode(Object treeNode) {
-		return treeNode instanceof DomainRelationTreeNode;
-	}
-
-	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode() {
-		return treeModel.find(DomainRelationTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<DomainRelationTreeNode> findAllDomainRelationTreeNode() {
-		return treeModel.findAll(DomainRelationTreeNode.class, treeNode -> true);
-	}
-
-	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode(java.util.function.Predicate<DomainRelationTreeNode> predicate) {
-		return treeModel.find(DomainRelationTreeNode.class, predicate);
-	}
-
-	private java.util.Collection<DomainRelationTreeNode> findAllDomainRelationTreeNode(java.util.function.Predicate<DomainRelationTreeNode> predicate) {
-		return treeModel.findAll(DomainRelationTreeNode.class, predicate);
-	}
-
-	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<DomainRelationTreeNode> predicate) {
-		return treeModel.find(parent, DomainRelationTreeNode.class, predicate);
-	}
-
-	private java.util.stream.Stream<DomainRelationTreeNode> getSelectedDomainRelationTreeNodes() {
-		return getSelectedNodes(DomainRelationTreeNode.class);
-	}
-
-	private void onDomainRelationTreeNodeSelected(DomainRelationTreeNode selectedNode) {
-	}
-
 	// RootNode
 	public class RootNode extends BaseTreeNode<String> {
 
@@ -943,8 +594,6 @@ public class STModelNavigator extends JPanel {
 
 			setLabel(getModel().getName());
 			this.tooltip = "";
-
-			model.getDomainsSorted().forEach(domain -> add(new STModelNavigator.DomainTreeNode(domain)));
 
 			final Map<nextgen.model.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
 			final Map<nextgen.model.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
@@ -1195,7 +844,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	private void onSTGroupModelTreeNodeSelected(STGroupModelTreeNode selectedNode) {
-		nextgen.events.ModelNavigatorSTGroupTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STGroupTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STTemplateTreeNode

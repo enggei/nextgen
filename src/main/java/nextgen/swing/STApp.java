@@ -52,7 +52,7 @@ public class STApp extends JFrame {
             .setOutputPackage(appConfig.getOutputPackage("nextgen.templates"))
             .setOutputPath(appConfig.getOutputPath(new File(root, "src/main/java").getAbsolutePath()))
             .setTemplateDir(appConfig.getTemplateDir(new File(root, "src/main/resources/templates").getAbsolutePath()))
-            .setDbDir(appConfig.getDbDir("./db"))
+            .setDbDir(appConfig.getDbDir("/home/goe/dbs/db"))
             .setRootDir(appConfig.getRootDir("."))
             .setTitle(appConfig.getTitle("STApp"));
 
