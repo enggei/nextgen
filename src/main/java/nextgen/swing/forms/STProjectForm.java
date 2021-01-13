@@ -19,8 +19,8 @@ public class STProjectForm extends JPanel {
 		setLayout(new com.jgoodies.forms.layout.FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none, center:30:none, center:max(50dlu;pref):none, center:30:none, center:pref:grow"));
 	}
 
-	public JLabel getNameJLabel() {
-		return name_JLabel;
+	public <T extends JLabel> T getNameJLabel() {
+		return (T) name_JLabel;
 	}
 
 	public <T extends JLabel> T getNameJLabel(java.util.function.Supplier<T> supplier) {
@@ -34,8 +34,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JTextField getNameJTextField() {
-		return name_JTextField;
+	public <T extends JTextField> T getNameJTextField() {
+		return (T) name_JTextField;
 	}
 
 	public <T extends JTextField> T getNameJTextField(java.util.function.Supplier<T> supplier) {
@@ -49,8 +49,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JLabel getRootJLabel() {
-		return root_JLabel;
+	public <T extends JLabel> T getRootJLabel() {
+		return (T) root_JLabel;
 	}
 
 	public <T extends JLabel> T getRootJLabel(java.util.function.Supplier<T> supplier) {
@@ -64,8 +64,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JTextField getRootJTextField() {
-		return root_JTextField;
+	public <T extends JTextField> T getRootJTextField() {
+		return (T) root_JTextField;
 	}
 
 	public <T extends JTextField> T getRootJTextField(java.util.function.Supplier<T> supplier) {
@@ -79,8 +79,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JLabel getValuesJLabel() {
-		return values_JLabel;
+	public <T extends JLabel> T getValuesJLabel() {
+		return (T) values_JLabel;
 	}
 
 	public <T extends JLabel> T getValuesJLabel(java.util.function.Supplier<T> supplier) {
@@ -94,8 +94,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JComponent getValuesJComponent() {
-		return values_JComponent;
+	public <T extends JComponent> T getValuesJComponent() {
+		return (T) values_JComponent;
 	}
 
 	public <T extends JComponent> T getValuesJComponent(java.util.function.Supplier<T> supplier) {
@@ -109,8 +109,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JLabel getModelsJLabel() {
-		return models_JLabel;
+	public <T extends JLabel> T getModelsJLabel() {
+		return (T) models_JLabel;
 	}
 
 	public <T extends JLabel> T getModelsJLabel(java.util.function.Supplier<T> supplier) {
@@ -124,8 +124,8 @@ public class STProjectForm extends JPanel {
 		return this;
 	}
 
-	public JComponent getModelsJComponent() {
-		return models_JComponent;
+	public <T extends JComponent> T getModelsJComponent() {
+		return (T) models_JComponent;
 	}
 
 	public <T extends JComponent> T getModelsJComponent(java.util.function.Supplier<T> supplier) {
@@ -140,11 +140,11 @@ public class STProjectForm extends JPanel {
 	}
 
 
-	public void setModel(nextgen.model.STProject model, java.awt.event.KeyListener keyListener) {
+	public void setModel(nextgen.model.STProject model) {
 		setName(newJLabel("Name")); 
-		setName(newJTextField(model.getName(), keyListener)); 
+		setName(newJTextField(model.getName())); 
 		setRoot(newJLabel("Root")); 
-		setRoot(newJTextField(model.getRoot(), keyListener)); 
+		setRoot(newJTextField(model.getRoot())); 
 		setValues(newJLabel("Values")); 
 		setValues(newJScrollPane(new nextgen.swing.table.STValueTable().setSelectionListener(nextgen.events.STValueSelected::post).setContent(model.getValues().sorted((v1,v2) -> v1.getValue("").compareToIgnoreCase(v2.getValue(""))))));
 		setModels(newJLabel("Models")); 

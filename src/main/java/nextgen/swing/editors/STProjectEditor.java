@@ -2,6 +2,8 @@ package nextgen.swing.editors;
 
 import java.awt.*;
 
+import nextgen.events.*;
+
 public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STProject> {
 
 	private final javax.swing.JTabbedPane editors = nextgen.swing.ComponentFactory.newJTabbedPane();
@@ -21,14 +23,16 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 		super.setModel(model);
 
 		this.uuid = model.getUuid();
+		form.setModel(model);
 
 		if (getComponentCount() == 0) {
 		   editors.add("Form", form);
+		   form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+		   form.getRootJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+
 			add(editors, BorderLayout.CENTER);
 		   invalidate();
 		}
-
-		form.setModel(model, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 	}
 
 	@Override
@@ -36,4 +40,6 @@ public class STProjectEditor extends nextgen.swing.BaseEditor<nextgen.model.STPr
 		if (model == null) return;
 		appModel().doInTransaction(transaction -> form.onSave(model));
 	}
+
+
 }
