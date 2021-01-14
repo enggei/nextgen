@@ -162,6 +162,18 @@ public class AbstractEditor extends javax.swing.JPanel {
       nextgen.utils.SwingUtil.toClipboard(textArea.getText().trim());
    }
 
+   protected void gotoTop(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      textArea.setCaretPosition(0);
+   }
+
+   protected void gotoBottom(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      textArea.setCaretPosition(textArea.getText().length());
+   }
+
+   protected void clear(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+      textArea.setText("");
+   }
+
    protected FlowPanel newFlowPanel() {
       return new nextgen.swing.AbstractEditor.FlowPanel();
    }
@@ -230,5 +242,15 @@ public class AbstractEditor extends javax.swing.JPanel {
          add(nextgen.swing.ComponentFactory.newJLabel(label));
          return this;
       }
+   }
+
+   protected void addCodeTemplate(boolean addToPop, org.fife.ui.autocomplete.DefaultCompletionProvider provider, org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea, String replacementText, String before, String after) {
+
+      provider.addCompletion(new org.fife.ui.autocomplete.BasicCompletion(provider, replacementText));
+      org.fife.ui.rsyntaxtextarea.RSyntaxTextArea.getCodeTemplateManager().addTemplate(new org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate(replacementText, before, after));
+      if (addToPop) textArea.getPopupMenu().add(newAction(replacementText, actionEvent -> {
+         textArea.append("\n" + before + after);
+         textArea.setCaretPosition(textArea.getText().length() - (after.length()));
+      }));
    }
 }

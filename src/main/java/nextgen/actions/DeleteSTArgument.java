@@ -28,7 +28,7 @@ public class DeleteSTArgument extends nextgen.actions.TransactionAction {
                stModel.removeArguments(stArgument);
                stArgument.getKeyValues().forEach(STArgumentKV::delete);
                stArgument.delete();
-               nextgen.events.STArgumentDeleted.post(stModel, uuid);
+               nextgen.events.STArgumentDeleted.post(uuid);
             }));
    }
 

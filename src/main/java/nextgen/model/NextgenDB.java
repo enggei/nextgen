@@ -1134,6 +1134,174 @@ public class NextgenDB {
 		return db.findNodes(DomainVisitorLabel, "onComplete", value).stream().map(this::newDomainVisitor);
 	}  
 
+	public DomainVisitor findDomainVisitorByOnEntityEntity(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onEntityEntity", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnEntityEntity(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnEntityEntity(value);
+		return existing == null ? newDomainVisitor().setOnEntityEntity(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnEntityEntity(String value) {
+		return db.findNodes(DomainVisitorLabel, "onEntityEntity", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnEnumEntity(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onEnumEntity", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnEnumEntity(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnEnumEntity(value);
+		return existing == null ? newDomainVisitor().setOnEnumEntity(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnEnumEntity(String value) {
+		return db.findNodes(DomainVisitorLabel, "onEnumEntity", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnPrimitiveEntity(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onPrimitiveEntity", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnPrimitiveEntity(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnPrimitiveEntity(value);
+		return existing == null ? newDomainVisitor().setOnPrimitiveEntity(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnPrimitiveEntity(String value) {
+		return db.findNodes(DomainVisitorLabel, "onPrimitiveEntity", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOneEntityRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOneEntityRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOneEntityRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOneEntityRelation(value);
+		return existing == null ? newDomainVisitor().setOnOneEntityRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOneEntityRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOneEntityRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOneEnumRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOneEnumRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOneEnumRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOneEnumRelation(value);
+		return existing == null ? newDomainVisitor().setOnOneEnumRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOneEnumRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOneEnumRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOnePrimitiveRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOnePrimitiveRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOnePrimitiveRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOnePrimitiveRelation(value);
+		return existing == null ? newDomainVisitor().setOnOnePrimitiveRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOnePrimitiveRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOnePrimitiveRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnManyEntityRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onManyEntityRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnManyEntityRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnManyEntityRelation(value);
+		return existing == null ? newDomainVisitor().setOnManyEntityRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnManyEntityRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onManyEntityRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnManyEnumRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onManyEnumRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnManyEnumRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnManyEnumRelation(value);
+		return existing == null ? newDomainVisitor().setOnManyEnumRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnManyEnumRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onManyEnumRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnManyPrimitiveRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onManyPrimitiveRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnManyPrimitiveRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnManyPrimitiveRelation(value);
+		return existing == null ? newDomainVisitor().setOnManyPrimitiveRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnManyPrimitiveRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onManyPrimitiveRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOptionalEntityRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOptionalEntityRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOptionalEntityRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOptionalEntityRelation(value);
+		return existing == null ? newDomainVisitor().setOnOptionalEntityRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOptionalEntityRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOptionalEntityRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOptionalEnumRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOptionalEnumRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOptionalEnumRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOptionalEnumRelation(value);
+		return existing == null ? newDomainVisitor().setOnOptionalEnumRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOptionalEnumRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOptionalEnumRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
+	public DomainVisitor findDomainVisitorByOnOptionalPrimitiveRelation(String value) {
+		final org.neo4j.graphdb.Node node = db.findNodes(DomainVisitorLabel, "onOptionalPrimitiveRelation", value).stream().findFirst().orElse(null);
+		return node == null ? null : newDomainVisitor(node);
+	}
+
+	public DomainVisitor findOrCreateDomainVisitorByOnOptionalPrimitiveRelation(String value) {
+		final DomainVisitor existing = findDomainVisitorByOnOptionalPrimitiveRelation(value);
+		return existing == null ? newDomainVisitor().setOnOptionalPrimitiveRelation(value) : existing;
+	}
+
+	public java.util.stream.Stream<DomainVisitor> findAllDomainVisitorByOnOptionalPrimitiveRelation(String value) {
+		return db.findNodes(DomainVisitorLabel, "onOptionalPrimitiveRelation", value).stream().map(this::newDomainVisitor);
+	}  
+
 	// ONLY delete this node and its relations
 	public void delete(org.neo4j.graphdb.Node node) {
 

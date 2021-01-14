@@ -146,8 +146,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileChanged(nextgen.events.STFileChanged event) {
-		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.stFile))
-				.ifPresent(STModelNavigator.STFileSinkTreeNode::nodeChanged);
+		findSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(STModelNavigator.STFileSinkTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -241,20 +240,18 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTValueChanged(nextgen.events.STValueChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.value))
-				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTArgumentChanged(nextgen.events.STArgumentChanged event) {
-		findSTModelArgumentTreeNode(stModelArgumentTreeNode -> stModelArgumentTreeNode.stArgument.equals(event.stArgument)).ifPresent(treeModel::nodeChanged);
-		findSTValueArgumentTreeNode(stModelArgumentTreeNode -> stModelArgumentTreeNode.stArgument.equals(event.stArgument)).ifPresent(treeModel::nodeChanged);
+		findSTModelArgumentTreeNode(stModelArgumentTreeNode -> stModelArgumentTreeNode.stArgument.equals(event.model)).ifPresent(treeModel::nodeChanged);
+		findSTValueArgumentTreeNode(stModelArgumentTreeNode -> stModelArgumentTreeNode.stArgument.equals(event.model)).ifPresent(treeModel::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelChanged(nextgen.events.STModelChanged event) {
-		treeModel.find(treeNode -> treeNode.getModel().equals(event.model))
-				.ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
+		treeModel.find(treeNode -> treeNode.getModel().equals(event.model)).ifPresent(STModelNavigator.BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -286,8 +283,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onKVDeleted(nextgen.events.KVDeleted event) {
-		findSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.ifPresent(treeModel::removeNodeFromParent);
+		findAllSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()

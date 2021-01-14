@@ -14,4 +14,4 @@ public final class STInterfaceDeleted {
 	public STInterfaceDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

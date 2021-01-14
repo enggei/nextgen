@@ -2,74 +2,125 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
+import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.value.AbstractValueModel;
+import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.CellConstraints;
+
+import nextgen.swing.ComponentFactory;
 import static nextgen.swing.ComponentFactory.*;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class STValueForm extends JPanel {
 
-	JLabel value_JLabel;
-	JScrollPane value_JScrollPane;
+	nextgen.model.STValue model;
+	JLabel value_JLabel = newJLabel("value");
+	JTextField value_JTextField = newJTextField("value");
+	JTextFieldModel valueModel = new JTextFieldModel(getValueJTextField());
 
 	public STValueForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none, center:30:none"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none"));
+		add(this.value_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
+		add(this.value_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
 	}
 
 	public <T extends JLabel> T getValueJLabel() {
 		return (T) value_JLabel;
 	}
 
-	public <T extends JLabel> T getValueJLabel(java.util.function.Supplier<T> supplier) {
-		if (this.value_JLabel == null) setValue(supplier.get());
-   	return (T) this.value_JLabel;
-	}
-
-	public STValueForm setValue(JLabel component) {
-		if (component == null) return this;
-		add(this.value_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		return this;
-	}
-
-	public <T extends JScrollPane> T getValueJScrollPane() {
-		return (T) value_JScrollPane;
-	}
-
-	public <T extends JScrollPane> T getValueJScrollPane(java.util.function.Supplier<T> supplier) {
-		if (this.value_JScrollPane == null) setValue(supplier.get());
-   	return (T) this.value_JScrollPane;
-	}
-
-	public STValueForm setValue(JScrollPane component) {
-		if (component == null) return this;
-		add(this.value_JScrollPane = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 3, "FILL, FILL"));
-		return this;
+	public <T extends JTextField> T getValueJTextField() {
+		return (T) value_JTextField;
 	}
 
 
-	public void setModel(nextgen.model.STValue model) {
-		setValue(newJLabel("Value"));
-		getValueJScrollPane(() -> newRTextScrollPane(newRSyntaxTextArea())).getTextArea().setText(model.getValue());
+	public void modelToView(nextgen.model.STValue model) {
+		this.model = model;
+		valueModel.setValue(model.getValue());
 	}
 
-	public void onSave(nextgen.model.STValue model) {
-		model.setValue(((org.fife.ui.rtextarea.RTextScrollPane) getValueJScrollPane()).getTextArea().getText());
+	public void modelToView() {
+		valueModel.setValue(model.getValue());
 	}
+
+	public nextgen.model.STValue viewToModel() {
+		model.setValue((String) valueModel.getValue());
+		return model;
+	}
+
 
 	/*
 
-	 columns 	2	"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	 rows 		3 	"center:30:none, center:30:none, center:30:none"
+	rows 		 	"center:30:none"
 
-	 col 2 1 CENTER max(50dlu;pref) none
-	 col 3 1 FILL pref grow
-	 row 1 2 CENTER 30 none
-	 row 1 3 CENTER 30 none
-	 row 1 4 CENTER 30 none
-	 cell 2 2 1 1 CENTER CENTER Label value
-	 cell 3 2 3 1 FILL FILL ScrollPane value
-	 cell 2 3 1 1 CENTER CENTER NONE null
-	 cell 3 3 1 1 FILL CENTER NONE root
-	 cell 2 4 1 1 CENTER CENTER NONE 
-	 cell 3 4 1 1 CENTER CENTER NONE null
 
 	*/	
-}
+
+	public static final class JTextFieldModel extends AbstractValueModel {
+
+		private String value;
+		private final ValueModel valueModel = new AbstractValueModel() {
+
+			@Override
+			public Object getValue() { return value; }
+
+			@Override
+			public void setValue(Object o) { 
+				String old = value;
+				value = o == null ? null : o.toString();
+				fireValueChange(old, value);
+			}
+		};
+
+		public JTextFieldModel(JTextField component) {
+			Bindings.bind(component, valueModel);
+		}
+
+		@Override
+		public Object getValue() {
+			return valueModel.getValue();
+		}
+
+		@Override
+		public void setValue(Object o) {
+			Object old = getValue();
+			valueModel.setValue(o);
+			fireValueChange(old, valueModel.getValue());
+		}
+	}
+
+	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
+
+		private String value;
+		private final ValueModel valueModel = new AbstractValueModel() {
+
+			@Override
+			public Object getValue() { return value; }
+
+			@Override
+			public void setValue(Object o) {
+				String old = value;
+				value = o == null ? null : o.toString();
+				fireValueChange(old, value);
+			}
+		};
+
+		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
+			Bindings.bind(component, valueModel);
+		}
+
+		@Override
+		public Object getValue() {
+			return valueModel.getValue();
+		}
+
+		@Override
+		public void setValue(Object o) {
+			Object old = getValue();
+			valueModel.setValue(o);
+			fireValueChange(old, valueModel.getValue());
+		}
+	}
+}  

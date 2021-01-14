@@ -14,4 +14,4 @@ public final class STValueDeleted {
 	public STValueDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

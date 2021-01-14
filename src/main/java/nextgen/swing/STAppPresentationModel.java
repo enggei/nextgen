@@ -18,7 +18,6 @@ public class STAppPresentationModel {
    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STAppPresentationModel.class);
 
    public final STModelDB db;
-   public final DomainDB domainDB;
 
    private static final Map<String, ImageIcon> cache = new LinkedHashMap<>();
 
@@ -30,7 +29,6 @@ public class STAppPresentationModel {
 
    public STAppPresentationModel() {
       this.db = new STModelDB(AppModel.getInstance().getDbDir());
-      this.domainDB = new DomainDB(this.db.getDatabaseService());
 
       this.chronicle = new nextgen.utils.NeoChronicle(AppModel.getInstance().getDbDir(), db.getDatabaseService());
       this.stRenderer = new nextgen.st.STRenderer();
@@ -42,7 +40,7 @@ public class STAppPresentationModel {
    }
 
    public static String getSTPackage(org.stringtemplate.v4.ST st) {
-      return st.getAttribute("package") == null ? st.getAttribute("packageName").toString() : st.getAttribute("package").toString();
+      return st.getAttribute("package") == null ? st.getAttribute("packageName").toString() : (st.getAttribute("package") == null ? null : st.getAttribute("package").toString());
    }
 
    public void replaceAllSTValues(STModel thisModel, String existingValue, String newValue) {
@@ -464,7 +462,7 @@ public class STAppPresentationModel {
       stModel.removeArguments(stArgument);
       final String uuid = stArgument.getUuid();
       delete(stArgument);
-      nextgen.events.STArgumentDeleted.post(stModel, uuid);
+      nextgen.events.STArgumentDeleted.post(uuid);
    }
 
    public static void detach(nextgen.model.STModel stModel, nextgen.model.STParameter stParameter) {
@@ -1194,22 +1192,22 @@ public class STAppPresentationModel {
       final STValue stArgumentValue = stArgument.getValue();
       if (stArgumentValue == null) {
          stArgument.setValue(newSTValue(value));
-         nextgen.events.STArgumentChanged.post(stModel, stArgument);
+         nextgen.events.STArgumentChanged.post(stArgument);
       } else {
          switch (stArgumentValue.getType()) {
             case STMODEL:
                stArgument.setValue(newSTValue(value));
-               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               nextgen.events.STArgumentChanged.post(stArgument);
                break;
             case PRIMITIVE:
                if (render(stArgument, "").equals(value)) return;
                stArgument.setValue(newSTValue(value));
-               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               nextgen.events.STArgumentChanged.post(stArgument);
                notifyIfLabel(stModel, stArgument);
                break;
             case ENUM:
                stArgument.setValue(newSTValue(value));
-               nextgen.events.STArgumentChanged.post(stModel, stArgument);
+               nextgen.events.STArgumentChanged.post(stArgument);
                break;
          }
       }
@@ -1399,7 +1397,7 @@ public class STAppPresentationModel {
    }
 
    public Domain newDomain(String domainName) {
-      return domainDB.newDomain()
+      return db.newDomain()
             .setName(domainName);
    }
 
@@ -1407,9 +1405,9 @@ public class STAppPresentationModel {
    public DomainEntity addDomainEntity(Domain domain, String name, DomainEntityType type, String enumValues) {
 
       final java.util.Optional<nextgen.model.DomainEntity> existing = domain.getEntities().filter(domainEntity -> domainEntity.getName().equals(name)).findAny();
-      if(existing.isPresent()) return existing.get();
+      if (existing.isPresent()) return existing.get();
 
-      final DomainEntity domainEntity = domainDB.newDomainEntity().setName(name).setType(type).setEnums(enumValues);
+      final DomainEntity domainEntity = db.newDomainEntity().setName(name).setType(type).setEnums(enumValues);
 
       domain.addEntities(domainEntity);
       NewDomainDomainEntity.post(domainEntity, domain);
@@ -1421,7 +1419,7 @@ public class STAppPresentationModel {
 
       final Domain domain = domainEntity.getIncomingEntitiesDomain().findAny().get();
       final DomainEntity entity = findDomainEntity(domain, entityName).orElseGet(() -> addDomainEntity(domain, entityName, nextgen.model.DomainEntityType.ENTITY, ""));
-      final DomainRelation domainRelation = domainDB.newDomainRelation()
+      final DomainRelation domainRelation = db.newDomainRelation()
             .setName(relationName)
             .setSrc(domainEntity)
             .setDst(entity)
@@ -1462,7 +1460,7 @@ public class STAppPresentationModel {
 
    public void addDomainVisitor(Domain domain, String visitorName) {
 
-      final DomainVisitor domainVisitor = domainDB.newDomainVisitor().setName(visitorName);
+      final DomainVisitor domainVisitor = db.newDomainVisitor().setName(visitorName);
       domain.addVisitors(domainVisitor);
 
       nextgen.events.NewDomainVisitor.post(domain, domainVisitor);
@@ -1472,6 +1470,7 @@ public class STAppPresentationModel {
       domainVisitor.addTemplates(stTemplate);
       nextgen.events.DomainVisitorSTTemplateAdded.post(domainVisitor, stTemplate);
    }
+
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 

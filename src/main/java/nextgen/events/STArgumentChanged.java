@@ -4,16 +4,14 @@ public final class STArgumentChanged {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STArgumentChanged.class);
 
-	public static void post(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument) {
-		log.info("STArgumentChanged" + " stModel" + " stArgument");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentChanged(stModel, stArgument));
+	public static void post(nextgen.model.STArgument model) {
+		log.info("STArgumentChanged" + " model");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STArgumentChanged(model));
 	}
 
-	public final nextgen.model.STModel stModel;
-	public final nextgen.model.STArgument stArgument;
+	public final nextgen.model.STArgument model;
 
-	public STArgumentChanged(nextgen.model.STModel stModel, nextgen.model.STArgument stArgument) {
-		this.stModel = stModel;
-		this.stArgument = stArgument;
+	public STArgumentChanged(nextgen.model.STArgument model) {
+		this.model = model;
 	}
-}
+}  

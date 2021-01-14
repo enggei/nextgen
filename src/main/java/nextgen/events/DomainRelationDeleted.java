@@ -14,4 +14,4 @@ public final class DomainRelationDeleted {
 	public DomainRelationDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

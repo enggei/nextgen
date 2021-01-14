@@ -2,5 +2,5 @@ package nextgen.model;
 
 public enum DomainEntityType {
 
-	ENTITY,ENUM
+	ENTITY,ENUM,PRIMITIVE
 }  

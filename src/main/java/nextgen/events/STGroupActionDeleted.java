@@ -14,4 +14,4 @@ public final class STGroupActionDeleted {
 	public STGroupActionDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

@@ -14,4 +14,4 @@ public final class STModelDeleted {
 	public STModelDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

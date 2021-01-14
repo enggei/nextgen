@@ -14,4 +14,4 @@ public final class STEnumDeleted {
 	public STEnumDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

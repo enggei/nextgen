@@ -118,130 +118,158 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainVisitor(nextgen.events.NewDomainVisitor event) {
+		findAllDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain))
+							.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainVisitorTreeNode(event.visitor)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomain(nextgen.events.NewDomain event) {
+		findAllDomainsTreeNode().forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainTreeNode(event.domain)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTAction(nextgen.events.NewSTAction event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-				.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STGroupActionTreeNode(event.action)));
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+				.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STGroupActionTreeNode(event.action)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupActionDeleted(nextgen.events.STGroupActionDeleted event) {
-		findSTGroupActionTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findAllSTGroupActionTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupActionChanged(nextgen.events.STGroupActionChanged event) {
-		findSTGroupActionTreeNode(treeNode -> treeNode.getModel().equals(event.action))
-				.ifPresent(STTemplateNavigator.STGroupActionTreeNode::nodeChanged);
+		findAllSTGroupActionTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STTemplateNavigator.STGroupActionTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainEntityDomainRelation(nextgen.events.NewDomainEntityDomainRelation event) {
+		findAllDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.domainEntity))
+			.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainRelationTreeNode(event.domainRelation)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onDomainEntityChanged(nextgen.events.DomainEntityChanged event) {
+		findAllDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+		      .forEach(treeNode -> {
+		         treeNode.removeAllChildren();
+		         event.model.getIncomingEntitiesDomain().findFirst()
+		               .ifPresent(domain -> domain.getRelationsSorted()
+		                     .filter(domainRelation -> domainRelation.getSrc().equals(event.model))
+		                     .forEach(domainRelation -> treeNode.add(new DomainRelationTreeNode(domainRelation))));
+
+		         treeNode.nodeChanged();
+		      });
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
-		findSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.stGroupFile))
-				.ifPresent(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
+		findAllSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelTreeNodeClicked(nextgen.events.STModelTreeNodeClicked event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stModel.getStTemplate())).ifPresent(treeModel::select);
+		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stModel.getStTemplate())).forEach(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		findSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.ifPresent(treeModel::removeNodeFromParent);
+		findAllSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
-		findSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.ifPresent(treeModel::removeNodeFromParent);
+		findAllSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.ifPresent(treeModel::removeNodeFromParent);
+		findAllSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
-		findSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.ifPresent(treeModel::removeNodeFromParent);
+		findAllSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
+				.forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroup(nextgen.events.NewSTGroup event) {
-		treeModel.addNodeInSortedOrderAndSelect((RootNode) treeModel.getRoot(), new STTemplateNavigator.STGroupTreeNode(event.group));
+		findTemplatesTreeNode().ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new nextgen.swing.STTemplateNavigator.STGroupTreeNode(event.group)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTEnum(nextgen.events.NewSTEnum event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTInterface(nextgen.events.NewSTInterface event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STInterfaceTreeNode(event.stInterface)));
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+							.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STInterfaceTreeNode(event.stInterface)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroupTemplate(nextgen.events.NewSTGroupTemplate event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
-							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
+							.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTTemplateChild(nextgen.events.NewSTTemplateChild event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
-							.ifPresent(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
+		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.parent))
+							.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STTemplateTreeNode(event.template)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-							.ifPresent(STTemplateNavigator.STGroupTreeNode::nodeChanged);
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+							.forEach(STTemplateNavigator.STGroupTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
-		findSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
-							.ifPresent(STTemplateNavigator.STTemplateTreeNode::nodeChanged);
+		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
+							.forEach(STTemplateNavigator.STTemplateTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceNameChanged(nextgen.events.STInterfaceNameChanged event) {
-		findSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))
-							.ifPresent(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
+		findAllSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))
+							.forEach(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumNameChanged(nextgen.events.STEnumNameChanged event) {
-		findSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
-							.ifPresent(STTemplateNavigator.STEnumTreeNode::nodeChanged);
+		findAllSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
+							.forEach(STTemplateNavigator.STEnumTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupTreeNodeClicked(nextgen.events.STGroupTreeNodeClicked event) {
-		findSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).ifPresent(treeModel::select);
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).forEach(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onCanvasSTModelNodeClicked(nextgen.events.CanvasSTModelNodeClicked event) {
 		final nextgen.model.STTemplate stTemplate = event.stModel.getStTemplate();
-		findSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(stTemplate)).ifPresent(treeModel::select);
+		findAllSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(stTemplate)).forEach(treeModel::select);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTGroupFile(nextgen.events.NewSTGroupFile event) {
-		findSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.stGroupModel))
-				.ifPresent(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
+		findAllSTGroupTreeNode(stGroupTreeNode -> stGroupTreeNode.getModel().equals(event.stGroupModel))
+				.forEach(stGroupTreeNode -> treeModel.addNodeInSortedOrderAndSelect(stGroupTreeNode, new STTemplateNavigator.STGroupFileTreeNode(event.stGroupFile)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileDeleted(nextgen.events.STGroupFileDeleted event) {
-		findSTGroupFileTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).ifPresent(treeModel::removeNodeFromParent);
+		findAllSTGroupFileTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	public class BaseTreeNode<T> extends DefaultMutableTreeNode {
@@ -416,6 +444,8 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new AddDomainEntities(getModel(), workspace));
+				actions.add(new AddDomainVisitor(getModel(), workspace));
 			});
 
 			return actions;
@@ -531,7 +561,7 @@ public class STTemplateNavigator extends JPanel {
 			setLabel(model.toString());
 			this.tooltip = "";
 
-			appModel().domainDB.findAllDomain().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(domain -> add(new DomainTreeNode(domain)));
+			appModel().db.findAllDomain().sorted((g1,g2) -> g1.getName().compareToIgnoreCase(g2.getName())).forEach(domain -> add(new DomainTreeNode(domain)));
 		}
 
 		DomainsTreeNode thisNode() {
@@ -670,7 +700,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		DomainRelationTreeNode(nextgen.model.DomainRelation model) {
-			super(model, appModel().loadIcon("rel"));
+			super(model, appModel().loadIcon(model.getType().name()));
 
 
 			setLabel(getModel().getName());

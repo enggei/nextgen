@@ -45,6 +45,12 @@ public class STValueTable extends javax.swing.JTable {
 		return tableModel().content.stream();
 	}
 
+	public java.util.List<nextgen.model.STValue> getSelectedValues() {
+		java.util.List<nextgen.model.STValue> values = new java.util.ArrayList<>();
+		for (int selectedRow : getSelectedRows()) values.add(tableModel().content.get(selectedRow).model);
+		return values;
+	}
+
 	public STValueTable refresh() {
 		tableModel().fireTableDataChanged();
 		return this;
@@ -63,16 +69,16 @@ public class STValueTable extends javax.swing.JTable {
 	public static final class RowElement {
 
 		public final nextgen.model.STValue model;
-		private String value;
+		private String _value;
 
 		protected RowElement(nextgen.model.STValue model) {
 			this.model = model;
-			value = model.getValue();
+			_value = model.getValue();
 		}
 
-		String getValue() { return value; }
+		String getValue() { return _value; }
 
-		public void setValue(Object value) { this.value = (String)value; }
+		public void setValue(Object value) { this._value = (String)value; }
 	}
 
 	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
@@ -181,4 +187,4 @@ public class STValueTable extends javax.swing.JTable {
 			return content.get(row).model;
 		}
 	}
-}
+}  

@@ -2,88 +2,125 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
+import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.value.AbstractValueModel;
+import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.CellConstraints;
+
+import nextgen.swing.ComponentFactory;
 import static nextgen.swing.ComponentFactory.*;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class DomainForm extends JPanel {
 
-	JLabel name_JLabel;
-	JTextField name_JTextField;
-	JLabel entities_JLabel;
-	JComponent entities_JComponent;
-	JComponent values_JComponent;
+	nextgen.model.Domain model;
+	JLabel name_JLabel = newJLabel("name");
+	JTextField name_JTextField = newJTextField("name");
+	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
 
 	public DomainForm() {
-		setLayout(new com.jgoodies.forms.layout.FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none, center:30:grow"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
 	}
 
-	public JLabel getNameJLabel() {
-		return name_JLabel;
+	public <T extends JLabel> T getNameJLabel() {
+		return (T) name_JLabel;
 	}
 
-	public DomainForm setName(JLabel component) {
-		if (component == null) return this;
-		add(this.name_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		return this;
+	public <T extends JTextField> T getNameJTextField() {
+		return (T) name_JTextField;
 	}
 
-	public JTextField getNameJTextField() {
-		return name_JTextField;
+
+	public void modelToView(nextgen.model.Domain model) {
+		this.model = model;
+		nameModel.setValue(model.getName());
 	}
 
-	public DomainForm setName(JTextField component) {
-		if (component == null) return this;
-		add(this.name_JTextField = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		return this;
+	public void modelToView() {
+		nameModel.setValue(model.getName());
 	}
 
-	public JLabel getEntitiesJLabel() {
-		return entities_JLabel;
-	}
-
-	public DomainForm setEntities(JLabel component) {
-		if (component == null) return this;
-		add(this.entities_JLabel = component, new com.jgoodies.forms.layout.CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		return this;
-	}
-
-	public JComponent getEntitiesJComponent() {
-		return entities_JComponent;
-	}
-
-	public DomainForm setEntities(JComponent component) {
-		if (component == null) return this;
-		add(this.entities_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 2, 1, 2, "FILL, FILL"));
-		return this;
-	}
-
-	public JComponent getValuesJComponent() {
-		return values_JComponent;
-	}
-
-	public DomainForm setValues(JComponent component) {
-		if (component == null) return this;
-		add(this.values_JComponent = component, new com.jgoodies.forms.layout.CellConstraints().xywh(2, 3, 1, 2, "DEFAULT, FILL"));
-		return this;
+	public nextgen.model.Domain viewToModel() {
+		model.setName((String) nameModel.getValue());
+		return model;
 	}
 
 
 	/*
 
-	 columns 	2	"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	 rows 		3 	"center:30:none, center:30:none, center:30:grow"
+	rows 		 	"center:30:none"
 
-	 col 2 1 CENTER max(50dlu;pref) none
-	 col 3 1 FILL pref grow
-	 row 1 2 CENTER 30 none
-	 row 1 3 CENTER 30 none
-	 row 1 4 CENTER 30 grow
-	 cell 2 2 1 1 CENTER CENTER Label name
-	 cell 3 2 1 1 FILL CENTER TextField name
-	 cell 2 3 1 1 CENTER CENTER Label entities
-	 cell 3 3 2 1 FILL FILL Component entities
-	 cell 2 4 1 1 CENTER CENTER NONE null
-	 cell 3 4 2 1 DEFAULT FILL Component values
 
 	*/	
-}
+
+	public static final class JTextFieldModel extends AbstractValueModel {
+
+		private String value;
+		private final ValueModel valueModel = new AbstractValueModel() {
+
+			@Override
+			public Object getValue() { return value; }
+
+			@Override
+			public void setValue(Object o) { 
+				String old = value;
+				value = o == null ? null : o.toString();
+				fireValueChange(old, value);
+			}
+		};
+
+		public JTextFieldModel(JTextField component) {
+			Bindings.bind(component, valueModel);
+		}
+
+		@Override
+		public Object getValue() {
+			return valueModel.getValue();
+		}
+
+		@Override
+		public void setValue(Object o) {
+			Object old = getValue();
+			valueModel.setValue(o);
+			fireValueChange(old, valueModel.getValue());
+		}
+	}
+
+	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
+
+		private String value;
+		private final ValueModel valueModel = new AbstractValueModel() {
+
+			@Override
+			public Object getValue() { return value; }
+
+			@Override
+			public void setValue(Object o) {
+				String old = value;
+				value = o == null ? null : o.toString();
+				fireValueChange(old, value);
+			}
+		};
+
+		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
+			Bindings.bind(component, valueModel);
+		}
+
+		@Override
+		public Object getValue() {
+			return valueModel.getValue();
+		}
+
+		@Override
+		public void setValue(Object o) {
+			Object old = getValue();
+			valueModel.setValue(o);
+			fireValueChange(old, valueModel.getValue());
+		}
+	}
+}  

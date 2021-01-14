@@ -14,4 +14,4 @@ public final class STModelChanged {
 	public STModelChanged(nextgen.model.STModel model) {
 		this.model = model;
 	}
-}
+}  

@@ -166,7 +166,7 @@ public class STModelEditor extends BaseEditor<STModel> {
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentChanged(nextgen.events.STArgumentChanged event) {
-      if (model.equals(event.stModel)) {
+      if (model.equals(event.model)) {
          modelEditorText.setModel(model);
          modelEditorForm.setModel(model);
       }
@@ -182,10 +182,7 @@ public class STModelEditor extends BaseEditor<STModel> {
 
    @org.greenrobot.eventbus.Subscribe()
    public void onSTArgumentDeleted(nextgen.events.STArgumentDeleted event) {
-      if (model.equals(event.stModel)) {
-         modelEditorText.setModel(model);
-         modelEditorForm.setModel(model);
-      }
+
    }
 
    @org.greenrobot.eventbus.Subscribe()

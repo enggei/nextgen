@@ -14,4 +14,4 @@ public final class DomainDeleted {
 	public DomainDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

@@ -14,4 +14,4 @@ public final class DomainEntityDeleted {
 	public DomainEntityDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

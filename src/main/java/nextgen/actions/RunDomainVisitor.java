@@ -48,6 +48,7 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    	visitor.getTemplatesSorted().forEach(stTemplate -> appModel().addKVArgument(visitorInterface, "templates", "name", stTemplate.getName(), "uuid", stTemplate.getUuid()));
    	
    	nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));
+   	appModel().addArgument(transactionAction, "imports", "static nextgen.utils.StringUtil.*");
    	appModel().setArgument(transactionAction, "packageName", packageName);
    	appModel().setArgument(transactionAction, "name", visitor.getName());
    	appModel().setArgument(transactionAction, "title", visitor.getName());

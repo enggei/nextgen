@@ -14,4 +14,4 @@ public final class STGroupFileDeleted {
 	public STGroupFileDeleted(String uuid) {
 		this.uuid = uuid;
 	}
-}
+}  

@@ -7,7 +7,7 @@ public class STTemplateTable extends javax.swing.JTable {
 
 /*
 	0 name	String	
-	1 group	String	
+	1 text	String	
 */
 	private Consumer<nextgen.model.STTemplate> selectionListener;
 
@@ -72,22 +72,22 @@ public class STTemplateTable extends javax.swing.JTable {
 	public static final class RowElement {
 
 		public final nextgen.model.STTemplate model;
-		private String name;
-		private String group;
+		private String _name;
+		private String _text;
 
 		protected RowElement(nextgen.model.STTemplate model) {
 			this.model = model;
-			name = model.getName();
-			group = nextgen.swing.STAppPresentationModel.getSTGroup(model).getName();
+			_name = model.getName();
+			_text = model.getText();
 		}
 
-		String getName() { return name; }
+		String getName() { return _name; }
 
-		String getGroup() { return group; }
+		String getText() { return _text; }
 
-		public void setName(Object value) { this.name = (String)value; }
+		public void setName(Object value) { this._name = (String)value; }
 
-		public void setGroup(Object value) { this.group = (String)value; }
+		public void setText(Object value) { this._text = (String)value; }
 	}
 
 	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
@@ -148,7 +148,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public String getColumnName(int columnIndex) {
 			switch(columnIndex) {
 				case 0: return "name";
-				case 1: return "group";
+				case 1: return "text";
 			}
 			return "";
 		}
@@ -166,7 +166,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public int findColumn(String columnName) {
 			switch(columnName) {
 				case "name": return 0;
-				case "group": return 1;
+				case "text": return 1;
 			}
 			return 0;
 		}
@@ -185,7 +185,7 @@ public class STTemplateTable extends javax.swing.JTable {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 				case 0: return content.get(rowIndex).getName();
-				case 1: return content.get(rowIndex).getGroup();
+				case 1: return content.get(rowIndex).getText();
 			}
 			return null;
 		}
@@ -202,4 +202,4 @@ public class STTemplateTable extends javax.swing.JTable {
 			return content.get(row).model;
 		}
 	}
-}
+}  

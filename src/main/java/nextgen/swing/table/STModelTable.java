@@ -6,9 +6,6 @@ import java.util.function.Consumer;
 public class STModelTable extends javax.swing.JTable {
 
 /*
-	1 stTemplate	String	
-	0 stGroup	String	
-	2 name	String	
 */
 	private Consumer<nextgen.model.STModel> selectionListener;
 
@@ -35,12 +32,6 @@ public class STModelTable extends javax.swing.JTable {
 			if (getSelectedRow() != -1 && selectionListener != null) selectionListener.accept(tableModel().getValueAt(getSelectedRow()));
 		});
 
-		getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
-		getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
-		getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
-		getColumnModel().getColumn(1).setCellEditor(new CellEditor());
-		getColumnModel().getColumn(0).setCellEditor(new CellEditor());
-		getColumnModel().getColumn(2).setCellEditor(new CellEditor());
 
 		tableModel.fireTableStructureChanged();
 
@@ -49,6 +40,12 @@ public class STModelTable extends javax.swing.JTable {
 
 	public java.util.stream.Stream<RowElement> getContent() {
 		return tableModel().content.stream();
+	}
+
+	public java.util.List<nextgen.model.STModel> getSelectedValues() {
+		java.util.List<nextgen.model.STModel> values = new java.util.ArrayList<>();
+		for (int selectedRow : getSelectedRows()) values.add(tableModel().content.get(selectedRow).model);
+		return values;
 	}
 
 	public STModelTable refresh() {
@@ -69,28 +66,12 @@ public class STModelTable extends javax.swing.JTable {
 	public static final class RowElement {
 
 		public final nextgen.model.STModel model;
-		private String stTemplate;
-		private String stGroup;
-		private String name;
 
 		protected RowElement(nextgen.model.STModel model) {
 			this.model = model;
-			stTemplate = model.getStTemplate().getName();
-			stGroup = nextgen.swing.STAppPresentationModel.getSTGroup(model.getStTemplate()).getName();
-			name = nextgen.swing.STAppPresentationModel.getSTModelName(model, "[no name]");
 		}
 
-		String getStTemplate() { return stTemplate; }
 
-		String getStGroup() { return stGroup; }
-
-		String getName() { return name; }
-
-		public void setStTemplate(Object value) { this.stTemplate = (String)value; }
-
-		public void setStGroup(Object value) { this.stGroup = (String)value; }
-
-		public void setName(Object value) { this.name = (String)value; }
 	}
 
 	static final class CellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor {
@@ -141,9 +122,6 @@ public class STModelTable extends javax.swing.JTable {
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-				case 1: return false;
-				case 0: return false;
-				case 2: return false;
 			}
 			return false;
 		}
@@ -151,9 +129,6 @@ public class STModelTable extends javax.swing.JTable {
 		@Override
 		public String getColumnName(int columnIndex) {
 			switch(columnIndex) {
-				case 1: return "stTemplate";
-				case 0: return "stGroup";
-				case 2: return "name";
 			}
 			return "";
 		}
@@ -161,9 +136,6 @@ public class STModelTable extends javax.swing.JTable {
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
 			switch(columnIndex) {
-				case 1: return String.class;
-				case 0: return String.class;
-				case 2: return String.class;
 			}
 			return Object.class;
 		}
@@ -171,9 +143,6 @@ public class STModelTable extends javax.swing.JTable {
 		@Override
 		public int findColumn(String columnName) {
 			switch(columnName) {
-				case "stTemplate": return 1;
-				case "stGroup": return 0;
-				case "name": return 2;
 			}
 			return 0;
 		}
@@ -185,15 +154,12 @@ public class STModelTable extends javax.swing.JTable {
 
 		@Override
 		public int getColumnCount() {
-			return 3;
+			return 0;
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-				case 1: return content.get(rowIndex).getStTemplate();
-				case 0: return content.get(rowIndex).getStGroup();
-				case 2: return content.get(rowIndex).getName();
 			}
 			return null;
 		}
@@ -201,9 +167,6 @@ public class STModelTable extends javax.swing.JTable {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-				case 1: break;
-				case 0: break;
-				case 2: break;
 			}
 		}
 
@@ -211,4 +174,4 @@ public class STModelTable extends javax.swing.JTable {
 			return content.get(row).model;
 		}
 	}
-}
+}  
