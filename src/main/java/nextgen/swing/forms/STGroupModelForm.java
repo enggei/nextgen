@@ -29,7 +29,7 @@ public class STGroupModelForm extends JPanel {
 	RSyntaxTextAreaModel iconModel = new RSyntaxTextAreaModel(getIconRSyntaxTextArea());
 
 	public STGroupModelForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none, center:pref:none, center:pref:none"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:200:grow, center:pref:none, center:200:grow, center:200:grow"));
 		add(newJScrollPane(this.language_JLabel), new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(newJScrollPane(this.language_RSyntaxTextArea), new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 		add(this.name_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
@@ -101,7 +101,7 @@ public class STGroupModelForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:pref:none"
+	rows 		 	"center:200:grow, center:pref:none, center:200:grow, center:200:grow"
 
 
 	*/	

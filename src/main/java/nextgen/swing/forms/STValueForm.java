@@ -20,7 +20,7 @@ public class STValueForm extends JPanel {
 	RSyntaxTextAreaModel valueModel = new RSyntaxTextAreaModel(getValueRSyntaxTextArea());
 
 	public STValueForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:200:grow"));
 		add(newJScrollPane(this.value_JLabel), new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(newJScrollPane(this.value_RSyntaxTextArea), new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 	}
@@ -53,7 +53,7 @@ public class STValueForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:pref:none"
+	rows 		 	"center:200:grow"
 
 
 	*/	

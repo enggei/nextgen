@@ -23,7 +23,7 @@ public class STParameterForm extends JPanel {
 	RSyntaxTextAreaModel argumentTypeModel = new RSyntaxTextAreaModel(getArgumentTypeRSyntaxTextArea());
 
 	public STParameterForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:200:grow"));
 		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 		add(newJScrollPane(this.argumentType_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
@@ -69,7 +69,7 @@ public class STParameterForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:pref:none, center:pref:none"
+	rows 		 	"center:pref:none, center:200:grow"
 
 
 	*/	
