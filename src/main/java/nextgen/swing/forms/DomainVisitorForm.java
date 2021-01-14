@@ -68,41 +68,41 @@ public class DomainVisitorForm extends JPanel {
 	RSyntaxTextAreaModel onOptionalPrimitiveRelationModel = new RSyntaxTextAreaModel(getOnOptionalPrimitiveRelationRSyntaxTextArea());
 
 	public DomainVisitorForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.onDomain_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.onDomain_RSyntaxTextArea, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
-		add(this.onEntity_JLabel, new CellConstraints().xywh(1, 3, 1, 1, "CENTER, CENTER"));
-		add(this.onEntity_RSyntaxTextArea, new CellConstraints().xywh(2, 3, 1, 1, "FILL, CENTER"));
-		add(this.onRelation_JLabel, new CellConstraints().xywh(1, 4, 1, 1, "CENTER, CENTER"));
-		add(this.onRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 4, 1, 1, "FILL, CENTER"));
-		add(this.onComplete_JLabel, new CellConstraints().xywh(1, 5, 1, 1, "CENTER, CENTER"));
-		add(this.onComplete_RSyntaxTextArea, new CellConstraints().xywh(2, 5, 1, 1, "FILL, CENTER"));
-		add(this.onEntityEntity_JLabel, new CellConstraints().xywh(1, 6, 1, 1, "CENTER, CENTER"));
-		add(this.onEntityEntity_RSyntaxTextArea, new CellConstraints().xywh(2, 6, 1, 1, "FILL, CENTER"));
-		add(this.onEnumEntity_JLabel, new CellConstraints().xywh(1, 7, 1, 1, "CENTER, CENTER"));
-		add(this.onEnumEntity_RSyntaxTextArea, new CellConstraints().xywh(2, 7, 1, 1, "FILL, CENTER"));
-		add(this.onPrimitiveEntity_JLabel, new CellConstraints().xywh(1, 8, 1, 1, "CENTER, CENTER"));
-		add(this.onPrimitiveEntity_RSyntaxTextArea, new CellConstraints().xywh(2, 8, 1, 1, "FILL, CENTER"));
-		add(this.onOneEntityRelation_JLabel, new CellConstraints().xywh(1, 9, 1, 1, "CENTER, CENTER"));
-		add(this.onOneEntityRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 9, 1, 1, "FILL, CENTER"));
-		add(this.onOneEnumRelation_JLabel, new CellConstraints().xywh(1, 10, 1, 1, "CENTER, CENTER"));
-		add(this.onOneEnumRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 10, 1, 1, "FILL, CENTER"));
-		add(this.onOnePrimitiveRelation_JLabel, new CellConstraints().xywh(1, 11, 1, 1, "CENTER, CENTER"));
-		add(this.onOnePrimitiveRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 11, 1, 1, "FILL, CENTER"));
-		add(this.onManyEntityRelation_JLabel, new CellConstraints().xywh(1, 12, 1, 1, "CENTER, CENTER"));
-		add(this.onManyEntityRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 12, 1, 1, "FILL, CENTER"));
-		add(this.onManyEnumRelation_JLabel, new CellConstraints().xywh(1, 13, 1, 1, "CENTER, CENTER"));
-		add(this.onManyEnumRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 13, 1, 1, "FILL, CENTER"));
-		add(this.onManyPrimitiveRelation_JLabel, new CellConstraints().xywh(1, 14, 1, 1, "CENTER, CENTER"));
-		add(this.onManyPrimitiveRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 14, 1, 1, "FILL, CENTER"));
-		add(this.onOptionalEntityRelation_JLabel, new CellConstraints().xywh(1, 15, 1, 1, "CENTER, CENTER"));
-		add(this.onOptionalEntityRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 15, 1, 1, "FILL, CENTER"));
-		add(this.onOptionalEnumRelation_JLabel, new CellConstraints().xywh(1, 16, 1, 1, "CENTER, CENTER"));
-		add(this.onOptionalEnumRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 16, 1, 1, "FILL, CENTER"));
-		add(this.onOptionalPrimitiveRelation_JLabel, new CellConstraints().xywh(1, 17, 1, 1, "CENTER, CENTER"));
-		add(this.onOptionalPrimitiveRelation_RSyntaxTextArea, new CellConstraints().xywh(2, 17, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onDomain_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onDomain_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onEntity_JLabel), new CellConstraints().xywh(1, 3, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onEntity_RSyntaxTextArea), new CellConstraints().xywh(2, 3, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onRelation_JLabel), new CellConstraints().xywh(1, 4, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 4, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onComplete_JLabel), new CellConstraints().xywh(1, 5, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onComplete_RSyntaxTextArea), new CellConstraints().xywh(2, 5, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onEntityEntity_JLabel), new CellConstraints().xywh(1, 6, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onEntityEntity_RSyntaxTextArea), new CellConstraints().xywh(2, 6, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onEnumEntity_JLabel), new CellConstraints().xywh(1, 7, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onEnumEntity_RSyntaxTextArea), new CellConstraints().xywh(2, 7, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onPrimitiveEntity_JLabel), new CellConstraints().xywh(1, 8, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onPrimitiveEntity_RSyntaxTextArea), new CellConstraints().xywh(2, 8, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOneEntityRelation_JLabel), new CellConstraints().xywh(1, 9, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOneEntityRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 9, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOneEnumRelation_JLabel), new CellConstraints().xywh(1, 10, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOneEnumRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 10, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOnePrimitiveRelation_JLabel), new CellConstraints().xywh(1, 11, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOnePrimitiveRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 11, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onManyEntityRelation_JLabel), new CellConstraints().xywh(1, 12, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onManyEntityRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 12, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onManyEnumRelation_JLabel), new CellConstraints().xywh(1, 13, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onManyEnumRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 13, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onManyPrimitiveRelation_JLabel), new CellConstraints().xywh(1, 14, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onManyPrimitiveRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 14, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOptionalEntityRelation_JLabel), new CellConstraints().xywh(1, 15, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOptionalEntityRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 15, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOptionalEnumRelation_JLabel), new CellConstraints().xywh(1, 16, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOptionalEnumRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 16, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.onOptionalPrimitiveRelation_JLabel), new CellConstraints().xywh(1, 17, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.onOptionalPrimitiveRelation_RSyntaxTextArea), new CellConstraints().xywh(2, 17, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -309,7 +309,7 @@ public class DomainVisitorForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none, center:pref:none"
 
 
 	*/	

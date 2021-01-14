@@ -411,7 +411,7 @@ public class ComponentFactory {
    }
 
    public static javax.swing.JScrollPane newJScrollPane(java.awt.Component jComponent) {
-      return decorate(new javax.swing.JScrollPane(jComponent));
+      return jComponent instanceof RSyntaxTextArea ? newRTextScrollPane((org.fife.ui.rsyntaxtextarea.RSyntaxTextArea) jComponent) : decorate(new javax.swing.JScrollPane(jComponent));
    }
 
    public static JButton newJButton(String title, ActionListener actionListener) {

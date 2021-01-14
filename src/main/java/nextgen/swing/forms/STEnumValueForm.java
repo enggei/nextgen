@@ -18,16 +18,16 @@ public class STEnumValueForm extends JPanel {
 	JLabel name_JLabel = newJLabel("name");
 	JTextField name_JTextField = newJTextField("name");
 	JLabel lexical_JLabel = newJLabel("lexical");
-	JTextField lexical_JTextField = newJTextField("lexical");
+	RSyntaxTextArea lexical_RSyntaxTextArea = newRSyntaxTextArea("lexical");
 	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	JTextFieldModel lexicalModel = new JTextFieldModel(getLexicalJTextField());
+	RSyntaxTextAreaModel lexicalModel = new RSyntaxTextAreaModel(getLexicalRSyntaxTextArea());
 
 	public STEnumValueForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.lexical_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.lexical_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.lexical_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.lexical_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -42,8 +42,8 @@ public class STEnumValueForm extends JPanel {
 		return (T) lexical_JLabel;
 	}
 
-	public <T extends JTextField> T getLexicalJTextField() {
-		return (T) lexical_JTextField;
+	public <T extends RSyntaxTextArea> T getLexicalRSyntaxTextArea() {
+		return (T) lexical_RSyntaxTextArea;
 	}
 
 
@@ -69,7 +69,7 @@ public class STEnumValueForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none"
 
 
 	*/	

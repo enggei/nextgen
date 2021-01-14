@@ -2,9 +2,13 @@ package nextgen.actions;
 
 import static nextgen.utils.SwingUtil.*;
 import static nextgen.swing.ComponentFactory.*;
+
 import nextgen.model.*;
+
 import javax.swing.*;
+
 import org.neo4j.graphdb.Transaction;
+
 import java.awt.event.ActionEvent;
 
 public class RunDomainVisitor extends nextgen.actions.TransactionAction {
@@ -12,15 +16,15 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    private final nextgen.model.DomainVisitor visitor;
    private final JComponent owner;
 
-	public RunDomainVisitor(nextgen.model.DomainVisitor visitor, JComponent owner) {
-		super("Run");
-		this.visitor = visitor;
-		this.owner = owner;
-	}
+   public RunDomainVisitor(nextgen.model.DomainVisitor visitor, JComponent owner) {
+      super("Run");
+      this.visitor = visitor;
+      this.owner = owner;
+   }
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
-   	log.info("RunDomainVisitor" + " visitor" + " owner");
+      log.info("RunDomainVisitor" + " visitor" + " owner");
 
       try {
          final nextgen.model.STModel source = asSource();
@@ -34,34 +38,46 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    }
 
    private nextgen.model.STModel asSource() {
-   	
-   	final String packageName = appModel().getSourceOutputPackage() + "." + visitor.getName().toLowerCase();
-   	
-   	nextgen.model.STTemplate domainVisitor = appModel().db.findSTTemplateByUuid("95c75764-2aff-4b56-b1db-fa2ffac11872");
-   	final nextgen.model.STModel visitorInterface = appModel().newSTModel(domainVisitor);
-   	
-   	appModel().addArgument(visitorInterface, "onDomain", visitor.getOnDomain());
-   	appModel().addArgument(visitorInterface, "onEntity", visitor.getOnEntity());
-   	appModel().addArgument(visitorInterface, "onRelation", visitor.getOnRelation());
-   	appModel().addArgument(visitorInterface, "onComplete", visitor.getOnComplete());
-   	
-   	visitor.getTemplatesSorted().forEach(stTemplate -> appModel().addKVArgument(visitorInterface, "templates", "name", stTemplate.getName(), "uuid", stTemplate.getUuid()));
-   	
-   	nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));
-   	appModel().addArgument(transactionAction, "imports", "static nextgen.utils.StringUtil.*");
-   	appModel().setArgument(transactionAction, "packageName", packageName);
-   	appModel().setArgument(transactionAction, "name", visitor.getName());
-   	appModel().setArgument(transactionAction, "title", visitor.getName());
-   	appModel().addKVArgument(transactionAction, "fields", "name", "domain", "type", "nextgen.model.Domain");
-   	appModel().addKVArgument(transactionAction, "fields", "name", "owner", "type", "javax.swing.JComponent");
-   	appModel().addArgument(transactionAction, "statements", appModel().render(appModel().newSTModel(appModel().db.findSTTemplateByUuid("6032fd32-e00e-4f73-b7b7-8a9fe6444514"))));
-   	appModel().addArgument(transactionAction, "methods", appModel().render(visitorInterface));
-   	
-   	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
-   	nextgen.st.STGenerator.writeJavaFile(appModel().render(transactionAction), packageName, nextgen.swing.STAppPresentationModel.getSTModelName(transactionAction), file);
-   	
-   	appModel().setArgument(transactionAction, "name", visitor.getName() + "_" + System.currentTimeMillis());
-   	
-   	return transactionAction;
+
+      final String packageName = appModel().getSourceOutputPackage() + "." + visitor.getName().toLowerCase();
+
+      nextgen.model.STTemplate domainVisitor = appModel().db.findSTTemplateByUuid("95c75764-2aff-4b56-b1db-fa2ffac11872");
+      final nextgen.model.STModel visitorInterface = appModel().newSTModel(domainVisitor);
+
+      appModel().addArgument(visitorInterface, "onDomain", visitor.getOnDomain());
+      appModel().addArgument(visitorInterface, "onEntity", visitor.getOnEntity());
+      appModel().addArgument(visitorInterface, "onRelation", visitor.getOnRelation());
+      appModel().addArgument(visitorInterface, "onComplete", visitor.getOnComplete());
+      appModel().addArgument(visitorInterface, "onEntityEntity", visitor.getOnEntityEntity());
+      appModel().addArgument(visitorInterface, "onEnumEntity", visitor.getOnEnumEntity());
+      appModel().addArgument(visitorInterface, "onPrimitiveEntity", visitor.getOnPrimitiveEntity());
+      appModel().addArgument(visitorInterface, "onOneEntityRelation", visitor.getOnOneEntityRelation());
+      appModel().addArgument(visitorInterface, "onOneEnumRelation", visitor.getOnOneEnumRelation());
+      appModel().addArgument(visitorInterface, "onOnePrimitiveRelation", visitor.getOnOnePrimitiveRelation());
+      appModel().addArgument(visitorInterface, "onManyEntityRelation", visitor.getOnManyEntityRelation());
+      appModel().addArgument(visitorInterface, "onManyEnumRelation", visitor.getOnManyEnumRelation());
+      appModel().addArgument(visitorInterface, "onManyPrimitiveRelation", visitor.getOnManyPrimitiveRelation());
+      appModel().addArgument(visitorInterface, "onOptionalEntityRelation", visitor.getOnOptionalEntityRelation());
+      appModel().addArgument(visitorInterface, "onOptionalEnumRelation", visitor.getOnOptionalEnumRelation());
+      appModel().addArgument(visitorInterface, "onOptionalPrimitiveRelation", visitor.getOnOptionalPrimitiveRelation());
+
+      visitor.getTemplatesSorted().forEach(stTemplate -> appModel().addKVArgument(visitorInterface, "templates", "name", stTemplate.getName(), "uuid", stTemplate.getUuid()));
+
+      nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));
+      appModel().addArgument(transactionAction, "imports", "static nextgen.utils.StringUtil.*");
+      appModel().setArgument(transactionAction, "packageName", packageName);
+      appModel().setArgument(transactionAction, "name", visitor.getName());
+      appModel().setArgument(transactionAction, "title", visitor.getName());
+      appModel().addKVArgument(transactionAction, "fields", "name", "domain", "type", "nextgen.model.Domain");
+      appModel().addKVArgument(transactionAction, "fields", "name", "owner", "type", "javax.swing.JComponent");
+      appModel().addArgument(transactionAction, "statements", appModel().render(appModel().newSTModel(appModel().db.findSTTemplateByUuid("6032fd32-e00e-4f73-b7b7-8a9fe6444514"))));
+      appModel().addArgument(transactionAction, "methods", appModel().render(visitorInterface));
+
+      final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
+      nextgen.st.STGenerator.writeJavaFile(appModel().render(transactionAction), packageName, nextgen.swing.STAppPresentationModel.getSTModelName(transactionAction), file);
+
+      appModel().setArgument(transactionAction, "name", visitor.getName() + "_" + System.currentTimeMillis());
+
+      return transactionAction;
    }
 }

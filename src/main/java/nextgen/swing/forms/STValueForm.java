@@ -16,21 +16,21 @@ public class STValueForm extends JPanel {
 
 	nextgen.model.STValue model;
 	JLabel value_JLabel = newJLabel("value");
-	JTextField value_JTextField = newJTextField("value");
-	JTextFieldModel valueModel = new JTextFieldModel(getValueJTextField());
+	RSyntaxTextArea value_RSyntaxTextArea = newRSyntaxTextArea("value");
+	RSyntaxTextAreaModel valueModel = new RSyntaxTextAreaModel(getValueRSyntaxTextArea());
 
 	public STValueForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none"));
-		add(this.value_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.value_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none"));
+		add(newJScrollPane(this.value_JLabel), new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.value_RSyntaxTextArea), new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getValueJLabel() {
 		return (T) value_JLabel;
 	}
 
-	public <T extends JTextField> T getValueJTextField() {
-		return (T) value_JTextField;
+	public <T extends RSyntaxTextArea> T getValueRSyntaxTextArea() {
+		return (T) value_RSyntaxTextArea;
 	}
 
 
@@ -53,7 +53,7 @@ public class STValueForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none"
+	rows 		 	"center:pref:none"
 
 
 	*/	

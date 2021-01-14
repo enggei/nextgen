@@ -18,16 +18,16 @@ public class DomainEntityForm extends JPanel {
 	JLabel name_JLabel = newJLabel("name");
 	JTextField name_JTextField = newJTextField("name");
 	JLabel enums_JLabel = newJLabel("enums");
-	JTextField enums_JTextField = newJTextField("enums");
+	RSyntaxTextArea enums_RSyntaxTextArea = newRSyntaxTextArea("enums");
 	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	JTextFieldModel enumsModel = new JTextFieldModel(getEnumsJTextField());
+	RSyntaxTextAreaModel enumsModel = new RSyntaxTextAreaModel(getEnumsRSyntaxTextArea());
 
 	public DomainEntityForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.enums_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.enums_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.enums_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.enums_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -42,8 +42,8 @@ public class DomainEntityForm extends JPanel {
 		return (T) enums_JLabel;
 	}
 
-	public <T extends JTextField> T getEnumsJTextField() {
-		return (T) enums_JTextField;
+	public <T extends RSyntaxTextArea> T getEnumsRSyntaxTextArea() {
+		return (T) enums_RSyntaxTextArea;
 	}
 
 
@@ -69,7 +69,7 @@ public class DomainEntityForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none"
 
 
 	*/	

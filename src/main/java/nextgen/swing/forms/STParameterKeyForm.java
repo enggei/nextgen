@@ -18,16 +18,16 @@ public class STParameterKeyForm extends JPanel {
 	JLabel name_JLabel = newJLabel("name");
 	JTextField name_JTextField = newJTextField("name");
 	JLabel argumentType_JLabel = newJLabel("argumentType");
-	JTextField argumentType_JTextField = newJTextField("argumentType");
+	RSyntaxTextArea argumentType_RSyntaxTextArea = newRSyntaxTextArea("argumentType");
 	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	JTextFieldModel argumentTypeModel = new JTextFieldModel(getArgumentTypeJTextField());
+	RSyntaxTextAreaModel argumentTypeModel = new RSyntaxTextAreaModel(getArgumentTypeRSyntaxTextArea());
 
 	public STParameterKeyForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.argumentType_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.argumentType_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.argumentType_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.argumentType_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -42,8 +42,8 @@ public class STParameterKeyForm extends JPanel {
 		return (T) argumentType_JLabel;
 	}
 
-	public <T extends JTextField> T getArgumentTypeJTextField() {
-		return (T) argumentType_JTextField;
+	public <T extends RSyntaxTextArea> T getArgumentTypeRSyntaxTextArea() {
+		return (T) argumentType_RSyntaxTextArea;
 	}
 
 
@@ -69,7 +69,7 @@ public class STParameterKeyForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none"
 
 
 	*/	

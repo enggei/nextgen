@@ -18,16 +18,16 @@ public class STProjectForm extends JPanel {
 	JLabel name_JLabel = newJLabel("name");
 	JTextField name_JTextField = newJTextField("name");
 	JLabel root_JLabel = newJLabel("root");
-	JTextField root_JTextField = newJTextField("root");
+	RSyntaxTextArea root_RSyntaxTextArea = newRSyntaxTextArea("root");
 	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	JTextFieldModel rootModel = new JTextFieldModel(getRootJTextField());
+	RSyntaxTextAreaModel rootModel = new RSyntaxTextAreaModel(getRootRSyntaxTextArea());
 
 	public STProjectForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.root_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.root_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.root_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.root_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -42,8 +42,8 @@ public class STProjectForm extends JPanel {
 		return (T) root_JLabel;
 	}
 
-	public <T extends JTextField> T getRootJTextField() {
-		return (T) root_JTextField;
+	public <T extends RSyntaxTextArea> T getRootRSyntaxTextArea() {
+		return (T) root_RSyntaxTextArea;
 	}
 
 
@@ -69,7 +69,7 @@ public class STProjectForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none"
 
 
 	*/	

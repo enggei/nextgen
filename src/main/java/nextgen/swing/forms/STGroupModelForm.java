@@ -16,36 +16,36 @@ public class STGroupModelForm extends JPanel {
 
 	nextgen.model.STGroupModel model;
 	JLabel language_JLabel = newJLabel("language");
-	JTextField language_JTextField = newJTextField("language");
+	RSyntaxTextArea language_RSyntaxTextArea = newRSyntaxTextArea("language");
 	JLabel name_JLabel = newJLabel("name");
 	JTextField name_JTextField = newJTextField("name");
 	JLabel delimiter_JLabel = newJLabel("delimiter");
-	JTextField delimiter_JTextField = newJTextField("delimiter");
+	RSyntaxTextArea delimiter_RSyntaxTextArea = newRSyntaxTextArea("delimiter");
 	JLabel icon_JLabel = newJLabel("icon");
-	JTextField icon_JTextField = newJTextField("icon");
-	JTextFieldModel languageModel = new JTextFieldModel(getLanguageJTextField());
+	RSyntaxTextArea icon_RSyntaxTextArea = newRSyntaxTextArea("icon");
+	RSyntaxTextAreaModel languageModel = new RSyntaxTextAreaModel(getLanguageRSyntaxTextArea());
 	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	JTextFieldModel delimiterModel = new JTextFieldModel(getDelimiterJTextField());
-	JTextFieldModel iconModel = new JTextFieldModel(getIconJTextField());
+	RSyntaxTextAreaModel delimiterModel = new RSyntaxTextAreaModel(getDelimiterRSyntaxTextArea());
+	RSyntaxTextAreaModel iconModel = new RSyntaxTextAreaModel(getIconRSyntaxTextArea());
 
 	public STGroupModelForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:30:none, center:30:none, center:30:none, center:30:none"));
-		add(this.language_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "CENTER, CENTER"));
-		add(this.language_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, CENTER"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "CENTER, CENTER"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, CENTER"));
-		add(this.delimiter_JLabel, new CellConstraints().xywh(1, 3, 1, 1, "CENTER, CENTER"));
-		add(this.delimiter_JTextField, new CellConstraints().xywh(2, 3, 1, 1, "FILL, CENTER"));
-		add(this.icon_JLabel, new CellConstraints().xywh(1, 4, 1, 1, "CENTER, CENTER"));
-		add(this.icon_JTextField, new CellConstraints().xywh(2, 4, 1, 1, "FILL, CENTER"));
+		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:pref:none, center:pref:none, center:pref:none"));
+		add(newJScrollPane(this.language_JLabel), new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.language_RSyntaxTextArea), new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		add(this.name_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(this.name_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.delimiter_JLabel), new CellConstraints().xywh(1, 3, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.delimiter_RSyntaxTextArea), new CellConstraints().xywh(2, 3, 1, 1, "FILL, FILL"));
+		add(newJScrollPane(this.icon_JLabel), new CellConstraints().xywh(1, 4, 1, 1, "LEFT, TOP"));
+		add(newJScrollPane(this.icon_RSyntaxTextArea), new CellConstraints().xywh(2, 4, 1, 1, "FILL, FILL"));
 	}
 
 	public <T extends JLabel> T getLanguageJLabel() {
 		return (T) language_JLabel;
 	}
 
-	public <T extends JTextField> T getLanguageJTextField() {
-		return (T) language_JTextField;
+	public <T extends RSyntaxTextArea> T getLanguageRSyntaxTextArea() {
+		return (T) language_RSyntaxTextArea;
 	}
 
 	public <T extends JLabel> T getNameJLabel() {
@@ -60,16 +60,16 @@ public class STGroupModelForm extends JPanel {
 		return (T) delimiter_JLabel;
 	}
 
-	public <T extends JTextField> T getDelimiterJTextField() {
-		return (T) delimiter_JTextField;
+	public <T extends RSyntaxTextArea> T getDelimiterRSyntaxTextArea() {
+		return (T) delimiter_RSyntaxTextArea;
 	}
 
 	public <T extends JLabel> T getIconJLabel() {
 		return (T) icon_JLabel;
 	}
 
-	public <T extends JTextField> T getIconJTextField() {
-		return (T) icon_JTextField;
+	public <T extends RSyntaxTextArea> T getIconRSyntaxTextArea() {
+		return (T) icon_RSyntaxTextArea;
 	}
 
 
@@ -101,7 +101,7 @@ public class STGroupModelForm extends JPanel {
 
 	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
 
-	rows 		 	"center:30:none, center:30:none, center:30:none, center:30:none"
+	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:pref:none"
 
 
 	*/	
