@@ -26,8 +26,8 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 		form.modelToView(model);
 
 		if (getComponentCount() == 0) {
-			editors.add("Form", form);
-			form.getValueJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
+			form.getValueRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 
 			add(editors, BorderLayout.CENTER);
 			invalidate();

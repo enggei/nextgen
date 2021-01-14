@@ -28,7 +28,7 @@ public class DomainVisitorEditor extends nextgen.swing.BaseEditor<nextgen.model.
 		form.modelToView(model);
 
 		if (getComponentCount() == 0) {
-			editors.add("Form", form);
+			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
 			form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 			decorate(form.getOnDomainRSyntaxTextArea()).addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 			decorate(form.getOnEntityRSyntaxTextArea()).addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));

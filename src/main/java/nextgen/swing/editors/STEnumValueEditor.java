@@ -26,9 +26,9 @@ public class STEnumValueEditor extends nextgen.swing.BaseEditor<nextgen.model.ST
 		form.modelToView(model);
 
 		if (getComponentCount() == 0) {
-			editors.add("Form", form);
+			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
 			form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getLexicalJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+			form.getLexicalRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 
 			add(editors, BorderLayout.CENTER);
 			invalidate();

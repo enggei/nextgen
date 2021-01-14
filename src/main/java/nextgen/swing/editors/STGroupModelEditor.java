@@ -26,11 +26,11 @@ public class STGroupModelEditor extends nextgen.swing.BaseEditor<nextgen.model.S
 		form.modelToView(model);
 
 		if (getComponentCount() == 0) {
-			editors.add("Form", form);
-			form.getLanguageJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
+			form.getLanguageRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 			form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getDelimiterJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getIconJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+			form.getDelimiterRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
+			form.getIconRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
 
 			add(editors, BorderLayout.CENTER);
 			invalidate();

@@ -26,7 +26,7 @@ public class STGroupFileEditor extends nextgen.swing.BaseEditor<nextgen.model.ST
 		form.modelToView(model);
 
 		if (getComponentCount() == 0) {
-			editors.add("Form", form);
+			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
 			add(editors, BorderLayout.CENTER);
 			invalidate();
 		}
