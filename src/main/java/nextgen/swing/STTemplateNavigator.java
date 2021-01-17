@@ -159,14 +159,18 @@ public class STTemplateNavigator extends JPanel {
 		               .ifPresent(domain -> domain.getRelationsSorted()
 		                     .filter(domainRelation -> domainRelation.getSrc().equals(event.model))
 		                     .forEach(domainRelation -> treeNode.add(new DomainRelationTreeNode(domainRelation))));
-
 		         treeNode.nodeChanged();
 		      });
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
-		findAllSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STTemplateNavigator.STGroupFileTreeNode::nodeChanged);
+		findAllSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STGroupFileTreeNode::nodeChanged);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onNewDomainDomainEntity(nextgen.events.NewDomainDomainEntity event) {
+		findAllDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain)).forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainEntityTreeNode(event.domainEntity)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -176,26 +180,22 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
-		findAllSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.forEach(treeModel::removeNodeFromParent);
+		findAllSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTEnumDeleted(nextgen.events.STEnumDeleted event) {
-		findAllSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.forEach(treeModel::removeNodeFromParent);
+		findAllSTEnumTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateDeleted(nextgen.events.STTemplateDeleted event) {
-		findAllSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.forEach(treeModel::removeNodeFromParent);
+		findAllSTTemplateTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceDeleted(nextgen.events.STInterfaceDeleted event) {
-		findAllSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
-				.forEach(treeModel::removeNodeFromParent);
+		findAllSTInterfaceTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -205,7 +205,8 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTEnum(nextgen.events.NewSTEnum event) {
-		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
+							.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STEnumTreeNode(event.stEnum)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -228,20 +229,17 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
-		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
-							.forEach(STTemplateNavigator.STGroupTreeNode::nodeChanged);
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).forEach(STGroupTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
-		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate))
-							.forEach(STTemplateNavigator.STTemplateTreeNode::nodeChanged);
+		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate)).forEach(STTemplateTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTInterfaceNameChanged(nextgen.events.STInterfaceNameChanged event) {
-		findAllSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface))
-							.forEach(STTemplateNavigator.STInterfaceTreeNode::nodeChanged);
+		findAllSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface)).forEach(STInterfaceTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -418,7 +416,7 @@ public class STTemplateNavigator extends JPanel {
 	public class DomainTreeNode extends BaseTreeNode<nextgen.model.Domain> {
 
 		DomainTreeNode(nextgen.model.Domain model) {
-			super(model, appModel().loadIcon("sq-pinkg"));
+			super(model, appModel().loadIcon("nextgen.model.Domain"));
 
 
 			setLabel(getModel().getName());
@@ -488,7 +486,7 @@ public class STTemplateNavigator extends JPanel {
 	public class TemplatesTreeNode extends BaseTreeNode<String> {
 
 		TemplatesTreeNode(String model) {
-			super(model, appModel().loadIcon("sq-teal"));
+			super(model, appModel().loadIcon("String"));
 
 
 			setLabel(model.toString());
@@ -555,7 +553,7 @@ public class STTemplateNavigator extends JPanel {
 	public class DomainsTreeNode extends BaseTreeNode<String> {
 
 		DomainsTreeNode(String model) {
-			super(model, appModel().loadIcon("sq-pink"));
+			super(model, appModel().loadIcon("String"));
 
 
 			setLabel(model.toString());
@@ -624,7 +622,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		DomainEntityTreeNode(nextgen.model.DomainEntity model) {
-			super(model, appModel().loadIcon("sq-purple"));
+			super(model, appModel().loadIcon("nextgen.model.DomainEntity"));
 
 
 			setLabel(getModel().getName());
@@ -700,7 +698,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		DomainRelationTreeNode(nextgen.model.DomainRelation model) {
-			super(model, appModel().loadIcon(model.getType().name()));
+			super(model, appModel().loadIcon("nextgen.model.DomainRelation"));
 
 
 			setLabel(getModel().getName());
@@ -772,7 +770,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		DomainVisitorTreeNode(nextgen.model.DomainVisitor model) {
-			super(model, appModel().loadIcon("vis"));
+			super(model, appModel().loadIcon("nextgen.model.DomainVisitor"));
 
 
 			setLabel(getModel().getName());
@@ -843,7 +841,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STGroupActionTreeNode(nextgen.model.STGroupAction model) {
-			super(model, appModel().loadIcon("sq-red"));
+			super(model, appModel().loadIcon("nextgen.model.STGroupAction"));
 
 
 			setLabel(getModel().getName());
@@ -914,7 +912,7 @@ public class STTemplateNavigator extends JPanel {
 	public class StringTreeNode extends BaseTreeNode<String> {
 
 		StringTreeNode(String model) {
-			super(model, null);
+			super(model, appModel().loadIcon("String"));
 
 
 			setLabel(getModel());
@@ -980,7 +978,7 @@ public class STTemplateNavigator extends JPanel {
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
-			super(model, null);
+			super(model, appModel().loadIcon("String"));
 
 
 			setLabel(getModel());
@@ -1052,7 +1050,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STGroupTreeNode(nextgen.model.STGroupModel model) {
-			super(model, null);
+			super(model, appModel().loadIcon("nextgen.model.STGroupModel"));
 
 
 			setLabel(getModel().getName());
@@ -1137,7 +1135,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STEnumTreeNode(nextgen.model.STEnum model) {
-			super(model, appModel().loadIcon("sq-green"));
+			super(model, appModel().loadIcon("nextgen.model.STEnum"));
 
 
 			setLabel(getModel().getName());
@@ -1210,7 +1208,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STTemplateTreeNode(nextgen.model.STTemplate model) {
-			super(model, appModel().loadIcon("sq-teal"));
+			super(model, appModel().loadIcon("nextgen.model.STTemplate"));
 
 
 			setLabel(getModel().getName());
@@ -1306,7 +1304,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STInterfaceTreeNode(nextgen.model.STInterface model) {
-			super(model, appModel().loadIcon("sq-purple"));
+			super(model, appModel().loadIcon("nextgen.model.STInterface"));
 
 
 			setLabel(getModel().getName());
@@ -1377,7 +1375,7 @@ public class STTemplateNavigator extends JPanel {
 		private String uuid;
 
 		STGroupFileTreeNode(nextgen.model.STGroupFile model) {
-			super(model, appModel().loadIcon("sq-white"));
+			super(model, appModel().loadIcon("nextgen.model.STGroupFile"));
 
 
 			setLabel(appModel().render(getModel().getPath()));

@@ -2,109 +2,55 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.value.AbstractValueModel;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 
-import nextgen.swing.ComponentFactory;
-import static nextgen.swing.ComponentFactory.*;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 public class STModelForm extends JPanel {
 
-	nextgen.model.STModel model;
+	JLabel lblFiles = new JLabel("files");
+	nextgen.swing.table.STFileTable tblFiles = new nextgen.swing.table.STFileTable();
+	JLabel lblArguments = new JLabel("arguments");
+	nextgen.swing.table.STArgumentTable tblArguments = new nextgen.swing.table.STArgumentTable();
 
 	public STModelForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", ""));
+		setLayout(new FormLayout("left:1024:none", "center:200:grow, center:200:grow"));
+		final CellConstraints cc = new CellConstraints();
+		add(lblFiles, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblFiles), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
+		add(lblArguments, cc.xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblArguments), cc.xywh(1, 2, 1, 1, "FILL, FILL"));
+	}
+
+	public JLabel getLblFiles() {
+		return lblFiles;
+	}
+
+	public nextgen.swing.table.STFileTable getTblFiles() {
+		return tblFiles;
+	}
+
+	public JLabel getLblArguments() {
+		return lblArguments;
+	}
+
+	public nextgen.swing.table.STArgumentTable getTblArguments() {
+		return tblArguments;
 	}
 
 
-	public void modelToView(nextgen.model.STModel model) {
-		this.model = model;
+	public void modelToView(nextgen.model.STModel model) { 
+		tblFiles.setContent(model.getFiles());
+		tblArguments.setContent(model.getArguments());	
 	}
 
-	public void modelToView() {
-	}
-
-	public nextgen.model.STModel viewToModel() {
-		return model;
-	}
-
-
+	public void viewToModel(nextgen.model.STModel model) {
+		
+	}  
 	/*
 
-	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"left:1024:none"
 
-	rows 		 	""
+	rows 		 	"center:200:grow, center:200:grow"
 
-
-	*/	
-
-	public static final class JTextFieldModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) { 
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public JTextFieldModel(JTextField component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
-
-	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) {
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
+	*/
 }  

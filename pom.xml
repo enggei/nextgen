@@ -134,6 +134,17 @@
 			<version>3.3.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.sshtools</groupId>
+			<artifactId>icon-generator</artifactId>
+			<version>1.4.3</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.sshtools</groupId>
+			<artifactId>icon-generator-swing</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.github.wumpz</groupId>
 			<artifactId>diffutils</artifactId>
 			<version>2.2</version>

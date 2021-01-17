@@ -2,173 +2,149 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.value.AbstractValueModel;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 
-import nextgen.swing.ComponentFactory;
-import static nextgen.swing.ComponentFactory.*;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 public class STGroupModelForm extends JPanel {
 
-	nextgen.model.STGroupModel model;
-	JLabel language_JLabel = newJLabel("language");
-	RSyntaxTextArea language_RSyntaxTextArea = newRSyntaxTextArea("language");
-	JLabel name_JLabel = newJLabel("name");
-	JTextField name_JTextField = newJTextField("name");
-	JLabel delimiter_JLabel = newJLabel("delimiter");
-	RSyntaxTextArea delimiter_RSyntaxTextArea = newRSyntaxTextArea("delimiter");
-	JLabel icon_JLabel = newJLabel("icon");
-	RSyntaxTextArea icon_RSyntaxTextArea = newRSyntaxTextArea("icon");
-	RSyntaxTextAreaModel languageModel = new RSyntaxTextAreaModel(getLanguageRSyntaxTextArea());
-	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	RSyntaxTextAreaModel delimiterModel = new RSyntaxTextAreaModel(getDelimiterRSyntaxTextArea());
-	RSyntaxTextAreaModel iconModel = new RSyntaxTextAreaModel(getIconRSyntaxTextArea());
+	JLabel lblLanguage = new JLabel("language");
+	nextgen.swing.components.BaseTextArea txtLanguage = new nextgen.swing.components.BaseTextArea("");
+	JLabel lblName = new JLabel("name");
+	JTextField txtName = new JTextField("");
+	JLabel lblFiles = new JLabel("files");
+	nextgen.swing.table.STGroupFileTable tblFiles = new nextgen.swing.table.STGroupFileTable();
+	JLabel lblTemplates = new JLabel("templates");
+	nextgen.swing.table.STTemplateTable tblTemplates = new nextgen.swing.table.STTemplateTable();
+	JLabel lblInterfaces = new JLabel("interfaces");
+	nextgen.swing.table.STInterfaceTable tblInterfaces = new nextgen.swing.table.STInterfaceTable();
+	JLabel lblEnums = new JLabel("enums");
+	nextgen.swing.table.STEnumTable tblEnums = new nextgen.swing.table.STEnumTable();
+	JLabel lblActions = new JLabel("actions");
+	nextgen.swing.table.STGroupActionTable tblActions = new nextgen.swing.table.STGroupActionTable();
+	JLabel lblDelimiter = new JLabel("delimiter");
+	nextgen.swing.components.BaseTextArea txtDelimiter = new nextgen.swing.components.BaseTextArea("");
+	JLabel lblIcon = new JLabel("icon");
+	nextgen.swing.components.BaseTextArea txtIcon = new nextgen.swing.components.BaseTextArea("");
 
 	public STGroupModelForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:200:grow, center:pref:none, center:200:grow, center:200:grow"));
-		add(newJScrollPane(this.language_JLabel), new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
-		add(newJScrollPane(this.language_RSyntaxTextArea), new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
-		add(newJScrollPane(this.delimiter_JLabel), new CellConstraints().xywh(1, 3, 1, 1, "LEFT, TOP"));
-		add(newJScrollPane(this.delimiter_RSyntaxTextArea), new CellConstraints().xywh(2, 3, 1, 1, "FILL, FILL"));
-		add(newJScrollPane(this.icon_JLabel), new CellConstraints().xywh(1, 4, 1, 1, "LEFT, TOP"));
-		add(newJScrollPane(this.icon_RSyntaxTextArea), new CellConstraints().xywh(2, 4, 1, 1, "FILL, FILL"));
+		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
+		final CellConstraints cc = new CellConstraints();
+		add(lblLanguage, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtLanguage), cc.xywh(1, 2, 1, 1, "FILL, FILL"));
+		add(lblName, cc.xywh(1, 3, 1, 1, "LEFT, TOP"));
+		add(txtName, cc.xywh(1, 4, 1, 1, "FILL, FILL"));
+		add(lblFiles, cc.xywh(1, 5, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblFiles), cc.xywh(1, 5, 1, 1, "FILL, FILL"));
+		add(lblTemplates, cc.xywh(1, 6, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblTemplates), cc.xywh(1, 6, 1, 1, "FILL, FILL"));
+		add(lblInterfaces, cc.xywh(1, 7, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblInterfaces), cc.xywh(1, 7, 1, 1, "FILL, FILL"));
+		add(lblEnums, cc.xywh(1, 8, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblEnums), cc.xywh(1, 8, 1, 1, "FILL, FILL"));
+		add(lblActions, cc.xywh(1, 9, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblActions), cc.xywh(1, 9, 1, 1, "FILL, FILL"));
+		add(lblDelimiter, cc.xywh(1, 10, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtDelimiter), cc.xywh(1, 11, 1, 1, "FILL, FILL"));
+		add(lblIcon, cc.xywh(1, 12, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtIcon), cc.xywh(1, 13, 1, 1, "FILL, FILL"));
 	}
 
-	public <T extends JLabel> T getLanguageJLabel() {
-		return (T) language_JLabel;
+	public JLabel getLblLanguage() {
+		return lblLanguage;
 	}
 
-	public <T extends RSyntaxTextArea> T getLanguageRSyntaxTextArea() {
-		return (T) language_RSyntaxTextArea;
+	public nextgen.swing.components.BaseTextArea getTxtLanguage() {
+		return txtLanguage;
 	}
 
-	public <T extends JLabel> T getNameJLabel() {
-		return (T) name_JLabel;
+	public JLabel getLblName() {
+		return lblName;
 	}
 
-	public <T extends JTextField> T getNameJTextField() {
-		return (T) name_JTextField;
+	public JTextField getTxtName() {
+		return txtName;
 	}
 
-	public <T extends JLabel> T getDelimiterJLabel() {
-		return (T) delimiter_JLabel;
+	public JLabel getLblFiles() {
+		return lblFiles;
 	}
 
-	public <T extends RSyntaxTextArea> T getDelimiterRSyntaxTextArea() {
-		return (T) delimiter_RSyntaxTextArea;
+	public nextgen.swing.table.STGroupFileTable getTblFiles() {
+		return tblFiles;
 	}
 
-	public <T extends JLabel> T getIconJLabel() {
-		return (T) icon_JLabel;
+	public JLabel getLblTemplates() {
+		return lblTemplates;
 	}
 
-	public <T extends RSyntaxTextArea> T getIconRSyntaxTextArea() {
-		return (T) icon_RSyntaxTextArea;
+	public nextgen.swing.table.STTemplateTable getTblTemplates() {
+		return tblTemplates;
+	}
+
+	public JLabel getLblInterfaces() {
+		return lblInterfaces;
+	}
+
+	public nextgen.swing.table.STInterfaceTable getTblInterfaces() {
+		return tblInterfaces;
+	}
+
+	public JLabel getLblEnums() {
+		return lblEnums;
+	}
+
+	public nextgen.swing.table.STEnumTable getTblEnums() {
+		return tblEnums;
+	}
+
+	public JLabel getLblActions() {
+		return lblActions;
+	}
+
+	public nextgen.swing.table.STGroupActionTable getTblActions() {
+		return tblActions;
+	}
+
+	public JLabel getLblDelimiter() {
+		return lblDelimiter;
+	}
+
+	public nextgen.swing.components.BaseTextArea getTxtDelimiter() {
+		return txtDelimiter;
+	}
+
+	public JLabel getLblIcon() {
+		return lblIcon;
+	}
+
+	public nextgen.swing.components.BaseTextArea getTxtIcon() {
+		return txtIcon;
 	}
 
 
-	public void modelToView(nextgen.model.STGroupModel model) {
-		this.model = model;
-		languageModel.setValue(model.getLanguage());
-		nameModel.setValue(model.getName());
-		delimiterModel.setValue(model.getDelimiter());
-		iconModel.setValue(model.getIcon());
+	public void modelToView(nextgen.model.STGroupModel model) { 
+		txtLanguage.setText(model.getLanguage());
+		txtName.setText(model.getName());
+		tblFiles.setContent(model.getFiles());
+		tblTemplates.setContent(model.getTemplates());
+		tblInterfaces.setContent(model.getInterfaces());
+		tblEnums.setContent(model.getEnums());
+		tblActions.setContent(model.getActions());
+		txtDelimiter.setText(model.getDelimiter());
+		txtIcon.setText(model.getIcon());	
 	}
 
-	public void modelToView() {
-		languageModel.setValue(model.getLanguage());
-		nameModel.setValue(model.getName());
-		delimiterModel.setValue(model.getDelimiter());
-		iconModel.setValue(model.getIcon());
-	}
-
-	public nextgen.model.STGroupModel viewToModel() {
-		model.setLanguage((String) languageModel.getValue());
-		model.setName((String) nameModel.getValue());
-		model.setDelimiter((String) delimiterModel.getValue());
-		model.setIcon((String) iconModel.getValue());
-		return model;
-	}
-
-
+	public void viewToModel(nextgen.model.STGroupModel model) {
+		model.setLanguage(txtLanguage.getText());
+		model.setName(txtName.getText());
+		model.setDelimiter(txtDelimiter.getText());
+		model.setIcon(txtIcon.getText());	
+	}  
 	/*
 
-	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"left:1024:none"
 
-	rows 		 	"center:200:grow, center:pref:none, center:200:grow, center:200:grow"
+	rows 		 	"center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"
 
-
-	*/	
-
-	public static final class JTextFieldModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) { 
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public JTextFieldModel(JTextField component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
-
-	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) {
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
+	*/
 }  

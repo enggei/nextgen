@@ -1,6 +1,5 @@
 A different type of texteditor for developers.
 
-
 Domain
     name            1   String
     entities        *   DomainEntity
@@ -12,7 +11,6 @@ Domain
 
     DomainRelation
         name            1   String
-        //value           1   STValue
         src             1   DomainEntity
         dst             1   DomainEntity
         type            1   DomainRelationType
@@ -25,7 +23,6 @@ Domain
             ONE
             MANY
             OPTIONAL
-
 
 STProject
 	name		    1	String
@@ -160,6 +157,13 @@ calculated: we need to minimize the action first. A system becomes conservative 
 in the system is minimized. In causal logic this says that the causal symmetry of a causal set – the
 collection of different total orders that represent the causal set S will converge to an invariant
 behavior when the causal action is minimized.
+
+creation patterns
+
+new Object()
+new Object(Object ... params)
+
+
 
 stream()        sequence
 filter(f)       predicates/choice

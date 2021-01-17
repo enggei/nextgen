@@ -122,14 +122,11 @@ public class AbstractEditor extends javax.swing.JPanel {
       tryToSave();
    }
 
-   protected void selectFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+   protected void appendFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
       if (!textArea.isEditable()) return;
-
-      appModel().doLaterInTransaction(transaction -> nextgen.utils.SwingUtil.selectFromClipboard(textArea, o -> {
-         textArea.setText(o.toString().trim());
-         textArea.setCaretPosition(0);
-         tryToSave();
-      }));
+      textArea.append(nextgen.utils.SwingUtil.fromClipboard().trim());
+      textArea.setCaretPosition(0);
+      tryToSave();
    }
 
    protected void prependFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
@@ -139,11 +136,14 @@ public class AbstractEditor extends javax.swing.JPanel {
       tryToSave();
    }
 
-   protected void appendFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
+   protected void selectFromClipboard(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {
       if (!textArea.isEditable()) return;
-      textArea.append(nextgen.utils.SwingUtil.fromClipboard().trim());
-      textArea.setCaretPosition(0);
-      tryToSave();
+
+      appModel().doLaterInTransaction(transaction -> nextgen.utils.SwingUtil.selectFromClipboard(textArea, o -> {
+         textArea.setText(o.toString().trim());
+         textArea.setCaretPosition(0);
+         tryToSave();
+      }));
    }
 
    protected void selectLine(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea) {

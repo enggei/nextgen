@@ -19,6 +19,7 @@ public class STWorkspace extends JTabbedPane {
 	public STWorkspace() {
 		setPreferredSize(new Dimension(600, 600));
 		setMinimumSize(new Dimension(100, 100));
+		setMaximumSize(new Dimension(1200, 1200));
 		getCanvas();
 		getTextProcessor();
 		templateNavigator = new STTemplateNavigator(this);

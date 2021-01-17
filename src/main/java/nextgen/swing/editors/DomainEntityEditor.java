@@ -11,34 +11,35 @@ public class DomainEntityEditor extends nextgen.swing.BaseEditor<nextgen.model.D
 
 	public DomainEntityEditor() {
 		super();
+		init();
 	}
 
 	public DomainEntityEditor(nextgen.model.DomainEntity model) {
 		super(model, model.getUuid());
+		init();
 		setModel(model);
+	}
+
+	private void init() {
+		form.getTxtName().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		form.getTxtEnums().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
+		add(editors, BorderLayout.CENTER);
 	}
 
 	@Override
 	public void setModel(nextgen.model.DomainEntity model) {
 		super.setModel(model);
-
 		this.uuid = model.getUuid();
 		form.modelToView(model);
-
-		if (getComponentCount() == 0) {
-			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
-			form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getEnumsRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-
-			add(editors, BorderLayout.CENTER);
-			invalidate();
-		}
 	}
 
 	@Override
 	protected void tryToSave() {
 		if (model == null) return;
-		form.viewToModel();
+		appModel().doLaterInTransaction(tx -> {
+			form.viewToModel(getModel());
+		});
 	}
 
 	

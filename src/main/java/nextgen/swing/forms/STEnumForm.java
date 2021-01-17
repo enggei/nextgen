@@ -2,125 +2,55 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.value.AbstractValueModel;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 
-import nextgen.swing.ComponentFactory;
-import static nextgen.swing.ComponentFactory.*;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 public class STEnumForm extends JPanel {
 
-	nextgen.model.STEnum model;
-	JLabel name_JLabel = newJLabel("name");
-	JTextField name_JTextField = newJTextField("name");
-	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
+	JLabel lblName = new JLabel("name");
+	JTextField txtName = new JTextField("");
+	JLabel lblValues = new JLabel("values");
+	nextgen.swing.table.STEnumValueTable tblValues = new nextgen.swing.table.STEnumValueTable();
 
 	public STEnumForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
+		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:pref:none, center:200:grow"));
+		final CellConstraints cc = new CellConstraints();
+		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
+		add(lblValues, cc.xywh(1, 3, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblValues), cc.xywh(1, 3, 1, 1, "FILL, FILL"));
 	}
 
-	public <T extends JLabel> T getNameJLabel() {
-		return (T) name_JLabel;
+	public JLabel getLblName() {
+		return lblName;
 	}
 
-	public <T extends JTextField> T getNameJTextField() {
-		return (T) name_JTextField;
+	public JTextField getTxtName() {
+		return txtName;
 	}
 
-
-	public void modelToView(nextgen.model.STEnum model) {
-		this.model = model;
-		nameModel.setValue(model.getName());
+	public JLabel getLblValues() {
+		return lblValues;
 	}
 
-	public void modelToView() {
-		nameModel.setValue(model.getName());
-	}
-
-	public nextgen.model.STEnum viewToModel() {
-		model.setName((String) nameModel.getValue());
-		return model;
+	public nextgen.swing.table.STEnumValueTable getTblValues() {
+		return tblValues;
 	}
 
 
+	public void modelToView(nextgen.model.STEnum model) { 
+		txtName.setText(model.getName());
+		tblValues.setContent(model.getValues());	
+	}
+
+	public void viewToModel(nextgen.model.STEnum model) {
+		model.setName(txtName.getText());	
+	}  
 	/*
 
-	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"left:1024:none"
 
-	rows 		 	"center:pref:none"
+	rows 		 	"center:pref:none, center:pref:none, center:200:grow"
 
-
-	*/	
-
-	public static final class JTextFieldModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) { 
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public JTextFieldModel(JTextField component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
-
-	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) {
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
+	*/
 }  

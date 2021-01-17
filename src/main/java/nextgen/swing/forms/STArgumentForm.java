@@ -2,109 +2,42 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.value.AbstractValueModel;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 
-import nextgen.swing.ComponentFactory;
-import static nextgen.swing.ComponentFactory.*;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 public class STArgumentForm extends JPanel {
 
-	nextgen.model.STArgument model;
+	JLabel lblKeyValues = new JLabel("keyValues");
+	nextgen.swing.table.STArgumentKVTable tblKeyValues = new nextgen.swing.table.STArgumentKVTable();
 
 	public STArgumentForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", ""));
+		setLayout(new FormLayout("left:1024:none", "center:200:grow"));
+		final CellConstraints cc = new CellConstraints();
+		add(lblKeyValues, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblKeyValues), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
+	}
+
+	public JLabel getLblKeyValues() {
+		return lblKeyValues;
+	}
+
+	public nextgen.swing.table.STArgumentKVTable getTblKeyValues() {
+		return tblKeyValues;
 	}
 
 
-	public void modelToView(nextgen.model.STArgument model) {
-		this.model = model;
+	public void modelToView(nextgen.model.STArgument model) { 
+		tblKeyValues.setContent(model.getKeyValues());	
 	}
 
-	public void modelToView() {
-	}
-
-	public nextgen.model.STArgument viewToModel() {
-		return model;
-	}
-
-
+	public void viewToModel(nextgen.model.STArgument model) {
+		
+	}  
 	/*
 
-	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"left:1024:none"
 
-	rows 		 	""
+	rows 		 	"center:200:grow"
 
-
-	*/	
-
-	public static final class JTextFieldModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) { 
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public JTextFieldModel(JTextField component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
-
-	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) {
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
+	*/
 }  

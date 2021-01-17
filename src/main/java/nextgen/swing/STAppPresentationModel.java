@@ -813,13 +813,9 @@ public class STAppPresentationModel {
    }
 
    public ImageIcon loadIcon(String iconName) {
-      return loadIcon(iconName, "16x16");
-   }
-
-   public ImageIcon loadIcon(String iconName, String dimension) {
       if (iconName == null) return null;
       if (cache.containsKey(iconName)) return cache.get(iconName);
-      final URL resource = getClass().getClassLoader().getResource("icons/" + iconName + dimension + ".png");
+      final URL resource = getClass().getClassLoader().getResource("icons/" + iconName + ".png");
       if (resource == null) return null;
       cache.put(iconName, new ImageIcon(Objects.requireNonNull(resource)));
       return cache.get(iconName);

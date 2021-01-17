@@ -2,141 +2,82 @@ package nextgen.swing.forms;
 
 import javax.swing.*;
 
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.value.AbstractValueModel;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 
-import nextgen.swing.ComponentFactory;
-import static nextgen.swing.ComponentFactory.*;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 public class STTemplateForm extends JPanel {
 
-	nextgen.model.STTemplate model;
-	JLabel name_JLabel = newJLabel("name");
-	JTextField name_JTextField = newJTextField("name");
-	JLabel text_JLabel = newJLabel("text");
-	RSyntaxTextArea text_RSyntaxTextArea = newRSyntaxTextArea("text");
-	JTextFieldModel nameModel = new JTextFieldModel(getNameJTextField());
-	RSyntaxTextAreaModel textModel = new RSyntaxTextAreaModel(getTextRSyntaxTextArea());
+	JLabel lblParameters = new JLabel("parameters");
+	nextgen.swing.table.STParameterTable tblParameters = new nextgen.swing.table.STParameterTable();
+	JLabel lblName = new JLabel("name");
+	JTextField txtName = new JTextField("");
+	JLabel lblText = new JLabel("text");
+	nextgen.swing.components.BaseTextArea txtText = new nextgen.swing.components.BaseTextArea("");
+	JLabel lblChildren = new JLabel("children");
+	nextgen.swing.table.STTemplateTable tblChildren = new nextgen.swing.table.STTemplateTable();
 
 	public STTemplateForm() {
-		setLayout(new FormLayout("center:max(50dlu;pref):none, fill:pref:grow", "center:pref:none, center:200:grow"));
-		add(this.name_JLabel, new CellConstraints().xywh(1, 1, 1, 1, "LEFT, TOP"));
-		add(this.name_JTextField, new CellConstraints().xywh(2, 1, 1, 1, "FILL, FILL"));
-		add(newJScrollPane(this.text_JLabel), new CellConstraints().xywh(1, 2, 1, 1, "LEFT, TOP"));
-		add(newJScrollPane(this.text_RSyntaxTextArea), new CellConstraints().xywh(2, 2, 1, 1, "FILL, FILL"));
+		setLayout(new FormLayout("left:1024:none", "center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:200:grow"));
+		final CellConstraints cc = new CellConstraints();
+		add(lblParameters, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblParameters), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
+		add(lblName, cc.xywh(1, 2, 1, 1, "LEFT, TOP"));
+		add(txtName, cc.xywh(1, 3, 1, 1, "FILL, FILL"));
+		add(lblText, cc.xywh(1, 4, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtText), cc.xywh(1, 5, 1, 1, "FILL, FILL"));
+		add(lblChildren, cc.xywh(1, 6, 1, 1, "LEFT, TOP"));
+		add(new JScrollPane(tblChildren), cc.xywh(1, 6, 1, 1, "FILL, FILL"));
 	}
 
-	public <T extends JLabel> T getNameJLabel() {
-		return (T) name_JLabel;
+	public JLabel getLblParameters() {
+		return lblParameters;
 	}
 
-	public <T extends JTextField> T getNameJTextField() {
-		return (T) name_JTextField;
+	public nextgen.swing.table.STParameterTable getTblParameters() {
+		return tblParameters;
 	}
 
-	public <T extends JLabel> T getTextJLabel() {
-		return (T) text_JLabel;
+	public JLabel getLblName() {
+		return lblName;
 	}
 
-	public <T extends RSyntaxTextArea> T getTextRSyntaxTextArea() {
-		return (T) text_RSyntaxTextArea;
+	public JTextField getTxtName() {
+		return txtName;
+	}
+
+	public JLabel getLblText() {
+		return lblText;
+	}
+
+	public nextgen.swing.components.BaseTextArea getTxtText() {
+		return txtText;
+	}
+
+	public JLabel getLblChildren() {
+		return lblChildren;
+	}
+
+	public nextgen.swing.table.STTemplateTable getTblChildren() {
+		return tblChildren;
 	}
 
 
-	public void modelToView(nextgen.model.STTemplate model) {
-		this.model = model;
-		nameModel.setValue(model.getName());
-		textModel.setValue(model.getText());
+	public void modelToView(nextgen.model.STTemplate model) { 
+		tblParameters.setContent(model.getParameters());
+		txtName.setText(model.getName());
+		txtText.setText(model.getText());
+		tblChildren.setContent(model.getChildren());	
 	}
 
-	public void modelToView() {
-		nameModel.setValue(model.getName());
-		textModel.setValue(model.getText());
-	}
-
-	public nextgen.model.STTemplate viewToModel() {
-		model.setName((String) nameModel.getValue());
-		model.setText((String) textModel.getValue());
-		return model;
-	}
-
-
+	public void viewToModel(nextgen.model.STTemplate model) {
+		model.setName(txtName.getText());
+		model.setText(txtText.getText());	
+	}  
 	/*
 
-	columns 		"center:max(50dlu;pref):none, fill:pref:grow"
+	columns 		"left:1024:none"
 
-	rows 		 	"center:pref:none, center:200:grow"
+	rows 		 	"center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:200:grow"
 
-
-	*/	
-
-	public static final class JTextFieldModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) { 
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public JTextFieldModel(JTextField component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
-
-	public static final class RSyntaxTextAreaModel extends AbstractValueModel {
-
-		private String value;
-		private final ValueModel valueModel = new AbstractValueModel() {
-
-			@Override
-			public Object getValue() { return value; }
-
-			@Override
-			public void setValue(Object o) {
-				String old = value;
-				value = o == null ? null : o.toString();
-				fireValueChange(old, value);
-			}
-		};
-
-		public RSyntaxTextAreaModel(RSyntaxTextArea component) {
-			Bindings.bind(component, valueModel);
-		}
-
-		@Override
-		public Object getValue() {
-			return valueModel.getValue();
-		}
-
-		@Override
-		public void setValue(Object o) {
-			Object old = getValue();
-			valueModel.setValue(o);
-			fireValueChange(old, valueModel.getValue());
-		}
-	}
+	*/
 }  

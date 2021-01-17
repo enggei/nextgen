@@ -11,36 +11,37 @@ public class STGroupModelEditor extends nextgen.swing.BaseEditor<nextgen.model.S
 
 	public STGroupModelEditor() {
 		super();
+		init();
 	}
 
 	public STGroupModelEditor(nextgen.model.STGroupModel model) {
 		super(model, model.getUuid());
+		init();
 		setModel(model);
+	}
+
+	private void init() {
+		form.getTxtLanguage().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		form.getTxtName().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		form.getTxtDelimiter().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		form.getTxtIcon().addKeyListener(newSaveListener(textComponent -> tryToSave()));
+		editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
+		add(editors, BorderLayout.CENTER);
 	}
 
 	@Override
 	public void setModel(nextgen.model.STGroupModel model) {
 		super.setModel(model);
-
 		this.uuid = model.getUuid();
 		form.modelToView(model);
-
-		if (getComponentCount() == 0) {
-			editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));
-			form.getLanguageRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getNameJTextField().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getDelimiterRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-			form.getIconRSyntaxTextArea().addKeyListener(newSaveListener(txt -> appModel().doLaterInTransaction(tx -> tryToSave())));
-
-			add(editors, BorderLayout.CENTER);
-			invalidate();
-		}
 	}
 
 	@Override
 	protected void tryToSave() {
 		if (model == null) return;
-		form.viewToModel();
+		appModel().doLaterInTransaction(tx -> {
+			form.viewToModel(getModel());
+		});
 	}
 
 	

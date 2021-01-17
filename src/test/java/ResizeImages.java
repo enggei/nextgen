@@ -1,39 +1,82 @@
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class ResizeImages {
 
    public static void main(String[] args) throws IOException {
 
       // https://materialdesignicons.com/
-      final int d = 16;
 
       final File sourceDir = new File("resources/icons");
-
-      final File[] pngs = sourceDir
-            .listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".png") && !pathname.getName().endsWith(d + "x" + d + ".png"));
-
       final File destinationDir = new File("src/main/resources/icons");
-      for (File png : pngs) {
-         final BufferedImage src = ImageIO.read(png);
-         ImageIO.write(toBufferedImage(src.getScaledInstance(d, d, Image.SCALE_SMOOTH)), "png", new File(destinationDir, png.getName().replaceAll(".png", d + "x" + d + ".png")));
+      for (File png : java.util.Objects.requireNonNull(sourceDir.listFiles(java.io.File::isFile))) {
+
+         String name = png.getName();
+         final int startIndex = "alpha-".length();
+         final int endIndex = name.indexOf("-", startIndex + 1);
+         String letter = name.substring(startIndex, endIndex);
+         switch (letter) {
+            case "m":
+               copy(png, destinationDir, "STModel");
+               break;
+            case "v":
+               copy(png, destinationDir, "STValue");
+               copy(png, destinationDir, "STEnumValue");
+               copy(png, destinationDir, "DomainVisitor");
+               break;
+            case "e":
+               copy(png, destinationDir, "STEnum");
+               copy(png, destinationDir, "DomainEntity");
+               break;
+            case "a":
+               copy(png, destinationDir, "STGroupAction");
+               copy(png, destinationDir, "STArgument");
+               break;
+            case "r":
+               copy(png, destinationDir, "DomainRelation");
+               break;
+            case "p":
+               copy(png, destinationDir, "STProject");
+               copy(png, destinationDir, "STParameter");
+               break;
+            case "d":
+               copy(png, destinationDir, "Domain");
+               break;
+            case "g":
+               copy(png, destinationDir, "STGroupModel");
+               break;
+            case "t":
+               copy(png, destinationDir, "STTemplate");
+               copy(png, destinationDir, "STValueType");
+               copy(png, destinationDir, "STParameterType");
+               copy(png, destinationDir, "DomainEntityType");
+               copy(png, destinationDir, "DomainRelationType");
+               break;
+            case "i":
+               copy(png, destinationDir, "STInterface");
+               break;
+            case "f":
+               copy(png, destinationDir, "STGroupFile");
+               copy(png, destinationDir, "STFile");
+               break;
+            case "k":
+               copy(png, destinationDir, "STParameterKey");
+               copy(png, destinationDir, "STArgumentKV");
+               break;
+            default:
+               System.out.println("case \"" + letter + "\": break;");
+         }
       }
    }
 
-   public static BufferedImage toBufferedImage(Image img) {
+   private static void copy(java.io.File png, java.io.File destinationDir, String newName) throws java.io.IOException {
 
-      if (img instanceof BufferedImage)
-         return (BufferedImage) img;
+      java.nio.file.Path FROM = java.nio.file.Paths.get(png.getAbsolutePath());
+      java.nio.file.Path TO = java.nio.file.Paths.get(new File(destinationDir, "nextgen.model." + newName + ".png").getPath());
 
-      final BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-      final Graphics2D bGr = bimage.createGraphics();
-      bGr.drawImage(img, 0, 0, null);
-      bGr.dispose();
-
-      return bimage;
+      java.nio.file.CopyOption[] options = new java.nio.file.CopyOption[]{
+            java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+            java.nio.file.StandardCopyOption.COPY_ATTRIBUTES
+      };
+      java.nio.file.Files.copy(FROM, TO, options);
    }
 }

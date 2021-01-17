@@ -31,11 +31,11 @@ public class ComponentFactory {
       UIManager.put("Icons.RadioButtonSelected.selectedBorderColor", Color.WHITE);
       UIManager.put("Icons.RadioButtonSelected.selectionSelectedColor", Color.WHITE);
 
-      UIManager.put("Icons.CheckBoxFocused.activeFillColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxFocused.activeFillColor", Color.DARK_GRAY);
       UIManager.put("Icons.CheckBoxFocused.focusBorderColor", Color.WHITE);
 //      UIManager.put("Icons.CheckBoxFocused.glowOpacity", Color.WHITE);
 //      UIManager.put("Icons.CheckBoxFocused.glowFocus", Color.WHITE);
-      UIManager.put("Icons.CheckBoxSelectedFocused.selectedFillColor", Color.WHITE);
+      UIManager.put("Icons.CheckBoxSelectedFocused.selectedFillColor", java.awt.Color.BLACK);
       UIManager.put("Icons.CheckBoxSelectedFocused.focusSelectedBorderColor", Color.WHITE);
 //      UIManager.put("Icons.CheckBoxSelectedFocused.glowOpacity", Color.WHITE);
 //      UIManager.put("Icons.CheckBoxSelectedFocused.glowFocus", Color.WHITE);
@@ -57,7 +57,7 @@ public class ComponentFactory {
    }
 
    public static RSyntaxTextArea newRSyntaxTextArea() {
-      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(5, 60));
+      return decorate(new RSyntaxTextArea(5, 60));
    }
 
    public static javax.swing.JTextArea newJTextArea() {
@@ -358,7 +358,7 @@ public class ComponentFactory {
    }
 
    public static RSyntaxTextArea newRSyntaxTextArea(int rows, int cols) {
-      return decorate(new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(rows, cols));
+      return decorate(new RSyntaxTextArea(rows, cols));
    }
 
    public static RSyntaxTextArea newRSyntaxTextArea(String text) {
@@ -411,7 +411,15 @@ public class ComponentFactory {
    }
 
    public static javax.swing.JScrollPane newJScrollPane(java.awt.Component jComponent) {
-      return jComponent instanceof RSyntaxTextArea ? newRTextScrollPane((org.fife.ui.rsyntaxtextarea.RSyntaxTextArea) jComponent) : decorate(new javax.swing.JScrollPane(jComponent));
+
+      final javax.swing.JScrollPane scrollPane = jComponent instanceof RSyntaxTextArea ? newRTextScrollPane((RSyntaxTextArea) jComponent) : decorate(new javax.swing.JScrollPane(jComponent));
+
+      if (jComponent instanceof JPanel) {
+         scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+         scrollPane.getHorizontalScrollBar().setUnitIncrement(25);
+      }
+
+      return scrollPane;
    }
 
    public static JButton newJButton(String title, ActionListener actionListener) {
