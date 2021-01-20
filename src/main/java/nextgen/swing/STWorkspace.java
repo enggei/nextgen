@@ -53,6 +53,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onDomainEntityTreeNodeClicked(nextgen.events.DomainEntityTreeNodeClicked event) {
+		getDomainEntityEditor(event.domainEntity);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -86,7 +87,7 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelTreeNodeClicked(STModelTreeNodeClicked event) {
-		getModelEditor(event.stModel);
+		getSTModelEditor(event.stModel);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -361,7 +362,7 @@ public class STWorkspace extends JTabbedPane {
 	   }
 	}
 
-	public STModelEditor getModelEditor(STModel model) {
+	public STModelEditor getSTModelEditor(STModel model) {
 		for (int i = 0; i < getTabCount(); i++) {
 			final Component tabComponentAt = getComponentAt(i);
 			if (tabComponentAt instanceof STModelEditor && (((STModelEditor) tabComponentAt).getModel().equals(model))) {

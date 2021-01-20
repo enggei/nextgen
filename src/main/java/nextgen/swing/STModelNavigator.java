@@ -176,15 +176,15 @@ public class STModelNavigator extends JPanel {
 		findAllSTModelTreeNode().stream()
 						.filter(treeNode -> treeNode.getModel().equals(event.model))
 						.forEach(treeNode -> {
+							final java.util.concurrent.atomic.AtomicBoolean first = new java.util.concurrent.atomic.AtomicBoolean(true);
 							findAllSTParameterTreeNode(treeNode).stream()
 									.filter(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))
 									.forEach(stParameterTreeNode -> {
 										appModel().stArgumentConsumer(event.parameter)
-												.onSingleSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
-												.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-												.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
-												.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-												.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrderAndSelect(stParameterTreeNode, new STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter)))
+												.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+												.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
+												.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+												.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter)))
 												.accept(event.argument);
 									});
 						});
