@@ -11,7 +11,7 @@ public class DomainRelationForm extends JPanel {
 	JTextField txtName = new JTextField("");
 
 	public DomainRelationForm() {
-		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:pref:none"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -35,7 +35,7 @@ public class DomainRelationForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:pref:none, center:pref:none"
 

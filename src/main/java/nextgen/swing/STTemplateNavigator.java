@@ -720,6 +720,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onDomainEntityTreeNodeSelected(DomainEntityTreeNode selectedNode) {
+		nextgen.events.DomainEntityTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// DomainRelationTreeNode
@@ -796,6 +797,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onDomainRelationTreeNodeSelected(DomainRelationTreeNode selectedNode) {
+		nextgen.events.DomainRelationTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// DomainVisitorTreeNode

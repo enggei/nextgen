@@ -6,9 +6,15 @@ public class IconGenerator {
 
       // https://materialdesignicons.com/
 
-      String[] domain = new String[]{"#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837"};
-      String[] templates = new String[]{"#67001f", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac", "#053061"};
-      String[] models = new String[]{"#b3e2cd","#fdcdac","#cbd5e8","#f4cae4","#e6f5c9","#fff2ae","#f1e2cc"};
+      String[] domain = new String[]{
+            "#feebe2","#fcc5c0","#fa9fb5","#f768a1","#c51b8a","#7a0177"
+      };
+      String[] templates = new String[]{
+            "#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a"
+      };
+      String[] models = new String[]{
+            "#f1eef6", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b"
+      };
       String[] other = new String[]{"#d53e4f", "#fc8d59", "#fee08b", "#e6f598", "#99d594", "#3288bd"};
 
       final File destinationDir = new File("src/main/resources/icons");
@@ -26,21 +32,21 @@ public class IconGenerator {
       makeEntityIcon(destinationDir, "STParameterKey", templates[i++]);
 
       i = 0;
-      makeEntityIcon(destinationDir, "STProject", models[i]);
-      makeEntityIcon(destinationDir, "STModel", models[i]);
-      makeEntityIcon(destinationDir, "STFile", models[i]);
-      makeEntityIcon(destinationDir, "STArgument", models[i]);
-      makeEntityIcon(destinationDir, "STArgumentKV", models[i]);
-      makeEntityIcon(destinationDir, "STValue", models[i]);
-      makeEntityIcon(destinationDir, "STValueType", models[i]);
+      makeEntityIcon(destinationDir, "STValueType", models[i++]);
+      makeEntityIcon(destinationDir, "STValue", models[i++]);
+      makeEntityIcon(destinationDir, "STArgumentKV", models[i++]);
+      makeEntityIcon(destinationDir, "STArgument", models[i++]);
+      makeEntityIcon(destinationDir, "STFile", models[i++]);
+      makeEntityIcon(destinationDir, "STModel", models[i++]);
+      makeEntityIcon(destinationDir, "STProject", models[i++]);
 
       i = 0;
-      makeEntityIcon(destinationDir, "Domain", domain[i++]);
-      makeEntityIcon(destinationDir, "DomainVisitor", domain[i++]);
-      makeEntityIcon(destinationDir, "DomainEntity", domain[i++]);
+      makeEntityIcon(destinationDir, "DomainRelationType", domain[i++]);
       makeEntityIcon(destinationDir, "DomainEntityType", domain[i++]);
       makeEntityIcon(destinationDir, "DomainRelation", domain[i++]);
-      makeEntityIcon(destinationDir, "DomainRelationType", domain[i]);
+      makeEntityIcon(destinationDir, "DomainEntity", domain[i++]);
+      makeEntityIcon(destinationDir, "DomainVisitor", domain[i++]);
+      makeEntityIcon(destinationDir, "Domain", domain[i++]);
 
       makePlainIcon(destinationDir, "cb-get", other[1]);
       makePlainIcon(destinationDir, "cb-set", other[4]);

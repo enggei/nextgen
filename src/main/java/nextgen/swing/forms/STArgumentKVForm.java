@@ -9,7 +9,7 @@ public class STArgumentKVForm extends JPanel {
 
 
 	public STArgumentKVForm() {
-		setLayout(new FormLayout("left:1024:none", ""));
+		setLayout(new FormLayout("left:2400:none", ""));
 		final CellConstraints cc = new CellConstraints();
 	}
 
@@ -23,7 +23,7 @@ public class STArgumentKVForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	""
 

@@ -190,6 +190,10 @@ public class STDomain {
 				"			final String s = text.length() > 1 ? text.substring(1) : \"\";\n" + 
 				"			\n" + 
 				"			switch (formatString) {\n" + 
+				"				case \"simpleName\":\n" + 
+				"					final int lastIndex = text.lastIndexOf(\".\");\n" + 
+				"               if (lastIndex == -1) return text;\n" + 
+				"               return text.substring(lastIndex + 1);\n" + 
 				"				case \"capitalize\":\n" + 
 				"					return Character.toUpperCase(text.charAt(0)) + s;\n" + 
 				"				case \"toUpper\":\n" + 

@@ -13,7 +13,7 @@ public class STModelForm extends JPanel {
 	nextgen.swing.table.STArgumentTable tblArguments = new nextgen.swing.table.STArgumentTable();
 
 	public STModelForm() {
-		setLayout(new FormLayout("left:1024:none", "center:200:grow, center:200:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:200:grow, center:200:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblFiles, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(new JScrollPane(tblFiles), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
@@ -48,7 +48,7 @@ public class STModelForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:200:grow, center:200:grow"
 

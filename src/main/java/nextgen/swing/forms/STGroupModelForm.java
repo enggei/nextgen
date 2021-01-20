@@ -22,12 +22,12 @@ public class STGroupModelForm extends JPanel {
 	JLabel lblActions = new JLabel("actions");
 	nextgen.swing.table.STGroupActionTable tblActions = new nextgen.swing.table.STGroupActionTable();
 	JLabel lblDelimiter = new JLabel("delimiter");
-	nextgen.swing.components.BaseTextArea txtDelimiter = new nextgen.swing.components.BaseTextArea("");
+	JTextField txtDelimiter = new JTextField("");
 	JLabel lblIcon = new JLabel("icon");
-	nextgen.swing.components.BaseTextArea txtIcon = new nextgen.swing.components.BaseTextArea("");
+	JTextField txtIcon = new JTextField("");
 
 	public STGroupModelForm() {
-		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:pref:none"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblLanguage, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(new org.fife.ui.rtextarea.RTextScrollPane(txtLanguage), cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -44,9 +44,9 @@ public class STGroupModelForm extends JPanel {
 		add(lblActions, cc.xywh(1, 9, 1, 1, "LEFT, TOP"));
 		add(new JScrollPane(tblActions), cc.xywh(1, 9, 1, 1, "FILL, FILL"));
 		add(lblDelimiter, cc.xywh(1, 10, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtDelimiter), cc.xywh(1, 11, 1, 1, "FILL, FILL"));
+		add(txtDelimiter, cc.xywh(1, 11, 1, 1, "FILL, FILL"));
 		add(lblIcon, cc.xywh(1, 12, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtIcon), cc.xywh(1, 13, 1, 1, "FILL, FILL"));
+		add(txtIcon, cc.xywh(1, 13, 1, 1, "FILL, FILL"));
 	}
 
 	public JLabel getLblLanguage() {
@@ -109,7 +109,7 @@ public class STGroupModelForm extends JPanel {
 		return lblDelimiter;
 	}
 
-	public nextgen.swing.components.BaseTextArea getTxtDelimiter() {
+	public JTextField getTxtDelimiter() {
 		return txtDelimiter;
 	}
 
@@ -117,7 +117,7 @@ public class STGroupModelForm extends JPanel {
 		return lblIcon;
 	}
 
-	public nextgen.swing.components.BaseTextArea getTxtIcon() {
+	public JTextField getTxtIcon() {
 		return txtIcon;
 	}
 
@@ -142,9 +142,9 @@ public class STGroupModelForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
-	rows 		 	"center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"
+	rows 		 	"center:pref:none, center:150:grow, center:pref:none, center:pref:none, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:pref:none"
 
 	*/
 }  

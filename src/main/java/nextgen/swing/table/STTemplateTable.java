@@ -13,10 +13,6 @@ public class STTemplateTable extends javax.swing.JTable {
 
 	public STTemplateTable() {
 		super(new ResultsTableModel());
-		setPreferredSize(new java.awt.Dimension(100, 100));
-		setMaximumSize(new java.awt.Dimension(100, 100));
-		setMinimumSize(new java.awt.Dimension(100, 100));
-		setSize(new java.awt.Dimension(100, 100));
 	}
 
 	public STTemplateTable setSelectionListener(Consumer<nextgen.model.STTemplate> selectionListener) {
@@ -123,8 +119,7 @@ public class STTemplateTable extends javax.swing.JTable {
 
 		@Override
 		public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			final String text = value.toString();
-			setText(text.substring(0, Math.min(text.length(), 30)));
+			setText(((RowElement) value).toString());
 			return this;
 		}
 	}

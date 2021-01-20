@@ -13,7 +13,7 @@ public class DomainEntityForm extends JPanel {
 	nextgen.swing.components.BaseTextArea txtEnums = new nextgen.swing.components.BaseTextArea("");
 
 	public DomainEntityForm() {
-		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -49,7 +49,7 @@ public class DomainEntityForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:150:grow"
 

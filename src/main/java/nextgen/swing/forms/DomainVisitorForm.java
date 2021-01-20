@@ -45,7 +45,7 @@ public class DomainVisitorForm extends JPanel {
 	nextgen.swing.components.DomainVisitorTextArea txtOnOptionalPrimitiveRelation = new nextgen.swing.components.DomainVisitorTextArea("");
 
 	public DomainVisitorForm() {
-		setLayout(new FormLayout("left:1200:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -272,7 +272,7 @@ public class DomainVisitorForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"
 

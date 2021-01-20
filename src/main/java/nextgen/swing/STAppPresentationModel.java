@@ -40,7 +40,12 @@ public class STAppPresentationModel {
    }
 
    public static String getSTPackage(org.stringtemplate.v4.ST st) {
-      return st.getAttribute("package") == null ? st.getAttribute("packageName").toString() : (st.getAttribute("package") == null ? null : st.getAttribute("package").toString());
+
+      final Object aPackage = st.getAttribute("package");
+      if (aPackage != null) return aPackage.toString();
+
+      final Object packageName = st.getAttribute("packageName");
+      return packageName == null ? null : packageName.toString();
    }
 
    public void replaceAllSTValues(STModel thisModel, String existingValue, String newValue) {

@@ -12,12 +12,12 @@ public class STTemplateForm extends JPanel {
 	JLabel lblName = new JLabel("name");
 	JTextField txtName = new JTextField("");
 	JLabel lblText = new JLabel("text");
-	nextgen.swing.components.BaseTextArea txtText = new nextgen.swing.components.BaseTextArea("");
+	nextgen.swing.components.STTemplateTextArea txtText = new nextgen.swing.components.STTemplateTextArea("");
 	JLabel lblChildren = new JLabel("children");
 	nextgen.swing.table.STTemplateTable tblChildren = new nextgen.swing.table.STTemplateTable();
 
 	public STTemplateForm() {
-		setLayout(new FormLayout("left:1024:none", "center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:200:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:200:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblParameters, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(new JScrollPane(tblParameters), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
@@ -49,7 +49,7 @@ public class STTemplateForm extends JPanel {
 		return lblText;
 	}
 
-	public nextgen.swing.components.BaseTextArea getTxtText() {
+	public nextgen.swing.components.STTemplateTextArea getTxtText() {
 		return txtText;
 	}
 
@@ -75,7 +75,7 @@ public class STTemplateForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:200:grow, center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:200:grow"
 

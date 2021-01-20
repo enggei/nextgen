@@ -13,7 +13,7 @@ public class STEnumValueForm extends JPanel {
 	nextgen.swing.components.BaseTextArea txtLexical = new nextgen.swing.components.BaseTextArea("");
 
 	public STEnumValueForm() {
-		setLayout(new FormLayout("left:1024:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -49,7 +49,7 @@ public class STEnumValueForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:150:grow"
 

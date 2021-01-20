@@ -310,6 +310,10 @@ public class STGenerator {
          if (formatString == null) return text;
 
          switch (formatString) {
+            case "simpleName":
+               final int lastIndex = text.lastIndexOf(".");
+               if (lastIndex == -1) return text;
+               return text.substring(lastIndex + 1);
             case "capitalize":
                return Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
             case "toUpper":

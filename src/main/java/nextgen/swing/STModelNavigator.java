@@ -1094,6 +1094,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
+				actions.add(new CopyFilePathToClipboard(getModel()));
 				actions.add(new WriteSTFile(getModel()));
 				actions.add(new DeleteSTFile(getModel(), workspace));
 			});

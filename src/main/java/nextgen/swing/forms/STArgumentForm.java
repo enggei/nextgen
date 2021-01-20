@@ -11,7 +11,7 @@ public class STArgumentForm extends JPanel {
 	nextgen.swing.table.STArgumentKVTable tblKeyValues = new nextgen.swing.table.STArgumentKVTable();
 
 	public STArgumentForm() {
-		setLayout(new FormLayout("left:1024:none", "center:200:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:200:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblKeyValues, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(new JScrollPane(tblKeyValues), cc.xywh(1, 1, 1, 1, "FILL, FILL"));
@@ -35,7 +35,7 @@ public class STArgumentForm extends JPanel {
 	}  
 	/*
 
-	columns 		"left:1024:none"
+	columns 		"left:2400:none"
 
 	rows 		 	"center:200:grow"
 
