@@ -193,7 +193,6 @@ public final class TextProcessingPanel extends BaseEditor<String> {
                   txtOutput.setCaretPosition(start);
                   scrollOutput.getVerticalScrollBar().setValue(scrollInput.getVerticalScrollBar().getValue());
                   firstMatch.set(false);
-                  System.out.println("setValue");
 
                   synchScrollPanes.set(true);
                }
@@ -354,7 +353,6 @@ public final class TextProcessingPanel extends BaseEditor<String> {
 
          } catch (Throwable e) {
             txtPattern.setToolTipText(e.getMessage());
-            txtPattern.setBackground(decode3);
             txtOutput.setText(e.getMessage());
             txtOutput.setCaretPosition(0);
          }

@@ -1449,6 +1449,12 @@ public class STAppPresentationModel {
       DomainRelationDeleted.post(uuid);
    }
 
+   public void delete(nextgen.model.DomainVisitor domainVisitor) {
+      final String uuid = domainVisitor.getUuid();
+      domainVisitor.delete();
+      DomainVisitorDeleted.post(uuid);
+   }
+
    public void setName(Domain domain, String name) {
       domain.setName(name);
       DomainChanged.post(domain);

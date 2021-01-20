@@ -44,8 +44,7 @@ public class BaseTreeNode {
 				"\n" + 
 				"	public BaseTreeNode(T model, ImageIcon icon) {\n" + 
 				"		setUserObject(model);\n" + 
-				"		setLabel(model.toString());\n" + 
-				"		this.icon = icon;\n" + 
+				"		this.icon = icon;\n" +
 				"		this.tooltip = \"\";\n" + 
 				"	}\n" + 
 				"\n" + 

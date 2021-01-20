@@ -4,14 +4,14 @@ public final class STParameterKeyChanged {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STParameterKeyChanged.class);
 
-	public static void post(nextgen.model.STParameterKey model) {
-		log.info("STParameterKeyChanged" + " model");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new STParameterKeyChanged(model));
+	public static void post(nextgen.model.STParameterKey sTParameterKey) {
+		log.info("STParameterKeyChanged" + " sTParameterKey");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STParameterKeyChanged(sTParameterKey));
 	}
 
-	public final nextgen.model.STParameterKey model;
+	public final nextgen.model.STParameterKey sTParameterKey;
 
-	public STParameterKeyChanged(nextgen.model.STParameterKey model) {
-		this.model = model;
+	public STParameterKeyChanged(nextgen.model.STParameterKey sTParameterKey) {
+		this.sTParameterKey = sTParameterKey;
 	}
 }  

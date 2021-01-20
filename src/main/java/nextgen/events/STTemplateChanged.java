@@ -4,14 +4,14 @@ public final class STTemplateChanged {
 
 	private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STTemplateChanged.class);
 
-	public static void post(nextgen.model.STTemplate model) {
-		log.info("STTemplateChanged" + " model");
-		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateChanged(model));
+	public static void post(nextgen.model.STTemplate sTTemplate) {
+		log.info("STTemplateChanged" + " sTTemplate");
+		org.greenrobot.eventbus.EventBus.getDefault().post(new STTemplateChanged(sTTemplate));
 	}
 
-	public final nextgen.model.STTemplate model;
+	public final nextgen.model.STTemplate sTTemplate;
 
-	public STTemplateChanged(nextgen.model.STTemplate model) {
-		this.model = model;
+	public STTemplateChanged(nextgen.model.STTemplate sTTemplate) {
+		this.sTTemplate = sTTemplate;
 	}
 }  

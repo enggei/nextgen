@@ -121,6 +121,8 @@ public class ComponentFactory {
 
    public static javax.swing.JTextField decorate(javax.swing.JTextField component) {
       baseDecorate(component);
+      component.setBackground(Color.DARK_GRAY);
+      component.setForeground(UIManager.getColor("TextField.foreground"));
       return component;
    }
 
@@ -143,8 +145,7 @@ public class ComponentFactory {
       component.setHighlightCurrentLine(false);
       component.setFont(new Font("InputMono", Font.PLAIN, 12));
       component.setSelectionColor(Color.decode("#2b8cbe"));
-//      component.setBackground(Color.DARK_GRAY);
-//      component.setForeground(UIManager.getColor("TextField.foreground"));
+
       component.addKeyListener(new java.awt.event.KeyAdapter() {
 
          @Override

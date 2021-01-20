@@ -42,7 +42,7 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTActionTreeNodeClicked(TemplateNavigatorSTGroupActionTreeNodeClicked event) {
+	public void onSTActionTreeNodeClicked(STGroupActionTreeNodeClicked event) {
 		getSTGroupActionEditor(event.action);
 	}
 
@@ -76,22 +76,17 @@ public class STWorkspace extends JTabbedPane {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTGroupTreeNodeClicked(TemplateNavigatorSTGroupTreeNodeClicked event) {
+	public void onSTGroupTreeNodeClicked(STGroupTreeNodeClicked event) {
 		getSTTemplateEditor(event.stGroup).clear();
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTTemplateTreeNodeClicked(TemplateNavigatorSTTemplateTreeNodeClicked event) {
-		getSTTemplateEditor(event.stGroup).setSTTemplate(event.stTemplate);
-	}
-
-	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTEnumTreeNodeClicked(TemplateNavigatorSTEnumTreeNodeClicked event) {
+	public void onSTEnumTreeNodeClicked(STEnumTreeNodeClicked event) {
 		getSTTemplateEditor(event.stGroup).setSTEnum(event.stEnum);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTInterfaceTreeNodeClicked(TemplateNavigatorSTInterfaceTreeNodeClicked event) {
+	public void onSTInterfaceTreeNodeClicked(STInterfaceTreeNodeClicked event) {
 		getSTTemplateEditor(event.stGroup).setSTInterface(event.stInterface);
 	}
 
@@ -119,15 +114,15 @@ public class STWorkspace extends JTabbedPane {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelChanged(STModelChanged event) {
-		find(tabComponentAt -> tabComponentAt instanceof STModelEditor && (((STModelEditor) tabComponentAt).getModel().equals(event.model)))
+		find(tabComponentAt -> tabComponentAt instanceof STModelEditor && (((STModelEditor) tabComponentAt).getModel().equals(event.sTModel)))
 		      .ifPresent(component -> {
 		         final STWorkspace.ButtonTabComponent buttonTabComponent = tabComponents.get(component);
-		         if (buttonTabComponent != null) buttonTabComponent.setTitle(appModel().getLabel(event.model));
+		         if (buttonTabComponent != null) buttonTabComponent.setTitle(appModel().getLabel(event.sTModel));
 		      });
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onTemplateNavigatorSTGroupFileClicked(TemplateNavigatorSTGroupFileClicked event) {
+	public void onSTGroupFileClicked(STGroupFileClicked event) {
 		getSTGroupFileEditor(event.stGroupFile);
 	}
 

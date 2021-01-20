@@ -26,9 +26,9 @@ public class STTemplateNavigator extends JPanel {
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
-		tree.setCellRenderer(new STTemplateNavigator.STTemplateNavigatorCellRenderer());
-		tree.addKeyListener(new STTemplateNavigator.STTemplateNavigatorKeyListener());
-		tree.addMouseListener(new STTemplateNavigator.STTemplateNavigatorMouseListener());
+		tree.setCellRenderer(new STTemplateNavigatorCellRenderer());
+		tree.addKeyListener(new STTemplateNavigatorKeyListener());
+		tree.addMouseListener(new STTemplateNavigatorMouseListener());
 
 		setPreferredSize(new Dimension(300, 500));
 		add(new JScrollPane(tree), BorderLayout.CENTER);
@@ -141,7 +141,7 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupActionChanged(nextgen.events.STGroupActionChanged event) {
-		findAllSTGroupActionTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STTemplateNavigator.STGroupActionTreeNode::nodeChanged);
+		findAllSTGroupActionTreeNode(treeNode -> treeNode.getModel().equals(event.sTGroupAction)).forEach(STTemplateNavigator.STGroupActionTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -152,12 +152,12 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onDomainEntityChanged(nextgen.events.DomainEntityChanged event) {
-		findAllDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.model))
+		findAllDomainEntityTreeNode(treeNode -> treeNode.getModel().equals(event.domainEntity))
 		      .forEach(treeNode -> {
 		         treeNode.removeAllChildren();
-		         event.model.getIncomingEntitiesDomain().findFirst()
+		         event.domainEntity.getIncomingEntitiesDomain().findFirst()
 		               .ifPresent(domain -> domain.getRelationsSorted()
-		                     .filter(domainRelation -> domainRelation.getSrc().equals(event.model))
+		                     .filter(domainRelation -> domainRelation.getSrc().equals(event.domainEntity))
 		                     .forEach(domainRelation -> treeNode.add(new DomainRelationTreeNode(domainRelation))));
 		         treeNode.nodeChanged();
 		      });
@@ -165,12 +165,17 @@ public class STTemplateNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTGroupFileChanged(nextgen.events.STGroupFileChanged event) {
-		findAllSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.model)).forEach(STGroupFileTreeNode::nodeChanged);
+		findAllSTGroupFileTreeNode(treeNode -> treeNode.getModel().equals(event.sTGroupFile)).forEach(STGroupFileTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewDomainDomainEntity(nextgen.events.NewDomainDomainEntity event) {
 		findAllDomainTreeNode(treeNode -> treeNode.getModel().equals(event.domain)).forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new DomainEntityTreeNode(event.domainEntity)));
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
+	public void onDomainVisitorDeleted(nextgen.events.DomainVisitorDeleted event) {
+		findAllDomainVisitorTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -323,6 +328,14 @@ public class STTemplateNavigator extends JPanel {
 			return getModel().hashCode();
 		}
 
+		public <T> T getParentModel() {
+
+			final TreeNode parent = getParent();
+			if (!(parent instanceof BaseTreeNode)) return null;
+
+			return (T) ((BaseTreeNode<T>) parent).getModel();
+		}
+
 		@SuppressWarnings("unchecked")
 		public <T> Optional<T> getParentNode(Class<T> type) {
 			if (getClass().equals(type)) return (Optional<T>) Optional.of(this);
@@ -338,6 +351,7 @@ public class STTemplateNavigator extends JPanel {
 		}
 
 		public void nodeChanged() {
+			System.out.println("nodeChanged");
 			treeModel.nodeChanged(this);
 		}
 
@@ -463,6 +477,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(DomainTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<DomainTreeNode> findAllDomainTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(DomainTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<DomainTreeNode> findDomainTreeNode(java.util.function.Predicate<DomainTreeNode> predicate) {
 		return treeModel.find(DomainTreeNode.class, predicate);
 	}
@@ -530,6 +548,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(TemplatesTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<TemplatesTreeNode> findAllTemplatesTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(TemplatesTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<TemplatesTreeNode> findTemplatesTreeNode(java.util.function.Predicate<TemplatesTreeNode> predicate) {
 		return treeModel.find(TemplatesTreeNode.class, predicate);
 	}
@@ -595,6 +617,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private java.util.Collection<DomainsTreeNode> findAllDomainsTreeNode() {
 		return treeModel.findAll(DomainsTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainsTreeNode> findAllDomainsTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(DomainsTreeNode.class).collect(java.util.stream.Collectors.toList());
 	}
 
 	private Optional<DomainsTreeNode> findDomainsTreeNode(java.util.function.Predicate<DomainsTreeNode> predicate) {
@@ -673,6 +699,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(DomainEntityTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<DomainEntityTreeNode> findAllDomainEntityTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(DomainEntityTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<DomainEntityTreeNode> findDomainEntityTreeNode(java.util.function.Predicate<DomainEntityTreeNode> predicate) {
 		return treeModel.find(DomainEntityTreeNode.class, predicate);
 	}
@@ -745,6 +775,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(DomainRelationTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<DomainRelationTreeNode> findAllDomainRelationTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(DomainRelationTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<DomainRelationTreeNode> findDomainRelationTreeNode(java.util.function.Predicate<DomainRelationTreeNode> predicate) {
 		return treeModel.find(DomainRelationTreeNode.class, predicate);
 	}
@@ -796,6 +830,7 @@ public class STTemplateNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				actions.add(new RunDomainVisitor(getModel(), workspace));
+				actions.add(new DeleteDomainVisitor(getModel(), workspace));
 			});
 
 			return actions;
@@ -813,6 +848,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode() {
 		return treeModel.findAll(DomainVisitorTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<DomainVisitorTreeNode> findAllDomainVisitorTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(DomainVisitorTreeNode.class).collect(java.util.stream.Collectors.toList());
 	}
 
 	private Optional<DomainVisitorTreeNode> findDomainVisitorTreeNode(java.util.function.Predicate<DomainVisitorTreeNode> predicate) {
@@ -888,6 +927,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(STGroupActionTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupActionTreeNode> findAllSTGroupActionTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STGroupActionTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<STGroupActionTreeNode> findSTGroupActionTreeNode(java.util.function.Predicate<STGroupActionTreeNode> predicate) {
 		return treeModel.find(STGroupActionTreeNode.class, predicate);
 	}
@@ -905,7 +948,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTGroupActionTreeNodeSelected(STGroupActionTreeNode selectedNode) {
-		nextgen.events.TemplateNavigatorSTGroupActionTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STGroupActionTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// StringTreeNode
@@ -953,6 +996,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private java.util.Collection<StringTreeNode> findAllStringTreeNode() {
 		return treeModel.findAll(StringTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<StringTreeNode> findAllStringTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(StringTreeNode.class).collect(java.util.stream.Collectors.toList());
 	}
 
 	private Optional<StringTreeNode> findStringTreeNode(java.util.function.Predicate<StringTreeNode> predicate) {
@@ -1023,6 +1070,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private java.util.Collection<RootNode> findAllRootNode() {
 		return treeModel.findAll(RootNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<RootNode> findAllRootNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(RootNode.class).collect(java.util.stream.Collectors.toList());
 	}
 
 	private Optional<RootNode> findRootNode(java.util.function.Predicate<RootNode> predicate) {
@@ -1109,6 +1160,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(STGroupTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupTreeNode> findAllSTGroupTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STGroupTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<STGroupTreeNode> findSTGroupTreeNode(java.util.function.Predicate<STGroupTreeNode> predicate) {
 		return treeModel.find(STGroupTreeNode.class, predicate);
 	}
@@ -1126,7 +1181,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTGroupTreeNodeSelected(STGroupTreeNode selectedNode) {
-		nextgen.events.TemplateNavigatorSTGroupTreeNodeClicked.post(selectedNode.getModel());
+		nextgen.events.STGroupTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STEnumTreeNode
@@ -1182,6 +1237,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(STEnumTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STEnumTreeNode> findAllSTEnumTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STEnumTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<STEnumTreeNode> findSTEnumTreeNode(java.util.function.Predicate<STEnumTreeNode> predicate) {
 		return treeModel.find(STEnumTreeNode.class, predicate);
 	}
@@ -1199,7 +1258,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTEnumTreeNodeSelected(STEnumTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { nextgen.events.TemplateNavigatorSTEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()); });
+		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(stGroupTreeNode -> { nextgen.events.STEnumTreeNodeClicked.post(stGroupTreeNode.getModel(), selectedNode.getModel()); });
 	}
 
 	// STTemplateTreeNode
@@ -1275,6 +1334,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(STTemplateTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STTemplateTreeNode> findAllSTTemplateTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STTemplateTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<STTemplateTreeNode> findSTTemplateTreeNode(java.util.function.Predicate<STTemplateTreeNode> predicate) {
 		return treeModel.find(STTemplateTreeNode.class, predicate);
 	}
@@ -1292,10 +1355,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTTemplateTreeNodeSelected(STTemplateTreeNode selectedNode) {
-		selectedNode.getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
-			final STTemplateNavigator.STTemplateTreeNode stTemplateTreeNode = selectedNode.getParentNode(STTemplateNavigator.STTemplateTreeNode.class).orElse(null);
-			nextgen.events.TemplateNavigatorSTTemplateTreeNodeClicked.post(parent.getModel(), stTemplateTreeNode == null ? null : stTemplateTreeNode.getModel(), selectedNode.getModel());
-		});
+		nextgen.events.STTemplateTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// STInterfaceTreeNode
@@ -1348,6 +1408,10 @@ public class STTemplateNavigator extends JPanel {
 
 	private java.util.Collection<STInterfaceTreeNode> findAllSTInterfaceTreeNode() {
 		return treeModel.findAll(STInterfaceTreeNode.class, treeNode -> true);
+	}
+
+	private java.util.Collection<STInterfaceTreeNode> findAllSTInterfaceTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STInterfaceTreeNode.class).collect(java.util.stream.Collectors.toList());
 	}
 
 	private Optional<STInterfaceTreeNode> findSTInterfaceTreeNode(java.util.function.Predicate<STInterfaceTreeNode> predicate) {
@@ -1421,6 +1485,10 @@ public class STTemplateNavigator extends JPanel {
 		return treeModel.findAll(STGroupFileTreeNode.class, treeNode -> true);
 	}
 
+	private java.util.Collection<STGroupFileTreeNode> findAllSTGroupFileTreeNode(BaseTreeNode<?> parent) {
+		return parent.getChildren(STGroupFileTreeNode.class).collect(java.util.stream.Collectors.toList());
+	}
+
 	private Optional<STGroupFileTreeNode> findSTGroupFileTreeNode(java.util.function.Predicate<STGroupFileTreeNode> predicate) {
 		return treeModel.find(STGroupFileTreeNode.class, predicate);
 	}
@@ -1438,7 +1506,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onSTGroupFileTreeNodeSelected(STGroupFileTreeNode selectedNode) {
-		nextgen.events.TemplateNavigatorSTGroupFileClicked.post(selectedNode.getModel());
+		nextgen.events.STGroupFileClicked.post(selectedNode.getModel());
 	}	
 
 	private Action newAction(String name, Consumer<ActionEvent> actionEventConsumer) {
