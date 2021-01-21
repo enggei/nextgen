@@ -10,16 +10,16 @@ public class IconGenerator {
       final String clipboardSetColor = "#4daf4a";
 
       String[] domain = new String[]{
-            "#fcfbfd","#efedf5","#dadaeb","#bcbddc","#9e9ac8","#807dba","#6a51a3","#54278f","#3f007d"
+            "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"
       };
       String[] templates = new String[]{
-            "#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"
+            "#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"
       };
       String[] templatesSecondary = new String[]{
-            "#fcfbfd","#efedf5","#dadaeb","#bcbddc","#9e9ac8","#807dba","#6a51a3","#54278f","#3f007d"
+            "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"
       };
       String[] models = new String[]{
-            "#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"
+            "#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"
       };
 
       final File destinationDir = new File("src/main/resources/icons");
@@ -28,8 +28,8 @@ public class IconGenerator {
       makeEntityIcon(destinationDir, "STFile", fileColor);
       makeEntityIcon(destinationDir, "STProject", projectColor);
 
-      makeIcon(destinationDir, "cb-get","G", clipboardGetColor);
-      makeIcon(destinationDir, "cb-set","S", clipboardSetColor);
+      makeIcon(destinationDir, "cb-get", "G", clipboardGetColor);
+      makeIcon(destinationDir, "cb-set", "S", clipboardSetColor);
 
       int i = templates.length - 1;
       makeEntityIcon(destinationDir, "STGroupModel", templates[i--]);
@@ -67,21 +67,22 @@ public class IconGenerator {
       final java.io.File targetFile = new java.io.File(destinationDir, filename + ".png");
       final java.awt.Paint paint = java.awt.Color.decode(color);
 
-      final String s = letter.substring(0,1);
-
-      draw(width, height, paint, s, targetFile);
+      draw(width, height, paint, letter.substring(0, 1), targetFile);
    }
 
    private static void makeEntityIcon(java.io.File destinationDir, String newName, String color) {
+
+      final String name = newName.startsWith("ST") ? newName.substring(2) : newName;
 
       final int width = 16;
       final int height = 16;
       final java.io.File targetFile = new java.io.File(destinationDir, "nextgen.model." + newName + ".png");
       final java.awt.Paint paint = java.awt.Color.decode(color);
 
-      final String s = newName.toLowerCase().startsWith("st") ? newName.substring(2, 3) : (newName.contains("File") ? "F" : ((newName.startsWith("Domain") && !newName.equals("Domain")) ? newName.substring(6, 7) : (newName.endsWith("Action") ? "A" : newName.substring(0, 1))));
-
-      draw(width, height, paint, s, targetFile);
+      if (name.contains("File")) draw(width, height, paint, "F", targetFile);
+      else if (name.startsWith("Domain") && !newName.equals("Domain")) draw(width, height, paint, newName.substring(6, 7), targetFile);
+      else if (name.endsWith("Action") && !newName.equals("Domain")) draw(width, height, paint, "A", targetFile);
+      else draw(width, height, paint, newName.substring(0, 1), targetFile);
    }
 
    public static void draw(int width, int height, java.awt.Paint gp, String letters, java.io.File targetFile) {
