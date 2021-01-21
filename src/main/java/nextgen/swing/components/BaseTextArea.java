@@ -61,8 +61,6 @@ public class BaseTextArea extends RSyntaxTextArea {
       getPopupMenu().add(newAction("Goto top", actionEvent -> gotoTop()));
       getPopupMenu().add(newAction("Goto bottom", actionEvent -> gotoBottom()));
       getPopupMenu().addSeparator();
-
-
    }
 
    protected void clear() {
@@ -128,17 +126,16 @@ public class BaseTextArea extends RSyntaxTextArea {
       javax.swing.SwingUtilities.invokeLater(() -> {
          final int start = getLineStartOffsetOfCurrentLine();
          final int end = getLineEndOffsetOfCurrentLine();
-         final String line = "\n" + getText().substring(start, end);
+         final String line = getText().substring(start, end);
          insert(line, end);
-         System.out.println(getText());
       });
    }
 
-   public void addCodeTemplate(DefaultCompletionProvider provider, String replacementText, String before, String after) {
-      addCodeTemplate(false, provider, replacementText, before, after);
+   public void addCodeTemplate(String replacementText, String before, String after) {
+      addCodeTemplate(false, replacementText, before, after);
    }
 
-   public void addCodeTemplate(boolean addToPop, DefaultCompletionProvider provider, String replacementText, String before, String after) {
+   public void addCodeTemplate(boolean addToPop, String replacementText, String before, String after) {
 
       provider.addCompletion(new BasicCompletion(provider, replacementText));
       getCodeTemplateManager().addTemplate(new StaticCodeTemplate(replacementText, before, after));
