@@ -1,5 +1,7 @@
-package nextgen.model;
+package nextgen.st;
 
+
+import nextgen.model.STTemplate;
 
 public class STTemplateModel {
 

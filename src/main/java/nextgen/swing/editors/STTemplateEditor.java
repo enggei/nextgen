@@ -21,7 +21,6 @@ public class STTemplateEditor extends nextgen.swing.BaseEditor<nextgen.model.STT
 	}
 
 	private void init() {
-		form.getTxtText().setSyntaxEditingStyle(nextgen.swing.STAppPresentationModel.getSTGroup(model).getLanguage());
 		form.getTxtName().addKeyListener(newSaveListener(textComponent -> tryToSave()));
 		form.getTxtText().addKeyListener(newSaveListener(textComponent -> tryToSave()));
 		editors.add("Form", nextgen.swing.ComponentFactory.newJScrollPane(form));

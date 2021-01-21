@@ -173,6 +173,8 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTArgument(nextgen.events.NewSTArgument event) {
+
+
 		findAllSTModelTreeNode().stream()
 						.filter(treeNode -> treeNode.getModel().equals(event.model))
 						.forEach(treeNode -> {
@@ -548,9 +550,7 @@ public class STModelNavigator extends JPanel {
 			this.tooltip = "";
 
 			appModel().doInTransaction(transaction -> {
-				appModel().db.findAllSTProject()
-						.sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName))
-						.forEach(stProject -> add(new STProjectTreeNode(stProject)));
+				appModel().db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName)).forEach(stProject -> add(new STProjectTreeNode(stProject)));
 				add(new ModelsTreeNode("Models"));
 			});
 		}

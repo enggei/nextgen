@@ -129,6 +129,11 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
+	public void onDomainRelationDeleted(nextgen.events.DomainRelationDeleted event) {
+		findAllDomainRelationTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
+	}
+
+	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTAction(nextgen.events.NewSTAction event) {
 		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup))
 				.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STTemplateNavigator.STGroupActionTreeNode(event.action)));
@@ -498,6 +503,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	private void onDomainTreeNodeSelected(DomainTreeNode selectedNode) {
+		nextgen.events.DomainTreeNodeClicked.post(selectedNode.getModel());
 	}
 
 	// TemplatesTreeNode

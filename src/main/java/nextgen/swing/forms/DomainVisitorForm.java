@@ -17,8 +17,6 @@ public class DomainVisitorForm extends JPanel {
 	nextgen.swing.components.DomainVisitorTextArea txtOnRelation = new nextgen.swing.components.DomainVisitorTextArea("");
 	JLabel lblOnComplete = new JLabel("onComplete");
 	nextgen.swing.components.DomainVisitorTextArea txtOnComplete = new nextgen.swing.components.DomainVisitorTextArea("");
-	JLabel lblTemplates = new JLabel("templates");
-	nextgen.swing.table.STTemplateTable tblTemplates = new nextgen.swing.table.STTemplateTable();
 	JLabel lblOnEntityEntity = new JLabel("onEntityEntity");
 	nextgen.swing.components.DomainVisitorTextArea txtOnEntityEntity = new nextgen.swing.components.DomainVisitorTextArea("");
 	JLabel lblOnEnumEntity = new JLabel("onEnumEntity");
@@ -45,7 +43,7 @@ public class DomainVisitorForm extends JPanel {
 	nextgen.swing.components.DomainVisitorTextArea txtOnOptionalPrimitiveRelation = new nextgen.swing.components.DomainVisitorTextArea("");
 
 	public DomainVisitorForm() {
-		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
+		setLayout(new FormLayout("left:2400:none", "center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"));
 		final CellConstraints cc = new CellConstraints();
 		add(lblName, cc.xywh(1, 1, 1, 1, "LEFT, TOP"));
 		add(txtName, cc.xywh(1, 2, 1, 1, "FILL, FILL"));
@@ -57,32 +55,30 @@ public class DomainVisitorForm extends JPanel {
 		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnRelation), cc.xywh(1, 8, 1, 1, "FILL, FILL"));
 		add(lblOnComplete, cc.xywh(1, 9, 1, 1, "LEFT, TOP"));
 		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnComplete), cc.xywh(1, 10, 1, 1, "FILL, FILL"));
-		add(lblTemplates, cc.xywh(1, 11, 1, 1, "LEFT, TOP"));
-		add(new JScrollPane(tblTemplates), cc.xywh(1, 11, 1, 1, "FILL, FILL"));
-		add(lblOnEntityEntity, cc.xywh(1, 12, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnEntityEntity), cc.xywh(1, 13, 1, 1, "FILL, FILL"));
-		add(lblOnEnumEntity, cc.xywh(1, 14, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnEnumEntity), cc.xywh(1, 15, 1, 1, "FILL, FILL"));
-		add(lblOnPrimitiveEntity, cc.xywh(1, 16, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnPrimitiveEntity), cc.xywh(1, 17, 1, 1, "FILL, FILL"));
-		add(lblOnOneEntityRelation, cc.xywh(1, 18, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOneEntityRelation), cc.xywh(1, 19, 1, 1, "FILL, FILL"));
-		add(lblOnOneEnumRelation, cc.xywh(1, 20, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOneEnumRelation), cc.xywh(1, 21, 1, 1, "FILL, FILL"));
-		add(lblOnOnePrimitiveRelation, cc.xywh(1, 22, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOnePrimitiveRelation), cc.xywh(1, 23, 1, 1, "FILL, FILL"));
-		add(lblOnManyEntityRelation, cc.xywh(1, 24, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyEntityRelation), cc.xywh(1, 25, 1, 1, "FILL, FILL"));
-		add(lblOnManyEnumRelation, cc.xywh(1, 26, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyEnumRelation), cc.xywh(1, 27, 1, 1, "FILL, FILL"));
-		add(lblOnManyPrimitiveRelation, cc.xywh(1, 28, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyPrimitiveRelation), cc.xywh(1, 29, 1, 1, "FILL, FILL"));
-		add(lblOnOptionalEntityRelation, cc.xywh(1, 30, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalEntityRelation), cc.xywh(1, 31, 1, 1, "FILL, FILL"));
-		add(lblOnOptionalEnumRelation, cc.xywh(1, 32, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalEnumRelation), cc.xywh(1, 33, 1, 1, "FILL, FILL"));
-		add(lblOnOptionalPrimitiveRelation, cc.xywh(1, 34, 1, 1, "LEFT, TOP"));
-		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalPrimitiveRelation), cc.xywh(1, 35, 1, 1, "FILL, FILL"));
+		add(lblOnEntityEntity, cc.xywh(1, 11, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnEntityEntity), cc.xywh(1, 12, 1, 1, "FILL, FILL"));
+		add(lblOnEnumEntity, cc.xywh(1, 13, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnEnumEntity), cc.xywh(1, 14, 1, 1, "FILL, FILL"));
+		add(lblOnPrimitiveEntity, cc.xywh(1, 15, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnPrimitiveEntity), cc.xywh(1, 16, 1, 1, "FILL, FILL"));
+		add(lblOnOneEntityRelation, cc.xywh(1, 17, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOneEntityRelation), cc.xywh(1, 18, 1, 1, "FILL, FILL"));
+		add(lblOnOneEnumRelation, cc.xywh(1, 19, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOneEnumRelation), cc.xywh(1, 20, 1, 1, "FILL, FILL"));
+		add(lblOnOnePrimitiveRelation, cc.xywh(1, 21, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOnePrimitiveRelation), cc.xywh(1, 22, 1, 1, "FILL, FILL"));
+		add(lblOnManyEntityRelation, cc.xywh(1, 23, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyEntityRelation), cc.xywh(1, 24, 1, 1, "FILL, FILL"));
+		add(lblOnManyEnumRelation, cc.xywh(1, 25, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyEnumRelation), cc.xywh(1, 26, 1, 1, "FILL, FILL"));
+		add(lblOnManyPrimitiveRelation, cc.xywh(1, 27, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnManyPrimitiveRelation), cc.xywh(1, 28, 1, 1, "FILL, FILL"));
+		add(lblOnOptionalEntityRelation, cc.xywh(1, 29, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalEntityRelation), cc.xywh(1, 30, 1, 1, "FILL, FILL"));
+		add(lblOnOptionalEnumRelation, cc.xywh(1, 31, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalEnumRelation), cc.xywh(1, 32, 1, 1, "FILL, FILL"));
+		add(lblOnOptionalPrimitiveRelation, cc.xywh(1, 33, 1, 1, "LEFT, TOP"));
+		add(new org.fife.ui.rtextarea.RTextScrollPane(txtOnOptionalPrimitiveRelation), cc.xywh(1, 34, 1, 1, "FILL, FILL"));
 	}
 
 	public JLabel getLblName() {
@@ -123,14 +119,6 @@ public class DomainVisitorForm extends JPanel {
 
 	public nextgen.swing.components.DomainVisitorTextArea getTxtOnComplete() {
 		return txtOnComplete;
-	}
-
-	public JLabel getLblTemplates() {
-		return lblTemplates;
-	}
-
-	public nextgen.swing.table.STTemplateTable getTblTemplates() {
-		return tblTemplates;
 	}
 
 	public JLabel getLblOnEntityEntity() {
@@ -236,7 +224,6 @@ public class DomainVisitorForm extends JPanel {
 		txtOnEntity.setText(model.getOnEntity());
 		txtOnRelation.setText(model.getOnRelation());
 		txtOnComplete.setText(model.getOnComplete());
-		tblTemplates.setContent(model.getTemplates());
 		txtOnEntityEntity.setText(model.getOnEntityEntity());
 		txtOnEnumEntity.setText(model.getOnEnumEntity());
 		txtOnPrimitiveEntity.setText(model.getOnPrimitiveEntity());
@@ -274,7 +261,7 @@ public class DomainVisitorForm extends JPanel {
 
 	columns 		"left:2400:none"
 
-	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:200:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"
+	rows 		 	"center:pref:none, center:pref:none, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow, center:pref:none, center:150:grow"
 
 	*/
 }  

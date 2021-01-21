@@ -22,6 +22,31 @@ public class STTemplateTextArea extends JavaTextArea {
       getPopupMenu().add(newAction("Replace text and insert Single", actionEvent -> replaceAndInsertSingle()));
       getPopupMenu().add(newAction("Replace text", actionEvent -> replace()));
       getPopupMenu().add(newAction("Debug Template", actionEvent -> debug()));
+
+      addKeyListener(new java.awt.event.KeyAdapter() {
+         @Override
+         public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+            if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_L) {
+               insertList();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_I) {
+               insertIf();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_E) {
+               insertIfElse();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_Q) {
+               insertCapitalized();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_P) {
+               insertSingle();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_R) {
+               replaceAndInsertSingle();
+            } else if (keyEvent.getModifiers() == java.awt.event.KeyEvent.CTRL_MASK && keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_F) {
+               format();
+            }
+         }
+      });
+   }
+
+   private void format() {
+      nextgen.utils.SwingUtil.format(this);
    }
 
    private void insertSingle() {

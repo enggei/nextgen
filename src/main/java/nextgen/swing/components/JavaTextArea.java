@@ -16,6 +16,9 @@ public class JavaTextArea extends BaseTextArea {
       super.assignActions();
 
       addCodeTemplate(true, provider, "sout", "System.out.println(", ");");
+      addCodeTemplate(true, provider, "linfo", "log.info(", ");");
+      addCodeTemplate(true, provider, "lwarn", "log.warn(", ");");
+      addCodeTemplate(true, provider, "ldebug", "log.debug(", ");");
       addCodeTemplate(true, provider, "lambda", "() -> ", ")");
       addCodeTemplate(true, provider,  "lambdaMethod", "() -> {\n", "\n})");
       addCodeTemplate(true, provider,  "lambdaOne", "a -> {\n", "\n})");

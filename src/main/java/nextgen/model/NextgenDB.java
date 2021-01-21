@@ -46,7 +46,8 @@ public class NextgenDB {
 	}
 
 	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action, java.util.function.Consumer<java.lang.Throwable> onException) { 
-		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  { 
+		try (org.neo4j.graphdb.Transaction tx = db.beginTx())  {
+			System.out.println(".");
 			action.accept(tx);
 			tx.success();
 		} catch (java.lang.Throwable t)  { 

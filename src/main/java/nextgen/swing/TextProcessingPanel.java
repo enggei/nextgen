@@ -538,7 +538,6 @@ public final class TextProcessingPanel extends BaseEditor<String> {
       public void adjustmentValueChanged(AdjustmentEvent evt) {
          if (evt.getValueIsAdjusting() || !synchScrollPanes.get()) return;
          int value = evt.getValue();
-         System.out.println("setValue changed");
 //         if (evt.getSource().equals(input))
 //            output.setValue(value);
 //         else

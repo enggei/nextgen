@@ -8,9 +8,8 @@ import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
 public class RunDomainVisitor extends nextgen.actions.TransactionAction {
-
-   private final nextgen.model.DomainVisitor visitor;
-   private final JComponent owner;
+	private final nextgen.model.DomainVisitor visitor;
+	private final JComponent owner;
 
 	public RunDomainVisitor(nextgen.model.DomainVisitor visitor, JComponent owner) {
 		super("Run");
@@ -23,47 +22,63 @@ public class RunDomainVisitor extends nextgen.actions.TransactionAction {
    	log.info("RunDomainVisitor" + " visitor" + " owner");
 
       new Thread(() -> {
-         try {
-            final nextgen.model.STModel source = asSource();
-            final String className = nextgen.swing.STAppPresentationModel.getSTModelPackage(source) + "." + nextgen.swing.STAppPresentationModel.getSTModelName(source);
-            final Class<?> aClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(className, appModel().render(source));
-            final nextgen.actions.TransactionAction action = (nextgen.actions.TransactionAction) aClass.getDeclaredConstructor(Domain.class, JComponent.class).newInstance(visitor.getIncomingVisitorsDomain().findFirst().get(), owner);
-            action.actionPerformed(actionEvent);
-         } catch (Throwable e) {
-            throw new RuntimeException(e);
-         }   
+      	appModel().doInTransaction(tx -> {
+      		try {
+      			final nextgen.st.STBuilder source = asSource();
+      			final String className = source.getPackageName() + "." + source.getName();
+      			final Class<?> aClass = net.openhft.compiler.CompilerUtils.CACHED_COMPILER.loadFromJava(className, source.toString());
+      			final nextgen.actions.TransactionAction action = (nextgen.actions.TransactionAction) aClass.getDeclaredConstructor(Domain.class, JComponent.class).newInstance(visitor.getIncomingVisitorsDomain().findFirst().get(), owner);
+      			action.actionPerformed(actionEvent);
+      		} catch (Throwable e) {
+      			throw new RuntimeException(e);
+      		}
+      	});
       }).start();
    }
 
-   private nextgen.model.STModel asSource() {
-   	
+   private nextgen.st.STBuilder asSource() {
+
    	final String packageName = appModel().getSourceOutputPackage() + "." + visitor.getName().toLowerCase();
-   	
-   	nextgen.model.STTemplate domainVisitor = appModel().db.findSTTemplateByUuid("95c75764-2aff-4b56-b1db-fa2ffac11872");
-   	final nextgen.model.STModel visitorInterface = appModel().newSTModel(domainVisitor);
-   	
-   	appModel().addArgument(visitorInterface, "onDomain", visitor.getOnDomain());
-   	appModel().addArgument(visitorInterface, "onEntity", visitor.getOnEntity());
-   	appModel().addArgument(visitorInterface, "onRelation", visitor.getOnRelation());
-   	appModel().addArgument(visitorInterface, "onComplete", visitor.getOnComplete());
-   	
-   	visitor.getTemplatesSorted().forEach(stTemplate -> appModel().addKVArgument(visitorInterface, "templates", "name", stTemplate.getName(), "uuid", stTemplate.getUuid()));
-   	
-   	nextgen.model.STModel transactionAction = appModel().newSTModel(appModel().db.findSTTemplateByUuid("54b49221-8a58-44a5-9ba6-2a75cbe9357f"));
-   	appModel().addArgument(transactionAction, "imports", "static nextgen.utils.StringUtil.*");
-   	appModel().setArgument(transactionAction, "packageName", packageName);
-   	appModel().setArgument(transactionAction, "name", visitor.getName());
-   	appModel().setArgument(transactionAction, "title", visitor.getName());
-   	appModel().addKVArgument(transactionAction, "fields", "name", "domain", "type", "nextgen.model.Domain");
-   	appModel().addKVArgument(transactionAction, "fields", "name", "owner", "type", "javax.swing.JComponent");
-   	appModel().addArgument(transactionAction, "statements", appModel().render(appModel().newSTModel(appModel().db.findSTTemplateByUuid("6032fd32-e00e-4f73-b7b7-8a9fe6444514"))));
-   	appModel().addArgument(transactionAction, "methods", appModel().render(visitorInterface));
-   	
-   	final java.io.File file = new java.io.File(nextgen.swing.AppModel.getInstance().getOutputPath());
-   	nextgen.st.STGenerator.writeJavaFile(appModel().render(transactionAction), packageName, nextgen.swing.STAppPresentationModel.getSTModelName(transactionAction), file);
-   	
-   	appModel().setArgument(transactionAction, "name", visitor.getName() + "_" + System.currentTimeMillis());
-   	
+
+   	nextgen.st.STBuilder domainVisitor = new nextgen.st.STBuilder("95c75764-2aff-4b56-b1db-fa2ffac11872");
+   	domainVisitor.add("onDomain", visitor.getOnDomain());
+   	domainVisitor.add("onEntity", visitor.getOnEntity());
+   	domainVisitor.add("onRelation", visitor.getOnRelation());
+   	domainVisitor.add("onComplete", visitor.getOnComplete());
+
+   	domainVisitor.add("onEntityEntity", visitor.getOnEntityEntity());
+   	domainVisitor.add("onEnumEntity", visitor.getOnEnumEntity());
+   	domainVisitor.add("onPrimitiveEntity", visitor.getOnPrimitiveEntity());
+
+   	domainVisitor.add("onOneEntityRelation", visitor.getOnOneEntityRelation());
+   	domainVisitor.add("onOneEnumRelation", visitor.getOnOneEnumRelation());
+   	domainVisitor.add("onOnePrimitiveRelation", visitor.getOnOnePrimitiveRelation());
+
+   	domainVisitor.add("onManyEntityRelation", visitor.getOnManyEntityRelation());
+   	domainVisitor.add("onManyEnumRelation", visitor.getOnManyEnumRelation());
+   	domainVisitor.add("onManyPrimitiveRelation", visitor.getOnManyPrimitiveRelation());
+
+   	domainVisitor.add("onOptionalEntityRelation", visitor.getOnOptionalEntityRelation());
+   	domainVisitor.add("onOptionalEnumRelation", visitor.getOnOptionalEnumRelation());
+   	domainVisitor.add("onOptionalPrimitiveRelation", visitor.getOnOptionalPrimitiveRelation());
+
+   	nextgen.st.STBuilder transactionAction = new nextgen.st.STBuilder("54b49221-8a58-44a5-9ba6-2a75cbe9357f");
+   	transactionAction.add("imports", "static nextgen.utils.StringUtil.*");
+   	transactionAction.add("imports", "nextgen.st.*");
+   	transactionAction.add("packageName", packageName);
+   	transactionAction.add("name", visitor.getName());
+   	transactionAction.add("title", visitor.getName());
+   	transactionAction.add("fields", "name", "domain", "type", "nextgen.model.Domain");
+   	transactionAction.add("fields", "name", "owner", "type", "javax.swing.JComponent");
+   	transactionAction.add("statements", new nextgen.st.STBuilder("6032fd32-e00e-4f73-b7b7-8a9fe6444514"));
+   	transactionAction.add("methods", domainVisitor);
+
+   	// write to tmp- package (for debugging etc)
+   	transactionAction.writeJavaFile(nextgen.swing.AppModel.getInstance().getOutputPath());
+
+   	// change name, so compiler will use fresh code (and not cached)
+   	transactionAction.add("name", visitor.getName() + "_" + System.currentTimeMillis());
+
    	return transactionAction;
    }
 }

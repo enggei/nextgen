@@ -337,6 +337,11 @@ public class STGenerator {
       writeToFile(content, packageDeclaration, name, "java", root);
    }
 
+   public static void writeJavaFile(Object content, Object packageDeclaration, Object name, File root) {
+      if (name == null || name.toString().length() == 0) throw new IllegalArgumentException("WriteJavaFile.name cannot be empty");
+      writeToFile(content, packageDeclaration == null ? "" : packageDeclaration.toString(), name.toString(), "java", root);
+   }
+
    @Deprecated
    public static void writeKotlinFile(Object content, String packageDeclaration, String name, File root) {
       if (name == null || name.length() == 0)

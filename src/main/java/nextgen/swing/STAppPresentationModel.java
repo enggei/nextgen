@@ -35,18 +35,6 @@ public class STAppPresentationModel {
       this.generatorSTGroup = db.getInTransaction(transaction -> db.findSTGroupModelByName("StringTemplate"));
    }
 
-   public static String getSTName(org.stringtemplate.v4.ST st) {
-      return st.getAttribute("name").toString();
-   }
-
-   public static String getSTPackage(org.stringtemplate.v4.ST st) {
-
-      final Object aPackage = st.getAttribute("package");
-      if (aPackage != null) return aPackage.toString();
-
-      final Object packageName = st.getAttribute("packageName");
-      return packageName == null ? null : packageName.toString();
-   }
 
    public void replaceAllSTValues(STModel thisModel, String existingValue, String newValue) {
       getSTParameters(thisModel).forEach(parameterArguments -> {

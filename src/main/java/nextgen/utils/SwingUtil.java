@@ -875,9 +875,10 @@ public class SwingUtil {
 //   }
 
    public static void format(JTextArea txtEditor) {
+
       final int caretPosition = txtEditor.getCaretPosition();
       final StringBuilder spaces = new StringBuilder();
-      for (int i = 0; i < txtEditor.getTabSize(); i++) spaces.append(" ");
+      spaces.append(" ".repeat(Math.max(0, txtEditor.getTabSize())));
 
       String[] split = txtEditor.getText().split("\n");
       final StringBuilder formatted = new StringBuilder();

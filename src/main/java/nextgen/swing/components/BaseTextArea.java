@@ -24,6 +24,13 @@ public class BaseTextArea extends RSyntaxTextArea {
    }
 
    private void decorate() {
+
+      javax.swing.InputMap im = getInputMap();
+      im.put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK), "Duplicate");
+
+      javax.swing.ActionMap am = getActionMap();
+      am.put("Duplicate", newAction("Duplicate", actionEvent -> duplicateLine()));
+
       nextgen.swing.ComponentFactory.decorate(this);
       setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
    }
@@ -36,16 +43,26 @@ public class BaseTextArea extends RSyntaxTextArea {
    }
 
    protected void assignActions() {
+
       getPopupMenu().removeAll();
+
       getPopupMenu().add(newAction("Replace with Clipboard", actionEvent -> replaceWithClipboard()));
       getPopupMenu().add(newAction("Append from Clipboard", actionEvent -> appendFromClipboard()));
       getPopupMenu().add(newAction("Prepend from Clipboard", actionEvent -> prependFromClipboard()));
       getPopupMenu().addSeparator();
+
       getPopupMenu().add(newAction("To Clipboard", actionEvent -> toClipboard()));
+      getPopupMenu().addSeparator();
+
+      getPopupMenu().add(newAction("Duplicate", actionEvent -> duplicateLine()));
+      getPopupMenu().addSeparator();
 
       getPopupMenu().add(newAction("Clear", actionEvent -> clear()));
       getPopupMenu().add(newAction("Goto top", actionEvent -> gotoTop()));
       getPopupMenu().add(newAction("Goto bottom", actionEvent -> gotoBottom()));
+      getPopupMenu().addSeparator();
+
+
    }
 
    protected void clear() {
@@ -71,8 +88,13 @@ public class BaseTextArea extends RSyntaxTextArea {
 
    protected void replaceWithClipboard() {
       if (!isEditable()) return;
-      setText(nextgen.utils.SwingUtil.fromClipboard().trim());
-      setCaretPosition(0);
+      if (getSelectedText() != null) {
+         final int selectionStart = getSelectionStart();
+         replaceRange(nextgen.utils.SwingUtil.fromClipboard().trim(), selectionStart, getSelectionEnd());
+      } else {
+         setText(nextgen.utils.SwingUtil.fromClipboard().trim());
+         setCaretPosition(0);
+      }
    }
 
    protected void appendFromClipboard() {
@@ -88,7 +110,10 @@ public class BaseTextArea extends RSyntaxTextArea {
    }
 
    protected void toClipboard() {
-      nextgen.utils.SwingUtil.toClipboard(getText().trim());
+      if (getSelectedText() != null)
+         nextgen.utils.SwingUtil.toClipboard(getSelectedText().trim());
+      else
+         nextgen.utils.SwingUtil.toClipboard(getText().trim());
    }
 
    protected void removeSelectedTextIfAny() {
@@ -97,6 +122,16 @@ public class BaseTextArea extends RSyntaxTextArea {
          replaceRange("", selectionStart, getSelectionEnd());
          setCaretPosition(selectionStart);
       }
+   }
+
+   protected void duplicateLine() {
+      javax.swing.SwingUtilities.invokeLater(() -> {
+         final int start = getLineStartOffsetOfCurrentLine();
+         final int end = getLineEndOffsetOfCurrentLine();
+         final String line = "\n" + getText().substring(start, end);
+         insert(line, end);
+         System.out.println(getText());
+      });
    }
 
    public void addCodeTemplate(DefaultCompletionProvider provider, String replacementText, String before, String after) {
