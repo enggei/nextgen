@@ -12,17 +12,20 @@ import nextgen.model.*;
 
 public class STWorkspace extends JTabbedPane {
 
-	private final java.util.Map<java.awt.Component, nextgen.swing.STWorkspace.ButtonTabComponent> tabComponents = new java.util.LinkedHashMap<>();
-	private STTemplateNavigator templateNavigator;
-	private STModelNavigator modelNavigator;
+	private final nextgen.swing.STApp stApp;
 
-	public STWorkspace() {
+	private final java.util.Map<java.awt.Component, nextgen.swing.STWorkspace.ButtonTabComponent> tabComponents = new java.util.LinkedHashMap<>();
+	private final STTemplateNavigator templateNavigator;
+	private final STModelNavigator modelNavigator;
+
+	public STWorkspace(nextgen.swing.STApp stApp) {
+		this.stApp = stApp;
 		setPreferredSize(new Dimension(600, 600));
 		setMinimumSize(new Dimension(100, 100));
 		setMaximumSize(new Dimension(1200, 1200));
 		getCanvas();
 		getTextProcessor();
-		templateNavigator = new STTemplateNavigator(this);
+		templateNavigator = new STTemplateNavigator();
 		modelNavigator = new STModelNavigator(this);
 		org.greenrobot.eventbus.EventBus.getDefault().register(this);
 	}
@@ -652,6 +655,22 @@ public class STWorkspace extends JTabbedPane {
 								}
 							});
 
+							pop.addSeparator();
+
+							pop.add(new AbstractAction("Maximize") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									stApp.maximizeCenter();
+								}
+							});
+
+							pop.add(new AbstractAction("Normalize") {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									stApp.normalizeSplits();
+								}
+							});
+
 							pop.show(ButtonTabComponent.this, e.getX(), e.getY());
 						});
 					else {
@@ -687,4 +706,5 @@ public class STWorkspace extends JTabbedPane {
 			}
 		});
 	}
+
 }

@@ -202,7 +202,7 @@ public class STTemplateTextArea extends JavaTextArea {
 
          parseResult.getErrors().forEach(parserError -> {
             try {
-               addLineHighlight(parserError.getLine(), java.awt.Color.RED);
+               addLineHighlight(parserError.getLine() - 1, java.awt.Color.decode("#e41a1c"));
             } catch (javax.swing.text.BadLocationException ignored) {
 
             }

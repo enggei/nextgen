@@ -85,7 +85,7 @@ public class STModelDB extends NextgenDB {
          findAllSTModel().filter(node -> nextgen.swing.STAppPresentationModel.findSTProjectFor(node).isEmpty()).forEach(nextgen.model.STModel::delete);
 
          findAllSTArgument().filter(node -> node.getStParameter() == null).forEach(nextgen.model.STArgument::delete);
-         findAllSTArgument().filter(node -> node.getValue() == null).forEach(nextgen.model.STArgument::delete);
+         findAllSTArgument().filter(node-> !node.getStParameter().getType().equals(STParameterType.KVLIST)).filter(node -> node.getValue() == null).forEach(nextgen.model.STArgument::delete);
 
          findAllSTArgumentKV().filter(node -> node.getStParameterKey() == null).forEach(nextgen.model.STArgumentKV::delete);
          findAllSTArgumentKV().filter(node -> node.getValue() == null).forEach(nextgen.model.STArgumentKV::delete);

@@ -17,8 +17,8 @@ public class DomainVisitorTextArea extends JavaTextArea {
       addCodeTemplate(true,   "srcName", "name(src)", "");
       addCodeTemplate(true,   "dstName", "name(dst)", "");
 
-      addCodeTemplate(true,   "string", "getString(\"", "\")");
-      addCodeTemplate(true,   "set", "getSet(\"", "\")");
+      addCodeTemplate(true,   "getString", "getString(\"", "\")");
+      addCodeTemplate(true,   "getSet", "getSet(\"", "\")");
       addCodeTemplate(true,   "get", "get(\"", "\")");
 
       addCodeTemplate(true,   "app", "append(", ")");

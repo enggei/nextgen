@@ -1398,8 +1398,10 @@ public class STAppPresentationModel {
    }
 
    public Domain newDomain(String domainName) {
-      return db.newDomain()
+      final nextgen.model.Domain domain = db.newDomain()
             .setName(domainName);
+      nextgen.events.NewDomain.post(domain);
+      return domain;
    }
 
 

@@ -91,8 +91,6 @@ public class STModelNavigator extends JPanel {
 						onSTProjectTreeNodeSelected((STProjectTreeNode) lastPathComponent);
 					else if (isRootNode(lastPathComponent)) 
 						onRootNodeSelected((RootNode) lastPathComponent);
-					else if (isModelsTreeNode(lastPathComponent)) 
-						onModelsTreeNodeSelected((ModelsTreeNode) lastPathComponent);
 					else if (isSTGroupModelTreeNode(lastPathComponent)) 
 						onSTGroupModelTreeNodeSelected((STGroupModelTreeNode) lastPathComponent);
 					else if (isSTTemplateTreeNode(lastPathComponent)) 
@@ -173,23 +171,21 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTArgument(nextgen.events.NewSTArgument event) {
-
-
 		findAllSTModelTreeNode().stream()
-						.filter(treeNode -> treeNode.getModel().equals(event.model))
-						.forEach(treeNode -> {
-							final java.util.concurrent.atomic.AtomicBoolean first = new java.util.concurrent.atomic.AtomicBoolean(true);
-							findAllSTParameterTreeNode(treeNode).stream()
-									.filter(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))
-									.forEach(stParameterTreeNode -> {
-										appModel().stArgumentConsumer(event.parameter)
-												.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-												.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STValueArgumentTreeNode(stValue, stArgument)))
-												.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
-												.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelNavigator.STKVArgumentTreeNode(stArgument, event.parameter)))
-												.accept(event.argument);
-									});
-						});
+					.filter(treeNode -> treeNode.getModel().equals(event.model))
+					.forEach(treeNode -> {
+						final java.util.concurrent.atomic.AtomicBoolean first = new java.util.concurrent.atomic.AtomicBoolean(true);
+						findAllSTParameterTreeNode(treeNode).stream()
+								.filter(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.parameter))
+								.forEach(stParameterTreeNode -> {
+									appModel().stArgumentConsumer(event.parameter)
+											.onSingleSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+											.onListSTValue((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STValueArgumentTreeNode(stValue, stArgument)))
+											.onListSTModel((stArgument, stValue) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STModelArgumentTreeNode(stValue.getStModel(), stArgument)))
+											.onKVListConsumer((stArgument, stKVValues) -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STKVArgumentTreeNode(stArgument, event.parameter)))
+											.accept(event.argument);
+								});
+					});
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -551,7 +547,6 @@ public class STModelNavigator extends JPanel {
 
 			appModel().doInTransaction(transaction -> {
 				appModel().db.findAllSTProject().sorted(java.util.Comparator.comparing(nextgen.model.STProject::getName)).forEach(stProject -> add(new STProjectTreeNode(stProject)));
-				add(new ModelsTreeNode("Models"));
 			});
 		}
 
@@ -732,90 +727,6 @@ public class STModelNavigator extends JPanel {
 		nextgen.events.STProjectTreeNodeClicked.post(selectedNode.getModel());
 	}
 
-	// ModelsTreeNode
-	public class ModelsTreeNode extends BaseTreeNode<String> {
-
-		ModelsTreeNode(String model) {
-			super(model, appModel().loadIcon("String"));
-
-
-			setLabel(getModel());
-			this.tooltip = "";
-
-			appModel().doInTransaction(transaction -> appModel().db.findAllSTGroupModel()
-					.sorted((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()))
-					.forEach(stGroupModel -> {
-						final STGroupModelTreeNode stGroupModelTreeNode = new STGroupModelTreeNode(stGroupModel);
-						add(stGroupModelTreeNode);
-						stGroupModel.getTemplates().sorted((t1,t2) -> t1.getName().compareToIgnoreCase(t2.getName())).forEach(stTemplate -> addSTTemplateChild(stTemplate, stGroupModelTreeNode));
-					}));
-		}
-
-		ModelsTreeNode thisNode() {
-			return this;
-		}
-
-		@Override
-		public void nodeChanged() {
-			setLabel(getModel());
-			this.tooltip = "";
-			super.nodeChanged();
-		}
-
-		@Override
-		protected List<Action> getActions() {
-			final List<Action> actions = super.getActions();
-
-			appModel().doInTransaction(tx -> {
-			});
-
-			return actions;
-		}
-
-		private void addSTTemplateChild(nextgen.model.STTemplate stTemplate, BaseTreeNode<?> parent) {
-			final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(stTemplate);
-			parent.add(stTemplateTreeNode);
-
-			stTemplate.getIncomingStTemplateSTModel().forEach(stModel -> stTemplateTreeNode.add(new STModelTreeNode(stModel, stTemplate)));
-			stTemplate.getChildren().forEach(stTemplateChild -> addSTTemplateChild(stTemplateChild, stTemplateTreeNode));
-		}
-	}
-
-	private boolean isModelsTreeNode(Object treeNode) {
-		return treeNode instanceof ModelsTreeNode;
-	}
-
-	private Optional<ModelsTreeNode> findModelsTreeNode() {
-		return treeModel.find(ModelsTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<ModelsTreeNode> findAllModelsTreeNode() {
-		return treeModel.findAll(ModelsTreeNode.class, treeNode -> true);
-	}
-
-	private java.util.Collection<ModelsTreeNode> findAllModelsTreeNode(BaseTreeNode<?> parent) {
-		return parent.getChildren(ModelsTreeNode.class).collect(java.util.stream.Collectors.toList());
-	}
-
-	private Optional<ModelsTreeNode> findModelsTreeNode(java.util.function.Predicate<ModelsTreeNode> predicate) {
-		return treeModel.find(ModelsTreeNode.class, predicate);
-	}
-
-	private java.util.Collection<ModelsTreeNode> findAllModelsTreeNode(java.util.function.Predicate<ModelsTreeNode> predicate) {
-		return treeModel.findAll(ModelsTreeNode.class, predicate);
-	}
-
-	private Optional<ModelsTreeNode> findModelsTreeNode(BaseTreeNode<?> parent, java.util.function.Predicate<ModelsTreeNode> predicate) {
-		return treeModel.find(parent, ModelsTreeNode.class, predicate);
-	}
-
-	private java.util.stream.Stream<ModelsTreeNode> getSelectedModelsTreeNodes() {
-		return getSelectedNodes(ModelsTreeNode.class);
-	}
-
-	private void onModelsTreeNodeSelected(ModelsTreeNode selectedNode) {
-	}
-
 	// STGroupModelTreeNode
 	public class STGroupModelTreeNode extends BaseTreeNode<nextgen.model.STGroupModel> {
 
@@ -925,7 +836,6 @@ public class STModelNavigator extends JPanel {
 												.map(STModelNavigator.BaseTreeNode::getModel)
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
-				getParentNode(ModelsTreeNode.class).ifPresent(parent -> actions.add(new NewSTModelAction(getModel())));
 				actions.add(new GenerateSTModels(stModels));
 				actions.add(new AsBuilderCodes(getModel(), stModels));
 				actions.add(new AddFileSinkToSTModels(getModel(), stModels, workspace));

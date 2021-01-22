@@ -13,17 +13,34 @@ public class STApp extends JFrame {
 
    final STWorkspace workspace;
 
+   private final javax.swing.JSplitPane west;
+   private final javax.swing.JSplitPane center;
+
    public STApp() throws HeadlessException {
       super("ST Editor");
 
-      workspace = AppModel.getInstance().getSTAppPresentationModel().db.getInTransaction(transaction -> new STWorkspace());
+      workspace = AppModel.getInstance().getSTAppPresentationModel().db.getInTransaction(transaction -> new STWorkspace(this));
       AppModel.getInstance().setWorkspace(workspace);
 
-      final JSplitPane west = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace.getTemplateNavigator(), workspace);
-      final JSplitPane center = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, west, workspace.getModelNavigator());
+      west = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, workspace.getTemplateNavigator(), workspace);
+      center = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, west, workspace.getModelNavigator());
       add(center, BorderLayout.CENTER);
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   }
+
+   public void maximizeCenter() {
+      SwingUtilities.invokeLater(() -> {
+         west.setDividerLocation(0.1);
+         center.setDividerLocation(0.9);
+      });
+   }
+
+   public void normalizeSplits() {
+      SwingUtilities.invokeLater(() -> {
+         west.setDividerLocation(0.2);
+         center.setDividerLocation(0.8);
+      });
    }
 
    public static void main(String[] args) throws IOException {

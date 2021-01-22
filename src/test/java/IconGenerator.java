@@ -10,6 +10,7 @@ public class IconGenerator {
       final String clipboardSetColor = "#4daf4a";
       final String domainsColor = "#3f007d";
       final String templatesColor = "#08306b";
+      final String projectsColor = "#08306b";
 
       String[] domain = new String[]{
             "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"
@@ -26,14 +27,15 @@ public class IconGenerator {
 
       final File destinationDir = new File("src/main/resources/icons");
 
-      makeEntityIcon(destinationDir, "STGroupFile", fileColor);
-      makeEntityIcon(destinationDir, "STFile", fileColor);
-      makeEntityIcon(destinationDir, "STProject", projectColor);
-
       makeIcon(destinationDir, "cb-get", "G", clipboardGetColor);
       makeIcon(destinationDir, "cb-set", "S", clipboardSetColor);
       makeIcon(destinationDir, "domains", "D", domainsColor);
       makeIcon(destinationDir, "templates", "T", templatesColor);
+      makeIcon(destinationDir, "projects", "P", projectsColor);
+
+      makeEntityIcon(destinationDir, "STGroupFile", fileColor);
+      makeEntityIcon(destinationDir, "STFile", fileColor);
+      makeEntityIcon(destinationDir, "STProject", projectColor);
 
       int i = templates.length - 1;
       makeEntityIcon(destinationDir, "STGroupModel", templates[i--]);
