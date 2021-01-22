@@ -2,29 +2,9 @@ package nextgen.templates.javaneo4jembedded;
 
 public enum Neo4JTypes {
 
-	RelationshipType() {
+	GraphDatabaseFactory() {
 		@Override
-		public String toString() { return "org.neo4j.graphdb.RelationshipType"; }
-	},
-	Transaction() {
-		@Override
-		public String toString() { return "org.neo4j.graphdb.Transaction"; }
-	},
-	Direction() {
-		@Override
-		public String toString() { return "org.neo4j.graphdb.Direction"; }
-	},
-	Relationship() {
-		@Override
-		public String toString() { return "org.neo4j.graphdb.Relationship"; }
-	},
-	Node() {
-		@Override
-		public String toString() { return "org.neo4j.graphdb.Node"; }
-	},
-	Label() {
-		@Override
-		public String toString() { return "org.neo4j.graphdb.Label"; }
+		public String toString() { return "org.neo4j.graphdb.factory.GraphDatabaseFactory"; }
 	},
 	GraphDatabaseSettings() {
 		@Override
@@ -34,8 +14,28 @@ public enum Neo4JTypes {
 		@Override
 		public String toString() { return "org.neo4j.graphdb.GraphDatabaseService"; }
 	},
-	GraphDatabaseFactory() {
+	Node() {
 		@Override
-		public String toString() { return "org.neo4j.graphdb.factory.GraphDatabaseFactory"; }
+		public String toString() { return "org.neo4j.graphdb.Node"; }
+	},
+	Label() {
+		@Override
+		public String toString() { return "org.neo4j.graphdb.Label"; }
+	},
+	Direction() {
+		@Override
+		public String toString() { return "org.neo4j.graphdb.Direction"; }
+	},
+	Relationship() {
+		@Override
+		public String toString() { return "org.neo4j.graphdb.Relationship"; }
+	},
+	RelationshipType() {
+		@Override
+		public String toString() { return "org.neo4j.graphdb.RelationshipType"; }
+	},
+	Transaction() {
+		@Override
+		public String toString() { return "org.neo4j.graphdb.Transaction"; }
 	}
 }  

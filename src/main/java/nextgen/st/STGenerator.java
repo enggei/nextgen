@@ -244,18 +244,37 @@ public class STGenerator {
       final ST stGroupTemplate = templateGroup.getInstanceOf("STGroupTemplate");
       stGroupTemplate.add("delimiter", DELIMITER);
 
-      model.getTemplates()
+      final java.util.Map<String, STTemplate> templateSet = new java.util.LinkedHashMap<>();
+      nextgen.swing.STAppPresentationModel.aggregateTemplates(model)
             .filter(stTemplate -> !(stTemplate.getName().equals("eom") || stTemplate.getName().equals("gt")))
-            .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
-            .forEach(stModel -> addSTTemplate(templateGroup, stGroupTemplate, stModel));
+            .forEach(stTemplate -> {
+               log.info(model.getUuid() + " " + model.getName() + " " + stTemplate.getName() + " " + stTemplate.getUuid());
+               if (templateSet.containsKey(stTemplate.getName())) {
+                  log.error("duplicate stTemplate " + stTemplate.getName() + " " + stTemplate.getUuid());
+
+                  final String oneText = stTemplate.getText();
+                  final String twoText = templateSet.get(stTemplate.getName()).getText();
+
+
+                  if (oneText.equals(twoText)) model.removeTemplates(stTemplate);
+                  else {
+                     System.out.println("-------------------------");
+                     System.out.println(oneText);
+                     System.out.println("-------------------------");
+                     System.out.println("vs");
+                     System.out.println("-------------------------");
+                     System.out.println(twoText);
+                     System.out.println("-------------------------");
+                     System.out.println("");
+                  }
+
+
+               } else
+                  stGroupTemplate.add("templates", asST(templateGroup, stTemplate));
+               templateSet.put(stTemplate.getName(), stTemplate);
+            });
 
       return stGroupTemplate.render();
-   }
-
-   private static void addSTTemplate(STGroup templateGroup, ST stGroupTemplate, STTemplate stModel) {
-      final ST stTemplate = asST(templateGroup, stModel);
-      stGroupTemplate.add("templates", stTemplate);
-      stModel.getChildren().forEach(childTemplate -> addSTTemplate(templateGroup, stGroupTemplate, childTemplate));
    }
 
    public static ST asST(STGroup templateGroup, STTemplate stModel) {

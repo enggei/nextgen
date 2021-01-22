@@ -4,10 +4,17 @@ public class STTemplateTextArea extends JavaTextArea {
 
    private final String delimiter = nextgen.st.STGenerator.DELIMITER;
 
+   private final javax.swing.border.Border defaultBorder = getBorder();
+   private final java.awt.Color uneditedColor = getBackground();
+   private final java.awt.Color editedColor = getBackground().brighter();
+   private final java.awt.Color errorColor = java.awt.Color.decode("#e66101");
+   private String startText;
+
    public STTemplateTextArea(String text) {
       super(text);
       setSyntaxEditingStyle("text/plain");
       setClearWhitespaceLinesEnabled(true);
+      startText = text;
    }
 
    @Override
@@ -156,5 +163,50 @@ public class STTemplateTextArea extends JavaTextArea {
 
    private String getDelimiter() {
       return delimiter;
+   }
+
+   public void modelToView(nextgen.model.STTemplate model) {
+      final nextgen.model.STGroupModel stGroup = nextgen.swing.STAppPresentationModel.getSTGroup(model);
+      setSyntaxEditingStyle(stGroup.getLanguage());
+      setText(model.getText());
+
+      setBorder(defaultBorder);
+      removeAllLineHighlights();
+      setToolTipText("");
+   }
+
+   public void viewToModel(nextgen.model.STTemplate model) {
+
+      // bugfix: if there are '>>' in template, StringTemplate does not parse it, as '>>' is used as part of the template-definition:
+      // gt() is a 'private/hidden' template which is used to solve this issue
+      String text = getText().trim().replaceAll(">>", ">" + delimiter + "gt()" + delimiter);
+
+      final nextgen.model.parser.ParseResult parseResult = nextgen.st.STParser.parseTemplate(text);
+      if (parseResult.getErrors().isEmpty()) {
+
+         setBorder(defaultBorder);
+         removeAllLineHighlights();
+         setToolTipText("");
+
+         nextgen.st.STParser.mergeTemplate(parseResult.getParsed().getTemplates().stream().findFirst().get(), model);
+         startText = text;
+         setBackground(startText.trim().equals(getText().trim()) ? uneditedColor : editedColor);
+
+         model.setText(text);
+
+      } else {
+
+         setBorder(javax.swing.BorderFactory.createLineBorder(errorColor));
+         removeAllLineHighlights();
+         setToolTipText(nextgen.st.STParser.toString(parseResult.getErrors()));
+
+         parseResult.getErrors().forEach(parserError -> {
+            try {
+               addLineHighlight(parserError.getLine(), java.awt.Color.RED);
+            } catch (javax.swing.text.BadLocationException ignored) {
+
+            }
+         });
+      }
    }
 }

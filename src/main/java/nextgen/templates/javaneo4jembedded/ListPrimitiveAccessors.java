@@ -168,7 +168,7 @@ public class ListPrimitiveAccessors implements Accessor {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "listPrimitiveAccessors(type,setStatements,removeStatements,className,name) ::= <<private static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
+	static final String st = "listPrimitiveAccessors(type,setStatements,removeStatements,className,name) ::= <<public static final org.neo4j.graphdb.RelationshipType _~name~ = org.neo4j.graphdb.RelationshipType.withName(\"~name~\");\n" + 
 				"\n" + 
 				"public ~className;format=\"capitalize\"~ add~name;format=\"capitalize\"~(~type~ dst) { \n" + 
 				"	final java.util.Optional<org.neo4j.graphdb.Node> existing = java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, _~name~).spliterator(), false).map((r) -> r.getOtherNode(node)).filter((n) -> dst.equals(n.getProperty(\"value\"))).findAny();\n" + 

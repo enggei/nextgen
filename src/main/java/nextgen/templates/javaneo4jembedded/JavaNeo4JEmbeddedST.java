@@ -13,12 +13,16 @@ public class JavaNeo4JEmbeddedST {
 	.append(EnumAccessors.st + "\n")
 	.append(EnumListAccessors.st + "\n")
 	.append(ExternalAccessors.st + "\n")
+	.append(IncomingOptionalReference.st + "\n")
+	.append(IncomingReference.st + "\n")
 	.append(IncomingReferenceStream.st + "\n")
 	.append(ListPrimitiveAccessors.st + "\n")
 	.append(ListReferenceAccessors.st + "\n")
 	.append(NodeToJsonObject.st + "\n")
 	.append(PrimitiveAccessors.st + "\n")
+	.append(PrimitiveOptionalAccessors.st + "\n")
 	.append(ReferenceAccessors.st + "\n")
+	.append(ReferenceOptionalAccessors.st + "\n")
 	.toString()  ;
 
 	public static org.stringtemplate.v4.STGroup decorate(final org.stringtemplate.v4.STGroup stGroup) {
@@ -87,6 +91,14 @@ public class JavaNeo4JEmbeddedST {
 		return new ExternalAccessors(stGroup);
 	}  
 
+	public static IncomingOptionalReference newIncomingOptionalReference() {
+		return new IncomingOptionalReference(stGroup);
+	}  
+
+	public static IncomingReference newIncomingReference() {
+		return new IncomingReference(stGroup);
+	}  
+
 	public static IncomingReferenceStream newIncomingReferenceStream() {
 		return new IncomingReferenceStream(stGroup);
 	}  
@@ -107,8 +119,16 @@ public class JavaNeo4JEmbeddedST {
 		return new PrimitiveAccessors(stGroup);
 	}  
 
+	public static PrimitiveOptionalAccessors newPrimitiveOptionalAccessors() {
+		return new PrimitiveOptionalAccessors(stGroup);
+	}  
+
 	public static ReferenceAccessors newReferenceAccessors() {
 		return new ReferenceAccessors(stGroup);
+	}  
+
+	public static ReferenceOptionalAccessors newReferenceOptionalAccessors() {
+		return new ReferenceOptionalAccessors(stGroup);
 	}  
 
 	private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
@@ -122,6 +142,10 @@ public class JavaNeo4JEmbeddedST {
 			final String s = text.length() > 1 ? text.substring(1) : "";
 
 			switch (formatString) {
+				case "simpleName":
+					final int lastIndex = text.lastIndexOf(".");
+               if (lastIndex == -1) return text;
+               return text.substring(lastIndex + 1);
 				case "capitalize":
 					return Character.toUpperCase(text.charAt(0)) + s;
 				case "toUpper":

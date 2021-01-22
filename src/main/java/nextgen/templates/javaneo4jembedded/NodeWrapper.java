@@ -5,11 +5,11 @@ public class NodeWrapper {
 	private final java.util.UUID uuid = java.util.UUID.randomUUID();
 	private final org.stringtemplate.v4.STGroup stGroup;
 
-	private Object _useUuid;
-	private String _name;
 	private Object _package;
+	private String _name;
+	private Object _useUuid;
+	private java.util.List<Accessor> _accessors = new java.util.ArrayList<>();
 	private java.util.List<Object> _methods = new java.util.ArrayList<>();
-	private java.util.List<Object> _accessors = new java.util.ArrayList<>();
 	private java.util.List<java.util.Map<String, Object>> _externalFields = new java.util.ArrayList<>();
 
 	NodeWrapper(org.stringtemplate.v4.STGroup stGroup) {
@@ -23,34 +23,34 @@ public class NodeWrapper {
 	@Override
 	public String toString() {
 		final org.stringtemplate.v4.ST st = stGroup.getInstanceOf("NodeWrapper");
-		st.add("useUuid", _useUuid);
-		st.add("name", _name);
 		st.add("package", _package);
-		for (Object o : _methods) st.add("methods", o);
+		st.add("name", _name);
+		st.add("useUuid", _useUuid);
 		for (Object o : _accessors) st.add("accessors", o);
+		for (Object o : _methods) st.add("methods", o);
 		for (java.util.Map<String, Object> map : _externalFields) st.addAggr("externalFields.{name,initializer,type}", map.get("name"), map.get("initializer"), map.get("type"));
 		return st.render().trim();
 	}
 
-	public NodeWrapper setUseUuid(Object value) {
-		this._useUuid = value;
+	public NodeWrapper setPackage(Object value) {
+		this._package = value;
 		return this;
 	}
 
-	public Object getUseUuid() {
-		return this._useUuid;
+	public Object getPackage() {
+		return this._package;
 	}
 
-	public Object getUseUuid(Object defaultValue) {
-		return this._useUuid == null ? defaultValue : this._useUuid;
+	public Object getPackage(Object defaultValue) {
+		return this._package == null ? defaultValue : this._package;
 	}
 
-	public boolean hasUseUuid() {
-		return this._useUuid != null;
+	public boolean hasPackage() {
+		return this._package != null;
 	}
 
-	public NodeWrapper removeUseUuid() {
-		this._useUuid = null;
+	public NodeWrapper removePackage() {
+		this._package = null;
 		return this;
 	} 
 
@@ -76,26 +76,55 @@ public class NodeWrapper {
 		return this;
 	} 
 
-	public NodeWrapper setPackage(Object value) {
-		this._package = value;
+	public NodeWrapper setUseUuid(Object value) {
+		this._useUuid = value;
 		return this;
 	}
 
-	public Object getPackage() {
-		return this._package;
+	public Object getUseUuid() {
+		return this._useUuid;
 	}
 
-	public Object getPackage(Object defaultValue) {
-		return this._package == null ? defaultValue : this._package;
+	public Object getUseUuid(Object defaultValue) {
+		return this._useUuid == null ? defaultValue : this._useUuid;
 	}
 
-	public boolean hasPackage() {
-		return this._package != null;
+	public boolean hasUseUuid() {
+		return this._useUuid != null;
 	}
 
-	public NodeWrapper removePackage() {
-		this._package = null;
+	public NodeWrapper removeUseUuid() {
+		this._useUuid = null;
 		return this;
+	} 
+
+	public NodeWrapper addAccessors(Accessor value) {
+		this._accessors.add(value);
+		return this;
+	}
+
+	public NodeWrapper setAccessors(Accessor[] value) {
+		this._accessors.addAll(java.util.Arrays.asList(value));
+		return this;
+	}
+
+	public NodeWrapper setAccessors(java.util.Collection<Accessor> values) {
+		this._accessors.addAll(values);
+		return this;
+	}
+
+	public NodeWrapper removeAccessors(Accessor value) {
+		this._accessors.remove(value);
+		return this;
+	}
+
+	public NodeWrapper removeAccessors(int index) {
+		this._accessors.remove(index);
+		return this;
+	}
+
+	public java.util.List<Accessor> getAccessors() {
+		return this._accessors;
 	} 
 
 	public NodeWrapper addMethods(Object value) {
@@ -127,34 +156,11 @@ public class NodeWrapper {
 		return this._methods;
 	} 
 
-	public NodeWrapper addAccessors(Object value) {
-		this._accessors.add(value);
-		return this;
-	}
-
-	public NodeWrapper setAccessors(Object[] value) {
-		this._accessors.addAll(java.util.Arrays.asList(value));
-		return this;
-	}
-
-	public NodeWrapper setAccessors(java.util.Collection<Object> values) {
-		this._accessors.addAll(values);
-		return this;
-	}
-
-	public NodeWrapper removeAccessors(Object value) {
-		this._accessors.remove(value);
-		return this;
-	}
-
-	public NodeWrapper removeAccessors(int index) {
-		this._accessors.remove(index);
-		return this;
-	}
-
-	public java.util.List<Object> getAccessors() {
-		return this._accessors;
-	} 
+	public NodeWrapper setExternalFields(java.util.Collection<NodeWrapper_ExternalFields> values) {
+			this._externalFields.clear();
+			values.stream().map(NodeWrapper_ExternalFields::asMap).forEach(map -> _externalFields.add(map));
+			return this;
+		}
 
 	public NodeWrapper addExternalFields(Object _name, Object _initializer, Object _type) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -222,6 +228,15 @@ public class NodeWrapper {
 			return this._type;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			map.put("initializer", _initializer);
+			map.put("type", _type);
+			return map;
+		}
+
 	}  
 
 	@Override
@@ -237,22 +252,70 @@ public class NodeWrapper {
 		return java.util.Objects.hash(uuid);
 	}
 
-	static final String st = "NodeWrapper(methods,useUuid,accessors,externalFields,name,package) ::= <<package ~package~;\n" + 
+	static final String st = "NodeWrapper(package,name,externalFields,accessors,useUuid,methods) ::= <<package ~package~;\n" + 
 				"\n" + 
+				"~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
 				"public class ~name;format=\"capitalize\"~ {\n" + 
-				"\n" + 
+				"	\n" + 
 				"	private final org.neo4j.graphdb.Node node;\n" + 
+				"	~if(useUuid)~private final String uuid;~endif~\n" + 
 				"	~externalFields:{it|private ~it.type~ _~it.name~~if(it.initializer)~ = ~it.initializer~~endif~;};separator=\"\\n\"~\n" + 
 				"\n" + 
 				"	public ~name;format=\"capitalize\"~(org.neo4j.graphdb.Node node) { \n" + 
 				"		this.node = node;\n" + 
-				"		~if(useUuid)~if (!node.hasProperty(\"uuid\")) this.node.setProperty(\"uuid\", java.util.UUID.randomUUID().toString());~endif~\n" + 
+				"		~if(useUuid)~if (!node.hasProperty(\"uuid\")) this.node.setProperty(\"uuid\", this.uuid = java.util.UUID.randomUUID().toString());\n" + 
+				"else this.uuid = node.getProperty(\"uuid\").toString();~endif~\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	public org.neo4j.graphdb.Node getNode() { \n" + 
 				"		return this.node;\n" + 
 				"	}\n" + 
 				"\n" + 
+				"~if(useUuid)~\n" + 
+				"\n" + 
+				"	@Override\n" + 
+				"	public boolean equals(java.lang.Object o) { \n" + 
+				"		if (this == o) return true;\n" + 
+				"		if (o == null || getClass() != o.getClass()) return false;\n" + 
+				"		final ~name~ other = (~name~) o;\n" + 
+				"		return uuid.equals(other.uuid);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	@Override\n" + 
+				"	public int hashCode() { \n" + 
+				"		return uuid.hashCode();\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	private static final String _uuid = \"uuid\";\n" + 
+				"	\n" + 
+				"	public ~name;format=\"capitalize\"~ setUuid(String value) { \n" + 
+				"		if (value == null) {\n" + 
+				"			removeUuid(); \n" + 
+				"		} else {\n" + 
+				"			node.setProperty(_uuid, value);\n" + 
+				"		}\n" + 
+				"		return this;\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public String getUuid() { \n" + 
+				"		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);\n" + 
+				"		return null;\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public String getUuid(String defaultValue) { \n" + 
+				"		if (node.hasProperty(_uuid)) return (String) node.getProperty(_uuid);\n" + 
+				"		return defaultValue;\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public boolean hasUuid() { \n" + 
+				"		return node.hasProperty(_uuid);\n" + 
+				"	}\n" + 
+				"	\n" + 
+				"	public ~name;format=\"capitalize\"~ removeUuid() { \n" + 
+				"		node.removeProperty(_uuid);\n" + 
+				"		return this;\n" + 
+				"	}\n" + 
+				"~else~\n" + 
 				"	@Override\n" + 
 				"	public boolean equals(java.lang.Object o) { \n" + 
 				"		if (this == o) return true;\n" + 
@@ -265,6 +328,7 @@ public class NodeWrapper {
 				"	public int hashCode() { \n" + 
 				"		return java.util.Objects.hash(node);\n" + 
 				"	}\n" + 
+				"~endif~\n" + 
 				"\n" + 
 				"	~accessors:{it|~it~};separator=\"\\n\\n\"~\n" + 
 				"\n" + 
@@ -287,6 +351,12 @@ public class NodeWrapper {
 				"			out.append(\")\");\n" + 
 				"		});\n" + 
 				"		return out.toString().trim();\n" + 
+				"	}\n" + 
+				"\n" + 
+				"	public void delete() {\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);\n" + 
+				"		node.delete();	\n" + 
 				"	}\n" + 
 				"\n" + 
 				"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 

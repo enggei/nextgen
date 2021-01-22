@@ -30,6 +30,12 @@ public class NodeToJsonObject {
 
 
 
+	public NodeToJsonObject setPrimitiveList(java.util.Collection<NodeToJsonObject_PrimitiveList> values) {
+			this._primitiveList.clear();
+			values.stream().map(NodeToJsonObject_PrimitiveList::asMap).forEach(map -> _primitiveList.add(map));
+			return this;
+		}
+
 	public NodeToJsonObject addPrimitiveList(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
 		map.put("name", _name);
@@ -70,7 +76,20 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public NodeToJsonObject setProperties(java.util.Collection<NodeToJsonObject_Properties> values) {
+			this._properties.clear();
+			values.stream().map(NodeToJsonObject_Properties::asMap).forEach(map -> _properties.add(map));
+			return this;
+		}
 
 	public NodeToJsonObject addProperties(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -112,7 +131,20 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public NodeToJsonObject setRefs(java.util.Collection<NodeToJsonObject_Refs> values) {
+			this._refs.clear();
+			values.stream().map(NodeToJsonObject_Refs::asMap).forEach(map -> _refs.add(map));
+			return this;
+		}
 
 	public NodeToJsonObject addRefs(Object _type, Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -167,7 +199,21 @@ public class NodeToJsonObject {
 			return this._name;
 		}
 
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("type", _type);
+			map.put("name", _name);
+			return map;
+		}
+
 	}  
+
+	public NodeToJsonObject setRefList(java.util.Collection<NodeToJsonObject_RefList> values) {
+			this._refList.clear();
+			values.stream().map(NodeToJsonObject_RefList::asMap).forEach(map -> _refList.add(map));
+			return this;
+		}
 
 	public NodeToJsonObject addRefList(Object _name) {
 		final java.util.Map<String, Object> map = new java.util.HashMap<>();
@@ -207,6 +253,13 @@ public class NodeToJsonObject {
 
 		public Object getName() {
 			return this._name;
+		}
+
+
+		public java.util.Map<String, Object> asMap() {
+			java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+			map.put("name", _name);
+			return map;
 		}
 
 	}  

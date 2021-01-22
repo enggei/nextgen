@@ -65,14 +65,14 @@ public class STTemplateForm extends JPanel {
 	public void modelToView(nextgen.model.STTemplate model) { 
 		tblParameters.setContent(model.getParameters());
 		txtName.setText(model.getName());
-		txtText.setText(model.getText());
+		txtText.modelToView(model);
 		tblChildren.setContent(model.getChildren());	
 	}
 
 	public void viewToModel(nextgen.model.STTemplate model) {
 		model.setName(txtName.getText());
-		model.setText(txtText.getText());	
-	}  
+		txtText.viewToModel(model);
+	}
 	/*
 
 	columns 		"left:2400:none"

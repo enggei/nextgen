@@ -105,7 +105,7 @@ STGroup
 					
 				STArgument
 					stParameter	    1	STParameter
-					value			1	STValue
+					value			?	STValue
 					keyValues	    *	STArgumentKV
 					
 					STArgumentKV

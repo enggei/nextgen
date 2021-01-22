@@ -1,12 +1,10 @@
 package nextgen.model;
 
-import org.neo4j.graphdb.Relationship;
-
 import static nextgen.model.STValueType.*;
 
 public class STModelDB extends NextgenDB {
 
-   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModel.class);
+   private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(STModelDB.class);
 
    public STModelDB(String dbDir) {
       super(dbDir);
@@ -68,105 +66,36 @@ public class STModelDB extends NextgenDB {
             .setStEnumValue(value);
    }
 
-   public void cleanup() {
+   @Override
+   protected void cleanup() {
       doInTransaction(transaction -> {
 
-         findAllSTGroupFile().forEach(stGroupFile -> {
+         findAllSTParameter().filter(node -> node.getArgumentType() == null).forEach(stParameter -> stParameter.setArgumentType("Object"));
+         findAllSTParameterKey().filter(node -> node.getArgumentType() == null).forEach(stParameter -> stParameter.setArgumentType("Object"));
 
-            if (stGroupFile.getNode().hasProperty("path")) {
-               stGroupFile.setPath(findOrCreateSTValueByValue(stGroupFile.getNode().getProperty("path").toString()));
-               stGroupFile.getNode().removeProperty("path");
-            }
+         findAllSTValue().filter(node -> node.getType().equals(PRIMITIVE)).filter(node -> node.getValue() == null).forEach(nextgen.model.STValue::delete);
+         findAllSTValue().filter(node -> node.getType().equals(STMODEL)).filter(node -> node.getStModel() == null).forEach(nextgen.model.STValue::delete);
+         findAllSTValue().filter(node -> node.getType().equals(ENUM)).filter(node -> node.getStEnumValue() == null).forEach(nextgen.model.STValue::delete);
 
-            if (stGroupFile.getNode().hasProperty("packageName")) {
-               stGroupFile.setPackageName(findOrCreateSTValueByValue(stGroupFile.getNode().getProperty("packageName").toString()));
-               stGroupFile.getNode().removeProperty("packageName");
-            }
+         findAllSTGroupModel().filter(node -> node.getTemplates().count() == 0L).forEach(nextgen.model.STGroupModel::delete);
 
-         });
+         findAllSTTemplate().filter(node -> nextgen.swing.STAppPresentationModel.getSTGroup(node) == null).forEach(nextgen.model.STTemplate::delete);
 
-         findAllSTGroupAction().forEach(stGroupAction -> {
+         findAllSTModel().filter(node -> node.getStTemplate() == null).forEach(nextgen.model.STModel::delete);
+         findAllSTModel().filter(node -> nextgen.swing.STAppPresentationModel.findSTProjectFor(node).isEmpty()).forEach(nextgen.model.STModel::delete);
 
-            if (stGroupAction.getNode().hasProperty("statements")) {
-               log.info("statements " + stGroupAction.getNode().getProperty("statements"));
-               stGroupAction.setStatements(newSTValue(stGroupAction.getNode().getProperty("statements").toString()));
-               stGroupAction.getNode().removeProperty("statements");
-            }
+         findAllSTArgument().filter(node -> node.getStParameter() == null).forEach(nextgen.model.STArgument::delete);
+         findAllSTArgument().filter(node -> node.getValue() == null).forEach(nextgen.model.STArgument::delete);
 
-            if (stGroupAction.getNode().hasProperty("methods")) {
-               log.info("methods " + stGroupAction.getNode().getProperty("methods"));
-               stGroupAction.setMethods(newSTValue(stGroupAction.getNode().getProperty("methods").toString()));
-               stGroupAction.getNode().removeProperty("methods");
-            }
+         findAllSTArgumentKV().filter(node -> node.getStParameterKey() == null).forEach(nextgen.model.STArgumentKV::delete);
+         findAllSTArgumentKV().filter(node -> node.getValue() == null).forEach(nextgen.model.STArgumentKV::delete);
 
-         });
+         findAllSTFile().filter(node -> !node.getIncomingFilesSTModel().iterator().hasNext()).forEach(nextgen.model.STFile::delete);
 
-         findAllSTParameter().forEach(stParameter -> {
-            if (stParameter.getArgumentType() != null) return;
-            log.info(stParameter.getUuid() + " " + stParameter.getName() + " adding Object argument type");
-            stParameter.setArgumentType("Object");
-         });
+         findAllSTGroupFile().filter(node -> !node.getIncomingFilesSTGroupModel().iterator().hasNext()).forEach(nextgen.model.STGroupFile::delete);
 
-         findAllSTParameterKey().forEach(stParameterKey -> {
-            if (stParameterKey.getArgumentType() != null) return;
-            log.info("ParameterKey " + stParameterKey.getUuid() + " " + stParameterKey.getName() + " adding Object argument type");
-            stParameterKey.setArgumentType("Object");
-         });
-
-         findAllSTModel().forEach(stModel -> {
-            if (stModel.getStTemplate() == null) {
-               log.error(stModel.toString());
-               stModel.delete();
-            }
-         });
-
-
-          findAllSTModel().forEach(stModel -> {
-
-             final java.util.Optional<STProject> stProject = nextgen.swing.STAppPresentationModel.findSTProjectFor(stModel);
-             if(stProject.isEmpty()) {
-               log.error("STModel " + stModel.getUuid() + " " + (stModel.getArguments().count()) + " arguments");
-            }
-         });
-
-
-         deleteUnnusedNodes();
-         deleteUnnusedFiles();
-
-
-         findAllSTGroupModel().filter(stGroupModel -> stGroupModel.getDelimiter()==null).forEach(stGroupModel -> {
-            System.out.println(stGroupModel.getUuid() + " " + stGroupModel.getName() + " missing delimiter");
-            stGroupModel.setDelimiter(nextgen.st.STGenerator.DELIMITER);
-         });
+         getDatabaseService().getAllNodes().stream().filter(node -> !node.getRelationships().iterator().hasNext()).forEach(org.neo4j.graphdb.Node::delete);
 
       });
    }
-
-   public void deleteUnnusedFiles() {
-      findAllSTFile().forEach(stFile -> {
-         if (stFile.getIncomingFilesSTModel().iterator().hasNext()) return;
-         log.info("deleting unnused stFile-" + stFile.getUuid());
-         log.info(toString(stFile.getNode()));
-         stFile.getNode().getRelationships().forEach(Relationship::delete);
-         stFile.getNode().delete();
-      });
-
-      findAllSTGroupFile().forEach(stGroupFile -> {
-         if (stGroupFile.hasUuid()) return;
-         stGroupFile.delete();
-      });
-   }
-
-   public void deleteUnnusedNodes() {
-      getDatabaseService().getAllNodes()
-            .forEach(node -> {
-               if (node.getRelationships().iterator().hasNext()) return;
-               if (isSTProject(node)) return;
-               log.info("deleting unnused node");
-               log.info(toString(node));
-               node.delete();
-            });
-   }
-
-
 }

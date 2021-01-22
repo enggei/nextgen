@@ -327,6 +327,27 @@ public class STParser {
       return STGenerator.asST(stTemplate);
    }
 
+   public static String toString(java.util.List<nextgen.model.parser.ParserError> errors) {
+      final StringBuilder info = new StringBuilder("Parsing errors:");
+      errors.forEach(stgError -> {
+         info.append("\n").append(stgError.getType());
+         if (stgError.getType() == nextgen.model.parser.ParserErrorType.COMPILE) {
+            info.append("\n\tline               ").append(stgError.getLine());
+            info.append("\n\tpos                ").append(stgError.getCharPosition());
+            info.append("\n\tmessage            ").append(stgError.getMessage());
+
+            if (stgError.getMessage().contains("expecting RDELIM")) {
+               info.append("\n\tpossible cause     ").append("This is probably a '}' being interpreted as end-of a kv-iteration.");
+               info.append("\n\tpossible solution  ").append("Try escaping the previous '}' (i.e from '}' to '\\}')");
+            } else if (stgError.getMessage().contains("invalid character '>'")) {
+               info.append("\n\tpossible cause     ").append("This is probably a '>' being interpreted as end-of template.");
+               info.append("\n\tpossible solution  ").append("Try changing the last '>' to '" + nextgen.st.STGenerator.DELIMITERCHAR + "gt()" + nextgen.st.STGenerator.DELIMITERCHAR + "'");
+            }
+         }
+      });
+      return info.toString().trim();
+   }
+
    static final class TemplateVisitor {
 
       private static final int EXPR = 41;

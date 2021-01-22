@@ -210,7 +210,7 @@ public class ConditionalFlow {
 		return jsonObject;
 	}
 
-	public void delete() {
+	public void delete() { System.out.println("deleting " + toString()); System.out.println("deleting " + toString());
 		node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.getRelationships(org.neo4j.graphdb.Direction.INCOMING).forEach(org.neo4j.graphdb.Relationship::delete);
 		node.delete();

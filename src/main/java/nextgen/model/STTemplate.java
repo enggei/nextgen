@@ -248,10 +248,6 @@ public class STTemplate {
 		return node.getSingleRelationship(org.neo4j.graphdb.RelationshipType.withName("labelParameter"), org.neo4j.graphdb.Direction.OUTGOING);
 	}  
 
-	public java.util.stream.Stream<DomainVisitor> getIncomingTemplatesDomainVisitor() { 
-		return java.util.stream.StreamSupport.stream(node.getRelationships(org.neo4j.graphdb.Direction.INCOMING, org.neo4j.graphdb.RelationshipType.withName("templates")).spliterator(), false).map((relationship) -> new DomainVisitor(relationship.getOtherNode(node)));
-	}  
-
 	@Override
 	public String toString() {
 		final StringBuilder out = new StringBuilder();

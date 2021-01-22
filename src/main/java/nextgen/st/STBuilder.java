@@ -35,7 +35,7 @@ public class STBuilder {
          }
       });
 
-      if (!found.get()) log.warn("parameterName " + parameterName + " NOT found in template " + model.stTemplate().getName());
+      if (!found.get()) log.warn(parameterName + " NOT found in template " + model.stTemplate().getName() + " " + model.stTemplate().getUuid());
 
       return this;
    }
@@ -68,11 +68,11 @@ public class STBuilder {
             model.st().addAggr(aggrSpec.render(), values.toArray());
 
          } else {
-            log.warn("parameterName " + parameterName + " is NOT a KVLIST in template " + model.stTemplate().getName());
+            log.warn(parameterName + " is NOT a KVLIST in template " + model.stTemplate().getName() + " " + model.stTemplate().getUuid());
          }
       });
 
-      if (!found.get()) log.warn("parameterName " + parameterName + " NOT found in template " + model.stTemplate().getName());
+      if (!found.get()) log.warn(parameterName + " NOT found in template " + model.stTemplate().getName() + " " + model.stTemplate().getUuid());
 
       return this;
    }

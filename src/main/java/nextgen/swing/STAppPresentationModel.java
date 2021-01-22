@@ -2,7 +2,6 @@ package nextgen.swing;
 
 import nextgen.events.*;
 import nextgen.model.*;
-import nextgen.model.DomainRelation;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
@@ -11,7 +10,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
+import java.util.stream.Stream;
 
 public class STAppPresentationModel {
 
@@ -522,8 +521,21 @@ public class STAppPresentationModel {
    }
 
    public static java.util.Optional<nextgen.model.STProject> findSTProjectFor(nextgen.model.STModel stModel) {
+
       final java.util.List<nextgen.model.STProject> collect = stModel.getIncomingModelsSTProject().collect(java.util.stream.Collectors.toList());
-      return Optional.ofNullable(collect.size() == 0 ? null : collect.get(0));
+      if (collect.size() != 0) return Optional.of(collect.get(0));
+
+      final java.util.List<nextgen.model.STValue> stValues = stModel.getIncomingStModelSTValue().collect(java.util.stream.Collectors.toList());
+      for (nextgen.model.STValue stValue : stValues) {
+         for (nextgen.model.STArgument stArgument : stValue.getIncomingValueSTArgument().collect(java.util.stream.Collectors.toList())) {
+            for (nextgen.model.STModel argumentModel : stArgument.getIncomingArgumentsSTModel().collect(java.util.stream.Collectors.toList())) {
+               final java.util.Optional<nextgen.model.STProject> stProject = findSTProjectFor(argumentModel);
+               if (stProject.isPresent()) return stProject;
+            }
+         }
+      }
+
+      return Optional.empty();
    }
 
    public static java.util.Set<nextgen.model.STTemplate> findSTTemplatesWithInterface(String name, nextgen.model.STGroupModel stGroupModel) {
@@ -1460,12 +1472,6 @@ public class STAppPresentationModel {
 
       nextgen.events.NewDomainVisitor.post(domain, domainVisitor);
    }
-
-   public void add(nextgen.model.DomainVisitor domainVisitor, nextgen.model.STTemplate stTemplate) {
-      domainVisitor.addTemplates(stTemplate);
-      nextgen.events.DomainVisitorSTTemplateAdded.post(domainVisitor, stTemplate);
-   }
-
 
    public static final class STArgumentConsumer implements java.util.function.Consumer<nextgen.model.STArgument> {
 
