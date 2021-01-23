@@ -15,12 +15,10 @@ public class STModelNavigator extends JPanel {
 	private final JTree tree = new JTree();
 	private final STModelNavigatorTreeModel treeModel;
 
-	private STWorkspace workspace;
 
-	public STModelNavigator(STWorkspace workspace) {
+	public STModelNavigator() {
 		super(new BorderLayout());
 
-		this.workspace = workspace;
 
 		treeModel = new STModelNavigatorTreeModel(new RootNode("Projects"));
 		tree.setModel(treeModel);
@@ -679,9 +677,9 @@ public class STModelNavigator extends JPanel {
 
 				for (nextgen.model.STValue selected : selectedSTValues) 
 					actions.add(new AddValueToProject(getModel(), selected));
-				actions.add(new AddDomainToProject(getModel(), workspace));
-				actions.add(new SetSTProjectRoot(getModel(), workspace));
-				actions.add(new AddValuesToProject(getModel(), workspace));
+				actions.add(new AddDomainToProject(getModel(), tree));
+				actions.add(new SetSTProjectRoot(getModel(), tree));
+				actions.add(new AddValuesToProject(getModel(), tree));
 				actions.add(new GenerateSTModels(getModel().getModels().collect(java.util.stream.Collectors.toList())));
 				actions.add(new ShowSTProjectInCanvas(getModel()));
 			});
@@ -838,8 +836,8 @@ public class STModelNavigator extends JPanel {
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				actions.add(new GenerateSTModels(stModels));
 				actions.add(new AsBuilderCodes(getModel(), stModels));
-				actions.add(new AddFileSinkToSTModels(getModel(), stModels, workspace));
-				actions.add(new DeleteSTFileFromSTModels(stModels, workspace));
+				actions.add(new AddFileSinkToSTModels(getModel(), stModels, tree));
+				actions.add(new DeleteSTFileFromSTModels(stModels, tree));
 			});
 
 			return actions;
@@ -921,15 +919,15 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, workspace)));
-				actions.add(new RunInTerminal(getModel(), workspace));
-				actions.add(new ReplaceAllSTValues(getModel(), workspace));
+				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, tree)));
+				actions.add(new RunInTerminal(getModel(), tree));
+				actions.add(new ReplaceAllSTValues(getModel(), tree));
 				actions.add(new STModelToClipboard(getModel()));
 				actions.add(new GenerateSTModel(getModel()));
 				actions.add(new AddFileSink(getModel()));
 				actions.add(new CopyModel(getModel()));
 				actions.add(new AsBuilderCode(getModel()));
-				actions.add(new DeleteSTModel(getModel(), workspace));
+				actions.add(new DeleteSTModel(getModel(), tree));
 			});
 
 			return actions;
@@ -1006,7 +1004,7 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				actions.add(new CopyFilePathToClipboard(getModel()));
 				actions.add(new WriteSTFile(getModel()));
-				actions.add(new DeleteSTFile(getModel(), workspace));
+				actions.add(new DeleteSTFile(getModel(), tree));
 			});
 
 			return actions;
@@ -1107,8 +1105,8 @@ public class STModelNavigator extends JPanel {
 						selectedSTModels.forEach(stModel -> actions.add(new SetArgumentFromSTModel("Set " + STAppPresentationModel.getSTModelName(stModel), this.stModel, getModel(), stModel)));
 						selectedSTValues.forEach(stNode -> actions.add(new SetArgumentFromSTValue("Set " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new SetArgumentFromSTTemplate("Set New " + stNode.getName(), stModel, getModel(), stNode)));
-						actions.add(new SetArgumentFromArgumentType(stModel, getModel(), workspace));
-						actions.add(new SetArgumentFromInput(stModel, getModel(), workspace));
+						actions.add(new SetArgumentFromArgumentType(stModel, getModel(), tree));
+						actions.add(new SetArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new SetArgumentFromClipboard(stModel, getModel()));
 						if (appModel().isBoolean(getModel())) actions.add(new SetArgumentToTrue(stModel, getModel()));
 						break;
@@ -1116,13 +1114,13 @@ public class STModelNavigator extends JPanel {
 						selectedSTModels.forEach(stNode -> actions.add(new AddArgumentFromSTModel("Add " + STAppPresentationModel.getSTModelName(stNode), stModel, getModel(), stNode)));
 						selectedSTValues.forEach(stNode -> actions.add(new AddArgumentFromSTValue("Add " + appModel().render(stNode, 30), stModel, getModel(), stNode)));
 						stTemplates.forEach(stNode -> actions.add(new AddArgumentFromSTTemplate("Add New " + stNode.getName(), stModel, getModel(), stNode)));
-						actions.add(new AddArgumentFromInput(stModel, getModel(), workspace));
+						actions.add(new AddArgumentFromInput(stModel, getModel(), tree));
 						actions.add(new AddArgumentFromClipboard(stModel, getModel()));
-						actions.add(new AddArgumentFromArgumentType(stModel, getModel(), workspace));
-						actions.add(new DeleteSTArguments(workspace, getModel(), stModel));
+						actions.add(new AddArgumentFromArgumentType(stModel, getModel(), tree));
+						actions.add(new DeleteSTArguments(tree, getModel(), stModel));
 						break;
 					case KVLIST:
-						actions.add(new AddKVArguments(getModel(), stModel, workspace));
+						actions.add(new AddKVArguments(getModel(), stModel, tree));
 						break;
 				}
 				actions.add(new ProcessParameterValues(getParentModel(), getModel(), tree));
@@ -1209,12 +1207,12 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, workspace)));
-				actions.add(new RunInTerminal(getModel(), workspace));
-				actions.add(new ReplaceAllSTValues(getModel(), workspace));
+				getSelectedSTModels().filter(stModel -> !stModel.equals(getModel())).forEach(stModel -> actions.add(new CopyInto(getModel(), stModel, tree)));
+				actions.add(new RunInTerminal(getModel(), tree));
+				actions.add(new ReplaceAllSTValues(getModel(), tree));
 				actions.add(new AsBuilderCode(getModel()));
 				actions.add(new CopyModel(getModel()));
-				actions.add(new DeleteSTArgument(stArgument, workspace));
+				actions.add(new DeleteSTArgument(stArgument, tree));
 				actions.add(new ShowSTModelInCanvas(getModel()));
 			});
 
@@ -1290,10 +1288,10 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new SetSTValueFromInput(getModel(), workspace));
+				actions.add(new SetSTValueFromInput(getModel(), tree));
 				actions.add(new SetSTValueFromClipboard(getModel()));
 				actions.add(new STValueToClipboard(getModel()));
-				actions.add(new DeleteSTValue(getModel(), workspace));
+				actions.add(new DeleteSTValue(getModel(), tree));
 			});
 
 			return actions;
@@ -1374,7 +1372,7 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				actions.add(new SetSTValueFromClipboard(getModel()));
 				actions.add(new STValueToClipboard(getModel()));
-				actions.add(new DeleteSTArgument(stArgument, workspace));
+				actions.add(new DeleteSTArgument(stArgument, tree));
 			});
 
 			return actions;
@@ -1457,12 +1455,12 @@ public class STModelNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				getParentNode(STModelTreeNode.class).ifPresent(parent -> {
 					stParameter.getKeys().forEach(stParameterKey -> {
-					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), getModel(), stParameterKey, workspace));
-					actions.add(new SetKVArgumentFromInput(parent.getModel(), getModel(), stParameterKey, workspace));
+					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), getModel(), stParameterKey, tree));
+					actions.add(new SetKVArgumentFromInput(parent.getModel(), getModel(), stParameterKey, tree));
 					actions.add(new SetKVArgumentFromClipboard(parent.getModel(), getModel(), stParameterKey));
 					});
 				} );
-				actions.add(new DeleteSTArgument(getModel(), workspace));
+				actions.add(new DeleteSTArgument(getModel(), tree));
 			});
 
 			return actions;
@@ -1567,12 +1565,12 @@ public class STModelNavigator extends JPanel {
 					selectedSTModels.forEach(stModel -> actions.add(new SetKVArgumentFromSTModel(parent.getModel(), stArgument, stParameterKey, stModel)));
 					selectedSTValues.forEach(stValue -> actions.add(new SetKVArgumentFromSTValue(parent.getModel(), stArgument, stParameterKey, stValue)));
 					stTemplates.forEach(stNode -> actions.add(new SetArgumentKVFromSTTemplate("Set New " + stNode.getName(), parent.getModel(), stNode, stParameterKey, stArgument)));
-					actions.add(new SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, workspace));
+					actions.add(new SetKVArgumentFromInput(parent.getModel(), stArgument, stParameterKey, tree));
 					actions.add(new SetKVArgumentFromClipboard(parent.getModel(), stArgument, stParameterKey));
-					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), stArgument, stParameterKey, workspace));
+					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), stArgument, stParameterKey, tree));
 					if (appModel().isBoolean(stParameterKey)) actions.add(new SetKVArgumentToTrue(parent.getModel(), getModel()));
 				});
-				actions.add(new DeleteKV(getModel(), workspace));
+				actions.add(new DeleteKV(getModel(), tree));
 			});
 
 			return actions;
@@ -1657,7 +1655,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), workspace)));
+				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), tree)));
 				actions.add(new ShowSTModelInCanvas(getModel()));
 			});
 
@@ -1737,7 +1735,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), workspace)));
+				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), tree)));
 				actions.add(new STValueToClipboard(getModel()));
 			});
 

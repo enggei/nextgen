@@ -59,6 +59,9 @@ public class BaseTextArea extends RSyntaxTextArea {
       getPopupMenu().add(newAction("Duplicate", actionEvent -> duplicateLine()));
       getPopupMenu().addSeparator();
 
+      getPopupMenu().add(newAction("Cut", actionEvent -> cut()));
+      getPopupMenu().addSeparator();
+
       getPopupMenu().add(newAction("Delete Line", actionEvent -> deleteLine()));
       getPopupMenu().add(newAction("Clear", actionEvent -> clear()));
       getPopupMenu().add(newAction("Goto top", actionEvent -> gotoTop()));
