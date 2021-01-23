@@ -7,11 +7,11 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class NewDomainAction extends nextgen.actions.TransactionAction {
+public class NewDomain extends nextgen.actions.TransactionAction {
 
    private final JComponent owner;
 
-	public NewDomainAction(JComponent owner) {
+	public NewDomain(JComponent owner) {
 		super("New Domain");
       this.owner = owner;
 	}

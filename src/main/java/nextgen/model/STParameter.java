@@ -1,5 +1,7 @@
 package nextgen.model;
 
+// stParameter STParameter
+// labelParameter STParameter
 public class STParameter {
 
 	private final org.neo4j.graphdb.Node node;
@@ -214,4 +216,4 @@ public class STParameter {
 	}
 
 
-}  
+} 

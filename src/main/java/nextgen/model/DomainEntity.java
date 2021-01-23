@@ -1,5 +1,7 @@
 package nextgen.model;
 
+// src DomainEntity
+// dst DomainEntity
 public class DomainEntity {
 
 	private final org.neo4j.graphdb.Node node;
@@ -185,4 +187,4 @@ public class DomainEntity {
 	}
 
 
-}  
+} 

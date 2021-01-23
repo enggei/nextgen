@@ -38,6 +38,9 @@ public class STValueEditor extends nextgen.swing.BaseEditor<nextgen.model.STValu
 		if (model == null) return;
 		appModel().doLaterInTransaction(tx -> {
 			form.viewToModel(getModel());
+
+
+			nextgen.events.STValueChanged.post(getModel());
 		});
 	}
 

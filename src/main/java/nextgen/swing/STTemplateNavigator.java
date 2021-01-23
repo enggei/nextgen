@@ -20,7 +20,7 @@ public class STTemplateNavigator extends JPanel {
 		super(new BorderLayout());
 
 
-		treeModel = new STTemplateNavigatorTreeModel(new RootNode("[]"));
+		treeModel = new STTemplateNavigatorTreeModel(new RootNode(""));
 		tree.setModel(treeModel);
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
@@ -298,7 +298,7 @@ public class STTemplateNavigator extends JPanel {
 
 		protected void setLabel(String label) {
 			this.label = label;
-			if (this.label == null || this.label.trim().length() == 0) this.label = "[EMPTY]";
+			if (this.label == null || this.label.trim().length() == 0) this.label = "";
 		}
 
 		public String getLabel() {
@@ -604,7 +604,7 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new NewDomainAction(tree));
+				actions.add(new NewDomain(tree));
 			});
 
 			return actions;
@@ -914,7 +914,7 @@ public class STTemplateNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> actions.add(new DeleteAction(getModel(), tree, parent.getModel())));
 				actions.add(new RunAction(getModel(), tree));
-				actions.add(new WriteSTGroupAction(getModel()));
+				actions.add(new WriteSTGroup(getModel()));
 			});
 
 			return actions;
@@ -1032,10 +1032,10 @@ public class STTemplateNavigator extends JPanel {
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
-			super(model, appModel().loadIcon("String"));
+			super(model, appModel().loadIcon("repository"));
 
 
-			setLabel(getModel());
+			setLabel(model.toString());
 			this.tooltip = "";
 
 			add(new DomainsTreeNode("Domains"));
@@ -1048,7 +1048,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
-			setLabel(getModel());
+			setLabel(getModel().toString());
 			this.tooltip = "";
 			super.nodeChanged();
 		}
@@ -1058,7 +1058,7 @@ public class STTemplateNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				actions.add(new NewSTGroupAction(tree));
+				actions.add(new NewSTGroup(tree));
 				actions.add(new GenerateAllSTGroups(tree));
 			});
 
@@ -1302,7 +1302,7 @@ public class STTemplateNavigator extends JPanel {
 			appModel().doInTransaction(tx -> {
 				final java.util.Set<nextgen.model.STTemplate> candidateChildren = getSelectedTemplates();
 				final Set<nextgen.model.STTemplate> childTemplates = getModel().getChildren().collect(java.util.stream.Collectors.toSet());
-				actions.add(new NewSTModelAction(getModel()));
+				actions.add(new NewSTModel(getModel()));
 				getParentNode(STGroupTreeNode.class).ifPresent(parent -> { 
 					actions.add(new AddChildToTemplate(getModel(), parent.getModel(), tree));
 					actions.add(new SetTemplateParameterTypes(parent.getModel(), getModel(), tree));

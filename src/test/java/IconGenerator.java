@@ -10,7 +10,8 @@ public class IconGenerator {
       final String clipboardSetColor = "#4daf4a";
       final String domainsColor = "#3f007d";
       final String templatesColor = "#08306b";
-      final String projectsColor = "#08306b";
+      final String projectsColor = "#35978f";
+      final String repositoryColor = "#4d4d4d";
 
       String[] domain = new String[]{
             "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"
@@ -32,6 +33,7 @@ public class IconGenerator {
       makeIcon(destinationDir, "domains", "D", domainsColor);
       makeIcon(destinationDir, "templates", "T", templatesColor);
       makeIcon(destinationDir, "projects", "P", projectsColor);
+      makeIcon(destinationDir, "repository", "R", repositoryColor);
 
       makeEntityIcon(destinationDir, "STGroupFile", fileColor);
       makeEntityIcon(destinationDir, "STFile", fileColor);

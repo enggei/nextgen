@@ -244,35 +244,9 @@ public class STGenerator {
       final ST stGroupTemplate = templateGroup.getInstanceOf("STGroupTemplate");
       stGroupTemplate.add("delimiter", DELIMITER);
 
-      final java.util.Map<String, STTemplate> templateSet = new java.util.LinkedHashMap<>();
       nextgen.swing.STAppPresentationModel.aggregateTemplates(model)
             .filter(stTemplate -> !(stTemplate.getName().equals("eom") || stTemplate.getName().equals("gt")))
-            .forEach(stTemplate -> {
-               log.info(model.getUuid() + " " + model.getName() + " " + stTemplate.getName() + " " + stTemplate.getUuid());
-               if (templateSet.containsKey(stTemplate.getName())) {
-                  log.error("duplicate stTemplate " + stTemplate.getName() + " " + stTemplate.getUuid());
-
-                  final String oneText = stTemplate.getText();
-                  final String twoText = templateSet.get(stTemplate.getName()).getText();
-
-
-                  if (oneText.equals(twoText)) model.removeTemplates(stTemplate);
-                  else {
-                     System.out.println("-------------------------");
-                     System.out.println(oneText);
-                     System.out.println("-------------------------");
-                     System.out.println("vs");
-                     System.out.println("-------------------------");
-                     System.out.println(twoText);
-                     System.out.println("-------------------------");
-                     System.out.println("");
-                  }
-
-
-               } else
-                  stGroupTemplate.add("templates", asST(templateGroup, stTemplate));
-               templateSet.put(stTemplate.getName(), stTemplate);
-            });
+            .forEach(stTemplate -> stGroupTemplate.add("templates", asST(templateGroup, stTemplate)));
 
       return stGroupTemplate.render();
    }

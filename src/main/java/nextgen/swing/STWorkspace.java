@@ -655,21 +655,21 @@ public class STWorkspace extends JTabbedPane {
 								}
 							});
 
-							pop.addSeparator();
+pop.addSeparator();
 
-							pop.add(new AbstractAction("Maximize") {
-								@Override
-								public void actionPerformed(ActionEvent actionEvent) {
-									stApp.maximizeCenter();
-								}
-							});
+pop.add(new AbstractAction("Maximize") {
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		stApp.maximizeCenter();
+	}
+});
 
-							pop.add(new AbstractAction("Normalize") {
-								@Override
-								public void actionPerformed(ActionEvent actionEvent) {
-									stApp.normalizeSplits();
-								}
-							});
+pop.add(new AbstractAction("Normalize") {
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		stApp.normalizeSplits();
+	}
+});
 
 							pop.show(ButtonTabComponent.this, e.getX(), e.getY());
 						});

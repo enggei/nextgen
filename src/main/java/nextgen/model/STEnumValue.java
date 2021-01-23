@@ -1,5 +1,6 @@
 package nextgen.model;
 
+// stEnumValue STEnumValue
 public class STEnumValue {
 
 	private final org.neo4j.graphdb.Node node;
@@ -153,4 +154,4 @@ public class STEnumValue {
 	}
 
 
-}  
+} 

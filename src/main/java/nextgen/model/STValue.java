@@ -1,5 +1,16 @@
 package nextgen.model;
 
+// name STValue
+// packageName STValue
+// path STValue
+// statements STValue
+// imports STValue
+// methods STValue
+// type STValue
+// packageName STValue
+// path STValue
+// value STValue
+// value STValue
 public class STValue {
 
 	private final org.neo4j.graphdb.Node node;
@@ -247,4 +258,4 @@ public class STValue {
 	}
 
 
-}  
+} 

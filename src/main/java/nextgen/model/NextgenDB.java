@@ -21,7 +21,13 @@ public class NextgenDB {
 		return this.db;
 	}
 
-	protected void cleanup() {    
+	private void cleanup() {
+      doInTransaction(transaction -> {
+         //findAllDomainProperty().forEach(DomainProperty::delete);
+         //findAllDomainRelation().forEach(DomainRelation::delete);
+         //findAllDomainEntity().forEach(DomainEntity::delete);
+         //findAllDomain().forEach(Domain::delete);
+      });
    }
 
 	public void doInTransaction(java.util.function.Consumer<org.neo4j.graphdb.Transaction> action) { 

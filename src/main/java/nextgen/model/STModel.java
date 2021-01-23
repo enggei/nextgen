@@ -1,5 +1,6 @@
 package nextgen.model;
 
+// stModel STModel
 public class STModel {
 
 	private final org.neo4j.graphdb.Node node;
@@ -179,4 +180,4 @@ public class STModel {
 	}
 
 
-}  
+} 

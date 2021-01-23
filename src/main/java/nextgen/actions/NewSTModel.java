@@ -7,11 +7,11 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class NewSTModelAction extends nextgen.actions.TransactionAction {
+public class NewSTModel extends nextgen.actions.TransactionAction {
 
    private final STTemplate stTemplate;
 
-	public NewSTModelAction(STTemplate stTemplate) {
+	public NewSTModel(STTemplate stTemplate) {
 		super("New instance");
 		this.stTemplate = stTemplate;
 	}

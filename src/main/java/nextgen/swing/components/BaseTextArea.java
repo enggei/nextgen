@@ -27,9 +27,11 @@ public class BaseTextArea extends RSyntaxTextArea {
 
       javax.swing.InputMap im = getInputMap();
       im.put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK), "Duplicate");
+      im.put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, java.awt.event.InputEvent.CTRL_DOWN_MASK), "DeleteLine");
 
       javax.swing.ActionMap am = getActionMap();
       am.put("Duplicate", newAction("Duplicate", actionEvent -> duplicateLine()));
+      am.put("DeleteLine", newAction("DeleteLine", actionEvent -> deleteLine()));
 
       nextgen.swing.ComponentFactory.decorate(this);
       setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
@@ -57,6 +59,7 @@ public class BaseTextArea extends RSyntaxTextArea {
       getPopupMenu().add(newAction("Duplicate", actionEvent -> duplicateLine()));
       getPopupMenu().addSeparator();
 
+      getPopupMenu().add(newAction("Delete Line", actionEvent -> deleteLine()));
       getPopupMenu().add(newAction("Clear", actionEvent -> clear()));
       getPopupMenu().add(newAction("Goto top", actionEvent -> gotoTop()));
       getPopupMenu().add(newAction("Goto bottom", actionEvent -> gotoBottom()));
@@ -128,6 +131,16 @@ public class BaseTextArea extends RSyntaxTextArea {
          final int end = getLineEndOffsetOfCurrentLine();
          final String line = getText().substring(start, end);
          insert(line, end);
+      });
+   }
+
+   protected void deleteLine() {
+      javax.swing.SwingUtilities.invokeLater(() -> {
+         final int start = getLineStartOffsetOfCurrentLine();
+         final int end = getLineEndOffsetOfCurrentLine();
+         final String line = getText().substring(start, end);
+         replaceRange("", start, end);
+         setCaretPosition(start);
       });
    }
 

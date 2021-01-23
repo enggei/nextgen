@@ -7,11 +7,11 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class WriteSTGroupAction extends nextgen.actions.TransactionAction {
+public class WriteSTGroup extends nextgen.actions.TransactionAction {
 
    private final STGroupAction action;
 
-	public WriteSTGroupAction(STGroupAction action) {
+	public WriteSTGroup(STGroupAction action) {
 		super("Generate Source");
 		setIcon("gen");
 		this.action = action;

@@ -334,7 +334,7 @@ public class STModelNavigator extends JPanel {
 
 		protected void setLabel(String label) {
 			this.label = label;
-			if (this.label == null || this.label.trim().length() == 0) this.label = "[EMPTY]";
+			if (this.label == null || this.label.trim().length() == 0) this.label = "";
 		}
 
 		public String getLabel() {
@@ -539,7 +539,7 @@ public class STModelNavigator extends JPanel {
 	public class RootNode extends BaseTreeNode<String> {
 
 		RootNode(String model) {
-			super(model, appModel().loadIcon("String"));
+			super(model, appModel().loadIcon("projects"));
 
 
 			setLabel(getModel());

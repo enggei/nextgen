@@ -7,11 +7,11 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class NewSTGroupAction extends nextgen.actions.TransactionAction {
+public class NewSTGroup extends nextgen.actions.TransactionAction {
 
    private final JComponent owner;
 
-	public NewSTGroupAction(JComponent owner) {
+	public NewSTGroup(JComponent owner) {
 		super("New STGroup");
 		this.owner = owner;
 	}
