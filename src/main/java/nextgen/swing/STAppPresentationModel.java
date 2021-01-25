@@ -1467,6 +1467,11 @@ public class STAppPresentationModel {
       DomainChanged.post(domain);
    }
 
+   public void setName(DomainVisitor domainVisitor, String name) {
+      domainVisitor.setName(name);
+      DomainVisitorChanged.post(domainVisitor);
+   }
+
    public void addDomainVisitor(Domain domain, String visitorName) {
 
       final DomainVisitor domainVisitor = db.newDomainVisitor().setName(visitorName);

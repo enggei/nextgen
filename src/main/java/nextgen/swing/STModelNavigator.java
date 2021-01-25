@@ -143,7 +143,7 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTFileChanged(nextgen.events.STFileChanged event) {
 		findAllSTFileSinkTreeNode(treeNode -> treeNode.getModel().equals(event.sTFile))
-				.forEach(STModelNavigator.STFileSinkTreeNode::nodeChanged);
+				.forEach(STFileSinkTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -204,7 +204,7 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewKV(nextgen.events.NewKV event) {
 		findAllSTKVArgumentTreeNode(treeNode -> treeNode.uuid.equals(event.argument.getUuid())).forEach(treeNode -> {
-			treeModel.addNodeInSortedOrderAndSelect(treeNode, new STModelNavigator.STKVTreeNode(event.kv, treeNode.getModel(), event.stParameterKey));
+			treeModel.addNodeInSortedOrderAndSelect(treeNode, new STKVTreeNode(event.kv, treeNode.getModel(), event.stParameterKey));
 			treeNode.nodeChanged();
 		});
 	}
@@ -225,23 +225,23 @@ public class STModelNavigator extends JPanel {
 		findAllSTProjectTreeNode(stProjectTreeNode -> stProjectTreeNode.getModel().equals(event.project))
 				.forEach(stProjectTreeNode -> {
 					final nextgen.model.STGroupModel stGroup = appModel().getSTGroup(event.template);
-					final java.util.Optional<STModelNavigator.STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
+					final java.util.Optional<STGroupModelTreeNode> groupModelTreeNode = findSTGroupModelTreeNode(stProjectTreeNode, stGroupModelTreeNode -> stGroupModelTreeNode.getModel().equals(stGroup));
 					if (groupModelTreeNode.isPresent()) {
-						final java.util.Optional<STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
+						final java.util.Optional<STTemplateTreeNode> stTemplateTreeNode = findSTTemplateTreeNode(groupModelTreeNode.get(), stTemplateTreeNode1 -> stTemplateTreeNode1.getModel().equals(event.template));
 						if (stTemplateTreeNode.isPresent()) {
-							treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode.get(), new STModelNavigator.STModelTreeNode(event.model, event.template));
+							treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode.get(), new STModelTreeNode(event.model, event.template));
 						} else {
-							final STModelNavigator.STTemplateTreeNode newSTTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(event.template);
+							final STTemplateTreeNode newSTTemplateTreeNode = new STTemplateTreeNode(event.template);
 							treeModel.addNodeInSortedOrder(groupModelTreeNode.get(), newSTTemplateTreeNode);
-							treeModel.addNodeInSortedOrderAndSelect(newSTTemplateTreeNode, new STModelNavigator.STModelTreeNode(event.model, event.template));
+							treeModel.addNodeInSortedOrderAndSelect(newSTTemplateTreeNode, new STModelTreeNode(event.model, event.template));
 						}
 
 					} else {
-						final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
+						final STGroupModelTreeNode stGroupModelTreeNode = new STGroupModelTreeNode(stGroup);
 						treeModel.addNodeInSortedOrder(stProjectTreeNode, stGroupModelTreeNode);
-						final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(event.template);
+						final STTemplateTreeNode stTemplateTreeNode = new STTemplateTreeNode(event.template);
 						treeModel.addNodeInSortedOrder(stGroupModelTreeNode, stTemplateTreeNode);
-						treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new STModelNavigator.STModelTreeNode(event.model, event.template));
+						treeModel.addNodeInSortedOrderAndSelect(stTemplateTreeNode, new STModelTreeNode(event.model, event.template));
 					}
 				});
 	}
@@ -249,12 +249,12 @@ public class STModelNavigator extends JPanel {
 	@org.greenrobot.eventbus.Subscribe()
 	public void onNewSTProjectSTValue(nextgen.events.NewSTProjectSTValue event) {
 		findAllSTProjectTreeNode(treeNode -> treeNode.getModel().equals(event.project))
-				.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STModelNavigator.STValueTreeNode(event.value)));
+				.forEach(treeNode -> treeModel.addNodeInSortedOrderAndSelect(treeNode, new STValueTreeNode(event.value)));
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTValueChanged(nextgen.events.STValueChanged event) {
-		findAllSTValueTreeNode(treeNode -> treeNode.getModel().equals(event.sTValue)).forEach(BaseTreeNode::nodeChanged);
+		findAllSTValueTreeNode(treeNode -> treeNode.getModel().equals(event.sTValue)).forEach(STValueTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -265,7 +265,7 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelChanged(nextgen.events.STModelChanged event) {
-		findAllSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.sTModel)).forEach(STModelNavigator.BaseTreeNode::nodeChanged);
+		findAllSTModelTreeNode(treeNode -> treeNode.getModel().equals(event.sTModel)).forEach(BaseTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -619,29 +619,29 @@ public class STModelNavigator extends JPanel {
 			setLabel(getModel().getName());
 			this.tooltip = "";
 
-			final Map<nextgen.model.STGroupModel, STModelNavigator.STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
-			final Map<nextgen.model.STTemplate, STModelNavigator.STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
+			final Map<nextgen.model.STGroupModel, STGroupModelTreeNode> stGroupTreeNodeMap = new java.util.LinkedHashMap<>();
+			final Map<nextgen.model.STTemplate, STTemplateTreeNode> stTemplateTreeNodeMap = new java.util.LinkedHashMap<>();
 			model.getModels().sorted((m1, m2) -> appModel().getLabel(m1, () -> m1.getStTemplate().getName()).compareToIgnoreCase(appModel().getLabel(m2, () -> m2.getStTemplate().getName()))).forEach(stModel -> {
 
 				final nextgen.model.STTemplate stTemplate = stModel.getStTemplate();
 				final nextgen.model.STGroupModel stGroup = appModel().getSTGroup(stTemplate);
 
 				if (!stGroupTreeNodeMap.containsKey(stGroup)) {
-					final STModelNavigator.STGroupModelTreeNode stGroupModelTreeNode = new STModelNavigator.STGroupModelTreeNode(stGroup);
+					final STGroupModelTreeNode stGroupModelTreeNode = new STGroupModelTreeNode(stGroup);
 					add(stGroupModelTreeNode);
 					stGroupTreeNodeMap.put(stGroup, stGroupModelTreeNode);
 				}
 
 				if (!stTemplateTreeNodeMap.containsKey(stTemplate)) {
-					final STModelNavigator.STTemplateTreeNode stTemplateTreeNode = new STModelNavigator.STTemplateTreeNode(stTemplate);
+					final STTemplateTreeNode stTemplateTreeNode = new STTemplateTreeNode(stTemplate);
 					stGroupTreeNodeMap.get(stGroup).add(stTemplateTreeNode);
 					stTemplateTreeNodeMap.put(stTemplate, stTemplateTreeNode);
 				}
 
-				stTemplateTreeNodeMap.get(stTemplate).add(new STModelNavigator.STModelTreeNode(stModel, stTemplate));
+				stTemplateTreeNodeMap.get(stTemplate).add(new STModelTreeNode(stModel, stTemplate));
 			});
 
-			model.getValuesSorted().forEach(stValue -> add(new STModelNavigator.STValueTreeNode(stValue)));
+			model.getValuesSorted().forEach(stValue -> add(new STValueTreeNode(stValue)));
 		}
 
 		STProjectTreeNode thisNode() {
@@ -830,8 +830,8 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.List<nextgen.model.STModel> stModels = getChildren(STModelNavigator.STModelTreeNode.class)
-												.map(STModelNavigator.BaseTreeNode::getModel)
+				final java.util.List<nextgen.model.STModel> stModels = getChildren(STModelTreeNode.class)
+												.map(BaseTreeNode::getModel)
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
 				actions.add(new GenerateSTModels(stModels));
@@ -1089,7 +1089,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.Optional<STModelNavigator.STModelTreeNode> parentNode = getParentNode(STModelNavigator.STModelTreeNode.class);
+				final java.util.Optional<STModelTreeNode> parentNode = getParentNode(STModelTreeNode.class);
 
 				final java.util.List<nextgen.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
 
@@ -1550,7 +1550,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				final java.util.Optional<STModelNavigator.STModelTreeNode> parentNode = getParentNode(STModelNavigator.STModelTreeNode.class);
+				final java.util.Optional<STModelTreeNode> parentNode = getParentNode(STModelTreeNode.class);
 
 				final java.util.List<nextgen.model.STValue> selectedSTValues = getSelectedSTValues().collect(java.util.stream.Collectors.toList());
 
