@@ -192,7 +192,7 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
+	public void onSTGroupModelDeleted(nextgen.events.STGroupModelDeleted event) {
 		findAllSTGroupTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
 	}
 
@@ -241,24 +241,23 @@ public class STTemplateNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTGroupNameChanged(nextgen.events.STGroupNameChanged event) {
-		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.stGroup)).forEach(STGroupTreeNode::nodeChanged);
+	public void onSTGroupModelChanged(nextgen.events.STGroupModelChanged event) {
+		findAllSTGroupTreeNode(treeNode -> treeNode.getModel().equals(event.sTGroupModel)).forEach(STGroupTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
-		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.stTemplate)).forEach(STTemplateTreeNode::nodeChanged);
+	public void onSTTemplateChanged(nextgen.events.STTemplateChanged event) {
+		findAllSTTemplateTreeNode(treeNode -> treeNode.getModel().equals(event.sTTemplate)).forEach(STTemplateTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTInterfaceNameChanged(nextgen.events.STInterfaceNameChanged event) {
-		findAllSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.stInterface)).forEach(STInterfaceTreeNode::nodeChanged);
+	public void onSTInterfaceChanged(nextgen.events.STInterfaceChanged event) {
+		findAllSTInterfaceTreeNode(treeNode -> treeNode.getModel().equals(event.sTInterface)).forEach(STInterfaceTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTEnumNameChanged(nextgen.events.STEnumNameChanged event) {
-		findAllSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.stEnum))
-							.forEach(STEnumTreeNode::nodeChanged);
+	public void onSTEnumChanged(nextgen.events.STEnumChanged event) {
+		findAllSTEnumTreeNode(treeNode -> treeNode.getModel().equals(event.sTEnum)).forEach(STEnumTreeNode::nodeChanged);
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -454,6 +453,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("DomainTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -528,6 +528,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("TemplatesTreeNode changed");
 			setLabel(getModel().toString());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -599,6 +600,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("DomainsTreeNode changed");
 			setLabel(getModel().toString());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -677,6 +679,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("DomainEntityTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -755,6 +758,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("DomainRelationTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -831,6 +835,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("DomainVisitorTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -842,7 +847,7 @@ public class STTemplateNavigator extends JPanel {
 
 			appModel().doInTransaction(tx -> {
 				actions.add(new RunDomainVisitor(getModel(), tree));
-				actions.add(new SetDomainVisitorName(getModel(), tree));
+				actions.add(new RenameDomainVisitor(getModel(), tree));
 				actions.add(new DeleteDomainVisitor(getModel(), tree));
 			});
 
@@ -908,6 +913,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STGroupActionTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -982,6 +988,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("StringTreeNode changed");
 			setLabel(getModel());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1054,6 +1061,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("RootNode changed");
 			setLabel(getModel().toString());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1134,6 +1142,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STGroupTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1218,6 +1227,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STEnumTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1296,6 +1306,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STTemplateTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1392,6 +1403,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STInterfaceTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1467,6 +1479,7 @@ public class STTemplateNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STGroupFileTreeNode changed");
 			setLabel(appModel().render(getModel().getPath()));
 			this.tooltip = "";
 			super.nodeChanged();

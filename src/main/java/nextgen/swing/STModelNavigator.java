@@ -129,8 +129,8 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTTemplateNameChanged(nextgen.events.STTemplateNameChanged event) {
-		findAllSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.stTemplate))
+	public void onSTTemplateChanged(nextgen.events.STTemplateChanged event) {
+		findAllSTTemplateTreeNode(stTemplateTreeNode -> stTemplateTreeNode.getModel().equals(event.sTTemplate))
 		      .forEach(stTemplateTreeNode -> stTemplateTreeNode.getChildren(STModelTreeNode.class).forEach(STModelTreeNode::nodeChanged));
 	}
 
@@ -195,9 +195,7 @@ public class STModelNavigator extends JPanel {
 					findAllSTParameterTreeNode(treeNode)
 							.stream()
 							.filter(stParameterTreeNode -> stParameterTreeNode.getModel().equals(event.stParameter))
-							.forEach(stParameterTreeNode -> {
-								treeModel.addNodeInSortedOrder(treeNode, new STKVArgumentTreeNode(event.argument, event.stParameter));
-							});
+							.forEach(stParameterTreeNode -> treeModel.addNodeInSortedOrder(stParameterTreeNode, new STKVArgumentTreeNode(event.argument, event.stParameter)));
 				});
 	}
 
@@ -270,7 +268,19 @@ public class STModelNavigator extends JPanel {
 
 	@org.greenrobot.eventbus.Subscribe()
 	public void onSTModelDeleted(nextgen.events.STModelDeleted event) {
-		findAllSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeModel::removeNodeFromParent);
+		findAllSTModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid)).forEach(treeNode -> {
+
+			final java.util.Optional<nextgen.swing.STModelNavigator.STTemplateTreeNode> stTemplateTreeNode = treeNode.getParentNode(nextgen.swing.STModelNavigator.STTemplateTreeNode.class);
+			treeModel.removeNodeFromParent(treeNode);
+
+			// if stTemplate tree node (and STGroupTreeNode) is empty, remove both
+			if (stTemplateTreeNode.isPresent() && stTemplateTreeNode.get().getChildCount() == 0) {
+				final java.util.Optional<nextgen.swing.STModelNavigator.STGroupModelTreeNode> stGroupModelTreeNode = stTemplateTreeNode.get().getParentNode(nextgen.swing.STModelNavigator.STGroupModelTreeNode.class);
+				treeModel.removeNodeFromParent(stTemplateTreeNode.get());
+				if (stGroupModelTreeNode.isPresent() && stGroupModelTreeNode.get().getChildCount() == 0)
+					treeModel.removeNodeFromParent(stGroupModelTreeNode.get());
+			}
+		});
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
@@ -283,7 +293,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onSTGroupDeleted(nextgen.events.STGroupDeleted event) {
+	public void onSTGroupModelDeleted(nextgen.events.STGroupModelDeleted event) {
 		SwingUtilities.invokeLater(() -> findAllSTGroupModelTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
 				.forEach(treeModel::removeNodeFromParent));
 	}
@@ -295,7 +305,7 @@ public class STModelNavigator extends JPanel {
 	}
 
 	@org.greenrobot.eventbus.Subscribe()
-	public void onKVDeleted(nextgen.events.KVDeleted event) {
+	public void onSTArgumentKVDeleted(nextgen.events.STArgumentKVDeleted event) {
 		findAllSTKVTreeNode(treeNode -> treeNode.uuid.equals(event.uuid))
 				.forEach(treeModel::removeNodeFromParent);
 	}
@@ -481,6 +491,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("StringTreeNode changed");
 			setLabel(getModel());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -554,6 +565,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("RootNode changed");
 			setLabel(getModel());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -650,6 +662,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STProjectTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -746,6 +759,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STGroupModelTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -820,6 +834,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STTemplateTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -834,6 +849,7 @@ public class STModelNavigator extends JPanel {
 												.map(BaseTreeNode::getModel)
 												.collect(java.util.stream.Collectors.toList());
 				getParentNode(STProjectTreeNode.class).ifPresent(parent -> actions.add(new AddTemplateModelToProject("New instance", getModel(), parent.getModel())));
+				actions.add(new DeleteAllSTModel(stModels, tree));
 				actions.add(new GenerateSTModels(stModels));
 				actions.add(new AsBuilderCodes(getModel(), stModels));
 				actions.add(new AddFileSinkToSTModels(getModel(), stModels, tree));
@@ -909,6 +925,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STModelTreeNode changed");
 			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -992,6 +1009,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STFileSinkTreeNode changed");
 			setLabel(appModel().render(getModel().getPath()));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1079,6 +1097,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STParameterTreeNode changed");
 			setLabel(getModel().getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1123,7 +1142,6 @@ public class STModelNavigator extends JPanel {
 						actions.add(new AddKVArguments(getModel(), stModel, tree));
 						break;
 				}
-				actions.add(new ProcessParameterValues(getParentModel(), getModel(), tree));
 			});
 
 			return actions;
@@ -1197,6 +1215,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STModelArgumentTreeNode changed");
 			setLabel(appModel().getLabel(getModel()));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1278,6 +1297,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STValueTreeNode changed");
 			setLabel(appModel().render(getModel(), 50) + "...");
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1360,6 +1380,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STValueArgumentTreeNode changed");
 			setLabel(appModel().render(getModel(), 30) + "...");
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1443,6 +1464,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STKVArgumentTreeNode changed");
 			setLabel(appModel().findKVArgumentValue(getModel(), stParameter, "name", stParameter::getName));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1540,6 +1562,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STKVTreeNode changed");
 			setLabel(stParameterKey.getName());
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1570,7 +1593,7 @@ public class STModelNavigator extends JPanel {
 					actions.add(new SetKVArgumentFromArgumentType(parent.getModel(), stArgument, stParameterKey, tree));
 					if (appModel().isBoolean(stParameterKey)) actions.add(new SetKVArgumentToTrue(parent.getModel(), getModel()));
 				});
-				actions.add(new DeleteKV(getModel(), tree));
+				actions.add(new DeleteSTArgumentKV(getModel(), tree));
 			});
 
 			return actions;
@@ -1645,6 +1668,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STModelKVArgumentTreeNode changed");
 			setLabel(appModel().getLabel(getModel(),  () -> "[" + stParameterKey.getName() + "]"));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1655,7 +1679,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), tree)));
+				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteSTArgumentKV(parent.getModel(), tree)));
 				actions.add(new ShowSTModelInCanvas(getModel()));
 			});
 
@@ -1725,6 +1749,7 @@ public class STModelNavigator extends JPanel {
 
 		@Override
 		public void nodeChanged() {
+			System.out.println("STValueKVArgumentTreeNode changed");
 			setLabel(appModel().render(getModel(), 30));
 			this.tooltip = "";
 			super.nodeChanged();
@@ -1735,7 +1760,7 @@ public class STModelNavigator extends JPanel {
 			final List<Action> actions = super.getActions();
 
 			appModel().doInTransaction(tx -> {
-				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteKV(parent.getModel(), tree)));
+				getParentNode(STKVTreeNode.class).ifPresent(parent -> actions.add(new DeleteSTArgumentKV(parent.getModel(), tree)));
 				actions.add(new STValueToClipboard(getModel()));
 			});
 

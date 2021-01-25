@@ -8,10 +8,9 @@ import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
 public class RenameSTInterface extends nextgen.actions.TransactionAction {
-
-   private final STInterface stInterface;
-   private final STGroupModel stGroup;
-   private final JComponent owner;
+	private final STInterface stInterface;
+	private final STGroupModel stGroup;
+	private final JComponent owner;
 
 	public RenameSTInterface(STInterface stInterface, STGroupModel stGroup, JComponent owner) {
 		super("Rename");
@@ -26,7 +25,7 @@ public class RenameSTInterface extends nextgen.actions.TransactionAction {
 
       inputName(owner, stInterface.getName(), s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
          stInterface.setName(name);
-         nextgen.events.STInterfaceNameChanged.post(stGroup, stInterface);
+         nextgen.events.STInterfaceChanged.post(stInterface);
       }));
    }
 

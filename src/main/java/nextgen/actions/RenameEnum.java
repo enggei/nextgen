@@ -8,10 +8,9 @@ import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
 public class RenameEnum extends nextgen.actions.TransactionAction {
-
-   private final STEnum stEnum;
-   private final STGroupModel stGroup;
-   private final JComponent owner;
+	private final STEnum stEnum;
+	private final STGroupModel stGroup;
+	private final JComponent owner;
 
 	public RenameEnum(STEnum stEnum, STGroupModel stGroup, JComponent owner) {
 		super("Rename");
@@ -26,7 +25,7 @@ public class RenameEnum extends nextgen.actions.TransactionAction {
 
       inputName(owner, stEnum.getName(), s -> appModel().isValidTemplateName(owner, stGroup, s).ifPresent(name -> {
       	stEnum.setName(name);
-      	nextgen.events.STEnumNameChanged.post(stGroup, stEnum);
+      	nextgen.events.STEnumChanged.post(stEnum);
       }));
    }
 

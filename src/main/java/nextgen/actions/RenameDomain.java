@@ -7,21 +7,21 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetDomainVisitorName extends nextgen.actions.TransactionAction {
-	private final DomainVisitor domainVisitor;
+public class RenameDomain extends nextgen.actions.TransactionAction {
+	private final Domain domain;
 	private final JComponent owner;
 
-	public SetDomainVisitorName(DomainVisitor domainVisitor, JComponent owner) {
-		super("Set Name");
-		this.domainVisitor = domainVisitor;
+	public RenameDomain(Domain domain, JComponent owner) {
+		super("Set name");
+		this.domain = domain;
 		this.owner = owner;
 	}
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
-   	log.info("SetDomainVisitorName" + " domainVisitor" + " owner");
+   	log.info("RenameDomain" + " domain" + " owner");
 
-      input(owner, "Set Name", s -> appModel().setName(domainVisitor, s));
+      input(owner, "Set Name", s -> appModel().setName(domain, s));
    }
 
 }

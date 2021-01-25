@@ -7,12 +7,12 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class SetDomainName extends nextgen.actions.TransactionAction {
+public class RenameDomainName extends nextgen.actions.TransactionAction {
 
    private final Domain domain;
    private final JComponent owner;
 
-	public SetDomainName(Domain domain, JComponent owner) {
+	public RenameDomainName(Domain domain, JComponent owner) {
 		super("Set from Input");
 		this.domain = domain;
 		this.owner = owner;

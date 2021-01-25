@@ -200,12 +200,4 @@ public class STModelEditor extends BaseEditor<STModel> {
          modelEditorForm.setModel(model);
       }
    }
-
-   @org.greenrobot.eventbus.Subscribe()
-   public void onKVDeleted(nextgen.events.KVDeleted event) {
-      if (model.equals(event.stModel)) {
-         modelEditorText.setModel(model);
-         modelEditorForm.setModel(model);
-      }
-   }
 }

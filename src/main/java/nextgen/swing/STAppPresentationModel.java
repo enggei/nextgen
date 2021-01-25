@@ -401,7 +401,7 @@ public class STAppPresentationModel {
    public void delete(nextgen.model.STGroupModel stGroup) {
       final String uuid = stGroup.getUuid();
       stGroup.delete();
-      nextgen.events.STGroupDeleted.post(uuid);
+      nextgen.events.STGroupModelDeleted.post(uuid);
    }
 
    public void delete(nextgen.model.STGroupAction stAction) {
@@ -431,6 +431,11 @@ public class STAppPresentationModel {
       final String uuid = stModel.getUuid();
       stModel.delete();
       nextgen.events.STModelDeleted.post(uuid);
+   }
+
+   public void delete(java.util.List<nextgen.model.STModel> models) {
+      for (nextgen.model.STModel model : models)
+         delete(model);
    }
 
    public static void delete(nextgen.model.STTemplate stTemplate) {
@@ -467,7 +472,7 @@ public class STAppPresentationModel {
          final String uuid = existing.get().getUuid();
          stArgument.removeKeyValues(existing.get());
          existing.get().delete();
-         nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+         nextgen.events.STArgumentKVDeleted.post(uuid);
       }
    }
 

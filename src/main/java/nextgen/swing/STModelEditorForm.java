@@ -4,7 +4,6 @@ import nextgen.actions.*;
 import nextgen.model.*;
 import nextgen.swing.forms.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -261,7 +260,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          final RSyntaxTextArea rSyntaxTextArea = newRSyntaxTextArea(render, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, stArgument, txt.getText().trim()))));
          return new TextAreaCrudForm()
                .setTextArea(newRTextScrollPane(rSyntaxTextArea))
-               .setDelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
+               .setDelete(getButton(new nextgen.actions.DeleteSTArgumentKV(argument, STModelEditorForm.this)))
                .setFromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))
                .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
 
@@ -275,7 +274,7 @@ public class STModelEditorForm extends BaseEditor<STModel> {
          final JTextField textField = newJTextField(render, newSaveListener(txt -> appModel().doLaterInTransaction(tx -> appModel().updateSTArgument(model, argument, txt.getText().trim()))));
          return new CrudPanel()
                .setValue(textField)
-               .setDelete(getButton(new DeleteKV(argument, STModelEditorForm.this)))
+               .setDelete(getButton(new nextgen.actions.DeleteSTArgumentKV(argument, STModelEditorForm.this)))
                .setFromClipboard(getButton(new SetKVArgumentFromClipboard(model, stArgument, stParameterKey)))
                .setToClipboard(getButton(new STValueToClipboard(stArgument.getValue())));
       }

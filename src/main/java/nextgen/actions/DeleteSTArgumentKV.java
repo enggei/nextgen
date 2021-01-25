@@ -7,12 +7,11 @@ import javax.swing.*;
 import org.neo4j.graphdb.Transaction;
 import java.awt.event.ActionEvent;
 
-public class DeleteKV extends nextgen.actions.TransactionAction {
+public class DeleteSTArgumentKV extends nextgen.actions.TransactionAction {
+	private final STArgumentKV argumentKV;
+	private final JComponent owner;
 
-   private final STArgumentKV argumentKV;
-   private final JComponent owner;
-
-	public DeleteKV(STArgumentKV argumentKV, JComponent owner) {
+	public DeleteSTArgumentKV(STArgumentKV argumentKV, JComponent owner) {
 		super("DEL");
 		this.argumentKV = argumentKV;
 		this.owner = owner;
@@ -20,7 +19,7 @@ public class DeleteKV extends nextgen.actions.TransactionAction {
 
    @Override
    protected void actionPerformed(ActionEvent actionEvent, Transaction transaction) {
-   	log.info("DeleteKV" + " argumentKV" + " owner");
+   	log.info("DeleteSTArgumentKV" + " argumentKV" + " owner");
 
       confirm(owner, "Delete", unused ->
             argumentKV.getIncomingKeyValuesSTArgument()
@@ -28,7 +27,7 @@ public class DeleteKV extends nextgen.actions.TransactionAction {
                   .ifPresent(stArgument -> stArgument.getIncomingArgumentsSTModel().findFirst().ifPresent(stModel -> {
                      final String uuid = argumentKV.getUuid();
                      stArgument.removeKeyValues(argumentKV);
-                     nextgen.events.KVDeleted.post(stModel, stArgument, uuid);
+                     nextgen.events.STArgumentKVDeleted.post(uuid);
                   })));
    }
 

@@ -118,7 +118,7 @@ public class STModelEditorText extends BaseEditor<STModel> {
                               break;
                            case PRIMITIVE:
                               parameterKeyMenu.add(new nextgen.actions.STValueToClipboard(argumentKV.get().getValue()).setName(appModel().render(argumentKV.get(), 30)));
-                              parameterKeyMenu.add(new DeleteKV(argumentKV.get(), txtEditor));
+                              parameterKeyMenu.add(new nextgen.actions.DeleteSTArgumentKV(argumentKV.get(), txtEditor));
                               break;
                            case ENUM:
                               break;
